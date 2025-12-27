@@ -30,7 +30,7 @@ export default function Step0Welcome({ data, onComplete }) {
   const toggleIntention = (code) => {
     if (selected.includes(code)) {
       setSelected(selected.filter(c => c !== code));
-    } else if (selected.length < 3) {
+    } else if (selected.length < 7) {
       setSelected([...selected, code]);
     }
   };
@@ -43,7 +43,7 @@ export default function Step0Welcome({ data, onComplete }) {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Why are you here?</h2>
-        <p className="text-slate-600">Select up to 3 intentions that resonate with you</p>
+        <p className="text-slate-600">Select up to 7 intentions that resonate with you</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -55,14 +55,14 @@ export default function Step0Welcome({ data, onComplete }) {
             <button
               key={intention.code}
               onClick={() => toggleIntention(intention.code)}
-              disabled={!isSelected && selected.length >= 3}
+              disabled={!isSelected && selected.length >= 7}
               className={cn(
                 "p-4 rounded-xl border-2 transition-all text-left",
                 "hover:border-violet-300 hover:shadow-md",
                 isSelected 
                   ? "border-violet-500 bg-violet-50 shadow-md" 
                   : "border-slate-200 bg-white",
-                !isSelected && selected.length >= 3 && "opacity-50 cursor-not-allowed"
+                !isSelected && selected.length >= 7 && "opacity-50 cursor-not-allowed"
               )}
             >
               <Icon className={cn(
@@ -82,7 +82,7 @@ export default function Step0Welcome({ data, onComplete }) {
 
       <div className="flex items-center justify-between pt-4">
         <p className="text-sm text-slate-500">
-          {selected.length}/3 selected
+          {selected.length}/7 selected
         </p>
         <Button
           onClick={handleContinue}
