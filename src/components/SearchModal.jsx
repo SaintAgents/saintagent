@@ -123,7 +123,71 @@ export default function SearchModal({ open, onClose, onSelect }) {
             </div>
           ) : (
             <div className="space-y-2">
-              {(tab === 'all' || tab === 'people') && filteredProfiles.map(profile => (
+              {(tab === 'all' || tab === 'people') && filteredProfiles.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">People</h3>}
+                  {filteredProfiles.map(profile => (
+                    <button
+                      key={profile.id}
+                      onClick={() => { onSelect?.('profile', profile); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={profile.avatar_url} />
+                        <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="text-left">
+                        <p className="font-medium text-slate-900">{profile.display_name}</p>
+                        <p className="text-sm text-slate-500">@{profile.handle}</p>
+                      </div>
+                      <Users className="w-4 h-4 text-slate-400 ml-auto" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {(tab === 'all' || tab === 'offers') && filteredListings.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Offers</h3>}
+                  {filteredListings.map(listing => (
+                    <button
+                      key={listing.id}
+                      onClick={() => { onSelect?.('listing', listing); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <ShoppingBag className="w-10 h-10 p-2 rounded-lg bg-emerald-100 text-emerald-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{listing.title}</p>
+                        <p className="text-sm text-slate-500">{listing.is_free ? 'Free' : `$${listing.price_amount}`}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {(tab === 'all' || tab === 'missions') && filteredMissions.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Missions</h3>}
+                  {filteredMissions.map(mission => (
+                    <button
+                      key={mission.id}
+                      onClick={() => { onSelect?.('mission', mission); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <Target className="w-10 h-10 p-2 rounded-lg bg-amber-100 text-amber-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{mission.title}</p>
+                        <p className="text-sm text-slate-500">{mission.participant_count} joined</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {(tab === 'all' || tab === 'circles') && filteredCircles.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Circles</h3>}
+                  {filteredCircles.map(circle => (
                 <button
                   key={profile.id}
                   onClick={() => { onSelect?.('profile', profile); onClose(); }}
