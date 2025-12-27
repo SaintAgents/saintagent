@@ -643,55 +643,6 @@ export default function Profile() {
 
           <TabsContent value="stats" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 space-y-6">
-                {/* Intentions */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Intentions</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {profile?.intentions?.map((intention, i) => (
-                        <Badge key={i} className="bg-violet-100 text-violet-700 capitalize">
-                          {intention}
-                        </Badge>
-                      ))}
-                      {(!profile?.intentions || profile.intentions.length === 0) && (
-                        <p className="text-slate-400">No intentions set</p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Skills */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Skills</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {profile?.skills?.map((skill, i) => (
-                        <Badge key={i} variant="outline" className="capitalize">
-                          {skill}
-                        </Badge>
-                      ))}
-                      {(!profile?.skills || profile.skills.length === 0) && (
-                        <p className="text-slate-400">No skills added</p>
-                      )}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-violet-600"
-                        onClick={() => setSkillsPickerOpen(true)}
-                      >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Add Skills
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
               {/* Right Column - Stats */}
               <div className="space-y-6">
             {/* Rank Progress */}
