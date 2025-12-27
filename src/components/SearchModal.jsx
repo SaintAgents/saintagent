@@ -1,0 +1,189 @@
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Search,
+  Users,
+  ShoppingBag,
+  Target,
+  Calendar,
+  CircleDot,
+  FileText,
+  X
+} from "lucide-react";
+
+export default function SearchModal({ open, onClose, onSelect }) {
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState('all');
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['searchProfiles', query],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 20),
+    enabled: query.length > 2
+  });
+
+  const { data: listings = [] } = useQuery({
+    queryKey: ['searchListings', query],
+    queryFn: () => base44.entities.Listing.list('-created_date', 20),
+    enabled: query.length > 2
+  });
+
+  const { data: missions = [] } = useQuery({
+    queryKey: ['searchMissions', query],
+    queryFn: () => base44.entities.Mission.list('-created_date', 20),
+    enabled: query.length > 2
+  });
+
+  const { data: circles = [] } = useQuery({
+    queryKey: ['searchCircles', query],
+    queryFn: () => base44.entities.Circle.list('-created_date', 20),
+    enabled: query.length > 2
+  });
+
+  const filterResults = (items) => {
+    if (!query) return [];
+    return items.filter(item => 
+      JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
+    );
+  };
+
+  const filteredProfiles = filterResults(profiles);
+  const filteredListings = filterResults(listings);
+  const filteredMissions = filterResults(missions);
+  const filteredCircles = filterResults(circles);
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-2xl p-0">
+        <div className="p-4 border-b">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Input
+              placeholder="Search people, offers, missions, circles..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-10 pr-10 h-12 rounded-xl"
+              autoFocus
+            />
+            {query && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2"
+                onClick={() => setQuery('')}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <Tabs value={tab} onValueChange={setTab} className="px-4">
+          <TabsList className="w-full grid grid-cols-6">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="people">
+              <Users className="w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="offers">
+              <ShoppingBag className="w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="missions">
+              <Target className="w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="circles">
+              <CircleDot className="w-4 h-4" />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <ScrollArea className="h-96 px-4 pb-4">
+          {query.length < 3 ? (
+            <div className="text-center py-12 text-slate-400">
+              <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>Type at least 3 characters to search</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {(tab === 'all' || tab === 'people') && filteredProfiles.map(profile => (
+                <button
+                  key={profile.id}
+                  onClick={() => { onSelect?.('profile', profile); onClose(); }}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                >
+                  <Avatar className="w-10 h-10">
+                    <AvatarImage src={profile.avatar_url} />
+                    <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="text-left">
+                    <p className="font-medium text-slate-900">{profile.display_name}</p>
+                    <p className="text-sm text-slate-500">@{profile.handle}</p>
+                  </div>
+                  <Users className="w-4 h-4 text-slate-400 ml-auto" />
+                </button>
+              ))}
+
+              {(tab === 'all' || tab === 'offers') && filteredListings.map(listing => (
+                <button
+                  key={listing.id}
+                  onClick={() => { onSelect?.('listing', listing); onClose(); }}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                >
+                  <ShoppingBag className="w-10 h-10 p-2 rounded-lg bg-emerald-100 text-emerald-600" />
+                  <div className="text-left flex-1">
+                    <p className="font-medium text-slate-900">{listing.title}</p>
+                    <p className="text-sm text-slate-500">{listing.is_free ? 'Free' : `$${listing.price_amount}`}</p>
+                  </div>
+                </button>
+              ))}
+
+              {(tab === 'all' || tab === 'missions') && filteredMissions.map(mission => (
+                <button
+                  key={mission.id}
+                  onClick={() => { onSelect?.('mission', mission); onClose(); }}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                >
+                  <Target className="w-10 h-10 p-2 rounded-lg bg-amber-100 text-amber-600" />
+                  <div className="text-left flex-1">
+                    <p className="font-medium text-slate-900">{mission.title}</p>
+                    <p className="text-sm text-slate-500">{mission.participant_count} joined</p>
+                  </div>
+                </button>
+              ))}
+
+              {(tab === 'all' || tab === 'circles') && filteredCircles.map(circle => (
+                <button
+                  key={circle.id}
+                  onClick={() => { onSelect?.('circle', circle); onClose(); }}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                >
+                  <CircleDot className="w-10 h-10 p-2 rounded-lg bg-blue-100 text-blue-600" />
+                  <div className="text-left flex-1">
+                    <p className="font-medium text-slate-900">{circle.name}</p>
+                    <p className="text-sm text-slate-500">{circle.member_count} members</p>
+                  </div>
+                </button>
+              ))}
+
+              {filteredProfiles.length === 0 && filteredListings.length === 0 && 
+               filteredMissions.length === 0 && filteredCircles.length === 0 && (
+                <div className="text-center py-12 text-slate-400">
+                  <p>No results found for "{query}"</p>
+                </div>
+              )}
+            </div>
+          )}
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+}
