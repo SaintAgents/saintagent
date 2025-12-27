@@ -19,7 +19,8 @@ export default function CollapsibleCard({
   actions,
   className,
   onPin,
-  isPinned
+  isPinned,
+  backgroundImage
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -34,12 +35,20 @@ export default function CollapsibleCard({
 
   return (
     <div className={cn(
-      "bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden transition-all duration-300",
+      "relative bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden transition-all duration-300",
       isPinned && "ring-2 ring-violet-500/20",
       className
     )}>
+      {/* Background Image */}
+      {backgroundImage && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-5"
+          style={{ backgroundImage: `url(${backgroundImage})` }}
+        />
+      )}
+      
       <div 
-        className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
+        className="relative flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-3 min-w-0">
@@ -102,7 +111,7 @@ export default function CollapsibleCard({
         </div>
       </div>
       <div className={cn(
-        "overflow-hidden transition-all duration-300",
+        "relative overflow-hidden transition-all duration-300",
         isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
       )}>
         <div className="px-5 pb-5">

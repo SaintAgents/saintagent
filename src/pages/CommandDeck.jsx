@@ -404,6 +404,7 @@ export default function CommandDeck() {
               icon={Zap}
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
             >
               <div className="grid grid-cols-2 gap-3">
                 <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl">
@@ -431,6 +432,7 @@ export default function CommandDeck() {
               icon={Radio}
               badge={notifications.length}
               badgeColor="rose"
+              backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
             >
               <div className="space-y-3">
                 {notifications.length === 0 ? (
@@ -460,6 +462,7 @@ export default function CommandDeck() {
               title="Circles & Regions" 
               icon={Users}
               defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
             >
               <div className="space-y-3">
                 <Button variant="outline" className="w-full justify-start gap-3 h-12 rounded-xl">
@@ -492,6 +495,7 @@ export default function CommandDeck() {
               icon={Sparkles}
               badge={matches.length}
               badgeColor="violet"
+              backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
             >
               <Tabs value={matchTab} onValueChange={setMatchTab} className="w-full">
                 <TabsList className="w-full grid grid-cols-5 mb-4">
@@ -533,6 +537,7 @@ export default function CommandDeck() {
               icon={Calendar}
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
             >
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ? (
@@ -561,6 +566,7 @@ export default function CommandDeck() {
               icon={Target}
               badge={missions.length}
               badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
             >
               <div className="space-y-3">
                 {missions.length === 0 ? (
@@ -591,6 +597,7 @@ export default function CommandDeck() {
             <CollapsibleCard 
               title="Marketplace: Earn & Learn" 
               icon={ShoppingBag}
+              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
             >
               <Tabs defaultValue="offers" className="w-full">
                 <TabsList className="w-full grid grid-cols-3 mb-4">
@@ -639,6 +646,7 @@ export default function CommandDeck() {
             <CollapsibleCard 
               title="Influence & Reach" 
               icon={TrendingUp}
+              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
             >
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
@@ -680,6 +688,7 @@ export default function CommandDeck() {
               title="144K Leader Channel" 
               icon={Radio}
               defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
             >
               <div className="text-center py-6">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
