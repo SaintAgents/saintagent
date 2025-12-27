@@ -8,6 +8,7 @@ import Settings from './pages/Settings';
 import Messages from './pages/Messages';
 import Circles from './pages/Circles';
 import Studio from './pages/Studio';
+import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +23,7 @@ export const PAGES = {
     "Messages": Messages,
     "Circles": Circles,
     "Studio": Studio,
+    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {

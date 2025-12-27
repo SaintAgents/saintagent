@@ -1,0 +1,97 @@
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { 
+  Rocket, 
+  GraduationCap, 
+  Users, 
+  DollarSign, 
+  Calendar, 
+  Target,
+  TrendingUp,
+  Sparkles
+} from "lucide-react";
+
+const INTENTIONS = [
+  { code: "build_project", label: "Build a project/company", icon: Rocket },
+  { code: "learn_skills", label: "Learn skills", icon: GraduationCap },
+  { code: "teach_mentor", label: "Teach / mentor", icon: Users },
+  { code: "find_collaborators", label: "Find collaborators", icon: Users },
+  { code: "earn_income", label: "Earn income", icon: DollarSign },
+  { code: "host_events", label: "Host/attend events", icon: Calendar },
+  { code: "join_missions", label: "Join missions", icon: Target },
+  { code: "grow_influence", label: "Grow influence", icon: TrendingUp },
+  { code: "spiritual_growth", label: "Spiritual growth / consciousness", icon: Sparkles }
+];
+
+export default function Step0Welcome({ data, onComplete }) {
+  const [selected, setSelected] = useState(data.intentions || []);
+
+  const toggleIntention = (code) => {
+    if (selected.includes(code)) {
+      setSelected(selected.filter(c => c !== code));
+    } else if (selected.length < 3) {
+      setSelected([...selected, code]);
+    }
+  };
+
+  const handleContinue = () => {
+    onComplete({ intentions: selected });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Why are you here?</h2>
+        <p className="text-slate-600">Select up to 3 intentions that resonate with you</p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {INTENTIONS.map((intention) => {
+          const Icon = intention.icon;
+          const isSelected = selected.includes(intention.code);
+          
+          return (
+            <button
+              key={intention.code}
+              onClick={() => toggleIntention(intention.code)}
+              disabled={!isSelected && selected.length >= 3}
+              className={cn(
+                "p-4 rounded-xl border-2 transition-all text-left",
+                "hover:border-violet-300 hover:shadow-md",
+                isSelected 
+                  ? "border-violet-500 bg-violet-50 shadow-md" 
+                  : "border-slate-200 bg-white",
+                !isSelected && selected.length >= 3 && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              <Icon className={cn(
+                "w-6 h-6 mb-2",
+                isSelected ? "text-violet-600" : "text-slate-400"
+              )} />
+              <p className={cn(
+                "text-sm font-medium",
+                isSelected ? "text-violet-900" : "text-slate-700"
+              )}>
+                {intention.label}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center justify-between pt-4">
+        <p className="text-sm text-slate-500">
+          {selected.length}/3 selected
+        </p>
+        <Button
+          onClick={handleContinue}
+          disabled={selected.length === 0}
+          className="bg-violet-600 hover:bg-violet-700"
+        >
+          Continue
+        </Button>
+      </div>
+    </div>
+  );
+}
