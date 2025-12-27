@@ -46,7 +46,7 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
   if (isCompact) {
     return (
       <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
-        <Avatar className="w-8 h-8">
+        <Avatar className="w-8 h-8 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={meeting.host_id === "current" ? meeting.guest_id : meeting.host_id}>
           <AvatarImage src={otherPerson.avatar} />
           <AvatarFallback className="text-xs">{otherPerson.name?.charAt(0)}</AvatarFallback>
         </Avatar>

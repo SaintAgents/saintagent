@@ -114,7 +114,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
         <p className="text-sm text-slate-500 line-clamp-2 mt-2">{listing.description}</p>
 
         <div className="flex items-center gap-3 mt-3">
-          <Avatar className="w-6 h-6">
+          <Avatar className="w-6 h-6 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={listing.owner_id}>
             <AvatarImage src={listing.owner_avatar} />
             <AvatarFallback className="text-xs">{listing.owner_name?.charAt(0)}</AvatarFallback>
           </Avatar>
