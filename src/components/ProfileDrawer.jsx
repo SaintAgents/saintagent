@@ -51,9 +51,25 @@ export default function ProfileDrawer({ userId, onClose }) {
     enabled: !!userId
   });
 
+  const { data: creatorTiers = [] } = useQuery({
+    queryKey: ['creatorTiers', userId],
+    queryFn: () => base44.entities.CreatorTier.filter({ creator_id: userId, status: 'active' }),
+    enabled: !!userId
+  });
+
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
+  });
+
+  const { data: subscriptions = [] } = useQuery({
+    queryKey: ['subscriptions', currentUser?.email, userId],
+    queryFn: () => base44.entities.Subscription.filter({ 
+      subscriber_id: currentUser?.email,
+      creator_id: userId,
+      status: 'active'
+    }),
+    enabled: !!currentUser?.email && !!userId
   });
 
   const isOwnProfile = currentUser?.email === userId;
@@ -269,6 +285,29 @@ export default function ProfileDrawer({ userId, onClose }) {
                     {practice.replace('_', ' ')}
                   </Badge>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Membership Tiers */}
+          {!isOwnProfile && creatorTiers.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <Crown className="w-5 h-5 text-violet-500" />
+                Membership Tiers
+              </h3>
+              <div className="space-y-3">
+                {creatorTiers.map((tier) => {
+                  const currentSubscription = subscriptions.find(s => s.tier_id === tier.id);
+                  return (
+                    <SubscriptionCard
+                      key={tier.id}
+                      tier={tier}
+                      currentSubscription={currentSubscription}
+                      profile={profile}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
