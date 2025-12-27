@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
+import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
+import AvatarUploader from '@/components/profile/AvatarUploader';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   User,
   Edit,
@@ -33,6 +36,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [skillsPickerOpen, setSkillsPickerOpen] = useState(false);
+  const [editingSpiritualProfile, setEditingSpiritualProfile] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: profiles } = useQuery({
@@ -64,6 +68,15 @@ export default function Profile() {
 
   const handleSave = () => {
     updateMutation.mutate(editData);
+  };
+
+  const handleAvatarUpdate = async (avatarUrl) => {
+    await updateMutation.mutateAsync({ avatar_url: avatarUrl });
+  };
+
+  const handleSpiritualProfileSave = async (spiritualData) => {
+    await updateMutation.mutateAsync(spiritualData);
+    setEditingSpiritualProfile(false);
   };
 
   const rankProgress = profile?.rank_points || 0;
@@ -119,9 +132,26 @@ export default function Profile() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Profile Info */}
-          <div className="lg:col-span-2 space-y-6">
+        <Tabs defaultValue="basic" className="space-y-6">
+          <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsTrigger value="basic">Basic Info</TabsTrigger>
+            <TabsTrigger value="spiritual">Spiritual Profile</TabsTrigger>
+            <TabsTrigger value="stats">Stats & Activity</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="basic" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Avatar Uploader */}
+              <div>
+                <AvatarUploader 
+                  currentAvatar={profile?.avatar_url}
+                  displayName={profile?.display_name}
+                  onAvatarUpdate={handleAvatarUpdate}
+                />
+              </div>
+
+              {/* Left Column - Profile Info */}
+              <div className="lg:col-span-2 space-y-6">
             {/* Bio & Details */}
             <Card>
               <CardHeader>
@@ -244,10 +274,177 @@ export default function Profile() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+              </div>
+            </div>
+          </TabsContent>
 
-          {/* Right Column - Stats */}
-          <div className="space-y-6">
+          <TabsContent value="spiritual" className="space-y-6">
+            {editingSpiritualProfile ? (
+              <SpiritualProfileEditor
+                profile={profile}
+                onSave={handleSpiritualProfileSave}
+                onCancel={() => setEditingSpiritualProfile(false)}
+              />
+            ) : (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900">Spiritual Profile</h2>
+                    <p className="text-slate-500 mt-1">Your mystical identifiers and practices</p>
+                  </div>
+                  <Button 
+                    onClick={() => setEditingSpiritualProfile(true)}
+                    className="bg-violet-600 hover:bg-violet-700 gap-2"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit Spiritual Profile
+                  </Button>
+                </div>
+
+                <div className="grid gap-6">
+                  {/* Spiritual Practices */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Spiritual Practices</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {profile?.spiritual_practices?.length > 0 ? (
+                        <>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {profile.spiritual_practices.map((practice, i) => (
+                              <Badge key={i} className="bg-purple-100 text-purple-700 capitalize">
+                                {practice.replace(/_/g, ' ')}
+                              </Badge>
+                            ))}
+                          </div>
+                          {profile?.practices_description && (
+                            <p className="text-sm text-slate-600 mt-3">{profile.practices_description}</p>
+                          )}
+                        </>
+                      ) : (
+                        <p className="text-slate-400">No practices selected</p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Lineage / Tradition */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Lineage / Tradition</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {profile?.lineage_tradition ? (
+                        <>
+                          <Badge className="bg-blue-100 text-blue-700 capitalize mb-2">
+                            {profile.lineage_tradition.replace(/_/g, ' ')}
+                          </Badge>
+                          {profile?.lineage_custom && (
+                            <p className="text-sm text-slate-600 mt-2">{profile.lineage_custom}</p>
+                          )}
+                        </>
+                      ) : (
+                        <p className="text-slate-400">No tradition specified</p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Symbolic Groups */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Symbolic Groups</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {profile?.symbolic_groups?.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {profile.symbolic_groups.map((group, i) => (
+                            <Badge key={i} className="bg-amber-100 text-amber-700 capitalize">
+                              {group === '144000' ? '144,000' : group.replace(/_/g, ' ')}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-slate-400">No groups selected</p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Consciousness Orientation */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Consciousness Orientation</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {profile?.consciousness_orientation?.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {profile.consciousness_orientation.map((orientation, i) => (
+                            <Badge key={i} className="bg-emerald-100 text-emerald-700 capitalize">
+                              {orientation.replace(/_/g, ' ')}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-slate-400">No orientation selected</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="stats" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                {/* Intentions */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Intentions</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {profile?.intentions?.map((intention, i) => (
+                        <Badge key={i} className="bg-violet-100 text-violet-700 capitalize">
+                          {intention}
+                        </Badge>
+                      ))}
+                      {(!profile?.intentions || profile.intentions.length === 0) && (
+                        <p className="text-slate-400">No intentions set</p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Skills */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Skills</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {profile?.skills?.map((skill, i) => (
+                        <Badge key={i} variant="outline" className="capitalize">
+                          {skill}
+                        </Badge>
+                      ))}
+                      {(!profile?.skills || profile.skills.length === 0) && (
+                        <p className="text-slate-400">No skills added</p>
+                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-violet-600"
+                        onClick={() => setSkillsPickerOpen(true)}
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add Skills
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Right Column - Stats */}
+              <div className="space-y-6">
             {/* Rank Progress */}
             <Card>
               <CardContent className="pt-6 text-center">
@@ -315,8 +512,10 @@ export default function Profile() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {/* Skills Picker Modal */}
         <SkillsPicker
