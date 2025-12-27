@@ -49,6 +49,9 @@ export default function Profile() {
   const [editData, setEditData] = useState({});
   const [skillsPickerOpen, setSkillsPickerOpen] = useState(false);
   const [editingSpiritualProfile, setEditingSpiritualProfile] = useState(false);
+  const [editingIntentions, setEditingIntentions] = useState(false);
+  const [intentionsData, setIntentionsData] = useState([]);
+  const [newIntention, setNewIntention] = useState('');
   const queryClient = useQueryClient();
 
   const { data: profiles } = useQuery({
@@ -88,6 +91,13 @@ export default function Profile() {
     enabled: !!profile?.user_id
   });
 
+  // Fetch testimonials
+  const { data: testimonials = [] } = useQuery({
+    queryKey: ['userTestimonials', profile?.user_id],
+    queryFn: () => base44.entities.Testimonial.filter({ to_user_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
     onSuccess: () => {
@@ -118,6 +128,34 @@ export default function Profile() {
     await updateMutation.mutateAsync(spiritualData);
     setEditingSpiritualProfile(false);
   };
+
+  const handleIntentionsEdit = () => {
+    setIntentionsData(profile?.intentions || []);
+    setEditingIntentions(true);
+  };
+
+  const handleIntentionsSave = async () => {
+    await updateMutation.mutateAsync({ intentions: intentionsData });
+    setEditingIntentions(false);
+  };
+
+  const addIntention = () => {
+    if (newIntention.trim() && !intentionsData.includes(newIntention.trim())) {
+      setIntentionsData([...intentionsData, newIntention.trim()]);
+      setNewIntention('');
+    }
+  };
+
+  const removeIntention = (intention) => {
+    setIntentionsData(intentionsData.filter(i => i !== intention));
+  };
+
+  const deleteTestimonialMutation = useMutation({
+    mutationFn: (id) => base44.entities.Testimonial.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userTestimonials'] });
+    }
+  });
 
   const rankProgress = profile?.rank_points || 0;
   const nextRankAt = 1000;
@@ -272,19 +310,130 @@ export default function Profile() {
             {/* Intentions */}
             <Card>
               <CardHeader>
-                <CardTitle>Intentions</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Intentions</span>
+                  {!editingIntentions ? (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-violet-600"
+                      onClick={handleIntentionsEdit}
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => setEditingIntentions(false)}
+                      >
+                        <X className="w-4 h-4 mr-1" />
+                        Cancel
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-violet-600"
+                        onClick={handleIntentionsSave}
+                      >
+                        <Save className="w-4 h-4 mr-1" />
+                        Save
+                      </Button>
+                    </div>
+                  )}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {profile?.intentions?.map((intention, i) => (
-                    <Badge key={i} className="bg-violet-100 text-violet-700 capitalize">
-                      {intention}
-                    </Badge>
-                  ))}
-                  {(!profile?.intentions || profile.intentions.length === 0) && (
-                    <p className="text-slate-400">No intentions set</p>
-                  )}
-                </div>
+                {editingIntentions ? (
+                  <div className="space-y-3">
+                    <div className="flex gap-2">
+                      <Input 
+                        placeholder="Add intention (e.g., service, healing, build)..."
+                        value={newIntention}
+                        onChange={(e) => setNewIntention(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            addIntention();
+                          }
+                        }}
+                      />
+                      <Button onClick={addIntention} variant="outline">Add</Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {intentionsData.map((intention, i) => (
+                        <Badge key={i} className="bg-violet-100 text-violet-700 gap-2 pr-1 capitalize">
+                          {intention}
+                          <button onClick={() => removeIntention(intention)} className="hover:bg-violet-200 rounded-full p-0.5">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {profile?.intentions?.map((intention, i) => (
+                      <Badge key={i} className="bg-violet-100 text-violet-700 capitalize">
+                        {intention}
+                      </Badge>
+                    ))}
+                    {(!profile?.intentions || profile.intentions.length === 0) && (
+                      <p className="text-slate-400">No intentions set</p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Testimonials */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-amber-500" />
+                  Testimonials
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {testimonials.length === 0 ? (
+                  <p className="text-slate-400">No testimonials yet</p>
+                ) : (
+                  <div className="space-y-3">
+                    {testimonials.map(t => (
+                      <div key={t.id} className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="w-8 h-8">
+                              <AvatarImage src={t.from_avatar} />
+                              <AvatarFallback className="text-xs">{t.from_name?.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-sm font-medium">{t.from_name}</p>
+                              <div className="flex">
+                                {[...Array(t.rating || 5)].map((_, i) => (
+                                  <span key={i} className="text-amber-400 text-sm">★</span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="h-8 w-8 text-slate-400 hover:text-red-600"
+                            onClick={() => deleteTestimonialMutation.mutate(t.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <p className="text-sm text-slate-600">{t.text}</p>
+                        {t.context && (
+                          <p className="text-xs text-slate-400 mt-2">{t.context}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
 

@@ -25,6 +25,7 @@ import {
   Award
 } from "lucide-react";
 import { createPageUrl } from '@/utils';
+import FollowButton from '@/components/FollowButton';
 
 export default function ProfileDrawer({ userId, onClose }) {
   const queryClient = useQueryClient();
@@ -105,15 +106,18 @@ export default function ProfileDrawer({ userId, onClose }) {
 
           {/* Actions */}
           {!isOwnProfile && (
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
-                <MessageCircle className="w-4 h-4" />
-                Message
-              </Button>
-              <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2">
-                <Calendar className="w-4 h-4" />
-                Book
-              </Button>
+            <div className="space-y-3 mb-6">
+              <div className="grid grid-cols-2 gap-3">
+                <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
+                  <MessageCircle className="w-4 h-4" />
+                  Message
+                </Button>
+                <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2">
+                  <Calendar className="w-4 h-4" />
+                  Book
+                </Button>
+              </div>
+              <FollowButton targetUserId={userId} className="w-full rounded-xl" />
             </div>
           )}
 
