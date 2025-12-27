@@ -1,0 +1,244 @@
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export default function UserManagement() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const queryClient = useQueryClient();
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 500)
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.UserProfile.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      setSelectedUser(null);
+    }
+  });
+
+  const filteredProfiles = profiles.filter(p =>
+    p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleChangeRole = (profile, newRole) => {
+    if (confirm(`Change ${profile.display_name}'s role to ${newRole}?`)) {
+      updateProfileMutation.mutate({ 
+        id: profile.id, 
+        data: { leader_tier: newRole }
+      });
+    }
+  };
+
+  const handleAdjustGGG = (profile, amount) => {
+    const newBalance = (profile.ggg_balance || 0) + amount;
+    updateProfileMutation.mutate({
+      id: profile.id,
+      data: { ggg_balance: Math.max(0, newBalance) }
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Search & Stats */}
+      <div className="grid grid-cols-4 gap-4">
+        <Card className="col-span-3">
+          <CardContent className="pt-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search users by name, handle, or email..."
+                className="pl-10"
+              />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-3xl font-bold text-slate-900">{profiles.length}</p>
+            <p className="text-sm text-slate-500 mt-1">Total Users</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Users Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>User Directory</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[600px]">
+            <div className="space-y-2">
+              {filteredProfiles.map((profile) => (
+                <div
+                  key={profile.id}
+                  className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors"
+                >
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={profile.avatar_url} />
+                    <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-slate-900">{profile.display_name}</p>
+                      {profile.leader_tier === 'verified144k' && (
+                        <Badge className="bg-amber-100 text-amber-700">144K Leader</Badge>
+                      )}
+                      {profile.leader_tier === 'candidate' && (
+                        <Badge variant="outline">Candidate</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-500">@{profile.handle} • {profile.user_id}</p>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="text-center">
+                      <p className="font-semibold text-slate-900">{profile.ggg_balance?.toFixed(2) || 0}</p>
+                      <p className="text-xs text-slate-500">GGG</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="font-semibold text-slate-900 capitalize">{profile.rank_code || 'seeker'}</p>
+                      <p className="text-xs text-slate-500">Rank</p>
+                    </div>
+                    <div className={cn(
+                      "w-2 h-2 rounded-full",
+                      profile.status === 'online' ? "bg-emerald-500" : "bg-slate-300"
+                    )} />
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedUser(profile)}
+                  >
+                    <Edit className="w-3 h-3 mr-1" />
+                    Manage
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+
+      {/* User Management Modal */}
+      <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Manage User: {selectedUser?.display_name}</DialogTitle>
+          </DialogHeader>
+
+          {selectedUser && (
+            <div className="space-y-6">
+              {/* User Info */}
+              <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50">
+                <Avatar className="w-16 h-16">
+                  <AvatarImage src={selectedUser.avatar_url} />
+                  <AvatarFallback>{selectedUser.display_name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold text-slate-900">{selectedUser.display_name}</p>
+                  <p className="text-sm text-slate-500">@{selectedUser.handle}</p>
+                  <p className="text-xs text-slate-400">{selectedUser.user_id}</p>
+                </div>
+              </div>
+
+              {/* GGG Balance Controls */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-3">GGG Balance</h3>
+                <div className="flex items-center gap-3">
+                  <p className="text-2xl font-bold text-slate-900">
+                    {selectedUser.ggg_balance?.toFixed(2) || 0}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -1)}>
+                      -1
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -0.1)}>
+                      -0.1
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 0.1)}>
+                      +0.1
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 1)}>
+                      +1
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 10)}>
+                      +10
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Leader Status */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-3">Leader Status</h3>
+                <Select
+                  value={selectedUser.leader_tier || 'none'}
+                  onValueChange={(value) => handleChangeRole(selectedUser, value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Regular User</SelectItem>
+                    <SelectItem value="candidate">Leader Candidate</SelectItem>
+                    <SelectItem value="verified144k">144K Verified Leader</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Stats */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-3">User Stats</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="p-3 rounded-lg bg-slate-50">
+                    <p className="text-2xl font-bold text-slate-900">{selectedUser.follower_count || 0}</p>
+                    <p className="text-xs text-slate-500">Followers</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-50">
+                    <p className="text-2xl font-bold text-slate-900">{selectedUser.reach_score || 0}</p>
+                    <p className="text-xs text-slate-500">Reach</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-50">
+                    <p className="text-2xl font-bold text-slate-900">{selectedUser.meetings_completed || 0}</p>
+                    <p className="text-xs text-slate-500">Meetings</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
