@@ -36,6 +36,7 @@ import ListingCard from '@/components/hud/ListingCard';
 import ProgressRing from '@/components/hud/ProgressRing';
 import SidePanel from '@/components/hud/SidePanel';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
+import ModeCard from '@/components/hud/ModeCard';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -342,6 +343,54 @@ export default function CommandDeck() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Mode Cards Grid */}
+        <div className="px-6 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <ModeCard
+              mode="earn"
+              title="Earn"
+              icon={DollarSign}
+              stats={`$${profile?.total_earnings || 0}`}
+              onClick={() => window.location.href = createPageUrl('Marketplace')}
+            />
+            <ModeCard
+              mode="learn"
+              title="Learn"
+              icon={TrendingUp}
+              stats={`${meetings.filter(m => m.meeting_type === 'mentorship').length} sessions`}
+              onClick={() => window.location.href = createPageUrl('Marketplace')}
+            />
+            <ModeCard
+              mode="build"
+              title="Build"
+              icon={Target}
+              stats={`${missions.filter(m => m.participant_ids?.includes(profile?.user_id)).length} active`}
+              onClick={() => window.location.href = createPageUrl('Missions')}
+            />
+            <ModeCard
+              mode="teach"
+              title="Teach"
+              icon={Users}
+              stats={`${listings.filter(l => l.listing_type === 'offer').length} offers`}
+              onClick={() => window.location.href = createPageUrl('Studio')}
+            />
+            <ModeCard
+              mode="lead"
+              title="Lead"
+              icon={Sparkles}
+              stats={profile?.leader_tier !== 'none' ? 'Active' : 'Apply'}
+              onClick={() => window.location.href = createPageUrl('LeaderChannel')}
+            />
+            <ModeCard
+              mode="connect"
+              title="Connect"
+              icon={Users}
+              stats={`${profile?.follower_count || 0} followers`}
+              onClick={() => window.location.href = createPageUrl('Circles')}
+            />
           </div>
         </div>
 
