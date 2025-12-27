@@ -165,7 +165,33 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
-          <div className="h-32 bg-gradient-to-r from-violet-500 to-purple-600" />
+          <div className="relative h-48 bg-gradient-to-r from-violet-500 to-purple-600 group">
+            {profile?.hero_image_url && (
+              <img 
+                src={profile.hero_image_url} 
+                alt="Profile hero" 
+                className="w-full h-full object-cover"
+              />
+            )}
+            <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    await updateMutation.mutateAsync({ hero_image_url: file_url });
+                  }
+                }}
+              />
+              <div className="text-white text-center">
+                <Edit className="w-8 h-8 mx-auto mb-2" />
+                <p className="text-sm font-medium">Change Hero Image</p>
+              </div>
+            </label>
+          </div>
           <CardContent className="relative pt-0">
             <div className="flex items-end gap-6 -mt-12">
               <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl">
