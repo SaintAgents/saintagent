@@ -17,7 +17,12 @@ import {
   Users,
   Crown,
   ShoppingBag,
-  CircleDot
+  CircleDot,
+  Heart,
+  Target,
+  Sparkles,
+  MapPin,
+  Award
 } from "lucide-react";
 import { createPageUrl } from '@/utils';
 
@@ -139,6 +144,93 @@ export default function ProfileDrawer({ userId, onClose }) {
             </div>
           )}
 
+          {/* Location */}
+          {profile.location && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                Location
+              </h3>
+              <p className="text-sm text-slate-600">{profile.location}</p>
+            </div>
+          )}
+
+          {/* Relationship Status */}
+          {profile.relationship_status && profile.relationship_status !== 'prefer_not_to_say' && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                <Heart className="w-4 h-4" />
+                Connection Preferences
+              </h3>
+              <Badge className="bg-rose-100 text-rose-700 capitalize mb-2">
+                {profile.relationship_status.replace('_', ' ')}
+              </Badge>
+              {profile.relationship_type_seeking?.length > 0 && (
+                <div className="mt-2">
+                  <p className="text-xs text-slate-500 mb-1">Open to:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {profile.relationship_type_seeking.map((type, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs capitalize">
+                        {type.replace('_', ' ')}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Qualities Seeking */}
+          {profile.qualities_seeking?.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                <Target className="w-4 h-4" />
+                Seeking in Others
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.qualities_seeking.map((q, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs bg-rose-50 text-rose-700 border-rose-200">
+                    {q}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Qualities Providing */}
+          {profile.qualities_providing?.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                <Award className="w-4 h-4" />
+                What I Provide
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.qualities_providing.map((q, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">
+                    {q}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Skills */}
+          {profile.skills?.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                Skills
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.skills.map((skill, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Intentions */}
           {profile.intentions?.length > 0 && (
             <div className="mb-6">
@@ -147,6 +239,53 @@ export default function ProfileDrawer({ userId, onClose }) {
                 {profile.intentions.map((i, idx) => (
                   <Badge key={idx} className="bg-violet-100 text-violet-700 capitalize">{i}</Badge>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Spiritual Practices */}
+          {profile.spiritual_practices?.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2">Spiritual Practices</h3>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.spiritual_practices.map((practice, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs capitalize">
+                    {practice.replace('_', ' ')}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Mystical Identifiers */}
+          {(profile.mystical_identifier || profile.astrological_sign || profile.birth_card) && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2">Mystical Profile</h3>
+              <div className="space-y-2 text-sm">
+                {profile.mystical_identifier && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Mystical ID:</span>
+                    <span className="font-medium">{profile.mystical_identifier}</span>
+                  </div>
+                )}
+                {profile.astrological_sign && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Sign:</span>
+                    <span className="font-medium">{profile.astrological_sign}</span>
+                  </div>
+                )}
+                {profile.numerology_life_path && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Life Path:</span>
+                    <span className="font-medium">{profile.numerology_life_path}</span>
+                  </div>
+                )}
+                {profile.birth_card && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Birth Card:</span>
+                    <span className="font-medium">{profile.birth_card}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
