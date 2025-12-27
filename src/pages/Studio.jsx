@@ -15,6 +15,7 @@ import {
   Zap
 } from "lucide-react";
 import MetricTile from '@/components/hud/MetricTile';
+import TierManager from '@/components/creator/TierManager';
 
 export default function Studio() {
   const { data: profiles } = useQuery({
