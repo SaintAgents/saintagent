@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -25,7 +28,10 @@ import {
   MessageCircle,
   Wifi,
   Moon,
-  Focus
+  Focus,
+  Trophy,
+  Crown,
+  TrendingUp
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -66,6 +72,12 @@ export default function Sidebar({
 }) {
   const [status, setStatus] = useState(profile?.status || 'online');
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
+
+  const { data: topLeaders = [] } = useQuery({
+    queryKey: ['topLeaders'],
+    queryFn: () => base44.entities.UserProfile.list('-rank_points', 10),
+    refetchInterval: 30000
+  });
 
   const handleStatusChange = (value) => {
     setStatus(value);
@@ -149,6 +161,54 @@ export default function Sidebar({
         })}
       </nav>
 
+      {/* Leaderboard */}
+      {!isCollapsed && (
+        <div className="border-t border-slate-100 p-3">
+          <div className="flex items-center gap-2 px-2 mb-3">
+            <Trophy className="w-4 h-4 text-amber-500" />
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
+          </div>
+          <ScrollArea className="h-48">
+            <div className="space-y-2">
+              {topLeaders.map((leader, index) => (
+                <button
+                  key={leader.id}
+                  className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                  data-user-id={leader.user_id}
+                >
+                  <div className="relative">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={leader.avatar_url} />
+                      <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    {index < 3 && (
+                      <div className={cn(
+                        "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
+                        index === 0 && "bg-amber-400 text-white",
+                        index === 1 && "bg-slate-300 text-slate-700",
+                        index === 2 && "bg-orange-400 text-white"
+                      )}>
+                        {index + 1}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-slate-900 truncate">{leader.display_name}</p>
+                    <div className="flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3 text-violet-500" />
+                      <span className="text-[10px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                    </div>
+                  </div>
+                  {leader.leader_tier === 'verified144k' && (
+                    <Crown className="w-3 h-3 text-amber-500 shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+      )}
+
       {/* Footer - Status Controls */}
       <div className={cn(
         "border-t border-slate-100 p-4 space-y-3",
@@ -200,8 +260,6 @@ export default function Sidebar({
             </Select>
           </div>
         )}
-
-
 
         {/* Collapse Toggle (when collapsed) */}
         {isCollapsed && (
