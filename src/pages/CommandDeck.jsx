@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { createPageUrl } from '@/utils';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -90,24 +91,122 @@ export default function CommandDeck() {
   const scheduledMeetings = meetings.filter(m => m.status === 'scheduled');
   const completedMeetingsThisWeek = meetings.filter(m => m.status === 'completed').length;
 
-  const handleMatchAction = (action, match) => {
-    console.log('Match action:', action, match);
+  const queryClient = useQueryClient();
+
+  const updateMatchMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Match.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matches'] })
+  });
+
+  const updateMeetingMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Meeting.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['meetings'] })
+  });
+
+  const createMutation = useMutation({
+    mutationFn: ({ entity, data }) => {
+      if (entity === 'Listing') return base44.entities.Listing.create(data);
+      if (entity === 'Meeting') return base44.entities.Meeting.create(data);
+      if (entity === 'Mission') return base44.entities.Mission.create(data);
+      return Promise.reject('Unknown entity');
+    },
+    onSuccess: (_, variables) => {
+      if (variables.entity === 'Listing') queryClient.invalidateQueries({ queryKey: ['listings'] });
+      if (variables.entity === 'Meeting') queryClient.invalidateQueries({ queryKey: ['meetings'] });
+      if (variables.entity === 'Mission') queryClient.invalidateQueries({ queryKey: ['missions'] });
+    }
+  });
+
+  const handleMatchAction = async (action, match) => {
+    if (action === 'save') {
+      updateMatchMutation.mutate({ id: match.id, data: { status: 'saved' } });
+    } else if (action === 'decline') {
+      updateMatchMutation.mutate({ id: match.id, data: { status: 'declined' } });
+    } else if (action === 'message') {
+      window.location.href = createPageUrl('Messages');
+    } else if (action === 'book') {
+      window.location.href = createPageUrl('Meetings');
+    }
   };
 
-  const handleMeetingAction = (action, meeting) => {
-    console.log('Meeting action:', action, meeting);
+  const handleMeetingAction = async (action, meeting) => {
+    if (action === 'accept') {
+      updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'scheduled' } });
+    } else if (action === 'decline') {
+      updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'declined' } });
+    } else if (action === 'confirm') {
+      updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'completed', guest_confirmed: true, ggg_earned: 25 } });
+      await base44.entities.GGGTransaction.create({
+        user_id: profile.user_id,
+        source_type: 'meeting',
+        source_id: meeting.id,
+        delta: 25,
+        reason_code: 'meeting_completed',
+        description: `Meeting completed with ${meeting.host_name}`,
+        balance_after: (profile.ggg_balance || 0) + 25
+      });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    } else if (action === 'view') {
+      window.location.href = createPageUrl('Meetings');
+    }
   };
 
-  const handleMissionAction = (action, mission) => {
-    console.log('Mission action:', action, mission);
+  const handleMissionAction = async (action, mission) => {
+    if (action === 'join') {
+      const newParticipants = [...(mission.participant_ids || []), profile.user_id];
+      await base44.entities.Mission.update(mission.id, {
+        participant_ids: newParticipants,
+        participant_count: newParticipants.length
+      });
+      queryClient.invalidateQueries({ queryKey: ['missions'] });
+    } else if (action === 'view') {
+      window.location.href = createPageUrl('Missions');
+    }
   };
 
-  const handleListingAction = (action, listing) => {
-    console.log('Listing action:', action, listing);
+  const handleListingAction = async (action, listing) => {
+    if (action === 'book') {
+      window.location.href = createPageUrl('Marketplace');
+    }
   };
 
-  const handleCreate = (type, data) => {
-    console.log('Create:', type, data);
+  const handleCreate = async (type, data) => {
+    try {
+      if (type === 'offer') {
+        await createMutation.mutateAsync({
+          entity: 'Listing',
+          data: {
+            owner_id: profile.user_id,
+            owner_name: profile.display_name,
+            owner_avatar: profile.avatar_url,
+            listing_type: 'offer',
+            category: data.category,
+            title: data.title,
+            price_amount: parseFloat(data.price) || 0,
+            is_free: !data.price || parseFloat(data.price) === 0,
+            duration_minutes: parseInt(data.duration) || 60,
+            delivery_mode: 'online',
+            status: 'active'
+          }
+        });
+      } else if (type === 'meeting') {
+        await createMutation.mutateAsync({
+          entity: 'Meeting',
+          data: {
+            title: data.title,
+            host_id: profile.user_id,
+            guest_id: data.recipient,
+            host_name: profile.display_name,
+            guest_name: data.recipient,
+            host_avatar: profile.avatar_url,
+            meeting_type: data.type || 'casual',
+            status: 'pending'
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Create error:', error);
+    }
   };
 
   return (

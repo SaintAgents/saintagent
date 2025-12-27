@@ -109,12 +109,16 @@ export default function TopBar({
         </Button>
 
         {/* Messages */}
-        <Button variant="ghost" size="icon" className="relative">
-          <MessageCircle className="w-5 h-5 text-slate-600" />
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-rose-500 rounded-full">
-            3
-          </span>
-        </Button>
+        <Link to={createPageUrl('Messages')}>
+          <Button variant="ghost" size="icon" className="relative">
+            <MessageCircle className="w-5 h-5 text-slate-600" />
+            {notifications.filter(n => n.type === 'message').length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-rose-500 rounded-full">
+                {notifications.filter(n => n.type === 'message').length}
+              </span>
+            )}
+          </Button>
+        </Link>
 
         {/* Notifications */}
         <NotificationBell 

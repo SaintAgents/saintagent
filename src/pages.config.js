@@ -5,6 +5,7 @@ import Missions from './pages/Missions';
 import Marketplace from './pages/Marketplace';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Messages from './pages/Messages';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "Marketplace": Marketplace,
     "Profile": Profile,
     "Settings": Settings,
+    "Messages": Messages,
 }
 
 export const pagesConfig = {

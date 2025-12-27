@@ -48,7 +48,9 @@ export default function QuickCreateModal({ open, onClose, onCreate }) {
     setFormData({});
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e?.preventDefault();
+    if (!selectedType) return;
     onCreate?.(selectedType, formData);
     handleClose();
   };

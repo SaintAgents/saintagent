@@ -36,6 +36,7 @@ const NAV_ITEMS = [
   { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', badge: 2 },
   { id: 'missions', label: 'Missions', icon: Target, page: 'Missions' },
   { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
+  { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', badge: 0 },
   { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', locked: true },
   { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles' },
   { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio' },

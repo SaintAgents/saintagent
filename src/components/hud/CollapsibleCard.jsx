@@ -42,16 +42,16 @@ export default function CollapsibleCard({
         className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           {Icon && (
-            <div className="p-2 rounded-xl bg-slate-100">
+            <div className="p-2 rounded-xl bg-slate-100 shrink-0">
               <Icon className="w-4 h-4 text-slate-600" />
             </div>
           )}
-          <h3 className="font-semibold text-slate-900 tracking-tight">{title}</h3>
+          <h3 className="font-semibold text-slate-900 tracking-tight hidden md:block truncate">{title}</h3>
           {badge && (
             <span className={cn(
-              "px-2.5 py-0.5 text-xs font-medium rounded-full",
+              "px-2.5 py-0.5 text-xs font-medium rounded-full shrink-0",
               badgeColors[badgeColor]
             )}>
               {badge}
