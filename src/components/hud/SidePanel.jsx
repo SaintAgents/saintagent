@@ -36,6 +36,7 @@ export default function SidePanel({
 }) {
   const [commentText, setCommentText] = useState({});
   const [expandedComments, setExpandedComments] = useState({});
+  const [newPostText, setNewPostText] = useState('');
   const queryClient = useQueryClient();
 
   // Fetch posts
@@ -99,6 +100,21 @@ export default function SidePanel({
     }
   });
 
+  const createPostMutation = useMutation({
+    mutationFn: async (content) => {
+      await base44.entities.Post.create({
+        author_id: profile.user_id,
+        author_name: profile.display_name,
+        author_avatar: profile.avatar_url,
+        content
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      setNewPostText('');
+    }
+  });
+
   const handleLike = (postId) => {
     likeMutation.mutate({ postId, userId: profile?.user_id });
   };
@@ -108,6 +124,12 @@ export default function SidePanel({
     if (text?.trim()) {
       commentMutation.mutate({ postId, content: text.trim() });
       setCommentText({ ...commentText, [postId]: '' });
+    }
+  };
+
+  const handleCreatePost = () => {
+    if (newPostText.trim()) {
+      createPostMutation.mutate(newPostText.trim());
     }
   };
 
@@ -291,6 +313,37 @@ export default function SidePanel({
                 Community Feed
               </h3>
             </div>
+
+            {/* Create Post */}
+            <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+              <div className="flex items-start gap-3">
+                <Avatar className="w-9 h-9">
+                  <AvatarImage src={profile?.avatar_url} />
+                  <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                    {profile?.display_name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <Textarea
+                  value={newPostText}
+                  onChange={(e) => setNewPostText(e.target.value)}
+                  placeholder="What's on your mind?"
+                  className="flex-1 resize-none text-sm"
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleCreatePost}
+                  disabled={!newPostText.trim() || createPostMutation.isPending}
+                  className="bg-violet-600 hover:bg-violet-700"
+                  size="sm"
+                >
+                  <Send className="w-3 h-3 mr-1" />
+                  Post
+                </Button>
+              </div>
+            </div>
+
             <div className="space-y-4">
               {posts.length === 0 ? (
                 <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
