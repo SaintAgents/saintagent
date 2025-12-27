@@ -104,8 +104,15 @@ export default function Onboarding() {
     }
   };
 
-  const CurrentStepComponent = STEPS[currentStep].component;
+  const CurrentStepComponent = STEPS[currentStep]?.component;
   const progressPercent = ((currentStep + 1) / STEPS.length) * 100;
+
+  // Safety check: if currentStep is out of bounds, reset to 0
+  useEffect(() => {
+    if (currentStep >= STEPS.length) {
+      setCurrentStep(0);
+    }
+  }, [currentStep]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 flex items-center justify-center p-4">
@@ -132,11 +139,13 @@ export default function Onboarding() {
 
         {/* Step Content */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8 mb-6">
-          <CurrentStepComponent
-            data={stepData[currentStep] || {}}
-            onComplete={handleStepComplete}
-            user={user}
-          />
+          {CurrentStepComponent && (
+            <CurrentStepComponent
+              data={stepData[currentStep] || {}}
+              onComplete={handleStepComplete}
+              user={user}
+            />
+          )}
         </div>
 
         {/* Navigation */}
