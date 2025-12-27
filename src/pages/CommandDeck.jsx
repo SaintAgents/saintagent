@@ -183,7 +183,16 @@ export default function CommandDeck() {
 
   const handleCreate = async (type, data) => {
     try {
-      if (type === 'offer') {
+      if (type === 'post') {
+        await base44.entities.Post.create({
+          author_id: profile.user_id,
+          author_name: profile.display_name,
+          author_avatar: profile.avatar_url,
+          content: data.content,
+          image_urls: data.image_urls || []
+        });
+        // Stay on command deck to see the post in the feed
+      } else if (type === 'offer') {
         await createMutation.mutateAsync({
           entity: 'Listing',
           data: {
@@ -200,6 +209,7 @@ export default function CommandDeck() {
             status: 'active'
           }
         });
+        window.location.href = createPageUrl('Marketplace');
       } else if (type === 'meeting') {
         await createMutation.mutateAsync({
           entity: 'Meeting',
@@ -214,6 +224,20 @@ export default function CommandDeck() {
             status: 'pending'
           }
         });
+        window.location.href = createPageUrl('Meetings');
+      } else if (type === 'mission') {
+        await createMutation.mutateAsync({
+          entity: 'Mission',
+          data: {
+            title: data.title,
+            objective: data.objective || data.description,
+            creator_id: profile.user_id,
+            creator_name: profile.display_name,
+            mission_type: 'personal',
+            status: 'active'
+          }
+        });
+        window.location.href = createPageUrl('Missions');
       }
     } catch (error) {
       console.error('Create error:', error);
