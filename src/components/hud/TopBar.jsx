@@ -126,45 +126,59 @@ export default function TopBar({
           onAction={onNotificationAction}
         />
 
-        {/* Profile Menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-10 px-2 gap-2 rounded-xl">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={profile?.avatar_url} />
-                <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                  {profile?.display_name?.charAt(0) || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium text-slate-900">{profile?.display_name}</p>
-                <p className="text-xs text-slate-500 capitalize">{profile?.rank_code || 'Seeker'}</p>
-              </div>
-              {profile?.leader_tier === 'verified144k' && (
-                <Badge className="bg-amber-100 text-amber-700 text-xs">144K</Badge>
-              )}
+        {/* Profile Menu / Auth */}
+        {profile ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-10 px-2 gap-2 rounded-xl">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={profile?.avatar_url} />
+                  <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                    {profile?.display_name?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                {profile?.leader_tier === 'verified144k' && (
+                  <Badge className="bg-amber-100 text-amber-700 text-xs">144K</Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem asChild>
+                <Link to={createPageUrl('Profile')} className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  View Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to={createPageUrl('Settings')} className="flex items-center gap-2">
+                  <Settings className="w-4 h-4" />
+                  Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onLogout} className="text-rose-600">
+                <LogOut className="w-4 h-4 mr-2" />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost"
+              onClick={() => window.location.href = createPageUrl('Onboarding')}
+              className="rounded-xl"
+            >
+              Sign In
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem asChild>
-              <Link to={createPageUrl('Profile')} className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                View Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to={createPageUrl('Settings')} className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                Settings
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onLogout} className="text-rose-600">
-              <LogOut className="w-4 h-4 mr-2" />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <Button 
+              onClick={() => window.location.href = createPageUrl('Onboarding')}
+              className="bg-violet-600 hover:bg-violet-700 rounded-xl"
+            >
+              Sign Up
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );
