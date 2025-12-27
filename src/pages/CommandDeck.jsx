@@ -143,47 +143,98 @@ export default function CommandDeck() {
           </div>
 
           {/* Hero Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <MetricTile 
-              label="GGG Balance" 
-              value={profile?.ggg_balance?.toLocaleString() || "0"} 
-              icon={Coins}
-              color="amber"
-              trend="up"
-              trendValue="+124 today"
-            />
-            <MetricTile 
-              label="Rank" 
-              value={profile?.rank_code?.charAt(0).toUpperCase() + profile?.rank_code?.slice(1) || "Seeker"}
-              icon={TrendingUp}
-              color="violet"
-            />
-            <MetricTile 
-              label="Reach Score" 
-              value={profile?.reach_score || 0}
-              icon={Users}
-              color="blue"
-              trend="up"
-              trendValue="+8%"
-            />
-            <MetricTile 
-              label="Earnings" 
-              value={`$${profile?.total_earnings?.toLocaleString() || 0}`}
-              icon={DollarSign}
-              color="emerald"
-            />
-            <MetricTile 
-              label="Meetings" 
-              value={completedMeetingsThisWeek}
-              icon={Calendar}
-              color="rose"
-            />
-            <MetricTile 
-              label="Missions" 
-              value={missions.filter(m => m.participant_ids?.includes(profile?.user_id)).length}
-              icon={Target}
-              color="amber"
-            />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="relative overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Coins className="w-4 h-4 text-amber-600" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-amber-600 opacity-80">GGG</p>
+                  </div>
+                  <p className="text-2xl font-bold tracking-tight text-amber-900">
+                    {profile?.ggg_balance?.toLocaleString() || "0"}
+                  </p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <TrendingUp className="w-3 h-3 text-emerald-500" />
+                    <span className="text-xs font-medium text-emerald-600">+124 today</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-violet-200 bg-violet-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <TrendingUp className="w-4 h-4 text-violet-600" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-violet-600 opacity-80">Rank</p>
+                  </div>
+                  <p className="text-xl font-bold tracking-tight text-violet-900 capitalize">
+                    {profile?.rank_code || "Seeker"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-blue-200 bg-blue-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-blue-600 opacity-80">Reach</p>
+                  </div>
+                  <p className="text-2xl font-bold tracking-tight text-blue-900">
+                    {profile?.reach_score || 0}
+                  </p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <TrendingUp className="w-3 h-3 text-emerald-500" />
+                    <span className="text-xs font-medium text-emerald-600">+8%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <DollarSign className="w-4 h-4 text-emerald-600" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-emerald-600 opacity-80">Earned</p>
+                  </div>
+                  <p className="text-2xl font-bold tracking-tight text-emerald-900">
+                    ${profile?.total_earnings?.toLocaleString() || 0}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-rose-200 bg-rose-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Calendar className="w-4 h-4 text-rose-600" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-rose-600 opacity-80">Meetings</p>
+                  </div>
+                  <p className="text-2xl font-bold tracking-tight text-rose-900">
+                    {completedMeetingsThisWeek}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Target className="w-4 h-4 text-amber-600" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-amber-600 opacity-80">Missions</p>
+                  </div>
+                  <p className="text-2xl font-bold tracking-tight text-amber-900">
+                    {missions.filter(m => m.participant_ids?.includes(profile?.user_id)).length}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
