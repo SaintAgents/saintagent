@@ -346,6 +346,29 @@ export default function ProfileDrawer({ userId, onClose }) {
             </div>
           )}
 
+          {/* Membership Tiers */}
+          {!isOwnProfile && creatorTiers.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <Crown className="w-5 h-5 text-violet-500" />
+                Membership Tiers
+              </h3>
+              <div className="space-y-3">
+                {creatorTiers.map((tier) => {
+                  const currentSubscription = subscriptions.find(s => s.tier_id === tier.id);
+                  return (
+                    <SubscriptionCard
+                      key={tier.id}
+                      tier={tier}
+                      currentSubscription={currentSubscription}
+                      profile={profile}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Offers */}
           {listings.length > 0 && (
             <div className="mb-6">
