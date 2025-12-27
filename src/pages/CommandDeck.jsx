@@ -250,6 +250,82 @@ export default function CommandDeck() {
             </div>
           </div>
 
+          {/* Profile Identifiers */}
+          <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
+            <div className="flex items-center gap-6">
+              <div className="relative">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg">
+                  <div className="w-full h-full rounded-full bg-white p-1">
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                        <span className="text-3xl font-bold text-violet-600">
+                          {profile?.display_name?.charAt(0) || 'U'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {profile?.leader_tier === 'verified144k' && (
+                  <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
+                {profile?.mystical_identifier && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Mystical ID</p>
+                      <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {profile?.astrological_sign && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                      ✨
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Sign</p>
+                      <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {profile?.numerology_life_path && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Life Path</p>
+                      <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {profile?.birth_card && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
+                      🃏
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Birth Card</p>
+                      <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="relative overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
