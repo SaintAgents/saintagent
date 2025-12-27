@@ -22,6 +22,8 @@ export default function StepMystical({ data, onComplete, user }) {
   const [formData, setFormData] = useState({
     mystical_identifier: data.mystical_identifier || '',
     astrological_sign: data.astrological_sign || '',
+    rising_sign: data.rising_sign || '',
+    moon_sign: data.moon_sign || '',
     numerology_life_path: data.numerology_life_path || '',
     numerology_personality: data.numerology_personality || '',
     birth_card: data.birth_card || '',
@@ -37,6 +39,8 @@ export default function StepMystical({ data, onComplete, user }) {
       await base44.entities.UserProfile.update(profiles[0].id, {
         mystical_identifier: formData.mystical_identifier,
         astrological_sign: formData.astrological_sign,
+        rising_sign: formData.rising_sign,
+        moon_sign: formData.moon_sign,
         numerology_life_path: formData.numerology_life_path ? parseInt(formData.numerology_life_path) : null,
         numerology_personality: formData.numerology_personality ? parseInt(formData.numerology_personality) : null,
         birth_card: formData.birth_card,
@@ -68,21 +72,55 @@ export default function StepMystical({ data, onComplete, user }) {
           />
         </div>
 
-        <div>
-          <Label htmlFor="astrological_sign">Astrological Sign</Label>
-          <Select
-            value={formData.astrological_sign}
-            onValueChange={(value) => setFormData({ ...formData, astrological_sign: value })}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select your sign" />
-            </SelectTrigger>
-            <SelectContent>
-              {ZODIAC_SIGNS.map(sign => (
-                <SelectItem key={sign} value={sign}>{sign}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <Label htmlFor="astrological_sign">Sun Sign</Label>
+            <Select
+              value={formData.astrological_sign}
+              onValueChange={(value) => setFormData({ ...formData, astrological_sign: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                {ZODIAC_SIGNS.map(sign => (
+                  <SelectItem key={sign} value={sign}>{sign}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="rising_sign">Rising Sign</Label>
+            <Select
+              value={formData.rising_sign}
+              onValueChange={(value) => setFormData({ ...formData, rising_sign: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                {ZODIAC_SIGNS.map(sign => (
+                  <SelectItem key={sign} value={sign}>{sign}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="moon_sign">Moon Sign</Label>
+            <Select
+              value={formData.moon_sign}
+              onValueChange={(value) => setFormData({ ...formData, moon_sign: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                {ZODIAC_SIGNS.map(sign => (
+                  <SelectItem key={sign} value={sign}>{sign}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
