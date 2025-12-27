@@ -25,32 +25,40 @@ import {
 export default function SearchModal({ open, onClose, onSelect }) {
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
+  const [showAll, setShowAll] = useState(false);
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['searchProfiles', query],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 20),
-    enabled: query.length > 2
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 50),
+    enabled: open
   });
 
   const { data: listings = [] } = useQuery({
     queryKey: ['searchListings', query],
-    queryFn: () => base44.entities.Listing.list('-created_date', 20),
-    enabled: query.length > 2
+    queryFn: () => base44.entities.Listing.list('-created_date', 50),
+    enabled: open
   });
 
   const { data: missions = [] } = useQuery({
     queryKey: ['searchMissions', query],
-    queryFn: () => base44.entities.Mission.list('-created_date', 20),
-    enabled: query.length > 2
+    queryFn: () => base44.entities.Mission.list('-created_date', 50),
+    enabled: open
   });
 
   const { data: circles = [] } = useQuery({
     queryKey: ['searchCircles', query],
-    queryFn: () => base44.entities.Circle.list('-created_date', 20),
-    enabled: query.length > 2
+    queryFn: () => base44.entities.Circle.list('-created_date', 50),
+    enabled: open
   });
 
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && !query.trim()) {
+      setShowAll(true);
+    }
+  };
+
   const filterResults = (items) => {
+    if (showAll && !query) return items;
     if (!query) return [];
     return items.filter(item => 
       JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
@@ -69,9 +77,10 @@ export default function SearchModal({ open, onClose, onSelect }) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <Input
-              placeholder="Search people, offers, missions, circles..."
+              placeholder="Search people, offers, missions, circles... (press Enter to browse all)"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => { setQuery(e.target.value); setShowAll(false); }}
+              onKeyDown={handleSearch}
               className="pl-10 pr-10 h-12 rounded-xl"
               autoFocus
             />
@@ -107,10 +116,10 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </Tabs>
 
         <ScrollArea className="h-96 px-4 pb-4">
-          {query.length < 3 ? (
+          {!showAll && query.length < 3 ? (
             <div className="text-center py-12 text-slate-400">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>Type at least 3 characters to search</p>
+              <p>Type to search or press Enter to browse all</p>
             </div>
           ) : (
             <div className="space-y-2">
