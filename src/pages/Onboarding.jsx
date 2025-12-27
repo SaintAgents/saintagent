@@ -11,6 +11,7 @@ import Step0Welcome from '@/components/onboarding/Step0Welcome';
 import Step1Identity from '@/components/onboarding/Step1Identity';
 import StepMystical from '@/components/onboarding/StepMystical';
 import Step2Region from '@/components/onboarding/Step2Region';
+import StepValues from '@/components/onboarding/StepValues';
 import Step3Skills from '@/components/onboarding/Step3Skills';
 import Step4Desires from '@/components/onboarding/Step4Desires';
 import Step5Hopes from '@/components/onboarding/Step5Hopes';
@@ -22,11 +23,12 @@ const STEPS = [
   { id: 1, title: "Identity", component: Step1Identity, skippable: false },
   { id: 2, title: "Mystical", component: StepMystical, skippable: true },
   { id: 3, title: "Region", component: Step2Region, skippable: true },
-  { id: 4, title: "Skills", component: Step3Skills, skippable: false },
-  { id: 5, title: "Desires", component: Step4Desires, skippable: false },
-  { id: 6, title: "Hopes", component: Step5Hopes, skippable: true },
-  { id: 7, title: "Connection", component: Step7Dating, skippable: true },
-  { id: 8, title: "Actions", component: Step6Actions, skippable: false }
+  { id: 4, title: "Values", component: StepValues, skippable: false },
+  { id: 5, title: "Skills", component: Step3Skills, skippable: false },
+  { id: 6, title: "Desires", component: Step4Desires, skippable: false },
+  { id: 7, title: "Hopes", component: Step5Hopes, skippable: true },
+  { id: 8, title: "Connection", component: Step7Dating, skippable: true },
+  { id: 9, title: "Actions", component: Step6Actions, skippable: false }
 ];
 
 export default function Onboarding() {
@@ -145,6 +147,12 @@ export default function Onboarding() {
             <CurrentStepComponent
               data={stepData[currentStep] || {}}
               onComplete={handleStepComplete}
+              onNext={() => handleStepComplete(stepData[currentStep] || {})}
+              onUpdate={async (data) => {
+                const newStepData = { ...stepData, [currentStep]: data };
+                setStepData(newStepData);
+              }}
+              profile={stepData[currentStep]}
               user={user}
             />
           )}
