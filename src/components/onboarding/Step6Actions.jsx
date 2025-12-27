@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, Sparkles } from "lucide-react";
 
 const FIRST_ACTIONS = [
-  { label: "Follow 5 leaders", reward: 5, completed: false },
-  { label: "Send 1 message", reward: 3, completed: false },
-  { label: "Book 1 meeting", reward: 25, completed: false },
-  { label: "Join 1 mission", reward: 20, completed: false },
-  { label: "Create 1 offer", reward: 15, completed: false }
+  { label: "Follow 5 leaders", reward: 0.03, completed: false },
+  { label: "Send 1 message", reward: 0.02, completed: false },
+  { label: "Book 1 meeting", reward: 0.03, completed: false },
+  { label: "Join 1 mission", reward: 0.03, completed: false },
+  { label: "Create 1 offer", reward: 0.03, completed: false }
 ];
 
 export default function Step6Actions({ onComplete }) {
@@ -45,7 +45,7 @@ export default function Step6Actions({ onComplete }) {
 
       <div className="p-6 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-200 text-center">
         <p className="text-sm text-slate-600 mb-4">
-          Complete these actions to earn your first <strong>68 GGG</strong> and unlock powerful matches!
+          Complete these actions to earn your first <strong>0.14 GGG</strong> (~$20) and unlock powerful matches!
         </p>
         <Button
           onClick={handleFinish}

@@ -142,15 +142,15 @@ export default function CommandDeck() {
     } else if (action === 'decline') {
       updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'declined' } });
     } else if (action === 'confirm') {
-      updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'completed', guest_confirmed: true, ggg_earned: 25 } });
+      updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'completed', guest_confirmed: true, ggg_earned: 0.03 } });
       await base44.entities.GGGTransaction.create({
         user_id: profile.user_id,
         source_type: 'meeting',
         source_id: meeting.id,
-        delta: 25,
+        delta: 0.03,
         reason_code: 'meeting_completed',
         description: `Meeting completed with ${meeting.host_name}`,
-        balance_after: (profile.ggg_balance || 0) + 25
+        balance_after: (profile.ggg_balance || 0) + 0.03
       });
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     } else if (action === 'view') {
