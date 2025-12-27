@@ -57,44 +57,6 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
-          {/* Control Badge Area */}
-          <div className="flex items-center justify-between gap-2 pb-4 border-b border-slate-200">
-            <Avatar className="w-10 h-10 ring-2 ring-violet-200">
-              <AvatarImage src={profile?.avatar_url} />
-              <AvatarFallback className="bg-violet-100 text-violet-700 font-semibold">
-                {profile?.display_name?.charAt(0) || "?"}
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="flex items-center gap-1.5">
-              {/* Rank Badge */}
-              <div className="px-2 py-1 rounded-lg bg-violet-100 border border-violet-200">
-                <span className="text-xs font-bold text-violet-700 uppercase">{profile?.rank_code?.substring(0, 3) || "SEK"}</span>
-              </div>
-              
-              {/* Level */}
-              <div className="px-2 py-1 rounded-lg bg-amber-100 border border-amber-200">
-                <span className="text-xs font-bold text-amber-700">L{Math.floor((profile?.rank_points || 0) / 100)}</span>
-              </div>
-              
-              {/* Notifications */}
-              <button className="relative p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors">
-                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">3</span>
-              </button>
-              
-              {/* Messages */}
-              <button className="relative p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors">
-                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">2</span>
-              </button>
-            </div>
-          </div>
-
           {/* GGG & Rank Meters */}
           <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
             <div className="flex items-center justify-between mb-4">
