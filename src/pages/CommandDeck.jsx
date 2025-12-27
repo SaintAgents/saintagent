@@ -5,6 +5,7 @@ import { createPageUrl } from '@/utils';
 import VideoMeetingModal from '@/components/VideoMeetingModal';
 import BoostModal from '@/components/BoostModal';
 import TuneEngineModal from '@/components/TuneEngineModal';
+import OnlineUsersModal from '@/components/OnlineUsersModal';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -45,6 +46,7 @@ export default function CommandDeck() {
   const [videoMeeting, setVideoMeeting] = useState(null);
   const [boostTarget, setBoostTarget] = useState(null);
   const [tuneEngineOpen, setTuneEngineOpen] = useState(false);
+  const [onlineUsersOpen, setOnlineUsersOpen] = useState(false);
 
   // Fetch user profile
   const { data: profiles } = useQuery({
@@ -335,13 +337,16 @@ export default function CommandDeck() {
                   <p className="text-2xl font-bold text-slate-900">1,247</p>
                 </div>
                 <div className="h-8 w-px bg-slate-200" />
-                <div>
+                <button 
+                  onClick={() => setOnlineUsersOpen(true)}
+                  className="text-left hover:opacity-80 transition-opacity"
+                >
                   <p className="text-xs text-slate-500 mb-1">Online Now</p>
                   <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     342
                   </p>
-                </div>
+                </button>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-right">
@@ -894,6 +899,12 @@ export default function CommandDeck() {
         open={tuneEngineOpen}
         onClose={() => setTuneEngineOpen(false)}
       />
-    </div>
-  );
-}
+
+      {/* Online Users Modal */}
+      <OnlineUsersModal
+        open={onlineUsersOpen}
+        onClose={() => setOnlineUsersOpen(false)}
+      />
+      </div>
+      );
+      }
