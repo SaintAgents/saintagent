@@ -242,25 +242,54 @@ export default function SidePanel({
               {matches.length === 0 ? (
                 <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p>
               ) : (
-                matches.slice(0, 5).map((match, i) => (
-                  <button
-                    key={i}
-                    onClick={() => onMatchAction?.('view', match)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left"
-                  >
-                    <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={match.target_id}>
-                      <AvatarImage src={match.target_avatar} />
-                      <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                        {match.target_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
-                      <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
-                    </div>
-                    <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
-                  </button>
-                ))
+                matches.slice(0, 5).map((match, i) => {
+                  const handleClick = () => {
+                    if (match.target_type === 'person') {
+                      // Open profile drawer
+                      const event = new CustomEvent('openProfile', { detail: { userId: match.target_id } });
+                      document.dispatchEvent(event);
+                    } else if (match.target_type === 'offer') {
+                      window.location.href = '/Marketplace';
+                    } else if (match.target_type === 'mission') {
+                      window.location.href = '/Missions';
+                    } else if (match.target_type === 'event') {
+                      window.location.href = '/Meetings';
+                    } else {
+                      onMatchAction?.('view', match);
+                    }
+                  };
+
+                  return (
+                    <button
+                      key={i}
+                      onClick={handleClick}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left"
+                    >
+                      <div 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (match.target_type === 'person') {
+                            const event = new CustomEvent('openProfile', { detail: { userId: match.target_id } });
+                            document.dispatchEvent(event);
+                          }
+                        }}
+                        data-user-id={match.target_type === 'person' ? match.target_id : null}
+                      >
+                        <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all">
+                          <AvatarImage src={match.target_avatar} />
+                          <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                            {match.target_name?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
+                        <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
+                      </div>
+                      <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
+                    </button>
+                  );
+                })
               )}
             </div>
           </div>

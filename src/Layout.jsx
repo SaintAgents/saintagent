@@ -24,8 +24,17 @@ export default function Layout({ children, currentPageName }) {
         setProfileDrawerUserId(target.getAttribute('data-user-id'));
       }
     };
+    const handleOpenProfile = (e) => {
+      if (e.detail?.userId) {
+        setProfileDrawerUserId(e.detail.userId);
+      }
+    };
     document.addEventListener('click', handleProfileClick);
-    return () => document.removeEventListener('click', handleProfileClick);
+    document.addEventListener('openProfile', handleOpenProfile);
+    return () => {
+      document.removeEventListener('click', handleProfileClick);
+      document.removeEventListener('openProfile', handleOpenProfile);
+    };
   }, []);
 
   // Get current page ID for sidebar highlighting
