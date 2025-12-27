@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
 import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
 import AvatarUploader from '@/components/profile/AvatarUploader';
+import OnboardingDataEditor from '@/components/profile/OnboardingDataEditor';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,14 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   User,
   Edit,
@@ -26,7 +35,10 @@ import {
   Globe,
   Plus,
   Star,
-  Crown
+  Crown,
+  Target,
+  Heart,
+  Compass
 } from "lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
@@ -47,6 +59,34 @@ export default function Profile() {
     }
   });
   const profile = profiles?.[0];
+
+  // Fetch user skills
+  const { data: skills = [] } = useQuery({
+    queryKey: ['skills', profile?.user_id],
+    queryFn: () => base44.entities.Skill.filter({ user_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
+  // Fetch desires
+  const { data: desires = [] } = useQuery({
+    queryKey: ['desires', profile?.user_id],
+    queryFn: () => base44.entities.UserDesire.filter({ user_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
+  // Fetch hopes
+  const { data: hopes = [] } = useQuery({
+    queryKey: ['hopes', profile?.user_id],
+    queryFn: () => base44.entities.UserHope.filter({ user_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
+  // Fetch intentions
+  const { data: intentions = [] } = useQuery({
+    queryKey: ['intentions', profile?.user_id],
+    queryFn: () => base44.entities.UserIntention.filter({ user_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
 
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
@@ -133,10 +173,11 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-3">
+          <TabsList className="grid w-full max-w-2xl grid-cols-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
-            <TabsTrigger value="spiritual">Spiritual Profile</TabsTrigger>
-            <TabsTrigger value="stats">Stats & Activity</TabsTrigger>
+            <TabsTrigger value="onboarding">Profile Details</TabsTrigger>
+            <TabsTrigger value="spiritual">Spiritual</TabsTrigger>
+            <TabsTrigger value="stats">Stats</TabsTrigger>
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
@@ -250,18 +291,8 @@ export default function Profile() {
             {/* Skills */}
             <Card>
               <CardHeader>
-                <CardTitle>Skills</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {profile?.skills?.map((skill, i) => (
-                    <Badge key={i} variant="outline" className="capitalize">
-                      {skill}
-                    </Badge>
-                  ))}
-                  {(!profile?.skills || profile.skills.length === 0) && (
-                    <p className="text-slate-400">No skills added</p>
-                  )}
+                <CardTitle className="flex items-center justify-between">
+                  <span>Skills</span>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -271,11 +302,54 @@ export default function Profile() {
                     <Plus className="w-4 h-4 mr-1" />
                     Add Skills
                   </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {skills.filter(s => s.type === 'offer').length > 0 && (
+                    <div>
+                      <p className="text-xs text-slate-500 mb-2">I Offer</p>
+                      <div className="flex flex-wrap gap-2">
+                        {skills.filter(s => s.type === 'offer').map((skill) => (
+                          <Badge key={skill.id} className="bg-violet-100 text-violet-700">
+                            {skill.skill_name}
+                            <span className="ml-1 text-amber-600">
+                              {'★'.repeat(skill.proficiency || 3)}
+                            </span>
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {skills.filter(s => s.type === 'seek').length > 0 && (
+                    <div>
+                      <p className="text-xs text-slate-500 mb-2">I Seek</p>
+                      <div className="flex flex-wrap gap-2">
+                        {skills.filter(s => s.type === 'seek').map((skill) => (
+                          <Badge key={skill.id} className="bg-blue-100 text-blue-700">
+                            {skill.skill_name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {skills.length === 0 && (
+                    <p className="text-slate-400">No skills added yet</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="onboarding" className="space-y-6">
+            <OnboardingDataEditor 
+              profile={profile}
+              desires={desires}
+              hopes={hopes}
+              intentions={intentions}
+            />
           </TabsContent>
 
           <TabsContent value="spiritual" className="space-y-6">
