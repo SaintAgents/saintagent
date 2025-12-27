@@ -394,14 +394,19 @@ export default function CommandDeck() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
-              <div className="flex items-start justify-between gap-3">
+            <div className="relative overflow-hidden rounded-2xl border border-emerald-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-70"
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/854748652_c9f98f91-174a-46a0-b12f-26bde09c8ea8.png)' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
+              <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <DollarSign className="w-4 h-4 text-emerald-600" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-emerald-600 opacity-80">Earned</p>
+                    <DollarSign className="w-4 h-4 text-emerald-300" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-emerald-200">Earned</p>
                   </div>
-                  <p className="text-2xl font-bold tracking-tight text-emerald-900">
+                  <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
                     ${profile?.total_earnings?.toLocaleString() || 0}
                   </p>
                 </div>
