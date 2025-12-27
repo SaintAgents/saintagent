@@ -72,6 +72,7 @@ export default function Sidebar({
 }) {
   const [status, setStatus] = useState(profile?.status || 'online');
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
+  const [leaderboardOpen, setLeaderboardOpen] = useState(true);
 
   const { data: topLeaders = [] } = useQuery({
     queryKey: ['topLeaders'],
@@ -164,48 +165,59 @@ export default function Sidebar({
       {/* Leaderboard */}
       {!isCollapsed && (
         <div className="border-t border-slate-100 p-3">
-          <div className="flex items-center gap-2 px-2 mb-3">
-            <Trophy className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
-          </div>
-          <ScrollArea className="h-48">
-            <div className="space-y-2">
-              {topLeaders.map((leader, index) => (
-                <button
-                  key={leader.id}
-                  className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
-                  data-user-id={leader.user_id}
-                >
-                  <div className="relative">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={leader.avatar_url} />
-                      <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    {index < 3 && (
-                      <div className={cn(
-                        "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
-                        index === 0 && "bg-amber-400 text-white",
-                        index === 1 && "bg-slate-300 text-slate-700",
-                        index === 2 && "bg-orange-400 text-white"
-                      )}>
-                        {index + 1}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-slate-900 truncate">{leader.display_name}</p>
-                    <div className="flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3 text-violet-500" />
-                      <span className="text-[10px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
-                    </div>
-                  </div>
-                  {leader.leader_tier === 'verified144k' && (
-                    <Crown className="w-3 h-3 text-amber-500 shrink-0" />
-                  )}
-                </button>
-              ))}
+          <button
+            onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+            className="w-full flex items-center justify-between px-2 mb-3 hover:bg-slate-50 rounded-lg py-1 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-amber-500" />
+              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
             </div>
-          </ScrollArea>
+            <ChevronRight className={cn(
+              "w-4 h-4 text-slate-400 transition-transform",
+              leaderboardOpen && "rotate-90"
+            )} />
+          </button>
+          {leaderboardOpen && (
+            <ScrollArea className="h-48">
+              <div className="space-y-2">
+                {topLeaders.map((leader, index) => (
+                  <button
+                    key={leader.id}
+                    className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                    data-user-id={leader.user_id}
+                  >
+                    <div className="relative">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={leader.avatar_url} />
+                        <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      {index < 3 && (
+                        <div className={cn(
+                          "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
+                          index === 0 && "bg-amber-400 text-white",
+                          index === 1 && "bg-slate-300 text-slate-700",
+                          index === 2 && "bg-orange-400 text-white"
+                        )}>
+                          {index + 1}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-slate-900 truncate">{leader.display_name}</p>
+                      <div className="flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3 text-violet-500" />
+                        <span className="text-[10px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                      </div>
+                    </div>
+                    {leader.leader_tier === 'verified144k' && (
+                      <Crown className="w-3 h-3 text-amber-500 shrink-0" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
         </div>
       )}
 
