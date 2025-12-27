@@ -270,14 +270,20 @@ export default function CommandDeck() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border border-violet-200 bg-violet-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
-              <div className="flex items-start justify-between gap-3">
+            <div className="relative overflow-hidden rounded-2xl border border-violet-200 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+              <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/def3a92a7_image_2025-12-27_111942719.png)' }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-900/60 via-violet-800/40 to-transparent" />
+              </div>
+              <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <TrendingUp className="w-4 h-4 text-violet-600" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-violet-600 opacity-80">Rank</p>
+                    <TrendingUp className="w-4 h-4 text-white/90" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-white/80">Rank</p>
                   </div>
-                  <p className="text-xl font-bold tracking-tight text-violet-900 capitalize">
+                  <p className="text-xl font-bold tracking-tight text-white capitalize">
                     {profile?.rank_code || "Seeker"}
                   </p>
                 </div>
