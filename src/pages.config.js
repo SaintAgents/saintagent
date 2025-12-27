@@ -9,6 +9,7 @@ import Messages from './pages/Messages';
 import Circles from './pages/Circles';
 import Studio from './pages/Studio';
 import Onboarding from './pages/Onboarding';
+import AffiliateCenter from './pages/AffiliateCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -24,6 +25,7 @@ export const PAGES = {
     "Circles": Circles,
     "Studio": Studio,
     "Onboarding": Onboarding,
+    "AffiliateCenter": AffiliateCenter,
 }
 
 export const pagesConfig = {
