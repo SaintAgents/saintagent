@@ -328,24 +328,24 @@ export default function CommandDeck() {
 
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="relative overflow-hidden rounded-2xl border border-amber-200 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
+            <div className="relative overflow-hidden rounded-2xl border border-amber-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div 
-                className="absolute inset-0 bg-cover bg-center opacity-30"
+                className="absolute inset-0 bg-cover bg-center opacity-70"
                 style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e8ff4336b_image_2025-12-27_131552732.png)' }}
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-amber-100/80 to-amber-50/90" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
               <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <Coins className="w-4 h-4 text-amber-600" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-amber-600 opacity-80">GGG</p>
+                    <Coins className="w-4 h-4 text-amber-300" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-amber-200">GGG</p>
                   </div>
-                  <p className="text-2xl font-bold tracking-tight text-amber-900">
+                  <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
                     {profile?.ggg_balance?.toLocaleString() || "0"}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
-                    <TrendingUp className="w-3 h-3 text-emerald-500" />
-                    <span className="text-xs font-medium text-emerald-600">+124 today</span>
+                    <TrendingUp className="w-3 h-3 text-emerald-300" />
+                    <span className="text-xs font-medium text-emerald-200">+124 today</span>
                   </div>
                 </div>
               </div>
