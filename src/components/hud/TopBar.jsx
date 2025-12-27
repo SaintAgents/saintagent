@@ -26,11 +26,11 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 const MODE_TABS = [
-  { id: 'command', label: 'Command', icon: Sparkles },
-  { id: 'build', label: 'Build' },
-  { id: 'teach', label: 'Teach' },
-  { id: 'lead', label: 'Lead', locked: true },
-  { id: 'earn', label: 'Earn' },
+  { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
+  { id: 'build', label: 'Build', page: 'Missions' },
+  { id: 'teach', label: 'Teach', page: 'Studio' },
+  { id: 'lead', label: 'Lead', locked: true, page: 'LeaderChannel' },
+  { id: 'earn', label: 'Earn', page: 'Marketplace' },
 ];
 
 export default function TopBar({ 
@@ -62,7 +62,13 @@ export default function TopBar({
         {MODE_TABS.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => !tab.locked && onModeChange?.(tab.id)}
+            onClick={() => {
+              if (!tab.locked && tab.page) {
+                window.location.href = createPageUrl(tab.page);
+              } else if (!tab.locked) {
+                onModeChange?.(tab.id);
+              }
+            }}
             disabled={tab.locked}
             className={cn(
               "px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5",
