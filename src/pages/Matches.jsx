@@ -19,10 +19,20 @@ import {
 
 import MatchCard from '@/components/hud/MatchCard';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
+import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.UserProfile.filter({ user_id: user.email });
+    }
+  });
+  const profile = profiles?.[0];
 
   const { data: matches = [], isLoading, refetch } = useQuery({
     queryKey: ['matches'],
@@ -66,16 +76,13 @@ export default function Matches() {
               <Sparkles className="w-6 h-6 text-violet-500" />
               Synchronicity Engine
             </h1>
-            <p className="text-slate-500 mt-1">Your personalized matches based on intent, skills, and timing</p>
+            <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
           </div>
           <div className="flex items-center gap-3">
+            <AIMatchGenerator profile={profile} />
             <Button variant="outline" className="rounded-xl gap-2" onClick={() => refetch()}>
               <RefreshCw className="w-4 h-4" />
               Refresh
-            </Button>
-            <Button variant="outline" className="rounded-xl gap-2">
-              <SlidersHorizontal className="w-4 h-4" />
-              Tune Engine
             </Button>
           </div>
         </div>
