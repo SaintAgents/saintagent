@@ -413,14 +413,19 @@ export default function CommandDeck() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border border-rose-200 bg-rose-50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
-              <div className="flex items-start justify-between gap-3">
+            <div className="relative overflow-hidden rounded-2xl border border-cyan-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-70"
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cc962c0c_ChatGPTImageDec27202501_25_18PM.png)' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/60 via-blue-900/50 to-cyan-800/60" />
+              <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <Calendar className="w-4 h-4 text-rose-600" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-rose-600 opacity-80">Meetings</p>
+                    <Calendar className="w-4 h-4 text-cyan-300" />
+                    <p className="text-xs font-medium uppercase tracking-wider text-cyan-200">Meetings</p>
                   </div>
-                  <p className="text-2xl font-bold tracking-tight text-rose-900">
+                  <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
                     {completedMeetingsThisWeek}
                   </p>
                 </div>
