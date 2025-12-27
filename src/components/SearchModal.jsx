@@ -188,69 +188,25 @@ export default function SearchModal({ open, onClose, onSelect }) {
                 <div>
                   {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Circles</h3>}
                   {filteredCircles.map(circle => (
-                <button
-                  key={profile.id}
-                  onClick={() => { onSelect?.('profile', profile); onClose(); }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
-                >
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={profile.avatar_url} />
-                    <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className="text-left">
-                    <p className="font-medium text-slate-900">{profile.display_name}</p>
-                    <p className="text-sm text-slate-500">@{profile.handle}</p>
-                  </div>
-                  <Users className="w-4 h-4 text-slate-400 ml-auto" />
-                </button>
-              ))}
+                    <button
+                      key={circle.id}
+                      onClick={() => { onSelect?.('circle', circle); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <CircleDot className="w-10 h-10 p-2 rounded-lg bg-blue-100 text-blue-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{circle.name}</p>
+                        <p className="text-sm text-slate-500">{circle.member_count} members</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
-              {(tab === 'all' || tab === 'offers') && filteredListings.map(listing => (
-                <button
-                  key={listing.id}
-                  onClick={() => { onSelect?.('listing', listing); onClose(); }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
-                >
-                  <ShoppingBag className="w-10 h-10 p-2 rounded-lg bg-emerald-100 text-emerald-600" />
-                  <div className="text-left flex-1">
-                    <p className="font-medium text-slate-900">{listing.title}</p>
-                    <p className="text-sm text-slate-500">{listing.is_free ? 'Free' : `$${listing.price_amount}`}</p>
-                  </div>
-                </button>
-              ))}
-
-              {(tab === 'all' || tab === 'missions') && filteredMissions.map(mission => (
-                <button
-                  key={mission.id}
-                  onClick={() => { onSelect?.('mission', mission); onClose(); }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
-                >
-                  <Target className="w-10 h-10 p-2 rounded-lg bg-amber-100 text-amber-600" />
-                  <div className="text-left flex-1">
-                    <p className="font-medium text-slate-900">{mission.title}</p>
-                    <p className="text-sm text-slate-500">{mission.participant_count} joined</p>
-                  </div>
-                </button>
-              ))}
-
-              {(tab === 'all' || tab === 'circles') && filteredCircles.map(circle => (
-                <button
-                  key={circle.id}
-                  onClick={() => { onSelect?.('circle', circle); onClose(); }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
-                >
-                  <CircleDot className="w-10 h-10 p-2 rounded-lg bg-blue-100 text-blue-600" />
-                  <div className="text-left flex-1">
-                    <p className="font-medium text-slate-900">{circle.name}</p>
-                    <p className="text-sm text-slate-500">{circle.member_count} members</p>
-                  </div>
-                </button>
-              ))}
-
-              {filteredProfiles.length === 0 && filteredListings.length === 0 && 
+              {(showAll || query) && filteredProfiles.length === 0 && filteredListings.length === 0 && 
                filteredMissions.length === 0 && filteredCircles.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
-                  <p>No results found for "{query}"</p>
+                  <p>No results found{query ? ` for "${query}"` : ''}</p>
                 </div>
               )}
             </div>
