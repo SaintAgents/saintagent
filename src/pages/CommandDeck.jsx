@@ -38,6 +38,7 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import SidePanel from '@/components/hud/SidePanel';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
+import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -674,6 +675,9 @@ export default function CommandDeck() {
               badgeColor="violet"
               backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
             >
+              <div className="mb-4">
+                <AIMatchGenerator profile={profile} />
+              </div>
               <Tabs value={matchTab} onValueChange={setMatchTab} className="w-full">
                 <TabsList className="w-full grid grid-cols-5 mb-4">
                   <TabsTrigger value="people" className="text-xs">People</TabsTrigger>
