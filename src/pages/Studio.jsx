@@ -86,8 +86,9 @@ export default function Studio() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="w-full grid grid-cols-5">
+          <TabsList className="w-full grid grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="tiers">Tiers</TabsTrigger>
             <TabsTrigger value="offers">Offers</TabsTrigger>
             <TabsTrigger value="bookings">Bookings</TabsTrigger>
             <TabsTrigger value="audience">Audience</TabsTrigger>
@@ -144,6 +145,10 @@ export default function Studio() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="tiers" className="space-y-6">
+            <TierManager profile={profile} />
           </TabsContent>
 
           <TabsContent value="offers">
