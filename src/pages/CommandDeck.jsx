@@ -330,7 +330,7 @@ export default function CommandDeck() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="relative overflow-hidden rounded-2xl border border-amber-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div 
-                className="absolute inset-0 bg-cover bg-center opacity-70"
+                className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
                 style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e8ff4336b_image_2025-12-27_131552732.png)' }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
@@ -373,7 +373,7 @@ export default function CommandDeck() {
 
             <div className="relative overflow-hidden rounded-2xl border border-blue-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div 
-                className="absolute inset-0 bg-cover bg-center opacity-70"
+                className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
                 style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/834e5195f_image_2025-12-27_132011008.png)' }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-blue-800/50 to-blue-900/60" />
@@ -396,7 +396,7 @@ export default function CommandDeck() {
 
             <div className="relative overflow-hidden rounded-2xl border border-emerald-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div 
-                className="absolute inset-0 bg-cover bg-center opacity-70"
+                className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
                 style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/854748652_c9f98f91-174a-46a0-b12f-26bde09c8ea8.png)' }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
@@ -415,7 +415,7 @@ export default function CommandDeck() {
 
             <div className="relative overflow-hidden rounded-2xl border border-cyan-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div 
-                className="absolute inset-0 bg-cover bg-center opacity-70"
+                className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
                 style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cc962c0c_ChatGPTImageDec27202501_25_18PM.png)' }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/60 via-blue-900/50 to-cyan-800/60" />
@@ -434,7 +434,7 @@ export default function CommandDeck() {
 
             <div className="relative overflow-hidden rounded-2xl border border-purple-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div 
-                className="absolute inset-0 bg-cover bg-center opacity-70"
+                className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
                 style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a2f4b87c3_ChatGPTImageDec27202501_27_46PM.png)' }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
