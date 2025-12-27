@@ -248,7 +248,7 @@ export default function SidePanel({
                     onClick={() => onMatchAction?.('view', match)}
                     className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left"
                   >
-                    <Avatar className="w-9 h-9">
+                    <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={match.target_id}>
                       <AvatarImage src={match.target_avatar} />
                       <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
                         {match.target_name?.charAt(0)}
@@ -357,7 +357,7 @@ export default function SidePanel({
                     <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
                       {/* Post Header */}
                       <div className="flex items-start gap-3">
-                        <Avatar className="w-9 h-9">
+                        <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={post.author_id}>
                           <AvatarImage src={post.author_avatar} />
                           <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
                             {post.author_name?.charAt(0)}
@@ -412,7 +412,7 @@ export default function SidePanel({
                           {/* Existing Comments */}
                           {postComments.map((comment) => (
                             <div key={comment.id} className="flex items-start gap-2">
-                              <Avatar className="w-7 h-7">
+                              <Avatar className="w-7 h-7 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={comment.author_id}>
                                 <AvatarImage src={comment.author_avatar} />
                                 <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
                                   {comment.author_name?.charAt(0)}

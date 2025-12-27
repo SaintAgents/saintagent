@@ -256,7 +256,10 @@ export default function CommandDeck() {
           <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
             <div className="flex items-center gap-6">
               <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg">
+                <div 
+                  className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                  data-user-id={profile?.user_id}
+                >
                   <div className="w-full h-full rounded-full bg-white p-1">
                     {profile?.avatar_url ? (
                       <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full rounded-full object-cover" />
