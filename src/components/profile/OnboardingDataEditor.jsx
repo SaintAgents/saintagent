@@ -122,7 +122,11 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
       region: profile?.region || '',
       timezone: profile?.timezone || '',
       values_tags: profile?.values_tags || [],
+      intentions: profile?.intentions || [],
     });
+    setSelectedDesires(desires?.map(d => d.desire_code) || []);
+    setSelectedHopes(hopes?.map(h => h.hope_code) || []);
+    setSelectedIntentions(intentions?.map(i => i.intention_code) || []);
     setIsEditing(true);
   };
 
