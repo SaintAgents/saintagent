@@ -172,6 +172,22 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
     });
   };
 
+  const addIntention = (intention) => {
+    if (intention && !editData.intentions?.includes(intention)) {
+      setEditData({ 
+        ...editData, 
+        intentions: [...(editData.intentions || []), intention] 
+      });
+    }
+  };
+
+  const removeIntention = (intention) => {
+    setEditData({ 
+      ...editData, 
+      intentions: editData.intentions?.filter(i => i !== intention) 
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -334,6 +350,54 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
               ))}
               {(!profile?.values_tags || profile.values_tags.length === 0) && (
                 <p className="text-slate-400">No values set</p>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Free-form Intentions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="w-5 h-5 text-violet-500" />
+            My Intentions (Custom)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isEditing ? (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input 
+                  placeholder="Add intention (e.g., service, healing, build, teach)..."
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      addIntention(e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {editData.intentions?.map((intention, i) => (
+                  <Badge key={i} className="bg-violet-100 text-violet-700 gap-2 pr-1 capitalize">
+                    {intention}
+                    <button onClick={() => removeIntention(intention)} className="hover:bg-violet-200 rounded-full p-0.5">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {profile?.intentions?.map((intention, i) => (
+                <Badge key={i} className="bg-violet-100 text-violet-700 capitalize">
+                  {intention}
+                </Badge>
+              ))}
+              {(!profile?.intentions || profile.intentions.length === 0) && (
+                <p className="text-slate-400">No intentions set</p>
               )}
             </div>
           )}
