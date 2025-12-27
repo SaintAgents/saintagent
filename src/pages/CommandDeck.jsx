@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
+import VideoMeetingModal from '@/components/VideoMeetingModal';
+import BoostModal from '@/components/BoostModal';
+import TuneEngineModal from '@/components/TuneEngineModal';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,6 +41,9 @@ export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [matchTab, setMatchTab] = useState('people');
+  const [videoMeeting, setVideoMeeting] = useState(null);
+  const [boostTarget, setBoostTarget] = useState(null);
+  const [tuneEngineOpen, setTuneEngineOpen] = useState(false);
 
   // Fetch user profile
   const { data: profiles } = useQuery({
@@ -148,6 +154,8 @@ export default function CommandDeck() {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     } else if (action === 'view') {
       window.location.href = createPageUrl('Meetings');
+    } else if (action === 'join') {
+      setVideoMeeting(meeting);
     }
   };
 
@@ -607,7 +615,10 @@ export default function CommandDeck() {
                   <p className="text-sm text-slate-600 mb-3">
                     Spend GGG to amplify your content and attract more followers.
                   </p>
-                  <Button className="w-full rounded-xl bg-violet-600 hover:bg-violet-700">
+                  <Button 
+                    className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
+                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}
+                  >
                     <Zap className="w-4 h-4 mr-2" />
                     Boost Now
                   </Button>
@@ -654,6 +665,31 @@ export default function CommandDeck() {
         open={quickCreateOpen}
         onClose={() => setQuickCreateOpen(false)}
         onCreate={handleCreate}
+      />
+
+      {/* Video Meeting Modal */}
+      {videoMeeting && (
+        <VideoMeetingModal
+          meeting={videoMeeting}
+          open={!!videoMeeting}
+          onClose={() => setVideoMeeting(null)}
+        />
+      )}
+
+      {/* Boost Modal */}
+      {boostTarget && (
+        <BoostModal
+          open={!!boostTarget}
+          onClose={() => setBoostTarget(null)}
+          targetType={boostTarget.type}
+          targetId={boostTarget.id}
+        />
+      )}
+
+      {/* Tune Engine Modal */}
+      <TuneEngineModal
+        open={tuneEngineOpen}
+        onClose={() => setTuneEngineOpen(false)}
       />
     </div>
   );

@@ -62,7 +62,10 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200/60 p-4 hover:shadow-md transition-all duration-300">
       <div className="flex items-start gap-4">
-        <Avatar className="w-11 h-11 ring-2 ring-white shadow-sm">
+        <Avatar 
+          className="w-11 h-11 ring-2 ring-white shadow-sm cursor-pointer"
+          data-user-id={meeting.host_id === "current" ? meeting.guest_id : meeting.host_id}
+        >
           <AvatarImage src={otherPerson.avatar} />
           <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
             {otherPerson.name?.charAt(0)}

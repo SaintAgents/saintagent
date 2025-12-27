@@ -5,11 +5,28 @@ import { cn } from "@/lib/utils";
 import Sidebar from '@/components/hud/Sidebar';
 import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
+import ProfileDrawer from '@/components/ProfileDrawer';
+import SearchModal from '@/components/SearchModal';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
+  const [profileDrawerUserId, setProfileDrawerUserId] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // Global profile click handler
+  useEffect(() => {
+    const handleProfileClick = (e) => {
+      const target = e.target.closest('[data-user-id]');
+      if (target) {
+        e.preventDefault();
+        setProfileDrawerUserId(target.getAttribute('data-user-id'));
+      }
+    };
+    document.addEventListener('click', handleProfileClick);
+    return () => document.removeEventListener('click', handleProfileClick);
+  }, []);
 
   // Get current page ID for sidebar highlighting
   const getPageId = (pageName) => {
@@ -61,7 +78,13 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleSearch = (query) => {
-    console.log('Search:', query);
+    setSearchOpen(true);
+  };
+
+  const handleSearchSelect = (type, item) => {
+    if (type === 'profile') {
+      setProfileDrawerUserId(item.user_id);
+    }
   };
 
   const handleNotificationAction = (action, notif) => {
@@ -147,6 +170,21 @@ export default function Layout({ children, currentPageName }) {
         open={quickCreateOpen}
         onClose={() => setQuickCreateOpen(false)}
         onCreate={handleCreate}
+      />
+
+      {/* Profile Drawer */}
+      {profileDrawerUserId && (
+        <ProfileDrawer
+          userId={profileDrawerUserId}
+          onClose={() => setProfileDrawerUserId(null)}
+        />
+      )}
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        onSelect={handleSearchSelect}
       />
     </div>
   );

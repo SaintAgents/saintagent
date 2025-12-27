@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import SkillsPicker from '@/components/SkillsPicker';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,7 @@ import MetricTile from '@/components/hud/MetricTile';
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
+  const [skillsPickerOpen, setSkillsPickerOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: profiles } = useQuery({
@@ -230,7 +232,12 @@ export default function Profile() {
                   {(!profile?.skills || profile.skills.length === 0) && (
                     <p className="text-slate-400">No skills added</p>
                   )}
-                  <Button variant="ghost" size="sm" className="text-violet-600">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-violet-600"
+                    onClick={() => setSkillsPickerOpen(true)}
+                  >
                     <Plus className="w-4 h-4 mr-1" />
                     Add Skills
                   </Button>
@@ -310,6 +317,13 @@ export default function Profile() {
             </Card>
           </div>
         </div>
+
+        {/* Skills Picker Modal */}
+        <SkillsPicker
+          open={skillsPickerOpen}
+          onClose={() => setSkillsPickerOpen(false)}
+          userId={profile?.user_id}
+        />
       </div>
     </div>
   );

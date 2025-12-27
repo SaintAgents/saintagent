@@ -6,6 +6,8 @@ import Marketplace from './pages/Marketplace';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Messages from './pages/Messages';
+import Circles from './pages/Circles';
+import Studio from './pages/Studio';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +20,8 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Messages": Messages,
+    "Circles": Circles,
+    "Studio": Studio,
 }
 
 export const pagesConfig = {

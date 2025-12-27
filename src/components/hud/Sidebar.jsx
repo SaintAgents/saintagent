@@ -40,6 +40,7 @@ const NAV_ITEMS = [
   { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', locked: true },
   { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles' },
   { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio' },
+  { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },
 ];
 
 const STATUS_OPTIONS = [
@@ -200,17 +201,7 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* Settings */}
-        <Link
-          to={createPageUrl('Settings')}
-          className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors",
-            isCollapsed && "justify-center px-0"
-          )}
-        >
-          <Settings className="w-5 h-5 text-slate-400" />
-          {!isCollapsed && <span className="text-sm font-medium">Settings</span>}
-        </Link>
+
 
         {/* Collapse Toggle (when collapsed) */}
         {isCollapsed && (

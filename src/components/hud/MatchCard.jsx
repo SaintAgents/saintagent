@@ -54,7 +54,10 @@ export default function MatchCard({ match, onAction }) {
     >
       <div className="flex items-start gap-4">
         <div className="relative">
-          <Avatar className="w-12 h-12 ring-2 ring-white shadow-md">
+          <Avatar 
+            className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer" 
+            data-user-id={match.target_id}
+          >
             <AvatarImage src={match.target_avatar} />
             <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium">
               {match.target_name?.charAt(0) || "?"}
