@@ -98,7 +98,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </div>
 
         <Tabs value={tab} onValueChange={setTab} className="px-4">
-          <TabsList className="w-full grid grid-cols-6">
+          <TabsList className="w-full grid grid-cols-5">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="people">
               <Users className="w-4 h-4" />
