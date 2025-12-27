@@ -326,6 +326,44 @@ export default function CommandDeck() {
             </div>
           </div>
 
+          {/* Platform Stats Mini Dashboard */}
+          <div className="mb-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Total Users</p>
+                  <p className="text-2xl font-bold text-slate-900">1,247</p>
+                </div>
+                <div className="h-8 w-px bg-slate-200" />
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Online Now</p>
+                  <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    342
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-xs text-slate-500">North America</p>
+                  <p className="text-sm font-semibold text-slate-900">487</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-slate-500">Europe</p>
+                  <p className="text-sm font-semibold text-slate-900">312</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-slate-500">Asia</p>
+                  <p className="text-sm font-semibold text-slate-900">289</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-slate-500">Other</p>
+                  <p className="text-sm font-semibold text-slate-900">159</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="relative overflow-hidden rounded-2xl border border-amber-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   ChevronLeft, 
   ChevronRight,
@@ -13,7 +16,11 @@ import {
   TrendingUp,
   HelpCircle,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Heart,
+  MessageCircle,
+  Share2,
+  Send
 } from "lucide-react";
 import ProgressRing from './ProgressRing';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
@@ -27,6 +34,91 @@ export default function SidePanel({
   onMatchAction,
   onMeetingAction
 }) {
+  const [commentText, setCommentText] = useState({});
+  const [expandedComments, setExpandedComments] = useState({});
+  const queryClient = useQueryClient();
+
+  // Fetch posts
+  const { data: posts = [] } = useQuery({
+    queryKey: ['posts'],
+    queryFn: () => base44.entities.Post.list('-created_date', 10)
+  });
+
+  // Fetch likes
+  const { data: allLikes = [] } = useQuery({
+    queryKey: ['postLikes'],
+    queryFn: () => base44.entities.PostLike.list()
+  });
+
+  // Fetch comments
+  const { data: allComments = [] } = useQuery({
+    queryKey: ['postComments'],
+    queryFn: () => base44.entities.PostComment.list('-created_date')
+  });
+
+  const likeMutation = useMutation({
+    mutationFn: async ({ postId, userId }) => {
+      const existing = allLikes.find(l => l.post_id === postId && l.user_id === userId);
+      if (existing) {
+        await base44.entities.PostLike.delete(existing.id);
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+          await base44.entities.Post.update(postId, { likes_count: Math.max(0, (post.likes_count || 0) - 1) });
+        }
+      } else {
+        await base44.entities.PostLike.create({ post_id: postId, user_id: userId });
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+          await base44.entities.Post.update(postId, { likes_count: (post.likes_count || 0) + 1 });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['postLikes'] });
+    }
+  });
+
+  const commentMutation = useMutation({
+    mutationFn: async ({ postId, content }) => {
+      await base44.entities.PostComment.create({
+        post_id: postId,
+        author_id: profile.user_id,
+        author_name: profile.display_name,
+        author_avatar: profile.avatar_url,
+        content
+      });
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        await base44.entities.Post.update(postId, { comments_count: (post.comments_count || 0) + 1 });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['postComments'] });
+    }
+  });
+
+  const handleLike = (postId) => {
+    likeMutation.mutate({ postId, userId: profile?.user_id });
+  };
+
+  const handleComment = (postId) => {
+    const text = commentText[postId];
+    if (text?.trim()) {
+      commentMutation.mutate({ postId, content: text.trim() });
+      setCommentText({ ...commentText, [postId]: '' });
+    }
+  };
+
+  const isLikedByUser = (postId) => {
+    return allLikes.some(l => l.post_id === postId && l.user_id === profile?.user_id);
+  };
+
+  const getPostComments = (postId) => {
+    return allComments.filter(c => c.post_id === postId);
+  };
+
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
     const date = parseISO(dateStr);
@@ -188,6 +280,130 @@ export default function SidePanel({
                   View guide →
                 </Button>
               </div>
+            </div>
+          </div>
+
+          {/* Social Feed */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                <MessageCircle className="w-4 h-4 text-slate-500" />
+                Community Feed
+              </h3>
+            </div>
+            <div className="space-y-4">
+              {posts.length === 0 ? (
+                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
+              ) : (
+                posts.map((post) => {
+                  const postComments = getPostComments(post.id);
+                  const isLiked = isLikedByUser(post.id);
+                  const showComments = expandedComments[post.id];
+
+                  return (
+                    <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+                      {/* Post Header */}
+                      <div className="flex items-start gap-3">
+                        <Avatar className="w-9 h-9">
+                          <AvatarImage src={post.author_avatar} />
+                          <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                            {post.author_name?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900">{post.author_name}</p>
+                          <p className="text-xs text-slate-500">
+                            {format(parseISO(post.created_date), 'MMM d, h:mm a')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Post Content */}
+                      <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
+
+                      {post.image_urls && post.image_urls.length > 0 && (
+                        <img 
+                          src={post.image_urls[0]} 
+                          alt="" 
+                          className="w-full rounded-lg"
+                        />
+                      )}
+
+                      {/* Post Actions */}
+                      <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
+                        <button
+                          onClick={() => handleLike(post.id)}
+                          className={cn(
+                            "flex items-center gap-1.5 text-xs transition-colors",
+                            isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600"
+                          )}
+                        >
+                          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
+                          <span className="font-medium">{post.likes_count || 0}</span>
+                        </button>
+                        <button
+                          onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
+                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="font-medium">{post.comments_count || 0}</span>
+                        </button>
+                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors">
+                          <Share2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Comments Section */}
+                      {showComments && (
+                        <div className="space-y-3 pt-2">
+                          {/* Existing Comments */}
+                          {postComments.map((comment) => (
+                            <div key={comment.id} className="flex items-start gap-2">
+                              <Avatar className="w-7 h-7">
+                                <AvatarImage src={comment.author_avatar} />
+                                <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
+                                  {comment.author_name?.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 p-2 rounded-lg bg-slate-50">
+                                <p className="text-xs font-medium text-slate-900">{comment.author_name}</p>
+                                <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* Comment Input */}
+                          <div className="flex items-start gap-2">
+                            <Avatar className="w-7 h-7">
+                              <AvatarImage src={profile?.avatar_url} />
+                              <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">
+                                {profile?.display_name?.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 flex gap-2">
+                              <Textarea
+                                value={commentText[post.id] || ''}
+                                onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                                placeholder="Write a comment..."
+                                className="text-xs h-8 resize-none"
+                                rows={1}
+                              />
+                              <Button
+                                size="sm"
+                                onClick={() => handleComment(post.id)}
+                                disabled={!commentText[post.id]?.trim()}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Send className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
