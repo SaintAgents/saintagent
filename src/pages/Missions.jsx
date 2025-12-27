@@ -16,9 +16,11 @@ import {
 } from "lucide-react";
 
 import MissionCard from '@/components/hud/MissionCard';
+import CreateMissionModal from '@/components/CreateMissionModal';
 
 export default function Missions() {
   const [tab, setTab] = useState('all');
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
@@ -45,7 +47,10 @@ export default function Missions() {
             </h1>
             <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts</p>
           </div>
-          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2">
+          <Button 
+            onClick={() => setCreateModalOpen(true)}
+            className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2"
+          >
             <Plus className="w-4 h-4" />
             Create Mission
           </Button>
@@ -89,7 +94,10 @@ export default function Missions() {
             <Target className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No missions available</h3>
             <p className="text-slate-500 mb-6">Create your own mission or check back later</p>
-            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700">
+            <Button 
+              onClick={() => setCreateModalOpen(true)}
+              className="rounded-xl bg-violet-600 hover:bg-violet-700"
+            >
               Create Mission
             </Button>
           </div>
@@ -105,6 +113,11 @@ export default function Missions() {
           </div>
         )}
       </div>
+
+      <CreateMissionModal 
+        open={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+      />
     </div>
   );
 }
