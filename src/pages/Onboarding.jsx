@@ -15,6 +15,7 @@ import Step3Skills from '@/components/onboarding/Step3Skills';
 import Step4Desires from '@/components/onboarding/Step4Desires';
 import Step5Hopes from '@/components/onboarding/Step5Hopes';
 import Step6Actions from '@/components/onboarding/Step6Actions';
+import Step7Dating from '@/components/onboarding/Step7Dating';
 
 const STEPS = [
   { id: 0, title: "Welcome", component: Step0Welcome, skippable: false },
@@ -24,7 +25,8 @@ const STEPS = [
   { id: 4, title: "Skills", component: Step3Skills, skippable: false },
   { id: 5, title: "Desires", component: Step4Desires, skippable: false },
   { id: 6, title: "Hopes", component: Step5Hopes, skippable: true },
-  { id: 7, title: "Actions", component: Step6Actions, skippable: false }
+  { id: 7, title: "Connection", component: Step7Dating, skippable: true },
+  { id: 8, title: "Actions", component: Step6Actions, skippable: false }
 ];
 
 export default function Onboarding() {
