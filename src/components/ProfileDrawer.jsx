@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
+import TestimonialButton from '@/components/TestimonialButton';
 
 export default function ProfileDrawer({ userId, onClose }) {
   const queryClient = useQueryClient();
@@ -117,7 +118,17 @@ export default function ProfileDrawer({ userId, onClose }) {
                   Book
                 </Button>
               </div>
-              <FollowButton targetUserId={userId} className="w-full rounded-xl" />
+              <div className="grid grid-cols-2 gap-3">
+                <FollowButton targetUserId={userId} className="w-full rounded-xl" />
+                <TestimonialButton
+                  toUserId={userId}
+                  toUserName={profile.display_name}
+                  toUserAvatar={profile.avatar_url}
+                  context="profile"
+                  contextId={profile.id}
+                  className="w-full rounded-xl"
+                />
+              </div>
             </div>
           )}
 
