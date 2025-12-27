@@ -147,9 +147,67 @@ export default function MatchCard({ match, onAction }) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="mt-3 pt-3 border-t border-slate-100">
-              <p className="text-sm text-slate-600 mb-3">{match.explanation}</p>
-              <div className="grid grid-cols-5 gap-2">
+            <div className="mt-3 pt-3 border-t border-slate-100 space-y-3">
+              {/* AI Reasoning */}
+              {match.ai_reasoning && (
+                <div className="p-3 rounded-lg bg-violet-50 border border-violet-100">
+                  <div className="flex items-start gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-violet-600 mt-0.5" />
+                    <span className="text-xs font-semibold text-violet-700 uppercase tracking-wide">AI Analysis</span>
+                  </div>
+                  <p className="text-sm text-slate-700 leading-relaxed">{match.ai_reasoning}</p>
+                </div>
+              )}
+
+              {/* Fallback to regular explanation */}
+              {!match.ai_reasoning && match.explanation && (
+                <p className="text-sm text-slate-600">{match.explanation}</p>
+              )}
+
+              {/* Shared Values */}
+              {match.shared_values?.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-slate-700 mb-2">Shared Values</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {match.shared_values.map((value, i) => (
+                      <Badge key={i} variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                        {value}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Complementary Skills */}
+              {match.complementary_skills?.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-slate-700 mb-2">Complementary Skills</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {match.complementary_skills.map((skill, i) => (
+                      <Badge key={i} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Conversation Starters */}
+              {match.conversation_starters?.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-slate-700 mb-2">💬 Conversation Starters</p>
+                  <div className="space-y-2">
+                    {match.conversation_starters.map((starter, i) => (
+                      <div key={i} className="p-2 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer">
+                        <p className="text-xs text-slate-700">{starter}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Score Breakdown */}
+              <div className="grid grid-cols-5 gap-2 pt-2">
                 {scoreBreakdown.map((item, i) => (
                   <div key={i} className="text-center">
                     <div className="flex justify-center mb-1">
@@ -160,7 +218,8 @@ export default function MatchCard({ match, onAction }) {
                   </div>
                 ))}
               </div>
-              <div className="flex gap-2 mt-3">
+
+              <div className="flex gap-2 pt-2">
                 <Button variant="ghost" size="sm" className="text-xs h-7">
                   More like this
                 </Button>
