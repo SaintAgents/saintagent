@@ -27,6 +27,7 @@ import {
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
+import SubscriptionCard from '@/components/creator/SubscriptionCard';
 
 export default function ProfileDrawer({ userId, onClose }) {
   const queryClient = useQueryClient();
