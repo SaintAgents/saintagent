@@ -83,6 +83,7 @@ export default function Sidebar({
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
+  const isDark = theme === 'dark';
 
   // Ensure we have an email even if profile hasn't loaded yet
   const { data: currentUser } = useQuery({
