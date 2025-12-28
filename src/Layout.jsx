@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
+import { createPageUrl } from '@/utils';
 import Sidebar from '@/components/hud/Sidebar';
 import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
@@ -10,7 +11,6 @@ import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
-import { createPageUrl } from '@/utils';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);

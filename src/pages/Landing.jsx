@@ -6,11 +6,11 @@ import { createPageUrl } from '@/utils';
 
 export default function Landing() {
   const handleSignIn = () => {
-    window.location.href = createPageUrl('CommandDeck');
+    window.location.href = createPageUrl('Onboarding');
   };
 
   const handleSignUp = () => {
-    window.location.href = createPageUrl('CommandDeck');
+    window.location.href = createPageUrl('Onboarding');
   };
 
   return (
