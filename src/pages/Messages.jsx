@@ -100,23 +100,20 @@ export default function Messages() {
               variant="ghost" 
               className="rounded-lg gap-1.5 text-xs"
               onClick={() => {
-                if (selectedConversation) {
-                  window.dispatchEvent(new CustomEvent('openFloatingChat', {
+                console.log('Popup clicked');
+                const conv = selectedConversation || (conversations.length > 0 ? conversations[0] : null);
+                if (conv) {
+                  console.log('Dispatching openFloatingChat event', conv.otherUser);
+                  const event = new CustomEvent('openFloatingChat', {
                     detail: {
-                      recipientId: selectedConversation.otherUser.id,
-                      recipientName: selectedConversation.otherUser.name,
-                      recipientAvatar: selectedConversation.otherUser.avatar
+                      recipientId: conv.otherUser.id,
+                      recipientName: conv.otherUser.name,
+                      recipientAvatar: conv.otherUser.avatar
                     }
-                  }));
-                } else if (conversations.length > 0) {
-                  const firstConv = conversations[0];
-                  window.dispatchEvent(new CustomEvent('openFloatingChat', {
-                    detail: {
-                      recipientId: firstConv.otherUser.id,
-                      recipientName: firstConv.otherUser.name,
-                      recipientAvatar: firstConv.otherUser.avatar
-                    }
-                  }));
+                  });
+                  window.dispatchEvent(event);
+                } else {
+                  console.log('No conversation to open');
                 }
               }}
             >
@@ -164,13 +161,15 @@ export default function Messages() {
                 className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs gap-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.dispatchEvent(new CustomEvent('openFloatingChat', {
+                  console.log('Row popup clicked', conv.otherUser);
+                  const event = new CustomEvent('openFloatingChat', {
                     detail: {
                       recipientId: conv.otherUser.id,
                       recipientName: conv.otherUser.name,
                       recipientAvatar: conv.otherUser.avatar
                     }
-                  }));
+                  });
+                  window.dispatchEvent(event);
                 }}
                 >
                 <ExternalLink className="w-3.5 h-3.5" />

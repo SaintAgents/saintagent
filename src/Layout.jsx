@@ -32,12 +32,14 @@ export default function Layout({ children, currentPageName }) {
       }
     };
     const handleOpenChat = (e) => {
+      console.log('openFloatingChat event received:', e.detail);
       if (e.detail) {
         setFloatingChat({
           recipientId: e.detail.recipientId,
           recipientName: e.detail.recipientName,
           recipientAvatar: e.detail.recipientAvatar
         });
+        console.log('Floating chat state set:', e.detail);
       }
     };
     document.addEventListener('click', handleProfileClick);
