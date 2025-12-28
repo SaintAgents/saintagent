@@ -51,6 +51,8 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import LeaderPathway from '@/components/leader/LeaderPathway';
+import HelpHint from '@/components/hud/HelpHint';
+import { getRPRank } from '@/components/reputation/rpUtils';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -92,6 +94,8 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
     enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
+  const rpPoints = profile?.rp_points || 0;
+  const rpInfo = getRPRank(rpPoints);
 
   // Onboarding progress
   const { data: onboardingRecords } = useQuery({
@@ -362,15 +366,40 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     <h2 className="text-2xl font-bold text-slate-900">
                       {profile?.display_name || 'User'}
                     </h2>
-                    <p className="text-sm text-slate-500 capitalize">
-                      {profile?.rank_code || 'Seeker'} • @{profile?.handle}
-                    </p>
+                    <div className="flex items-center gap-1">
+                      <p className="text-sm text-slate-500 capitalize">
+                        {profile?.rank_code || 'Seeker'} • @{profile?.handle}
+                      </p>
+                      <HelpHint
+                        content={
+                          <div>
+                            <div className="font-semibold mb-1">Rank progression</div>
+                            <div>Current: {rpInfo.title} ({rpPoints} RP)</div>
+                            {rpInfo.nextMin ? (
+                              <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, (rpInfo.nextMin - rpPoints))} RP to go</div>
+                            ) : (
+                              <div>You're at the highest rank.</div>
+                            )}
+                          </div>
+                        }
+                      />
+                    </div>
                   </div>
                   
                   {/* Trust Score Gauge */}
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-xs text-slate-500">Trust Score</p>
+                      <p className="text-xs text-slate-500 flex items-center gap-1 justify-end">
+                        Trust Score
+                        <HelpHint
+                          content={
+                            <div>
+                              <div className="font-semibold mb-1">What is Trust Score?</div>
+                              <div>0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
+                            </div>
+                          }
+                        />
+                      </p>
                       <p className="text-2xl font-bold text-violet-600">{profile?.trust_score || 0}</p>
                     </div>
                     <div className="relative w-16 h-16">
@@ -410,11 +439,17 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                 <div className="grid grid-cols-4 gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50">
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
-                    <p className="text-xs text-slate-500">GGG</p>
+                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
+                      GGG
+                      <HelpHint content="GGG is the platform currency—earn it from meetings, missions, and rewards. Spend it to boost reach and incentivize actions." />
+                    </p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
-                    <p className="text-xs text-slate-500">Rank Points</p>
+                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
+                      Rank Points
+                      <HelpHint content="RP (Rank Points) reflect your long-term contribution: missions, meetings, testimonials and more. They determine your rank." />
+                    </p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
@@ -637,8 +672,21 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     <TrendingUp className="w-4 h-4 text-white/90" />
                     <p className="text-xs font-medium uppercase tracking-wider text-white/80">Rank</p>
                   </div>
-                  <p className="text-xl font-bold tracking-tight text-white capitalize">
+                  <p className="text-xl font-bold tracking-tight text-white capitalize inline-flex items-center gap-1">
                     {profile?.rank_code || "Seeker"}
+                    <HelpHint
+                      content={
+                        <div>
+                          <div className="font-semibold mb-1">Rank progression</div>
+                          <div>Current: {rpInfo.title} ({rpPoints} RP)</div>
+                          {rpInfo.nextMin ? (
+                            <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, (rpInfo.nextMin - rpPoints))} RP to go</div>
+                          ) : (
+                            <div>You're at the highest rank.</div>
+                          )}
+                        </div>
+                      }
+                    />
                   </p>
                 </div>
               </div>
