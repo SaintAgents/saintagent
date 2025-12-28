@@ -1,5 +1,4 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,11 +6,11 @@ import { Sparkles } from "lucide-react";
 
 export default function SignInModal({ open, onClose }) {
   const handleSignIn = () => {
-    base44.auth.redirectToLogin(`${window.location.origin}${createPageUrl('CommandDeck')}`);
+    window.location.href = createPageUrl('CommandDeck');
   };
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(`${window.location.origin}${createPageUrl('CommandDeck')}`);
+    window.location.href = createPageUrl('CommandDeck');
   };
 
   return (

@@ -8,7 +8,7 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
-import SignInModal from '@/components/SignInModal';
+
 import MeetingReminderService from '@/components/MeetingReminderService';
 
 export default function Layout({ children, currentPageName }) {
@@ -18,7 +18,7 @@ export default function Layout({ children, currentPageName }) {
   const [profileDrawerUserId, setProfileDrawerUserId] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
-  const [showSignIn, setShowSignIn] = useState(false);
+
 
   // Global profile click handler
   useEffect(() => {
@@ -101,12 +101,7 @@ export default function Layout({ children, currentPageName }) {
     enabled: !!currentUser
   });
 
-  // Show sign-in modal when user is logged out
-  useEffect(() => {
-    if (currentUser === null) {
-      setShowSignIn(true);
-    }
-  }, [currentUser]);
+
 
   const handleStatusChange = async (status) => {
     if (profile) {
@@ -121,7 +116,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleLogout = () => {
-    window.location.href = createPageUrl('Logout');
+    window.location.href = createPageUrl('Landing');
   };
 
   const handleSearch = (query) => {
@@ -148,10 +143,6 @@ export default function Layout({ children, currentPageName }) {
     return (
       <div className="min-h-screen bg-slate-50">
         {children}
-        <SignInModal 
-          open={showSignIn} 
-          onClose={() => setShowSignIn(false)} 
-        />
       </div>
     );
   }
@@ -263,11 +254,7 @@ export default function Layout({ children, currentPageName }) {
         />
       )}
 
-      {/* Sign In Modal */}
-      <SignInModal 
-        open={showSignIn} 
-        onClose={() => setShowSignIn(false)} 
-      />
+
 
       {/* Meeting Reminder Service */}
       {currentUser && <MeetingReminderService />}

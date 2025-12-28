@@ -1,5 +1,4 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Users, Target, Crown, ArrowRight } from "lucide-react";
@@ -7,11 +6,11 @@ import { createPageUrl } from '@/utils';
 
 export default function Landing() {
   const handleSignIn = () => {
-    base44.auth.redirectToLogin(`${window.location.origin}${createPageUrl('CommandDeck')}`);
+    window.location.href = createPageUrl('CommandDeck');
   };
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(`${window.location.origin}${createPageUrl('CommandDeck')}`);
+    window.location.href = createPageUrl('CommandDeck');
   };
 
   return (
