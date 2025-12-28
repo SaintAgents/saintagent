@@ -80,6 +80,8 @@ export default function Sidebar({
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(true);
+  const [presenceOpen, setPresenceOpen] = useState(true);
 
   // Ensure we have an email even if profile hasn't loaded yet
   const { data: currentUser } = useQuery({
@@ -143,50 +145,71 @@ export default function Sidebar({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
-          const isActive = currentPage === item.id;
-          const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : (item.badge || 0);
-          return (
-            <Link
-              key={item.id}
-              to={createPageUrl(item.page)}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
-                isActive 
-                  ? "bg-violet-100 text-violet-700" 
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                item.locked && "opacity-50 pointer-events-none"
-              )}
-            >
-              <item.icon className={cn(
-                "w-5 h-5 shrink-0",
-                isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
-              )} />
-              {!isCollapsed && (
-                <>
-                  <span className="font-medium text-sm">{item.label}</span>
-                  {badgeValue > 0 && (
-                    <Badge className="ml-auto bg-violet-600 text-white text-xs">
+      <div className="flex-1 overflow-y-auto">
+        <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && "justify-center")}> 
+          {!isCollapsed && (
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Navigation</span>
+          )}
+          <button
+            onClick={() => setNavOpen(!navOpen)}
+            className={cn("p-1 rounded-md hover:bg-slate-50", isCollapsed && "w-full flex items-center justify-center")}
+            aria-label={navOpen ? 'Collapse navigation' : 'Expand navigation'}
+            title={navOpen ? 'Collapse' : 'Expand'}
+          >
+            {navOpen ? (
+              <ChevronUp className="w-4 h-4 text-slate-500" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-slate-500" />
+            )}
+          </button>
+        </div>
+        {navOpen && (
+          <nav className="p-3 pt-0 space-y-1">
+            {NAV_ITEMS.map((item) => {
+              const isActive = currentPage === item.id;
+              const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : (item.badge || 0);
+              return (
+                <Link
+                  key={item.id}
+                  to={createPageUrl(item.page)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
+                    isActive 
+                      ? "bg-violet-100 text-violet-700" 
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                    item.locked && "opacity-50 pointer-events-none"
+                  )}
+                >
+                  <item.icon className={cn(
+                    "w-5 h-5 shrink-0",
+                    isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
+                  )} />
+                  {!isCollapsed && (
+                    <>
+                      <span className="font-medium text-sm">{item.label}</span>
+                      {badgeValue > 0 && (
+                        <Badge className="ml-auto bg-violet-600 text-white text-xs">
+                          {badgeValue}
+                        </Badge>
+                      )}
+                      {item.locked && (
+                        <Badge variant="outline" className="ml-auto text-xs">
+                          Locked
+                        </Badge>
+                      )}
+                    </>
+                  )}
+                  {isCollapsed && badgeValue > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                       {badgeValue}
-                    </Badge>
+                    </span>
                   )}
-                  {item.locked && (
-                    <Badge variant="outline" className="ml-auto text-xs">
-                      Locked
-                    </Badge>
-                  )}
-                </>
-              )}
-              {isCollapsed && badgeValue > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  {badgeValue}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+                </Link>
+              );
+            })}
+          </nav>
+        )}
+      </div>
 
       {/* Leaderboard */}
       {!isCollapsed && (
@@ -306,60 +329,82 @@ export default function Sidebar({
         "border-t border-slate-100 p-4 space-y-3",
         isCollapsed && "px-2"
       )}>
-        {!isCollapsed && profile && (
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">RP</span>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">{profile.rp_points || 0}</Badge>
-              <span className="text-xs capitalize text-slate-700">{getRPRank(profile.rp_points || 0).title}</span>
-            </div>
-          </div>
-        )}
-        {/* Status Light */}
-        <div className={cn(
-          "flex items-center gap-3",
-          isCollapsed && "justify-center"
-        )}>
-          <div className={cn(
-            "w-3 h-3 rounded-full animate-pulse",
-            statusOption?.color
-          )} />
+        {/* Presence Section */}
+        <button
+          onClick={() => setPresenceOpen(!presenceOpen)}
+          className={cn("w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50", isCollapsed && "justify-center")}
+          aria-label={presenceOpen ? 'Collapse presence' : 'Expand presence'}
+          title={presenceOpen ? 'Collapse' : 'Expand'}
+        >
           {!isCollapsed && (
-            <Select value={status} onValueChange={handleStatusChange}>
-              <SelectTrigger className="h-9 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {STATUS_OPTIONS.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    <div className="flex items-center gap-2">
-                      <div className={cn("w-2 h-2 rounded-full", opt.color)} />
-                      {opt.label}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
           )}
-        </div>
+          {presenceOpen ? (
+            <ChevronUp className="w-4 h-4 text-slate-500" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-slate-500" />
+          )}
+        </button>
 
-        {/* DM Policy */}
-        {!isCollapsed && (
-          <div className="flex items-center gap-3">
-            <MessageCircle className="w-4 h-4 text-slate-400" />
-            <Select value={dmPolicy} onValueChange={handleDMChange}>
-              <SelectTrigger className="h-9 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DM_POLICY_OPTIONS.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    DMs: {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        {presenceOpen && (
+          <>
+            {!isCollapsed && profile && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-500">RP</span>
+                  <span className="text-sm font-semibold text-slate-900">{profile.rp_points || 0}</span>
+                </div>
+                <span className="text-xs capitalize text-slate-700">{getRPRank(profile.rp_points || 0).title}</span>
+              </div>
+            )}
+
+            {/* Status Light */}
+            <div className={cn(
+              "flex items-center gap-3",
+              isCollapsed && "justify-center"
+            )}>
+              <div className={cn(
+                "w-3 h-3 rounded-full animate-pulse",
+                statusOption?.color
+              )} />
+              {!isCollapsed && (
+                <Select value={status} onValueChange={handleStatusChange}>
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        <div className="flex items-center gap-2">
+                          <div className={cn("w-2 h-2 rounded-full", opt.color)} />
+                          {opt.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            {/* DM Policy */}
+            {!isCollapsed && (
+              <div className="flex items-center gap-3">
+                <MessageCircle className="w-4 h-4 text-slate-400" />
+                <Select value={dmPolicy} onValueChange={handleDMChange}>
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DM_POLICY_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        DMs: {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </>
         )}
 
         {/* Collapse Toggle (when collapsed) */}
