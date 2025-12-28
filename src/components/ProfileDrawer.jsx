@@ -24,6 +24,7 @@ import {
   MapPin,
   Award
 } from "lucide-react";
+import { Pencil, Globe } from "lucide-react";
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
@@ -54,6 +55,12 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const { data: creatorTiers = [] } = useQuery({
     queryKey: ['creatorTiers', userId],
     queryFn: () => base44.entities.CreatorTier.filter({ creator_id: userId, status: 'active' }),
+    enabled: !!userId
+  });
+
+  const { data: userSkills = [] } = useQuery({
+    queryKey: ['skills', userId],
+    queryFn: () => base44.entities.Skill.filter({ user_id: userId }),
     enabled: !!userId
   });
 
@@ -200,6 +207,13 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               )}
             </div>
             <p className="text-slate-500">@{profile.handle}</p>
+            {isOwnProfile && (
+              <div className="mt-3">
+                <Button size="sm" variant="outline" className="rounded-xl gap-2" onClick={() => { window.location.href = createPageUrl('Profile'); }}>
+                  <Pencil className="w-4 h-4" /> Edit Profile
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Actions */}
@@ -257,13 +271,19 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           )}
 
           {/* Location */}
-          {profile.location && (
+          {(profile.location || profile.region || profile.timezone) && (
             <div className="mb-6">
               <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
                 Location
               </h3>
-              <p className="text-sm text-slate-600">{profile.location}</p>
+              <div className="flex flex-wrap gap-2 text-sm text-slate-600">
+                {profile.location && <span className="px-2 py-1 rounded bg-slate-50 border">{profile.location}</span>}
+                {profile.region && <span className="px-2 py-1 rounded bg-slate-50 border">Region: {profile.region}</span>}
+                {profile.timezone && (
+                  <span className="px-2 py-1 rounded bg-slate-50 border flex items-center gap-1"><Globe className="w-3 h-3" /> {profile.timezone}</span>
+                )}
+              </div>
             </div>
           )}
 
@@ -327,19 +347,37 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           )}
 
           {/* Skills */}
-          {profile.skills?.length > 0 && (
+          {userSkills.length > 0 && (
             <div className="mb-6">
               <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 Skills
               </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {profile.skills.map((skill, idx) => (
-                  <Badge key={idx} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
+              {userSkills.filter(s => s.type === 'offer').length > 0 && (
+                <div className="mb-2">
+                  <p className="text-xs text-slate-500 mb-1">I Offer</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {userSkills.filter(s => s.type === 'offer').map((s) => (
+                      <Badge key={s.id} className="text-xs bg-violet-100 text-violet-700">
+                        {s.skill_name}
+                        <span className="ml-1 text-amber-600">{'★'.repeat(s.proficiency || 3)}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {userSkills.filter(s => s.type === 'seek').length > 0 && (
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">I Seek</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {userSkills.filter(s => s.type === 'seek').map((s) => (
+                      <Badge key={s.id} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                        {s.skill_name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -355,6 +393,20 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             </div>
           )}
 
+          {/* Values */}
+          {profile.values_tags?.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-slate-900 mb-2">Values</h3>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.values_tags.map((v, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200 capitalize">
+                    {v}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Spiritual Practices */}
           {profile.spiritual_practices?.length > 0 && (
             <div className="mb-6">
@@ -362,15 +414,18 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               <div className="flex flex-wrap gap-1.5">
                 {profile.spiritual_practices.map((practice, idx) => (
                   <Badge key={idx} variant="outline" className="text-xs capitalize">
-                    {practice.replace('_', ' ')}
+                    {practice.replace(/_/g, ' ')}
                   </Badge>
                 ))}
               </div>
+              {profile.practices_description && (
+                <p className="text-sm text-slate-600 mt-2">{profile.practices_description}</p>
+              )}
             </div>
           )}
 
           {/* Mystical Identifiers */}
-          {(profile.mystical_identifier || profile.astrological_sign || profile.birth_card) && (
+          {(profile.mystical_identifier || profile.astrological_sign || profile.birth_card || profile.lineage_tradition || profile.lineage_custom || (profile.symbolic_groups?.length) || (profile.consciousness_orientation?.length)) && (
             <div className="mb-6">
               <h3 className="font-semibold text-slate-900 mb-2">Mystical Profile</h3>
               <div className="space-y-2 text-sm">
