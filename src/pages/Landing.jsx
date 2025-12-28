@@ -11,7 +11,7 @@ export default function Landing() {
   };
 
   const handleSignUp = () => {
-    window.location.href = createPageUrl('CommandDeck');
+    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
   };
 
   return (
