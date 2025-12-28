@@ -195,6 +195,29 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
             </div>
           </div>
         );
+      case 'mission':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>Mission Title</Label>
+              <Input 
+                placeholder="e.g., Community Cleanup"
+                className="mt-2"
+                value={formData.title || ''}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Objective</Label>
+              <Textarea 
+                placeholder="What are we trying to accomplish?"
+                className="mt-2 min-h-24"
+                value={formData.objective || ''}
+                onChange={(e) => setFormData({ ...formData, objective: e.target.value })}
+              />
+            </div>
+          </div>
+        );
       default:
         return null;
     }
