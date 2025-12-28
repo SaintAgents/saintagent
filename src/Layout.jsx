@@ -120,6 +120,17 @@ export default function Layout({ children, currentPageName }) {
     enabled: !!currentUser
   });
 
+  // Onboarding status (for first-time welcome)
+  const { data: onboardingRecords } = useQuery({
+    queryKey: ['layoutOnboarding', currentUser?.email],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.OnboardingProgress.filter({ user_id: user.email });
+    },
+    enabled: !!currentUser
+  });
+  const onboarding = onboardingRecords?.[0];
+
 
 
   const handleStatusChange = async (status) => {
@@ -202,6 +213,13 @@ export default function Layout({ children, currentPageName }) {
         base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
       }
     }, [currentUser]);
+
+    // First-time welcome redirect
+    useEffect(() => {
+      if (currentUser && (onboarding === undefined || !onboarding || onboarding.status === 'not_started') && currentPageName !== 'Welcome' && currentPageName !== 'Onboarding') {
+        window.location.href = createPageUrl('Welcome');
+      }
+    }, [currentUser, onboarding, currentPageName]);
 
   // If no user, show minimal shell while redirecting to login
   if (currentUser === null) {
