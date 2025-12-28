@@ -19,6 +19,7 @@ export default function Layout({ children, currentPageName }) {
   const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
+  const [theme, setTheme] = useState('light');
 const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         // Open/close multiple profile drawers (max 6)
@@ -73,6 +74,21 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
       document.removeEventListener('openFloatingChat', handleOpenChat);
     };
   }, []);
+
+  // Initialize theme
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') setTheme(saved);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem('theme', theme); } catch {}
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
 
   // Get current page ID for sidebar highlighting
   const getPageId = (pageName) => {
@@ -270,6 +286,25 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
       `}</style>
+      <style>{`
+        /* Dark theme overrides */
+        [data-theme='dark'] {
+          color-scheme: dark;
+        }
+        [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
+          background-color: #0b1220 !important;
+          color: #e5e7eb;
+        }
+        [data-theme='dark'] [class*='bg-white'] { background-color: #0f172a !important; }
+        [data-theme='dark'] [class*='bg-slate-50'] { background-color: #0b1220 !important; }
+        [data-theme='dark'] [class*='bg-slate-100'] { background-color: #0f172a !important; }
+        [data-theme='dark'] [class*='border-slate-100'] { border-color: #1e293b !important; }
+        [data-theme='dark'] [class*='border-slate-200'] { border-color: #334155 !important; }
+        [data-theme='dark'] [class*='text-slate-900'] { color: #e5e7eb !important; }
+        [data-theme='dark'] [class*='text-slate-700'] { color: #cbd5e1 !important; }
+        [data-theme='dark'] [class*='text-slate-600'] { color: #94a3b8 !important; }
+        [data-theme='dark'] [class*='text-slate-500'] { color: #94a3b8 !important; }
+      `}</style>
 
       {/* Sidebar */}
       <Sidebar 
@@ -279,6 +314,8 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         profile={profile}
         onStatusChange={handleStatusChange}
         onDMPolicyChange={handleDMPolicyChange}
+        theme={theme}
+        onThemeToggle={setTheme}
       />
 
       {/* Top Bar */}

@@ -3,6 +3,7 @@ import AffiliateCenter from './pages/AffiliateCenter';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import EventDetail from './pages/EventDetail';
+import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
 import InviteLanding from './pages/InviteLanding';
 import LeaderChannel from './pages/LeaderChannel';
@@ -17,7 +18,6 @@ import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
-import FAQ from './pages/FAQ';
 import Terms from './pages/Terms';
 import __Layout from './Layout.jsx';
 
@@ -28,6 +28,7 @@ export const PAGES = {
     "Circles": Circles,
     "CommandDeck": CommandDeck,
     "EventDetail": EventDetail,
+    "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
     "InviteLanding": InviteLanding,
     "LeaderChannel": LeaderChannel,
@@ -42,7 +43,6 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Studio": Studio,
-    "FAQ": FAQ,
     "Terms": Terms,
 }
 
