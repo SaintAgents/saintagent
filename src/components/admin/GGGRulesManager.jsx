@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Coins, Plus, Edit, Trash2 } from "lucide-react";
+import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD } from '@/components/earnings/gggMatrix';
 
 const ACTION_TYPES = [
   { value: 'meeting_completed', label: 'Meeting Completed' },
@@ -95,6 +96,36 @@ export default function GGGRulesManager() {
           New Rule
         </Button>
       </div>
+
+      {/* GGG Earnings Matrix (Reference) */}
+      <Card>
+        <CardHeader>
+          <CardTitle>GGG Earnings Matrix (Reference)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <div className="text-xs text-slate-500 mb-2">Tiers (GGG → USD)</div>
+            <div className="flex flex-wrap gap-2">
+              {TIERS.map((t) => (
+                <span key={t} className="text-xs px-2 py-1 rounded bg-slate-100 border border-slate-200">
+                  {t.toFixed(2)} GGG ≈ ${ (t * GGG_TO_USD).toFixed(2) }
+                </span>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-slate-500 mb-2">Actions and base earnings</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {ACTIONS.map((a) => (
+                <div key={a.key} className="flex items-center justify-between p-2 rounded border bg-white">
+                  <span className="text-sm text-slate-700">{a.title}</span>
+                  <span className="text-sm font-semibold text-amber-600">{a.base.toFixed(2)} GGG</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Create New Rule */}
       {isCreating && (
