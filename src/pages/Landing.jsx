@@ -34,21 +34,19 @@ export default function Landing() {
         {/* Auth Card */}
         <Card className="max-w-md mx-auto shadow-2xl">
           <CardContent className="p-8">
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Button 
-                onClick={handleSignIn}
-                className="w-full h-12 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold"
+                onClick={() => base44.auth.redirectToLogin(createPageUrl('CommandDeck'))}
+                className="w-full h-12 bg-white text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center gap-3"
               >
-                Enter
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                Sign in with Google
               </Button>
-              <Button 
-                onClick={handleSignUp}
-                variant="outline"
-                className="w-full h-12 border-2 border-violet-600 text-violet-600 hover:bg-violet-50 font-semibold"
-              >
-                Explore App
-              </Button>
+
+              <div className="grid grid-cols-1 gap-2">
+                <Button onClick={handleSignIn} className="w-full h-11 bg-violet-600 hover:bg-violet-700 text-white rounded-xl">Sign In</Button>
+                <Button onClick={handleSignUp} variant="outline" className="w-full h-11 rounded-xl">Create Account</Button>
+              </div>
             </div>
 
             <div className="relative my-6">
