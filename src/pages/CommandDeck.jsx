@@ -369,7 +369,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     </h2>
                     <div className="flex items-center gap-1">
                       <p className="text-sm text-slate-500 capitalize">
-                        {profile?.rank_code || 'Seeker'} • @{profile?.handle}
+                        {profile?.rank_code || 'Seeker'} • @{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}
                       </p>
                       <HelpHint
                         content={
