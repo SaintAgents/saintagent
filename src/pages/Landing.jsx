@@ -7,7 +7,7 @@ import { createPageUrl } from '@/utils';
 
 export default function Landing() {
   const handleSignIn = () => {
-    window.location.href = createPageUrl('CommandDeck');
+    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
   };
 
   const handleSignUp = () => {
