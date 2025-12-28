@@ -197,7 +197,8 @@ export default function Sidebar({
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </Button>
           </div>
-          {leaderboardOpen && (
+          <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}
+          >
             <ScrollArea className="h-48">
               <div className="space-y-2">
                 {topLeaders.map((leader, index) => (
@@ -236,7 +237,7 @@ export default function Sidebar({
                 ))}
               </div>
             </ScrollArea>
-          )}
+          </div>
           {leadersPopupOpen && (
             <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
               <div className="space-y-2">
