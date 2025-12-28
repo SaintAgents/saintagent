@@ -39,6 +39,7 @@ export default function Step7Dating({ data = {}, onChange, onUpdate }) {
   };
 
   const handleTypeToggle = (type) => {
+    if (!type) return;
     const types = data.relationship_type_seeking || [];
     const newTypes = types.includes(type)
       ? types.filter(t => t !== type)
