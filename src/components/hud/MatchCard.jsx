@@ -24,6 +24,7 @@ import {
   ThumbsDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPageUrl } from '@/utils';
 
 export default function MatchCard({ match, onAction }) {
   const [showExplanation, setShowExplanation] = useState(false);
@@ -81,6 +82,19 @@ export default function MatchCard({ match, onAction }) {
 
   const TypeIcon = typeIcons[match.target_type] || Users;
 
+  const handleNavigateTarget = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (match.target_type === 'mission') {
+      window.location.href = createPageUrl('MissionDetail?id=' + match.target_id);
+    } else if (match.target_type === 'event') {
+      window.location.href = createPageUrl('EventDetail?id=' + match.target_id);
+    } else {
+      const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }});
+      document.dispatchEvent(ev);
+    }
+  };
+
   const scoreBreakdown = [
     { label: "Intent", value: match.intent_alignment || 0, icon: Target },
     { label: "Skills", value: match.skill_complementarity || 0, icon: Brain },
@@ -96,11 +110,9 @@ export default function MatchCard({ match, onAction }) {
       className="group relative bg-white rounded-xl border border-slate-200/60 p-4 hover:shadow-lg hover:border-violet-200 transition-all duration-300"
     >
       <div className="flex items-start gap-4">
-        <div className="relative" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }}); document.dispatchEvent(ev); }}>
+        <div className="relative" onClick={handleNavigateTarget}>
           <Avatar 
-            className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all" 
-            data-user-id={match.target_id}
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }}); document.dispatchEvent(ev); }}
+            className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all"
           >
             <AvatarImage src={match.target_avatar} />
             <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium">
@@ -117,8 +129,7 @@ export default function MatchCard({ match, onAction }) {
             <div>
               <h4 
                 className="font-semibold text-slate-900 truncate cursor-pointer"
-                data-user-id={match.target_id}
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }}); document.dispatchEvent(ev); }}
+                onClick={handleNavigateTarget}
               >
                 {match.target_name}
               </h4>
