@@ -41,6 +41,20 @@ export default function UserManagement() {
     }
   });
 
+  const { data: userRecords = [] } = useQuery({
+    queryKey: ['userRecord', selectedUser?.user_id],
+    queryFn: () => base44.entities.User.filter({ email: selectedUser.user_id }),
+    enabled: !!selectedUser?.user_id
+  });
+  const userRecord = userRecords?.[0];
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.User.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userRecord'] });
+    }
+  });
+
   const filteredProfiles = profiles.filter(p =>
     p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -62,6 +76,57 @@ export default function UserManagement() {
       id: profile.id,
       data: { ggg_balance: Math.max(0, newBalance) }
     });
+  };
+
+  const handleProfileSave = () => {
+    if (!selectedUser) return;
+    updateProfileMutation.mutate({
+      id: selectedUser.id,
+      data: {
+        display_name: selectedUser.display_name,
+        handle: selectedUser.handle,
+        status: selectedUser.status,
+        dm_policy: selectedUser.dm_policy
+      }
+    });
+  };
+
+  const handleChangeUserRole = (newRole) => {
+    if (!userRecord) return;
+    if (confirm(`Change user role to ${newRole}?`)) {
+      updateUserMutation.mutate({ id: userRecord.id, data: { role: newRole } });
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!selectedUser) return;
+    if (confirm('Delete this UserProfile? This cannot be undone.')) {
+      await base44.entities.UserProfile.delete(selectedUser.id);
+      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      setSelectedUser(null);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userRecord) return;
+    if (confirm('Delete this user account? This will remove login access.')) {
+      await base44.entities.User.delete(userRecord.id);
+      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      setSelectedUser(null);
+    }
+  };
+
+  const handlePurgeData = async () => {
+    const email = selectedUser?.user_id;
+    if (!email) return;
+    if (!confirm("Permanently delete this user's messages and notifications?")) return;
+    const [msgsOut, msgsIn, notifs] = await Promise.all([
+      base44.entities.Message.filter({ from_user_id: email }, '-created_date', 1000),
+      base44.entities.Message.filter({ to_user_id: email }, '-created_date', 1000),
+      base44.entities.Notification.filter({ user_id: email }, '-created_date', 1000)
+    ]);
+    await Promise.all([...(msgsOut || []), ...(msgsIn || [])].map(m => base44.entities.Message.delete(m.id)));
+    await Promise.all((notifs || []).map(n => base44.entities.Notification.delete(n.id)));
   };
 
   return (
@@ -217,7 +282,82 @@ export default function UserManagement() {
                 </Select>
               </div>
 
-              {/* Stats */}
+              {/* Profile Basics */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-3">Profile Basics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <Input
+                    placeholder="Display Name"
+                    value={selectedUser.display_name || ''}
+                    onChange={(e) => setSelectedUser({ ...selectedUser, display_name: e.target.value })}
+                  />
+                  <Input
+                    placeholder="@handle"
+                    value={selectedUser.handle || ''}
+                    onChange={(e) => setSelectedUser({ ...selectedUser, handle: e.target.value })}
+                  />
+                  <Select
+                    value={selectedUser.status || 'online'}
+                    onValueChange={(v) => setSelectedUser({ ...selectedUser, status: v })}
+                  >
+                    <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="online">Online</SelectItem>
+                      <SelectItem value="focus">Focus</SelectItem>
+                      <SelectItem value="dnd">Do Not Disturb</SelectItem>
+                      <SelectItem value="offline">Offline</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select
+                    value={selectedUser.dm_policy || 'everyone'}
+                    onValueChange={(v) => setSelectedUser({ ...selectedUser, dm_policy: v })}
+                  >
+                    <SelectTrigger><SelectValue placeholder="DM Policy" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="everyone">Everyone</SelectItem>
+                      <SelectItem value="followers">Followers</SelectItem>
+                      <SelectItem value="mutual">Mutuals</SelectItem>
+                      <SelectItem value="none">No one</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="text-right mt-3">
+                  <Button size="sm" className="rounded-lg" onClick={handleProfileSave}>Save Profile</Button>
+                </div>
+              </div>
+
+              {/* User Role */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-3">User Role</h3>
+                <Select
+                  value={userRecord?.role || 'user'}
+                  onValueChange={(v) => handleChangeUserRole(v)}
+                >
+                  <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="border border-rose-200 bg-rose-50 rounded-lg p-4">
+                <h3 className="font-semibold text-rose-700 mb-2">Danger Zone</h3>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handlePurgeData}>
+                    Purge Messages & Notifications
+                  </Button>
+                  <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handleDeleteProfile}>
+                    Delete Profile
+                  </Button>
+                  <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handleDeleteUser} disabled={!userRecord}>
+                    Delete User Account
+                  </Button>
+                </div>
+              </div>
+
+              {/* Stats */
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">User Stats</h3>
                 <div className="grid grid-cols-3 gap-4">
