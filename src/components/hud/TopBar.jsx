@@ -20,7 +20,8 @@ import {
   
   Sparkles,
   Crown,
-  Shield
+  Shield,
+  LogOut
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import { Link } from 'react-router-dom';
@@ -141,6 +142,18 @@ export default function TopBar({
           notifications={notifications} 
           onAction={onNotificationAction}
         />
+
+        {currentUser && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-xl"
+            title="Sign out"
+            onClick={() => base44.auth.logout(createPageUrl('Landing'))}
+          >
+            <LogOut className="w-5 h-5 text-slate-600" />
+          </Button>
+        )}
 
         {/* Profile Menu / Auth */}
         {profile ? (
