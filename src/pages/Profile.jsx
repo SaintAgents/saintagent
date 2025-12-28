@@ -259,11 +259,12 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-4">
+          <TabsList className="grid w-full max-w-2xl grid-cols-5">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="onboarding">Profile Details</TabsTrigger>
             <TabsTrigger value="spiritual">Spiritual</TabsTrigger>
             <TabsTrigger value="stats">Stats</TabsTrigger>
+            <TabsTrigger value="friends">Friends</TabsTrigger>
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
@@ -737,88 +738,87 @@ export default function Profile() {
               </div>
             </div>
           </TabsContent>
+          <TabsContent value="friends" className="space-y-6">
+            {following.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-rose-500" />
+                    Following ({following.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {following.map((follow) => (
+                      <div 
+                        key={follow.id} 
+                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group"
+                      >
+                        <div 
+                          className="cursor-pointer"
+                          data-user-id={follow.following_id}
+                        >
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={follow.following_avatar} />
+                            <AvatarFallback className="text-sm">
+                              {follow.following_name?.charAt(0) || 'U'}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                        <p 
+                          className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
+                          data-user-id={follow.following_id}
+                        >
+                          {follow.following_name}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                          onClick={() => unfollowMutation.mutate(follow.id)}
+                        >
+                          Unfollow
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {followers.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="w-5 h-5 text-blue-500" />
+                    Followers ({followers.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {followers.map((follow) => (
+                      <div 
+                        key={follow.id} 
+                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
+                        data-user-id={follow.follower_id}
+                      >
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={follow.follower_avatar} />
+                          <AvatarFallback className="text-sm">
+                            {follow.follower_name?.charAt(0) || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
+                          {follow.follower_name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
         </Tabs>
-
-        {/* Following Section */}
-        {following.length > 0 && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-rose-500" />
-                Following ({following.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {following.map((follow) => (
-                  <div 
-                    key={follow.id} 
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group"
-                  >
-                    <div 
-                      className="cursor-pointer"
-                      data-user-id={follow.following_id}
-                    >
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={follow.following_avatar} />
-                        <AvatarFallback className="text-sm">
-                          {follow.following_name?.charAt(0) || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <p 
-                      className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
-                      data-user-id={follow.following_id}
-                    >
-                      {follow.following_name}
-                    </p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
-                      onClick={() => unfollowMutation.mutate(follow.id)}
-                    >
-                      Unfollow
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Followers Section */}
-        {followers.length > 0 && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-500" />
-                Followers ({followers.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {followers.map((follow) => (
-                  <div 
-                    key={follow.id} 
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
-                    data-user-id={follow.follower_id}
-                  >
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src={follow.follower_avatar} />
-                      <AvatarFallback className="text-sm">
-                        {follow.follower_name?.charAt(0) || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
-                      {follow.follower_name}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Skills Picker Modal */}
         <SkillsPicker
