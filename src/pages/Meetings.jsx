@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, Check, Plus } from "lucide-react";
 
+import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import MeetingCard from '@/components/hud/MeetingCard';
 
 export default function Meetings() {
   const [tab, setTab] = useState('upcoming');
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: meetings = [], isLoading } = useQuery({
@@ -20,6 +22,11 @@ export default function Meetings() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Meeting.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['meetings'] })
+  });
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
   });
 
   const pending = meetings.filter(m => m.status === 'pending');
@@ -45,6 +52,21 @@ export default function Meetings() {
     }
   };
 
+  const handleCreate = async (type, data) => {
+    if (type !== 'meeting' || !currentUser) return;
+    await base44.entities.Meeting.create({
+      title: data.title || 'Meeting',
+      host_id: currentUser.email,
+      guest_id: data.recipient,
+      host_name: currentUser.full_name,
+      guest_name: data.recipient,
+      meeting_type: data.type || 'casual',
+      status: 'pending'
+    });
+    queryClient.invalidateQueries({ queryKey: ['meetings'] });
+    setQuickCreateOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
       <div className="max-w-4xl mx-auto">
@@ -57,7 +79,7 @@ export default function Meetings() {
             </h1>
             <p className="text-slate-500 mt-1">Schedule, attend, and verify your meetings to earn GGG</p>
           </div>
-          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2">
+          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
             <Plus className="w-4 h-4" />
             Request Meeting
           </Button>
@@ -143,6 +165,12 @@ export default function Meetings() {
           </div>
         )}
       </div>
+      <QuickCreateModal 
+        open={quickCreateOpen}
+        initialType="meeting"
+        onClose={() => setQuickCreateOpen(false)}
+        onCreate={handleCreate}
+      />
     </div>
   );
 }
