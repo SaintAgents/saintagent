@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,9 +39,17 @@ const CREATE_OPTIONS = [
   { id: 'meeting', label: 'Meeting', icon: Video, color: 'bg-indigo-500', description: 'Request a 1:1 meeting' },
 ];
 
-export default function QuickCreateModal({ open, onClose, onCreate }) {
+export default function QuickCreateModal({ open, onClose, onCreate, initialType }) {
   const [selectedType, setSelectedType] = useState(null);
   const [formData, setFormData] = useState({});
+
+  // When opened with an initialType, jump straight into that form
+  useEffect(() => {
+    if (open && initialType) {
+      setSelectedType(initialType);
+      setFormData({});
+    }
+  }, [open, initialType]);
 
   const handleTypeSelect = (type) => {
     setSelectedType(type);
