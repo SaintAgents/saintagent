@@ -129,7 +129,7 @@ export default function ProfileDrawer({ userId, onClose }) {
     <div
       id="profile-drawer"
       ref={containerRef}
-      className="fixed w-96 h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[60] flex flex-col overflow-hidden"
+      className="fixed w-[90vw] md:w-96 h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] flex flex-col overflow-hidden"
       style={{ left: pos.x, top: pos.y }}
     >
       <Button 
