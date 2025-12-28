@@ -212,9 +212,9 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
               }
             }, [currentUser, currentPageName]);
 
-  // If authenticated but onboarding not complete, force Onboarding
+  // If authenticated and onboarding missing or not complete, force Onboarding
   useEffect(() => {
-    if (currentUser && onboarding && onboarding.status !== 'complete' && currentPageName !== 'Onboarding') {
+    if (currentUser && currentPageName !== 'Onboarding' && (!onboarding || onboarding.status !== 'complete')) {
       window.location.href = createPageUrl('Onboarding');
     }
   }, [currentUser, onboarding, currentPageName]);

@@ -195,14 +195,7 @@ export default function TopBar({
         ) : (
           <div className="flex items-center gap-2">
             <Button 
-              variant="ghost"
-              onClick={() => base44.auth.redirectToLogin(createPageUrl('CommandDeck'))}
-              className="rounded-xl"
-            >
-              Explore
-            </Button>
-            <Button 
-              onClick={() => base44.auth.redirectToLogin(createPageUrl('CommandDeck'))}
+              onClick={() => base44.auth.redirectToLogin(createPageUrl('Onboarding'))}
               className="bg-violet-600 hover:bg-violet-700 rounded-xl"
             >
               Get Started
