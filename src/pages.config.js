@@ -4,6 +4,7 @@ import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import EventDetail from './pages/EventDetail';
 import FindCollaborators from './pages/FindCollaborators';
+import InviteLanding from './pages/InviteLanding';
 import LeaderChannel from './pages/LeaderChannel';
 import Marketplace from './pages/Marketplace';
 import Matches from './pages/Matches';
@@ -16,7 +17,6 @@ import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
-import InviteLanding from './pages/InviteLanding';
 import __Layout from './Layout.jsx';
 
 
@@ -27,6 +27,7 @@ export const PAGES = {
     "CommandDeck": CommandDeck,
     "EventDetail": EventDetail,
     "FindCollaborators": FindCollaborators,
+    "InviteLanding": InviteLanding,
     "LeaderChannel": LeaderChannel,
     "Marketplace": Marketplace,
     "Matches": Matches,
@@ -39,7 +40,6 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Studio": Studio,
-    "InviteLanding": InviteLanding,
 }
 
 export const pagesConfig = {

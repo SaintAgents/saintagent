@@ -23,12 +23,22 @@ export default function InviteLanding() {
     'Join the collaboration chamber',
   ];
 
-  const handlePrimary = () => {
-    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+  const handlePrimary = async () => {
+    const isAuthed = await base44.auth.isAuthenticated();
+    if (isAuthed) {
+      window.location.href = createPageUrl('Onboarding');
+    } else {
+      base44.auth.redirectToLogin(createPageUrl('Onboarding'));
+    }
   };
 
-  const handleInvite = () => {
-    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+  const handleInvite = async () => {
+    const isAuthed = await base44.auth.isAuthenticated();
+    if (isAuthed) {
+      window.location.href = createPageUrl('Onboarding');
+    } else {
+      base44.auth.redirectToLogin(createPageUrl('Onboarding'));
+    }
   };
 
   return (
