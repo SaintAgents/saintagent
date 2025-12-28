@@ -8,15 +8,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Users, Trash2 } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
 import CreateGroupChatModal from "@/components/messages/CreateGroupChatModal";
+import NewDirectMessageModal from "@/components/messages/NewDirectMessageModal";
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [groupOpen, setGroupOpen] = useState(false);
+  const [dmOpen, setDMOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -30,7 +32,7 @@ export default function Messages() {
     refetchInterval: 1500
   });
 
-  const { data: dbConversations = [] } = useQuery({
+  const { data: conversations = [] } = useQuery({
     queryKey: ['conversations'],
     queryFn: () => base44.entities.Conversation.list('-updated_date', 200),
     refetchInterval: 5000
@@ -55,7 +57,7 @@ export default function Messages() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['messages'] })
   });
 
-  // Group messages into conversations (merge Message-derived and Conversation entities)
+  // Group messages into conversations (includes entity-defined Conversations)
   const convList = React.useMemo(() => {
     const convMap = {};
     const visibleMsgs = allMessages.filter(m => !(m.deleted_for_user_ids?.includes?.(user?.email)));
@@ -73,33 +75,30 @@ export default function Messages() {
         };
       }
       convMap[convId].messages.push(msg);
-      if (!msg.is_read && msg.to_user_id === user?.email) {
-        convMap[convId].unreadCount++;
+      if (!msg.is_read && msg.to_user_id === user?.email) convMap[convId].unreadCount++;
+    });
+    const myConvs = conversations.filter(c => c.participant_ids?.includes(user?.email));
+    myConvs.forEach(c => {
+      if (!convMap[c.id]) {
+        const others = (c.participant_ids || []).filter(pid => pid !== user?.email);
+        let otherUser;
+        if (c.type === 'direct' && others.length === 1) {
+          const p = profiles.find(pr => pr.user_id === others[0]);
+          otherUser = { id: others[0], name: p?.display_name || others[0], avatar: p?.avatar_url || null };
+        } else {
+          otherUser = { id: c.id, name: c.name || (others.length > 1 ? `${others.length}+ members` : others[0] || 'Group'), avatar: null };
+        }
+        convMap[c.id] = {
+          id: c.id,
+          messages: [],
+          otherUser,
+          lastMessage: { created_date: c.last_message_at || new Date(0).toISOString(), content: c.last_message || '' },
+          unreadCount: visibleMsgs.filter(m => m.conversation_id === c.id && !m.is_read && m.to_user_id === user?.email).length
+        };
       }
     });
-
-    // Fill in explicit Conversation entities (mainly groups)
-    dbConversations
-      .filter(c => c.participant_ids?.includes(user?.email))
-      .forEach(c => {
-        if (!convMap[c.id]) {
-          const others = (c.participant_ids || []).filter(pid => pid !== user?.email);
-          convMap[c.id] = {
-            id: c.id,
-            messages: [],
-            otherUser: {
-              id: c.id,
-              name: c.name || (others.length > 1 ? `${others.length}+ members` : others[0] || 'Group'),
-              avatar: null
-            },
-            lastMessage: { created_date: c.last_message_at || new Date(0).toISOString(), content: c.last_message || '' },
-            unreadCount: visibleMsgs.filter(m => m.conversation_id === c.id && !m.is_read && m.to_user_id === user?.email).length
-          };
-        }
-      });
-
     return Object.values(convMap).sort((a, b) => new Date(b.lastMessage.created_date) - new Date(a.lastMessage.created_date));
-  }, [allMessages, dbConversations, user]);
+  }, [allMessages, conversations, profiles, user]);
 
   const currentMessages = (selectedConversation?.messages || []).filter(m => !(m.deleted_for_user_ids?.includes?.(user?.email)));
 
@@ -111,57 +110,57 @@ export default function Messages() {
   const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
 
   const handleSend = async () => {
-    if (!messageText.trim() || !selectedConversation || !user?.email) return;
-
-    const convEntity = dbConversations.find(c => c.id === selectedConversation.id);
-    // Group chat: send one message per recipient so unread counts work per user
+    if (!messageText.trim() || !selectedConversation) return;
+    const convEntity = conversations.find(c => c.id === selectedConversation.id);
     if (convEntity?.type === 'group') {
       const recipients = (convEntity.participant_ids || []).filter(pid => pid !== user.email);
-      if (recipients.length === 0) return;
-
-      await Promise.all(recipients.map(r => base44.entities.Message.create({
-        conversation_id: selectedConversation.id,
-        from_user_id: user.email,
-        to_user_id: r,
-        from_name: user.full_name,
-        to_name: (convEntity.participant_names || [])[convEntity.participant_ids.indexOf(r)] || r,
-        content: messageText
-      })));
-
-      // Notifications
+      // create one message per recipient + one for sender's view
+      await Promise.all([
+        ...recipients.map(r => base44.entities.Message.create({
+          conversation_id: convEntity.id,
+          from_user_id: user.email,
+          to_user_id: r,
+          from_name: user.full_name,
+          to_name: selectedConversation.otherUser.name,
+          content: messageText
+        })),
+        base44.entities.Message.create({
+          conversation_id: convEntity.id,
+          from_user_id: user.email,
+          to_user_id: user.email,
+          from_name: user.full_name,
+          to_name: user.full_name,
+          content: messageText
+        })
+      ]);
       await Promise.all(recipients.map(r => base44.entities.Notification.create({
         user_id: r,
         type: 'message',
         title: `New message in ${convEntity.name || 'Group'}`,
-        message: messageText.slice(0, 200),
+        message: messageText.slice(0, 120),
         action_url: createPageUrl('Messages')
       })));
-
-      setMessageText('');
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     } else {
-      // Direct message
-      await base44.entities.Message.create({
+      // direct
+      const payload = {
         conversation_id: selectedConversation.id,
         from_user_id: user.email,
         to_user_id: selectedConversation.otherUser.id,
         from_name: user.full_name,
         to_name: selectedConversation.otherUser.name,
         content: messageText
-      });
-      setMessageText('');
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
-
+      };
+      sendMutation.mutate(payload);
       await base44.entities.Notification.create({
         user_id: selectedConversation.otherUser.id,
         type: 'message',
         title: `New message from ${user.full_name}`,
-        message: messageText.slice(0, 200),
+        message: messageText.slice(0, 120),
         action_url: createPageUrl('Messages')
       });
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     }
+    setMessageText('');
+    queryClient.invalidateQueries({ queryKey: ['messages'] });
   };
 
   React.useEffect(() => {
@@ -175,6 +174,7 @@ export default function Messages() {
   }, [selectedConversation]);
 
   return (
+    <>
     <div className="h-[calc(100vh-4rem)] bg-slate-50 flex">
       {/* Conversations List */}
       <div className="w-80 border-r bg-white flex flex-col">
@@ -182,6 +182,9 @@ export default function Messages() {
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-slate-900">Messages</h2>
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs" onClick={() => setDMOpen(true)}>
+              <Plus className="w-3.5 h-3.5" /> New Message
+            </Button>
             <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs" onClick={() => setGroupOpen(true)}>
               <Users className="w-3.5 h-3.5" /> New Group
             </Button>
@@ -381,6 +384,7 @@ export default function Messages() {
           </div>
         </div>
       )}
+    </div>
     <CreateGroupChatModal 
       open={groupOpen} 
       onClose={() => setGroupOpen(false)} 
@@ -396,6 +400,22 @@ export default function Messages() {
         });
       }}
     />
-    </div>
-  );
-}
+    <NewDirectMessageModal
+      open={dmOpen}
+      onClose={() => setDMOpen(false)}
+      onCreated={(conv) => {
+        setDMOpen(false);
+        const other = (conv.participant_ids || []).find(pid => pid !== user?.email) || '';
+        const p = profiles.find(pr => pr.user_id === other);
+        setSelectedConversation({
+          id: conv.id,
+          messages: [],
+          otherUser: { id: other, name: p?.display_name || other, avatar: p?.avatar_url || null },
+          lastMessage: { created_date: conv.last_message_at || new Date().toISOString(), content: conv.last_message || '' },
+          unreadCount: 0
+        });
+      }}
+    />
+    </>
+    );
+    }
