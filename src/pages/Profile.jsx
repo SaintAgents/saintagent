@@ -6,6 +6,7 @@ import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor'
 import MysticalProfileEditor from '@/components/profile/MysticalProfileEditor';
 import AvatarUploader from '@/components/profile/AvatarUploader';
 import OnboardingDataEditor from '@/components/profile/OnboardingDataEditor';
+import ConnectionPreferencesEditor from '@/components/profile/ConnectionPreferencesEditor';
 import AscensionLadderPopover from '@/components/profile/AscensionLadderPopover';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -563,6 +564,7 @@ export default function Profile() {
               hopes={hopes}
               intentions={intentions}
             />
+            <ConnectionPreferencesEditor profile={profile} />
           </TabsContent>
 
           <TabsContent value="spiritual" className="space-y-6">
