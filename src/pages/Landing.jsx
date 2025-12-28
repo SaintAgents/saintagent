@@ -7,11 +7,13 @@ import { createPageUrl } from '@/utils';
 
 export default function Landing() {
   const handleSignIn = () => {
-    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+    const nextUrl = window.location.origin + createPageUrl('CommandDeck');
+    base44.auth.redirectToLogin(nextUrl);
   };
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+    const nextUrl = window.location.origin + createPageUrl('CommandDeck');
+    base44.auth.redirectToLogin(nextUrl);
   };
 
   return (
