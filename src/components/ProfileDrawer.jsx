@@ -129,7 +129,7 @@ export default function ProfileDrawer({ userId, onClose }) {
     <div
       id="profile-drawer"
       ref={containerRef}
-      className="fixed w-[90vw] md:w-96 h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] flex flex-col overflow-hidden"
+      className="fixed w-96 h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] pointer-events-auto flex flex-col overflow-hidden"
       style={{ left: pos.x, top: pos.y }}
     >
       <Button 
@@ -148,7 +148,7 @@ export default function ProfileDrawer({ userId, onClose }) {
         Drag to move
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="h-[calc(80vh-2.25rem)] overflow-auto overscroll-contain">
         <div className="p-6">
           {/* Avatar */}
           <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
