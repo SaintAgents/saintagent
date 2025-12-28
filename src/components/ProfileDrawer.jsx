@@ -85,7 +85,7 @@ export default function ProfileDrawer({ userId, onClose }) {
   if (!profile) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-white border-l shadow-2xl z-50 flex flex-col relative">
+    <div id="profile-drawer" className="fixed inset-y-0 right-0 w-96 bg-white border-l shadow-2xl z-50 flex flex-col relative">
       <Button 
         variant="ghost" 
         size="icon"

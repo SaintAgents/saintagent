@@ -138,7 +138,7 @@ export default function TopBar({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-10 px-2 gap-2 rounded-xl">
-                <Avatar className="w-8 h-8">
+                <Avatar className="w-8 h-8" data-user-id={profile?.user_id}>
                   <AvatarImage src={profile?.avatar_url} />
                   <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
                     {profile?.display_name?.charAt(0) || 'U'}

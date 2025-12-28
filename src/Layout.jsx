@@ -23,10 +23,15 @@ export default function Layout({ children, currentPageName }) {
   // Global profile click handler
   useEffect(() => {
     const handleProfileClick = (e) => {
-      const target = e.target.closest('[data-user-id]');
+      // Ignore clicks inside the open drawer
+      if (e.target.closest('#profile-drawer')) return;
+      // Support both explicit profile triggers and generic user-id tags
+      const target = e.target.closest('[data-user-id], [data-open-profile]');
       if (target) {
         e.preventDefault();
-        setProfileDrawerUserId(target.getAttribute('data-user-id'));
+        e.stopPropagation();
+        const id = target.getAttribute('data-user-id') || target.getAttribute('data-open-profile');
+        if (id) setProfileDrawerUserId(id);
       }
     };
     const handleOpenProfile = (e) => {
