@@ -15,9 +15,21 @@ export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
-  const [profileDrawerUserId, setProfileDrawerUserId] = useState(null);
+  const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
+
+        // Open/close multiple profile drawers (max 6)
+        const openProfile = (id) => {
+          if (!id) return;
+          setOpenProfileUserIds((prev) => {
+            const next = [...prev.filter((uid) => uid !== id), id];
+            return next.length > 6 ? next.slice(next.length - 6) : next;
+          });
+        };
+        const closeProfile = (id) => {
+          setOpenProfileUserIds((prev) => prev.filter((uid) => uid !== id));
+        };
 
 
   // Global profile click handler
@@ -31,12 +43,12 @@ export default function Layout({ children, currentPageName }) {
         e.preventDefault();
         e.stopPropagation();
         const id = target.getAttribute('data-user-id') || target.getAttribute('data-open-profile');
-        if (id) setProfileDrawerUserId(id);
+        if (id) openProfile(id);
       }
     };
     const handleOpenProfile = (e) => {
       if (e.detail?.userId) {
-        setProfileDrawerUserId(e.detail.userId);
+        openProfile(e.detail.userId);
       }
     };
     const handleOpenChat = (e) => {
@@ -231,13 +243,14 @@ export default function Layout({ children, currentPageName }) {
         onCreate={handleCreate}
       />
 
-      {/* Profile Drawer */}
-      {profileDrawerUserId && (
+      {/* Profile Drawers */}
+      {openProfileUserIds.map((uid) => (
         <ProfileDrawer
-          userId={profileDrawerUserId}
-          onClose={() => setProfileDrawerUserId(null)}
+          key={uid}
+          userId={uid}
+          onClose={() => closeProfile(uid)}
         />
-      )}
+      ))}
 
       {/* Search Modal */}
       <SearchModal
