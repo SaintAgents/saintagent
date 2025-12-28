@@ -103,9 +103,7 @@ export default function Onboarding() {
   };
 
   const handleSkip = () => {
-    if (STEPS[currentStep].skippable) {
-      handleStepComplete({});
-    }
+    handleStepComplete({});
   };
 
   const CurrentStepComponent = STEPS[currentStep]?.component;
@@ -174,15 +172,13 @@ export default function Onboarding() {
             Back
           </Button>
 
-          {STEPS[currentStep]?.skippable && (
-            <Button
-              variant="ghost"
-              onClick={handleSkip}
-              className="text-slate-500"
-            >
-              Skip for now
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            onClick={handleSkip}
+            className="text-slate-500"
+          >
+            Skip for now
+          </Button>
         </div>
       </div>
     </div>

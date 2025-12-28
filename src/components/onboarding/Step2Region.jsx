@@ -35,6 +35,11 @@ export default function Step2Region({ data, onComplete, user }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user?.email) {
+      onComplete(formData);
+      return;
+    }
     
     // Save availability preferences
     const existing = await base44.entities.AvailabilityPreference.filter({ user_id: user.email });
