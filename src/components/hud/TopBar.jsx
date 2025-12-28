@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   Search,
-  Plus,
   MessageCircle,
   User,
   Settings,
@@ -116,15 +115,6 @@ export default function TopBar({
 
       {/* Actions */}
       <div className="flex items-center gap-2">
-        {/* Quick Create */}
-        <Button 
-          onClick={onQuickCreate}
-          className="bg-violet-600 hover:bg-violet-700 rounded-xl h-10 px-4 gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="hidden sm:inline">Create</span>
-        </Button>
-
         {/* Messages */}
         <Link to={createPageUrl('Messages')}>
           <Button variant="ghost" size="icon" className="relative">
