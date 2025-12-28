@@ -18,6 +18,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import FAQ from './pages/FAQ';
+import Terms from './pages/Terms';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +43,7 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "FAQ": FAQ,
+    "Terms": Terms,
 }
 
 export const pagesConfig = {

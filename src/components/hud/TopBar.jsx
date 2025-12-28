@@ -180,11 +180,6 @@ export default function TopBar({
                   Help / FAQ
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('FAQ')} className="flex items-center gap-2">
-                  Help / FAQ
-                </Link>
-              </DropdownMenuItem>
               {currentUser?.role === 'admin' && (
                 <>
                   <DropdownMenuSeparator />

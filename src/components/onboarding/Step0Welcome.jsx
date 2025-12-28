@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { 
   Rocket, 
   GraduationCap, 
@@ -26,6 +30,8 @@ const INTENTIONS = [
 
 export default function Step0Welcome({ data, onComplete }) {
   const [selected, setSelected] = useState(data.intentions || []);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const toggleIntention = (code) => {
     if (selected.includes(code)) {
@@ -80,13 +86,47 @@ export default function Step0Welcome({ data, onComplete }) {
         })}
       </div>
 
-      <div className="flex items-center justify-between pt-4">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 flex items-start gap-3">
+        <input
+          id="accept"
+          type="checkbox"
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+          className="mt-1"
+        />
+        <label htmlFor="accept" className="text-sm text-slate-600">
+          I agree to the {" "}
+          <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank" rel="noreferrer">
+            SAINT AGENTS  TERMS AND CONDITIONS
+          </Link>
+          .
+        </label>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 flex items-start gap-3">
+        <input
+          id="accept"
+          type="checkbox"
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+          className="mt-1"
+        />
+        <label htmlFor="accept" className="text-sm text-slate-600">
+          I agree to the {" "}
+          <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank" rel="noreferrer">
+            SAINT AGENTS  TERMS AND CONDITIONS
+          </Link>
+          .
+        </label>
+      </div>
+
+       <div className="flex items-center justify-between pt-4">
         <p className="text-sm text-slate-500">
           {selected.length}/7 selected
         </p>
         <Button
           onClick={handleContinue}
-          disabled={selected.length === 0}
+          disabled={selected.length === 0 || !acceptTerms}
           className="bg-violet-600 hover:bg-violet-700"
         >
           Continue
