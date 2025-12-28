@@ -85,21 +85,18 @@ export default function ProfileDrawer({ userId, onClose }) {
   if (!profile) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-white border-l shadow-2xl z-50 flex flex-col">
-      {/* Header */}
-      <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className="absolute top-4 right-4 text-white hover:bg-white/20"
-          onClick={onClose}
-        >
-          <X className="w-5 h-5" />
-        </Button>
-      </div>
+    <div className="fixed inset-y-0 right-0 w-96 bg-white border-l shadow-2xl z-50 flex flex-col relative">
+      <Button 
+        variant="ghost" 
+        size="icon"
+        className="absolute top-4 right-4 text-slate-600 hover:bg-slate-100"
+        onClick={onClose}
+      >
+        <X className="w-5 h-5" />
+      </Button>
 
       <ScrollArea className="flex-1">
-        <div className="p-6 -mt-16">
+        <div className="p-6">
           {/* Avatar */}
           <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
             <AvatarImage src={profile.avatar_url} />
