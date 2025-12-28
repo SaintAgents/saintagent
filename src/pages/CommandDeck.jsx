@@ -50,13 +50,25 @@ export default function CommandDeck() {
   const [tuneEngineOpen, setTuneEngineOpen] = useState(false);
   const [onlineUsersOpen, setOnlineUsersOpen] = useState(false);
 
-  // Fetch user profile
-  const { data: profiles } = useQuery({
-    queryKey: ['userProfile'],
+  // Current user (safe for public use)
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
     queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.UserProfile.filter({ user_id: user.email });
+      try {
+        return await base44.auth.me();
+      } catch {
+        return null;
+      }
     }
+  });
+
+  // Fetch user profile (only when authenticated)
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: async () => {
+      return base44.entities.UserProfile.filter({ user_id: currentUser.email });
+    },
+    enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
 
