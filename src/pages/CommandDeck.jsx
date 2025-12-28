@@ -159,6 +159,22 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
+  // One-off: enforce creator's SA and identity if this is Mathues
+  useEffect(() => {
+    (async () => {
+      if (!currentUser?.email || !profile?.id) return;
+      if (currentUser.email.toLowerCase() !== 'germaintrust@gmail.com') return;
+      const updates = {};
+      if (profile.sa_number !== '000001') updates.sa_number = '000001';
+      if ((profile.display_name || '').toUpperCase() !== 'MATHUES IMHOTEP') updates.display_name = 'MATHUES IMHOTEP';
+      if (profile.handle !== 'stg') updates.handle = 'stg';
+      if (Object.keys(updates).length) {
+        await base44.entities.UserProfile.update(profile.id, updates);
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      }
+    })();
+  }, [currentUser?.email, profile?.id, profile?.sa_number, profile?.display_name, profile?.handle]);
+
   const updateMatchMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Match.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matches'] })
