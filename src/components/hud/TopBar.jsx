@@ -215,6 +215,7 @@ export default function TopBar({
         )}
       </div>
       <FaqModal open={faqOpen} onOpenChange={setFaqOpen} />
+      <FaqModal open={faqOpen} onOpenChange={setFaqOpen} />
     </header>
   );
 }
