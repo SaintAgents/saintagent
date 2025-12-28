@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
 import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
+import MysticalProfileEditor from '@/components/profile/MysticalProfileEditor';
 import AvatarUploader from '@/components/profile/AvatarUploader';
 import OnboardingDataEditor from '@/components/profile/OnboardingDataEditor';
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ export default function Profile() {
   const [editData, setEditData] = useState({});
   const [skillsPickerOpen, setSkillsPickerOpen] = useState(false);
   const [editingSpiritualProfile, setEditingSpiritualProfile] = useState(false);
+  const [editingMysticalProfile, setEditingMysticalProfile] = useState(false);
   const [editingIntentions, setEditingIntentions] = useState(false);
   const [intentionsData, setIntentionsData] = useState([]);
   const [newIntention, setNewIntention] = useState('');
@@ -149,6 +151,11 @@ export default function Profile() {
   const handleSpiritualProfileSave = async (spiritualData) => {
     await updateMutation.mutateAsync(spiritualData);
     setEditingSpiritualProfile(false);
+  };
+
+  const handleMysticalProfileSave = async (data) => {
+    await updateMutation.mutateAsync(data);
+    setEditingMysticalProfile(false);
   };
 
   const handleIntentionsEdit = () => {
@@ -572,6 +579,65 @@ export default function Profile() {
                     Edit Spiritual Profile
                   </Button>
                 </div>
+
+                {/* Mystical Profile */}
+                {editingMysticalProfile ? (
+                  <MysticalProfileEditor
+                    profile={profile}
+                    onSave={handleMysticalProfileSave}
+                    onCancel={() => setEditingMysticalProfile(false)}
+                  />
+                ) : (
+                  <Card>
+                    <CardHeader className="flex items-center justify-between">
+                      <CardTitle className="text-base">Mystical Profile</CardTitle>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-violet-600"
+                        onClick={() => setEditingMysticalProfile(true)}
+                      >
+                        Edit
+                      </Button>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-slate-500">Mystical ID</span>
+                          <div className="font-medium text-slate-900">{profile?.mystical_identifier || 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Sun</span>
+                          <div className="font-medium text-slate-900">{profile?.astrological_sign || 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Rising</span>
+                          <div className="font-medium text-slate-900">{profile?.rising_sign || 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Moon</span>
+                          <div className="font-medium text-slate-900">{profile?.moon_sign || 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Life Path</span>
+                          <div className="font-medium text-slate-900">{profile?.numerology_life_path ?? 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Personality</span>
+                          <div className="font-medium text-slate-900">{profile?.numerology_personality ?? 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Birth Card</span>
+                          <div className="font-medium text-slate-900">{profile?.birth_card || 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Sun Card</span>
+                          <div className="font-medium text-slate-900">{profile?.sun_card || 'Not set'}</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
                 <div className="grid gap-6">
                   {/* Spiritual Practices */}
