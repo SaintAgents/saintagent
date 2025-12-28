@@ -6,11 +6,11 @@ import { Sparkles } from "lucide-react";
 
 export default function SignInModal({ open, onClose }) {
   const handleSignIn = () => {
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(window.location.origin + createPageUrl('CommandDeck'));
   };
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(window.location.origin + createPageUrl('CommandDeck'));
   };
 
   return (
