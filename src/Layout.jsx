@@ -10,6 +10,7 @@ import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
+import { createPageUrl } from '@/utils';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -194,14 +195,19 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  // If no user and not on Landing page, show minimal layout with sign-in modal
+  // Redirect unauthenticated users to Landing
+  useEffect(() => {
+    if (currentUser === null && currentPageName !== 'Landing') {
+      window.location.href = createPageUrl('Landing');
+    }
+  }, [currentUser, currentPageName]);
+
+  // If no user and not on Landing page, show minimal shell while redirecting
   if (currentUser === null && currentPageName !== 'Landing') {
-    return (
-      <div className="min-h-screen bg-slate-50">
-        {children}
-      </div>
-    );
-  }
+          return (
+            <div className="min-h-screen bg-slate-50" />
+          );
+        }
 
   // If no user and on Landing page, just show Landing without layout chrome
   if (currentUser === null && currentPageName === 'Landing') {
