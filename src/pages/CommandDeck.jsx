@@ -688,7 +688,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     <p className="text-xs font-medium uppercase tracking-wider text-cyan-200">Meetings</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
-                   {completedMeetingsThisWeek}
+                    {completedMeetingsThisWeek}
                   </p>
                 </div>
               </div>
@@ -891,7 +891,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <div className="text-center py-6">
                     <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No upcoming meetings</p>
-                    <Button variant="outline" className="mt-3 rounded-xl">
+                    <Button variant="outline" className="mt-3 rounded-xl" onClick={() => { setQuickCreateType('meeting'); setQuickCreateOpen(true); }}>
                       Schedule a meeting
                     </Button>
                   </div>
