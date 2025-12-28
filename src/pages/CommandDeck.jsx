@@ -52,7 +52,6 @@ import LeaderPathway from '@/components/leader/LeaderPathway';
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
-  const [quickCreateType, setQuickCreateType] = useState(null);
   const [matchTab, setMatchTab] = useState('people');
   const [videoMeeting, setVideoMeeting] = useState(null);
   const [boostTarget, setBoostTarget] = useState(null);
@@ -776,19 +775,19 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
               backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
             >
               <div className="grid grid-cols-2 gap-3">
-                <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => { setQuickCreateType('meeting'); setQuickCreateOpen(true); }}>
+                <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl">
                   <Calendar className="w-5 h-5" />
                   <span className="text-xs">Book Meeting</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('post'); setQuickCreateOpen(true); }}>
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl">
                   <Plus className="w-5 h-5" />
                   <span className="text-xs">Post Update</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('mission'); setQuickCreateOpen(true); }}>
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl">
                   <Target className="w-5 h-5" />
                   <span className="text-xs">Launch Mission</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('offer'); setQuickCreateOpen(true); }}>
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl">
                   <ShoppingBag className="w-5 h-5" />
                   <span className="text-xs">Create Offer</span>
                 </Button>
@@ -1134,8 +1133,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
       {/* Quick Create Modal */}
       <QuickCreateModal 
         open={quickCreateOpen}
-        initialType={quickCreateType}
-        onClose={() => { setQuickCreateOpen(false); setQuickCreateType(null); }}
+        onClose={() => setQuickCreateOpen(false)}
         onCreate={handleCreate}
       />
 
