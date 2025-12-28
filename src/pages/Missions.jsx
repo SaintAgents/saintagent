@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,8 +21,6 @@ import CreateMissionModal from '@/components/CreateMissionModal';
 export default function Missions() {
   const [tab, setTab] = useState('all');
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [seeded, setSeeded] = useState(false);
-  const queryClient = useQueryClient();
 
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
@@ -32,40 +30,6 @@ export default function Missions() {
   const filteredMissions = tab === 'all' 
     ? missions 
     : missions.filter(m => m.mission_type === tab);
-
-  React.useEffect(() => {
-    if (isLoading || seeded) return;
-    (async () => {
-      const hasSPD = missions.some(m => m.title === 'Soul Purpose Discovery');
-      const hasGMD = missions.some(m => m.title === 'Global Meditation Day');
-      const records = [];
-      if (!hasSPD) {
-        records.push({
-          title: 'Soul Purpose Discovery',
-          objective: 'A guided mission to clarify and activate your core calling with peers.',
-          mission_type: 'platform',
-          status: 'active',
-          reward_ggg: 50,
-          reward_rank_points: 100
-        });
-      }
-      if (!hasGMD) {
-        records.push({
-          title: 'Global Meditation Day',
-          objective: 'Coordinate a worldwide meditation wave for peace and coherence.',
-          mission_type: 'region',
-          status: 'active',
-          reward_ggg: 30,
-          reward_rank_points: 60
-        });
-      }
-      if (records.length > 0) {
-        await base44.entities.Mission.bulkCreate(records);
-        queryClient.invalidateQueries({ queryKey: ['missions'] });
-      }
-      setSeeded(true);
-    })();
-  }, [isLoading, missions, seeded]);
 
   const handleAction = (action, mission) => {
     console.log('Mission action:', action, mission);
@@ -81,7 +45,7 @@ export default function Missions() {
               <Target className="w-6 h-6 text-amber-500" />
               Missions & Quests
             </h1>
-            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG (.25 - .35 per 1 GGG), rank points, and boosts</p>
+            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts</p>
           </div>
           <Button 
             onClick={() => setCreateModalOpen(true)}
