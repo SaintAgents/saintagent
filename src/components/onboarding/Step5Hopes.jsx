@@ -75,7 +75,7 @@ export default function Step5Hopes({ data, onComplete, user }) {
                   isSelected 
                     ? "border-violet-500 bg-violet-50" 
                     : "border-slate-200 bg-white hover:border-violet-200",
-                  !isSelected && formData.hopes.length >= 3 && "opacity-50"
+                  !isSelected && formData.hopes.length >= 5 && "opacity-50"
                 )}
               >
                 <p className="text-sm font-medium text-slate-900">{hope.label}</p>
