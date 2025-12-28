@@ -150,7 +150,7 @@ export default function Messages() {
                 )}
               >
               <div className="relative">
-                <Avatar className="w-10 h-10">
+                <Avatar className="w-10 h-10 cursor-pointer" data-user-id={conv.otherUser.id}>
                   <AvatarImage src={conv.otherUser.avatar} />
                   <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
@@ -201,7 +201,7 @@ export default function Messages() {
         <div className="flex-1 flex flex-col">
           {/* Header */}
           <div className="p-4 border-b bg-white flex items-center gap-3">
-            <Avatar className="w-10 h-10">
+            <Avatar className="w-10 h-10 cursor-pointer" data-user-id={selectedConversation.otherUser.id}>
               <AvatarImage src={selectedConversation.otherUser.avatar} />
               <AvatarFallback>{selectedConversation.otherUser.name?.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -218,7 +218,7 @@ export default function Messages() {
                 const isOwn = msg.from_user_id === user?.email;
                 return (
                   <div key={msg.id} className={cn("flex gap-3", isOwn && "flex-row-reverse")}>
-                    <Avatar className="w-8 h-8">
+                    <Avatar className="w-8 h-8 cursor-pointer" data-user-id={msg.from_user_id}>
                       <AvatarImage src={isOwn ? msg.from_avatar : msg.from_avatar} />
                       <AvatarFallback>{msg.from_name?.charAt(0)}</AvatarFallback>
                     </Avatar>

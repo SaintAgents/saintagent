@@ -137,7 +137,7 @@ export default function CollaboratorFinder() {
           )}
           {scoredProfiles.map(({ profile, matched, score }) => (
             <div key={profile.id} className="flex items-center gap-3 p-3 rounded-xl border hover:shadow-sm bg-white">
-              <Avatar className="w-10 h-10">
+              <Avatar className="w-10 h-10 cursor-pointer" data-user-id={profile.user_id}>
                 <AvatarImage src={profile.avatar_url} />
                 <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
               </Avatar>
