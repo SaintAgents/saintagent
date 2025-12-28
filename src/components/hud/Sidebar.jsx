@@ -37,7 +37,8 @@ import {
   Trophy,
   Crown,
   TrendingUp,
-  ExternalLink
+  ExternalLink,
+  Sun
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -75,7 +76,9 @@ export default function Sidebar({
   currentPage,
   profile,
   onStatusChange,
-  onDMPolicyChange
+  onDMPolicyChange,
+  theme,
+  onThemeToggle
 }) {
   const [status, setStatus] = useState(profile?.status || 'online');
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
@@ -83,6 +86,7 @@ export default function Sidebar({
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
+  const isDark = theme === 'dark';
   const isDark = theme === 'dark';
 
   // Ensure we have an email even if profile hasn't loaded yet
