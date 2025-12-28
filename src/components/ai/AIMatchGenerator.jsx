@@ -23,18 +23,23 @@ export default function AIMatchGenerator({ profile }) {
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
   });
 
+  const { data: enginePrefs } = useQuery({
+    queryKey: ['enginePreferences', profile?.user_id],
+    queryFn: async () => {
+      const prefs = await base44.entities.EnginePreference.filter({ user_id: profile.user_id });
+      return prefs[0] || null;
+    },
+    enabled: !!profile?.user_id
+  });
+
   const generateMatchesMutation = useMutation({
     mutationFn: async () => {
       setIsGenerating(true);
       
-      // Fetch user preferences
-      const preferencesData = await base44.entities.EnginePreference.filter({ user_id: profile.user_id });
-      const preferences = preferencesData[0] || {};
-      
       // Filter out current user and get potential matches
       const potentialMatches = allProfiles.filter(p => p.user_id !== profile.user_id);
       
-      // Prepare enhanced context for AI with preferences
+      // Prepare context for AI with enhanced preferences
       const userContext = {
         display_name: profile.display_name,
         bio: profile.bio,
@@ -42,101 +47,86 @@ export default function AIMatchGenerator({ profile }) {
         intentions: profile.intentions || [],
         skills: profile.skills || [],
         spiritual_practices: profile.spiritual_practices || [],
-        consciousness_orientation: profile.consciousness_orientation || [],
         qualities_seeking: profile.qualities_seeking || [],
         qualities_providing: profile.qualities_providing || [],
         relationship_status: profile.relationship_status,
         region: profile.region,
-        mystical_profile: {
-          astrological_sign: profile.astrological_sign,
-          numerology_life_path: profile.numerology_life_path,
-          birth_card: profile.birth_card
-        },
         preferences: {
-          skills_seeking: preferences.skills_seeking || [],
-          skills_offering: preferences.skills_offering || [],
-          commitment_level: preferences.commitment_level || 'contributor',
-          time_availability: preferences.time_availability,
-          spiritual_alignment_importance: preferences.spiritual_alignment_importance || 5,
-          value_alignment_importance: preferences.value_alignment_importance || 7,
-          practices_alignment: preferences.practices_alignment || [],
-          consciousness_level_preference: preferences.consciousness_level_preference || ['any'],
-          collaboration_style: preferences.collaboration_style || [],
-          seeking_roles: preferences.seeking_roles || [],
-          offering_roles: preferences.offering_roles || [],
-          energy_compatibility: preferences.energy_compatibility !== false,
-          distance_preference: preferences.distance_preference || 'global'
+          skills_seeking: enginePrefs?.skills_seeking || [],
+          skills_offering: enginePrefs?.skills_offering || [],
+          commitment_level: enginePrefs?.commitment_level || 'contributor',
+          time_availability: enginePrefs?.time_availability,
+          spiritual_alignment_importance: enginePrefs?.spiritual_alignment_importance || 5,
+          value_alignment_importance: enginePrefs?.value_alignment_importance || 7,
+          consciousness_level_preference: enginePrefs?.consciousness_level_preference || ['any'],
+          collaboration_style: enginePrefs?.collaboration_style || [],
+          distance_preference: enginePrefs?.distance_preference || 'global',
+          energy_compatibility: enginePrefs?.energy_compatibility ?? true
         }
       };
 
-      // Get top 15 potential matches with more context
-      const topCandidates = potentialMatches.slice(0, 15).map(p => ({
+      // Get top 10 potential matches
+      const topCandidates = potentialMatches.slice(0, 10).map(p => ({
         id: p.user_id,
         name: p.display_name,
         bio: p.bio,
         values: p.values_tags || [],
         intentions: p.intentions || [],
         skills: p.skills || [],
-        spiritual_practices: p.spiritual_practices || [],
-        consciousness_orientation: p.consciousness_orientation || [],
         qualities_providing: p.qualities_providing || [],
-        region: p.region,
-        mystical_profile: {
-          astrological_sign: p.astrological_sign,
-          numerology_life_path: p.numerology_life_path
-        }
+        region: p.region
       }));
 
-      // Enhanced AI prompt with preference weighting
-      const prompt = `You are an advanced AI synchronicity matching assistant for a conscious community platform.
+      // Call AI to analyze matches with enhanced criteria
+      const prompt = `You are an advanced AI matchmaking assistant for a spiritual growth and collaboration platform called SaintAgent.
 
-USER PROFILE WITH DETAILED PREFERENCES:
+USER PROFILE & PREFERENCES:
 ${JSON.stringify(userContext, null, 2)}
 
-POTENTIAL MATCHES (${topCandidates.length} candidates):
+POTENTIAL MATCHES:
 ${JSON.stringify(topCandidates, null, 2)}
 
-CRITICAL MATCHING INSTRUCTIONS:
+Analyze each potential match using these weighted criteria:
 
-Analyze and return the TOP 5 BEST MATCHES based on the user's EXPLICIT PREFERENCES:
+1. SKILLS ALIGNMENT (30%):
+   - Does the candidate have skills the user is seeking?
+   - Are the user's offered skills valuable to the candidate?
+   - Skill complementarity for collaboration
 
-1. **Skills Alignment** (HIGHEST PRIORITY):
-   - Match user's preferences.skills_seeking with candidates' skills
-   - Match user's preferences.skills_offering with potential needs
-   - Look for direct skill complementarity
+2. VALUES & SPIRITUAL ALIGNMENT (${userContext.preferences.value_alignment_importance * 10}%):
+   - Shared core values
+   - Compatible spiritual practices
+   - Consciousness orientation match
 
-2. **Spiritual Alignment** (Weight: ${preferences.spiritual_alignment_importance || 5}/10):
-   - Compare spiritual_practices arrays for overlap
-   - Match consciousness_orientation with consciousness_level_preference
-   - Consider mystical compatibility if energy_compatibility enabled
+3. COMMITMENT & AVAILABILITY (15%):
+   - Compatible commitment levels
+   - Similar time availability
+   - Collaboration style alignment
 
-3. **Value Alignment** (Weight: ${preferences.value_alignment_importance || 7}/10):
-   - Deep resonance in shared values
-   - Similar life intentions and philosophies
+4. GEOGRAPHIC COMPATIBILITY (10%):
+   - Distance preference consideration
+   - Regional synergies
 
-4. **Commitment & Style**:
-   - Consider commitment_level compatibility
-   - Match collaboration_style preferences
-   - Align on time_availability
+5. ENERGY & MYSTICAL COMPATIBILITY (${userContext.preferences.spiritual_alignment_importance * 5}%):
+   ${userContext.preferences.energy_compatibility ? '- Astrological and energetic resonance' : '- Basic personality compatibility'}
+   - Consciousness orientation match
 
-5. **Role Complementarity**:
-   - User's seeking_roles vs candidate capabilities
-   - User's offering_roles vs candidate needs
+6. INTENTIONS & PURPOSE (20%):
+   - Aligned life intentions
+   - Complementary goals
+   - Mutual growth potential
 
-6. **Geographic Preference** (${preferences.distance_preference || 'global'}):
-   - Respect distance_preference setting
+For the TOP 5 best matches, provide:
+1. Match score (0-100) based on weighted criteria
+2. Detailed reasoning with specific examples
+3. 3 personalized conversation starters based on shared interests
+4. List of shared values
+5. List of complementary skills
+6. Intent alignment score (0-100)
+7. Skill complementarity score (0-100)
+8. Timing readiness (how ready both are for collaboration)
 
-7. **Qualities Match**:
-   - User's qualities_seeking vs candidate's qualities_providing
-
-For EACH of the TOP 5 matches, provide:
-- match_score (0-100) - weighted heavily by preference alignment
-- ai_reasoning: Detailed explanation focusing on HOW preferences align
-- conversation_starters: 3-5 personalized, specific openers
-- shared_values: Array of common values
-- complementary_skills: Skills that specifically complement based on seeking/offering
-
-Return ONLY the 5 best matches that align with user's stated preferences.`;
+Return ONLY the top 5 matches, prioritizing quality over quantity.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -162,7 +152,10 @@ Return ONLY the 5 best matches that align with user's stated preferences.`;
                   complementary_skills: {
                     type: "array",
                     items: { type: "string" }
-                  }
+                  },
+                  intent_alignment: { type: "number" },
+                  skill_complementarity: { type: "number" },
+                  timing_readiness: { type: "number" }
                 }
               }
             }
@@ -190,7 +183,10 @@ Return ONLY the 5 best matches that align with user's stated preferences.`;
             conversation_starters: match.conversation_starters,
             shared_values: match.shared_values,
             complementary_skills: match.complementary_skills,
-            explanation: `AI-generated match based on values, skills, and intentions`
+            intent_alignment: match.intent_alignment || 0,
+            skill_complementarity: match.skill_complementarity || 0,
+            timing_readiness: match.timing_readiness || 0,
+            explanation: `AI-generated match based on enhanced criteria including skills, values, commitment level, and spiritual alignment`
           });
         } else {
           // Create new match
@@ -206,7 +202,10 @@ Return ONLY the 5 best matches that align with user's stated preferences.`;
             conversation_starters: match.conversation_starters,
             shared_values: match.shared_values,
             complementary_skills: match.complementary_skills,
-            explanation: `AI-generated match based on values, skills, and intentions`,
+            intent_alignment: match.intent_alignment || 0,
+            skill_complementarity: match.skill_complementarity || 0,
+            timing_readiness: match.timing_readiness || 0,
+            explanation: `AI-generated match based on enhanced criteria including skills, values, commitment level, and spiritual alignment`,
             status: 'active'
           });
         }
