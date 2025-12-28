@@ -158,8 +158,6 @@ export default function Onboarding() {
               }}
               profile={stepData[currentStep]}
               user={user}
-              // Ensure Step7Dating can call onComplete directly
-              onComplete={handleStepComplete}
             />
           )}
         </div>
