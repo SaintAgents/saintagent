@@ -331,7 +331,8 @@ export default function SidePanel({
                   rows={3}
                 />
               </div>
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between">
+                <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
                   onClick={handleCreatePost}
                   disabled={!newPostText.trim() || createPostMutation.isPending}
@@ -579,7 +580,8 @@ export default function SidePanel({
                   rows={3}
                 />
               </div>
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between">
+                <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
                   onClick={handleCreatePost}
                   disabled={!newPostText.trim() || createPostMutation.isPending}
