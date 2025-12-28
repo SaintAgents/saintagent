@@ -34,6 +34,7 @@ export default function Step7Dating({ data = {}, onChange, onUpdate }) {
   const setData = onChange || onUpdate || (() => {});
 
   const handleStatusChange = (status) => {
+    if (!status) return;
     setData({ ...data, relationship_status: status });
   };
 
