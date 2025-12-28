@@ -97,7 +97,7 @@ export default function Step0Welcome({ data, onComplete }) {
         <label htmlFor="accept" className="text-sm text-slate-600">
           I agree to the {" "}
           <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank" rel="noreferrer">
-            SAINT AGENTS  TERMS AND CONDITIONS
+            SAINT AGENTS – TERMS AND CONDITIONS
           </Link>
           .
         </label>
@@ -114,7 +114,7 @@ export default function Step0Welcome({ data, onComplete }) {
         <label htmlFor="accept" className="text-sm text-slate-600">
           I agree to the {" "}
           <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank" rel="noreferrer">
-            SAINT AGENTS  TERMS AND CONDITIONS
+            SAINT AGENTS – TERMS AND CONDITIONS
           </Link>
           .
         </label>
