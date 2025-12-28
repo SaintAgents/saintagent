@@ -9,6 +9,7 @@ import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 import SignInModal from '@/components/SignInModal';
+import MeetingReminderService from '@/components/MeetingReminderService';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -267,6 +268,9 @@ export default function Layout({ children, currentPageName }) {
         open={showSignIn} 
         onClose={() => setShowSignIn(false)} 
       />
+
+      {/* Meeting Reminder Service */}
+      {currentUser && <MeetingReminderService />}
     </div>
   );
 }
