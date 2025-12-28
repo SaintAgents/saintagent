@@ -1,5 +1,5 @@
 import React from 'react';
-import { BADGE_SECTIONS } from './badgesData';
+import { BADGE_SECTIONS, BADGE_RULES } from './badgesData';
 import BadgeIcon from './BadgeIcon';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -27,6 +27,18 @@ export default function BadgesGlossaryModal({ open, onOpenChange }) {
                       </div>
                       <p className="text-xs text-slate-600 mt-1"><span className="font-medium">Icon:</span> {item.icon_desc}</p>
                       <p className="text-sm text-slate-700 mt-1"><span className="font-medium">Definition:</span> {item.definition}</p>
+                      {BADGE_RULES[item.code] && (
+                        <div className="mt-1 space-y-1">
+                          <p className="text-xs text-slate-600"><span className="font-medium">When:</span> {BADGE_RULES[item.code].when}</p>
+                          {BADGE_RULES[item.code].how && (
+                            <p className="text-xs text-slate-600"><span className="font-medium">How:</span> {BADGE_RULES[item.code].how}</p>
+                          )}
+                          <div className="text-xs text-slate-600">
+                            <span className="font-medium">Trigger Rules:</span>
+                            <pre className="bg-slate-50 border border-slate-200 rounded p-2 mt-1 overflow-auto"><code>{JSON.stringify(BADGE_RULES[item.code].conditions, null, 2)}</code></pre>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
