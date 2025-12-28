@@ -135,7 +135,7 @@ export default function ProfileDrawer({ userId, onClose }) {
       <Button 
         variant="ghost" 
         size="icon"
-        className="absolute top-4 right-4 text-slate-600 hover:bg-slate-100"
+        className="absolute top-4 right-4 z-20 text-slate-600 hover:bg-slate-100"
         onClick={onClose}
       >
         <X className="w-5 h-5" />
@@ -143,7 +143,7 @@ export default function ProfileDrawer({ userId, onClose }) {
 
       <div
         onMouseDown={startDrag}
-        className="h-9 w-full border-b bg-slate-50/80 backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center px-3 text-xs font-medium text-slate-500"
+        className="h-9 w-full border-b bg-slate-50/80 backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center px-3 pr-12 text-xs font-medium text-slate-500"
       >
         Drag to move
       </div>
