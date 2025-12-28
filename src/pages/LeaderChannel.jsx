@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import SaintStewardNominationModal from '@/components/leader/SaintStewardNominationModal';
 import SaintStewardReviewPanel from '@/components/leader/SaintStewardReviewPanel';
+import BroadcastCenter from '@/components/leader/BroadcastCenter';
+import LeaderMissionsPanel from '@/components/leader/LeaderMissionsPanel';
+import GovernancePortal from '@/components/leader/GovernancePortal';
 
 export default function LeaderChannel() {
   const [nominationModalOpen, setNominationModalOpen] = useState(false);
@@ -118,33 +121,15 @@ export default function LeaderChannel() {
           </TabsContent>
 
           <TabsContent value="broadcast">
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Radio className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">Broadcast Center - Coming Soon</p>
-                <p className="text-xs text-slate-400 mt-2">Send announcements to the entire community</p>
-              </CardContent>
-            </Card>
+            <BroadcastCenter profile={profile} />
           </TabsContent>
 
           <TabsContent value="missions">
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">Leader Missions Dashboard - Coming Soon</p>
-                <p className="text-xs text-slate-400 mt-2">Coordinate high-impact missions</p>
-              </CardContent>
-            </Card>
+            <LeaderMissionsPanel profile={profile} />
           </TabsContent>
 
           <TabsContent value="governance">
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Crown className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500">Governance Portal - Coming Soon</p>
-                <p className="text-xs text-slate-400 mt-2">Vote on platform decisions</p>
-              </CardContent>
-            </Card>
+            <GovernancePortal profile={profile} />
           </TabsContent>
         </Tabs>
       </div>
