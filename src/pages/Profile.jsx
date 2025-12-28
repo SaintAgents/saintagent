@@ -256,7 +256,7 @@ export default function Profile() {
                     <Badge variant="outline">Leader Candidate</Badge>
                   )}
                 </div>
-                <p className="text-slate-500">@{profile?.handle}</p>
+                <p className="text-slate-500">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
               <Button 
                 variant="outline" 

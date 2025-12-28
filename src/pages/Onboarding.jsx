@@ -127,6 +127,15 @@ export default function Onboarding() {
                 handle,
                 sa_number: sa
               });
+
+              // ensure notifications are fresh for new SA
+              await base44.entities.Notification.create({
+                user_id: user.email,
+                type: 'system',
+                title: 'Saint Agent ID Assigned',
+                message: `Your Saint Agent number is SA#${sa}.`,
+                priority: 'normal'
+              });
             } else if (!existingProfiles[0].sa_number) {
               let sa = String(Math.floor(100000 + Math.random() * 900000));
               for (let i = 0; i < 2; i++) {

@@ -199,7 +199,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                 </Badge>
               )}
             </div>
-            <p className="text-slate-500">@{profile.handle}</p>
+            <p className="text-slate-500">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
           </div>
 
           {/* Actions */}

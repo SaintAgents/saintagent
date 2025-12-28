@@ -365,8 +365,8 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h2 className="text-2xl font-bold text-slate-900">
-                      {profile?.display_name || 'User'}
-                    </h2>
+                            {profile?.display_name || 'User'}
+                          </h2>
                     <div className="flex items-center gap-1">
                       <p className="text-sm text-slate-500 capitalize">
                         {profile?.rank_code || 'Seeker'} • @{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}
