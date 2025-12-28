@@ -25,10 +25,13 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPageUrl } from '@/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function MatchCard({ match, onAction }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [showRating, setShowRating] = useState(false);
+  const [showChoice, setShowChoice] = useState(false);
+  const [choiceOptions, setChoiceOptions] = useState([]);
   const [rating, setRating] = useState(match.user_rating || 0);
   const queryClient = useQueryClient();
 
@@ -82,6 +85,55 @@ export default function MatchCard({ match, onAction }) {
 
   const TypeIcon = typeIcons[match.target_type] || Users;
 
+  const navigateTo = (type, id) => {
+    if (type === 'mission') {
+      window.location.href = createPageUrl('MissionDetail?id=' + id);
+    } else if (type === 'event') {
+      window.location.href = createPageUrl('EventDetail?id=' + id);
+    } else {
+      const ev = new CustomEvent('openProfile', { detail: { userId: id }});
+      document.dispatchEvent(ev);
+    }
+  };
+
+  const getCardOptions = () => {
+    const opts = [];
+    if (match?.target_type && match?.target_id) {
+      opts.push({ type: match.target_type, id: match.target_id, name: match.target_name });
+    }
+    if (Array.isArray(match?.linked_targets)) {
+      match.linked_targets.forEach(t => {
+        if (t?.type && t?.id) opts.push({ type: t.type, id: t.id, name: t.name });
+      });
+    }
+    if (match?.related_event_id) {
+      opts.push({ type: 'event', id: match.related_event_id, name: match.related_event_name });
+    }
+    if (match?.related_mission_id) {
+      opts.push({ type: 'mission', id: match.related_mission_id, name: match.related_mission_name });
+    }
+    const seen = new Set();
+    return opts.filter(o => {
+      const key = o.type + ':' + o.id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+
+  const handleCardClick = (e) => {
+    const interactive = e.target.closest('button, [role="button"], a, input, textarea, select');
+    if (interactive) return;
+    const opts = getCardOptions();
+    if (opts.length <= 1) {
+      const o = opts[0] || { type: match.target_type, id: match.target_id };
+      navigateTo(o.type, o.id);
+    } else {
+      setChoiceOptions(opts);
+      setShowChoice(true);
+    }
+  };
+
   const handleNavigateTarget = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -107,6 +159,7 @@ export default function MatchCard({ match, onAction }) {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
+      onClick={handleCardClick}
       className="group relative bg-white rounded-xl border border-slate-200/60 p-4 hover:shadow-lg hover:border-violet-200 transition-all duration-300"
     >
       <div className="flex items-start gap-4">
@@ -338,6 +391,32 @@ export default function MatchCard({ match, onAction }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
-  );
+
+      <Dialog open={showChoice} onOpenChange={setShowChoice}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Open</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            {choiceOptions.map((opt, idx) => {
+              const Icon = typeIcons[opt.type] || Users;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setShowChoice(false);
+                    navigateTo(opt.type, opt.id);
+                  }}
+                  className="w-full flex items-center gap-2 p-2 rounded-lg border hover:bg-slate-50 text-left"
+                >
+                  <Icon className="w-4 h-4 text-violet-500" />
+                  <span className="text-sm text-slate-700">{opt.name || opt.type}</span>
+                </button>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
+      </motion.div>
+      );
 }
