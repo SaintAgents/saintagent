@@ -51,6 +51,7 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import LeaderPathway from '@/components/leader/LeaderPathway';
+import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import HelpHint from '@/components/hud/HelpHint';
 import { getRPRank } from '@/components/reputation/rpUtils';
 
@@ -852,6 +853,16 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <span className="text-xs">Create Offer</span>
                 </Button>
               </div>
+            </CollapsibleCard>
+
+            {/* Quick Start Checklist */}
+            <CollapsibleCard 
+              title="Quick Start Checklist" 
+              icon={CheckCircle}
+              defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+            >
+              <QuickStartChecklist />
             </CollapsibleCard>
 
             {/* Inbox & Signals */}
