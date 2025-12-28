@@ -214,32 +214,42 @@ export default function Sidebar({
       {/* Leaderboard */}
       {!isCollapsed && (
         <div className="border-t border-slate-100 p-3">
-          <div className="relative">
-            <button
-              onClick={() => setLeaderboardOpen(!leaderboardOpen)}
-              className="w-full flex items-center justify-between px-2 mb-3 hover:bg-slate-50 rounded-lg py-1 transition-colors"
-              aria-label={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
-              title={leaderboardOpen ? 'Collapse' : 'Expand'}
-            >
-              <div className="flex items-center gap-2">
+          <div className="mb-3 px-2">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+                className="flex items-center gap-2 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors"
+                aria-label={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
+                title={leaderboardOpen ? 'Collapse' : 'Expand'}
+              >
                 <Trophy className="w-4 h-4 text-amber-500" />
                 <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
+              </button>
+              <div className="flex items-center gap-1">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={() => setLeadersPopupOpen(true)}
+                  title="Pop out"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+                  title={leaderboardOpen ? 'Collapse' : 'Expand'}
+                >
+                  {leaderboardOpen ? (
+                    <ChevronUp className="w-4 h-4 text-slate-500" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  )}
+                </Button>
               </div>
-              {leaderboardOpen ? (
-                <ChevronUp className="w-4 h-4 text-slate-500" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-slate-500" />
-              )}
-            </button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="absolute right-1 top-0.5 h-6 w-6"
-              onClick={(e) => { e.stopPropagation(); setLeadersPopupOpen(true); }}
-              title="Pop out"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-            </Button>
+            </div>
           </div>
           <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}
           >
