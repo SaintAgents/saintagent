@@ -421,9 +421,24 @@ export default function Sidebar({
               </div>
             )}
           </>
-        )}
+          )}
 
-        {/* Collapse Toggle (when collapsed) */}
+          {/* Theme Toggle */}
+          {!isCollapsed && (
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center gap-2">
+              {isDark ? (
+                <Moon className="w-4 h-4 text-slate-400" />
+              ) : (
+                <Sun className="w-4 h-4 text-slate-400" />
+              )}
+              <span className="text-sm text-slate-700">Dark mode</span>
+            </div>
+            <Switch checked={isDark} onCheckedChange={(v) => onThemeToggle?.(v ? 'dark' : 'light')} />
+          </div>
+          )}
+
+          {/* Collapse Toggle (when collapsed) */}
         {isCollapsed && (
           <Button 
             variant="ghost" 
