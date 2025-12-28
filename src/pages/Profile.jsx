@@ -98,6 +98,13 @@ export default function Profile() {
     enabled: !!profile?.user_id
   });
 
+  // Fetch followers
+  const { data: followers = [] } = useQuery({
+    queryKey: ['followers', profile?.user_id],
+    queryFn: () => base44.entities.Follow.filter({ following_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
     onSuccess: () => {
@@ -716,6 +723,39 @@ export default function Profile() {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Followers Section */}
+        {followers.length > 0 && (
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-500" />
+                Followers ({followers.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {followers.map((follow) => (
+                  <div 
+                    key={follow.id} 
+                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
+                    data-user-id={follow.follower_id}
+                  >
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={follow.follower_avatar} />
+                      <AvatarFallback className="text-sm">
+                        {follow.follower_name?.charAt(0) || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
+                      {follow.follower_name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Skills Picker Modal */}
         <SkillsPicker
