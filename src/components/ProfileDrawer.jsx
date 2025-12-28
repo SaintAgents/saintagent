@@ -29,7 +29,7 @@ import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
 
-export default function ProfileDrawer({ userId, onClose }) {
+export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
 
   const { data: profiles } = useQuery({
@@ -81,13 +81,14 @@ export default function ProfileDrawer({ userId, onClose }) {
   const draggingRef = React.useRef(false);
 
   React.useEffect(() => {
-    // Initial position near bottom-right
+    // Initial position near bottom-right, stagger by offsetIndex
     const width = 384; // w-96
     const defaultHeight = Math.min(window.innerHeight * 0.8, 640);
-    const x = Math.max(8, window.innerWidth - width - 16);
-    const y = Math.max(8, window.innerHeight - defaultHeight - 16);
+    const offset = (offsetIndex || 0) * 28; // stagger
+    const x = Math.max(8, window.innerWidth - width - 16 - offset);
+    const y = Math.max(8, window.innerHeight - defaultHeight - 16 - offset);
     setPos({ x, y });
-  }, []);
+  }, [offsetIndex]);
 
   React.useEffect(() => {
     const onMouseMove = (e) => {

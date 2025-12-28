@@ -244,13 +244,14 @@ export default function Layout({ children, currentPageName }) {
       />
 
       {/* Profile Drawers */}
-      {openProfileUserIds.map((uid) => (
-        <ProfileDrawer
-          key={uid}
-          userId={uid}
-          onClose={() => closeProfile(uid)}
-        />
-      ))}
+      {openProfileUserIds.map((uid, idx) => (
+                    <ProfileDrawer
+                      key={uid}
+                      userId={uid}
+                      offsetIndex={idx}
+                      onClose={() => closeProfile(uid)}
+                    />
+                  ))}
 
       {/* Search Modal */}
       <SearchModal
