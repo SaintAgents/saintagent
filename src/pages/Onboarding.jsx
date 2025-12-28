@@ -152,6 +152,10 @@ export default function Onboarding() {
                 const newStepData = { ...stepData, [currentStep]: data };
                 setStepData(newStepData);
               }}
+              onChange={(data) => {
+                const newStepData = { ...stepData, [currentStep]: data };
+                setStepData(newStepData);
+              }}
               profile={stepData[currentStep]}
               user={user}
             />
