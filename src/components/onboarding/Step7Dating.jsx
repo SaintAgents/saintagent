@@ -25,12 +25,16 @@ const qualityOptions = [
   'Independent', 'Communicative', 'Supportive', 'Open-Minded', 'Humorous'
 ];
 
-export default function Step7Dating({ data = {}, onChange }) {
+export default function Step7Dating({ data = {}, onChange, onUpdate }) {
   const [customQualitySeeking, setCustomQualitySeeking] = useState('');
   const [customQualityProviding, setCustomQualityProviding] = useState('');
 
+  const setData = onChange || onUpdate || (() => {});
+
+  const setData = onChange || onUpdate || (() => {});
+
   const handleStatusChange = (status) => {
-    onChange({ ...data, relationship_status: status });
+    setData({ ...data, relationship_status: status });
   };
 
   const handleTypeToggle = (type) => {
@@ -38,7 +42,7 @@ export default function Step7Dating({ data = {}, onChange }) {
     const newTypes = types.includes(type)
       ? types.filter(t => t !== type)
       : [...types, type];
-    onChange({ ...data, relationship_type_seeking: newTypes });
+    setData({ ...data, relationship_type_seeking: newTypes });
   };
 
   const handleInterestedInToggle = (value) => {
@@ -47,7 +51,7 @@ export default function Step7Dating({ data = {}, onChange }) {
     const newInterested = interested.includes(value)
       ? interested.filter(i => i !== value)
       : [...interested, value];
-    onChange({ 
+    setData({ 
       ...data, 
       dating_preferences: { ...prefs, interested_in: newInterested }
     });
@@ -58,7 +62,7 @@ export default function Step7Dating({ data = {}, onChange }) {
     const newQualities = qualities.includes(quality)
       ? qualities.filter(q => q !== quality)
       : [...qualities, quality];
-    onChange({ ...data, qualities_seeking: newQualities });
+    setData({ ...data, qualities_seeking: newQualities });
   };
 
   const handleQualityProvidingToggle = (quality) => {
@@ -66,13 +70,13 @@ export default function Step7Dating({ data = {}, onChange }) {
     const newQualities = qualities.includes(quality)
       ? qualities.filter(q => q !== quality)
       : [...qualities, quality];
-    onChange({ ...data, qualities_providing: newQualities });
+    setData({ ...data, qualities_providing: newQualities });
   };
 
   const addCustomQualitySeeking = () => {
     if (customQualitySeeking.trim()) {
       const qualities = data.qualities_seeking || [];
-      onChange({ ...data, qualities_seeking: [...qualities, customQualitySeeking.trim()] });
+      setData({ ...data, qualities_seeking: [...qualities, customQualitySeeking.trim()] });
       setCustomQualitySeeking('');
     }
   };
@@ -80,7 +84,7 @@ export default function Step7Dating({ data = {}, onChange }) {
   const addCustomQualityProviding = () => {
     if (customQualityProviding.trim()) {
       const qualities = data.qualities_providing || [];
-      onChange({ ...data, qualities_providing: [...qualities, customQualityProviding.trim()] });
+      setData({ ...data, qualities_providing: [...qualities, customQualityProviding.trim()] });
       setCustomQualityProviding('');
     }
   };
@@ -167,7 +171,7 @@ export default function Step7Dating({ data = {}, onChange }) {
             type="number"
             placeholder="Min"
             value={data.dating_preferences?.age_range_min || ''}
-            onChange={(e) => onChange({
+            onChange={(e) => setData({
               ...data,
               dating_preferences: {
                 ...data.dating_preferences,
@@ -181,7 +185,7 @@ export default function Step7Dating({ data = {}, onChange }) {
             type="number"
             placeholder="Max"
             value={data.dating_preferences?.age_range_max || ''}
-            onChange={(e) => onChange({
+            onChange={(e) => setData({
               ...data,
               dating_preferences: {
                 ...data.dating_preferences,
