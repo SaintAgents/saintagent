@@ -17,10 +17,12 @@ import {
 
 import MissionCard from '@/components/hud/MissionCard';
 import CreateMissionModal from '@/components/CreateMissionModal';
+import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 
 export default function Missions() {
   const [tab, setTab] = useState('all');
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [matrixOpen, setMatrixOpen] = useState(false);
 
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
@@ -47,13 +49,22 @@ export default function Missions() {
             </h1>
             <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts</p>
           </div>
-          <Button 
-            onClick={() => setCreateModalOpen(true)}
-            className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Create Mission
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => setCreateModalOpen(true)}
+              className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Create Mission
+            </Button>
+            <Button 
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => setMatrixOpen(true)}
+            >
+              Earnings Matrix
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -118,6 +129,8 @@ export default function Missions() {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
       />
+
+      <EarningsMatrixModal open={matrixOpen} onOpenChange={setMatrixOpen} />
     </div>
   );
 }

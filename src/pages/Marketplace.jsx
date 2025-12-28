@@ -24,6 +24,7 @@ import {
 
 import ListingCard from '@/components/hud/ListingCard';
 import CreateListingModal from '@/components/marketplace/CreateListingModal';
+import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 
 export default function Marketplace() {
   const [tab, setTab] = useState('browse');
@@ -31,6 +32,7 @@ export default function Marketplace() {
   const [viewMode, setViewMode] = useState('grid');
   const [createOpen, setCreateOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [matrixOpen, setMatrixOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [deliveryFilter, setDeliveryFilter] = useState('all');
 
@@ -82,10 +84,15 @@ export default function Marketplace() {
             </h1>
             <p className="text-slate-500 mt-1">Offer your skills, find mentors, and grow together</p>
           </div>
-          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
-            <Plus className="w-4 h-4" />
-            Create Listing
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
+              <Plus className="w-4 h-4" />
+              Create Listing
+            </Button>
+            <Button variant="outline" className="rounded-xl" onClick={() => setMatrixOpen(true)}>
+              Earnings Matrix
+            </Button>
+          </div>
         </div>
 
         {/* Search & Filters */}
@@ -207,6 +214,8 @@ export default function Marketplace() {
             ))}
           </div>
         )}
+      <EarningsMatrixModal open={matrixOpen} onOpenChange={setMatrixOpen} />
+
       <CreateListingModal
         open={createOpen}
         onOpenChange={setCreateOpen}
