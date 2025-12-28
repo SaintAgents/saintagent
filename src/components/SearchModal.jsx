@@ -29,7 +29,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['searchProfiles', query],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 50),
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
     enabled: open
   });
 
@@ -98,7 +98,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </div>
 
         <Tabs value={tab} onValueChange={setTab} className="px-4">
-          <TabsList className="w-full grid grid-cols-5">
+          <TabsList className="w-full grid grid-cols-6">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="people">
               <Users className="w-4 h-4" />

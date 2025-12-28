@@ -87,7 +87,7 @@ export default function OnlineUsersModal({ open, onClose }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Users className="w-5 h-5 text-emerald-600" />
@@ -153,11 +153,11 @@ export default function OnlineUsersModal({ open, onClose }) {
         </div>
 
         {/* Users List */}
-        <ScrollArea className="flex-1 px-6">
+        <ScrollArea className="h-[60vh] px-6">
           <div className="py-4 space-y-6">
             {Object.entries(byRegion).map(([region, users]) => (
               <div key={region}>
-                <div className="flex items-center gap-2 mb-3 sticky top-0 bg-white py-2">
+                <div className="flex items-center gap-2 mb-3 sticky top-0 z-10 bg-white/90 backdrop-blur py-2">
                   <MapPin className="w-4 h-4 text-slate-500" />
                   <h3 className="font-semibold text-slate-900">{region}</h3>
                   <span className="text-sm text-slate-500">({users.length})</span>
