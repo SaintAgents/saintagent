@@ -134,7 +134,7 @@ export default function Onboarding() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-slate-700">
-              Step {currentStep + 1} of {STEPS.length}: {STEPS[currentStep].title}
+              Step {Math.min(currentStep + 1, STEPS.length)} of {STEPS.length}: {STEPS[currentStep]?.title || ''}
             </span>
             <span className="text-sm text-violet-600 font-medium">{Math.round(progressPercent)}%</span>
           </div>
@@ -174,7 +174,7 @@ export default function Onboarding() {
             Back
           </Button>
 
-          {STEPS[currentStep].skippable && (
+          {STEPS[currentStep]?.skippable && (
             <Button
               variant="ghost"
               onClick={handleSkip}
