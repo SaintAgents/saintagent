@@ -19,7 +19,7 @@ export default function Layout({ children, currentPageName }) {
   const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
-const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome'];
+const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         // Open/close multiple profile drawers (max 6)
         const openProfile = (id) => {
