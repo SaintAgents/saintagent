@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,7 +20,8 @@ export default function CollapsibleCard({
   className,
   onPin,
   isPinned,
-  backgroundImage
+  backgroundImage,
+  onPopout
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -103,6 +104,21 @@ export default function CollapsibleCard({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+          )}
+          {onPopout && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPopout();
+              }}
+              aria-label="Pop out"
+              title="Pop out"
+            >
+              <ExternalLink className="w-4 h-4 text-slate-400" />
+            </Button>
           )}
           <ChevronDown className={cn(
             "w-5 h-5 text-slate-400 transition-transform duration-200",

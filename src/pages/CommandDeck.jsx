@@ -27,6 +27,9 @@ import {
   Flame,
   BarChart3
 } from "lucide-react";
+import FloatingPanel from '@/components/hud/FloatingPanel';
+import InboxSignals from '@/components/sections/InboxSignals';
+import CirclesRegions from '@/components/sections/CirclesRegions';
 
 import MetricTile from '@/components/hud/MetricTile';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -49,6 +52,8 @@ export default function CommandDeck() {
   const [boostTarget, setBoostTarget] = useState(null);
   const [tuneEngineOpen, setTuneEngineOpen] = useState(false);
   const [onlineUsersOpen, setOnlineUsersOpen] = useState(false);
+const [inboxPopupOpen, setInboxPopupOpen] = useState(false);
+const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
 
   // Current user (safe for public use)
   const { data: currentUser } = useQuery({
@@ -780,63 +785,26 @@ export default function CommandDeck() {
 
             {/* Inbox & Signals */}
             <CollapsibleCard 
-              title="Inbox & Signals" 
-              icon={Radio}
-              badge={notifications.length}
-              badgeColor="rose"
-              backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
-            >
-              <div className="space-y-3">
-                {notifications.length === 0 ? (
-                  <p className="text-sm text-slate-400 text-center py-6">All caught up!</p>
-                ) : (
-                  notifications.slice(0, 5).map((notif) => (
-                    <div 
-                      key={notif.id}
-                      className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors"
-                    >
-                      <div className="p-2 rounded-lg bg-violet-100">
-                        <Sparkles className="w-4 h-4 text-violet-600" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-900">{notif.title}</p>
-                        <p className="text-xs text-slate-500 truncate">{notif.message}</p>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
-                    </div>
-                  ))
-                )}
-              </div>
-            </CollapsibleCard>
+                                title="Inbox & Signals" 
+                                icon={Radio}
+                                badge={notifications.length}
+                                badgeColor="rose"
+                                backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
+                                onPopout={() => setInboxPopupOpen(true)}
+                              >
+                                <InboxSignals notifications={notifications} />
+                              </CollapsibleCard>
 
             {/* Circles & Regions */}
             <CollapsibleCard 
-              title="Circles & Regions" 
-              icon={Users}
-              defaultOpen={false}
-              backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
-            >
-              <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start gap-3 h-12 rounded-xl">
-                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <Users className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-medium">Join a Circle</p>
-                    <p className="text-xs text-slate-500">Find your community</p>
-                  </div>
-                </Button>
-                <Button variant="outline" className="w-full justify-start gap-3 h-12 rounded-xl">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                    <Target className="w-4 h-4 text-emerald-600" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-medium">Explore Your Region</p>
-                    <p className="text-xs text-slate-500">Local events & needs</p>
-                  </div>
-                </Button>
-              </div>
-            </CollapsibleCard>
+                                title="Circles & Regions" 
+                                icon={Users}
+                                defaultOpen={false}
+                                backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
+                                onPopout={() => setCirclesPopupOpen(true)}
+                              >
+                                <CirclesRegions />
+                              </CollapsibleCard>
 
             {/* Leader Pathway */}
             <LeaderPathway profile={profile} />
@@ -1075,6 +1043,18 @@ export default function CommandDeck() {
         onMatchAction={handleMatchAction}
         onMeetingAction={handleMeetingAction}
       />
+
+      {/* Popout Panels */}
+      {inboxPopupOpen && (
+        <FloatingPanel title="Inbox & Signals" onClose={() => setInboxPopupOpen(false)}>
+          <InboxSignals notifications={notifications} />
+        </FloatingPanel>
+      )}
+      {circlesPopupOpen && (
+        <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}>
+          <CirclesRegions />
+        </FloatingPanel>
+      )}
 
       {/* Quick Create Modal */}
       <QuickCreateModal 
