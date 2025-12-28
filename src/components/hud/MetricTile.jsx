@@ -42,11 +42,11 @@ export default function MetricTile({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium uppercase tracking-wider opacity-60 mb-1 truncate">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-800 mb-1 truncate">
             {label}
           </p>
           <p className={cn(
-            "font-bold tracking-tight",
+            "font-extrabold tracking-tight text-slate-900",
             size === "compact" ? "text-xl" : "text-2xl"
           )}>
             {value}

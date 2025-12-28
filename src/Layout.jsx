@@ -293,6 +293,10 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         }
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
           background-color: #0b1220 !important;
+          background-image: linear-gradient(180deg, rgba(11,18,32,0.6), rgba(11,18,32,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0ea2a3ef3_9426c871-d540-4f5f-8354-f72ac2015cc0.jpg');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
           color: #e5e7eb;
         }
         [data-theme='dark'] [class*='bg-white'] { background-color: #0f172a !important; }
@@ -304,6 +308,15 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         [data-theme='dark'] [class*='text-slate-700'] { color: #cbd5e1 !important; }
         [data-theme='dark'] [class*='text-slate-600'] { color: #94a3b8 !important; }
         [data-theme='dark'] [class*='text-slate-500'] { color: #94a3b8 !important; }
+
+        /* Command Deck gold accent */
+        [data-theme='dark'] main[data-page='CommandDeck'] { --gold: #FFD76A; }
+        [data-theme='dark'] main[data-page='CommandDeck'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-900'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-800'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-700'] {
+          color: var(--gold) !important;
+        }
       `}</style>
 
       {/* Sidebar */}
@@ -332,10 +345,12 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
       />
 
       {/* Main Content */}
-      <main className={cn(
-        "pt-16 min-h-screen transition-all duration-300",
-        sidebarCollapsed ? "pl-20" : "pl-64"
-      )}>
+      <main
+        data-page={currentPageName}
+        className={cn(
+          "pt-16 min-h-screen transition-all duration-300",
+          sidebarCollapsed ? "pl-20" : "pl-64"
+        )}>
         {children}
       </main>
 
