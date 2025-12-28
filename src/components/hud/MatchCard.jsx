@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,12 +17,53 @@ import {
   Target,
   Users,
   Brain,
-  Shield
+  Shield,
+  Star,
+  Ban,
+  ThumbsUp,
+  ThumbsDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function MatchCard({ match, onAction }) {
   const [showExplanation, setShowExplanation] = useState(false);
+  const [showRating, setShowRating] = useState(false);
+  const [rating, setRating] = useState(match.user_rating || 0);
+  const queryClient = useQueryClient();
+
+  const updateMatchMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Match.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matches'] })
+  });
+
+  const handleRate = (stars) => {
+    setRating(stars);
+    updateMatchMutation.mutate({ 
+      id: match.id, 
+      data: { user_rating: stars }
+    });
+    setTimeout(() => setShowRating(false), 1000);
+  };
+
+  const handleBlock = async () => {
+    await updateMatchMutation.mutateAsync({ 
+      id: match.id, 
+      data: { is_blocked: true, status: 'blocked' }
+    });
+    
+    // Also add to blocked list in preferences
+    const prefs = await base44.entities.EnginePreference.filter({ user_id: match.user_id });
+    if (prefs[0]) {
+      const blockedUsers = prefs[0].blocked_users || [];
+      if (!blockedUsers.includes(match.target_id)) {
+        await base44.entities.EnginePreference.update(prefs[0].id, {
+          blocked_users: [...blockedUsers, match.target_id]
+        });
+      }
+    }
+    
+    onAction?.('block', match);
+  };
   
   const scoreColor = match.match_score >= 80 
     ? "text-emerald-600 bg-emerald-50" 
@@ -39,11 +82,11 @@ export default function MatchCard({ match, onAction }) {
   const TypeIcon = typeIcons[match.target_type] || Users;
 
   const scoreBreakdown = [
-    { label: "Intent Alignment", value: match.intent_alignment || 0, icon: Target },
-    { label: "Skill Match", value: match.skill_complementarity || 0, icon: Brain },
+    { label: "Intent", value: match.intent_alignment || 0, icon: Target },
+    { label: "Skills", value: match.skill_complementarity || 0, icon: Brain },
+    { label: "Spiritual", value: match.spiritual_alignment_score || 0, icon: Sparkles },
     { label: "Proximity", value: match.proximity_score || 0, icon: Users },
     { label: "Timing", value: match.timing_readiness || 0, icon: Clock },
-    { label: "Trust", value: match.trust_score || 0, icon: Shield },
   ];
 
   return (
@@ -113,6 +156,15 @@ export default function MatchCard({ match, onAction }) {
           size="icon" 
           variant="ghost"
           className="h-9 w-9 shrink-0"
+          onClick={() => setShowRating(!showRating)}
+          title="Rate this match"
+        >
+          <Star className={cn("w-4 h-4", rating > 0 ? "text-amber-500 fill-amber-500" : "text-slate-400")} />
+        </Button>
+        <Button 
+          size="icon" 
+          variant="ghost"
+          className="h-9 w-9 shrink-0"
           onClick={() => onAction?.('save', match)}
         >
           <Bookmark className="w-4 h-4 text-slate-400" />
@@ -120,12 +172,50 @@ export default function MatchCard({ match, onAction }) {
         <Button 
           size="icon" 
           variant="ghost"
-          className="h-9 w-9 shrink-0"
-          onClick={() => onAction?.('decline', match)}
+          className="h-9 w-9 shrink-0 hover:text-rose-600"
+          onClick={handleBlock}
+          title="Block this user"
         >
-          <X className="w-4 h-4 text-slate-400" />
+          <Ban className="w-4 h-4 text-slate-400" />
         </Button>
       </div>
+
+      {/* Rating Interface */}
+      <AnimatePresence>
+        {showRating && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 p-3 bg-slate-50 rounded-lg">
+              <p className="text-xs text-slate-600 mb-2">Rate this match quality:</p>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => handleRate(star)}
+                    className="hover:scale-110 transition-transform"
+                  >
+                    <Star className={cn(
+                      "w-6 h-6",
+                      star <= rating 
+                        ? "text-amber-500 fill-amber-500" 
+                        : "text-slate-300"
+                    )} />
+                  </button>
+                ))}
+              </div>
+              {rating > 0 && (
+                <p className="text-xs text-slate-500 mt-2">
+                  {rating >= 4 ? "Great match! 🎉" : rating >= 3 ? "Good match" : "Not quite right"}
+                </p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <button
         onClick={() => setShowExplanation(!showExplanation)}
@@ -148,66 +238,14 @@ export default function MatchCard({ match, onAction }) {
             className="overflow-hidden"
           >
             <div className="mt-3 pt-3 border-t border-slate-100 space-y-3">
-              {/* AI Reasoning */}
               {match.ai_reasoning && (
-                <div className="p-3 rounded-lg bg-violet-50 border border-violet-100">
-                  <div className="flex items-start gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-violet-600 mt-0.5" />
-                    <span className="text-xs font-semibold text-violet-700 uppercase tracking-wide">AI Analysis</span>
-                  </div>
-                  <p className="text-sm text-slate-700 leading-relaxed">{match.ai_reasoning}</p>
+                <div className="p-3 bg-violet-50 rounded-lg">
+                  <p className="text-xs font-medium text-violet-900 mb-1">AI Analysis</p>
+                  <p className="text-xs text-violet-700">{match.ai_reasoning}</p>
                 </div>
               )}
 
-              {/* Fallback to regular explanation */}
-              {!match.ai_reasoning && match.explanation && (
-                <p className="text-sm text-slate-600">{match.explanation}</p>
-              )}
-
-              {/* Shared Values */}
-              {match.shared_values?.length > 0 && (
-                <div>
-                  <p className="text-xs font-semibold text-slate-700 mb-2">Shared Values</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {match.shared_values.map((value, i) => (
-                      <Badge key={i} variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
-                        {value}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Complementary Skills */}
-              {match.complementary_skills?.length > 0 && (
-                <div>
-                  <p className="text-xs font-semibold text-slate-700 mb-2">Complementary Skills</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {match.complementary_skills.map((skill, i) => (
-                      <Badge key={i} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Conversation Starters */}
-              {match.conversation_starters?.length > 0 && (
-                <div>
-                  <p className="text-xs font-semibold text-slate-700 mb-2">💬 Conversation Starters</p>
-                  <div className="space-y-2">
-                    {match.conversation_starters.map((starter, i) => (
-                      <div key={i} className="p-2 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer">
-                        <p className="text-xs text-slate-700">{starter}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Score Breakdown */}
-              <div className="grid grid-cols-5 gap-2 pt-2">
+              <div className="grid grid-cols-5 gap-2">
                 {scoreBreakdown.map((item, i) => (
                   <div key={i} className="text-center">
                     <div className="flex justify-center mb-1">
@@ -219,11 +257,62 @@ export default function MatchCard({ match, onAction }) {
                 ))}
               </div>
 
+              {match.shared_values?.length > 0 && (
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Shared Values</p>
+                  <div className="flex flex-wrap gap-1">
+                    {match.shared_values.slice(0, 3).map((value, i) => (
+                      <Badge key={i} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                        {value}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {match.spiritual_synergies?.length > 0 && (
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Spiritual Synergies</p>
+                  <div className="flex flex-wrap gap-1">
+                    {match.spiritual_synergies.slice(0, 3).map((syn, i) => (
+                      <Badge key={i} variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                        ✨ {syn}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {match.conversation_starters?.length > 0 && (
+                <div>
+                  <p className="text-xs text-slate-500 mb-1.5">Conversation Starters</p>
+                  <div className="space-y-1">
+                    {match.conversation_starters.slice(0, 2).map((starter, i) => (
+                      <p key={i} className="text-xs text-slate-600 pl-2 border-l-2 border-violet-200">
+                        {starter}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-2 pt-2">
-                <Button variant="ghost" size="sm" className="text-xs h-7">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs h-7 flex-1"
+                  onClick={() => handleRate(5)}
+                >
+                  <ThumbsUp className="w-3 h-3 mr-1" />
                   More like this
                 </Button>
-                <Button variant="ghost" size="sm" className="text-xs h-7">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs h-7 flex-1"
+                  onClick={() => handleRate(2)}
+                >
+                  <ThumbsDown className="w-3 h-3 mr-1" />
                   Less like this
                 </Button>
               </div>
