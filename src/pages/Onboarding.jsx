@@ -105,9 +105,17 @@ export default function Onboarding() {
             const subject = 'Welcome to Saint Agents – Your Mission Just Went Live';
             const body = `Hi ${firstName},\n\nWelcome to Saint Agents. 🌟\nYour account is now active, and your Saint profile has been initiated inside the GGG-powered ecosystem. From here forward, every action—every mission, every connection, every contribution—can become part of a higher-aligned impact trail.\n\nWhat this means for you\nAs a Saint Agent, you’re not just “using a platform.” You’re stepping into a living system designed to:\n• Track real value you create through missions, services, and exchanges\n• Grow your GGG earnings in a secured, clean ledger\n• Build a visible reputation + trust profile that reflects who you truly are in the work\n\nOver time, you’ll unlock roles, badges, and access tiers that recognize your integrity, consistency, and service—not just your volume.\n\nYour first steps\nTo get started, we recommend:\n1) Complete Your Profile — add a clear photo, a short bio, and your main skills/offers.\n2) Review the Mission & Marketplace areas — browse missions to accept/support and post your first offer or service.\n3) Read the Saint Agent Ethos — Truth over manipulation • Service over extraction • Long-term alignment over quick wins.\n\nHow your trust & reputation grow\nBehind the scenes, the system is watching for follow-through, integrity, and contribution. As you complete missions, earn GGG, and interact with others, you’ll start to see:\n• Your Reputation Rank (from Seeker upward)\n• Your Trust Meter (0–100%)\n• Your badges unlocking (e.g., Mentor, Steward, Healer, Market Maker, etc.)\n\nNeed help?\nCheck the Help / FAQ section in your dashboard or reach out to support at ${supportEmail}.\n\nThank you for stepping in. The fact that you’re here says something about who you are—and what you’re ready to build.\n\nWelcome to Saint Agents. Your mission is now in motion.\n\nWith respect,\nThe Saint Agents Team`;
 
-            // Clear any existing notifications for this brand-new user (delete all)
-            const existing = await base44.entities.Notification.filter({ user_id: user.email });
-            await Promise.all((existing || []).map(n => base44.entities.Notification.delete(n.id)));
+            // Clear any existing notifications and messages for this brand-new user
+            const existingNotifs = await base44.entities.Notification.filter({ user_id: user.email });
+            await Promise.all((existingNotifs || []).map(n => base44.entities.Notification.delete(n.id)));
+
+            // Clear messages (both outgoing and incoming)
+            const msgsOut = await base44.entities.Message.filter({ from_user_id: user.email });
+            const msgsIn = await base44.entities.Message.filter({ to_user_id: user.email });
+            const msgsToDelete = [...(msgsOut || []), ...(msgsIn || [])];
+            if (msgsToDelete.length) {
+              await Promise.all(msgsToDelete.map(m => base44.entities.Message.delete(m.id)));
+            }
 
             // Add welcome notification
             await base44.entities.Notification.create({
