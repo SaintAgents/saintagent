@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, Send, Search, Plus } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 export default function Messages() {
@@ -97,9 +97,8 @@ export default function Messages() {
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-slate-900">Messages</h2>
             <Button 
-              size="icon" 
               variant="ghost" 
-              className="rounded-lg"
+              className="rounded-lg gap-1.5 text-xs"
               onClick={() => {
                 if (selectedConversation) {
                   window.dispatchEvent(new CustomEvent('openFloatingChat', {
@@ -121,7 +120,8 @@ export default function Messages() {
                 }
               }}
             >
-              <Plus className="w-4 h-4" />
+              <ExternalLink className="w-3.5 h-3.5" />
+              Popup
             </Button>
           </div>
           <div className="relative">
@@ -159,9 +159,9 @@ export default function Messages() {
                 </div>
                 </button>
                 <Button
-                size="icon"
+                size="sm"
                 variant="ghost"
-                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs gap-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   window.dispatchEvent(new CustomEvent('openFloatingChat', {
@@ -173,7 +173,8 @@ export default function Messages() {
                   }));
                 }}
                 >
-                <Plus className="w-4 h-4" />
+                <ExternalLink className="w-3.5 h-3.5" />
+                Popup
                 </Button>
                 </div>
                 ))}
