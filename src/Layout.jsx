@@ -8,6 +8,7 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
+import SignInModal from '@/components/SignInModal';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -16,6 +17,7 @@ export default function Layout({ children, currentPageName }) {
   const [profileDrawerUserId, setProfileDrawerUserId] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   // Global profile click handler
   useEffect(() => {
@@ -72,7 +74,13 @@ export default function Layout({ children, currentPageName }) {
   // Fetch user profile and current user
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: async () => {
+      try {
+        return await base44.auth.me();
+      } catch (error) {
+        return null;
+      }
+    }
   });
 
   const { data: profiles } = useQuery({
@@ -80,15 +88,24 @@ export default function Layout({ children, currentPageName }) {
     queryFn: async () => {
       const user = await base44.auth.me();
       return base44.entities.UserProfile.filter({ user_id: user.email });
-    }
+    },
+    enabled: !!currentUser
   });
   const profile = profiles?.[0];
 
   // Fetch notifications
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications'],
-    queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20)
+    queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20),
+    enabled: !!currentUser
   });
+
+  // Show sign-in modal when user is logged out
+  useEffect(() => {
+    if (currentUser === null) {
+      setShowSignIn(true);
+    }
+  }, [currentUser]);
 
   const handleStatusChange = async (status) => {
     if (profile) {
@@ -226,6 +243,12 @@ export default function Layout({ children, currentPageName }) {
           onClose={() => setFloatingChat(null)}
         />
       )}
+
+      {/* Sign In Modal */}
+      <SignInModal 
+        open={showSignIn} 
+        onClose={() => setShowSignIn(false)} 
+      />
     </div>
   );
 }

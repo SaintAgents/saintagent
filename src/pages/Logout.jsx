@@ -77,7 +77,7 @@ export default function Logout() {
   const handleLogout = async () => {
     localStorage.removeItem('session_start_time');
     await base44.auth.logout();
-    setShowSignIn(true);
+    window.location.reload();
   };
 
   const handleCancel = () => {
