@@ -10,7 +10,6 @@ import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
-import { createPageUrl } from '@/utils';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -116,9 +115,7 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  const handleLogout = () => {
-    window.location.href = createPageUrl('Landing');
-  };
+
 
   const handleSearch = (query) => {
     setSearchOpen(true);
@@ -211,8 +208,7 @@ export default function Layout({ children, currentPageName }) {
         onSearch={handleSearch}
         onQuickCreate={() => setQuickCreateOpen(true)}
         onNotificationAction={handleNotificationAction}
-        onLogout={handleLogout}
-        sidebarCollapsed={sidebarCollapsed}
+         sidebarCollapsed={sidebarCollapsed}
       />
 
       {/* Main Content */}
