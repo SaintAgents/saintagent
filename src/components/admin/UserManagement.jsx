@@ -357,7 +357,7 @@ export default function UserManagement() {
                 </div>
               </div>
 
-              {/* Stats */
+              {/* Stats */}
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">User Stats</h3>
                 <div className="grid grid-cols-3 gap-4">
