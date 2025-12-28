@@ -41,7 +41,7 @@ export default function TopBar({
   onSearch,
   onQuickCreate,
   onNotificationAction,
-  onLogout,
+  onLogout,,
   sidebarCollapsed
 }) {
   const [searchQuery, setSearchQuery] = useState('');
