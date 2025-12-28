@@ -70,6 +70,7 @@ export default function Step7Dating({ data = {}, onChange, onUpdate }) {
   };
 
   const handleQualityProvidingToggle = (quality) => {
+    if (!quality) return;
     const qualities = data.qualities_providing || [];
     const newQualities = qualities.includes(quality)
       ? qualities.filter(q => q !== quality)
