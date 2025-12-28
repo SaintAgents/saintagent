@@ -64,6 +64,7 @@ const [meetingsPopupOpen, setMeetingsPopupOpen] = useState(false);
 const [missionsPopupOpen, setMissionsPopupOpen] = useState(false);
 const [marketPopupOpen, setMarketPopupOpen] = useState(false);
 const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
+const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
 
   // Current user (safe for public use)
   const { data: currentUser } = useQuery({
@@ -817,7 +818,14 @@ const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
                               </CollapsibleCard>
 
             {/* Leader Pathway */}
-            <LeaderPathway profile={profile} />
+            <CollapsibleCard 
+              title="Leader Pathway" 
+              icon={Sparkles}
+              defaultOpen={true}
+              onPopout={() => setLeaderPopupOpen(true)}
+            >
+              <LeaderPathway profile={profile} />
+            </CollapsibleCard>
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
@@ -1114,6 +1122,11 @@ const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
             profile={profile}
             onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}
           />
+        </FloatingPanel>
+      )}
+      {leaderPopupOpen && (
+        <FloatingPanel title="Leader Pathway" onClose={() => setLeaderPopupOpen(false)}>
+          <LeaderPathway profile={profile} />
         </FloatingPanel>
       )}
 
