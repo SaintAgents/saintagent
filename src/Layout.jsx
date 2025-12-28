@@ -195,23 +195,16 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  // Redirect unauthenticated users to Landing
-  useEffect(() => {
-    if (currentUser === null && currentPageName !== 'Landing') {
-      window.location.href = createPageUrl('Landing');
-    }
-  }, [currentUser, currentPageName]);
+  // Redirect unauthenticated users to login, then go to Command Deck
+    useEffect(() => {
+      if (currentUser === null) {
+        base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+      }
+    }, [currentUser]);
 
-  // If no user and not on Landing page, show minimal shell while redirecting
-  if (currentUser === null && currentPageName !== 'Landing') {
-          return (
-            <div className="min-h-screen bg-slate-50" />
-          );
-        }
-
-  // If no user and on Landing page, just show Landing without layout chrome
-  if (currentUser === null && currentPageName === 'Landing') {
-    return <>{children}</>;
+  // If no user, show minimal shell while redirecting to login
+  if (currentUser === null) {
+    return <div className="min-h-screen bg-slate-50" />;
   }
 
   return (

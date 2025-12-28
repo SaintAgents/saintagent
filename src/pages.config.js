@@ -4,7 +4,6 @@ import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import EventDetail from './pages/EventDetail';
 import FindCollaborators from './pages/FindCollaborators';
-import Landing from './pages/Landing';
 import LeaderChannel from './pages/LeaderChannel';
 import Marketplace from './pages/Marketplace';
 import Matches from './pages/Matches';
@@ -27,7 +26,6 @@ export const PAGES = {
     "CommandDeck": CommandDeck,
     "EventDetail": EventDetail,
     "FindCollaborators": FindCollaborators,
-    "Landing": Landing,
     "LeaderChannel": LeaderChannel,
     "Marketplace": Marketplace,
     "Matches": Matches,
