@@ -6,6 +6,7 @@ import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor'
 import MysticalProfileEditor from '@/components/profile/MysticalProfileEditor';
 import AvatarUploader from '@/components/profile/AvatarUploader';
 import OnboardingDataEditor from '@/components/profile/OnboardingDataEditor';
+import AscensionLadderPopover from '@/components/profile/AscensionLadderPopover';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -752,9 +753,12 @@ export default function Profile() {
                   color="violet"
                   className="mx-auto mb-4"
                 />
-                <h3 className="text-xl font-bold text-slate-900 capitalize">
-                  {profile?.rank_code || 'Seeker'}
-                </h3>
+                <div className="flex items-center justify-center gap-2">
+                  <h3 className="text-xl font-bold text-slate-900 capitalize">
+                    {profile?.rank_code || 'Seeker'}
+                  </h3>
+                  <AscensionLadderPopover />
+                </div>
                 <p className="text-sm text-slate-500 mt-1">
                   {nextRankAt - rankProgress} points to next rank
                 </p>
