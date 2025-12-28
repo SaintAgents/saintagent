@@ -101,8 +101,12 @@ export default function Sidebar({
       {/* Logo */}
       <div className="flex items-center justify-between p-4 border-b border-slate-100">
         <div className={cn("flex items-center gap-3", isCollapsed && "justify-center w-full")}>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-200">
-            <Sparkles className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center">
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
+              alt="Saint Agent Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           {!isCollapsed && (
             <span className="font-bold text-xl text-slate-900">SaintAgent</span>
