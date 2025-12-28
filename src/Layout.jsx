@@ -200,7 +200,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   // Redirect unauthenticated users to login, then go to Command Deck
     useEffect(() => {
               if (currentUser === null && !PUBLIC_PAGES.includes(currentPageName)) {
-                base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+                base44.auth.redirectToLogin(createPageUrl('Onboarding'));
               }
             }, [currentUser, currentPageName]);
 
