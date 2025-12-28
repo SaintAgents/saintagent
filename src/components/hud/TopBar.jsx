@@ -19,7 +19,8 @@ import {
   Settings,
   LogOut,
   Sparkles,
-  Crown
+  Crown,
+  Shield
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import { Link } from 'react-router-dom';
@@ -37,6 +38,7 @@ export default function TopBar({
   mode,
   onModeChange,
   profile,
+  currentUser,
   notifications = [],
   onSearch,
   onQuickCreate,
@@ -160,6 +162,17 @@ export default function TopBar({
                   Settings
                 </Link>
               </DropdownMenuItem>
+              {currentUser?.role === 'admin' && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to={createPageUrl('Admin')} className="flex items-center gap-2 text-violet-600">
+                      <Shield className="w-4 h-4" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link to={createPageUrl('Logout')} className="flex items-center gap-2 text-rose-600">

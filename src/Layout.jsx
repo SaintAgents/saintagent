@@ -69,7 +69,12 @@ export default function Layout({ children, currentPageName }) {
     return pageMap[pageName] || 'command';
   };
 
-  // Fetch user profile
+  // Fetch user profile and current user
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
@@ -173,6 +178,7 @@ export default function Layout({ children, currentPageName }) {
         mode={mode}
         onModeChange={setMode}
         profile={profile}
+        currentUser={currentUser}
         notifications={notifications}
         onSearch={handleSearch}
         onQuickCreate={() => setQuickCreateOpen(true)}
