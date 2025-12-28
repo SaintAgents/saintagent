@@ -19,10 +19,12 @@ import {
 import { createPageUrl } from '@/utils';
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import SignInModal from '@/components/SignInModal';
 
 export default function Logout() {
   const [sessionDuration, setSessionDuration] = useState('');
   const [confirming, setConfirming] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -72,9 +74,10 @@ export default function Logout() {
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem('session_start_time');
-    base44.auth.logout(createPageUrl('CommandDeck'));
+    await base44.auth.logout();
+    setShowSignIn(true);
   };
 
   const handleCancel = () => {
@@ -83,15 +86,21 @@ export default function Logout() {
 
   useEffect(() => {
     if (!user) {
-      window.location.href = createPageUrl('CommandDeck');
+      setShowSignIn(true);
     }
   }, [user]);
 
   if (!user || !profile) {
-    return null;
+    return (
+      <>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30" />
+        <SignInModal open={showSignIn} onClose={() => setShowSignIn(false)} />
+      </>
+    );
   }
 
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 flex items-center justify-center p-6">
       <Card className="w-full max-w-2xl shadow-2xl">
         <CardContent className="p-8">
@@ -258,6 +267,8 @@ export default function Logout() {
           )}
         </CardContent>
       </Card>
-    </div>
-  );
-}
+      </div>
+      <SignInModal open={showSignIn} onClose={() => setShowSignIn(false)} />
+      </>
+      );
+      }
