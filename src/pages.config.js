@@ -14,7 +14,7 @@ import Admin from './pages/Admin';
 import LeaderChannel from './pages/LeaderChannel';
 import Logout from './pages/Logout';
 import Landing from './pages/Landing';
-import MissionCollaboration from './pages/MissionCollaboration';
+import MissionDetail from './pages/MissionDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -35,7 +35,7 @@ export const PAGES = {
     "LeaderChannel": LeaderChannel,
     "Logout": Logout,
     "Landing": Landing,
-    "MissionCollaboration": MissionCollaboration,
+    "MissionDetail": MissionDetail,
 }
 
 export const pagesConfig = {
