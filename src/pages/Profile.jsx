@@ -105,6 +105,21 @@ export default function Profile() {
     enabled: !!profile?.user_id
   });
 
+  // Fetch following
+  const { data: following = [] } = useQuery({
+    queryKey: ['following', profile?.user_id],
+    queryFn: () => base44.entities.Follow.filter({ follower_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
+  // Unfollow mutation
+  const unfollowMutation = useMutation({
+    mutationFn: (followId) => base44.entities.Follow.delete(followId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['following'] });
+    }
+  });
+
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
     onSuccess: () => {
@@ -723,6 +738,54 @@ export default function Profile() {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Following Section */}
+        {following.length > 0 && (
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-rose-500" />
+                Following ({following.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {following.map((follow) => (
+                  <div 
+                    key={follow.id} 
+                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group"
+                  >
+                    <div 
+                      className="cursor-pointer"
+                      data-user-id={follow.following_id}
+                    >
+                      <Avatar className="w-12 h-12">
+                        <AvatarImage src={follow.following_avatar} />
+                        <AvatarFallback className="text-sm">
+                          {follow.following_name?.charAt(0) || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <p 
+                      className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
+                      data-user-id={follow.following_id}
+                    >
+                      {follow.following_name}
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                      onClick={() => unfollowMutation.mutate(follow.id)}
+                    >
+                      Unfollow
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Followers Section */}
         {followers.length > 0 && (
