@@ -25,6 +25,8 @@ import {
 import NotificationBell from './NotificationBell';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 const MODE_TABS = [
   { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
@@ -47,6 +49,13 @@ export default function TopBar({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+
+  const { data: unreadMessages = [] } = useQuery({
+    queryKey: ['unreadMessages', currentUser?.email],
+    queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 1000),
+    enabled: !!currentUser?.email,
+    refetchInterval: 5000
+  });
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -119,9 +128,9 @@ export default function TopBar({
         <Link to={createPageUrl('Messages')}>
           <Button variant="ghost" size="icon" className="relative">
             <MessageCircle className="w-5 h-5 text-slate-600" />
-            {notifications.filter(n => n.type === 'message').length > 0 && (
+            {unreadMessages.length > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-rose-500 rounded-full">
-                {notifications.filter(n => n.type === 'message').length}
+                {unreadMessages.length}
               </span>
             )}
           </Button>

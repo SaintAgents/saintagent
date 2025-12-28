@@ -78,6 +78,13 @@ export default function Sidebar({
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
 
+  const { data: unreadMessages = [] } = useQuery({
+    queryKey: ['unreadMessages', profile?.user_id],
+    queryFn: () => base44.entities.Message.filter({ to_user_id: profile.user_id, is_read: false }, '-created_date', 1000),
+    enabled: !!profile?.user_id,
+    refetchInterval: 5000
+  });
+
   const { data: topLeaders = [] } = useQuery({
     queryKey: ['topLeaders'],
     queryFn: () => base44.entities.UserProfile.list('-rank_points', 10),
@@ -129,6 +136,7 @@ export default function Sidebar({
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const isActive = currentPage === item.id;
+          const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : item.badge;
           return (
             <Link
               key={item.id}
@@ -148,9 +156,9 @@ export default function Sidebar({
               {!isCollapsed && (
                 <>
                   <span className="font-medium text-sm">{item.label}</span>
-                  {item.badge && (
+                  {badgeValue > 0 && (
                     <Badge className="ml-auto bg-violet-600 text-white text-xs">
-                      {item.badge}
+                      {badgeValue}
                     </Badge>
                   )}
                   {item.locked && (
@@ -160,9 +168,9 @@ export default function Sidebar({
                   )}
                 </>
               )}
-              {isCollapsed && item.badge && (
+              {isCollapsed && badgeValue > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  {item.badge}
+                  {badgeValue}
                 </span>
               )}
             </Link>
