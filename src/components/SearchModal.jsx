@@ -51,6 +51,12 @@ export default function SearchModal({ open, onClose, onSelect }) {
     enabled: open
   });
 
+  const { data: posts = [] } = useQuery({
+    queryKey: ['searchPosts', query],
+    queryFn: () => base44.entities.Post.list('-created_date', 50),
+    enabled: open
+  });
+
   const handleSearch = (e) => {
     if (e.key === 'Enter' && !query.trim()) {
       setShowAll(true);
@@ -69,6 +75,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filteredListings = filterResults(listings);
   const filteredMissions = filterResults(missions);
   const filteredCircles = filterResults(circles);
+  const filteredPosts = filterResults(posts);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -112,6 +119,9 @@ export default function SearchModal({ open, onClose, onSelect }) {
             <TabsTrigger value="circles">
               <CircleDot className="w-4 h-4" />
             </TabsTrigger>
+            <TabsTrigger value="posts">
+              <FileText className="w-4 h-4" />
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -132,7 +142,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
                       onClick={() => { onSelect?.('profile', profile); onClose(); }}
                       className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
                     >
-                      <Avatar className="w-10 h-10">
+                      <Avatar className="w-10 h-10 cursor-pointer" data-user-id={profile.user_id}>
                         <AvatarImage src={profile.avatar_url} />
                         <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
                       </Avatar>
@@ -204,7 +214,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
               )}
 
               {(showAll || query) && filteredProfiles.length === 0 && filteredListings.length === 0 && 
-               filteredMissions.length === 0 && filteredCircles.length === 0 && (
+               filteredMissions.length === 0 && filteredCircles.length === 0 && filteredPosts.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
                   <p>No results found{query ? ` for "${query}"` : ''}</p>
                 </div>

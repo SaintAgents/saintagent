@@ -141,10 +141,11 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleSearchSelect = (type, item) => {
-    if (type === 'profile') {
-      setProfileDrawerUserId(item.user_id);
-    }
-  };
+          if (type === 'profile') {
+            openProfile(item.user_id);
+            setSearchOpen(false);
+          }
+        };
 
   const handleNotificationAction = (action, notif) => {
     console.log('Notification action:', action, notif);
