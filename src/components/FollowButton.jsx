@@ -12,13 +12,14 @@ export default function FollowButton({ targetUserId, className }) {
     queryFn: () => base44.auth.me()
   });
 
-  // Check if already following (this would need a Follow entity)
+  // Check if already following using Follow entity
   const { data: followRecords = [] } = useQuery({
     queryKey: ['following', currentUser?.email, targetUserId],
-    queryFn: () => {
-      // For now, we'll track this in a simple way
-      // You would need to create a Follow entity with follower_id and following_id
-      return [];
+    queryFn: async () => {
+      return base44.entities.Follow.filter({
+        follower_id: currentUser.email,
+        following_id: targetUserId
+      });
     },
     enabled: !!currentUser && !!targetUserId && currentUser.email !== targetUserId
   });
@@ -27,34 +28,42 @@ export default function FollowButton({ targetUserId, className }) {
 
   const followMutation = useMutation({
     mutationFn: async () => {
-      // This would create a Follow record
-      // For now, we'll just update follower counts directly
       const targetProfiles = await base44.entities.UserProfile.filter({ user_id: targetUserId });
       const currentProfiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
-      
-      if (targetProfiles[0] && currentProfiles[0]) {
-        if (isFollowing) {
-          // Unfollow
-          await base44.entities.UserProfile.update(targetProfiles[0].id, {
-            follower_count: Math.max(0, (targetProfiles[0].follower_count || 0) - 1)
-          });
-          await base44.entities.UserProfile.update(currentProfiles[0].id, {
-            following_count: Math.max(0, (currentProfiles[0].following_count || 0) - 1)
-          });
-        } else {
-          // Follow
-          await base44.entities.UserProfile.update(targetProfiles[0].id, {
-            follower_count: (targetProfiles[0].follower_count || 0) + 1
-          });
-          await base44.entities.UserProfile.update(currentProfiles[0].id, {
-            following_count: (currentProfiles[0].following_count || 0) + 1
-          });
-        }
+      const target = targetProfiles?.[0];
+      const current = currentProfiles?.[0];
+      if (!target || !current) return;
+
+      if (isFollowing && followRecords?.[0]) {
+        // Unfollow: delete follow record and decrement counters
+        await base44.entities.Follow.delete(followRecords[0].id);
+        await base44.entities.UserProfile.update(target.id, {
+          follower_count: Math.max(0, (target.follower_count || 0) - 1)
+        });
+        await base44.entities.UserProfile.update(current.id, {
+          following_count: Math.max(0, (current.following_count || 0) - 1)
+        });
+      } else if (!isFollowing) {
+        // Follow: create record and increment counters
+        await base44.entities.Follow.create({
+          follower_id: current.user_id,
+          follower_name: current.display_name,
+          follower_avatar: current.avatar_url,
+          following_id: target.user_id,
+          following_name: target.display_name,
+          following_avatar: target.avatar_url
+        });
+        await base44.entities.UserProfile.update(target.id, {
+          follower_count: (target.follower_count || 0) + 1
+        });
+        await base44.entities.UserProfile.update(current.id, {
+          following_count: (current.following_count || 0) + 1
+        });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['followers'] });
       queryClient.invalidateQueries({ queryKey: ['following'] });
     }
   });
