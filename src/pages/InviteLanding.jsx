@@ -65,9 +65,8 @@ export default function InviteLanding() {
           </p>
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-3">
+        <div className="mt-10 flex items-center justify-center">
           <Button className="h-11 px-5 rounded-xl" onClick={handlePrimary}>Create My Agent Profile</Button>
-          <Button variant="outline" className="h-11 px-5 rounded-xl" onClick={handleInvite}>Enter Invite Code</Button>
         </div>
       </section>
 
@@ -116,9 +115,8 @@ export default function InviteLanding() {
           ))}
         </div>
 
-        <div className="mt-8 flex items-center gap-3">
+        <div className="mt-8">
           <Button className="h-11 px-5 rounded-xl" onClick={handlePrimary}>Create My Agent Profile</Button>
-          <Button variant="outline" className="h-11 px-5 rounded-xl" onClick={handleInvite}>Enter Invite Code</Button>
         </div>
 
         <p className="mt-10 text-slate-600 text-sm">

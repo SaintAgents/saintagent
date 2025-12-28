@@ -121,6 +121,14 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
     enabled: !!currentUser
   });
 
+  // Onboarding progress for redirect
+  const { data: onboardingRecords } = useQuery({
+    queryKey: ['onboardingProgress', currentUser?.email],
+    queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const onboarding = onboardingRecords?.[0];
+
 
 
   const handleStatusChange = async (status) => {
@@ -203,6 +211,13 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
                 base44.auth.redirectToLogin(createPageUrl('Onboarding'));
               }
             }, [currentUser, currentPageName]);
+
+  // If authenticated but onboarding not complete, force Onboarding
+  useEffect(() => {
+    if (currentUser && onboarding && onboarding.status !== 'complete' && currentPageName !== 'Onboarding') {
+      window.location.href = createPageUrl('Onboarding');
+    }
+  }, [currentUser, onboarding, currentPageName]);
 
   // If no user, show minimal shell while redirecting to login
   if (currentUser === null && PUBLIC_PAGES.includes(currentPageName)) {
