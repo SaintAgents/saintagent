@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import FloatingPanel from '@/components/hud/FloatingPanel';
 import {
   Select,
   SelectContent,
@@ -74,6 +75,7 @@ export default function Sidebar({
   const [status, setStatus] = useState(profile?.status || 'online');
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
+  const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
 
   const { data: topLeaders = [] } = useQuery({
     queryKey: ['topLeaders'],
@@ -170,19 +172,30 @@ export default function Sidebar({
       {/* Leaderboard */}
       {!isCollapsed && (
         <div className="border-t border-slate-100 p-3">
-          <button
-            onClick={() => setLeaderboardOpen(!leaderboardOpen)}
-            className="w-full flex items-center justify-between px-2 mb-3 hover:bg-slate-50 rounded-lg py-1 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-500" />
-              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
-            </div>
-            <ChevronRight className={cn(
-              "w-4 h-4 text-slate-400 transition-transform",
-              leaderboardOpen && "rotate-90"
-            )} />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+              className="w-full flex items-center justify-between px-2 mb-3 hover:bg-slate-50 rounded-lg py-1 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-amber-500" />
+                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
+              </div>
+              <ChevronRight className={cn(
+                "w-4 h-4 text-slate-400 transition-transform",
+                leaderboardOpen && "rotate-90"
+              )} />
+            </button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-1 top-0.5 h-6 w-6"
+              onClick={(e) => { e.stopPropagation(); setLeadersPopupOpen(true); }}
+              title="Pop out"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            </Button>
+          </div>
           {leaderboardOpen && (
             <ScrollArea className="h-48">
               <div className="space-y-2">
@@ -222,6 +235,45 @@ export default function Sidebar({
                 ))}
               </div>
             </ScrollArea>
+          )}
+          {leadersPopupOpen && (
+            <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
+              <div className="space-y-2">
+                {topLeaders.map((leader, index) => (
+                  <div
+                    key={leader.id}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors"
+                  >
+                    <div className="relative">
+                      <Avatar className="w-9 h-9 cursor-pointer" data-user-id={leader.user_id}>
+                        <AvatarImage src={leader.avatar_url} />
+                        <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      {index < 3 && (
+                        <div className={cn(
+                          "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
+                          index === 0 && "bg-amber-400 text-white",
+                          index === 1 && "bg-slate-300 text-slate-700",
+                          index === 2 && "bg-orange-400 text-white"
+                        )}>
+                          {index + 1}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-900 truncate">{leader.display_name}</p>
+                      <div className="flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3 text-violet-500" />
+                        <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                      </div>
+                    </div>
+                    {leader.leader_tier === 'verified144k' && (
+                      <Crown className="w-4 h-4 text-amber-500 shrink-0" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </FloatingPanel>
           )}
         </div>
       )}
