@@ -95,7 +95,7 @@ export default function ProfileDrawer({ userId, onClose }) {
         <X className="w-5 h-5" />
       </Button>
 
-      <ScrollArea className="flex-1 max-h-[70vh]">
+      <ScrollArea className="flex-1 h-[70vh]">
         <div className="p-6">
           {/* Avatar */}
           <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
