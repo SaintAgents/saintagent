@@ -198,12 +198,15 @@ export default function Layout({ children, currentPageName }) {
 
   // Redirect unauthenticated users to login, then go to Command Deck
     useEffect(() => {
-      if (currentUser === null) {
-        base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
-      }
-    }, [currentUser]);
+              if (currentUser === null && currentPageName !== 'SignUp') {
+                base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+              }
+            }, [currentUser, currentPageName]);
 
   // If no user, show minimal shell while redirecting to login
+  if (currentUser === null && currentPageName === 'SignUp') {
+    return <div className="min-h-screen bg-slate-50">{children}</div>;
+  }
   if (currentUser === null) {
     return <div className="min-h-screen bg-slate-50" />;
   }
