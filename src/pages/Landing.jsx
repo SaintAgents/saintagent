@@ -38,7 +38,7 @@ export default function Landing() {
                 onClick={handleSignIn}
                 className="w-full h-12 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold"
               >
-                Sign In
+                Enter
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
               <Button 
@@ -46,7 +46,7 @@ export default function Landing() {
                 variant="outline"
                 className="w-full h-12 border-2 border-violet-600 text-violet-600 hover:bg-violet-50 font-semibold"
               >
-                Create Account
+                Explore App
               </Button>
             </div>
 
