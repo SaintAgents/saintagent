@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import EmojiPicker from "@/components/messages/EmojiPicker";
 import { 
   ChevronLeft, 
   ChevronRight,
@@ -432,7 +433,7 @@ export default function SidePanel({
                                 {profile?.display_name?.charAt(0)}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 flex gap-2">
+                            <div className="flex-1 flex items-end gap-2">
                               <Textarea
                                 value={commentText[post.id] || ''}
                                 onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
@@ -440,6 +441,7 @@ export default function SidePanel({
                                 className="text-xs h-8 resize-none"
                                 rows={1}
                               />
+                              <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: ((commentText[post.id] || '') + e) })} />
                               <Button
                                 size="sm"
                                 onClick={() => handleComment(post.id)}
@@ -657,17 +659,18 @@ export default function SidePanel({
                                 {profile?.display_name?.charAt(0)}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 flex gap-2">
-                              <Textarea
-                                value={commentText[post.id] || ''}
-                                onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
-                                placeholder="Write a comment..."
-                                className="text-xs h-8 resize-none"
-                                rows={1}
-                              />
-                              <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
-                                <Send className="w-3 h-3" />
-                              </Button>
+                            <div className="flex-1 flex items-end gap-2">
+                             <Textarea
+                               value={commentText[post.id] || ''}
+                               onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                               placeholder="Write a comment..."
+                               className="text-xs h-8 resize-none"
+                               rows={1}
+                             />
+                             <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: ((commentText[post.id] || '') + e) })} />
+                             <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
+                               <Send className="w-3 h-3" />
+                             </Button>
                             </div>
                           </div>
                         </div>

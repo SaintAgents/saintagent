@@ -4,6 +4,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import EmojiPicker from "@/components/messages/EmojiPicker";
 import {
   Dialog,
   DialogContent,
@@ -117,6 +118,9 @@ export default function TestimonialModal({
               className="mt-2 min-h-32"
               required
             />
+            <div className="mt-2 flex justify-end">
+              <EmojiPicker onSelect={(e) => setText((prev) => (prev || '') + e)} />
+            </div>
             <p className="text-xs text-slate-500 mt-1">
               {context && `About: ${context}`}
             </p>
