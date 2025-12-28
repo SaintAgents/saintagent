@@ -7,6 +7,7 @@ import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
+import FloatingChatWidget from '@/components/FloatingChatWidget';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -14,6 +15,7 @@ export default function Layout({ children, currentPageName }) {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [profileDrawerUserId, setProfileDrawerUserId] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [floatingChat, setFloatingChat] = useState(null);
 
   // Global profile click handler
   useEffect(() => {
@@ -29,11 +31,22 @@ export default function Layout({ children, currentPageName }) {
         setProfileDrawerUserId(e.detail.userId);
       }
     };
+    const handleOpenChat = (e) => {
+      if (e.detail) {
+        setFloatingChat({
+          recipientId: e.detail.recipientId,
+          recipientName: e.detail.recipientName,
+          recipientAvatar: e.detail.recipientAvatar
+        });
+      }
+    };
     document.addEventListener('click', handleProfileClick);
     document.addEventListener('openProfile', handleOpenProfile);
+    document.addEventListener('openFloatingChat', handleOpenChat);
     return () => {
       document.removeEventListener('click', handleProfileClick);
       document.removeEventListener('openProfile', handleOpenProfile);
+      document.removeEventListener('openFloatingChat', handleOpenChat);
     };
   }, []);
 
@@ -195,6 +208,16 @@ export default function Layout({ children, currentPageName }) {
         onClose={() => setSearchOpen(false)}
         onSelect={handleSearchSelect}
       />
+
+      {/* Floating Chat Widget */}
+      {floatingChat && (
+        <FloatingChatWidget
+          recipientId={floatingChat.recipientId}
+          recipientName={floatingChat.recipientName}
+          recipientAvatar={floatingChat.recipientAvatar}
+          onClose={() => setFloatingChat(null)}
+        />
+      )}
     </div>
   );
 }

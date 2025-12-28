@@ -96,7 +96,22 @@ export default function Messages() {
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-slate-900">Messages</h2>
-            <Button size="icon" variant="ghost" className="rounded-lg">
+            <Button 
+              size="icon" 
+              variant="ghost" 
+              className="rounded-lg"
+              onClick={() => {
+                if (selectedConversation) {
+                  window.dispatchEvent(new CustomEvent('openFloatingChat', {
+                    detail: {
+                      recipientId: selectedConversation.otherUser.id,
+                      recipientName: selectedConversation.otherUser.name,
+                      recipientAvatar: selectedConversation.otherUser.avatar
+                    }
+                  }));
+                }
+              }}
+            >
               <Plus className="w-4 h-4" />
             </Button>
           </div>
