@@ -6,13 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Sparkles } from "lucide-react";
 
 export default function SignInModal({ open, onClose }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    // Redirect to Base44 auth with return URL
+  const handleSignIn = () => {
     window.location.href = '/api/auth/login?next=' + encodeURIComponent(window.location.href);
+  };
+
+  const handleSignUp = () => {
+    window.location.href = '/api/auth/signup?next=' + encodeURIComponent(window.location.href);
   };
 
   return (
@@ -21,50 +20,35 @@ export default function SignInModal({ open, onClose }) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="w-5 h-5 text-violet-600" />
-            Sign In to SaintAgent
+            Welcome to SaintAgent
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSignIn} className="space-y-4 pt-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="h-11"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-11"
-              required
-            />
-          </div>
+        <div className="space-y-4 pt-4">
+          <p className="text-sm text-slate-600 text-center">
+            Sign in to access your account and continue your journey.
+          </p>
           <Button 
-            type="submit"
+            onClick={handleSignIn}
             className="w-full h-11 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700"
           >
             Sign In
           </Button>
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => window.location.href = '/api/auth/login?next=' + encodeURIComponent(window.location.href)}
-              className="text-sm text-violet-600 hover:text-violet-700"
-            >
-              Don't have an account? Sign Up
-            </button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-slate-500">Or</span>
+            </div>
           </div>
-        </form>
+          <Button 
+            onClick={handleSignUp}
+            variant="outline"
+            className="w-full h-11 border-2 border-violet-600 text-violet-600 hover:bg-violet-50"
+          >
+            Create New Account
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

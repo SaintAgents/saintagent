@@ -11,7 +11,7 @@ export default function Landing() {
   };
 
   const handleSignUp = () => {
-    window.location.href = '/api/auth/login?next=' + encodeURIComponent(window.location.origin + createPageUrl('CommandDeck'));
+    window.location.href = '/api/auth/signup?next=' + encodeURIComponent(window.location.origin + createPageUrl('CommandDeck'));
   };
 
   return (
