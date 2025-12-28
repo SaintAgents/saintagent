@@ -48,6 +48,8 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import MetricTile from '@/components/hud/MetricTile';
+import BadgesBar from '@/components/badges/BadgesBar';
+import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -58,6 +60,7 @@ export default function Profile() {
   const [editingIntentions, setEditingIntentions] = useState(false);
   const [intentionsData, setIntentionsData] = useState([]);
   const [newIntention, setNewIntention] = useState('');
+  const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: profiles } = useQuery({
@@ -94,6 +97,13 @@ export default function Profile() {
   const { data: intentions = [] } = useQuery({
     queryKey: ['intentions', profile?.user_id],
     queryFn: () => base44.entities.UserIntention.filter({ user_id: profile?.user_id }),
+    enabled: !!profile?.user_id
+  });
+
+  // Fetch badges
+  const { data: profileBadges = [] } = useQuery({
+    queryKey: ['userBadges', profile?.user_id],
+    queryFn: () => base44.entities.Badge.filter({ user_id: profile.user_id, status: 'active' }),
     enabled: !!profile?.user_id
   });
 
@@ -501,6 +511,26 @@ export default function Profile() {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* Badges */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Badges</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-violet-600"
+                    onClick={() => setBadgeGlossaryOpen(true)}
+                  >
+                    View Glossary
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BadgesBar badges={profileBadges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
               </CardContent>
             </Card>
 
@@ -934,6 +964,7 @@ export default function Profile() {
           userId={profile?.user_id}
         />
       </div>
-    </div>
-  );
-}
+      <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
+      </div>
+      );
+      }
