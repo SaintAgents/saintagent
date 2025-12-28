@@ -214,8 +214,12 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
   // If authenticated and onboarding missing or not complete, force Onboarding
   useEffect(() => {
-    if (currentUser && currentPageName !== 'Onboarding' && (!onboarding || onboarding.status !== 'complete')) {
+    const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
+    if (currentUser && currentPageName !== 'Onboarding' && !justCompleted && (!onboarding || onboarding.status !== 'complete')) {
       window.location.href = createPageUrl('Onboarding');
+    }
+    if (justCompleted && onboarding?.status === 'complete') {
+      try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
     }
   }, [currentUser, onboarding, currentPageName]);
 
