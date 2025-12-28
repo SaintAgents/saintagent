@@ -142,8 +142,8 @@ export default function Layout({ children, currentPageName }) {
     // Handle creation based on type
   };
 
-  // If no user, show minimal layout with sign-in modal
-  if (currentUser === null) {
+  // If no user and not on Landing page, show minimal layout with sign-in modal
+  if (currentUser === null && currentPageName !== 'Landing') {
     return (
       <div className="min-h-screen bg-slate-50">
         {children}
@@ -153,6 +153,11 @@ export default function Layout({ children, currentPageName }) {
         />
       </div>
     );
+  }
+
+  // If no user and on Landing page, just show Landing without layout chrome
+  if (currentUser === null && currentPageName === 'Landing') {
+    return <>{children}</>;
   }
 
   return (
