@@ -8,10 +8,12 @@ import { Calendar, Clock, Check, Plus } from "lucide-react";
 
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import MeetingCard from '@/components/hud/MeetingCard';
+import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 
 export default function Meetings() {
   const [tab, setTab] = useState('upcoming');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
+  const [rescheduleMeeting, setRescheduleMeeting] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: meetings = [], isLoading } = useQuery({
@@ -48,6 +50,9 @@ export default function Meetings() {
         break;
       case 'confirm':
         updateMutation.mutate({ id: meeting.id, data: { status: 'completed', guest_confirmed: true, ggg_earned: 25 } });
+        break;
+      case 'reschedule':
+        setRescheduleMeeting(meeting);
         break;
     }
   };
@@ -170,6 +175,16 @@ export default function Meetings() {
         initialType="meeting"
         onClose={() => setQuickCreateOpen(false)}
         onCreate={handleCreate}
+      />
+
+      <RescheduleDialog 
+        open={!!rescheduleMeeting} 
+        meeting={rescheduleMeeting}
+        onClose={() => setRescheduleMeeting(null)}
+        onSave={(iso) => {
+          updateMutation.mutate({ id: rescheduleMeeting.id, data: { scheduled_time: iso, status: 'scheduled' } });
+          setRescheduleMeeting(null);
+        }}
       />
     </div>
   );

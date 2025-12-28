@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,11 @@ export default function Marketplace() {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
@@ -36,8 +42,19 @@ export default function Marketplace() {
     return matchesSearch;
   });
 
-  const handleAction = (action, listing) => {
-    console.log('Listing action:', action, listing);
+  const handleAction = async (action, listing) => {
+    if (action === 'book') {
+      if (!currentUser) return;
+      await base44.entities.Booking.create({
+        listing_id: listing.id,
+        buyer_id: currentUser.email,
+        seller_id: listing.owner_id,
+        buyer_name: currentUser.full_name,
+        seller_name: listing.owner_name,
+        status: 'pending'
+      });
+      window.location.href = createPageUrl('Meetings');
+    }
   };
 
   return (
