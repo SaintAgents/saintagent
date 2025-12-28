@@ -593,9 +593,43 @@ export default function SidePanel({
             )}
           </div>
         </FloatingPanel>
-      )}
+        )}
 
-      {schedulePopupOpen && (
+        {gggTxOpen && (
+         <FloatingPanel title="GGG Transactions" onClose={() => setGggTxOpen(false)}>
+           <div className="space-y-2">
+             {(gggTx || []).length === 0 ? (
+               <p className="text-sm text-slate-400 py-4 text-center">No transactions</p>
+             ) : (
+               gggTx.map((tx) => {
+                 const positive = (tx.delta || 0) >= 0;
+                 return (
+                   <div key={tx.id} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
+                     <div className="p-2 rounded-lg bg-amber-100">
+                       <Coins className="w-4 h-4 text-amber-600" />
+                     </div>
+                     <div className="flex-1 min-w-0">
+                       <div className="flex items-center justify-between">
+                         <p className="text-sm font-medium text-slate-900">{tx.reason_code || 'Transaction'}</p>
+                         <span className={`text-sm font-semibold ${positive ? 'text-amber-700' : 'text-slate-700'}`}>
+                           {positive ? '+' : ''}{tx.delta} GGG
+                         </span>
+                       </div>
+                       <p className="text-xs text-slate-500">
+                         {tx.source_type || 'reward'}{tx.source_id ? ` • #${tx.source_id}` : ''}
+                       </p>
+                       {tx.description && <p className="text-xs text-slate-600 mt-1">{tx.description}</p>}
+                       <p className="text-[11px] text-slate-400 mt-1">{format(parseISO(tx.created_date), 'MMM d, h:mm a')}</p>
+                     </div>
+                   </div>
+                 );
+               })
+             )}
+           </div>
+         </FloatingPanel>
+        )}
+
+        {schedulePopupOpen && (
         <FloatingPanel title="Today's Schedule" onClose={() => setSchedulePopupOpen(false)}>
           <div className="space-y-2">
             {meetings.length === 0 ? (
