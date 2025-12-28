@@ -150,8 +150,48 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleCreate = async (type, data) => {
-    console.log('Create:', type, data);
-    // Handle creation based on type
+    if (type === 'message') {
+      const me = await base44.auth.me();
+      // resolve recipient (email or @handle)
+      let recipientEmail = null;
+      let recipientProfile = null;
+      if (data.recipient?.includes('@') && !data.recipient.startsWith('@')) {
+        recipientEmail = data.recipient.trim();
+        const rp = await base44.entities.UserProfile.filter({ user_id: recipientEmail });
+        recipientProfile = rp?.[0];
+      } else {
+        const handle = data.recipient?.replace(/^@/, '');
+        const rp = await base44.entities.UserProfile.filter({ handle });
+        recipientProfile = rp?.[0];
+        recipientEmail = recipientProfile?.user_id;
+      }
+      if (!recipientEmail) return;
+      const myProfiles = await base44.entities.UserProfile.filter({ user_id: me.email });
+      const myProfile = myProfiles?.[0];
+      await base44.entities.Message.create({
+        conversation_id: [me.email, recipientEmail].sort().join('_'),
+        from_user_id: me.email,
+        to_user_id: recipientEmail,
+        from_name: me.full_name,
+        from_avatar: myProfile?.avatar_url,
+        to_name: recipientProfile?.display_name,
+        content: data.content || ''
+      });
+    } else if (type === 'event') {
+      const me = await base44.auth.me();
+      await base44.entities.Event.create({
+        title: data.title,
+        description: data.description || '',
+        start_time: data.start_time,
+        end_time: data.end_time || undefined,
+        location: data.location || '',
+        online_link: data.online_link || '',
+        host_id: me.email,
+        host_name: me.full_name,
+        image_url: data.image_url || undefined,
+        status: 'upcoming'
+      });
+    }
   };
 
   // If no user and not on Landing page, show minimal layout with sign-in modal

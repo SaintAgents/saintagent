@@ -100,6 +100,7 @@ export default function MatchCard({ match, onAction }) {
           <Avatar 
             className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all" 
             data-user-id={match.target_id}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }}); document.dispatchEvent(ev); }}
           >
             <AvatarImage src={match.target_avatar} />
             <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium">

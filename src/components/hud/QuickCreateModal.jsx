@@ -218,9 +218,93 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
             </div>
           </div>
         );
+      case 'message':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>To (email or @handle)</Label>
+              <Input 
+                placeholder="Enter their email or @handle"
+                className="mt-2"
+                value={formData.recipient || ''}
+                onChange={(e) => setFormData({ ...formData, recipient: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Message</Label>
+              <Textarea 
+                placeholder="Write your message..."
+                className="mt-2 min-h-24"
+                value={formData.content || ''}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              />
+            </div>
+          </div>
+        );
+      case 'event':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>Event Title</Label>
+              <Input 
+                placeholder="e.g., Community Gathering"
+                className="mt-2"
+                value={formData.title || ''}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label>Starts</Label>
+                <Input 
+                  type="datetime-local"
+                  className="mt-2"
+                  value={formData.start_time || ''}
+                  onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Ends (optional)</Label>
+                <Input 
+                  type="datetime-local"
+                  className="mt-2"
+                  value={formData.end_time || ''}
+                  onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Location</Label>
+              <Input 
+                placeholder="City or venue (or 'Online')"
+                className="mt-2"
+                value={formData.location || ''}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Online Link (optional)</Label>
+              <Input 
+                placeholder="https://..."
+                className="mt-2"
+                value={formData.online_link || ''}
+                onChange={(e) => setFormData({ ...formData, online_link: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea 
+                placeholder="What is this event about?"
+                className="mt-2 min-h-24"
+                value={formData.description || ''}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              />
+            </div>
+          </div>
+        );
       default:
         return null;
-    }
+      }
   };
 
   return (
