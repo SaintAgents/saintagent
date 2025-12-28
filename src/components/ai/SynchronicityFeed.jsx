@@ -14,23 +14,68 @@ import {
   Heart,
   Zap,
   RefreshCw,
-  Loader2
+  Loader2,
+  Settings,
+  MoreVertical,
+  Ban
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { toast } from "sonner";
+import SynchronicitySettings from './SynchronicitySettings';
 
 export default function SynchronicityFeed({ profile, compact = false }) {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { data: matches = [], refetch } = useQuery({
+  const { data: preferences } = useQuery({
+    queryKey: ['enginePreferences', profile?.user_id],
+    queryFn: async () => {
+      const prefs = await base44.entities.EnginePreference.filter({ user_id: profile.user_id });
+      return prefs[0] || null;
+    },
+    enabled: !!profile?.user_id
+  });
+
+  const { data: allMatches = [], refetch } = useQuery({
     queryKey: ['synchronicityMatches', profile?.user_id],
     queryFn: () => base44.entities.Match.filter(
-      { user_id: profile.user_id, status: 'active' },
+      { user_id: profile.user_id },
       '-match_score',
-      20
+      50
     ),
     enabled: !!profile?.user_id
   });
+
+  // Filter matches based on preferences
+  const matches = React.useMemo(() => {
+    if (!preferences) return allMatches.filter(m => m.status === 'active');
+    
+    return allMatches.filter(m => {
+      // Exclude blocked matches
+      if (m.status === 'blocked') return false;
+      
+      // Only show active matches
+      if (m.status !== 'active') return false;
+      
+      // Apply minimum score threshold
+      if (m.match_score < (preferences.minimum_match_score || 70)) return false;
+      
+      // Filter by match types if specified
+      if (preferences.match_types_enabled?.length > 0) {
+        const matchType = m.target_type; // Could map this to match_type field
+        // For now, we'll allow all since target_type doesn't map directly
+      }
+      
+      return true;
+    });
+  }, [allMatches, preferences]);
 
   const { data: conversations = [] } = useQuery({
     queryKey: ['agentConversations', 'synchronicity_engine'],
@@ -38,7 +83,22 @@ export default function SynchronicityFeed({ profile, compact = false }) {
     enabled: !!profile?.user_id
   });
 
+  const blockUserMutation = useMutation({
+    mutationFn: (matchId) => base44.entities.Match.update(matchId, { status: 'blocked' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['synchronicityMatches'] });
+      toast.success('User blocked from feed');
+    }
+  });
+
   const handleGenerateMatches = async () => {
+    // Check if engine is enabled
+    if (preferences && !preferences.synchronicity_engine_enabled) {
+      toast.error('Synchronicity Engine is disabled. Enable it in settings.');
+      setSettingsOpen(true);
+      return;
+    }
+
     setIsGenerating(true);
     try {
       // Create or get existing conversation
@@ -55,10 +115,31 @@ export default function SynchronicityFeed({ profile, compact = false }) {
         });
       }
 
+      // Build prompt based on preferences
+      let prompt = `Scan for deep synchronicity matches for user ${profile.user_id}. `;
+      
+      if (preferences?.match_types_enabled?.length > 0) {
+        prompt += `Focus on these match types: ${preferences.match_types_enabled.join(', ')}. `;
+      }
+      
+      if (preferences?.minimum_match_score) {
+        prompt += `Only create matches with score ${preferences.minimum_match_score}+. `;
+      }
+      
+      if (preferences?.mystical_matching) {
+        prompt += `Include mystical/astrological alignment analysis. `;
+      }
+      
+      if (preferences?.location_sharing) {
+        prompt += `Prioritize nearby users and location synchronicities. `;
+      }
+      
+      prompt += `Analyze all users and create Match records for high-resonance connections. Consider values, spiritual alignment, mystical identifiers, intentions, desires, and mission overlap. Focus on meaningful synchronicities with detailed explanations.`;
+
       // Send request to agent
       await base44.agents.addMessage(conversation, {
         role: 'user',
-        content: `Scan for deep synchronicity matches for user ${profile.user_id}. Analyze all users on the platform and create Match records for high-resonance connections (score 70+). Consider values, spiritual alignment, mystical identifiers, intentions, desires, and mission overlap. Focus on meaningful synchronicities and provide detailed explanations for each match.`
+        content: prompt
       });
 
       // Wait a moment for processing
@@ -73,6 +154,10 @@ export default function SynchronicityFeed({ profile, compact = false }) {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleBlockUser = (matchId) => {
+    blockUserMutation.mutate(matchId);
   };
 
   const getMatchTypeIcon = (type) => {
@@ -152,25 +237,39 @@ export default function SynchronicityFeed({ profile, compact = false }) {
             <Sparkles className="w-5 h-5 text-violet-500" />
             Synchronicity Feed
           </h3>
-          <p className="text-sm text-slate-500">Deep resonance matches detected by AI</p>
+          <p className="text-sm text-slate-500">
+            Deep resonance matches detected by AI
+            {preferences && !preferences.synchronicity_engine_enabled && (
+              <span className="text-amber-600 ml-2">(Engine Disabled)</span>
+            )}
+          </p>
         </div>
-        <Button 
-          onClick={handleGenerateMatches}
-          disabled={isGenerating}
-          className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600"
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Scanning...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Scan for Matches
-            </>
-          )}
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleGenerateMatches}
+            disabled={isGenerating}
+            className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Scanning...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Scan
+              </>
+            )}
+          </Button>
+          <Button 
+            onClick={() => setSettingsOpen(true)}
+            variant="outline"
+            size="icon"
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
       <ScrollArea className="h-[600px]">
@@ -207,10 +306,23 @@ export default function SynchronicityFeed({ profile, compact = false }) {
                           <div className="flex items-center gap-1.5 text-xs text-violet-600 mb-2">
                             <Clock className="w-3 h-3" />
                             {match.timing_window}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                            </div>
+                            )}
+                            </div>
+                            <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="w-4 h-4" />
+                            </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleBlockUser(match.id)} className="text-rose-600">
+                            <Ban className="w-4 h-4 mr-2" />
+                            Block from feed
+                            </DropdownMenuItem>
+                            </DropdownMenuContent>
+                            </DropdownMenu>
+                            </div>
 
                     {/* Synchronicity Explanation */}
                     <div className="mb-3 p-3 rounded-lg bg-violet-50 border border-violet-100">
@@ -294,6 +406,12 @@ export default function SynchronicityFeed({ profile, compact = false }) {
           )}
         </div>
       </ScrollArea>
+
+      <SynchronicitySettings
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        profile={profile}
+      />
     </div>
   );
 }
