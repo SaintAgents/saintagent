@@ -1,4 +1,5 @@
 import React from "react";
+import { Progress } from "@/components/ui/progress";
 import { Sparkles, Square } from "lucide-react";
 
 const ACTIONS = [
@@ -11,7 +12,15 @@ const ACTIONS = [
 
 export default function QuickStartChecklist() {
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-slate-600">Progress</span>
+          <span className="text-xs font-medium text-slate-700">0/5</span>
+        </div>
+        <Progress value={0} className="h-2" />
+      </div>
+      <div className="space-y-3">
       {ACTIONS.map((action, i) => (
         <div
           key={i}

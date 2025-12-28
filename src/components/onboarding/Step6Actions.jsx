@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Sparkles, Square } from "lucide-react";
+import { SquareCheck, Sparkles, Square } from "lucide-react";
 
 const FIRST_ACTIONS = [
   { label: "Follow 5 leaders", reward: 0.03, completed: false },
@@ -18,8 +18,8 @@ export default function Step6Actions({ onComplete }) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 mb-4">
-          <CheckCircle2 className="w-8 h-8 text-white" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 mb-4">
+          <SquareCheck className="w-8 h-8 text-white" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">You're All Set!</h2>
         <p className="text-slate-600">Here are some quick actions to get started</p>
