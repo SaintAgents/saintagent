@@ -56,6 +56,7 @@ const [quickCreateType, setQuickCreateType] = useState(null);
 const [quickCreateType, setQuickCreateType] = useState(null);
 const [quickCreateType, setQuickCreateType] = useState(null);
 const [quickCreateType, setQuickCreateType] = useState(null);
+const [quickCreateType, setQuickCreateType] = useState(null);
   const [matchTab, setMatchTab] = useState('people');
   const [videoMeeting, setVideoMeeting] = useState(null);
   const [boostTarget, setBoostTarget] = useState(null);
