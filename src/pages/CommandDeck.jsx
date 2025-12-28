@@ -780,15 +780,15 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <Calendar className="w-5 h-5" />
                   <span className="text-xs">Book Meeting</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl">
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('post'); setQuickCreateOpen(true); }}>
                   <Plus className="w-5 h-5" />
                   <span className="text-xs">Post Update</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl">
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('mission'); setQuickCreateOpen(true); }}>
                   <Target className="w-5 h-5" />
                   <span className="text-xs">Launch Mission</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl">
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('offer'); setQuickCreateOpen(true); }}>
                   <ShoppingBag className="w-5 h-5" />
                   <span className="text-xs">Create Offer</span>
                 </Button>
