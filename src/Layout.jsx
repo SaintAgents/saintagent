@@ -79,6 +79,7 @@ export default function Layout({ children, currentPageName }) {
       'Matches': 'matches',
       'Meetings': 'meetings',
       'Missions': 'missions',
+      'FindCollaborators': 'collaborators',
       'Marketplace': 'marketplace',
       'LeaderChannel': 'leader',
       'Circles': 'circles',

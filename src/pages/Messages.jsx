@@ -25,6 +25,12 @@ export default function Messages() {
     queryFn: () => base44.entities.Message.list('-created_date', 100)
   });
 
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['profiles'],
+    queryFn: () => base44.entities.UserProfile.list(),
+    refetchInterval: 10000
+  });
+
   const sendMutation = useMutation({
     mutationFn: (data) => base44.entities.Message.create(data),
     onSuccess: () => {
@@ -67,19 +73,12 @@ export default function Messages() {
 
   const currentMessages = selectedConversation?.messages || [];
 
-  // Presence map for other users in conversations
-  const { data: presenceMap = {} } = useQuery({
-    queryKey: ['presenceMap', (conversations || []).map(c => c.otherUser.id)],
-    queryFn: async () => {
-      const entries = await Promise.all((conversations || []).map(async (c) => {
-        const res = await base44.entities.UserProfile.filter({ user_id: c.otherUser.id });
-        const p = res?.[0];
-        return [c.otherUser.id, { status: p?.status || 'offline', avatar: p?.avatar_url }];
-      }));
-      return Object.fromEntries(entries);
-    },
-    enabled: (conversations || []).length > 0,
-  });
+  const getStatus = React.useCallback((uid) => {
+    const p = profiles.find((pr) => pr.user_id === uid);
+    return p?.status || 'offline';
+  }, [profiles]);
+  const STATUS_COLORS = { online: 'bg-emerald-500', focus: 'bg-amber-500', dnd: 'bg-rose-500', offline: 'bg-slate-400' };
+  const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
 
   const handleSend = () => {
     if (!messageText.trim() || !selectedConversation) return;
@@ -125,7 +124,7 @@ export default function Messages() {
                       recipientAvatar: conv.otherUser.avatar
                     }
                   });
-                  document.dispatchEvent(event);
+                  window.dispatchEvent(event);
                 } else {
                   console.log('No conversation to open');
                 }
@@ -152,9 +151,11 @@ export default function Messages() {
               >
               <div className="relative">
                 <Avatar className="w-10 h-10">
-                <AvatarImage src={conv.otherUser.avatar} />
-                <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
-              </Avatar>
+                  <AvatarImage src={conv.otherUser.avatar} />
+                  <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <span className={cn("absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white", STATUS_COLORS[getStatus(conv.otherUser.id)])} />
+              </div>
               <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center justify-between">
                   <p className="font-medium text-sm text-slate-900">{conv.otherUser.name}</p>
@@ -168,7 +169,6 @@ export default function Messages() {
                     {conv.unreadCount}
                   </span>
                 )}
-                </div>
                 </div>
                 </button>
                 <Button
@@ -185,7 +185,7 @@ export default function Messages() {
                       recipientAvatar: conv.otherUser.avatar
                     }
                   });
-                  document.dispatchEvent(event);
+                  window.dispatchEvent(event);
                 }}
                 >
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -207,7 +207,7 @@ export default function Messages() {
             </Avatar>
             <div>
               <p className="font-semibold text-slate-900">{selectedConversation.otherUser.name}</p>
-              <p className="text-xs text-slate-500">{presenceMap[selectedConversation.otherUser.id]?.status === 'online' ? 'Online' : 'Offline'}</p>
+              <p className="text-xs text-slate-500">{STATUS_LABELS[getStatus(selectedConversation.otherUser.id)]}</p>
             </div>
           </div>
 

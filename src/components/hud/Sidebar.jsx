@@ -41,6 +41,7 @@ const NAV_ITEMS = [
   { id: 'matches', label: 'Matches', icon: Sparkles, page: 'Matches', badge: 5 },
   { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', badge: 2 },
   { id: 'missions', label: 'Missions', icon: Target, page: 'Missions' },
+  { id: 'collaborators', label: 'Collaborators', icon: Users, page: 'FindCollaborators' },
   { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
   { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', badge: 0 },
   { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', locked: true },

@@ -15,14 +15,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CircleDot, Plus, Users, MapPin, Search } from "lucide-react";
+import CircleManageModal from "@/components/circles/CircleManageModal";
 
 export default function Circles() {
   const [createOpen, setCreateOpen] = useState(false);
+  const [manageCircle, setManageCircle] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [formData, setFormData] = useState({ name: '', description: '', purpose: '' });
-  const [manageOpen, setManageOpen] = useState(false);
-  const [manageCircle, setManageCircle] = useState(null);
-  const [newMemberEmail, setNewMemberEmail] = useState('');
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -50,6 +49,17 @@ export default function Circles() {
       return base44.entities.Circle.update(circle.id, {
         member_ids: newMembers,
         member_count: newMembers.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['circles'] })
+  });
+
+  const leaveMutation = useMutation({
+    mutationFn: async (circle) => {
+      const newMembers = (circle.member_ids || []).filter((id) => id !== user.email);
+      return base44.entities.Circle.update(circle.id, {
+        member_ids: newMembers,
+        member_count: newMembers.length,
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['circles'] })
@@ -124,24 +134,20 @@ export default function Circles() {
                     </div>
                   )}
                   <div className="flex gap-2">
-                    <Button
-                      onClick={() => !isMember && joinMutation.mutate(circle)}
-                      disabled={isMember}
-                      className={cn(
-                        "flex-1 rounded-xl",
-                        isMember ? "bg-emerald-100 text-emerald-700" : "bg-violet-600 hover:bg-violet-700"
-                      )}
-                    >
-                      {isMember ? 'Joined' : 'Join Circle'}
-                    </Button>
-                    {circle.owner_id === user?.email && (
-                      <Button
-                        variant="outline"
-                        className="rounded-xl"
-                        onClick={() => { setManageCircle(circle); setManageOpen(true); }}
-                      >
-                        Manage
-                      </Button>
+                    {isMember ? (
+                      circle.owner_id === user?.email ? (
+                        <>
+                          <Button variant="outline" onClick={() => setManageCircle(circle)} className="flex-1 rounded-xl">Manage</Button>
+                          <Button disabled className="flex-1 rounded-xl bg-emerald-100 text-emerald-700">Joined</Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button variant="outline" onClick={() => leaveMutation.mutate(circle)} className="flex-1 rounded-xl">Leave</Button>
+                          <Button disabled className="flex-1 rounded-xl bg-emerald-100 text-emerald-700">Joined</Button>
+                        </>
+                      )
+                    ) : (
+                      <Button onClick={() => joinMutation.mutate(circle)} className="w-full rounded-xl bg-violet-600 hover:bg-violet-700">Join Circle</Button>
                     )}
                   </div>
                 </div>
@@ -149,6 +155,13 @@ export default function Circles() {
             );
           })}
         </div>
+
+        <CircleManageModal 
+          open={!!manageCircle}
+          onOpenChange={(o) => !o && setManageCircle(null)}
+          circle={manageCircle}
+          currentUser={user}
+        />
 
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogContent>
@@ -192,99 +205,6 @@ export default function Circles() {
                 </Button>
               </div>
             </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Manage Circle */}
-        <Dialog open={manageOpen} onOpenChange={setManageOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Manage Circle</DialogTitle>
-            </DialogHeader>
-            {manageCircle && (
-              <div className="space-y-4 mt-4">
-                <div>
-                  <Label>Circle Name</Label>
-                  <Input
-                    value={manageCircle.name}
-                    onChange={(e) => setManageCircle({ ...manageCircle, name: e.target.value })}
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label>Purpose</Label>
-                  <Input
-                    value={manageCircle.purpose || ''}
-                    onChange={(e) => setManageCircle({ ...manageCircle, purpose: e.target.value })}
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label>Description</Label>
-                  <Textarea
-                    value={manageCircle.description || ''}
-                    onChange={(e) => setManageCircle({ ...manageCircle, description: e.target.value })}
-                    className="mt-2 min-h-24"
-                  />
-                </div>
-                <div>
-                  <Label>Add member by email</Label>
-                  <div className="flex gap-2 mt-2">
-                    <Input value={newMemberEmail} onChange={(e) => setNewMemberEmail(e.target.value)} placeholder="name@example.com" />
-                    <Button
-                      onClick={async () => {
-                        if (!newMemberEmail) return;
-                        const next = Array.from(new Set([...(manageCircle.member_ids || []), newMemberEmail]));
-                        await base44.entities.Circle.update(manageCircle.id, { member_ids: next, member_count: next.length });
-                        setNewMemberEmail('');
-                        setManageCircle({ ...manageCircle, member_ids: next, member_count: next.length });
-                        // refresh
-                        const fresh = await base44.entities.Circle.list('-created_date', 50);
-                        queryClient.setQueryData(['circles'], fresh);
-                      }}
-                      className="rounded-xl bg-violet-600 hover:bg-violet-700"
-                    >Invite</Button>
-                  </div>
-                </div>
-                <div>
-                  <Label>Members</Label>
-                  <div className="mt-2 space-y-2 max-h-40 overflow-auto">
-                    {(manageCircle.member_ids || []).map((m) => (
-                      <div key={m} className="flex items-center justify-between p-2 rounded-lg border">
-                        <span className="text-sm text-slate-600">{m}</span>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={async () => {
-                            const next = (manageCircle.member_ids || []).filter(x => x !== m);
-                            await base44.entities.Circle.update(manageCircle.id, { member_ids: next, member_count: next.length });
-                            setManageCircle({ ...manageCircle, member_ids: next, member_count: next.length });
-                            const fresh = await base44.entities.Circle.list('-created_date', 50);
-                            queryClient.setQueryData(['circles'], fresh);
-                          }}
-                        >Remove</Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setManageOpen(false)}>Close</Button>
-                  <Button
-                    className="flex-1 rounded-xl bg-violet-600 hover:bg-violet-700"
-                    onClick={async () => {
-                      await base44.entities.Circle.update(manageCircle.id, {
-                        name: manageCircle.name,
-                        purpose: manageCircle.purpose,
-                        description: manageCircle.description
-                      });
-                      const fresh = await base44.entities.Circle.list('-created_date', 50);
-                      queryClient.setQueryData(['circles'], fresh);
-                      setManageOpen(false);
-                    }}
-                  >Save Changes</Button>
-                </div>
-              </div>
-            )}
           </DialogContent>
         </Dialog>
       </div>
