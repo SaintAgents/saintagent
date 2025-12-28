@@ -76,8 +76,9 @@ export default function Logout() {
 
   const handleLogout = async () => {
     localStorage.removeItem('session_start_time');
+    // Just logout and reload - Layout will handle showing sign in
     await base44.auth.logout();
-    window.location.href = createPageUrl('Landing');
+    window.location.reload();
   };
 
   const handleCancel = () => {
