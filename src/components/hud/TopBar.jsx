@@ -27,6 +27,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import FaqModal from '@/components/help/FaqModal';
+import FaqModal from '@/components/help/FaqModal';
 
 const MODE_TABS = [
   { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
@@ -49,6 +51,8 @@ export default function TopBar({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
 
   const { data: unreadMessages = [] } = useQuery({
     queryKey: ['unreadMessages', currentUser?.email],
@@ -175,6 +179,12 @@ export default function TopBar({
                   Settings
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFaqOpen(true)}>
+                FAQ
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFaqOpen(true)}>
+                FAQ
+              </DropdownMenuItem>
               {currentUser?.role === 'admin' && (
                 <>
                   <DropdownMenuSeparator />
@@ -204,6 +214,7 @@ export default function TopBar({
           </div>
         )}
       </div>
+      <FaqModal open={faqOpen} onOpenChange={setFaqOpen} />
     </header>
   );
 }
