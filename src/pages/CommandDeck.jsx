@@ -48,6 +48,7 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import LeaderPathway from '@/components/leader/LeaderPathway';
+import SetupProfileBanner from '@/components/onboarding/SetupProfileBanner';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -313,6 +314,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
               </Button>
             </div>
           </div>
+
+          {/* Setup Profile Banner */}
+          <SetupProfileBanner />
 
           {/* Profile Identifiers */}
           <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
