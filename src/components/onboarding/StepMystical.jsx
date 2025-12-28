@@ -32,6 +32,11 @@ export default function StepMystical({ data, onComplete, user }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user?.email) {
+      onComplete(formData);
+      return;
+    }
     
     // Update user profile with mystical data
     const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
