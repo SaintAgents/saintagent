@@ -74,6 +74,47 @@ export default function ProfileDrawer({ userId, onClose }) {
 
   const isOwnProfile = currentUser?.email === userId;
 
+  // Drag state for floating window
+  const containerRef = React.useRef(null);
+  const [pos, setPos] = React.useState({ x: 0, y: 0 });
+  const dragOffsetRef = React.useRef({ x: 0, y: 0 });
+  const draggingRef = React.useRef(false);
+
+  React.useEffect(() => {
+    // Initial position near bottom-right
+    const width = 384; // w-96
+    const defaultHeight = Math.min(window.innerHeight * 0.8, 640);
+    const x = Math.max(8, window.innerWidth - width - 16);
+    const y = Math.max(8, window.innerHeight - defaultHeight - 16);
+    setPos({ x, y });
+  }, []);
+
+  React.useEffect(() => {
+    const onMouseMove = (e) => {
+      if (!draggingRef.current) return;
+      const width = 384;
+      const height = containerRef.current?.offsetHeight || Math.min(window.innerHeight * 0.8, 640);
+      let newX = e.clientX - dragOffsetRef.current.x;
+      let newY = e.clientY - dragOffsetRef.current.y;
+      // clamp within viewport
+      newX = Math.min(Math.max(8, newX), window.innerWidth - width - 8);
+      newY = Math.min(Math.max(8, newY), window.innerHeight - height - 8);
+      setPos({ x: newX, y: newY });
+    };
+    const onMouseUp = () => { draggingRef.current = false; };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
+  const startDrag = (e) => {
+    draggingRef.current = true;
+    dragOffsetRef.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+  };
+
   const handleMessage = () => {
     window.location.href = createPageUrl('Messages');
   };
@@ -85,7 +126,12 @@ export default function ProfileDrawer({ userId, onClose }) {
   if (!profile) return null;
 
   return (
-    <div id="profile-drawer" className="fixed bottom-4 right-4 w-96 max-h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 flex flex-col relative overflow-hidden">
+    <div
+      id="profile-drawer"
+      ref={containerRef}
+      className="fixed w-96 h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[60] flex flex-col overflow-hidden"
+      style={{ left: pos.x, top: pos.y }}
+    >
       <Button 
         variant="ghost" 
         size="icon"
@@ -95,7 +141,14 @@ export default function ProfileDrawer({ userId, onClose }) {
         <X className="w-5 h-5" />
       </Button>
 
-      <ScrollArea className="flex-1 h-[70vh]">
+      <div
+        onMouseDown={startDrag}
+        className="h-9 w-full border-b bg-slate-50/80 backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center px-3 text-xs font-medium text-slate-500"
+      >
+        Drag to move
+      </div>
+
+      <ScrollArea className="flex-1">
         <div className="p-6">
           {/* Avatar */}
           <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
