@@ -11,6 +11,10 @@ const ZODIAC_SIGNS = [
 
 const LIFE_PATH_OPTIONS = ['1','2','3','4','5','6','7','8','9','11','22','33'];
 
+const RANKS = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King'];
+const SUITS = ['Clubs','Diamonds','Hearts','Spades'];
+const PLAYING_CARDS = RANKS.flatMap(r => SUITS.map(s => `${r} of ${s}`));
+
 export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     mystical_identifier: profile?.mystical_identifier || '',
@@ -140,22 +144,36 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
 
           <div>
             <Label>Birth Card</Label>
-            <Input
-              className="mt-2"
-              placeholder="e.g., Queen of Hearts"
+            <Select
               value={formData.birth_card}
-              onChange={(e) => setFormData({ ...formData, birth_card: e.target.value })}
-            />
+              onValueChange={(v) => setFormData({ ...formData, birth_card: v })}
+            >
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Select card" />
+              </SelectTrigger>
+              <SelectContent className="max-h-64">
+                {PLAYING_CARDS.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
             <Label>Sun Card</Label>
-            <Input
-              className="mt-2"
-              placeholder="e.g., Ace of Clubs"
+            <Select
               value={formData.sun_card}
-              onChange={(e) => setFormData({ ...formData, sun_card: e.target.value })}
-            />
+              onValueChange={(v) => setFormData({ ...formData, sun_card: v })}
+            >
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Select card" />
+              </SelectTrigger>
+              <SelectContent className="max-h-64">
+                {PLAYING_CARDS.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </CardContent>
