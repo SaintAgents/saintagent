@@ -1,0 +1,39 @@
+import React from 'react';
+import { Button } from "@/components/ui/button";
+import { TrendingUp, Flame } from "lucide-react";
+
+export default function InfluenceReach({ profile, onBoost }) {
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        <div className="text-center p-3 rounded-xl bg-slate-50">
+          <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>
+          <p className="text-xs text-slate-500">Followers</p>
+        </div>
+        <div className="text-center p-3 rounded-xl bg-slate-50">
+          <p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p>
+          <p className="text-xs text-slate-500">Following</p>
+        </div>
+        <div className="text-center p-3 rounded-xl bg-violet-50">
+          <p className="text-2xl font-bold text-violet-700">{profile?.reach_score || 0}</p>
+          <p className="text-xs text-violet-600">Reach</p>
+        </div>
+      </div>
+      <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+        <div className="flex items-center gap-3 mb-3">
+          <Flame className="w-5 h-5 text-amber-500" />
+          <span className="font-medium text-slate-900">Boost Your Reach</span>
+        </div>
+        <p className="text-sm text-slate-600 mb-3">
+          Spend GGG to amplify your content and attract more followers.
+        </p>
+        <Button 
+          className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
+          onClick={onBoost}
+        >
+          Boost Now
+        </Button>
+      </div>
+    </div>
+  );
+}

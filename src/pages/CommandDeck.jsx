@@ -30,6 +30,11 @@ import {
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
+import SynchronicityEngine from '@/components/sections/SynchronicityEngine';
+import MeetingsMomentum from '@/components/sections/MeetingsMomentum';
+import MissionsQuests from '@/components/sections/MissionsQuests';
+import MarketplaceEarnLearn from '@/components/sections/MarketplaceEarnLearn';
+import InfluenceReach from '@/components/sections/InfluenceReach';
 
 import MetricTile from '@/components/hud/MetricTile';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -54,6 +59,11 @@ export default function CommandDeck() {
   const [onlineUsersOpen, setOnlineUsersOpen] = useState(false);
 const [inboxPopupOpen, setInboxPopupOpen] = useState(false);
 const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
+const [syncPopupOpen, setSyncPopupOpen] = useState(false);
+const [meetingsPopupOpen, setMeetingsPopupOpen] = useState(false);
+const [missionsPopupOpen, setMissionsPopupOpen] = useState(false);
+const [marketPopupOpen, setMarketPopupOpen] = useState(false);
+const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
 
   // Current user (safe for public use)
   const { data: currentUser } = useQuery({
@@ -814,12 +824,13 @@ const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
           <div className="space-y-6">
             {/* Synchronicity Stack */}
             <CollapsibleCard 
-              title="Synchronicity Engine" 
-              icon={Sparkles}
-              badge={matches.length}
-              badgeColor="violet"
-              backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
-            >
+                                title="Synchronicity Engine" 
+                                icon={Sparkles}
+                                badge={matches.length}
+                                badgeColor="violet"
+                                backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
+                                onPopout={() => setSyncPopupOpen(true)}
+                              >
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -859,12 +870,13 @@ const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
 
             {/* Meetings & Momentum */}
             <CollapsibleCard 
-              title="Meetings & Momentum" 
-              icon={Calendar}
-              badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
-              badgeColor="amber"
-              backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
-            >
+                                title="Meetings & Momentum" 
+                                icon={Calendar}
+                                badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
+                                badgeColor="amber"
+                                backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+                                onPopout={() => setMeetingsPopupOpen(true)}
+                              >
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ? (
                   <div className="text-center py-6">
@@ -888,12 +900,13 @@ const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
 
             {/* Missions & Quests */}
             <CollapsibleCard 
-              title="Missions & Quests" 
-              icon={Target}
-              badge={missions.length}
-              badgeColor="amber"
-              backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
-            >
+                                title="Missions & Quests" 
+                                icon={Target}
+                                badge={missions.length}
+                                badgeColor="amber"
+                                backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
+                                onPopout={() => setMissionsPopupOpen(true)}
+                              >
               <div className="space-y-3">
                 {missions.length === 0 ? (
                   <div className="text-center py-6">
@@ -921,10 +934,11 @@ const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
           <div className="space-y-6">
             {/* Marketplace Card */}
             <CollapsibleCard 
-              title="Marketplace: Earn & Learn" 
-              icon={ShoppingBag}
-              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-            >
+                                title="Marketplace: Earn & Learn" 
+                                icon={ShoppingBag}
+                                backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
+                                onPopout={() => setMarketPopupOpen(true)}
+                              >
               <Tabs defaultValue="offers" className="w-full">
                 <TabsList className="w-full grid grid-cols-3 mb-4">
                   <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
@@ -970,10 +984,11 @@ const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
 
             {/* Influence & Broadcast */}
             <CollapsibleCard 
-              title="Influence & Reach" 
-              icon={TrendingUp}
-              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-            >
+                                title="Influence & Reach" 
+                                icon={TrendingUp}
+                                backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
+                                onPopout={() => setInfluencePopupOpen(true)}
+                              >
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
                   <div className="text-center p-3 rounded-xl bg-slate-50">
@@ -1053,6 +1068,52 @@ const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
       {circlesPopupOpen && (
         <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}>
           <CirclesRegions />
+        </FloatingPanel>
+      )}
+      {syncPopupOpen && (
+        <FloatingPanel title="Synchronicity Engine" onClose={() => setSyncPopupOpen(false)}>
+          <SynchronicityEngine 
+            profile={profile}
+            matchTab={matchTab}
+            setMatchTab={setMatchTab}
+            filteredMatches={filteredMatches}
+            matches={matches}
+            onMatchAction={handleMatchAction}
+          />
+        </FloatingPanel>
+      )}
+      {meetingsPopupOpen && (
+        <FloatingPanel title="Meetings & Momentum" onClose={() => setMeetingsPopupOpen(false)}>
+          <MeetingsMomentum 
+            pendingMeetings={pendingMeetings}
+            scheduledMeetings={scheduledMeetings}
+            onAction={handleMeetingAction}
+          />
+        </FloatingPanel>
+      )}
+      {missionsPopupOpen && (
+        <FloatingPanel title="Missions & Quests" onClose={() => setMissionsPopupOpen(false)}>
+          <MissionsQuests 
+            missions={missions}
+            profile={profile}
+            onAction={handleMissionAction}
+          />
+        </FloatingPanel>
+      )}
+      {marketPopupOpen && (
+        <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}>
+          <MarketplaceEarnLearn 
+            listings={listings}
+            onAction={handleListingAction}
+          />
+        </FloatingPanel>
+      )}
+      {influencePopupOpen && (
+        <FloatingPanel title="Influence & Reach" onClose={() => setInfluencePopupOpen(false)}>
+          <InfluenceReach 
+            profile={profile}
+            onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}
+          />
         </FloatingPanel>
       )}
 
