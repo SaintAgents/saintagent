@@ -271,7 +271,14 @@ export default function Profile() {
             <TabsTrigger value="onboarding">Profile Details</TabsTrigger>
             <TabsTrigger value="spiritual">Spiritual</TabsTrigger>
             <TabsTrigger value="stats">Stats</TabsTrigger>
-            <TabsTrigger value="friends">Friends</TabsTrigger>
+            <TabsTrigger value="friends">
+              <span className="inline-flex items-center gap-2">
+                Friends
+                {following.length > 0 && (
+                  <Badge className="ml-1 bg-violet-600 text-white h-5 px-2 text-xs">{following.length}</Badge>
+                )}
+              </span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
@@ -805,6 +812,37 @@ export default function Profile() {
             </div>
           </TabsContent>
           <TabsContent value="friends" className="space-y-6">
+            {following.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="w-5 h-5 text-violet-500" />
+                    Followed ({following.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {following.map((follow) => (
+                      <div 
+                        key={follow.id} 
+                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
+                        data-user-id={follow.following_id}
+                      >
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={follow.following_avatar} />
+                          <AvatarFallback className="text-sm">
+                            {follow.following_name?.charAt(0) || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
+                          {follow.following_name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             {following.length > 0 && (
               <Card>
                 <CardHeader>
