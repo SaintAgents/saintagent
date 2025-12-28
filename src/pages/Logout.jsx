@@ -74,7 +74,7 @@ export default function Logout() {
 
   const handleLogout = () => {
     localStorage.removeItem('session_start_time');
-    base44.auth.logout(createPageUrl('Landing'));
+    base44.auth.logout(createPageUrl('CommandDeck'));
   };
 
   const handleCancel = () => {
@@ -83,7 +83,7 @@ export default function Logout() {
 
   useEffect(() => {
     if (!user) {
-      window.location.href = createPageUrl('Landing');
+      window.location.href = createPageUrl('CommandDeck');
     }
   }, [user]);
 
