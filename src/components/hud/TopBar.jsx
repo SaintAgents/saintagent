@@ -156,12 +156,7 @@ export default function TopBar({
                     {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                {profile?.sa_number && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">SA#{profile.sa_number}</span>
-                )}
-                {profile?.sa_number && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">SA#{profile.sa_number}</span>
-                )}
+
                 {profile?.leader_tier === 'verified144k' && (
                   <Badge className="bg-amber-100 text-amber-700 text-xs">144K</Badge>
                 )}
