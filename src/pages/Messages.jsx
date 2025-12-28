@@ -8,11 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2 } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
 import CreateGroupChatModal from "@/components/messages/CreateGroupChatModal";
 import NewDirectMessageModal from "@/components/messages/NewDirectMessageModal";
+import EmojiPicker from "@/components/messages/EmojiPicker";
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -201,7 +202,7 @@ export default function Messages() {
                       recipientAvatar: conv.otherUser.avatar
                     }
                   });
-                  window.dispatchEvent(event);
+                  document.dispatchEvent(event);
                 }
               }}
             >
@@ -261,7 +262,7 @@ export default function Messages() {
                       recipientAvatar: conv.otherUser.avatar
                     }
                   });
-                  window.dispatchEvent(event);
+                  document.dispatchEvent(event);
                 }}
                 >
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -358,7 +359,8 @@ export default function Messages() {
 
           {/* Input */}
           <div className="p-4 border-t bg-white">
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-center">
+              <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
               <Input
                 placeholder="Type a message..."
                 value={messageText}
