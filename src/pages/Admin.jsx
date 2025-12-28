@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3 } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2 } from "lucide-react";
 
 import UserManagement from '@/components/admin/UserManagement';
 import GGGRulesManager from '@/components/admin/GGGRulesManager';
 import LeaderApplications from '@/components/admin/LeaderApplications';
 import PlatformSettings from '@/components/admin/PlatformSettings';
+import ReferralDatasets from '@/components/admin/ReferralDatasets';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -46,7 +47,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-5">
+          <TabsList className="grid w-full max-w-3xl grid-cols-6">
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Users
@@ -58,6 +59,10 @@ export default function Admin() {
             <TabsTrigger value="leaders" className="gap-2">
               <Crown className="w-4 h-4" />
               Leaders
+            </TabsTrigger>
+            <TabsTrigger value="referrals" className="gap-2">
+              <Share2 className="w-4 h-4" />
+              Referrals
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="w-4 h-4" />
@@ -79,6 +84,10 @@ export default function Admin() {
 
           <TabsContent value="leaders">
             <LeaderApplications />
+          </TabsContent>
+
+          <TabsContent value="referrals">
+            <ReferralDatasets />
           </TabsContent>
 
           <TabsContent value="settings">
