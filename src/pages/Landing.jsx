@@ -1,15 +1,17 @@
 import React from 'react';
+import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Users, Target, Crown, ArrowRight } from "lucide-react";
+import { createPageUrl } from '@/utils';
 
 export default function Landing() {
   const handleSignIn = () => {
-    window.location.href = '/api/auth/login?next=' + encodeURIComponent(window.location.origin);
+    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
   };
 
   const handleSignUp = () => {
-    window.location.href = '/api/auth/signup?next=' + encodeURIComponent(window.location.origin);
+    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
   };
 
   return (
