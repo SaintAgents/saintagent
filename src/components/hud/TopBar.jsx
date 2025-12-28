@@ -173,13 +173,7 @@ export default function TopBar({
                   </DropdownMenuItem>
                 </>
               )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('Logout')} className="flex items-center gap-2 text-rose-600">
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
-                </Link>
-              </DropdownMenuItem>
+
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
@@ -189,13 +183,13 @@ export default function TopBar({
               onClick={() => window.location.href = createPageUrl('Onboarding')}
               className="rounded-xl"
             >
-              Sign In
+              Explore
             </Button>
             <Button 
               onClick={() => window.location.href = createPageUrl('Onboarding')}
               className="bg-violet-600 hover:bg-violet-700 rounded-xl"
             >
-              Sign Up
+              Get Started
             </Button>
           </div>
         )}
