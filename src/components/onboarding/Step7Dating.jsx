@@ -48,6 +48,7 @@ export default function Step7Dating({ data = {}, onChange, onUpdate }) {
   };
 
   const handleInterestedInToggle = (value) => {
+    if (!value) return;
     const prefs = data.dating_preferences || {};
     const interested = prefs.interested_in || [];
     const newInterested = interested.includes(value)
