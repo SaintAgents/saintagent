@@ -32,7 +32,7 @@ const MODE_TABS = [
   { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
   { id: 'build', label: 'Build', page: 'Missions' },
   { id: 'teach', label: 'Teach', page: 'Studio' },
-  { id: 'lead', label: 'Lead', locked: true, page: 'LeaderChannel' },
+
   { id: 'earn', label: 'Earn', page: 'Marketplace' },
 ];
 
