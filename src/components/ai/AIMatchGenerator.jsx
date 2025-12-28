@@ -27,10 +27,14 @@ export default function AIMatchGenerator({ profile }) {
     mutationFn: async () => {
       setIsGenerating(true);
       
+      // Fetch user preferences
+      const preferencesData = await base44.entities.EnginePreference.filter({ user_id: profile.user_id });
+      const preferences = preferencesData[0] || {};
+      
       // Filter out current user and get potential matches
       const potentialMatches = allProfiles.filter(p => p.user_id !== profile.user_id);
       
-      // Prepare context for AI
+      // Prepare enhanced context for AI with preferences
       const userContext = {
         display_name: profile.display_name,
         bio: profile.bio,
@@ -38,48 +42,101 @@ export default function AIMatchGenerator({ profile }) {
         intentions: profile.intentions || [],
         skills: profile.skills || [],
         spiritual_practices: profile.spiritual_practices || [],
+        consciousness_orientation: profile.consciousness_orientation || [],
         qualities_seeking: profile.qualities_seeking || [],
         qualities_providing: profile.qualities_providing || [],
         relationship_status: profile.relationship_status,
-        region: profile.region
+        region: profile.region,
+        mystical_profile: {
+          astrological_sign: profile.astrological_sign,
+          numerology_life_path: profile.numerology_life_path,
+          birth_card: profile.birth_card
+        },
+        preferences: {
+          skills_seeking: preferences.skills_seeking || [],
+          skills_offering: preferences.skills_offering || [],
+          commitment_level: preferences.commitment_level || 'contributor',
+          time_availability: preferences.time_availability,
+          spiritual_alignment_importance: preferences.spiritual_alignment_importance || 5,
+          value_alignment_importance: preferences.value_alignment_importance || 7,
+          practices_alignment: preferences.practices_alignment || [],
+          consciousness_level_preference: preferences.consciousness_level_preference || ['any'],
+          collaboration_style: preferences.collaboration_style || [],
+          seeking_roles: preferences.seeking_roles || [],
+          offering_roles: preferences.offering_roles || [],
+          energy_compatibility: preferences.energy_compatibility !== false,
+          distance_preference: preferences.distance_preference || 'global'
+        }
       };
 
-      // Get top 10 potential matches
-      const topCandidates = potentialMatches.slice(0, 10).map(p => ({
+      // Get top 15 potential matches with more context
+      const topCandidates = potentialMatches.slice(0, 15).map(p => ({
         id: p.user_id,
         name: p.display_name,
         bio: p.bio,
         values: p.values_tags || [],
         intentions: p.intentions || [],
         skills: p.skills || [],
+        spiritual_practices: p.spiritual_practices || [],
+        consciousness_orientation: p.consciousness_orientation || [],
         qualities_providing: p.qualities_providing || [],
-        region: p.region
+        region: p.region,
+        mystical_profile: {
+          astrological_sign: p.astrological_sign,
+          numerology_life_path: p.numerology_life_path
+        }
       }));
 
-      // Call AI to analyze matches
-      const prompt = `You are an AI matchmaking assistant for a spiritual growth and collaboration platform called GGG (Global Gathering of Souls).
+      // Enhanced AI prompt with preference weighting
+      const prompt = `You are an advanced AI synchronicity matching assistant for a conscious community platform.
 
-USER PROFILE:
+USER PROFILE WITH DETAILED PREFERENCES:
 ${JSON.stringify(userContext, null, 2)}
 
-POTENTIAL MATCHES:
+POTENTIAL MATCHES (${topCandidates.length} candidates):
 ${JSON.stringify(topCandidates, null, 2)}
 
-Analyze each potential match and for the TOP 5 best matches, provide:
-1. Match score (0-100)
-2. Detailed reasoning explaining why this is a good match
-3. 3 conversation starters that are personalized and meaningful
-4. Shared values between them
-5. Complementary skills
+CRITICAL MATCHING INSTRUCTIONS:
 
-Consider:
-- Values alignment (most important)
-- Complementary skills and qualities
-- Shared intentions and spiritual practices
-- Geographic proximity
-- Mutual growth potential
+Analyze and return the TOP 5 BEST MATCHES based on the user's EXPLICIT PREFERENCES:
 
-Return ONLY the top 5 matches.`;
+1. **Skills Alignment** (HIGHEST PRIORITY):
+   - Match user's preferences.skills_seeking with candidates' skills
+   - Match user's preferences.skills_offering with potential needs
+   - Look for direct skill complementarity
+
+2. **Spiritual Alignment** (Weight: ${preferences.spiritual_alignment_importance || 5}/10):
+   - Compare spiritual_practices arrays for overlap
+   - Match consciousness_orientation with consciousness_level_preference
+   - Consider mystical compatibility if energy_compatibility enabled
+
+3. **Value Alignment** (Weight: ${preferences.value_alignment_importance || 7}/10):
+   - Deep resonance in shared values
+   - Similar life intentions and philosophies
+
+4. **Commitment & Style**:
+   - Consider commitment_level compatibility
+   - Match collaboration_style preferences
+   - Align on time_availability
+
+5. **Role Complementarity**:
+   - User's seeking_roles vs candidate capabilities
+   - User's offering_roles vs candidate needs
+
+6. **Geographic Preference** (${preferences.distance_preference || 'global'}):
+   - Respect distance_preference setting
+
+7. **Qualities Match**:
+   - User's qualities_seeking vs candidate's qualities_providing
+
+For EACH of the TOP 5 matches, provide:
+- match_score (0-100) - weighted heavily by preference alignment
+- ai_reasoning: Detailed explanation focusing on HOW preferences align
+- conversation_starters: 3-5 personalized, specific openers
+- shared_values: Array of common values
+- complementary_skills: Skills that specifically complement based on seeking/offering
+
+Return ONLY the 5 best matches that align with user's stated preferences.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt,
