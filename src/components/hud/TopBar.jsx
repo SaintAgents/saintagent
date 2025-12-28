@@ -134,26 +134,26 @@ export default function TopBar({
         />
 
         {currentUser && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-xl"
-            title="Sign out"
-            onClick={() => base44.auth.logout(createPageUrl('Landing'))}
-          >
-            <LogOut className="w-5 h-5 text-slate-600" />
-          </Button>
+         <Button
+           variant="ghost"
+           size="icon"
+           className="rounded-xl"
+           title="Sign out"
+           onClick={() => base44.auth.logout(createPageUrl('CommandDeck'))}
+         >
+           <LogOut className="w-5 h-5 text-slate-600" />
+         </Button>
         )}
 
         {/* Profile Menu / Auth */}
-        {profile ? (
+        {currentUser ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-10 px-2 gap-2 rounded-xl">
-                <Avatar className="w-8 h-8" data-user-id={profile?.user_id}>
+                <Avatar className="w-8 h-8" data-user-id={profile?.user_id || currentUser?.email}>
                   <AvatarImage src={profile?.avatar_url} />
                   <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                    {profile?.display_name?.charAt(0) || 'U'}
+                    {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 {profile?.leader_tier === 'verified144k' && (
@@ -198,7 +198,7 @@ export default function TopBar({
               onClick={() => base44.auth.redirectToLogin(createPageUrl('Onboarding'))}
               className="bg-violet-600 hover:bg-violet-700 rounded-xl"
             >
-              Get Started
+              Sign In
             </Button>
           </div>
         )}
