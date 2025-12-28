@@ -312,11 +312,81 @@ export default function CommandDeck() {
                 )}
               </div>
 
-              <div className="flex-1 space-y-4">
+              <div className="flex-1">
+                {/* Header: Name, Title, Trust Score */}
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900">
+                      {profile?.display_name || 'User'}
+                    </h2>
+                    <p className="text-sm text-slate-500 capitalize">
+                      {profile?.rank_code || 'Seeker'} • @{profile?.handle}
+                    </p>
+                  </div>
+                  
+                  {/* Trust Score Gauge */}
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <p className="text-xs text-slate-500">Trust Score</p>
+                      <p className="text-2xl font-bold text-violet-600">{profile?.trust_score || 0}</p>
+                    </div>
+                    <div className="relative w-16 h-16">
+                      <svg className="w-16 h-16 transform -rotate-90">
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          className="text-slate-200"
+                        />
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          strokeDasharray={`${2 * Math.PI * 28}`}
+                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.trust_score || 0) / 100)}`}
+                          className="text-violet-600 transition-all duration-500"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-xs font-bold text-violet-600">
+                          {profile?.trust_score || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stats Bar */}
+                <div className="grid grid-cols-4 gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50">
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
+                    <p className="text-xs text-slate-500">GGG</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
+                    <p className="text-xs text-slate-500">Rank Points</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
+                    <p className="text-xs text-slate-500">Followers</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-slate-900">{profile?.meetings_completed || 0}</p>
+                    <p className="text-xs text-slate-500">Meetings</p>
+                  </div>
+                </div>
+
                 {/* Badges */}
                 {badges.length > 0 && (
-                  <div>
-                    <p className="text-xs text-slate-500 mb-2">Badges</p>
+                  <div className="mb-4">
+                    <p className="text-xs text-slate-500 mb-2">Badges Earned</p>
                     <div className="flex flex-wrap gap-2">
                       {badges.slice(0, 6).map((badge) => (
                         <div 
@@ -343,8 +413,10 @@ export default function CommandDeck() {
                   </div>
                 )}
 
-                {/* Mystical Identifiers */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Mystical Profile */}
+                <div>
+                  <p className="text-xs text-slate-500 mb-3">✨ Mystical Identity</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {profile?.mystical_identifier && (
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
@@ -440,6 +512,7 @@ export default function CommandDeck() {
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
               </div>
             </div>
