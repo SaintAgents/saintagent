@@ -25,7 +25,7 @@ const qualityOptions = [
   'Independent', 'Communicative', 'Supportive', 'Open-Minded', 'Humorous'
 ];
 
-export default function Step7Dating({ data = {}, onChange, onUpdate }) {
+export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete }) {
   const [customQualitySeeking, setCustomQualitySeeking] = useState('');
   const [customQualityProviding, setCustomQualityProviding] = useState('');
 
