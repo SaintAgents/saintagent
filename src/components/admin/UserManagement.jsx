@@ -102,7 +102,8 @@ export default function UserManagement() {
     if (!selectedUser) return;
     if (confirm('Delete this UserProfile? This cannot be undone.')) {
       await base44.entities.UserProfile.delete(selectedUser.id);
-      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.refetchQueries({ queryKey: ['allProfiles'] });
       setSelectedUser(null);
     }
   };
@@ -111,7 +112,8 @@ export default function UserManagement() {
     if (!userRecord) return;
     if (confirm('Delete this user account? This will remove login access.')) {
       await base44.entities.User.delete(userRecord.id);
-      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.refetchQueries({ queryKey: ['allProfiles'] });
       setSelectedUser(null);
     }
   };
