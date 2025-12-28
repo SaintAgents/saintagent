@@ -149,8 +149,8 @@ export default function SidePanel({
     return format(date, "MMM d, h:mm a");
   };
 
-  const rankProgress = profile?.rank_points || 0;
-  const nextRankAt = 1000; // Example
+  const rankProgress = profile?.ggg_balance || 0;
+  const nextRankAt = 100;
 
   return (
     <div className={cn(
