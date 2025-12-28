@@ -23,7 +23,9 @@ import {
   Share2,
   Send,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Activity,
+  List
 } from "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -47,6 +49,7 @@ export default function SidePanel({
   // Popout states for sections
   const [gggPopupOpen, setGggPopupOpen] = useState(false);
   const [gggAuditOpen, setGggAuditOpen] = useState(false);
+  const [gggTxOpen, setGggTxOpen] = useState(false);
   const [schedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
   const [helpPopupOpen, setHelpPopupOpen] = useState(false);
@@ -203,6 +206,27 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
+          {/* Control Panel */}
+          <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
+                <Activity className="w-4 h-4 mr-1" />
+                Audit
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggPopupOpen(true)}>
+                <TrendingUp className="w-4 h-4 mr-1" />
+                Rank
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggTxOpen(true)}>
+                <List className="w-4 h-4 mr-1" />
+                Transactions
+              </Button>
+            </div>
+            <div className="text-xs text-slate-600">
+              Next rank in <span className="font-semibold text-violet-700">{Math.max(0, nextRankAt - rankProgress)}</span> pts
+            </div>
+          </div>
+
           {/* GGG & Rank */}
           <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
             <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
