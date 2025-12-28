@@ -96,7 +96,7 @@ export default function MatchCard({ match, onAction }) {
       className="group relative bg-white rounded-xl border border-slate-200/60 p-4 hover:shadow-lg hover:border-violet-200 transition-all duration-300"
     >
       <div className="flex items-start gap-4">
-        <div className="relative">
+        <div className="relative" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }}); document.dispatchEvent(ev); }}>
           <Avatar 
             className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all" 
             data-user-id={match.target_id}
@@ -114,7 +114,13 @@ export default function MatchCard({ match, onAction }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h4 className="font-semibold text-slate-900 truncate">{match.target_name}</h4>
+              <h4 
+                className="font-semibold text-slate-900 truncate cursor-pointer"
+                data-user-id={match.target_id}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); const ev = new CustomEvent('openProfile', { detail: { userId: match.target_id }}); document.dispatchEvent(ev); }}
+              >
+                {match.target_name}
+              </h4>
               <p className="text-sm text-slate-500 truncate">{match.target_subtitle}</p>
             </div>
             <div className={cn(
