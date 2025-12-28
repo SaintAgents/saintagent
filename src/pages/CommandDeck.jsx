@@ -471,27 +471,27 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                 </div>
 
                 {/* Stats Bar */}
-                <div className="grid grid-cols-4 gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50">
+                <div data-cmd-stats className="grid grid-cols-4 gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50">
                   <div className="text-center">
-                    <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
-                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
+                    <p className="text-lg font-extrabold text-slate-900">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
+                    <p className="text-xs text-slate-800 font-semibold uppercase inline-flex items-center gap-1 justify-center">
                       GGG
                       <HelpHint content="GGG is the platform currency—earn it from meetings, missions, and rewards. Spend it to boost reach and incentivize actions." />
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
-                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
+                    <p className="text-lg font-extrabold text-slate-900">{profile?.rank_points || 0}</p>
+                    <p className="text-xs text-slate-800 font-semibold uppercase inline-flex items-center gap-1 justify-center">
                       Rank Points
                       <HelpHint content="RP (Rank Points) reflect your long-term contribution: missions, meetings, testimonials and more. They determine your rank." />
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
+                    <p className="text-lg font-extrabold text-slate-900">{profile?.follower_count || 0}</p>
                     <p className="text-xs text-slate-500">Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900">{profile?.meetings_completed || 0}</p>
+                    <p className="text-lg font-extrabold text-slate-900">{profile?.meetings_completed || 0}</p>
                     <p className="text-xs text-slate-500">Meetings</p>
                   </div>
                 </div>

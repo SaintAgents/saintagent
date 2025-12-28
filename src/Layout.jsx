@@ -310,12 +310,17 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         [data-theme='dark'] [class*='text-slate-500'] { color: #94a3b8 !important; }
 
         /* Command Deck gold accent */
-        [data-theme='dark'] main[data-page='CommandDeck'] { --gold: #FFD76A; }
+        [data-theme='dark'] main[data-page='CommandDeck'] { --gold: #FFE27A; }
         [data-theme='dark'] main[data-page='CommandDeck'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-900'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-800'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-700'] {
           color: var(--gold) !important;
+        }
+        /* Ensure Avatar dashboard stats stay dark on dark theme */
+        [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats],
+        [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats] * {
+          color: #0f172a !important;
         }
       `}</style>
 
