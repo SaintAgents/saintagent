@@ -180,13 +180,13 @@ export default function TopBar({
           <div className="flex items-center gap-2">
             <Button 
               variant="ghost"
-              onClick={() => window.location.href = createPageUrl('Onboarding')}
+              onClick={() => window.location.href = createPageUrl('CommandDeck')}
               className="rounded-xl"
             >
               Explore
             </Button>
             <Button 
-              onClick={() => window.location.href = createPageUrl('Onboarding')}
+              onClick={() => window.location.href = createPageUrl('CommandDeck')}
               className="bg-violet-600 hover:bg-violet-700 rounded-xl"
             >
               Get Started
