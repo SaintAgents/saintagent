@@ -67,6 +67,20 @@ export default function Messages() {
 
   const currentMessages = selectedConversation?.messages || [];
 
+  // Presence map for other users in conversations
+  const { data: presenceMap = {} } = useQuery({
+    queryKey: ['presenceMap', (conversations || []).map(c => c.otherUser.id)],
+    queryFn: async () => {
+      const entries = await Promise.all((conversations || []).map(async (c) => {
+        const res = await base44.entities.UserProfile.filter({ user_id: c.otherUser.id });
+        const p = res?.[0];
+        return [c.otherUser.id, { status: p?.status || 'offline', avatar: p?.avatar_url }];
+      }));
+      return Object.fromEntries(entries);
+    },
+    enabled: (conversations || []).length > 0,
+  });
+
   const handleSend = () => {
     if (!messageText.trim() || !selectedConversation) return;
     sendMutation.mutate({
@@ -136,7 +150,8 @@ export default function Messages() {
                   selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
                 )}
               >
-              <Avatar className="w-10 h-10">
+              <div className="relative">
+                <Avatar className="w-10 h-10">
                 <AvatarImage src={conv.otherUser.avatar} />
                 <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
               </Avatar>
@@ -191,7 +206,7 @@ export default function Messages() {
             </Avatar>
             <div>
               <p className="font-semibold text-slate-900">{selectedConversation.otherUser.name}</p>
-              <p className="text-xs text-slate-500">Active now</p>
+              <p className="text-xs text-slate-500">{presenceMap[selectedConversation.otherUser.id]?.status === 'online' ? 'Online' : 'Offline'}</p>
             </div>
           </div>
 

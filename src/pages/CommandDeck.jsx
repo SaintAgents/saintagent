@@ -688,7 +688,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     <p className="text-xs font-medium uppercase tracking-wider text-cyan-200">Meetings</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
-                    {completedMeetingsThisWeek}
+                   {completedMeetingsThisWeek}
                   </p>
                 </div>
               </div>
