@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
+import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -141,11 +142,19 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
 
         <div className="flex items-center gap-2">
           <Button 
-            className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
+            className="bg-violet-600 hover:bg-violet-700 rounded-lg"
             onClick={() => onAction?.('join', mission)}
           >
             <Target className="w-4 h-4 mr-1.5" />
-            Join Mission
+            Join
+          </Button>
+          <Button 
+            variant="outline"
+            className="flex-1 rounded-lg"
+            onClick={() => window.location.href = createPageUrl(`MissionCollaboration?id=${mission.id}`)}
+          >
+            <Sparkles className="w-4 h-4 mr-1.5" />
+            AI Collaborate
           </Button>
           <Button 
             variant="outline"
