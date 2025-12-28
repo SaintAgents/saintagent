@@ -60,6 +60,13 @@ export default function CommandDeck() {
   });
   const profile = profiles?.[0];
 
+  // Fetch user badges
+  const { data: badges = [] } = useQuery({
+    queryKey: ['userBadges', profile?.user_id],
+    queryFn: () => base44.entities.Badge.filter({ user_id: profile.user_id, status: 'active' }),
+    enabled: !!profile?.user_id
+  });
+
   // Fetch matches
   const { data: matches = [] } = useQuery({
     queryKey: ['matches'],
@@ -280,8 +287,8 @@ export default function CommandDeck() {
 
           {/* Profile Identifiers */}
           <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
-            <div className="flex items-center gap-6">
-              <div className="relative">
+            <div className="flex items-start gap-6">
+              <div className="relative shrink-0">
                 <div 
                   className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg cursor-pointer hover:scale-105 transition-transform"
                   data-user-id={profile?.user_id}
@@ -305,54 +312,135 @@ export default function CommandDeck() {
                 )}
               </div>
 
-              <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
-                {profile?.mystical_identifier && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
-                      <Sparkles className="w-4 h-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Mystical ID</p>
-                      <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
-                    </div>
-                  </div>
-                )}
-                
-                {profile?.astrological_sign && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                      ✨
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Sign</p>
-                      <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
-                    </div>
-                  </div>
-                )}
-                
-                {profile?.numerology_life_path && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Life Path</p>
-                      <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
+              <div className="flex-1 space-y-4">
+                {/* Badges */}
+                {badges.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-500 mb-2">Badges</p>
+                    <div className="flex flex-wrap gap-2">
+                      {badges.slice(0, 6).map((badge) => (
+                        <div 
+                          key={badge.id}
+                          className="px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-r from-violet-100 to-purple-100 text-violet-700 border border-violet-200 flex items-center gap-1.5"
+                        >
+                          {badge.category === 'identity' && '🛡️'}
+                          {badge.category === 'marketplace' && '💰'}
+                          {badge.category === 'agent' && '🤖'}
+                          {badge.category === 'security' && '🔒'}
+                          {badge.category === 'mission' && '🎯'}
+                          {badge.category === 'alignment' && '✨'}
+                          <span className="capitalize">
+                            {badge.badge_name || badge.badge_code.replace(/_/g, ' ')}
+                          </span>
+                        </div>
+                      ))}
+                      {badges.length > 6 && (
+                        <div className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-600">
+                          +{badges.length - 6} more
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
-                
-                {profile?.birth_card && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
-                      🃏
+
+                {/* Mystical Identifiers */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {profile?.mystical_identifier && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
+                        <Sparkles className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Mystical ID</p>
+                        <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Birth Card</p>
-                      <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
+                  )}
+                  
+                  {profile?.astrological_sign && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                        ✨
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Sun Sign</p>
+                        <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                  
+                  {profile?.rising_sign && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center shrink-0">
+                        🌅
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Rising</p>
+                        <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {profile?.moon_sign && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                        🌙
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Moon</p>
+                        <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {profile?.numerology_life_path && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
+                        <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Life Path</p>
+                        <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {profile?.numerology_personality && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
+                        <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Personality</p>
+                        <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {profile?.birth_card && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
+                        🃏
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Birth Card</p>
+                        <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {profile?.sun_card && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center shrink-0">
+                        ☀️
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500">Sun Card</p>
+                        <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
