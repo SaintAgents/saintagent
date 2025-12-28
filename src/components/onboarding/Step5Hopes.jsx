@@ -29,7 +29,7 @@ export default function Step5Hopes({ data, onComplete, user }) {
   const toggleHope = (code) => {
     const hopes = formData.hopes.includes(code)
       ? formData.hopes.filter(c => c !== code)
-      : formData.hopes.length < 3
+      : formData.hopes.length < 5
       ? [...formData.hopes, code]
       : formData.hopes;
     setFormData({ ...formData, hopes });
@@ -59,7 +59,7 @@ export default function Step5Hopes({ data, onComplete, user }) {
       </div>
 
       <div>
-        <Label className="text-base mb-3 block">Pick up to 3 aspirational outcomes</Label>
+        <Label className="text-base mb-3 block">Pick up to 5 aspirational outcomes</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {HOPES.map((hope) => {
             const isSelected = formData.hopes.includes(hope.code);
@@ -69,7 +69,7 @@ export default function Step5Hopes({ data, onComplete, user }) {
                 key={hope.code}
                 type="button"
                 onClick={() => toggleHope(hope.code)}
-                disabled={!isSelected && formData.hopes.length >= 3}
+                disabled={!isSelected && formData.hopes.length >= 5}
                 className={cn(
                   "p-4 rounded-xl border-2 text-left transition-all",
                   isSelected 
@@ -83,7 +83,7 @@ export default function Step5Hopes({ data, onComplete, user }) {
             );
           })}
         </div>
-        <p className="text-sm text-slate-500 mt-2">{formData.hopes.length}/3 selected</p>
+        <p className="text-sm text-slate-500 mt-2">{formData.hopes.length}/5 selected</p>
       </div>
 
       <div>
