@@ -85,7 +85,7 @@ export default function ProfileDrawer({ userId, onClose }) {
   if (!profile) return null;
 
   return (
-    <div id="profile-drawer" className="fixed inset-y-0 right-0 w-96 bg-white border-l shadow-2xl z-50 flex flex-col relative">
+    <div id="profile-drawer" className="fixed bottom-4 right-4 w-96 max-h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 flex flex-col relative overflow-hidden">
       <Button 
         variant="ghost" 
         size="icon"
@@ -95,7 +95,7 @@ export default function ProfileDrawer({ userId, onClose }) {
         <X className="w-5 h-5" />
       </Button>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 max-h-[70vh]">
         <div className="p-6">
           {/* Avatar */}
           <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
