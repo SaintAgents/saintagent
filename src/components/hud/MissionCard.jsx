@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
-import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -17,6 +16,7 @@ import {
   Share2
 } from "lucide-react";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
+import { createPageUrl } from '@/utils';
 
 export default function MissionCard({ mission, onAction, variant = "default" }) {
   const completedTasks = mission.tasks?.filter(t => t.completed)?.length || 0;
@@ -39,7 +39,7 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
     return (
       <div 
         className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 hover:border-violet-200 cursor-pointer transition-all"
-        onClick={() => onAction?.('view', mission)}
+        onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}
       >
         <div className="p-2 rounded-lg bg-violet-100">
           <Target className="w-4 h-4 text-violet-600" />
@@ -142,19 +142,11 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
 
         <div className="flex items-center gap-2">
           <Button 
-            className="bg-violet-600 hover:bg-violet-700 rounded-lg"
-            onClick={() => onAction?.('join', mission)}
+            className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
+            onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}
           >
             <Target className="w-4 h-4 mr-1.5" />
-            Join
-          </Button>
-          <Button 
-            variant="outline"
-            className="flex-1 rounded-lg"
-            onClick={() => window.location.href = createPageUrl(`MissionCollaboration?id=${mission.id}`)}
-          >
-            <Sparkles className="w-4 h-4 mr-1.5" />
-            AI Collaborate
+            View Mission
           </Button>
           <Button 
             variant="outline"
