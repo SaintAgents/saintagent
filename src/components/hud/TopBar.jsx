@@ -17,7 +17,7 @@ import {
   MessageCircle,
   User,
   Settings,
-  LogOut,
+  
   Sparkles,
   Crown,
   Shield
