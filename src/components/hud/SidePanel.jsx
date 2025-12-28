@@ -23,6 +23,8 @@ import {
   Send
 } from "lucide-react";
 import ProgressRing from './ProgressRing';
+import CollapsibleCard from '@/components/hud/CollapsibleCard';
+import FloatingPanel from '@/components/hud/FloatingPanel';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 
 export default function SidePanel({ 
@@ -38,6 +40,13 @@ export default function SidePanel({
   const [expandedComments, setExpandedComments] = useState({});
   const [newPostText, setNewPostText] = useState('');
   const queryClient = useQueryClient();
+
+  // Popout states for sections
+  const [gggPopupOpen, setGggPopupOpen] = useState(false);
+  const [schedulePopupOpen, setSchedulePopupOpen] = useState(false);
+  const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
+  const [helpPopupOpen, setHelpPopupOpen] = useState(false);
+  const [feedPopupOpen, setFeedPopupOpen] = useState(false);
 
   // Fetch posts
   const { data: posts = [] } = useQuery({
@@ -171,40 +180,35 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
-          {/* GGG & Rank Meters */}
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
-                <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
-                  <Coins className="w-5 h-5 text-amber-500" />
-                  {profile?.ggg_balance?.toLocaleString() || 0}
-                </p>
+          {/* GGG & Rank */}
+          <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
+                  <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
+                    <Coins className="w-5 h-5 text-amber-500" />
+                    {profile?.ggg_balance?.toLocaleString() || 0}
+                  </p>
+                </div>
+                <ProgressRing 
+                  value={rankProgress} 
+                  max={nextRankAt} 
+                  size={64}
+                  strokeWidth={5}
+                  label={profile?.rank_code?.charAt(0).toUpperCase()}
+                  sublabel="Rank"
+                />
               </div>
-              <ProgressRing 
-                value={rankProgress} 
-                max={nextRankAt} 
-                size={64}
-                strokeWidth={5}
-                label={profile?.rank_code?.charAt(0).toUpperCase()}
-                sublabel="Rank"
-              />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-600">To next rank</span>
+                <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
+              </div>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-600">To next rank</span>
-              <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
-            </div>
-          </div>
+          </CollapsibleCard>
 
           {/* Today's Schedule */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-slate-500" />
-                Today's Schedule
-              </h3>
-              <span className="text-xs text-slate-500">{meetings.length} meetings</span>
-            </div>
+          <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
             <div className="space-y-2">
               {meetings.length === 0 ? (
                 <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p>
@@ -227,17 +231,10 @@ export default function SidePanel({
                 ))
               )}
             </div>
-          </div>
+          </CollapsibleCard>
 
-          {/* Active Match Stack */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-violet-500" />
-                Top Matches
-              </h3>
-              <span className="text-xs text-slate-500">{matches.length} active</span>
-            </div>
+          {/* Top Matches */}
+          <CollapsibleCard title="Top Matches" icon={Sparkles} badge={matches.length} badgeColor="violet" onPopout={() => setMatchesPopupOpen(true)}>
             <div className="space-y-2">
               {matches.length === 0 ? (
                 <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p>
@@ -245,7 +242,6 @@ export default function SidePanel({
                 matches.slice(0, 5).map((match, i) => {
                   const handleClick = () => {
                     if (match.target_type === 'person') {
-                      // Open profile drawer
                       const event = new CustomEvent('openProfile', { detail: { userId: match.target_id } });
                       document.dispatchEvent(event);
                     } else if (match.target_type === 'offer') {
@@ -292,36 +288,31 @@ export default function SidePanel({
                 })
               )}
             </div>
-          </div>
+          </CollapsibleCard>
 
 
-          {/* Context Help */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-slate-200">
-                <HelpCircle className="w-4 h-4 text-slate-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-slate-900">Need help?</p>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Learn how the Synchronicity Engine finds your perfect matches.
-                </p>
-                <Button variant="link" size="sm" className="h-6 px-0 text-xs text-violet-600">
-                  View guide →
-                </Button>
+          {/* Help */}
+          <CollapsibleCard title="Help" icon={HelpCircle} defaultOpen={false} onPopout={() => setHelpPopupOpen(true)}>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-slate-200">
+                  <HelpCircle className="w-4 h-4 text-slate-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-900">Need help?</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Learn how the Synchronicity Engine finds your perfect matches.
+                  </p>
+                  <Button variant="link" size="sm" className="h-6 px-0 text-xs text-violet-600">
+                    View guide →
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </CollapsibleCard>
 
-          {/* Social Feed */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-                <MessageCircle className="w-4 h-4 text-slate-500" />
-                Community Feed
-              </h3>
-            </div>
-
+          {/* Community Feed */}
+          <CollapsibleCard title="Community Feed" icon={MessageCircle} defaultOpen={true} onPopout={() => setFeedPopupOpen(true)}>
             {/* Create Post */}
             <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
               <div className="flex items-start gap-3">
@@ -466,8 +457,229 @@ export default function SidePanel({
                 })
               )}
             </div>
-          </div>
+          </CollapsibleCard>
         </div>
+      {/* Popout Panels */}
+      {gggPopupOpen && (
+        <FloatingPanel title="GGG & Rank" onClose={() => setGggPopupOpen(false)}>
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
+                <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
+                  <Coins className="w-5 h-5 text-amber-500" />
+                  {profile?.ggg_balance?.toLocaleString() || 0}
+                </p>
+              </div>
+              <ProgressRing 
+                value={rankProgress} 
+                max={nextRankAt} 
+                size={64}
+                strokeWidth={5}
+                label={profile?.rank_code?.charAt(0).toUpperCase()}
+                sublabel="Rank"
+              />
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-slate-600">To next rank</span>
+              <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
+            </div>
+          </div>
+        </FloatingPanel>
+      )}
+
+      {schedulePopupOpen && (
+        <FloatingPanel title="Today's Schedule" onClose={() => setSchedulePopupOpen(false)}>
+          <div className="space-y-2">
+            {meetings.length === 0 ? (
+              <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p>
+            ) : (
+              meetings.map((meeting, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+                  <div className="p-2 rounded-lg bg-blue-100">
+                    <Clock className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                    <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </FloatingPanel>
+      )}
+
+      {matchesPopupOpen && (
+        <FloatingPanel title="Top Matches" onClose={() => setMatchesPopupOpen(false)}>
+          <div className="space-y-2">
+            {matches.length === 0 ? (
+              <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p>
+            ) : (
+              matches.map((match, i) => (
+                <div key={i} className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+                  <Avatar className="w-9 h-9">
+                    <AvatarImage src={match.target_avatar} />
+                    <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                      {match.target_name?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
+                    <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
+                  </div>
+                  <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
+                </div>
+              ))
+            )}
+          </div>
+        </FloatingPanel>
+      )}
+
+      {helpPopupOpen && (
+        <FloatingPanel title="Help" onClose={() => setHelpPopupOpen(false)}>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-slate-200">
+                <HelpCircle className="w-4 h-4 text-slate-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-900">Need help?</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Learn how the Synchronicity Engine finds your perfect matches.
+                </p>
+                <Button variant="link" size="sm" className="h-6 px-0 text-xs text-violet-600">
+                  View guide →
+                </Button>
+              </div>
+            </div>
+          </div>
+        </FloatingPanel>
+      )}
+
+      {feedPopupOpen && (
+        <FloatingPanel title="Community Feed" onClose={() => setFeedPopupOpen(false)}>
+          <div className="space-y-4">
+            {/* Create Post */}
+            <div className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+              <div className="flex items-start gap-3">
+                <Avatar className="w-9 h-9">
+                  <AvatarImage src={profile?.avatar_url} />
+                  <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                    {profile?.display_name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <Textarea
+                  value={newPostText}
+                  onChange={(e) => setNewPostText(e.target.value)}
+                  placeholder="What's on your mind?"
+                  className="flex-1 resize-none text-sm"
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleCreatePost}
+                  disabled={!newPostText.trim() || createPostMutation.isPending}
+                  className="bg-violet-600 hover:bg-violet-700"
+                  size="sm"
+                >
+                  <Send className="w-3 h-3 mr-1" />
+                  Post
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {posts.length === 0 ? (
+                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
+              ) : (
+                posts.map((post) => {
+                  const postComments = getPostComments(post.id);
+                  const isLiked = isLikedByUser(post.id);
+                  const showComments = expandedComments[post.id];
+                  return (
+                    <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Avatar className="w-9 h-9">
+                          <AvatarImage src={post.author_avatar} />
+                          <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                            {post.author_name?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900">{post.author_name}</p>
+                          <p className="text-xs text-slate-500">{format(parseISO(post.created_date), 'MMM d, h:mm a')}</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
+                      {post.image_urls && post.image_urls.length > 0 && (
+                        <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" />
+                      )}
+                      <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
+                        <button
+                          onClick={() => handleLike(post.id)}
+                          className={cn("flex items-center gap-1.5 text-xs transition-colors", isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600")}
+                        >
+                          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
+                          <span className="font-medium">{post.likes_count || 0}</span>
+                        </button>
+                        <button
+                          onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
+                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="font-medium">{post.comments_count || 0}</span>
+                        </button>
+                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors">
+                          <Share2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {showComments && (
+                        <div className="space-y-3 pt-2">
+                          {postComments.map((comment) => (
+                            <div key={comment.id} className="flex items-start gap-2">
+                              <Avatar className="w-7 h-7">
+                                <AvatarImage src={comment.author_avatar} />
+                                <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
+                                  {comment.author_name?.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 p-2 rounded-lg bg-slate-50">
+                                <p className="text-xs font-medium text-slate-900">{comment.author_name}</p>
+                                <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
+                              </div>
+                            </div>
+                          ))}
+                          <div className="flex items-start gap-2">
+                            <Avatar className="w-7 h-7">
+                              <AvatarImage src={profile?.avatar_url} />
+                              <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">
+                                {profile?.display_name?.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 flex gap-2">
+                              <Textarea
+                                value={commentText[post.id] || ''}
+                                onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                                placeholder="Write a comment..."
+                                className="text-xs h-8 resize-none"
+                                rows={1}
+                              />
+                              <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
+                                <Send className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </FloatingPanel>
+      )}
       </ScrollArea>
     </div>
   );
