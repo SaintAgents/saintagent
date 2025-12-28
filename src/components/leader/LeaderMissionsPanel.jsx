@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Target, 
   Plus,
@@ -15,9 +16,11 @@ import {
   Calendar,
   TrendingUp,
   Crown,
-  CheckCircle
+  CheckCircle,
+  Wand2
 } from "lucide-react";
 import { toast } from "sonner";
+import MissionDesignAssistant from './MissionDesignAssistant';
 
 export default function LeaderMissionsPanel({ profile }) {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -63,6 +66,16 @@ export default function LeaderMissionsPanel({ profile }) {
       return;
     }
     createMissionMutation.mutate(newMission);
+  };
+
+  const handleApplyAISuggestions = (suggestions) => {
+    setNewMission({
+      title: suggestions.title,
+      objective: suggestions.objective,
+      reward_ggg: suggestions.reward_ggg,
+      reward_rank_points: suggestions.reward_rank_points,
+      max_participants: suggestions.max_participants
+    });
   };
 
   const totalParticipants = leaderMissions.reduce((sum, m) => sum + (m.participant_count || 0), 0);
@@ -178,11 +191,29 @@ export default function LeaderMissionsPanel({ profile }) {
 
       {/* Create Mission Dialog */}
       <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle>Create Leader Mission</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Crown className="w-5 h-5 text-amber-500" />
+              Create Leader Mission
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          
+          <Tabs defaultValue="manual" className="flex-1 overflow-hidden flex flex-col">
+            <TabsList className="w-full grid grid-cols-2">
+              <TabsTrigger value="manual">Manual Entry</TabsTrigger>
+              <TabsTrigger value="ai" className="gap-2">
+                <Wand2 className="w-4 h-4" />
+                AI Designer
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="ai" className="flex-1 overflow-auto mt-4">
+              <MissionDesignAssistant onApplySuggestions={handleApplyAISuggestions} />
+            </TabsContent>
+            
+            <TabsContent value="manual" className="flex-1 overflow-auto">
+              <div className="space-y-4">
             <div>
               <Label htmlFor="title">Mission Title *</Label>
               <Input
@@ -234,19 +265,21 @@ export default function LeaderMissionsPanel({ profile }) {
                 placeholder="Unlimited"
               />
             </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setCreateModalOpen(false)} className="flex-1">
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleCreate}
-                disabled={createMissionMutation.isPending}
-                className="flex-1 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600"
-              >
-                Create Mission
-              </Button>
-            </div>
-          </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={() => setCreateModalOpen(false)} className="flex-1">
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleCreate}
+                    disabled={createMissionMutation.isPending}
+                    className="flex-1 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600"
+                  >
+                    Create Mission
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>
