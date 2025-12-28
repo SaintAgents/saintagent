@@ -132,10 +132,15 @@ export default function Sidebar({
         <Button 
           variant="ghost" 
           size="icon"
-          className={cn("shrink-0", isCollapsed && "hidden")}
+          className={cn("shrink-0")}
           onClick={onToggle}
+          title={isCollapsed ? 'Expand' : 'Collapse'}
         >
-          <ChevronLeft className="w-4 h-4" />
+          {isCollapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
         </Button>
       </div>
 
@@ -192,15 +197,17 @@ export default function Sidebar({
             <button
               onClick={() => setLeaderboardOpen(!leaderboardOpen)}
               className="w-full flex items-center justify-between px-2 mb-3 hover:bg-slate-50 rounded-lg py-1 transition-colors"
+              title={leaderboardOpen ? 'Collapse' : 'Expand'}
             >
               <div className="flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-amber-500" />
                 <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
               </div>
-              <ChevronRight className={cn(
-                "w-4 h-4 text-slate-400 transition-transform",
-                leaderboardOpen && "rotate-90"
-              )} />
+              {leaderboardOpen ? (
+                <ChevronLeft className="w-4 h-4 text-slate-400" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              )}
             </button>
             <Button 
               variant="ghost" 
