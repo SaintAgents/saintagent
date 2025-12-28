@@ -25,6 +25,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Sparkles,
   MessageCircle,
   Wifi,
@@ -199,10 +201,11 @@ export default function Sidebar({
                 <Trophy className="w-4 h-4 text-amber-500" />
                 <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
               </div>
-              <ChevronRight className={cn(
-                "w-4 h-4 text-slate-400 transition-transform",
-                leaderboardOpen && "rotate-90"
-              )} />
+              {leaderboardOpen ? (
+                <ChevronUp className="w-4 h-4 text-slate-500" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-slate-500" />
+              )}
             </button>
             <Button 
               variant="ghost" 
