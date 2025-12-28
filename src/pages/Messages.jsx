@@ -109,6 +109,15 @@ export default function Messages() {
                       recipientAvatar: selectedConversation.otherUser.avatar
                     }
                   }));
+                } else if (conversations.length > 0) {
+                  const firstConv = conversations[0];
+                  window.dispatchEvent(new CustomEvent('openFloatingChat', {
+                    detail: {
+                      recipientId: firstConv.otherUser.id,
+                      recipientName: firstConv.otherUser.name,
+                      recipientAvatar: firstConv.otherUser.avatar
+                    }
+                  }));
                 }
               }}
             >
@@ -122,14 +131,14 @@ export default function Messages() {
         </div>
         <ScrollArea className="flex-1">
           {conversations.map((conv) => (
-            <button
-              key={conv.id}
-              onClick={() => setSelectedConversation(conv)}
-              className={cn(
-                "w-full flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b",
-                selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
-              )}
-            >
+            <div key={conv.id} className="relative group">
+              <button
+                onClick={() => setSelectedConversation(conv)}
+                className={cn(
+                  "w-full flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b",
+                  selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
+                )}
+              >
               <Avatar className="w-10 h-10">
                 <AvatarImage src={conv.otherUser.avatar} />
                 <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
@@ -147,10 +156,28 @@ export default function Messages() {
                     {conv.unreadCount}
                   </span>
                 )}
-              </div>
-            </button>
-          ))}
-        </ScrollArea>
+                </div>
+                </button>
+                <Button
+                size="icon"
+                variant="ghost"
+                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.dispatchEvent(new CustomEvent('openFloatingChat', {
+                    detail: {
+                      recipientId: conv.otherUser.id,
+                      recipientName: conv.otherUser.name,
+                      recipientAvatar: conv.otherUser.avatar
+                    }
+                  }));
+                }}
+                >
+                <Plus className="w-4 h-4" />
+                </Button>
+                </div>
+                ))}
+                </ScrollArea>
       </div>
 
       {/* Messages Area */}
