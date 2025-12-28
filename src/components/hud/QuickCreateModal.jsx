@@ -39,9 +39,15 @@ const CREATE_OPTIONS = [
   { id: 'meeting', label: 'Meeting', icon: Video, color: 'bg-indigo-500', description: 'Request a 1:1 meeting' },
 ];
 
-export default function QuickCreateModal({ open, onClose, onCreate }) {
+export default function QuickCreateModal({ open, onClose, onCreate, initialType }) {
   const [selectedType, setSelectedType] = useState(null);
   const [formData, setFormData] = useState({});
+
+  React.useEffect(() => {
+    if (open) {
+      setSelectedType(initialType || null);
+    }
+  }, [open, initialType]);
 
   const handleTypeSelect = (type) => {
     setSelectedType(type);
