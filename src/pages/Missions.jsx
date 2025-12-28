@@ -45,7 +45,7 @@ export default function Missions() {
               <Target className="w-6 h-6 text-amber-500" />
               Missions & Quests
             </h1>
-            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts</p>
+            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG (.25 - .35 per 1 GGG), rank points, and boosts</p>
           </div>
           <Button 
             onClick={() => setCreateModalOpen(true)}
