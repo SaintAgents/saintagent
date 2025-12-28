@@ -8,6 +8,7 @@ import TuneEngineModal from '@/components/TuneEngineModal';
 import OnlineUsersModal from '@/components/OnlineUsersModal';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
@@ -48,7 +49,6 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import LeaderPathway from '@/components/leader/LeaderPathway';
-import SetupProfileBanner from '@/components/onboarding/SetupProfileBanner';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -89,6 +89,16 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
     enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
+
+  // Onboarding progress
+  const { data: onboardingRecords } = useQuery({
+    queryKey: ['onboardingProgress', currentUser?.email],
+    queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const onboarding = onboardingRecords?.[0];
+  const ONBOARDING_STEPS = 10;
+  const setupPercent = onboarding ? Math.round((((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS) * 100) : 0;
 
   // Fetch user badges
   const { data: badges = [] } = useQuery({
@@ -315,9 +325,6 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </div>
           </div>
 
-          {/* Setup Profile Banner */}
-          <SetupProfileBanner />
-
           {/* Profile Identifiers */}
           <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
             <div className="flex items-start gap-6">
@@ -415,6 +422,22 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     <p className="text-xs text-slate-500">Meetings</p>
                   </div>
                 </div>
+
+                {/* Setup Progress (if onboarding not complete) */}
+                {onboarding && onboarding.status !== 'complete' && (
+                  <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <p className="text-sm font-medium text-amber-800">Profile setup in progress</p>
+                      <span className="text-xs font-semibold text-amber-700">{setupPercent}%</span>
+                    </div>
+                    <Progress value={setupPercent} className="h-2" />
+                    <div className="mt-2 text-right">
+                      <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('Onboarding'); }}>
+                        Resume Setup
+                      </Button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Badges */}
                 {badges.length > 0 && (
