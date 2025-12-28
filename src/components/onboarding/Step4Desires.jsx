@@ -26,7 +26,7 @@ export default function Step4Desires({ data, onComplete, user }) {
   const toggleDesire = (code) => {
     if (selected.includes(code)) {
       setSelected(selected.filter(c => c !== code));
-    } else if (selected.length < 5) {
+    } else if (selected.length < 7) {
       setSelected([...selected, code]);
     }
   };
@@ -50,7 +50,7 @@ export default function Step4Desires({ data, onComplete, user }) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Your Desires & Intentions</h2>
-        <p className="text-slate-600">Select up to 5 goals that drive you</p>
+        <p className="text-slate-600">Select up to 7 goals that drive you</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -62,7 +62,7 @@ export default function Step4Desires({ data, onComplete, user }) {
               key={desire.code}
               type="button"
               onClick={() => toggleDesire(desire.code)}
-              disabled={!isSelected && selected.length >= 5}
+              disabled={!isSelected && selected.length >= 7}
               className={cn(
                 "p-4 rounded-xl border-2 text-left transition-all",
                 "hover:border-violet-300 hover:shadow-md",
@@ -85,7 +85,7 @@ export default function Step4Desires({ data, onComplete, user }) {
 
       <div className="flex items-center justify-between pt-4">
         <p className="text-sm text-slate-500">
-          {selected.length}/5 selected
+          {selected.length}/7 selected
         </p>
         <Button
           type="submit"
