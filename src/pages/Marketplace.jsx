@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from "@/components/ui/select";
 import { 
   ShoppingBag,
   Search,
@@ -16,11 +23,16 @@ import {
 } from "lucide-react";
 
 import ListingCard from '@/components/hud/ListingCard';
+import CreateListingModal from '@/components/marketplace/CreateListingModal';
 
 export default function Marketplace() {
   const [tab, setTab] = useState('browse');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [deliveryFilter, setDeliveryFilter] = useState('all');
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -28,18 +40,19 @@ export default function Marketplace() {
   });
 
   const { data: listings = [], isLoading } = useQuery({
-    queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
-  });
+            queryKey: ['listings'],
+            queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
+          });
+          const queryClient = useQueryClient();
 
   const filteredListings = listings.filter(l => {
     const matchesSearch = !searchQuery || 
       l.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       l.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (tab === 'offers') return l.listing_type === 'offer' && matchesSearch;
-    if (tab === 'requests') return l.listing_type === 'request' && matchesSearch;
-    return matchesSearch;
+    const matchesType = tab === 'offers' ? l.listing_type === 'offer' : (tab === 'requests' ? l.listing_type === 'request' : true);
+    const matchesCategory = categoryFilter === 'all' || l.category === categoryFilter;
+    const matchesDelivery = deliveryFilter === 'all' || l.delivery_mode === deliveryFilter;
+    return matchesSearch && matchesType && matchesCategory && matchesDelivery;
   });
 
   const handleAction = async (action, listing) => {
@@ -69,7 +82,7 @@ export default function Marketplace() {
             </h1>
             <p className="text-slate-500 mt-1">Offer your skills, find mentors, and grow together</p>
           </div>
-          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2">
+          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
             <Plus className="w-4 h-4" />
             Create Listing
           </Button>
@@ -86,7 +99,7 @@ export default function Marketplace() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-12 rounded-xl gap-2">
+          <Button variant="outline" className="h-12 rounded-xl gap-2" onClick={() => setShowFilters(v => !v)}>
             <Filter className="w-4 h-4" />
             Filters
           </Button>
@@ -110,6 +123,42 @@ export default function Marketplace() {
           </div>
         </div>
 
+        {showFilters && (
+          <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label className="text-xs text-slate-500">Category</label>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="mt-1 bg-white">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="mentorship">Mentorship</SelectItem>
+                  <SelectItem value="session">Session</SelectItem>
+                  <SelectItem value="course">Course</SelectItem>
+                  <SelectItem value="consulting">Consulting</SelectItem>
+                  <SelectItem value="healing">Healing</SelectItem>
+                  <SelectItem value="mutual_aid">Mutual Aid</SelectItem>
+                  <SelectItem value="collaboration">Collaboration</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Delivery</label>
+              <Select value={deliveryFilter} onValueChange={setDeliveryFilter}>
+                <SelectTrigger className="mt-1 bg-white">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="online">Online</SelectItem>
+                  <SelectItem value="in-person">In-person</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
           <TabsList className="w-full grid grid-cols-3 h-11 bg-white rounded-xl border">
@@ -140,7 +189,7 @@ export default function Marketplace() {
             <ShoppingBag className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No listings found</h3>
             <p className="text-slate-500 mb-6">Be the first to create an offer or request</p>
-            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700">
+            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => setCreateOpen(true)}>
               Create Listing
             </Button>
           </div>
@@ -158,7 +207,31 @@ export default function Marketplace() {
             ))}
           </div>
         )}
+      <CreateListingModal
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreate={async (data) => {
+          if (!currentUser) return;
+          await base44.entities.Listing.create({
+            owner_id: currentUser.email,
+            owner_name: currentUser.full_name,
+            owner_avatar: undefined,
+            listing_type: data.listing_type || 'offer',
+            category: data.category || 'session',
+            title: data.title,
+            description: data.description || '',
+            price_amount: data.is_free ? 0 : Number(data.price_amount || 0),
+            is_free: !!data.is_free,
+            duration_minutes: Number(data.duration_minutes || 60),
+            delivery_mode: data.delivery_mode || 'online',
+            status: 'active',
+            image_url: data.image_url || undefined
+          });
+          queryClient.invalidateQueries({ queryKey: ['listings'] });
+          setCreateOpen(false);
+        }}
+      />
       </div>
-    </div>
-  );
+      </div>
+      );
 }
