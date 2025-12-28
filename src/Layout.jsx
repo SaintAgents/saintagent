@@ -142,6 +142,19 @@ export default function Layout({ children, currentPageName }) {
     // Handle creation based on type
   };
 
+  // If no user, show minimal layout with sign-in modal
+  if (currentUser === null) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        {children}
+        <SignInModal 
+          open={showSignIn} 
+          onClose={() => setShowSignIn(false)} 
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <style>{`
