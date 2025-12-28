@@ -10,7 +10,7 @@ export default function SignInModal({ open, onClose }) {
   };
 
   const handleSignUp = () => {
-44.auth.redirectToLogin();
+    base44.auth.redirectToLogin();
   };
 
   return (
