@@ -21,7 +21,9 @@ import {
   Heart,
   MessageCircle,
   Share2,
-  Send
+  Send,
+  ArrowUpRight,
+  ArrowDownRight
 } from "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -44,6 +46,7 @@ export default function SidePanel({
 
   // Popout states for sections
   const [gggPopupOpen, setGggPopupOpen] = useState(false);
+  const [gggAuditOpen, setGggAuditOpen] = useState(false);
   const [schedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
   const [helpPopupOpen, setHelpPopupOpen] = useState(false);
@@ -66,6 +69,25 @@ export default function SidePanel({
     queryKey: ['postComments'],
     queryFn: () => base44.entities.PostComment.list('-created_date')
   });
+
+  // Audit trail data (GGG + Reputation)
+  const { data: gggTx = [] } = useQuery({
+    queryKey: ['gggTx', profile?.user_id],
+    queryFn: () => base44.entities.GGGTransaction.filter({ user_id: profile.user_id }, '-created_date', 100),
+    enabled: !!profile?.user_id
+  });
+
+  const { data: rpEvents = [] } = useQuery({
+    queryKey: ['rpEvents', profile?.user_id],
+    queryFn: () => base44.entities.ReputationEvent.filter({ user_id: profile.user_id }, '-created_date', 100),
+    enabled: !!profile?.user_id
+  });
+
+  const auditItems = React.useMemo(() => {
+    const txs = (gggTx || []).map(it => ({ ...it, _type: 'ggg' }));
+    const rps = (rpEvents || []).map(it => ({ ...it, _type: 'rp' }));
+    return [...txs, ...rps].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+  }, [gggTx, rpEvents]);
 
   const likeMutation = useMutation({
     mutationFn: async ({ postId, userId }) => {
@@ -204,6 +226,11 @@ export default function SidePanel({
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600">To next rank</span>
                 <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
+              </div>
+              <div className="flex justify-end mt-3">
+                <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
+                  View audit trail
+                </Button>
               </div>
             </div>
           </CollapsibleCard>
@@ -487,6 +514,59 @@ export default function SidePanel({
               <span className="text-slate-600">To next rank</span>
               <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
             </div>
+            <div className="flex justify-end mt-3">
+              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
+                View audit trail
+              </Button>
+            </div>
+          </div>
+        </FloatingPanel>
+      )}
+
+      {gggAuditOpen && (
+        <FloatingPanel title="GGG Audit Trail" onClose={() => setGggAuditOpen(false)}>
+          <div className="space-y-2">
+            {auditItems.length === 0 ? (
+              <p className="text-sm text-slate-400 py-4 text-center">No audit entries yet</p>
+            ) : (
+              auditItems.map((item) => {
+                const isGGG = item._type === 'ggg';
+                const positive = (item.delta || 0) >= 0;
+                return (
+                  <div key={`${item._type}-${item.id}`} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
+                    <div className={`p-2 rounded-lg ${isGGG ? 'bg-amber-100' : positive ? 'bg-emerald-100' : 'bg-rose-100'}`}>
+                      {isGGG ? (
+                        <Coins className="w-4 h-4 text-amber-600" />
+                      ) : positive ? (
+                        <ArrowUpRight className="w-4 h-4 text-emerald-600" />
+                      ) : (
+                        <ArrowDownRight className="w-4 h-4 text-rose-600" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-slate-900">
+                          {isGGG ? (item.reason_code || 'GGG transaction') : (item.reason_code || 'Reputation update')}
+                        </p>
+                        <span className={`text-sm font-semibold ${isGGG ? (positive ? 'text-amber-700' : 'text-slate-700') : (positive ? 'text-emerald-700' : 'text-rose-700')}`}>
+                          {positive ? '+' : ''}{item.delta}{isGGG ? ' GGG' : ' RP'}{!isGGG && item.rp_after != null ? ` • ${item.rp_after} RP` : ''}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        {isGGG ? (item.source_type || 'reward') : (item.source_type || 'system')}
+                        {item.reason_code ? ` • ${item.reason_code}` : ''}
+                      </p>
+                      {item.description && (
+                        <p className="text-xs text-slate-600 mt-1">{item.description}</p>
+                      )}
+                      <p className="text-[11px] text-slate-400 mt-1">
+                        {format(parseISO(item.created_date), 'MMM d, h:mm a')}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </FloatingPanel>
       )}
