@@ -16,6 +16,7 @@ import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
+import InviteLanding from './pages/InviteLanding';
 import __Layout from './Layout.jsx';
 
 
@@ -38,6 +39,7 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Studio": Studio,
+    "InviteLanding": InviteLanding,
 }
 
 export const pagesConfig = {
