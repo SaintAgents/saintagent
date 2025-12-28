@@ -76,7 +76,8 @@ export default function Logout() {
 
   const handleLogout = async () => {
     localStorage.removeItem('session_start_time');
-    base44.auth.logout(window.location.origin + createPageUrl('Landing'));
+    await base44.auth.logout();
+    window.location.href = createPageUrl('Landing');
   };
 
   const handleCancel = () => {
