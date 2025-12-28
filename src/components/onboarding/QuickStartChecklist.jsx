@@ -21,20 +21,21 @@ export default function QuickStartChecklist() {
         <Progress value={0} className="h-2" />
       </div>
       <div className="space-y-3">
-      {ACTIONS.map((action, i) => (
-        <div
-          key={i}
-          className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200"
-        >
-          <div className="flex items-center gap-3">
-            <Square className="w-5 h-5 text-slate-400" />
-            <span className="text-sm font-medium text-slate-900">{action.label}</span>
+        {ACTIONS.map((action, i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200"
+          >
+            <div className="flex items-center gap-3">
+              <Square className="w-5 h-5 text-slate-400" />
+              <span className="text-sm font-medium text-slate-900">{action.label}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium">
+              <Sparkles className="w-4 h-4" /> +{action.reward} GGG
+            </div>
           </div>
-          <div className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium">
-            <Sparkles className="w-4 h-4" /> +{action.reward} GGG
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
