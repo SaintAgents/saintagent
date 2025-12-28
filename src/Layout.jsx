@@ -19,7 +19,7 @@ export default function Layout({ children, currentPageName }) {
   const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
-const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
+const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome'];
 
         // Open/close multiple profile drawers (max 6)
         const openProfile = (id) => {
@@ -200,7 +200,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   // Redirect unauthenticated users to login, then go to Command Deck
     useEffect(() => {
               if (currentUser === null && !PUBLIC_PAGES.includes(currentPageName)) {
-                base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+                base44.auth.redirectToLogin(createPageUrl('Onboarding'));
               }
             }, [currentUser, currentPageName]);
 
