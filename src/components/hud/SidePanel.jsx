@@ -294,27 +294,6 @@ export default function SidePanel({
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-500" />
-              Quick Actions
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" size="sm" className="h-10 rounded-xl text-xs">
-                Boost Profile
-              </Button>
-              <Button variant="outline" size="sm" className="h-10 rounded-xl text-xs">
-                Find Mentors
-              </Button>
-              <Button variant="outline" size="sm" className="h-10 rounded-xl text-xs">
-                Browse Events
-              </Button>
-              <Button variant="outline" size="sm" className="h-10 rounded-xl text-xs">
-                View Missions
-              </Button>
-            </div>
-          </div>
 
           {/* Context Help */}
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
@@ -346,7 +325,7 @@ export default function SidePanel({
             {/* Create Post */}
             <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
               <div className="flex items-start gap-3">
-                <Avatar className="w-9 h-9">
+                <Avatar className="w-9 h-9 cursor-pointer" data-user-id={profile?.user_id}>
                   <AvatarImage src={profile?.avatar_url} />
                   <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
                     {profile?.display_name?.charAt(0)}
@@ -456,7 +435,7 @@ export default function SidePanel({
 
                           {/* Comment Input */}
                           <div className="flex items-start gap-2">
-                            <Avatar className="w-7 h-7">
+                            <Avatar className="w-7 h-7 cursor-pointer" data-user-id={profile?.user_id}>
                               <AvatarImage src={profile?.avatar_url} />
                               <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">
                                 {profile?.display_name?.charAt(0)}
