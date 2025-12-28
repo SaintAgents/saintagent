@@ -78,10 +78,17 @@ export default function Sidebar({
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
 
+  // Ensure we have an email even if profile hasn't loaded yet
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+  const messagesEmail = profile?.user_id || currentUser?.email;
+
   const { data: unreadMessages = [] } = useQuery({
-    queryKey: ['unreadMessages', profile?.user_id],
-    queryFn: () => base44.entities.Message.filter({ to_user_id: profile.user_id, is_read: false }, '-created_date', 1000),
-    enabled: !!profile?.user_id,
+    queryKey: ['unreadMessages', messagesEmail],
+    queryFn: () => base44.entities.Message.filter({ to_user_id: messagesEmail, is_read: false }, '-created_date', 1000),
+    enabled: !!messagesEmail,
     refetchInterval: 5000
   });
 
@@ -136,7 +143,7 @@ export default function Sidebar({
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const isActive = currentPage === item.id;
-          const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : item.badge;
+          const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : (item.badge || 0);
           return (
             <Link
               key={item.id}
