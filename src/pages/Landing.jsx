@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Users, Target, Crown, ArrowRight } from "lucide-react";
+import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 
 export default function Landing() {
