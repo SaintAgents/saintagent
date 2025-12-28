@@ -122,7 +122,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   });
 
   // Onboarding progress for redirect
-  const { data: onboardingRecords } = useQuery({
+  const { data: onboardingRecords, isLoading: onboardingLoading } = useQuery({
     queryKey: ['onboardingProgress', currentUser?.email],
     queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email
@@ -215,13 +215,15 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   // If authenticated and onboarding missing or not complete, force Onboarding
   useEffect(() => {
     const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
-    if (currentUser && currentPageName !== 'Onboarding' && !justCompleted && (!onboarding || onboarding.status !== 'complete')) {
+    if (!currentUser || currentPageName === 'Onboarding') return;
+    if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
+    if (!justCompleted && (!onboarding || onboarding.status !== 'complete')) {
       window.location.href = createPageUrl('Onboarding');
     }
     if (justCompleted && onboarding?.status === 'complete') {
       try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
     }
-  }, [currentUser, onboarding, currentPageName]);
+  }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
   // If no user, show minimal shell while redirecting to login
   if (currentUser === null && PUBLIC_PAGES.includes(currentPageName)) {
