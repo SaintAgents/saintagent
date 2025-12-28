@@ -125,7 +125,7 @@ export default function Messages() {
                       recipientAvatar: conv.otherUser.avatar
                     }
                   });
-                  window.dispatchEvent(event);
+                  document.dispatchEvent(event);
                 } else {
                   console.log('No conversation to open');
                 }
@@ -169,6 +169,7 @@ export default function Messages() {
                   </span>
                 )}
                 </div>
+                </div>
                 </button>
                 <Button
                 size="sm"
@@ -184,7 +185,7 @@ export default function Messages() {
                       recipientAvatar: conv.otherUser.avatar
                     }
                   });
-                  window.dispatchEvent(event);
+                  document.dispatchEvent(event);
                 }}
                 >
                 <ExternalLink className="w-3.5 h-3.5" />
