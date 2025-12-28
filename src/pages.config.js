@@ -15,6 +15,7 @@ import LeaderChannel from './pages/LeaderChannel';
 import Landing from './pages/Landing';
 import MissionDetail from './pages/MissionDetail';
 import FindCollaborators from './pages/FindCollaborators';
+import EventDetail from './pages/EventDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -36,6 +37,7 @@ export const PAGES = {
     "Landing": Landing,
     "MissionDetail": MissionDetail,
     "FindCollaborators": FindCollaborators,
+    "EventDetail": EventDetail,
 }
 
 export const pagesConfig = {
