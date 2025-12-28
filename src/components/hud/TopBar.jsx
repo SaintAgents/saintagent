@@ -41,7 +41,7 @@ export default function TopBar({
   onSearch,
   onQuickCreate,
   onNotificationAction,
-  onLogout,,
+  onLogout,
   sidebarCollapsed
 }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -162,9 +162,11 @@ export default function TopBar({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={onLogout} className="text-rose-600">
-                <LogOut className="w-4 h-4 mr-2" />
-                Log out
+              <DropdownMenuItem asChild>
+                <Link to={createPageUrl('Logout')} className="flex items-center gap-2 text-rose-600">
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

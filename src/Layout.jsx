@@ -83,7 +83,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const handleLogout = () => {
-    base44.auth.logout();
+    window.location.href = createPageUrl('Logout');
   };
 
   const handleSearch = (query) => {
