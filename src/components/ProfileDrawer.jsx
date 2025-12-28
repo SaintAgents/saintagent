@@ -79,6 +79,13 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const dragOffsetRef = React.useRef({ x: 0, y: 0 });
   const draggingRef = React.useRef(false);
+  const [size, setSize] = React.useState({ w: 384, h: 480 });
+  const resizingRef = React.useRef({ active: false, edge: null });
+  const startResize = (edge) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizingRef.current = { active: true, edge };
+  };
 
   React.useEffect(() => {
     // Initial position near bottom-right, stagger by offsetIndex
@@ -88,12 +95,31 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     const x = Math.max(8, window.innerWidth - width - 16 - offset);
     const y = Math.max(8, window.innerHeight - defaultHeight - 16 - offset);
     setPos({ x, y });
+    setSize({ w: width, h: defaultHeight });
   }, [offsetIndex]);
 
   React.useEffect(() => {
     const onMouseMove = (e) => {
+      if (resizingRef.current.active) {
+        const minW = 320, minH = 240;
+        const maxW = Math.max(minW, window.innerWidth - pos.x - 8);
+        const maxH = Math.max(minH, window.innerHeight - pos.y - 8);
+        const edge = resizingRef.current.edge;
+        if (edge === 'right') {
+          const nextW = Math.min(Math.max(minW, e.clientX - pos.x), maxW);
+          setSize((s) => ({ ...s, w: nextW }));
+        } else if (edge === 'bottom') {
+          const nextH = Math.min(Math.max(minH, e.clientY - pos.y), maxH);
+          setSize((s) => ({ ...s, h: nextH }));
+        } else if (edge === 'bottom-right') {
+          const nextW = Math.min(Math.max(minW, e.clientX - pos.x), maxW);
+          const nextH = Math.min(Math.max(minH, e.clientY - pos.y), maxH);
+          setSize({ w: nextW, h: nextH });
+        }
+        return;
+      }
       if (!draggingRef.current) return;
-      const width = 384;
+      const width = containerRef.current?.offsetWidth || 384;
       const height = containerRef.current?.offsetHeight || Math.min(window.innerHeight * 0.8, 640);
       let newX = e.clientX - dragOffsetRef.current.x;
       let newY = e.clientY - dragOffsetRef.current.y;
@@ -102,7 +128,10 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       newY = Math.min(Math.max(8, newY), window.innerHeight - height - 8);
       setPos({ x: newX, y: newY });
     };
-    const onMouseUp = () => { draggingRef.current = false; };
+    const onMouseUp = () => { 
+      draggingRef.current = false; 
+      resizingRef.current = { active: false, edge: null };
+    };
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
     return () => {
@@ -130,8 +159,8 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     <div
       id="profile-drawer"
       ref={containerRef}
-      className="fixed w-96 h-[80vh] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] pointer-events-auto flex flex-col overflow-hidden"
-      style={{ left: pos.x, top: pos.y }}
+      className="fixed bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] pointer-events-auto flex flex-col overflow-hidden"
+      style={{ left: pos.x, top: pos.y, width: size.w, height: size.h }}
     >
       <Button 
         variant="ghost" 
@@ -149,7 +178,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
         Drag to move
       </div>
 
-      <ScrollArea className="h-[calc(80vh-2.25rem)] overflow-auto overscroll-contain">
+      <ScrollArea className="flex-1">
         <div className="p-6">
           {/* Avatar */}
           <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
@@ -464,7 +493,11 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             </div>
           )}
         </div>
+      {/* Resize handles */}
+      <div onMouseDown={startResize('right')} className="absolute top-0 right-0 h-full w-1.5 cursor-ew-resize z-10" />
+      <div onMouseDown={startResize('bottom')} className="absolute bottom-0 left-0 w-full h-1.5 cursor-ns-resize z-10" />
+      <div onMouseDown={startResize('bottom-right')} className="absolute bottom-0 right-0 w-3.5 h-3.5 cursor-nwse-resize z-20" />
       </ScrollArea>
-    </div>
+      </div>
   );
 }
