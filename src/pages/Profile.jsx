@@ -45,6 +45,8 @@ import {
 } from "lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
+import RPRing from '@/components/reputation/RPRing';
+import { getRPRank } from '@/components/reputation/rpUtils';
 import MetricTile from '@/components/hud/MetricTile';
 
 export default function Profile() {
@@ -188,8 +190,8 @@ export default function Profile() {
     }
   });
 
-  const rankProgress = profile?.rank_points || 0;
-  const nextRankAt = 1000;
+  const rpPoints = profile?.rp_points || 0;
+          const rpInfo = getRPRank(rpPoints);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
@@ -746,26 +748,21 @@ export default function Profile() {
               <div className="space-y-6">
             {/* Rank Progress */}
             <Card>
-              <CardContent className="pt-6 text-center">
-                <ProgressRing 
-                  value={rankProgress} 
-                  max={nextRankAt} 
-                  size={120}
-                  strokeWidth={8}
-                  color="violet"
-                  className="mx-auto mb-4"
-                />
-                <div className="flex items-center justify-center gap-2">
-                  <h3 className="text-xl font-bold text-slate-900 capitalize">
-                    {profile?.rank_code || 'Seeker'}
-                  </h3>
-                  <AscensionLadderPopover />
-                </div>
-                <p className="text-sm text-slate-500 mt-1">
-                  {nextRankAt - rankProgress} points to next rank
-                </p>
-              </CardContent>
-            </Card>
+                                <CardContent className="pt-6 text-center">
+                                  <RPRing rpPoints={rpPoints} className="mx-auto mb-4" />
+                                  <div className="flex items-center justify-center gap-2">
+                                    <h3 className="text-xl font-bold text-slate-900 capitalize">
+                                      {rpInfo.title}
+                                    </h3>
+                                    <AscensionLadderPopover />
+                                  </div>
+                                  <p className="text-sm text-slate-500 mt-1">
+                                    {rpInfo.nextMin
+                                      ? `${rpInfo.nextMin - rpPoints} RP to next rank (${rpInfo.nextTitle})`
+                                      : 'Max rank'}
+                                  </p>
+                                </CardContent>
+                              </Card>
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 gap-3">

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import FloatingPanel from '@/components/hud/FloatingPanel';
+import { getRPRank } from '@/components/reputation/rpUtils';
 import {
   Select,
   SelectContent,
@@ -305,6 +306,15 @@ export default function Sidebar({
         "border-t border-slate-100 p-4 space-y-3",
         isCollapsed && "px-2"
       )}>
+        {!isCollapsed && profile && (
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-500">RP</span>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs">{profile.rp_points || 0}</Badge>
+              <span className="text-xs capitalize text-slate-700">{getRPRank(profile.rp_points || 0).title}</span>
+            </div>
+          </div>
+        )}
         {/* Status Light */}
         <div className={cn(
           "flex items-center gap-3",
