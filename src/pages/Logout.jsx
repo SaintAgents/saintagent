@@ -16,6 +16,7 @@ import {
   Award,
   ArrowLeft
 } from "lucide-react";
+import { createPageUrl } from '@/utils';
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -73,7 +74,7 @@ export default function Logout() {
 
   const handleLogout = () => {
     localStorage.removeItem('session_start_time');
-    base44.auth.logout('/');
+    base44.auth.logout(createPageUrl('Landing'));
   };
 
   const handleCancel = () => {

@@ -13,6 +13,7 @@ import AffiliateCenter from './pages/AffiliateCenter';
 import Admin from './pages/Admin';
 import LeaderChannel from './pages/LeaderChannel';
 import Logout from './pages/Logout';
+import Landing from './pages/Landing';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "Admin": Admin,
     "LeaderChannel": LeaderChannel,
     "Logout": Logout,
+    "Landing": Landing,
 }
 
 export const pagesConfig = {
