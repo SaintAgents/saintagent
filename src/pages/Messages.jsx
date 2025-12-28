@@ -7,12 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, Send, Search, ExternalLink } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { createPageUrl } from "@/utils";
+import CreateGroupChatModal from "@/components/messages/CreateGroupChatModal";
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messageText, setMessageText] = useState('');
+  const [groupOpen, setGroupOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -22,7 +26,14 @@ export default function Messages() {
 
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages'],
-    queryFn: () => base44.entities.Message.list('-created_date', 100)
+    queryFn: () => base44.entities.Message.list('-created_date', 500),
+    refetchInterval: 1500
+  });
+
+  const { data: conversations = [] } = useQuery({
+    queryKey: ['conversations'],
+    queryFn: () => base44.entities.Conversation.list('-updated_date', 200),
+    refetchInterval: 5000
   });
 
   const { data: profiles = [] } = useQuery({
@@ -44,17 +55,17 @@ export default function Messages() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['messages'] })
   });
 
-  // Group messages into conversations
-  const conversations = React.useMemo(() => {
+  // Group messages into conversations (includes entity-defined Conversations)
+  const convList = React.useMemo(() => {
     const convMap = {};
-    allMessages.forEach(msg => {
-      const convId = msg.conversation_id || 
-        [msg.from_user_id, msg.to_user_id].sort().join('_');
+    const visibleMsgs = allMessages.filter(m => !(m.deleted_for_user_ids?.includes?.(user?.email)));
+    visibleMsgs.forEach(msg => {
+      const convId = msg.conversation_id || [msg.from_user_id, msg.to_user_id].sort().join('_');
       if (!convMap[convId]) {
         convMap[convId] = {
           id: convId,
           messages: [],
-          otherUser: msg.from_user_id === user?.email 
+          otherUser: msg.from_user_id === user?.email
             ? { id: msg.to_user_id, name: msg.to_name, avatar: msg.to_avatar }
             : { id: msg.from_user_id, name: msg.from_name, avatar: msg.from_avatar },
           lastMessage: msg,
@@ -62,16 +73,25 @@ export default function Messages() {
         };
       }
       convMap[convId].messages.push(msg);
-      if (!msg.is_read && msg.to_user_id === user?.email) {
-        convMap[convId].unreadCount++;
+      if (!msg.is_read && msg.to_user_id === user?.email) convMap[convId].unreadCount++;
+    });
+    const myConvs = conversations.filter(c => c.participant_ids?.includes(user?.email));
+    myConvs.forEach(c => {
+      if (!convMap[c.id]) {
+        const others = (c.participant_ids || []).filter(pid => pid !== user?.email);
+        convMap[c.id] = {
+          id: c.id,
+          messages: [],
+          otherUser: { id: c.id, name: c.name || (others.length > 1 ? `${others.length}+ members` : others[0] || 'Group'), avatar: null },
+          lastMessage: { created_date: c.last_message_at || new Date(0).toISOString(), content: c.last_message || '' },
+          unreadCount: visibleMsgs.filter(m => m.conversation_id === c.id && !m.is_read && m.to_user_id === user?.email).length
+        };
       }
     });
-    return Object.values(convMap).sort((a, b) => 
-      new Date(b.lastMessage.created_date) - new Date(a.lastMessage.created_date)
-    );
-  }, [allMessages, user]);
+    return Object.values(convMap).sort((a, b) => new Date(b.lastMessage.created_date) - new Date(a.lastMessage.created_date));
+  }, [allMessages, conversations, user]);
 
-  const currentMessages = selectedConversation?.messages || [];
+  const currentMessages = (selectedConversation?.messages || []).filter(m => !(m.deleted_for_user_ids?.includes?.(user?.email)));
 
   const getStatus = React.useCallback((uid) => {
     const p = profiles.find((pr) => pr.user_id === uid);
@@ -80,16 +100,34 @@ export default function Messages() {
   const STATUS_COLORS = { online: 'bg-emerald-500', focus: 'bg-amber-500', dnd: 'bg-rose-500', offline: 'bg-slate-400' };
   const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!messageText.trim() || !selectedConversation) return;
-    sendMutation.mutate({
+    const payload = {
       conversation_id: selectedConversation.id,
       from_user_id: user.email,
       to_user_id: selectedConversation.otherUser.id,
       from_name: user.full_name,
       to_name: selectedConversation.otherUser.name,
       content: messageText
-    });
+    };
+    sendMutation.mutate(payload);
+    // Notifications
+    const convEntity = conversations.find(c => c.id === selectedConversation.id);
+    let recipients = [];
+    if (convEntity?.type === 'group') {
+      recipients = (convEntity.participant_ids || []).filter(pid => pid !== user.email);
+    } else if (selectedConversation.otherUser?.id) {
+      recipients = [selectedConversation.otherUser.id];
+    }
+    if (recipients.length) {
+      await Promise.all(recipients.map(r => base44.entities.Notification.create({
+        user_id: r,
+        type: 'message',
+        title: `New message from ${user.full_name}`,
+        message: messageText.slice(0, 120),
+        action_url: createPageUrl('Messages')
+      })));
+    }
   };
 
   React.useEffect(() => {
@@ -107,16 +145,18 @@ export default function Messages() {
       {/* Conversations List */}
       <div className="w-80 border-r bg-white flex flex-col">
         <div className="p-4 border-b">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-slate-900">Messages</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-semibold text-slate-900">Messages</h2>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs" onClick={() => setGroupOpen(true)}>
+              <Users className="w-3.5 h-3.5" /> New Group
+            </Button>
             <Button 
               variant="ghost" 
               className="rounded-lg gap-1.5 text-xs"
               onClick={() => {
-                console.log('Popup clicked');
-                const conv = selectedConversation || (conversations.length > 0 ? conversations[0] : null);
+                const conv = selectedConversation || (convList.length > 0 ? convList[0] : null);
                 if (conv) {
-                  console.log('Dispatching openFloatingChat event', conv.otherUser);
                   const event = new CustomEvent('openFloatingChat', {
                     detail: {
                       recipientId: conv.otherUser.id,
@@ -125,8 +165,6 @@ export default function Messages() {
                     }
                   });
                   window.dispatchEvent(event);
-                } else {
-                  console.log('No conversation to open');
                 }
               }}
             >
@@ -134,13 +172,14 @@ export default function Messages() {
               Popup
             </Button>
           </div>
+        </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input placeholder="Search messages..." className="pl-9 h-9 rounded-lg" />
           </div>
         </div>
         <ScrollArea className="flex-1">
-          {conversations.map((conv) => (
+          {convList.map((conv) => (
             <div key={conv.id} className="relative group">
               <button
                 onClick={() => setSelectedConversation(conv)}
@@ -160,7 +199,7 @@ export default function Messages() {
                 <div className="flex items-center justify-between">
                   <p className="font-medium text-sm text-slate-900">{conv.otherUser.name}</p>
                   <p className="text-xs text-slate-400">
-                    {format(parseISO(conv.lastMessage.created_date), 'h:mm a')}
+                    {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'h:mm a') : ''}
                   </p>
                 </div>
                 <p className="text-sm text-slate-500 truncate">{conv.lastMessage.content}</p>
@@ -209,6 +248,25 @@ export default function Messages() {
               <p className="font-semibold text-slate-900">{selectedConversation.otherUser.name}</p>
               <p className="text-xs text-slate-500">{STATUS_LABELS[getStatus(selectedConversation.otherUser.id)]}</p>
             </div>
+            <div className="ml-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={async () => {
+                    const msgs = allMessages.filter(m => m.conversation_id === selectedConversation.id);
+                    for (const m of msgs) {
+                      const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                      if (!list.includes(user.email)) await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user.email] });
+                    }
+                    queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  }}>
+                    <Trash2 className="w-4 h-4 mr-2" /> Clear for me
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
           {/* Messages */}
@@ -231,9 +289,29 @@ export default function Messages() {
                       )}>
                         <p className="text-sm">{msg.content}</p>
                       </div>
-                      <p className="text-xs text-slate-400 mt-1 px-2">
-                        {format(parseISO(msg.created_date), 'h:mm a')}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-slate-400 mt-1 px-2">
+                          {format(parseISO(msg.created_date), 'h:mm a')}
+                        </p>
+                        {isOwn && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 mt-0.5 text-slate-400 hover:text-rose-600"
+                            onClick={() => {
+                              const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
+                              if (!list.includes(user.email)) {
+                                base44.entities.Message.update(msg.id, { deleted_for_user_ids: [...list, user.email] }).then(() => {
+                                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                                });
+                              }
+                            }}
+                            title="Delete for me"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
@@ -270,5 +348,20 @@ export default function Messages() {
         </div>
       )}
     </div>
-  );
-}
+    <CreateGroupChatModal 
+      open={groupOpen} 
+      onClose={() => setGroupOpen(false)} 
+      onCreated={(conv) => {
+        setGroupOpen(false);
+        const others = (conv.participant_ids || []).filter(pid => pid !== user?.email);
+        setSelectedConversation({
+          id: conv.id,
+          messages: [],
+          otherUser: { id: conv.id, name: conv.name || `${others.length}+ members`, avatar: null },
+          lastMessage: { created_date: conv.last_message_at || new Date().toISOString(), content: conv.last_message || '' },
+          unreadCount: 0
+        });
+      }}
+    />
+    );
+    }
