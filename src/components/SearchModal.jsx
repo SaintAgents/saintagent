@@ -66,9 +66,15 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filterResults = (items) => {
     if (showAll && !query) return items;
     if (!query) return [];
-    return items.filter(item => 
-      JSON.stringify(item).toLowerCase().includes(query.toLowerCase())
+    const normalize = (s) => (
+      (s ? String(s) : '')
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '') // strip diacritics
+        .replace(/[^a-z0-9]/g, '') // remove spaces & punctuation
     );
+    const needle = normalize(query);
+    return items.filter(item => normalize(JSON.stringify(item)).includes(needle));
   };
 
   const filteredProfiles = filterResults(profiles);
