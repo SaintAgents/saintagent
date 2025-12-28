@@ -257,6 +257,11 @@ export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete 
           <Button onClick={addCustomQualityProviding} variant="outline">Add</Button>
         </div>
       </div>
+
+      {/* Continue */}
+      <Button className="w-full bg-violet-600 hover:bg-violet-700" onClick={() => onComplete && onComplete(data)}>
+        Continue
+      </Button>
     </div>
   );
 }
