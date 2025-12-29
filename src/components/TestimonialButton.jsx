@@ -6,7 +6,7 @@ import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TestimonialModal from './TestimonialModal';
 
-export default function TestimonialButton({ 
+export default function TestimonialButton({
   toUserId,
   toUserName,
   toUserAvatar,
@@ -25,15 +25,15 @@ export default function TestimonialButton({
 
   const { data: testimonials = [] } = useQuery({
     queryKey: ['testimonials', toUserId, contextId],
-    queryFn: () => base44.entities.Testimonial.filter({ 
+    queryFn: () => base44.entities.Testimonial.filter({
       to_user_id: toUserId,
-      context_id: contextId 
+      context_id: contextId
     }),
     enabled: !!toUserId
   });
 
   const existingTestimonial = testimonials.find(
-    t => t.from_user_id === currentUser?.email
+    (t) => t.from_user_id === currentUser?.email
   );
 
   if (currentUser?.email === toUserId) {
@@ -44,10 +44,10 @@ export default function TestimonialButton({
     <>
       <Button
         variant={variant}
-        size={size}
-        className={cn("gap-2", className)}
-        onClick={() => setModalOpen(true)}
-      >
+        size={size} className="bg-violet-100 text-stone-950 px-3 text-xs font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-2 w-full"
+
+        onClick={() => setModalOpen(true)}>
+
         <Heart className={cn(
           "w-4 h-4",
           existingTestimonial && "fill-current text-rose-500"
@@ -63,8 +63,8 @@ export default function TestimonialButton({
         toUserAvatar={toUserAvatar}
         context={context}
         contextId={contextId}
-        existingTestimonial={existingTestimonial}
-      />
-    </>
-  );
+        existingTestimonial={existingTestimonial} />
+
+    </>);
+
 }
