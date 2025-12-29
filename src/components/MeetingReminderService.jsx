@@ -49,50 +49,66 @@ export default function MeetingReminderService() {
       const now = new Date();
       const reminderWindows = [15, 60]; // 15 minutes and 1 hour
 
-      // Meetings
-        // Only check meetings where current user is participant
-        if (meeting.host_id !== currentUser.email && meeting.guest_id !== currentUser.email) {
-          return;
-        }
-
+      // Meetings (where current user is host or guest)
+      (meetings || []).forEach((meeting) => {
+        if (meeting.host_id !== currentUser.email && meeting.guest_id !== currentUser.email) return;
         const meetingTime = new Date(meeting.scheduled_time);
         const minutesUntil = (meetingTime - now) / (1000 * 60);
-
-        // Check if meeting is in the future and within 2 hours
         if (minutesUntil > 0 && minutesUntil <= 120) {
-          reminderWindows.forEach(window => {
-            // If meeting is within the window (with 1-minute tolerance)
+          reminderWindows.forEach((window) => {
             if (Math.abs(minutesUntil - window) <= 1) {
-              // Check if we already sent this notification
-              const notificationKey = `meeting-${meeting.id}-${window}min`;
-              const alreadySent = existingNotifications.some(n => 
-                n.metadata?.meeting_id === meeting.id && 
-                n.metadata?.reminder_window === window
+              const alreadySent = existingNotifications.some(
+                (n) => n.metadata?.meeting_id === meeting.id && n.metadata?.reminder_window === window
               );
-
               if (!alreadySent) {
-                const otherPerson = meeting.host_id === currentUser.email 
-                  ? meeting.guest_name 
-                  : meeting.host_name;
-
+                const otherPerson = meeting.host_id === currentUser.email ? meeting.guest_name : meeting.host_name;
                 createNotification.mutate({
                   user_id: currentUser.email,
                   type: 'meeting',
-                  title: `Meeting Reminder`,
+                  title: 'Meeting Reminder',
                   message: `Your meeting "${meeting.title}" with ${otherPerson} starts in ${window} minutes`,
-                  action_url: `/meetings`,
+                  action_url: '/Meetings',
                   action_label: 'View Meeting',
                   priority: window <= 15 ? 'high' : 'normal',
-                  metadata: {
-                    meeting_id: meeting.id,
-                    reminder_window: window
-                  }
+                  metadata: { meeting_id: meeting.id, reminder_window: window },
                 });
-
-                // Show toast for immediate notifications (15 min)
                 if (window <= 15) {
                   toast.info(`Meeting starting in ${window} minutes`, {
                     description: `"${meeting.title}" with ${otherPerson}`,
+                    duration: 10000,
+                  });
+                }
+              }
+            }
+          });
+        }
+      });
+
+      // Events (hosted by current user)
+      (myEvents || []).forEach((evt) => {
+        if (evt.host_id !== currentUser.email || !evt.start_time) return;
+        const eventTime = new Date(evt.start_time);
+        const minutesUntil = (eventTime - now) / (1000 * 60);
+        if (minutesUntil > 0 && minutesUntil <= 120) {
+          reminderWindows.forEach((window) => {
+            if (Math.abs(minutesUntil - window) <= 1) {
+              const alreadySent = existingNotifications.some(
+                (n) => n.metadata?.event_id === evt.id && n.metadata?.reminder_window === window
+              );
+              if (!alreadySent) {
+                createNotification.mutate({
+                  user_id: currentUser.email,
+                  type: 'event',
+                  title: 'Event Reminder',
+                  message: `Your event "${evt.title}" starts in ${window} minutes`,
+                  action_url: `/EventDetail?id=${evt.id}`,
+                  action_label: 'Open Event',
+                  priority: window <= 15 ? 'high' : 'normal',
+                  metadata: { event_id: evt.id, reminder_window: window },
+                });
+                if (window <= 15) {
+                  toast.info(`Event starting in ${window} minutes`, {
+                    description: `"${evt.title}"`,
                     duration: 10000,
                   });
                 }
