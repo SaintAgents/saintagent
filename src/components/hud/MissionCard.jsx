@@ -17,6 +17,7 @@ import {
 "lucide-react";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
+import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 
 export default function MissionCard({ mission, onAction, variant = "default" }) {
   const completedTasks = mission.tasks?.filter((t) => t.completed)?.length || 0;
@@ -121,7 +122,7 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
               {mission.reward_ggg > 0 &&
               <span className="flex items-center gap-1 text-sm font-semibold text-amber-700">
                   <Coins className="w-3.5 h-3.5" />
-                  {mission.reward_ggg} GGG
+                  {Number(mission.reward_ggg).toFixed(2)} GGG • ${((Number(mission.reward_ggg) || 0) * GGG_TO_USD).toFixed(2)}
                 </span>
               }
               {mission.reward_rank_points > 0 &&

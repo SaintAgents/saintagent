@@ -117,9 +117,14 @@ export default function GGGRulesManager() {
             <div className="text-xs text-slate-500 mb-2">Actions and base earnings</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {ACTIONS.map((a) => (
-                <div key={a.key} className="flex items-center justify-between p-2 rounded border bg-white">
-                  <span className="text-sm text-slate-700">{a.title}</span>
-                  <span className="text-sm font-semibold text-amber-600">{a.base.toFixed(2)} GGG</span>
+                <div key={a.key} className="p-2 rounded border bg-white">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-700">{a.title}</span>
+                    <span className="text-sm font-semibold text-amber-600">{a.base.toFixed(2)} GGG</span>
+                  </div>
+                  {a.definition && (
+                    <p className="text-xs text-slate-500 mt-1">{a.definition}</p>
+                  )}
                 </div>
               ))}
             </div>

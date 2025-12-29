@@ -61,6 +61,9 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
                     ))}
                   </SelectContent>
                 </Select>
+                <div className="mt-2 text-xs text-slate-500 min-h-10">
+                  {ACTIONS.find(a => a.key === actionKey)?.definition}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
