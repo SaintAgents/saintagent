@@ -235,7 +235,7 @@ export default function SidePanel({
       {!isOpen && (
         <div
           onMouseEnter={() => onToggle?.()}
-          className="fixed top-1/2 -translate-y-1/2 z-40 bg-violet-600/80 hover:bg-violet-700 cursor-pointer rounded-l-lg"
+          className={cn("fixed top-1/2 -translate-y-1/2 z-40 bg-violet-600/80 hover:bg-violet-700 cursor-pointer", dockSide === 'right' ? "rounded-l-lg" : "rounded-r-lg")}
           style={{ width: '10px', height: '140px', right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
           title="Open panel"
         />
@@ -246,7 +246,7 @@ export default function SidePanel({
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "w-80" : "w-0 overflow-hidden"
         )}
-        style={{ top: topOffset, right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
+        style={{ top: topOffset, height: `calc(100vh - ${topOffset}px)`, right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
       >
       {/* Drag Handle */}
       <div
@@ -260,13 +260,15 @@ export default function SidePanel({
       {/* Toggle Button */}
       <button
         onClick={onToggle}
-        className="absolute -left-10 top-1/2 -translate-y-1/2 w-10 h-20 bg-white border border-r-0 border-slate-200 rounded-l-xl flex items-center justify-center shadow-md hover:bg-slate-50 transition-colors"
-      >
-        {isOpen ? (
-          <ChevronRight className="w-5 h-5 text-slate-600" />
-        ) : (
-          <ChevronLeft className="w-5 h-5 text-slate-600" />
+        className={cn(
+          "absolute top-1/2 -translate-y-1/2 w-10 h-20 bg-white border border-slate-200 flex items-center justify-center shadow-md hover:bg-slate-50 transition-colors",
+          dockSide === 'right' ? "-left-10 rounded-l-xl border-r-0" : "-right-10 rounded-r-xl border-l-0"
         )}
+      >
+        {dockSide === 'right'
+          ? (isOpen ? <ChevronRight className="w-5 h-5 text-slate-600" /> : <ChevronLeft className="w-5 h-5 text-slate-600" />)
+          : (isOpen ? <ChevronLeft className="w-5 h-5 text-slate-600" /> : <ChevronRight className="w-5 h-5 text-slate-600" />)
+        }
       </button>
 
       <ScrollArea className="flex-1">
