@@ -120,21 +120,7 @@ export default function CollapsibleCard({
               </DropdownMenuContent>
             </DropdownMenu>
           }
-          {onPopout && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 hover:bg-slate-100"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPopout();
-              }}
-              aria-label="Pop out"
-              title="Pop out"
-            >
-              <ExternalLink className="w-4 h-4 text-slate-500" />
-            </Button>
-          )}
+
           <ChevronDown className={cn(
             "w-5 h-5 text-slate-400 transition-transform duration-200",
             isOpen && "rotate-180"
