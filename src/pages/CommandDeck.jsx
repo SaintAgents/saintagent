@@ -474,25 +474,25 @@ export default function CommandDeck() {
                 <div className="bg-violet-200 text-neutral-950 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50">
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
-                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
-                      GGG
-                      <HelpHint content="GGG is the platform currency—earn it from meetings, missions, and rewards. Spend it to boost reach and incentivize actions." />
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG
+?
+
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
-                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
-                      Rank Points
-                      <HelpHint content="RP (Rank Points) reflect your long-term contribution: missions, meetings, testimonials and more. They determine your rank." />
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points
+?
+
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
-                    <p className="text-xs text-slate-500">Followers</p>
+                    <p className="text-gray-950 text-xs">Followers</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.meetings_completed || 0}</p>
-                    <p className="text-xs text-slate-500">Meetings</p>
+                    <p className="text-gray-950 text-xs">Meetings</p>
                   </div>
                 </div>
 
