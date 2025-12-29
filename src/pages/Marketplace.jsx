@@ -11,16 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
   SelectContent,
-  SelectItem
-} from "@/components/ui/select";
-import { 
+  SelectItem } from
+"@/components/ui/select";
+import {
   ShoppingBag,
   Search,
   Plus,
   Filter,
   Grid3X3,
-  List
-} from "lucide-react";
+  List } from
+"lucide-react";
 
 import ListingCard from '@/components/hud/ListingCard';
 import CreateListingModal from '@/components/marketplace/CreateListingModal';
@@ -42,16 +42,16 @@ export default function Marketplace() {
   });
 
   const { data: listings = [], isLoading } = useQuery({
-            queryKey: ['listings'],
-            queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
-          });
-          const queryClient = useQueryClient();
+    queryKey: ['listings'],
+    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
+  });
+  const queryClient = useQueryClient();
 
-  const filteredListings = listings.filter(l => {
-    const matchesSearch = !searchQuery || 
-      l.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      l.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = tab === 'offers' ? l.listing_type === 'offer' : (tab === 'requests' ? l.listing_type === 'request' : true);
+  const filteredListings = listings.filter((l) => {
+    const matchesSearch = !searchQuery ||
+    l.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    l.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = tab === 'offers' ? l.listing_type === 'offer' : tab === 'requests' ? l.listing_type === 'request' : true;
     const matchesCategory = categoryFilter === 'all' || l.category === categoryFilter;
     const matchesDelivery = deliveryFilter === 'all' || l.delivery_mode === deliveryFilter;
     return matchesSearch && matchesType && matchesCategory && matchesDelivery;
@@ -89,7 +89,7 @@ export default function Marketplace() {
               <Plus className="w-4 h-4" />
               Create Listing
             </Button>
-            <Button variant="outline" className="rounded-xl" onClick={() => setMatrixOpen(true)}>
+            <Button variant="outline" className="bg-purple-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => setMatrixOpen(true)}>
               Earnings Matrix
             </Button>
           </div>
@@ -103,35 +103,35 @@ export default function Marketplace() {
               placeholder="Search listings..."
               className="pl-12 h-12 rounded-xl bg-white"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+              onChange={(e) => setSearchQuery(e.target.value)} />
+
           </div>
-          <Button variant="outline" className="h-12 rounded-xl gap-2" onClick={() => setShowFilters(v => !v)}>
+          <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-12 gap-2" onClick={() => setShowFilters((v) => !v)}>
             <Filter className="w-4 h-4" />
             Filters
           </Button>
           <div className="flex items-center bg-white rounded-xl border p-1">
-            <Button 
+            <Button
               variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
               size="icon"
               className="rounded-lg"
-              onClick={() => setViewMode('grid')}
-            >
+              onClick={() => setViewMode('grid')}>
+
               <Grid3X3 className="w-4 h-4" />
             </Button>
-            <Button 
+            <Button
               variant={viewMode === 'list' ? 'secondary' : 'ghost'}
               size="icon"
               className="rounded-lg"
-              onClick={() => setViewMode('list')}
-            >
+              onClick={() => setViewMode('list')}>
+
               <List className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
-        {showFilters && (
-          <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {showFilters &&
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="text-xs text-slate-500">Category</label>
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -165,7 +165,7 @@ export default function Marketplace() {
               </Select>
             </div>
           </div>
-        )}
+        }
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
           <TabsList className="w-full grid grid-cols-3 h-11 bg-white rounded-xl border">
@@ -173,74 +173,74 @@ export default function Marketplace() {
               All Listings
             </TabsTrigger>
             <TabsTrigger value="offers" className="rounded-lg">
-              Offers ({listings.filter(l => l.listing_type === 'offer').length})
+              Offers ({listings.filter((l) => l.listing_type === 'offer').length})
             </TabsTrigger>
             <TabsTrigger value="requests" className="rounded-lg">
-              Requests ({listings.filter(l => l.listing_type === 'request').length})
+              Requests ({listings.filter((l) => l.listing_type === 'request').length})
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Listings Grid */}
-        {isLoading ? (
-          <div className={cn(
-            "gap-6",
-            viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "space-y-4"
-          )}>
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-72 bg-white rounded-xl animate-pulse" />
-            ))}
-          </div>
-        ) : filteredListings.length === 0 ? (
-          <div className="text-center py-16">
+        {isLoading ?
+        <div className={cn(
+          "gap-6",
+          viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "space-y-4"
+        )}>
+            {[1, 2, 3, 4, 5, 6].map((i) =>
+          <div key={i} className="h-72 bg-white rounded-xl animate-pulse" />
+          )}
+          </div> :
+        filteredListings.length === 0 ?
+        <div className="text-center py-16">
             <ShoppingBag className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No listings found</h3>
             <p className="text-slate-500 mb-6">Be the first to create an offer or request</p>
             <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => setCreateOpen(true)}>
               Create Listing
             </Button>
+          </div> :
+
+        <div className={cn(
+          "gap-6",
+          viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "space-y-4"
+        )}>
+            {filteredListings.map((listing) =>
+          <ListingCard
+            key={listing.id}
+            listing={listing}
+            onAction={handleAction} />
+
+          )}
           </div>
-        ) : (
-          <div className={cn(
-            "gap-6",
-            viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "space-y-4"
-          )}>
-            {filteredListings.map(listing => (
-              <ListingCard 
-                key={listing.id} 
-                listing={listing} 
-                onAction={handleAction}
-              />
-            ))}
-          </div>
-        )}
+        }
       <EarningsMatrixModal open={matrixOpen} onOpenChange={setMatrixOpen} />
 
       <CreateListingModal
-        open={createOpen}
-        onOpenChange={setCreateOpen}
-        onCreate={async (data) => {
-          if (!currentUser) return;
-          await base44.entities.Listing.create({
-            owner_id: currentUser.email,
-            owner_name: currentUser.full_name,
-            owner_avatar: undefined,
-            listing_type: data.listing_type || 'offer',
-            category: data.category || 'session',
-            title: data.title,
-            description: data.description || '',
-            price_amount: data.is_free ? 0 : Number(data.price_amount || 0),
-            is_free: !!data.is_free,
-            duration_minutes: Number(data.duration_minutes || 60),
-            delivery_mode: data.delivery_mode || 'online',
-            status: 'active',
-            image_url: data.image_url || undefined
-          });
-          queryClient.invalidateQueries({ queryKey: ['listings'] });
-          setCreateOpen(false);
-        }}
-      />
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+          onCreate={async (data) => {
+            if (!currentUser) return;
+            await base44.entities.Listing.create({
+              owner_id: currentUser.email,
+              owner_name: currentUser.full_name,
+              owner_avatar: undefined,
+              listing_type: data.listing_type || 'offer',
+              category: data.category || 'session',
+              title: data.title,
+              description: data.description || '',
+              price_amount: data.is_free ? 0 : Number(data.price_amount || 0),
+              is_free: !!data.is_free,
+              duration_minutes: Number(data.duration_minutes || 60),
+              delivery_mode: data.delivery_mode || 'online',
+              status: 'active',
+              image_url: data.image_url || undefined
+            });
+            queryClient.invalidateQueries({ queryKey: ['listings'] });
+            setCreateOpen(false);
+          }} />
+
       </div>
-      </div>
-      );
+      </div>);
+
 }
