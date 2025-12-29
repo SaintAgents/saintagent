@@ -61,16 +61,16 @@ export default function Messages() {
   // Group messages into conversations (includes entity-defined Conversations)
   const convList = React.useMemo(() => {
     const convMap = {};
-    const visibleMsgs = allMessages.filter(m => !(m.deleted_for_user_ids?.includes?.(user?.email)));
-    visibleMsgs.forEach(msg => {
+    const visibleMsgs = allMessages.filter((m) => !m.deleted_for_user_ids?.includes?.(user?.email));
+    visibleMsgs.forEach((msg) => {
       const convId = msg.conversation_id || [msg.from_user_id, msg.to_user_id].sort().join('_');
       if (!convMap[convId]) {
         convMap[convId] = {
           id: convId,
           messages: [],
-          otherUser: msg.from_user_id === user?.email
-            ? { id: msg.to_user_id, name: msg.to_name, avatar: msg.to_avatar }
-            : { id: msg.from_user_id, name: msg.from_name, avatar: msg.from_avatar },
+          otherUser: msg.from_user_id === user?.email ?
+          { id: msg.to_user_id, name: msg.to_name, avatar: msg.to_avatar } :
+          { id: msg.from_user_id, name: msg.from_name, avatar: msg.from_avatar },
           lastMessage: msg,
           unreadCount: 0
         };
@@ -78,13 +78,13 @@ export default function Messages() {
       convMap[convId].messages.push(msg);
       if (!msg.is_read && msg.to_user_id === user?.email) convMap[convId].unreadCount++;
     });
-    const myConvs = conversations.filter(c => c.participant_ids?.includes(user?.email));
-    myConvs.forEach(c => {
+    const myConvs = conversations.filter((c) => c.participant_ids?.includes(user?.email));
+    myConvs.forEach((c) => {
       if (!convMap[c.id]) {
-        const others = (c.participant_ids || []).filter(pid => pid !== user?.email);
+        const others = (c.participant_ids || []).filter((pid) => pid !== user?.email);
         let otherUser;
         if (c.type === 'direct' && others.length === 1) {
-          const p = profiles.find(pr => pr.user_id === others[0]);
+          const p = profiles.find((pr) => pr.user_id === others[0]);
           otherUser = { id: others[0], name: p?.display_name || others[0], avatar: p?.avatar_url || null };
         } else {
           otherUser = { id: c.id, name: c.name || (others.length > 1 ? `${others.length}+ members` : others[0] || 'Group'), avatar: null };
@@ -94,14 +94,14 @@ export default function Messages() {
           messages: [],
           otherUser,
           lastMessage: { created_date: c.last_message_at || new Date(0).toISOString(), content: c.last_message || '' },
-          unreadCount: visibleMsgs.filter(m => m.conversation_id === c.id && !m.is_read && m.to_user_id === user?.email).length
+          unreadCount: visibleMsgs.filter((m) => m.conversation_id === c.id && !m.is_read && m.to_user_id === user?.email).length
         };
       }
     });
     return Object.values(convMap).sort((a, b) => new Date(b.lastMessage.created_date) - new Date(a.lastMessage.created_date));
   }, [allMessages, conversations, profiles, user]);
 
-  const currentMessages = (selectedConversation?.messages || []).filter(m => !(m.deleted_for_user_ids?.includes?.(user?.email)));
+  const currentMessages = (selectedConversation?.messages || []).filter((m) => !m.deleted_for_user_ids?.includes?.(user?.email));
 
   const getStatus = React.useCallback((uid) => {
     const p = profiles.find((pr) => pr.user_id === uid);
@@ -112,29 +112,29 @@ export default function Messages() {
 
   const handleSend = async () => {
     if (!messageText.trim() || !selectedConversation) return;
-    const convEntity = conversations.find(c => c.id === selectedConversation.id);
+    const convEntity = conversations.find((c) => c.id === selectedConversation.id);
     if (convEntity?.type === 'group') {
-      const recipients = (convEntity.participant_ids || []).filter(pid => pid !== user.email);
+      const recipients = (convEntity.participant_ids || []).filter((pid) => pid !== user.email);
       // create one message per recipient + one for sender's view
       await Promise.all([
-        ...recipients.map(r => base44.entities.Message.create({
-          conversation_id: convEntity.id,
-          from_user_id: user.email,
-          to_user_id: r,
-          from_name: user.full_name,
-          to_name: selectedConversation.otherUser.name,
-          content: messageText
-        })),
-        base44.entities.Message.create({
-          conversation_id: convEntity.id,
-          from_user_id: user.email,
-          to_user_id: user.email,
-          from_name: user.full_name,
-          to_name: user.full_name,
-          content: messageText
-        })
-      ]);
-      await Promise.all(recipients.map(r => base44.entities.Notification.create({
+      ...recipients.map((r) => base44.entities.Message.create({
+        conversation_id: convEntity.id,
+        from_user_id: user.email,
+        to_user_id: r,
+        from_name: user.full_name,
+        to_name: selectedConversation.otherUser.name,
+        content: messageText
+      })),
+      base44.entities.Message.create({
+        conversation_id: convEntity.id,
+        from_user_id: user.email,
+        to_user_id: user.email,
+        from_name: user.full_name,
+        to_name: user.full_name,
+        content: messageText
+      })]
+      );
+      await Promise.all(recipients.map((r) => base44.entities.Notification.create({
         user_id: r,
         type: 'message',
         title: `New message in ${convEntity.name || 'Group'}`,
@@ -166,7 +166,7 @@ export default function Messages() {
 
   React.useEffect(() => {
     if (selectedConversation) {
-      currentMessages.forEach(msg => {
+      currentMessages.forEach((msg) => {
         if (!msg.is_read && msg.to_user_id === user?.email) {
           markReadMutation.mutate(msg.id);
         }
@@ -183,29 +183,29 @@ export default function Messages() {
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-slate-900">Messages</h2>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs" onClick={() => setDMOpen(true)}>
+            <Button variant="outline" size="sm" className="bg-violet-100 text-stone-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-1.5" onClick={() => setDMOpen(true)}>
               <Plus className="w-3.5 h-3.5" /> New Message
             </Button>
-            <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs" onClick={() => setGroupOpen(true)}>
+            <Button variant="outline" size="sm" className="bg-violet-100 text-neutral-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-1.5" onClick={() => setGroupOpen(true)}>
               <Users className="w-3.5 h-3.5" /> New Group
             </Button>
-            <Button 
-              variant="ghost" 
-              className="rounded-lg gap-1.5 text-xs"
-              onClick={() => {
-                const conv = selectedConversation || (convList.length > 0 ? convList[0] : null);
-                if (conv) {
-                  const event = new CustomEvent('openFloatingChat', {
-                    detail: {
-                      recipientId: conv.otherUser.id,
-                      recipientName: conv.otherUser.name,
-                      recipientAvatar: conv.otherUser.avatar
+            <Button
+                  variant="ghost"
+                  className="rounded-lg gap-1.5 text-xs"
+                  onClick={() => {
+                    const conv = selectedConversation || (convList.length > 0 ? convList[0] : null);
+                    if (conv) {
+                      const event = new CustomEvent('openFloatingChat', {
+                        detail: {
+                          recipientId: conv.otherUser.id,
+                          recipientName: conv.otherUser.name,
+                          recipientAvatar: conv.otherUser.avatar
+                        }
+                      });
+                      document.dispatchEvent(event);
                     }
-                  });
-                  document.dispatchEvent(event);
-                }
-              }}
-            >
+                  }}>
+
               <ExternalLink className="w-3.5 h-3.5" />
               Popup
             </Button>
@@ -217,15 +217,15 @@ export default function Messages() {
           </div>
         </div>
         <ScrollArea className="flex-1">
-          {convList.map((conv) => (
+          {convList.map((conv) =>
             <div key={conv.id} className="relative group">
               <button
                 onClick={() => setSelectedConversation(conv)}
                 className={cn(
                   "w-full flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b",
                   selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
-                )}
-              >
+                )}>
+
               <div className="relative">
                 <Avatar className="w-10 h-10 cursor-pointer" data-user-id={conv.otherUser.id}>
                   <AvatarImage src={conv.otherUser.avatar} />
@@ -241,11 +241,11 @@ export default function Messages() {
                   </p>
                 </div>
                 <p className="text-sm text-slate-500 truncate">{conv.lastMessage.content}</p>
-                {conv.unreadCount > 0 && (
+                {conv.unreadCount > 0 &&
                   <span className="inline-block mt-1 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
                     {conv.unreadCount}
                   </span>
-                )}
+                  }
                 </div>
                 </button>
                 <Button
@@ -263,18 +263,18 @@ export default function Messages() {
                     }
                   });
                   document.dispatchEvent(event);
-                }}
-                >
+                }}>
+
                 <ExternalLink className="w-3.5 h-3.5" />
                 Popup
                 </Button>
                 </div>
-                ))}
+            )}
                 </ScrollArea>
       </div>
 
       {/* Messages Area */}
-      {selectedConversation ? (
+      {selectedConversation ?
         <div className="flex-1 flex flex-col">
           {/* Header */}
           <div className="p-4 border-b bg-white flex items-center gap-3">
@@ -293,7 +293,7 @@ export default function Messages() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={async () => {
-                    const msgs = allMessages.filter(m => m.conversation_id === selectedConversation.id);
+                    const msgs = allMessages.filter((m) => m.conversation_id === selectedConversation.id);
                     for (const m of msgs) {
                       const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
                       if (!list.includes(user.email)) await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user.email] });
@@ -321,9 +321,9 @@ export default function Messages() {
                     <div className={cn("max-w-md", isOwn && "flex flex-col items-end")}>
                       <div className={cn(
                         "px-4 py-2 rounded-2xl",
-                        isOwn 
-                          ? "bg-violet-600 text-white rounded-br-sm" 
-                          : "bg-white border border-slate-200 rounded-bl-sm"
+                        isOwn ?
+                        "bg-violet-600 text-white rounded-br-sm" :
+                        "bg-white border border-slate-200 rounded-bl-sm"
                       )}>
                         <p className="text-sm">{msg.content}</p>
                       </div>
@@ -331,28 +331,28 @@ export default function Messages() {
                         <p className="text-xs text-slate-400 mt-1 px-2">
                           {format(parseISO(msg.created_date), 'h:mm a')}
                         </p>
-                        {isOwn && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 mt-0.5 text-slate-400 hover:text-rose-600"
-                            onClick={() => {
-                              const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
-                              if (!list.includes(user.email)) {
-                                base44.entities.Message.update(msg.id, { deleted_for_user_ids: [...list, user.email] }).then(() => {
-                                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                                });
-                              }
-                            }}
-                            title="Delete for me"
-                          >
+                        {isOwn &&
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 mt-0.5 text-slate-400 hover:text-rose-600"
+                          onClick={() => {
+                            const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
+                            if (!list.includes(user.email)) {
+                              base44.entities.Message.update(msg.id, { deleted_for_user_ids: [...list, user.email] }).then(() => {
+                                queryClient.invalidateQueries({ queryKey: ['messages'] });
+                              });
+                            }
+                          }}
+                          title="Delete for me">
+
                             <Trash2 className="w-4 h-4" />
                           </Button>
-                        )}
+                        }
                       </div>
                     </div>
-                  </div>
-                );
+                  </div>);
+
               })}
             </div>
           </ScrollArea>
@@ -366,58 +366,58 @@ export default function Messages() {
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 rounded-xl"
-              />
-              <Button 
+                className="flex-1 rounded-xl" />
+
+              <Button
                 onClick={handleSend}
                 disabled={!messageText.trim()}
-                className="rounded-xl bg-violet-600 hover:bg-violet-700"
-              >
+                className="rounded-xl bg-violet-600 hover:bg-violet-700">
+
                 <Send className="w-4 h-4" />
               </Button>
             </div>
           </div>
-        </div>
-      ) : (
+        </div> :
+
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <MessageCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <p className="text-slate-500">Select a conversation to start messaging</p>
           </div>
         </div>
-      )}
+        }
     </div>
-    <CreateGroupChatModal 
-      open={groupOpen} 
-      onClose={() => setGroupOpen(false)} 
-      onCreated={(conv) => {
-        setGroupOpen(false);
-        const others = (conv.participant_ids || []).filter(pid => pid !== user?.email);
-        setSelectedConversation({
-          id: conv.id,
-          messages: [],
-          otherUser: { id: conv.id, name: conv.name || `${others.length}+ members`, avatar: null },
-          lastMessage: { created_date: conv.last_message_at || new Date().toISOString(), content: conv.last_message || '' },
-          unreadCount: 0
-        });
-      }}
-    />
+    <CreateGroupChatModal
+        open={groupOpen}
+        onClose={() => setGroupOpen(false)}
+        onCreated={(conv) => {
+          setGroupOpen(false);
+          const others = (conv.participant_ids || []).filter((pid) => pid !== user?.email);
+          setSelectedConversation({
+            id: conv.id,
+            messages: [],
+            otherUser: { id: conv.id, name: conv.name || `${others.length}+ members`, avatar: null },
+            lastMessage: { created_date: conv.last_message_at || new Date().toISOString(), content: conv.last_message || '' },
+            unreadCount: 0
+          });
+        }} />
+
     <NewDirectMessageModal
-      open={dmOpen}
-      onClose={() => setDMOpen(false)}
-      onCreated={(conv) => {
-        setDMOpen(false);
-        const other = (conv.participant_ids || []).find(pid => pid !== user?.email) || '';
-        const p = profiles.find(pr => pr.user_id === other);
-        setSelectedConversation({
-          id: conv.id,
-          messages: [],
-          otherUser: { id: other, name: p?.display_name || other, avatar: p?.avatar_url || null },
-          lastMessage: { created_date: conv.last_message_at || new Date().toISOString(), content: conv.last_message || '' },
-          unreadCount: 0
-        });
-      }}
-    />
-    </>
-    );
-    }
+        open={dmOpen}
+        onClose={() => setDMOpen(false)}
+        onCreated={(conv) => {
+          setDMOpen(false);
+          const other = (conv.participant_ids || []).find((pid) => pid !== user?.email) || '';
+          const p = profiles.find((pr) => pr.user_id === other);
+          setSelectedConversation({
+            id: conv.id,
+            messages: [],
+            otherUser: { id: other, name: p?.display_name || other, avatar: p?.avatar_url || null },
+            lastMessage: { created_date: conv.last_message_at || new Date().toISOString(), content: conv.last_message || '' },
+            unreadCount: 0
+          });
+        }} />
+
+    </>);
+
+}
