@@ -5,15 +5,15 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Target,
   Plus,
   Sparkles,
   Users,
   MapPin,
   Crown,
-  Filter
-} from "lucide-react";
+  Filter } from
+"lucide-react";
 
 import MissionCard from '@/components/hud/MissionCard';
 import CreateMissionModal from '@/components/CreateMissionModal';
@@ -29,9 +29,9 @@ export default function Missions() {
     queryFn: () => base44.entities.Mission.list('-created_date', 50)
   });
 
-  const filteredMissions = tab === 'all' 
-    ? missions 
-    : missions.filter(m => m.mission_type === tab);
+  const filteredMissions = tab === 'all' ?
+  missions :
+  missions.filter((m) => m.mission_type === tab);
 
   const handleAction = (action, mission) => {
     console.log('Mission action:', action, mission);
@@ -50,18 +50,18 @@ export default function Missions() {
             <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button 
+            <Button
               onClick={() => setCreateModalOpen(true)}
-              className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2"
-            >
+              className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2">
+
               <Plus className="w-4 h-4" />
               Create Mission
             </Button>
-            <Button 
-              variant="outline"
-              className="rounded-xl"
-              onClick={() => setMatrixOpen(true)}
-            >
+            <Button
+              variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9"
+
+              onClick={() => setMatrixOpen(true)}>
+
               Earnings Matrix
             </Button>
           </div>
@@ -94,43 +94,43 @@ export default function Missions() {
         </Tabs>
 
         {/* Missions Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-80 bg-white rounded-xl animate-pulse" />
-            ))}
-          </div>
-        ) : filteredMissions.length === 0 ? (
-          <div className="text-center py-16">
+        {isLoading ?
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) =>
+          <div key={i} className="h-80 bg-white rounded-xl animate-pulse" />
+          )}
+          </div> :
+        filteredMissions.length === 0 ?
+        <div className="text-center py-16">
             <Target className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No missions available</h3>
             <p className="text-slate-500 mb-6">Create your own mission or check back later</p>
-            <Button 
-              onClick={() => setCreateModalOpen(true)}
-              className="rounded-xl bg-violet-600 hover:bg-violet-700"
-            >
+            <Button
+            onClick={() => setCreateModalOpen(true)}
+            className="rounded-xl bg-violet-600 hover:bg-violet-700">
+
               Create Mission
             </Button>
+          </div> :
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredMissions.map((mission) =>
+          <MissionCard
+            key={mission.id}
+            mission={mission}
+            onAction={handleAction} />
+
+          )}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMissions.map(mission => (
-              <MissionCard 
-                key={mission.id} 
-                mission={mission} 
-                onAction={handleAction}
-              />
-            ))}
-          </div>
-        )}
+        }
       </div>
 
-      <CreateMissionModal 
+      <CreateMissionModal
         open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-      />
+        onClose={() => setCreateModalOpen(false)} />
+
 
       <EarningsMatrixModal open={matrixOpen} onOpenChange={setMatrixOpen} />
-    </div>
-  );
+    </div>);
+
 }
