@@ -39,12 +39,20 @@ export default function WalletPanel() {
   const wallet = walletRes?.wallet;
   const txs = txRes?.transactions || [];
 
+  // Fallback: if wallet not present yet but profile has ggg_balance, show that
+  const [profile] = useQuery({
+    queryKey: ['userProfileSelf', user?.email],
+    queryFn: async () => user?.email ? (await base44.entities.UserProfile.filter({ user_id: user.email })) : [],
+    enabled: !!user?.email,
+  }).data || [];
+  const available = wallet?.available_balance ?? profile?.ggg_balance ?? 0;
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
           <p className="text-xs text-violet-600 font-medium">Available</p>
-          <p className="text-xl font-bold text-violet-900">{wallet?.available_balance?.toLocaleString?.() ?? 0} GGG</p>
+          <p className="text-xl font-bold text-violet-900">{(available ?? 0).toLocaleString?.()} GGG</p>
         </div>
         <div className="p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200">
           <p className="text-xs text-slate-600 font-medium">Locked</p>

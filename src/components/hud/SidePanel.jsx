@@ -186,7 +186,19 @@ export default function SidePanel({
     return format(date, "MMM d, h:mm a");
   };
 
-  const rankProgress = profile?.ggg_balance || 0;
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', profile?.user_id],
+    queryFn: async () => {
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'getWallet',
+        payload: { user_id: profile.user_id },
+      });
+      return data;
+    },
+    enabled: !!profile?.user_id,
+  });
+  const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
+  const rankProgress = walletAvailable;
   const nextRankAt = 100;
 
   return (
@@ -237,7 +249,7 @@ export default function SidePanel({
                   <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
                   <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
                     <Coins className="w-5 h-5 text-amber-500" />
-                    {profile?.ggg_balance?.toLocaleString() || 0}
+                    {walletAvailable?.toLocaleString?.() || 0}
                   </p>
                 </div>
                 <ProgressRing 
@@ -251,7 +263,7 @@ export default function SidePanel({
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600">To next rank</span>
-                <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
+                <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
               </div>
               <div className="flex justify-between mt-3">
                 <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
@@ -527,7 +539,7 @@ export default function SidePanel({
                 <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
                 <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
                   <Coins className="w-5 h-5 text-amber-500" />
-                  {profile?.ggg_balance?.toLocaleString() || 0}
+                  {walletAvailable?.toLocaleString?.() || 0}
                 </p>
               </div>
               <ProgressRing 
@@ -541,7 +553,7 @@ export default function SidePanel({
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-slate-600">To next rank</span>
-              <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
+              <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
             </div>
             <div className="flex justify-between mt-3">
               <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
