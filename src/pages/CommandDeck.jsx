@@ -1121,7 +1121,7 @@ export default function CommandDeck() {
                 <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
                   <div className="flex items-center gap-3 mb-3">
                     <Flame className="w-5 h-5 text-amber-500" />
-                    <span className="font-medium text-slate-900">Boost Your Reach</span>
+                    <span className="text-yellow-400 font-medium">Boost Your Reach</span>
                   </div>
                   <p className="text-sm text-slate-600 mb-3">
                     Spend GGG to amplify your content and attract more followers.
