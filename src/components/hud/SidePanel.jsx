@@ -57,6 +57,34 @@ export default function SidePanel({
   const [helpPopupOpen, setHelpPopupOpen] = useState(false);
   const [feedPopupOpen, setFeedPopupOpen] = useState(false);
 
+  // Docking & Dragging
+  const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
+  const [topOffset, setTopOffset] = useState(80); // px from top
+  const dragRef = React.useRef({ startY: 0, startTop: 0 });
+
+  const onDragMove = (e) => {
+    const dy = e.clientY - dragRef.current.startY;
+    const nextTop = Math.max(0, Math.min((window.innerHeight || 0) - 60, dragRef.current.startTop + dy));
+    setTopOffset(nextTop);
+  };
+  const onDragEnd = (e) => {
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+    if ((e.clientX || 0) < (window.innerWidth || 0) / 2) setDockSide('left'); else setDockSide('right');
+  };
+  const onDragStart = (e) => {
+    dragRef.current = { startY: e.clientY, startTop: topOffset };
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+    };
+  }, []);
+
   // Fetch posts
   const { data: posts = [] } = useQuery({
     queryKey: ['posts'],
@@ -202,10 +230,33 @@ export default function SidePanel({
   const nextRankAt = 100;
 
   return (
-    <div className={cn(
-      "fixed right-0 top-0 h-screen bg-white border-l border-slate-200 shadow-xl z-40 transition-all duration-300 flex flex-col",
-      isOpen ? "w-80" : "w-0 overflow-hidden"
-    )}>
+    <>
+      {/* Hover handle when collapsed */}
+      {!isOpen && (
+        <div
+          onMouseEnter={() => onToggle?.()}
+          className="fixed top-1/2 -translate-y-1/2 z-40 bg-violet-600/80 hover:bg-violet-700 cursor-pointer rounded-l-lg"
+          style={{ width: '10px', height: '140px', right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
+          title="Open panel"
+        />
+      )}
+      <div
+        className={cn(
+          "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-50 transition-all duration-300 flex flex-col",
+          dockSide === 'left' ? "border-r" : "border-l",
+          isOpen ? "w-80" : "w-0 overflow-hidden"
+        )}
+        style={{ top: topOffset, right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
+      >
+      {/* Drag Handle */}
+      <div
+        onMouseDown={onDragStart}
+        className="h-5 cursor-move bg-slate-100 border-b border-slate-200 flex items-center justify-center text-[10px] text-slate-400"
+        title="Drag to move. Drag toward an edge to dock."
+      >
+        Drag
+      </div>
+
       {/* Toggle Button */}
       <button
         onClick={onToggle}
