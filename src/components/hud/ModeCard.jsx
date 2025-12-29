@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react";
 
 const MODE_BACKGROUNDS = {
   earn: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d7ae3f928_c9f98f91-174a-46a0-b12f-26bde09c8ea8.png",
-  learn: "https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=600&q=80",
+  learn: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/622103084_gemini-25-flash-image-preview_A_futuristic_illustration_of_the_Global_Digital_Commodity_Exchange_depicting_a_sleek_modern_tradin-0.jpg",
   build: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80",
   teach: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80",
   lead: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
