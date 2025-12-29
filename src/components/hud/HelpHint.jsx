@@ -8,7 +8,7 @@ export default function HelpHint({ content, side = 'top', align = 'center', clas
         <button
           type="button"
           aria-label="Help"
-          className={`inline-flex items-center justify-center w-4 h-4 text-[10px] leading-none rounded-full border border-slate-300 text-slate-500 hover:bg-slate-50 hover:text-slate-700 ${className}`}
+          className={`inline-flex items-center justify-center w-4 h-4 text-[10px] leading-none rounded-full border border-black text-slate-900 hover:bg-slate-50 hover:text-slate-900 ${className}`}
         >
           ?
         </button>

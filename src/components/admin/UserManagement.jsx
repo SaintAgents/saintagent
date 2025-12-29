@@ -127,8 +127,12 @@ export default function UserManagement() {
 
   const handleDeleteUser = async () => {
     if (!userRecord) return;
-    if (confirm('Delete this user account? This will remove login access.')) {
+    if (confirm('Delete this user account? This will remove login access and their directory profile.')) {
       await base44.entities.User.delete(userRecord.id);
+      // Also remove from the directory by deleting their UserProfile if present
+      if (selectedUser?.id) {
+        try { await base44.entities.UserProfile.delete(selectedUser.id); } catch {}
+      }
       await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
       await queryClient.refetchQueries({ queryKey: ['allProfiles'] });
       setSelectedUser(null);
