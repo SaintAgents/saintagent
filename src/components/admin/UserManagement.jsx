@@ -12,14 +12,14 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  SelectValue } from
+"@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  DialogTitle } from
+"@/components/ui/dialog";
 import { Search, Shield, Ban, CheckCircle, XCircle, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -55,16 +55,16 @@ export default function UserManagement() {
     }
   });
 
-  const filteredProfiles = profiles.filter(p =>
-    p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProfiles = profiles.filter((p) =>
+  p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  p.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleChangeRole = (profile, newRole) => {
     if (confirm(`Change ${profile.display_name}'s role to ${newRole}?`)) {
-      updateProfileMutation.mutate({ 
-        id: profile.id, 
+      updateProfileMutation.mutate({
+        id: profile.id,
         data: { leader_tier: newRole }
       });
     }
@@ -123,19 +123,19 @@ export default function UserManagement() {
     if (!email) return;
     if (!confirm("Permanently delete this user's messages and notifications?")) return;
     const [msgsOut, msgsIn, notifs] = await Promise.all([
-      base44.entities.Message.filter({ from_user_id: email }, '-created_date', 1000),
-      base44.entities.Message.filter({ to_user_id: email }, '-created_date', 1000),
-      base44.entities.Notification.filter({ user_id: email }, '-created_date', 1000)
-    ]);
-    await Promise.all([...(msgsOut || []), ...(msgsIn || [])].map(m => base44.entities.Message.delete(m.id)));
-    await Promise.all((notifs || []).map(n => base44.entities.Notification.delete(n.id)));
+    base44.entities.Message.filter({ from_user_id: email }, '-created_date', 1000),
+    base44.entities.Message.filter({ to_user_id: email }, '-created_date', 1000),
+    base44.entities.Notification.filter({ user_id: email }, '-created_date', 1000)]
+    );
+    await Promise.all([...(msgsOut || []), ...(msgsIn || [])].map((m) => base44.entities.Message.delete(m.id)));
+    await Promise.all((notifs || []).map((n) => base44.entities.Notification.delete(n.id)));
   };
 
   return (
     <div className="space-y-6">
       {/* Search & Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="col-span-3">
+        <Card className="bg-violet-100 text-card-foreground rounded-xl border shadow col-span-3">
           <CardContent className="pt-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -143,13 +143,13 @@ export default function UserManagement() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search users by name, handle, or email..."
-                className="pl-10"
-              />
+                className="pl-10" />
+
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6 text-center">
+          <CardContent className="bg-purple-100 pt-6 p-6 text-center">
             <p className="text-3xl font-bold text-slate-900">{profiles.length}</p>
             <p className="text-sm text-slate-500 mt-1">Total Users</p>
           </CardContent>
@@ -158,17 +158,17 @@ export default function UserManagement() {
 
       {/* Users Table */}
       <Card>
-        <CardHeader>
+        <CardHeader className="bg-purple-100 p-6 flex flex-col space-y-1.5">
           <CardTitle>User Directory</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="bg-purple-100 pt-0 p-6">
           <ScrollArea className="h-[600px]">
             <div className="space-y-2">
-              {filteredProfiles.map((profile) => (
-                <div
-                  key={profile.id}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors"
-                >
+              {filteredProfiles.map((profile) =>
+              <div
+                key={profile.id}
+                className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+
                   <Avatar className="w-12 h-12">
                     <AvatarImage src={profile.avatar_url} />
                     <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
@@ -177,12 +177,12 @@ export default function UserManagement() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="font-medium text-slate-900">{profile.display_name}</p>
-                      {profile.leader_tier === 'verified144k' && (
-                        <Badge className="bg-amber-100 text-amber-700">144K Leader</Badge>
-                      )}
-                      {profile.leader_tier === 'candidate' && (
-                        <Badge variant="outline">Candidate</Badge>
-                      )}
+                      {profile.leader_tier === 'verified144k' &&
+                    <Badge className="bg-amber-100 text-amber-700">144K Leader</Badge>
+                    }
+                      {profile.leader_tier === 'candidate' &&
+                    <Badge variant="outline">Candidate</Badge>
+                    }
                     </div>
                     <p className="text-sm text-slate-500">@{profile.handle} • {profile.user_id}</p>
                   </div>
@@ -197,21 +197,21 @@ export default function UserManagement() {
                       <p className="text-xs text-slate-500">Rank</p>
                     </div>
                     <div className={cn(
-                      "w-2 h-2 rounded-full",
-                      profile.status === 'online' ? "bg-emerald-500" : "bg-slate-300"
-                    )} />
+                    "w-2 h-2 rounded-full",
+                    profile.status === 'online' ? "bg-emerald-500" : "bg-slate-300"
+                  )} />
                   </div>
 
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedUser(profile)}
-                  >
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedUser(profile)}>
+
                     <Edit className="w-3 h-3 mr-1" />
                     Manage
                   </Button>
                 </div>
-              ))}
+              )}
             </div>
           </ScrollArea>
         </CardContent>
@@ -224,8 +224,8 @@ export default function UserManagement() {
             <DialogTitle>Manage User: {selectedUser?.display_name}</DialogTitle>
           </DialogHeader>
 
-          {selectedUser && (
-            <div className="space-y-6">
+          {selectedUser &&
+          <div className="space-y-6">
               {/* User Info */}
               <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50">
                 <Avatar className="w-16 h-16">
@@ -270,9 +270,9 @@ export default function UserManagement() {
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">Leader Status</h3>
                 <Select
-                  value={selectedUser.leader_tier || 'none'}
-                  onValueChange={(value) => handleChangeRole(selectedUser, value)}
-                >
+                value={selectedUser.leader_tier || 'none'}
+                onValueChange={(value) => handleChangeRole(selectedUser, value)}>
+
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -289,19 +289,19 @@ export default function UserManagement() {
                 <h3 className="font-semibold text-slate-900 mb-3">Profile Basics</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Input
-                    placeholder="Display Name"
-                    value={selectedUser.display_name || ''}
-                    onChange={(e) => setSelectedUser({ ...selectedUser, display_name: e.target.value })}
-                  />
+                  placeholder="Display Name"
+                  value={selectedUser.display_name || ''}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, display_name: e.target.value })} />
+
                   <Input
-                    placeholder="@handle"
-                    value={selectedUser.handle || ''}
-                    onChange={(e) => setSelectedUser({ ...selectedUser, handle: e.target.value })}
-                  />
+                  placeholder="@handle"
+                  value={selectedUser.handle || ''}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, handle: e.target.value })} />
+
                   <Select
-                    value={selectedUser.status || 'online'}
-                    onValueChange={(v) => setSelectedUser({ ...selectedUser, status: v })}
-                  >
+                  value={selectedUser.status || 'online'}
+                  onValueChange={(v) => setSelectedUser({ ...selectedUser, status: v })}>
+
                     <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="online">Online</SelectItem>
@@ -311,9 +311,9 @@ export default function UserManagement() {
                     </SelectContent>
                   </Select>
                   <Select
-                    value={selectedUser.dm_policy || 'everyone'}
-                    onValueChange={(v) => setSelectedUser({ ...selectedUser, dm_policy: v })}
-                  >
+                  value={selectedUser.dm_policy || 'everyone'}
+                  onValueChange={(v) => setSelectedUser({ ...selectedUser, dm_policy: v })}>
+
                     <SelectTrigger><SelectValue placeholder="DM Policy" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="everyone">Everyone</SelectItem>
@@ -332,9 +332,9 @@ export default function UserManagement() {
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">User Role</h3>
                 <Select
-                  value={userRecord?.role || 'user'}
-                  onValueChange={(v) => handleChangeUserRole(v)}
-                >
+                value={userRecord?.role || 'user'}
+                onValueChange={(v) => handleChangeUserRole(v)}>
+
                   <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="user">User</SelectItem>
@@ -378,9 +378,9 @@ export default function UserManagement() {
                 </div>
               </div>
             </div>
-          )}
+          }
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>);
+
 }
