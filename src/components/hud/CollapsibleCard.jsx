@@ -6,13 +6,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger } from
+"@/components/ui/dropdown-menu";
 
-export default function CollapsibleCard({ 
-  title, 
+export default function CollapsibleCard({
+  title,
   icon: Icon,
-  children, 
+  children,
   defaultOpen = true,
   badge,
   badgeColor = "slate",
@@ -31,7 +31,7 @@ export default function CollapsibleCard({
     amber: "bg-amber-100 text-amber-700",
     emerald: "bg-emerald-100 text-emerald-700",
     rose: "bg-rose-100 text-rose-700",
-    blue: "bg-blue-100 text-blue-700",
+    blue: "bg-blue-100 text-blue-700"
   };
 
   return (
@@ -41,85 +41,85 @@ export default function CollapsibleCard({
       className
     )}>
       {/* Background Image */}
-      {backgroundImage && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-5"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        />
-      )}
+      {backgroundImage &&
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-5"
+        style={{ backgroundImage: `url(${backgroundImage})` }} />
+
+      }
       
-      <div 
+      <div
         className="relative flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+        onClick={() => setIsOpen(!isOpen)}>
+
         <div className="flex items-center gap-3 min-w-0">
-          {Icon && (
-            <div className="p-2 rounded-xl bg-slate-100 shrink-0">
+          {Icon &&
+          <div className="bg-fuchsia-100 p-2 rounded-xl shrink-0">
               <Icon className="w-4 h-4 text-slate-600" />
             </div>
-          )}
+          }
           <h3 className="font-semibold text-slate-900 tracking-tight hidden md:block truncate">{title}</h3>
-          {badge && (
-            <span className={cn(
-              "px-2.5 py-0.5 text-xs font-medium rounded-full shrink-0",
-              badgeColors[badgeColor]
-            )}>
+          {badge &&
+          <span className={cn(
+            "px-2.5 py-0.5 text-xs font-medium rounded-full shrink-0",
+            badgeColors[badgeColor]
+          )}>
               {badge}
             </span>
-          )}
+          }
         </div>
         <div className="flex items-center gap-1">
-          {onPin && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPin();
-              }}
-            >
+          {onPin &&
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPin();
+            }}>
+
               <Pin className={cn(
-                "w-4 h-4 transition-colors",
-                isPinned ? "text-violet-500 fill-violet-500" : "text-slate-400"
-              )} />
+              "w-4 h-4 transition-colors",
+              isPinned ? "text-violet-500 fill-violet-500" : "text-slate-400"
+            )} />
             </Button>
-          )}
-          {actions && (
-            <DropdownMenu>
+          }
+          {actions &&
+          <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <MoreHorizontal className="w-4 h-4 text-slate-400" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {actions.map((action, i) => (
-                  <DropdownMenuItem key={i} onClick={(e) => {
-                    e.stopPropagation();
-                    action.onClick();
-                  }}>
+                {actions.map((action, i) =>
+              <DropdownMenuItem key={i} onClick={(e) => {
+                e.stopPropagation();
+                action.onClick();
+              }}>
                     {action.icon && <action.icon className="w-4 h-4 mr-2" />}
                     {action.label}
                   </DropdownMenuItem>
-                ))}
+              )}
               </DropdownMenuContent>
             </DropdownMenu>
-          )}
-          {onPopout && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPopout();
-              }}
-              aria-label="Pop out"
-              title="Pop out"
-            >
+          }
+          {onPopout &&
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPopout();
+            }}
+            aria-label="Pop out"
+            title="Pop out">
+
               <ExternalLink className="w-4 h-4 text-slate-400" />
             </Button>
-          )}
+          }
           <ChevronDown className={cn(
             "w-5 h-5 text-slate-400 transition-transform duration-200",
             isOpen && "rotate-180"
@@ -134,6 +134,6 @@ export default function CollapsibleCard({
           {children}
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
