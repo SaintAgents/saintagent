@@ -119,12 +119,18 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
           <div className="flex-1">
             <p className="text-xs text-amber-600 font-medium">Rewards</p>
             <div className="flex items-center gap-3 mt-0.5">
-              {mission.reward_ggg > 0 &&
+              {mission.reward_ggg > 0 && (
               <span className="flex items-center gap-1 text-sm font-semibold text-amber-700">
                   <Coins className="w-3.5 h-3.5" />
-                  {Number(mission.reward_ggg).toFixed(2)} GGG • ${((Number(mission.reward_ggg) || 0) * GGG_TO_USD).toFixed(2)}
+                  {(() => {
+                    const raw = Number(mission.reward_ggg) || 0;
+                    const usd = raw * GGG_TO_USD;
+                    const usdCap = Math.min(55, usd);
+                    const gggCap = usdCap / GGG_TO_USD;
+                    return `${gggCap.toFixed(2)} GGG • $${usdCap.toFixed(2)}`;
+                  })()}
                 </span>
-              }
+              )}
               {mission.reward_rank_points > 0 &&
               <span className="flex items-center gap-1 text-sm font-semibold text-amber-700">
                   <TrendingUp className="w-3.5 h-3.5" />
