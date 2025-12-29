@@ -2,6 +2,7 @@ import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
+import DailyOps from './pages/DailyOps';
 import EventDetail from './pages/EventDetail';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
@@ -19,7 +20,6 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
-import DailyOps from './pages/DailyOps';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +28,7 @@ export const PAGES = {
     "AffiliateCenter": AffiliateCenter,
     "Circles": Circles,
     "CommandDeck": CommandDeck,
+    "DailyOps": DailyOps,
     "EventDetail": EventDetail,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
@@ -45,7 +46,6 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
-    "DailyOps": DailyOps,
 }
 
 export const pagesConfig = {

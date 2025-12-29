@@ -517,17 +517,11 @@ export default function CommandDeck() {
                 <div className="bg-violet-50 text-neutral-950 mb-4 p-3 opacity-100 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50">
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700">{walletAvailable?.toLocaleString?.() || "0"}</p>
-                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG
-?
-
-                    </p>
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
-                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points
-?
-
-                    </p>
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
