@@ -231,7 +231,7 @@ export default function Messages() {
                   <AvatarImage src={conv.otherUser.avatar} />
                   <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <span className={cn("absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white", STATUS_COLORS[getStatus(conv.otherUser.id)])} />
+                <span className={cn("absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-slate-200", STATUS_COLORS[getStatus(conv.otherUser.id)])} />
               </div>
               <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center justify-between">

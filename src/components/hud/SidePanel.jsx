@@ -32,6 +32,7 @@ import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
+import { createPageUrl } from '@/utils';
 
 export default function SidePanel({ 
   matches = [], 
@@ -136,6 +137,15 @@ export default function SidePanel({
         const post = posts.find(p => p.id === postId);
         if (post) {
           await base44.entities.Post.update(postId, { likes_count: (post.likes_count || 0) + 1 });
+          if (post.author_id && post.author_id !== profile?.user_id) {
+            await base44.entities.Notification.create({
+              user_id: post.author_id,
+              type: 'system',
+              title: 'New like on your post',
+              message: `${profile?.display_name || 'Someone'} liked your post`,
+              action_url: createPageUrl('CommandDeck')
+            });
+          }
         }
       }
     },

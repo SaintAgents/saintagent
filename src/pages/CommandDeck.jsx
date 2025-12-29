@@ -1173,8 +1173,12 @@ export default function CommandDeck() {
                 <p className="text-sm text-slate-500 mb-4">
                   Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
                 </p>
-                <Button variant="outline" className="rounded-xl">
-                  Apply for Verification
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
+                >
+                  {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
                 </Button>
               </div>
             </CollapsibleCard>
@@ -1295,8 +1299,12 @@ export default function CommandDeck() {
             <p className="text-sm text-slate-500 mb-4">
               Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
             </p>
-            <Button variant="outline" className="rounded-xl">
-              Apply for Verification
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
+            >
+              {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
             </Button>
           </div>
         </FloatingPanel>
