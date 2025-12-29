@@ -245,7 +245,7 @@ export default function Profile() {
               </Avatar>
               <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3">
-                  <h1 className="bg-purple-100 text-blue-950 text-2xl font-bold">{profile?.display_name}</h1>
+                  <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name}</h1>
                   {profile?.leader_tier === 'verified144k' &&
                   <Badge className="bg-amber-100 text-amber-700">
                       <Crown className="w-3 h-3 mr-1" />
