@@ -768,7 +768,7 @@ export default function CommandDeck() {
             <div className="relative overflow-hidden rounded-2xl border border-emerald-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/854748652_c9f98f91-174a-46a0-b12f-26bde09c8ea8.png)' }} />
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2d901fa27_Leonardo_Lightning_XL_Global_Digital_Commodity_Exchange_0.jpg)' }} />
 
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
               <div className="relative flex items-start justify-between gap-3">
