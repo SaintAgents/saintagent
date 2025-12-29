@@ -72,6 +72,9 @@ export default function CommandDeck() {
   const [marketPopupOpen, setMarketPopupOpen] = useState(false);
   const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
   const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
+        const [quickActionsPopupOpen, setQuickActionsPopupOpen] = useState(false);
+        const [quickStartPopupOpen, setQuickStartPopupOpen] = useState(false);
+        const [leaderChannelPopupOpen, setLeaderChannelPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
 
   // Current user (safe for public use)
@@ -878,11 +881,12 @@ export default function CommandDeck() {
           <div className="space-y-6">
             {/* Command Summary */}
             <CollapsibleCard
-              title="Quick Actions"
-              icon={Zap}
-              badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
-              badgeColor="amber"
-              backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80">
+                                title="Quick Actions"
+                                icon={Zap}
+                                badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
+                                badgeColor="amber"
+                                backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
+                                onPopout={() => setQuickActionsPopupOpen(true)}>
 
               <div className="grid grid-cols-2 gap-3">
                 <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
@@ -906,10 +910,11 @@ export default function CommandDeck() {
 
             {/* Quick Start Checklist */}
             <CollapsibleCard
-              title="Quick Start Checklist"
-              icon={CheckCircle}
-              defaultOpen={false}
-              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80">
+                                title="Quick Start Checklist"
+                                icon={CheckCircle}
+                                defaultOpen={false}
+                                backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+                                onPopout={() => setQuickStartPopupOpen(true)}>
 
               <QuickStartChecklist />
             </CollapsibleCard>
@@ -1154,10 +1159,11 @@ export default function CommandDeck() {
 
             {/* Leader Channel Preview */}
             <CollapsibleCard
-              title="144K Leader Channel"
-              icon={Radio}
-              defaultOpen={false}
-              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80">
+                                title="144K Leader Channel"
+                                icon={Radio}
+                                defaultOpen={false}
+                                backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
+                                onPopout={() => setLeaderChannelPopupOpen(true)}>
 
               <div className="text-center py-6">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
@@ -1249,6 +1255,52 @@ export default function CommandDeck() {
           <LeaderPathway profile={profile} />
         </FloatingPanel>
       }
+
+      {quickActionsPopupOpen && (
+        <FloatingPanel title="Quick Actions" onClose={() => setQuickActionsPopupOpen(false)}>
+          <div className="grid grid-cols-2 gap-3">
+            <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
+              <Calendar className="w-5 h-5" />
+              <span className="text-xs">Book Meeting</span>
+            </Button>
+            <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => {setQuickCreateType('post');setQuickCreateOpen(true);}}>
+              <Plus className="w-5 h-5" />
+              <span className="text-xs">Post Update</span>
+            </Button>
+            <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => {setQuickCreateType('mission');setQuickCreateOpen(true);}}>
+              <Target className="w-5 h-5" />
+              <span className="text-xs">Launch Mission</span>
+            </Button>
+            <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>
+              <ShoppingBag className="w-5 h-5" />
+              <span className="text-xs">Create Offer</span>
+            </Button>
+          </div>
+        </FloatingPanel>
+      )}
+
+      {quickStartPopupOpen && (
+        <FloatingPanel title="Quick Start Checklist" onClose={() => setQuickStartPopupOpen(false)}>
+          <QuickStartChecklist />
+        </FloatingPanel>
+      )}
+
+      {leaderChannelPopupOpen && (
+        <FloatingPanel title="144K Leader Channel" onClose={() => setLeaderChannelPopupOpen(false)}>
+          <div className="text-center py-6">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
+              <Radio className="w-8 h-8 text-amber-600" />
+            </div>
+            <h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4>
+            <p className="text-sm text-slate-500 mb-4">
+              Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
+            </p>
+            <Button variant="outline" className="rounded-xl">
+              Apply for Verification
+            </Button>
+          </div>
+        </FloatingPanel>
+      )}
 
       {/* Badge Glossary Modal */}
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
