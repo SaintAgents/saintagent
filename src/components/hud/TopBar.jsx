@@ -68,7 +68,7 @@ export default function TopBar({
       sidebarCollapsed ? "left-20" : "left-64"
     )}>
       {/* Mode Selector */}
-      <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
+      <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1" data-no-top>
         {MODE_TABS.map((tab) => (
           <button
             key={tab.id}
