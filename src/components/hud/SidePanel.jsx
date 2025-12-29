@@ -298,6 +298,10 @@ export default function SidePanel({
                 <List className="w-4 h-4 mr-1" />
                 Transactions
               </Button>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
+                <Calendar className="w-4 h-4 mr-1" />
+                Daily Ops
+              </Button>
             </div>
             <div className="text-xs text-slate-600">
               Next rank in <span className="font-semibold text-violet-700">{Math.max(0, nextRankAt - rankProgress)}</span> pts
