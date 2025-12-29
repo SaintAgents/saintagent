@@ -16,7 +16,7 @@ import {
   MessageCircle,
   User,
   Settings,
-  
+  Calendar,
   Sparkles,
   Crown,
   Shield,
@@ -116,7 +116,9 @@ export default function TopBar({
       {/* Actions */}
       <div className="flex items-center gap-2">
         <Link to={createPageUrl('DailyOps')}>
-          <Button variant="ghost" size="sm" className="rounded-xl font-bold tracking-wide">DO</Button>
+          <Button variant="ghost" size="icon" className="rounded-xl" title="Daily Ops">
+            <Calendar className="w-5 h-5 text-slate-600" />
+          </Button>
         </Link>
         {/* Messages */}
         <Link to={createPageUrl('Messages')}>
