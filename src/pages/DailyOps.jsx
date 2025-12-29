@@ -314,7 +314,7 @@ export default function DailyOps() {
                     <span className="text-slate-600">{format(parseISO(t.created_date), 'HH:mm')}</span>
                     <span className="font-medium text-slate-900">{t.reason_code || t.source_type || 'Action'}</span>
                   </div>
-                  <div className="font-semibold {[(t.delta||0)>=0? 'text-emerald-700':'text-rose-700']}">{(t.delta || 0) >= 0 ? '+' : ''}{(t.delta || 0).toFixed(2)} GGG</div>
+                  <div className={`font-semibold ${(t.delta || 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>{(t.delta || 0) >= 0 ? '+' : ''}{(t.delta || 0).toFixed(2)} GGG</div>
                 </div>
               ))}
             </div>
