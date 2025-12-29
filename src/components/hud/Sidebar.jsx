@@ -132,7 +132,7 @@ export default function Sidebar({
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           title="Go to top"
         >
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
               alt="Saint Agent Logo"
