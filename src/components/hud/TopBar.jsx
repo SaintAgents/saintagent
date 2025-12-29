@@ -115,6 +115,9 @@ export default function TopBar({
 
       {/* Actions */}
       <div className="flex items-center gap-2">
+        <Link to={createPageUrl('DailyOps')}>
+          <Button variant="ghost" size="sm" className="rounded-xl font-bold tracking-wide">DO</Button>
+        </Link>
         {/* Messages */}
         <Link to={createPageUrl('Messages')}>
           <Button variant="ghost" size="icon" className="relative">

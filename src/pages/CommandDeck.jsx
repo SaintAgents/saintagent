@@ -44,6 +44,7 @@ import MeetingCard from '@/components/hud/MeetingCard';
 import MissionCard from '@/components/hud/MissionCard';
 import ListingCard from '@/components/hud/ListingCard';
 import ProgressRing from '@/components/hud/ProgressRing';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import SidePanel from '@/components/hud/SidePanel';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
@@ -162,6 +163,30 @@ export default function CommandDeck() {
     queryKey: ['notifications'],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20)
   });
+
+  // Daily Ops data (today)
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const { data: dailyLogToday = [] } = useQuery({
+    queryKey: ['dailyLog', profile?.user_id, todayStr],
+    queryFn: () => base44.entities.DailyLog.filter({ user_id: profile.user_id, date: todayStr }),
+    enabled: !!profile?.user_id
+  });
+  const dailyLog = dailyLogToday?.[0];
+  const dailyCompleted = dailyLog?.completed?.length || 0;
+  const dailyInProgress = dailyLog?.in_progress?.length || 0;
+  const dailyGGG = (dailyLog?.completed || []).reduce((s, c) => s + (Number(c.ggg_earned) || 0), 0);
+
+  // Drag-and-drop ordering (Column C)
+  const [colCOrder, setColCOrder] = useState(['market', 'influence', 'leader', 'dailyops']);
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+    if (result.source.droppableId === 'colC' && result.destination.droppableId === 'colC') {
+      const items = Array.from(colCOrder);
+      const [removed] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, removed);
+      setColCOrder(items);
+    }
+  };
 
   const filteredMatches = matches.filter((m) =>
   matchTab === 'people' ? m.target_type === 'person' :
@@ -1063,126 +1088,164 @@ export default function CommandDeck() {
             </CollapsibleCard>
           </div>
 
-          {/* Column C: Earnings + Influence + Creator */}
-          <div className="space-y-6">
-            {/* Marketplace Card */}
-            <CollapsibleCard
-              title="Marketplace: Earn & Learn"
-              icon={ShoppingBag}
-              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-              onPopout={() => setMarketPopupOpen(true)}>
+          {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="colC">
+              {(provided) => (
+                <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
+                  {colCOrder.map((id, index) => (
+                    <Draggable draggableId={id} index={index} key={id}>
+                      {(dragProvided) => (
+                        <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
+                          {id === 'market' && (
+                            <CollapsibleCard
+                              title="Marketplace: Earn & Learn"
+                              icon={ShoppingBag}
+                              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
+                              onPopout={() => setMarketPopupOpen(true)}>
 
-              <Tabs defaultValue="offers" className="w-full">
-                <TabsList className="w-full grid grid-cols-3 mb-4">
-                  <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
-                  <TabsTrigger value="requests" className="text-xs">Requests</TabsTrigger>
-                  <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
-                </TabsList>
-                <TabsContent value="offers" className="space-y-3">
-                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ?
-                  <div className="text-center py-6">
-                      <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                      <p className="text-sm text-slate-500">No offers yet</p>
-                      <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">
-                        Create your first offer
-                      </Button>
-                    </div> :
+                              <Tabs defaultValue="offers" className="w-full">
+                                <TabsList className="w-full grid grid-cols-3 mb-4">
+                                  <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
+                                  <TabsTrigger value="requests" className="text-xs">Requests</TabsTrigger>
+                                  <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="offers" className="space-y-3">
+                                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ? (
+                                    <div className="text-center py-6">
+                                      <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                                      <p className="text-sm text-slate-500">No offers yet</p>
+                                      <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">
+                                        Create your first offer
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) => (
+                                      <ListingCard
+                                        key={listing.id}
+                                        listing={listing}
+                                        isOwner={true}
+                                        onAction={handleListingAction}
+                                      />
+                                    ))
+                                  )}
+                                </TabsContent>
+                                <TabsContent value="requests" className="space-y-3">
+                                  <div className="text-center py-6">
+                                    <p className="text-sm text-slate-500">No pending requests</p>
+                                  </div>
+                                </TabsContent>
+                                <TabsContent value="browse" className="space-y-3">
+                                  {listings.slice(0, 2).map((listing) => (
+                                    <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
+                                  ))}
+                                </TabsContent>
+                              </Tabs>
+                            </CollapsibleCard>
+                          )}
 
-                  listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) =>
-                  <ListingCard
-                    key={listing.id}
-                    listing={listing}
-                    isOwner={true}
-                    onAction={handleListingAction} />
+                          {id === 'influence' && (
+                            <CollapsibleCard
+                              title="Influence & Reach"
+                              icon={TrendingUp}
+                              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
+                              onPopout={() => setInfluencePopupOpen(true)}>
 
-                  )
-                  }
-                </TabsContent>
-                <TabsContent value="requests" className="space-y-3">
-                  <div className="text-center py-6">
-                    <p className="text-sm text-slate-500">No pending requests</p>
-                  </div>
-                </TabsContent>
-                <TabsContent value="browse" className="space-y-3">
-                  {listings.slice(0, 2).map((listing) =>
-                  <ListingCard
-                    key={listing.id}
-                    listing={listing}
-                    onAction={handleListingAction} />
+                              <div className="space-y-4">
+                                <div className="grid grid-cols-3 gap-3">
+                                  <div className="text-center p-3 rounded-xl bg-slate-50">
+                                    <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>
+                                    <p className="text-xs text-slate-500">Followers</p>
+                                  </div>
+                                  <div className="text-center p-3 rounded-xl bg-slate-50">
+                                    <p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p>
+                                    <p className="text-xs text-slate-500">Following</p>
+                                  </div>
+                                  <div className="text-center p-3 rounded-xl bg-violet-50">
+                                    <p className="text-2xl font-bold text-violet-700">{profile?.reach_score || 0}</p>
+                                    <p className="text-xs text-violet-600">Reach</p>
+                                  </div>
+                                </div>
+                                
+                                <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                                  <div className="flex items-center gap-3 mb-3">
+                                    <Flame className="w-5 h-5 text-amber-500" />
+                                    <span className="text-yellow-400 font-medium">Boost Your Reach</span>
+                                  </div>
+                                  <p className="text-sm text-slate-600 mb-3">
+                                    Spend GGG to amplify your content and attract more followers.
+                                  </p>
+                                  <Button
+                                    className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
+                                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
 
-                  )}
-                </TabsContent>
-              </Tabs>
-            </CollapsibleCard>
+                                    <Zap className="w-4 h-4 mr-2" />
+                                    Boost Now
+                                  </Button>
+                                </div>
+                              </div>
+                            </CollapsibleCard>
+                          )}
 
-            {/* Influence & Broadcast */}
-            <CollapsibleCard
-              title="Influence & Reach"
-              icon={TrendingUp}
-              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-              onPopout={() => setInfluencePopupOpen(true)}>
+                          {id === 'leader' && (
+                            <CollapsibleCard
+                              title="144K Leader Channel"
+                              icon={Radio}
+                              defaultOpen={false}
+                              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
+                              onPopout={() => setLeaderChannelPopupOpen(true)}>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="text-center p-3 rounded-xl bg-slate-50">
-                    <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>
-                    <p className="text-xs text-slate-500">Followers</p>
-                  </div>
-                  <div className="text-center p-3 rounded-xl bg-slate-50">
-                    <p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p>
-                    <p className="text-xs text-slate-500">Following</p>
-                  </div>
-                  <div className="text-center p-3 rounded-xl bg-violet-50">
-                    <p className="text-2xl font-bold text-violet-700">{profile?.reach_score || 0}</p>
-                    <p className="text-xs text-violet-600">Reach</p>
-                  </div>
+                              <div className="text-center py-6">
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
+                                  <Radio className="w-8 h-8 text-amber-600" />
+                                </div>
+                                <h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4>
+                                <p className="text-sm text-slate-500 mb-4">
+                                  Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
+                                </p>
+                                <Button
+                                  variant="outline"
+                                  className="rounded-xl"
+                                  onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
+                                >
+                                  {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
+                                </Button>
+                              </div>
+                            </CollapsibleCard>
+                          )}
+
+                          {id === 'dailyops' && (
+                            <CollapsibleCard
+                              title="Daily Ops"
+                              icon={Calendar}
+                              defaultOpen={true}
+                              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="text-xs text-slate-500">Today’s GGG</div>
+                                  <div className="text-2xl font-bold text-slate-900">{dailyGGG.toFixed(2)} GGG</div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-xs text-slate-500">Done • In Progress</div>
+                                  <div className="text-2xl font-bold text-slate-900">{dailyCompleted} • {dailyInProgress}</div>
+                                </div>
+                              </div>
+                              <div className="mt-3 text-right">
+                                <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
+                                  Open DO
+                                </Button>
+                              </div>
+                            </CollapsibleCard>
+                          )}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
                 </div>
-                
-                <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Flame className="w-5 h-5 text-amber-500" />
-                    <span className="text-yellow-400 font-medium">Boost Your Reach</span>
-                  </div>
-                  <p className="text-sm text-slate-600 mb-3">
-                    Spend GGG to amplify your content and attract more followers.
-                  </p>
-                  <Button
-                    className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
-                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
-
-                    <Zap className="w-4 h-4 mr-2" />
-                    Boost Now
-                  </Button>
-                </div>
-              </div>
-            </CollapsibleCard>
-
-            {/* Leader Channel Preview */}
-            <CollapsibleCard
-                                title="144K Leader Channel"
-                                icon={Radio}
-                                defaultOpen={false}
-                                backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
-                                onPopout={() => setLeaderChannelPopupOpen(true)}>
-
-              <div className="text-center py-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
-                  <Radio className="w-8 h-8 text-amber-600" />
-                </div>
-                <h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4>
-                <p className="text-sm text-slate-500 mb-4">
-                  Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
-                </p>
-                <Button
-                  variant="outline"
-                  className="rounded-xl"
-                  onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
-                >
-                  {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
-                </Button>
-              </div>
-            </CollapsibleCard>
-          </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
 
