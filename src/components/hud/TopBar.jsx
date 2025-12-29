@@ -96,7 +96,7 @@ export default function TopBar({
       </div>
 
       {/* Search */}
-      <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto">
+      <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto" data-no-top>
         <div className={cn(
           "relative transition-all duration-300",
           searchFocused && "scale-[1.02]"
