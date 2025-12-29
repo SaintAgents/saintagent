@@ -18,12 +18,19 @@ export default function MeetingReminderService() {
     refetchInterval: 60000, // Check every minute
   });
 
+  // Host's upcoming events
+  const { data: myEvents = [] } = useQuery({
+    queryKey: ['upcomingEvents', currentUser?.email],
+    queryFn: () => base44.entities.Event.filter({ host_id: currentUser.email }, '-start_time', 100),
+    enabled: !!currentUser?.email,
+    refetchInterval: 60000,
+  });
+
   const { data: existingNotifications = [] } = useQuery({
-    queryKey: ['meetingNotifications'],
+    queryKey: ['calendarNotifications', currentUser?.email],
     queryFn: () => base44.entities.Notification.filter({ 
-      user_id: currentUser?.email, 
-      type: 'meeting' 
-    }, '-created_date', 100),
+      user_id: currentUser?.email
+    }, '-created_date', 200),
     enabled: !!currentUser,
   });
 
@@ -38,11 +45,11 @@ export default function MeetingReminderService() {
   useEffect(() => {
     if (!currentUser || !meetings.length) return;
 
-    const checkMeetings = () => {
+    const checkMeetingsAndEvents = () => {
       const now = new Date();
       const reminderWindows = [15, 60]; // 15 minutes and 1 hour
 
-      meetings.forEach(meeting => {
+      // Meetings
         // Only check meetings where current user is participant
         if (meeting.host_id !== currentUser.email && meeting.guest_id !== currentUser.email) {
           return;
@@ -96,7 +103,7 @@ export default function MeetingReminderService() {
       });
     };
 
-    checkMeetings();
+    checkMeetingsAndEvents();
   }, [meetings, currentUser, existingNotifications, createNotification]);
 
   return null; // This is a service component with no UI
