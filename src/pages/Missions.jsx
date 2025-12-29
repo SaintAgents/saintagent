@@ -47,7 +47,7 @@ export default function Missions() {
               <Target className="w-6 h-6 text-amber-500" />
               Missions & Quests
             </h1>
-            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts</p>
+            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts (mission rewards capped at $55).</p>
           </div>
           <div className="flex items-center gap-2">
             <Button

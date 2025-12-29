@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 
 export default function CreateMissionModal({ open, onClose }) {
   const [formData, setFormData] = useState({
@@ -19,6 +20,9 @@ export default function CreateMissionModal({ open, onClose }) {
     reward_rank_points: '',
     max_participants: ''
   });
+
+  const MAX_USD = 55;
+  const MAX_GGG = MAX_USD / GGG_TO_USD;
 
   const queryClient = useQueryClient();
 
@@ -43,7 +47,7 @@ export default function CreateMissionModal({ open, onClose }) {
         creator_id: user.email,
         creator_name: profile?.display_name || user.full_name,
         status: 'active',
-        reward_ggg: parseFloat(data.reward_ggg) || 0,
+        reward_ggg: Math.min(parseFloat(data.reward_ggg) || 0, MAX_GGG),
         reward_rank_points: parseInt(data.reward_rank_points) || 0,
         max_participants: parseInt(data.max_participants) || null,
         participant_count: 0,
@@ -146,9 +150,20 @@ export default function CreateMissionModal({ open, onClose }) {
                 type="number"
                 step="0.01"
                 value={formData.reward_ggg}
-                onChange={(e) => setFormData({ ...formData, reward_ggg: e.target.value })}
+                onChange={(e) => {
+                  const raw = parseFloat(e.target.value);
+                  const safe = isNaN(raw) ? '' : Math.min(raw, MAX_GGG);
+                  setFormData({ ...formData, reward_ggg: safe });
+                }}
                 placeholder="0.00"
               />
+              <div className="mt-1 text-xs text-slate-500">
+                {(() => {
+                  const g = parseFloat(formData.reward_ggg as any) || 0;
+                  const usd = Math.min(g * GGG_TO_USD, MAX_USD);
+                  return `≈ $${usd.toFixed(2)} (capped at $${MAX_USD.toFixed(2)})`;
+                })()}
+              </div>
             </div>
 
             <div>
