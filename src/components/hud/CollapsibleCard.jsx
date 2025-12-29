@@ -69,7 +69,7 @@ export default function CollapsibleCard({
             </Button>
           )}
           {Icon &&
-          <div className="bg-fuchsia-100 p-2 rounded-xl shrink-0">
+          <div className="bg-fuchsia-100 p-2 rounded-xl shrink-0 flex items-center">
               <Icon className="w-4 h-4 text-slate-600" />
             </div>
           }
