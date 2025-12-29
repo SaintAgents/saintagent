@@ -106,7 +106,7 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
         {mission.roles_needed?.length > 0 &&
         <div className="flex flex-wrap gap-1.5 mb-4">
             {mission.roles_needed.map((role, i) =>
-          <Badge key={i} variant="outline" className="text-xs">
+          <Badge key={i} variant="outline" className="bg-purple-100 text-foreground px-2.5 py-0.5 text-xs font-semibold rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                 {role}
               </Badge>
           )}
