@@ -30,6 +30,7 @@ import {
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
+import WalletPanel from '@/components/wallet/WalletPanel';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 
 export default function SidePanel({ 
@@ -50,6 +51,7 @@ export default function SidePanel({
   const [gggPopupOpen, setGggPopupOpen] = useState(false);
   const [gggAuditOpen, setGggAuditOpen] = useState(false);
   const [gggTxOpen, setGggTxOpen] = useState(false);
+  const [walletPopupOpen, setWalletPopupOpen] = useState(false);
   const [schedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
   const [helpPopupOpen, setHelpPopupOpen] = useState(false);
@@ -251,7 +253,10 @@ export default function SidePanel({
                 <span className="text-slate-600">To next rank</span>
                 <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
               </div>
-              <div className="flex justify-end mt-3">
+              <div className="flex justify-between mt-3">
+                <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
+                  Open Wallet
+                </Button>
                 <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
                   View audit trail
                 </Button>
@@ -538,7 +543,10 @@ export default function SidePanel({
               <span className="text-slate-600">To next rank</span>
               <span className="font-medium text-violet-700">{nextRankAt - rankProgress} pts</span>
             </div>
-            <div className="flex justify-end mt-3">
+            <div className="flex justify-between mt-3">
+              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
+                Open Wallet
+              </Button>
               <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
                 View audit trail
               </Button>
@@ -629,7 +637,13 @@ export default function SidePanel({
          </FloatingPanel>
         )}
 
-        {schedulePopupOpen && (
+         {walletPopupOpen && (
+           <FloatingPanel title="My Wallet" onClose={() => setWalletPopupOpen(false)}>
+             <WalletPanel />
+           </FloatingPanel>
+         )}
+
+         {schedulePopupOpen && (
         <FloatingPanel title="Today's Schedule" onClose={() => setSchedulePopupOpen(false)}>
           <div className="space-y-2">
             {meetings.length === 0 ? (
