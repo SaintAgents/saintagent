@@ -207,17 +207,17 @@ export default function SidePanel({
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
           {/* Control Panel */}
-          <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+          <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
                 <Activity className="w-4 h-4 mr-1" />
                 Audit
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggPopupOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggPopupOpen(true)}>
                 <TrendingUp className="w-4 h-4 mr-1" />
                 Rank
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggTxOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggTxOpen(true)}>
                 <List className="w-4 h-4 mr-1" />
                 Transactions
               </Button>

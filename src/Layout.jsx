@@ -322,6 +322,20 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats] * {
           color: #0f172a !important;
         }
+
+        /* SidePanel control buttons */
+        [data-theme='dark'] [data-ggg-controls] {
+          background-color: #EDE9FE !important; /* violet-100 */
+          border-color: #C4B5FD !important;     /* violet-300 */
+        }
+        [data-theme='dark'] [data-ggg-controls] .btn-ctrl {
+          background-color: #E9D5FF !important; /* violet-200 */
+          color: #0b0f19 !important;            /* near-black */
+          border-color: #C4B5FD !important;
+        }
+        [data-theme='dark'] [data-ggg-controls] .btn-ctrl:hover {
+          background-color: #DDD6FE !important; /* violet-200/300 hover */
+        }
       `}</style>
 
       {/* Sidebar */}
