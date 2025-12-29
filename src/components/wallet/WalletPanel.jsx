@@ -22,6 +22,7 @@ export default function WalletPanel() {
       return data;
     },
     enabled: !!user?.email,
+    refetchInterval: 5000,
   });
 
   const { data: txRes } = useQuery({
@@ -34,6 +35,7 @@ export default function WalletPanel() {
       return data;
     },
     enabled: !!user?.email,
+    refetchInterval: 5000,
   });
 
   const wallet = walletRes?.wallet;

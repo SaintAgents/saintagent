@@ -48,6 +48,21 @@ export default function UserManagement() {
   });
   const userRecord = userRecords?.[0];
 
+  // Wallet for selected user (authoritative balance)
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', selectedUser?.user_id],
+    queryFn: async () => {
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'getWallet',
+        payload: { user_id: selectedUser.user_id },
+      });
+      return data;
+    },
+    enabled: !!selectedUser?.user_id,
+    refetchInterval: 5000,
+  });
+  const walletAvailable = walletRes?.wallet?.available_balance ?? selectedUser?.ggg_balance ?? 0;
+
   const updateUserMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.User.update(id, data),
     onSuccess: () => {
@@ -246,7 +261,7 @@ export default function UserManagement() {
                 <h3 className="font-semibold text-slate-900 mb-3">GGG Balance</h3>
                 <div className="flex items-center gap-3">
                   <p className="text-2xl font-bold text-slate-900">
-                    {selectedUser.ggg_balance?.toFixed(2) || 0}
+                    {walletAvailable?.toFixed?.(2) || 0}
                   </p>
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -1)}>

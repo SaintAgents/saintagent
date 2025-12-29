@@ -107,6 +107,7 @@ export default function CommandDeck() {
       return data;
     },
     enabled: !!profile?.user_id,
+    refetchInterval: 5000,
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpPoints = profile?.rp_points || 0;

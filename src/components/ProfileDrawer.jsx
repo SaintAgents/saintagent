@@ -50,6 +50,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       return data;
     },
     enabled: !!userId,
+    refetchInterval: 5000,
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
 
