@@ -3,17 +3,17 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Video, 
-  MapPin, 
-  Clock, 
-  Check, 
-  X, 
+import {
+  Video,
+  MapPin,
+  Clock,
+  Check,
+  X,
   Calendar,
   MessageCircle,
   Star,
-  ArrowRight
-} from "lucide-react";
+  ArrowRight } from
+"lucide-react";
 import { format, isToday, isTomorrow, parseISO } from "date-fns";
 
 export default function MeetingCard({ meeting, onAction, isCompact = false }) {
@@ -24,7 +24,7 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
     completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
     declined: "bg-slate-50 text-slate-500 border-slate-200",
     cancelled: "bg-slate-50 text-slate-500 border-slate-200",
-    no_show: "bg-rose-50 text-rose-700 border-rose-200",
+    no_show: "bg-rose-50 text-rose-700 border-rose-200"
   };
 
   const formatMeetingTime = (dateStr) => {
@@ -55,17 +55,17 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
           <p className="text-xs text-slate-500">{formatMeetingTime(meeting.scheduled_time)}</p>
         </div>
         <ArrowRight className="w-4 h-4 text-slate-400" />
-      </div>
-    );
+      </div>);
+
   }
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/60 p-4 hover:shadow-md transition-all duration-300">
       <div className="flex items-start gap-4">
-        <Avatar 
+        <Avatar
           className="w-11 h-11 ring-2 ring-white shadow-sm cursor-pointer"
-          data-user-id={meeting.host_id === "current" ? meeting.guest_id : meeting.host_id}
-        >
+          data-user-id={meeting.host_id === "current" ? meeting.guest_id : meeting.host_id}>
+
           <AvatarImage src={otherPerson.avatar} />
           <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
             {otherPerson.name?.charAt(0)}
@@ -88,105 +88,105 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
               <Clock className="w-4 h-4 text-slate-400" />
               {formatMeetingTime(meeting.scheduled_time)}
             </div>
-            {meeting.duration_minutes && (
-              <span className="text-slate-400">• {meeting.duration_minutes}min</span>
-            )}
+            {meeting.duration_minutes &&
+            <span className="text-slate-400">• {meeting.duration_minutes}min</span>
+            }
           </div>
 
-          {meeting.location && (
-            <div className="flex items-center gap-1.5 mt-2 text-sm text-slate-600">
+          {meeting.location &&
+          <div className="flex items-center gap-1.5 mt-2 text-sm text-slate-600">
               <MapPin className="w-4 h-4 text-slate-400" />
               {meeting.location}
             </div>
-          )}
+          }
 
-          {meeting.online_link && (
-            <div className="flex items-center gap-1.5 mt-2 text-sm text-violet-600">
+          {meeting.online_link &&
+          <div className="flex items-center gap-1.5 mt-2 text-sm text-violet-600">
               <Video className="w-4 h-4" />
               Video meeting
             </div>
-          )}
+          }
         </div>
       </div>
 
       <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100">
-        {meeting.status === 'pending' && (
-          <>
-            <Button 
-              size="sm" 
-              className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
-              onClick={() => onAction?.('accept', meeting)}
-            >
+        {meeting.status === 'pending' &&
+        <>
+            <Button
+            size="sm"
+            className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
+            onClick={() => onAction?.('accept', meeting)}>
+
               <Check className="w-4 h-4 mr-1.5" />
               Accept
             </Button>
-            <Button 
-              size="sm" 
-              variant="outline"
-              className="flex-1 rounded-lg"
-              onClick={() => onAction?.('propose', meeting)}
-            >
+            <Button
+            size="sm"
+            variant="outline"
+            className="flex-1 rounded-lg"
+            onClick={() => onAction?.('propose', meeting)}>
+
               <Calendar className="w-4 h-4 mr-1.5" />
               Propose Time
             </Button>
-            <Button 
-              size="icon" 
-              variant="ghost"
-              className="shrink-0"
-              onClick={() => onAction?.('decline', meeting)}
-            >
+            <Button
+            size="icon"
+            variant="ghost"
+            className="shrink-0"
+            onClick={() => onAction?.('decline', meeting)}>
+
               <X className="w-4 h-4 text-slate-400" />
             </Button>
           </>
-        )}
-        {meeting.status === 'scheduled' && (
-          <>
-            <Button 
-              size="sm" 
-              className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
-              onClick={() => onAction?.('join', meeting)}
-            >
+        }
+        {meeting.status === 'scheduled' &&
+        <>
+            <Button
+            size="sm"
+            className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
+            onClick={() => onAction?.('join', meeting)}>
+
               <Video className="w-4 h-4 mr-1.5" />
               Join Meeting
             </Button>
-            <Button 
-              size="sm" 
-              variant="outline"
-              className="flex-1 rounded-lg"
-              onClick={() => onAction?.('reschedule', meeting)}
-            >
+            <Button
+            size="sm"
+            variant="outline" className="bg-violet-100 text-neutral-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 flex-1"
+
+            onClick={() => onAction?.('reschedule', meeting)}>
+
               Reschedule
             </Button>
           </>
-        )}
-        {meeting.status === 'accepted' && !meeting.host_confirmed && (
-          <Button 
-            size="sm" 
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 rounded-lg"
-            onClick={() => onAction?.('confirm', meeting)}
-          >
+        }
+        {meeting.status === 'accepted' && !meeting.host_confirmed &&
+        <Button
+          size="sm"
+          className="flex-1 bg-emerald-600 hover:bg-emerald-700 rounded-lg"
+          onClick={() => onAction?.('confirm', meeting)}>
+
             <Check className="w-4 h-4 mr-1.5" />
             Confirm Completion
           </Button>
-        )}
-        {meeting.status === 'completed' && (
-          <>
+        }
+        {meeting.status === 'completed' &&
+        <>
             <div className="flex-1 flex items-center gap-2 text-sm text-emerald-600">
               <Check className="w-4 h-4" />
               <span>+{meeting.ggg_earned || 25} GGG earned</span>
             </div>
-            <Button 
-              size="sm" 
-              variant="outline"
-              className="rounded-lg"
-              onClick={() => onAction?.('testimonial', meeting)}
-            >
+            <Button
+            size="sm"
+            variant="outline"
+            className="rounded-lg"
+            onClick={() => onAction?.('testimonial', meeting)}>
+
               <Star className="w-4 h-4 mr-1.5" />
               Leave Review
             </Button>
           </>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
