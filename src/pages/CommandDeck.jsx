@@ -11,10 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Coins, 
-  TrendingUp, 
-  Users, 
+import {
+  Coins,
+  TrendingUp,
+  Users,
   Calendar,
   Target,
   DollarSign,
@@ -26,8 +26,8 @@ import {
   ShoppingBag,
   Radio,
   Flame,
-  BarChart3
-} from "lucide-react";
+  BarChart3 } from
+"lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
@@ -64,14 +64,14 @@ export default function CommandDeck() {
   const [boostTarget, setBoostTarget] = useState(null);
   const [tuneEngineOpen, setTuneEngineOpen] = useState(false);
   const [onlineUsersOpen, setOnlineUsersOpen] = useState(false);
-const [inboxPopupOpen, setInboxPopupOpen] = useState(false);
-const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
-const [syncPopupOpen, setSyncPopupOpen] = useState(false);
-const [meetingsPopupOpen, setMeetingsPopupOpen] = useState(false);
-const [missionsPopupOpen, setMissionsPopupOpen] = useState(false);
-const [marketPopupOpen, setMarketPopupOpen] = useState(false);
-const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
-const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
+  const [inboxPopupOpen, setInboxPopupOpen] = useState(false);
+  const [circlesPopupOpen, setCirclesPopupOpen] = useState(false);
+  const [syncPopupOpen, setSyncPopupOpen] = useState(false);
+  const [meetingsPopupOpen, setMeetingsPopupOpen] = useState(false);
+  const [missionsPopupOpen, setMissionsPopupOpen] = useState(false);
+  const [marketPopupOpen, setMarketPopupOpen] = useState(false);
+  const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
+  const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
 
   // Current user (safe for public use)
@@ -106,7 +106,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
   });
   const onboarding = onboardingRecords?.[0];
   const ONBOARDING_STEPS = 10;
-  const setupPercent = onboarding ? Math.round((((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS) * 100) : 0;
+  const setupPercent = onboarding ? Math.round(((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS * 100) : 0;
 
   // Fetch user badges
   const { data: badges = [] } = useQuery({
@@ -145,17 +145,17 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20)
   });
 
-  const filteredMatches = matches.filter(m => 
-    matchTab === 'people' ? m.target_type === 'person' :
-    matchTab === 'offers' ? m.target_type === 'offer' :
-    matchTab === 'missions' ? m.target_type === 'mission' :
-    matchTab === 'events' ? m.target_type === 'event' :
-    matchTab === 'teachers' ? m.target_type === 'teacher' : true
+  const filteredMatches = matches.filter((m) =>
+  matchTab === 'people' ? m.target_type === 'person' :
+  matchTab === 'offers' ? m.target_type === 'offer' :
+  matchTab === 'missions' ? m.target_type === 'mission' :
+  matchTab === 'events' ? m.target_type === 'event' :
+  matchTab === 'teachers' ? m.target_type === 'teacher' : true
   );
 
-  const pendingMeetings = meetings.filter(m => m.status === 'pending');
-  const scheduledMeetings = meetings.filter(m => m.status === 'scheduled');
-  const completedMeetingsThisWeek = meetings.filter(m => m.status === 'completed').length;
+  const pendingMeetings = meetings.filter((m) => m.status === 'pending');
+  const scheduledMeetings = meetings.filter((m) => m.status === 'scheduled');
+  const completedMeetingsThisWeek = meetings.filter((m) => m.status === 'completed').length;
 
   const queryClient = useQueryClient();
 
@@ -173,8 +173,8 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
           let newSa = String(Math.floor(100002 + Math.random() * 899998));
           for (let i = 0; i < 2; i++) {
             const collision = await base44.entities.UserProfile.filter({ sa_number: newSa });
-            if (collision?.length) newSa = String(Math.floor(100002 + Math.random() * 899998));
-            else break;
+            if (collision?.length) newSa = String(Math.floor(100002 + Math.random() * 899998));else
+            break;
           }
           await base44.entities.UserProfile.update(p.id, { sa_number: newSa });
         }
@@ -349,18 +349,18 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
               <p className="text-slate-500 mt-1">Your mission control center</p>
             </div>
             <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                className="rounded-xl gap-2"
-                onClick={() => setSidePanelOpen(!sidePanelOpen)}
-              >
+              <Button
+                variant="outline" className="bg-zinc-200 text-slate-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
+
+                onClick={() => setSidePanelOpen(!sidePanelOpen)}>
+
                 <BarChart3 className="w-4 h-4" />
                 {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
               </Button>
-              <Button 
+              <Button
                 className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-                onClick={() => setQuickCreateOpen(true)}
-              >
+                onClick={() => setQuickCreateOpen(true)}>
+
                 <Plus className="w-4 h-4" />
                 Quick Create
               </Button>
@@ -371,27 +371,27 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
           <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
             <div className="flex items-start gap-6">
               <div className="relative shrink-0">
-                <div 
+                <div
                   className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                  data-user-id={profile?.user_id}
-                >
+                  data-user-id={profile?.user_id}>
+
                   <div className="w-full h-full rounded-full bg-white p-1">
-                    {profile?.avatar_url ? (
-                      <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full rounded-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                    {profile?.avatar_url ?
+                    <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full rounded-full object-cover" /> :
+
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
                         <span className="text-3xl font-bold text-violet-600">
                           {profile?.display_name?.charAt(0) || 'U'}
                         </span>
                       </div>
-                    )}
+                    }
                   </div>
                 </div>
-                {profile?.leader_tier === 'verified144k' && (
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
+                {profile?.leader_tier === 'verified144k' &&
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
-                )}
+                }
               </div>
 
               <div className="flex-1">
@@ -407,17 +407,17 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                       </p>
                       <HelpHint
                         content={
-                          <div>
+                        <div>
                             <div className="font-semibold mb-1">Rank progression</div>
                             <div>Current: {rpInfo.title} ({rpPoints} RP)</div>
-                            {rpInfo.nextMin ? (
-                              <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, (rpInfo.nextMin - rpPoints))} RP to go</div>
-                            ) : (
-                              <div>You're at the highest rank.</div>
-                            )}
+                            {rpInfo.nextMin ?
+                          <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div> :
+
+                          <div>You're at the highest rank.</div>
+                          }
                           </div>
-                        }
-                      />
+                        } />
+
                     </div>
                   </div>
                   
@@ -428,12 +428,12 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         Trust Score
                         <HelpHint
                           content={
-                            <div>
+                          <div>
                               <div className="font-semibold mb-1">What is Trust Score?</div>
                               <div>0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
                             </div>
-                          }
-                        />
+                          } />
+
                       </p>
                       <p className="text-2xl font-bold text-violet-600">{profile?.trust_score || 0}</p>
                     </div>
@@ -446,8 +446,8 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                           stroke="currentColor"
                           strokeWidth="4"
                           fill="none"
-                          className="text-slate-200"
-                        />
+                          className="text-slate-200" />
+
                         <circle
                           cx="32"
                           cy="32"
@@ -458,8 +458,8 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                           strokeDasharray={`${2 * Math.PI * 28}`}
                           strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.trust_score || 0) / 100)}`}
                           className="text-violet-600 transition-all duration-500"
-                          strokeLinecap="round"
-                        />
+                          strokeLinecap="round" />
+
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-xs font-bold text-violet-600">
@@ -471,46 +471,46 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                 </div>
 
                 {/* Stats Bar */}
-                <div data-cmd-stats className="grid grid-cols-4 gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50">
+                <div className="grid grid-cols-4 gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50">
                   <div className="text-center">
-                    <p className="text-lg font-extrabold text-slate-900">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
-                    <p className="text-xs text-slate-800 font-semibold uppercase inline-flex items-center gap-1 justify-center">
+                    <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
+                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
                       GGG
                       <HelpHint content="GGG is the platform currency—earn it from meetings, missions, and rewards. Spend it to boost reach and incentivize actions." />
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-extrabold text-slate-900">{profile?.rank_points || 0}</p>
-                    <p className="text-xs text-slate-800 font-semibold uppercase inline-flex items-center gap-1 justify-center">
+                    <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
+                    <p className="text-xs text-slate-500 inline-flex items-center gap-1 justify-center">
                       Rank Points
                       <HelpHint content="RP (Rank Points) reflect your long-term contribution: missions, meetings, testimonials and more. They determine your rank." />
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-extrabold text-slate-900">{profile?.follower_count || 0}</p>
+                    <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
                     <p className="text-xs text-slate-500">Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-extrabold text-slate-900">{profile?.meetings_completed || 0}</p>
+                    <p className="text-lg font-bold text-slate-900">{profile?.meetings_completed || 0}</p>
                     <p className="text-xs text-slate-500">Meetings</p>
                   </div>
                 </div>
 
                 {/* Setup Progress (if onboarding not complete) */}
-                {onboarding && onboarding.status !== 'complete' && (
-                  <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                {onboarding && onboarding.status !== 'complete' &&
+                <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200">
                     <div className="flex items-center justify-between gap-3 mb-2">
                       <p className="text-sm font-medium text-amber-800">Profile setup in progress</p>
                       <span className="text-xs font-semibold text-amber-700">{setupPercent}%</span>
                     </div>
                     <Progress value={setupPercent} className="h-2" />
                     <div className="mt-2 text-right">
-                      <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('Onboarding'); }}>
+                      <Button variant="outline" size="sm" className="rounded-lg" onClick={() => {window.location.href = createPageUrl('Onboarding');}}>
                         Resume Setup
                       </Button>
                     </div>
                   </div>
-                )}
+                }
 
                 {/* Badges */}
                 <div className="mb-4">
@@ -527,7 +527,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                 <div>
                   <p className="text-xs text-slate-500 mb-3">✨ Mystical Identity</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {profile?.mystical_identifier && (
+                  {profile?.mystical_identifier &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
                         <Sparkles className="w-4 h-4 text-purple-600" />
@@ -537,9 +537,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
                       </div>
                     </div>
-                  )}
+                    }
                   
-                  {profile?.astrological_sign && (
+                  {profile?.astrological_sign &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
                         ✨
@@ -549,9 +549,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
                       </div>
                     </div>
-                  )}
+                    }
                   
-                  {profile?.rising_sign && (
+                  {profile?.rising_sign &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center shrink-0">
                         🌅
@@ -561,9 +561,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
                       </div>
                     </div>
-                  )}
+                    }
 
-                  {profile?.moon_sign && (
+                  {profile?.moon_sign &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
                         🌙
@@ -573,9 +573,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
                       </div>
                     </div>
-                  )}
+                    }
                   
-                  {profile?.numerology_life_path && (
+                  {profile?.numerology_life_path &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
                         <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
@@ -585,9 +585,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
                       </div>
                     </div>
-                  )}
+                    }
 
-                  {profile?.numerology_personality && (
+                  {profile?.numerology_personality &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
                         <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
@@ -597,9 +597,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
                       </div>
                     </div>
-                  )}
+                    }
                   
-                  {profile?.birth_card && (
+                  {profile?.birth_card &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
                         🃏
@@ -609,9 +609,9 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
                       </div>
                     </div>
-                  )}
+                    }
 
-                  {profile?.sun_card && (
+                  {profile?.sun_card &&
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center shrink-0">
                         ☀️
@@ -621,7 +621,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                         <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
                       </div>
                     </div>
-                  )}
+                    }
                   </div>
                 </div>
               </div>
@@ -637,10 +637,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <p className="text-2xl font-bold text-slate-900">1,247</p>
                 </div>
                 <div className="h-8 w-px bg-slate-200" />
-                <button 
+                <button
                   onClick={() => setOnlineUsersOpen(true)}
-                  className="text-left hover:opacity-80 transition-opacity"
-                >
+                  className="text-left hover:opacity-80 transition-opacity">
+
                   <p className="text-xs text-slate-500 mb-1">Online Now</p>
                   <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -672,10 +672,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="relative overflow-hidden rounded-2xl border border-amber-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e8ff4336b_image_2025-12-27_131552732.png)' }}
-              />
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e8ff4336b_image_2025-12-27_131552732.png)' }} />
+
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
               <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -695,10 +695,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </div>
 
             <div className="relative overflow-hidden rounded-2xl border border-violet-200 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all">
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/def3a92a7_image_2025-12-27_111942719.png)' }}
-              >
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/def3a92a7_image_2025-12-27_111942719.png)' }}>
+
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-900/60 via-violet-800/40 to-transparent" />
               </div>
               <div className="relative flex items-start justify-between gap-3">
@@ -711,27 +711,27 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     {profile?.rank_code || "Seeker"}
                     <HelpHint
                       content={
-                        <div>
+                      <div>
                           <div className="font-semibold mb-1">Rank progression</div>
                           <div>Current: {rpInfo.title} ({rpPoints} RP)</div>
-                          {rpInfo.nextMin ? (
-                            <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, (rpInfo.nextMin - rpPoints))} RP to go</div>
-                          ) : (
-                            <div>You're at the highest rank.</div>
-                          )}
+                          {rpInfo.nextMin ?
+                        <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div> :
+
+                        <div>You're at the highest rank.</div>
+                        }
                         </div>
-                      }
-                    />
+                      } />
+
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="relative overflow-hidden rounded-2xl border border-blue-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/834e5195f_image_2025-12-27_132011008.png)' }}
-              />
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/834e5195f_image_2025-12-27_132011008.png)' }} />
+
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-blue-800/50 to-blue-900/60" />
               <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -751,10 +751,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </div>
 
             <div className="relative overflow-hidden rounded-2xl border border-emerald-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/854748652_c9f98f91-174a-46a0-b12f-26bde09c8ea8.png)' }}
-              />
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/854748652_c9f98f91-174a-46a0-b12f-26bde09c8ea8.png)' }} />
+
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
               <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -770,10 +770,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </div>
 
             <div className="relative overflow-hidden rounded-2xl border border-cyan-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cc962c0c_ChatGPTImageDec27202501_25_18PM.png)' }}
-              />
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cc962c0c_ChatGPTImageDec27202501_25_18PM.png)' }} />
+
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/60 via-blue-900/50 to-cyan-800/60" />
               <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -789,10 +789,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </div>
 
             <div className="relative overflow-hidden rounded-2xl border border-purple-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
-                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a2f4b87c3_ChatGPTImageDec27202501_27_46PM.png)' }}
-              />
+                style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a2f4b87c3_ChatGPTImageDec27202501_27_46PM.png)' }} />
+
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-violet-900/50 to-purple-800/60" />
               <div className="relative flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -801,7 +801,7 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                     <p className="text-xs font-medium uppercase tracking-wider text-purple-200">Missions</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
-                    {missions.filter(m => m.participant_ids?.includes(profile?.user_id)).length}
+                    {missions.filter((m) => m.participant_ids?.includes(profile?.user_id)).length}
                   </p>
                 </div>
               </div>
@@ -817,43 +817,43 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
               title="Earn"
               icon={DollarSign}
               stats={`$${profile?.total_earnings || 0}`}
-              onClick={() => window.location.href = createPageUrl('Marketplace')}
-            />
+              onClick={() => window.location.href = createPageUrl('Marketplace')} />
+
             <ModeCard
               mode="learn"
               title="Learn"
               icon={TrendingUp}
-              stats={`${meetings.filter(m => m.meeting_type === 'mentorship').length} sessions`}
-              onClick={() => window.location.href = createPageUrl('Marketplace')}
-            />
+              stats={`${meetings.filter((m) => m.meeting_type === 'mentorship').length} sessions`}
+              onClick={() => window.location.href = createPageUrl('Marketplace')} />
+
             <ModeCard
               mode="build"
               title="Build"
               icon={Target}
-              stats={`${missions.filter(m => m.participant_ids?.includes(profile?.user_id)).length} active`}
-              onClick={() => window.location.href = createPageUrl('Missions')}
-            />
+              stats={`${missions.filter((m) => m.participant_ids?.includes(profile?.user_id)).length} active`}
+              onClick={() => window.location.href = createPageUrl('Missions')} />
+
             <ModeCard
               mode="teach"
               title="Teach"
               icon={Users}
-              stats={`${listings.filter(l => l.listing_type === 'offer').length} offers`}
-              onClick={() => window.location.href = createPageUrl('Studio')}
-            />
+              stats={`${listings.filter((l) => l.listing_type === 'offer').length} offers`}
+              onClick={() => window.location.href = createPageUrl('Studio')} />
+
             <ModeCard
               mode="lead"
               title="Lead"
               icon={Sparkles}
               stats={profile?.leader_tier !== 'none' ? 'Active' : 'Apply'}
-              onClick={() => window.location.href = createPageUrl('LeaderChannel')}
-            />
+              onClick={() => window.location.href = createPageUrl('LeaderChannel')} />
+
             <ModeCard
               mode="connect"
               title="Connect"
               icon={Users}
               stats={`${profile?.follower_count || 0} followers`}
-              onClick={() => window.location.href = createPageUrl('Circles')}
-            />
+              onClick={() => window.location.href = createPageUrl('Circles')} />
+
           </div>
         </div>
 
@@ -862,27 +862,27 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
           {/* Column A: Now + Daily Action */}
           <div className="space-y-6">
             {/* Command Summary */}
-            <CollapsibleCard 
-              title="Quick Actions" 
+            <CollapsibleCard
+              title="Quick Actions"
               icon={Zap}
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
-              backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
-            >
+              backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80">
+
               <div className="grid grid-cols-2 gap-3">
-                <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => { setQuickCreateType('meeting'); setQuickCreateOpen(true); }}>
+                <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
                   <Calendar className="w-5 h-5" />
                   <span className="text-xs">Book Meeting</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('post'); setQuickCreateOpen(true); }}>
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => {setQuickCreateType('post');setQuickCreateOpen(true);}}>
                   <Plus className="w-5 h-5" />
                   <span className="text-xs">Post Update</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('mission'); setQuickCreateOpen(true); }}>
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => {setQuickCreateType('mission');setQuickCreateOpen(true);}}>
                   <Target className="w-5 h-5" />
                   <span className="text-xs">Launch Mission</span>
                 </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => { setQuickCreateType('offer'); setQuickCreateOpen(true); }}>
+                <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>
                   <ShoppingBag className="w-5 h-5" />
                   <span className="text-xs">Create Offer</span>
                 </Button>
@@ -890,45 +890,45 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </CollapsibleCard>
 
             {/* Quick Start Checklist */}
-            <CollapsibleCard 
-              title="Quick Start Checklist" 
+            <CollapsibleCard
+              title="Quick Start Checklist"
               icon={CheckCircle}
               defaultOpen={false}
-              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-            >
+              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80">
+
               <QuickStartChecklist />
             </CollapsibleCard>
 
             {/* Inbox & Signals */}
-            <CollapsibleCard 
-                                title="Inbox & Signals" 
-                                icon={Radio}
-                                badge={notifications.length}
-                                badgeColor="rose"
-                                backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
-                                onPopout={() => setInboxPopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Inbox & Signals"
+              icon={Radio}
+              badge={notifications.length}
+              badgeColor="rose"
+              backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
+              onPopout={() => setInboxPopupOpen(true)}>
+
                                 <InboxSignals notifications={notifications} />
                               </CollapsibleCard>
 
             {/* Circles & Regions */}
-            <CollapsibleCard 
-                                title="Circles & Regions" 
-                                icon={Users}
-                                defaultOpen={false}
-                                backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
-                                onPopout={() => setCirclesPopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Circles & Regions"
+              icon={Users}
+              defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
+              onPopout={() => setCirclesPopupOpen(true)}>
+
                                 <CirclesRegions />
                               </CollapsibleCard>
 
             {/* Leader Pathway */}
-            <CollapsibleCard 
-              title="Leader Pathway" 
+            <CollapsibleCard
+              title="Leader Pathway"
               icon={Sparkles}
               defaultOpen={true}
-              onPopout={() => setLeaderPopupOpen(true)}
-            >
+              onPopout={() => setLeaderPopupOpen(true)}>
+
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
             </div>
@@ -936,14 +936,14 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
           {/* Column B: Synchronicity + Meetings + Missions */}
           <div className="space-y-6">
             {/* Synchronicity Stack */}
-            <CollapsibleCard 
-                                title="Synchronicity Engine" 
-                                icon={Sparkles}
-                                badge={matches.length}
-                                badgeColor="violet"
-                                backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
-                                onPopout={() => setSyncPopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Synchronicity Engine"
+              icon={Sparkles}
+              badge={matches.length}
+              badgeColor="violet"
+              backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
+              onPopout={() => setSyncPopupOpen(true)}>
+
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -956,89 +956,89 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <TabsTrigger value="teachers" className="text-xs">Teachers</TabsTrigger>
                 </TabsList>
                 <div className="space-y-3">
-                  {filteredMatches.length === 0 ? (
-                    <div className="text-center py-8">
+                  {filteredMatches.length === 0 ?
+                  <div className="text-center py-8">
                       <Sparkles className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                       <p className="text-sm text-slate-500">No matches yet</p>
                       <p className="text-xs text-slate-400 mt-1">Complete your profile to find matches</p>
-                    </div>
-                  ) : (
-                    filteredMatches.slice(0, 3).map((match) => (
-                      <MatchCard 
-                        key={match.id} 
-                        match={match} 
-                        onAction={handleMatchAction}
-                      />
-                    ))
-                  )}
-                  {filteredMatches.length > 3 && (
-                    <Button variant="ghost" className="w-full text-violet-600">
+                    </div> :
+
+                  filteredMatches.slice(0, 3).map((match) =>
+                  <MatchCard
+                    key={match.id}
+                    match={match}
+                    onAction={handleMatchAction} />
+
+                  )
+                  }
+                  {filteredMatches.length > 3 &&
+                  <Button variant="ghost" className="w-full text-violet-600">
                       View all {filteredMatches.length} matches
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
-                  )}
+                  }
                 </div>
               </Tabs>
             </CollapsibleCard>
 
             {/* Meetings & Momentum */}
-            <CollapsibleCard 
-                                title="Meetings & Momentum" 
-                                icon={Calendar}
-                                badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
-                                badgeColor="amber"
-                                backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
-                                onPopout={() => setMeetingsPopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Meetings & Momentum"
+              icon={Calendar}
+              badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
+              badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+              onPopout={() => setMeetingsPopupOpen(true)}>
+
               <div className="space-y-3">
-                {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ? (
-                  <div className="text-center py-6">
+                {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
+                <div className="text-center py-6">
                     <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No upcoming meetings</p>
-                    <Button variant="outline" className="mt-3 rounded-xl" onClick={() => { setQuickCreateType('meeting'); setQuickCreateOpen(true); }}>
+                    <Button variant="outline" className="mt-3 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
                       Schedule a meeting
                     </Button>
-                  </div>
-                ) : (
-                  [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) => (
-                    <MeetingCard 
-                      key={meeting.id} 
-                      meeting={meeting} 
-                      onAction={handleMeetingAction}
-                    />
-                  ))
-                )}
+                  </div> :
+
+                [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) =>
+                <MeetingCard
+                  key={meeting.id}
+                  meeting={meeting}
+                  onAction={handleMeetingAction} />
+
+                )
+                }
               </div>
             </CollapsibleCard>
 
             {/* Missions & Quests */}
-            <CollapsibleCard 
-                                title="Missions & Quests" 
-                                icon={Target}
-                                badge={missions.length}
-                                badgeColor="amber"
-                                backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
-                                onPopout={() => setMissionsPopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Missions & Quests"
+              icon={Target}
+              badge={missions.length}
+              badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
+              onPopout={() => setMissionsPopupOpen(true)}>
+
               <div className="space-y-3">
-                {missions.length === 0 ? (
-                  <div className="text-center py-6">
+                {missions.length === 0 ?
+                <div className="text-center py-6">
                     <Target className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No active missions</p>
                     <Button variant="outline" className="mt-3 rounded-xl">
                       Browse missions
                     </Button>
-                  </div>
-                ) : (
-                  missions.slice(0, 2).map((mission) => (
-                    <MissionCard 
-                      key={mission.id} 
-                      mission={mission} 
-                      onAction={handleMissionAction}
-                      variant="compact"
-                    />
-                  ))
-                )}
+                  </div> :
+
+                missions.slice(0, 2).map((mission) =>
+                <MissionCard
+                  key={mission.id}
+                  mission={mission}
+                  onAction={handleMissionAction}
+                  variant="compact" />
+
+                )
+                }
               </div>
             </CollapsibleCard>
           </div>
@@ -1046,12 +1046,12 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
           {/* Column C: Earnings + Influence + Creator */}
           <div className="space-y-6">
             {/* Marketplace Card */}
-            <CollapsibleCard 
-                                title="Marketplace: Earn & Learn" 
-                                icon={ShoppingBag}
-                                backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-                                onPopout={() => setMarketPopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Marketplace: Earn & Learn"
+              icon={ShoppingBag}
+              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
+              onPopout={() => setMarketPopupOpen(true)}>
+
               <Tabs defaultValue="offers" className="w-full">
                 <TabsList className="w-full grid grid-cols-3 mb-4">
                   <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
@@ -1059,24 +1059,24 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
                 </TabsList>
                 <TabsContent value="offers" className="space-y-3">
-                  {listings.filter(l => l.listing_type === 'offer').length === 0 ? (
-                    <div className="text-center py-6">
+                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ?
+                  <div className="text-center py-6">
                       <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                       <p className="text-sm text-slate-500">No offers yet</p>
                       <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">
                         Create your first offer
                       </Button>
-                    </div>
-                  ) : (
-                    listings.filter(l => l.listing_type === 'offer').slice(0, 2).map((listing) => (
-                      <ListingCard 
-                        key={listing.id} 
-                        listing={listing} 
-                        isOwner={true}
-                        onAction={handleListingAction}
-                      />
-                    ))
-                  )}
+                    </div> :
+
+                  listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) =>
+                  <ListingCard
+                    key={listing.id}
+                    listing={listing}
+                    isOwner={true}
+                    onAction={handleListingAction} />
+
+                  )
+                  }
                 </TabsContent>
                 <TabsContent value="requests" className="space-y-3">
                   <div className="text-center py-6">
@@ -1084,24 +1084,24 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   </div>
                 </TabsContent>
                 <TabsContent value="browse" className="space-y-3">
-                  {listings.slice(0, 2).map((listing) => (
-                    <ListingCard 
-                      key={listing.id} 
-                      listing={listing} 
-                      onAction={handleListingAction}
-                    />
-                  ))}
+                  {listings.slice(0, 2).map((listing) =>
+                  <ListingCard
+                    key={listing.id}
+                    listing={listing}
+                    onAction={handleListingAction} />
+
+                  )}
                 </TabsContent>
               </Tabs>
             </CollapsibleCard>
 
             {/* Influence & Broadcast */}
-            <CollapsibleCard 
-                                title="Influence & Reach" 
-                                icon={TrendingUp}
-                                backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-                                onPopout={() => setInfluencePopupOpen(true)}
-                              >
+            <CollapsibleCard
+              title="Influence & Reach"
+              icon={TrendingUp}
+              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
+              onPopout={() => setInfluencePopupOpen(true)}>
+
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
                   <div className="text-center p-3 rounded-xl bg-slate-50">
@@ -1126,10 +1126,10 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
                   <p className="text-sm text-slate-600 mb-3">
                     Spend GGG to amplify your content and attract more followers.
                   </p>
-                  <Button 
+                  <Button
                     className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
-                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}
-                  >
+                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
+
                     <Zap className="w-4 h-4 mr-2" />
                     Boost Now
                   </Button>
@@ -1138,12 +1138,12 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
             </CollapsibleCard>
 
             {/* Leader Channel Preview */}
-            <CollapsibleCard 
-              title="144K Leader Channel" 
+            <CollapsibleCard
+              title="144K Leader Channel"
               icon={Radio}
               defaultOpen={false}
-              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
-            >
+              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80">
+
               <div className="text-center py-6">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
                   <Radio className="w-8 h-8 text-amber-600" />
@@ -1162,120 +1162,120 @@ const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
       </div>
 
       {/* Side Panel */}
-      <SidePanel 
+      <SidePanel
         matches={matches.slice(0, 5)}
         meetings={scheduledMeetings}
         profile={profile}
         isOpen={sidePanelOpen}
         onToggle={() => setSidePanelOpen(!sidePanelOpen)}
         onMatchAction={handleMatchAction}
-        onMeetingAction={handleMeetingAction}
-      />
+        onMeetingAction={handleMeetingAction} />
+
 
       {/* Popout Panels */}
-      {inboxPopupOpen && (
-        <FloatingPanel title="Inbox & Signals" onClose={() => setInboxPopupOpen(false)}>
+      {inboxPopupOpen &&
+      <FloatingPanel title="Inbox & Signals" onClose={() => setInboxPopupOpen(false)}>
           <InboxSignals notifications={notifications} />
         </FloatingPanel>
-      )}
-      {circlesPopupOpen && (
-        <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}>
+      }
+      {circlesPopupOpen &&
+      <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}>
           <CirclesRegions />
         </FloatingPanel>
-      )}
-      {syncPopupOpen && (
-        <FloatingPanel title="Synchronicity Engine" onClose={() => setSyncPopupOpen(false)}>
-          <SynchronicityEngine 
-            profile={profile}
-            matchTab={matchTab}
-            setMatchTab={setMatchTab}
-            filteredMatches={filteredMatches}
-            matches={matches}
-            onMatchAction={handleMatchAction}
-          />
+      }
+      {syncPopupOpen &&
+      <FloatingPanel title="Synchronicity Engine" onClose={() => setSyncPopupOpen(false)}>
+          <SynchronicityEngine
+          profile={profile}
+          matchTab={matchTab}
+          setMatchTab={setMatchTab}
+          filteredMatches={filteredMatches}
+          matches={matches}
+          onMatchAction={handleMatchAction} />
+
         </FloatingPanel>
-      )}
-      {meetingsPopupOpen && (
-        <FloatingPanel title="Meetings & Momentum" onClose={() => setMeetingsPopupOpen(false)}>
-          <MeetingsMomentum 
-            pendingMeetings={pendingMeetings}
-            scheduledMeetings={scheduledMeetings}
-            onAction={handleMeetingAction}
-          />
+      }
+      {meetingsPopupOpen &&
+      <FloatingPanel title="Meetings & Momentum" onClose={() => setMeetingsPopupOpen(false)}>
+          <MeetingsMomentum
+          pendingMeetings={pendingMeetings}
+          scheduledMeetings={scheduledMeetings}
+          onAction={handleMeetingAction} />
+
         </FloatingPanel>
-      )}
-      {missionsPopupOpen && (
-        <FloatingPanel title="Missions & Quests" onClose={() => setMissionsPopupOpen(false)}>
-          <MissionsQuests 
-            missions={missions}
-            profile={profile}
-            onAction={handleMissionAction}
-          />
+      }
+      {missionsPopupOpen &&
+      <FloatingPanel title="Missions & Quests" onClose={() => setMissionsPopupOpen(false)}>
+          <MissionsQuests
+          missions={missions}
+          profile={profile}
+          onAction={handleMissionAction} />
+
         </FloatingPanel>
-      )}
-      {marketPopupOpen && (
-        <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}>
-          <MarketplaceEarnLearn 
-            listings={listings}
-            onAction={handleListingAction}
-          />
+      }
+      {marketPopupOpen &&
+      <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}>
+          <MarketplaceEarnLearn
+          listings={listings}
+          onAction={handleListingAction} />
+
         </FloatingPanel>
-      )}
-      {influencePopupOpen && (
-        <FloatingPanel title="Influence & Reach" onClose={() => setInfluencePopupOpen(false)}>
-          <InfluenceReach 
-            profile={profile}
-            onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}
-          />
+      }
+      {influencePopupOpen &&
+      <FloatingPanel title="Influence & Reach" onClose={() => setInfluencePopupOpen(false)}>
+          <InfluenceReach
+          profile={profile}
+          onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })} />
+
         </FloatingPanel>
-      )}
-      {leaderPopupOpen && (
-        <FloatingPanel title="Leader Pathway" onClose={() => setLeaderPopupOpen(false)}>
+      }
+      {leaderPopupOpen &&
+      <FloatingPanel title="Leader Pathway" onClose={() => setLeaderPopupOpen(false)}>
           <LeaderPathway profile={profile} />
         </FloatingPanel>
-      )}
+      }
 
       {/* Badge Glossary Modal */}
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
 
       {/* Quick Create Modal */}
-      <QuickCreateModal 
+      <QuickCreateModal
         open={quickCreateOpen}
         initialType={quickCreateType}
-        onClose={() => { setQuickCreateOpen(false); setQuickCreateType(null); }}
-        onCreate={handleCreate}
-      />
+        onClose={() => {setQuickCreateOpen(false);setQuickCreateType(null);}}
+        onCreate={handleCreate} />
+
 
       {/* Video Meeting Modal */}
-      {videoMeeting && (
-        <VideoMeetingModal
-          meeting={videoMeeting}
-          open={!!videoMeeting}
-          onClose={() => setVideoMeeting(null)}
-        />
-      )}
+      {videoMeeting &&
+      <VideoMeetingModal
+        meeting={videoMeeting}
+        open={!!videoMeeting}
+        onClose={() => setVideoMeeting(null)} />
+
+      }
 
       {/* Boost Modal */}
-      {boostTarget && (
-        <BoostModal
-          open={!!boostTarget}
-          onClose={() => setBoostTarget(null)}
-          targetType={boostTarget.type}
-          targetId={boostTarget.id}
-        />
-      )}
+      {boostTarget &&
+      <BoostModal
+        open={!!boostTarget}
+        onClose={() => setBoostTarget(null)}
+        targetType={boostTarget.type}
+        targetId={boostTarget.id} />
+
+      }
 
       {/* Tune Engine Modal */}
       <TuneEngineModal
         open={tuneEngineOpen}
-        onClose={() => setTuneEngineOpen(false)}
-      />
+        onClose={() => setTuneEngineOpen(false)} />
+
 
       {/* Online Users Modal */}
       <OnlineUsersModal
         open={onlineUsersOpen}
-        onClose={() => setOnlineUsersOpen(false)}
-      />
-      </div>
-      );
-      }
+        onClose={() => setOnlineUsersOpen(false)} />
+
+      </div>);
+
+}
