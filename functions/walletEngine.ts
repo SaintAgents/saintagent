@@ -7,9 +7,12 @@ function toNum(n) { return Math.round((Number(n) || 0) * 10000) / 10000; }
 async function getOrCreateWallet(base44, userId) {
   const rows = await base44.entities.Wallet.filter({ user_id: userId });
   if (rows?.length) return rows[0];
-  return base44.entities.Wallet.create({
+  // Initialize wallet from existing UserProfile.ggg_balance (migration-friendly)
+  const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
+  const startingAvail = toNum(profiles?.[0]?.ggg_balance || 0);
+  const created = await base44.entities.Wallet.create({
     user_id: userId,
-    available_balance: 0,
+    available_balance: startingAvail,
     locked_balance: 0,
     total_earned: 0,
     total_spent: 0,
@@ -21,6 +24,9 @@ async function getOrCreateWallet(base44, userId) {
     created_at: nowIso(),
     updated_at: nowIso(),
   });
+  // Ensure profile reflects same available for consistency
+  await updateProfileBalance(base44, userId, created.available_balance);
+  return created;
 }
 
 async function updateProfileBalance(base44, userId, available) {
