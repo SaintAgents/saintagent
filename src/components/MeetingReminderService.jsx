@@ -52,7 +52,7 @@ export default function MeetingReminderService() {
   });
 
   useEffect(() => {
-    if (!currentUser || !meetings.length) return;
+    if (!currentUser) return;
 
     const checkMeetingsAndEvents = () => {
       const now = new Date();
@@ -108,7 +108,7 @@ export default function MeetingReminderService() {
               if (!alreadySent) {
                 createNotification.mutate({
                   user_id: currentUser.email,
-                  type: 'event',
+                  type: 'system',
                   title: 'Event Reminder',
                   message: `Your event "${evt.title}" starts in ${window} minutes`,
                   action_url: `/EventDetail?id=${evt.id}`,
@@ -181,7 +181,7 @@ export default function MeetingReminderService() {
     };
 
     checkMeetingsAndEvents();
-  }, [meetings, currentUser, existingNotifications, createNotification]);
+  }, [meetings, currentUser, existingNotifications, createNotification, myEvents, myDailyLogs]);
 
   return null; // This is a service component with no UI
 }
