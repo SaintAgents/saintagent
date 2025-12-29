@@ -8,36 +8,36 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  DialogTitle } from
+"@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { 
-  FileText, 
-  ShoppingBag, 
-  Calendar, 
-  Target, 
-  MessageCircle, 
+  SelectValue } from
+"@/components/ui/select";
+import {
+  FileText,
+  ShoppingBag,
+  Calendar,
+  Target,
+  MessageCircle,
   Video,
   X,
   Sparkles,
-  ArrowRight
-} from "lucide-react";
+  ArrowRight } from
+"lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CREATE_OPTIONS = [
-  { id: 'post', label: 'Post', icon: FileText, color: 'bg-blue-500', description: 'Share an insight or update' },
-  { id: 'offer', label: 'Offer', icon: ShoppingBag, color: 'bg-emerald-500', description: 'Sell your skills or services' },
-  { id: 'event', label: 'Event', icon: Calendar, color: 'bg-violet-500', description: 'Host a gathering or workshop' },
-  { id: 'mission', label: 'Mission', icon: Target, color: 'bg-amber-500', description: 'Launch a collaborative mission' },
-  { id: 'message', label: 'Message', icon: MessageCircle, color: 'bg-pink-500', description: 'Start a conversation' },
-  { id: 'meeting', label: 'Meeting', icon: Video, color: 'bg-indigo-500', description: 'Request a 1:1 meeting' },
-];
+{ id: 'post', label: 'Post', icon: FileText, color: 'bg-blue-500', description: 'Share an insight or update' },
+{ id: 'offer', label: 'Offer', icon: ShoppingBag, color: 'bg-emerald-500', description: 'Sell your skills or services' },
+{ id: 'event', label: 'Event', icon: Calendar, color: 'bg-violet-500', description: 'Host a gathering or workshop' },
+{ id: 'mission', label: 'Mission', icon: Target, color: 'bg-amber-500', description: 'Launch a collaborative mission' },
+{ id: 'message', label: 'Message', icon: MessageCircle, color: 'bg-pink-500', description: 'Start a conversation' },
+{ id: 'meeting', label: 'Meeting', icon: Video, color: 'bg-indigo-500', description: 'Request a 1:1 meeting' }];
+
 
 export default function QuickCreateModal({ open, onClose, onCreate, initialType }) {
   const [selectedType, setSelectedType] = useState(null);
@@ -75,20 +75,20 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
         return (
           <div className="space-y-4">
             <div>
-              <Label>What's on your mind?</Label>
-              <Textarea 
+              <Label className="text-neutral-950 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">What's on your mind?</Label>
+              <Textarea
                 placeholder="Share an insight, teaching, or update..."
                 className="mt-2 min-h-32"
                 value={formData.content || ''}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })} />
+
             </div>
             <div>
-              <Label>Visibility</Label>
-              <Select 
-                value={formData.visibility || 'public'} 
-                onValueChange={(v) => setFormData({ ...formData, visibility: v })}
-              >
+              <Label className="text-stone-950 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Visibility</Label>
+              <Select
+                value={formData.visibility || 'public'}
+                onValueChange={(v) => setFormData({ ...formData, visibility: v })}>
+
                 <SelectTrigger className="mt-2">
                   <SelectValue />
                 </SelectTrigger>
@@ -99,26 +99,26 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        );
+          </div>);
+
       case 'offer':
         return (
           <div className="space-y-4">
             <div>
               <Label>Title</Label>
-              <Input 
+              <Input
                 placeholder="e.g., 1-on-1 Mentorship Session"
                 className="mt-2"
                 value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+
             </div>
             <div>
               <Label>Category</Label>
-              <Select 
-                value={formData.category || ''} 
-                onValueChange={(v) => setFormData({ ...formData, category: v })}
-              >
+              <Select
+                value={formData.category || ''}
+                onValueChange={(v) => setFormData({ ...formData, category: v })}>
+
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -134,54 +134,54 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Price ($)</Label>
-                <Input 
+                <Input
                   type="number"
                   placeholder="0 for free"
                   className="mt-2"
                   value={formData.price || ''}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                />
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+
               </div>
               <div>
                 <Label>Duration (min)</Label>
-                <Input 
+                <Input
                   type="number"
                   placeholder="60"
                   className="mt-2"
                   value={formData.duration || ''}
-                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                />
+                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })} />
+
               </div>
             </div>
-          </div>
-        );
+          </div>);
+
       case 'meeting':
         return (
           <div className="space-y-4">
             <div>
               <Label>Meeting Title</Label>
-              <Input 
+              <Input
                 placeholder="e.g., Quick sync about project"
                 className="mt-2"
                 value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+
             </div>
             <div>
               <Label>With (email or username)</Label>
-              <Input 
+              <Input
                 placeholder="Enter their email or @handle"
                 className="mt-2"
                 value={formData.recipient || ''}
-                onChange={(e) => setFormData({ ...formData, recipient: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, recipient: e.target.value })} />
+
             </div>
             <div>
               <Label>Type</Label>
-              <Select 
-                value={formData.type || 'casual'} 
-                onValueChange={(v) => setFormData({ ...formData, type: v })}
-              >
+              <Select
+                value={formData.type || 'casual'}
+                onValueChange={(v) => setFormData({ ...formData, type: v })}>
+
                 <SelectTrigger className="mt-2">
                   <SelectValue />
                 </SelectTrigger>
@@ -193,131 +193,131 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        );
+          </div>);
+
       case 'mission':
         return (
           <div className="space-y-4">
             <div>
               <Label>Mission Title</Label>
-              <Input 
+              <Input
                 placeholder="e.g., Community Cleanup"
                 className="mt-2"
                 value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+
             </div>
             <div>
               <Label>Objective</Label>
-              <Textarea 
+              <Textarea
                 placeholder="What are we trying to accomplish?"
                 className="mt-2 min-h-24"
                 value={formData.objective || ''}
-                onChange={(e) => setFormData({ ...formData, objective: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, objective: e.target.value })} />
+
             </div>
-          </div>
-        );
+          </div>);
+
       case 'message':
         return (
           <div className="space-y-4">
             <div>
               <Label>To (email or @handle)</Label>
-              <Input 
+              <Input
                 placeholder="Enter their email or @handle"
                 className="mt-2"
                 value={formData.recipient || ''}
-                onChange={(e) => setFormData({ ...formData, recipient: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, recipient: e.target.value })} />
+
             </div>
             <div>
               <Label>Message</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Write your message..."
                 className="mt-2 min-h-24"
                 value={formData.content || ''}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })} />
+
             </div>
-          </div>
-        );
+          </div>);
+
       case 'event':
         return (
           <div className="space-y-4">
             <div>
               <Label>Event Title</Label>
-              <Input 
+              <Input
                 placeholder="e.g., Community Gathering"
                 className="mt-2"
                 value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <Label>Starts</Label>
-                <Input 
+                <Input
                   type="datetime-local"
                   className="mt-2"
                   value={formData.start_time || ''}
-                  onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                />
+                  onChange={(e) => setFormData({ ...formData, start_time: e.target.value })} />
+
               </div>
               <div>
                 <Label>Ends (optional)</Label>
-                <Input 
+                <Input
                   type="datetime-local"
                   className="mt-2"
                   value={formData.end_time || ''}
-                  onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                />
+                  onChange={(e) => setFormData({ ...formData, end_time: e.target.value })} />
+
               </div>
             </div>
             <div>
               <Label>Location</Label>
-              <Input 
+              <Input
                 placeholder="City or venue (or 'Online')"
                 className="mt-2"
                 value={formData.location || ''}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
+
             </div>
             <div>
               <Label>Online Link (optional)</Label>
-              <Input 
+              <Input
                 placeholder="https://..."
                 className="mt-2"
                 value={formData.online_link || ''}
-                onChange={(e) => setFormData({ ...formData, online_link: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, online_link: e.target.value })} />
+
             </div>
             <div>
               <Label>Description</Label>
-              <Textarea 
+              <Textarea
                 placeholder="What is this event about?"
                 className="mt-2 min-h-24"
                 value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              />
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+
             </div>
-          </div>
-        );
+          </div>);
+
       default:
         return null;
-      }
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
         <AnimatePresence mode="wait">
-          {!selectedType ? (
-            <motion.div
-              key="select"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
+          {!selectedType ?
+          <motion.div
+            key="select"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, x: -20 }}>
+
               <DialogHeader className="p-6 pb-2">
                 <DialogTitle className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-violet-500" />
@@ -325,12 +325,12 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 </DialogTitle>
               </DialogHeader>
               <div className="grid grid-cols-2 gap-3 p-6 pt-4">
-                {CREATE_OPTIONS.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => handleTypeSelect(option.id)}
-                    className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:border-violet-300 hover:bg-violet-50/50 transition-all text-left group"
-                  >
+                {CREATE_OPTIONS.map((option) =>
+              <button
+                key={option.id}
+                onClick={() => handleTypeSelect(option.id)}
+                className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:border-violet-300 hover:bg-violet-50/50 transition-all text-left group">
+
                     <div className={cn("p-2.5 rounded-xl text-white", option.color)}>
                       <option.icon className="w-5 h-5" />
                     </div>
@@ -344,28 +344,28 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet-500 mt-1 transition-colors" />
                   </button>
-                ))}
+              )}
               </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="form"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-            >
+            </motion.div> :
+
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}>
+
               <DialogHeader className="p-6 pb-2">
                 <div className="flex items-center gap-3">
                   <Button
-                    variant="ghost"
-                    size="icon"
-                    className="shrink-0"
-                    onClick={() => setSelectedType(null)}
-                  >
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0"
+                  onClick={() => setSelectedType(null)}>
+
                     <X className="w-4 h-4" />
                   </Button>
-                  <DialogTitle>
-                    Create {CREATE_OPTIONS.find(o => o.id === selectedType)?.label}
+                  <DialogTitle className="text-zinc-950 text-lg font-semibold tracking-tight leading-none">
+                    Create {CREATE_OPTIONS.find((o) => o.id === selectedType)?.label}
                   </DialogTitle>
                 </div>
               </DialogHeader>
@@ -373,20 +373,20 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 {renderForm()}
               </div>
               <div className="flex justify-end gap-3 p-6 pt-4 border-t border-slate-100 mt-4">
-                <Button variant="outline" onClick={handleClose}>
+                <Button variant="outline" onClick={handleClose} className="bg-background text-stone-950 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9">
                   Cancel
                 </Button>
-                <Button 
-                  className="bg-violet-600 hover:bg-violet-700"
-                  onClick={handleSubmit}
-                >
+                <Button
+                className="bg-violet-600 hover:bg-violet-700"
+                onClick={handleSubmit}>
+
                   Create
                 </Button>
               </div>
             </motion.div>
-          )}
+          }
         </AnimatePresence>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>);
+
 }
