@@ -159,7 +159,7 @@ export default function CreateMissionModal({ open, onClose }) {
               />
               <div className="mt-1 text-xs text-slate-500">
                 {(() => {
-                  const g = parseFloat(formData.reward_ggg as any) || 0;
+                  const g = Number(formData.reward_ggg) || 0;
                   const usd = Math.min(g * GGG_TO_USD, MAX_USD);
                   return `≈ $${usd.toFixed(2)} (capped at $${MAX_USD.toFixed(2)})`;
                 })()}
