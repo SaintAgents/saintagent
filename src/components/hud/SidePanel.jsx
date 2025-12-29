@@ -904,5 +904,6 @@ export default function SidePanel({
       )}
       </ScrollArea>
     </div>
+  </>
   );
 }
