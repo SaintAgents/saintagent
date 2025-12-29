@@ -131,7 +131,7 @@ export default function DailyOps() {
     }
   }, [dailyLog]);
 
-  const updateLog = (patch) => upsertMutation.mutate({ ...(dailyLog || {}), ...patch });
+  const updateLog = (patch) => upsertMutation.mutate(patch);
 
   const addSchedule = () => {
     if (!schedDraft.title) return;
