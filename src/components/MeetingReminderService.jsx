@@ -34,11 +34,20 @@ export default function MeetingReminderService() {
     enabled: !!currentUser,
   });
 
+  // Today's Daily Ops log for schedule reminders
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const { data: myDailyLogs = [] } = useQuery({
+    queryKey: ['dailyLogReminder', currentUser?.email, todayStr],
+    queryFn: () => base44.entities.DailyLog.filter({ user_id: currentUser.email, date: todayStr }),
+    enabled: !!currentUser?.email,
+    refetchInterval: 60000,
+  });
+
   const createNotification = useMutation({
     mutationFn: (data) => base44.entities.Notification.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      queryClient.invalidateQueries({ queryKey: ['meetingNotifications'] });
+      queryClient.invalidateQueries({ queryKey: ['calendarNotifications'] });
     },
   });
 
@@ -48,6 +57,7 @@ export default function MeetingReminderService() {
     const checkMeetingsAndEvents = () => {
       const now = new Date();
       const reminderWindows = [15, 60]; // 15 minutes and 1 hour
+      const scheduleWindows = [5, 15]; // for personal schedule items
 
       // Meetings (where current user is host or guest)
       (meetings || []).forEach((meeting) => {
@@ -110,6 +120,57 @@ export default function MeetingReminderService() {
                   toast.info(`Event starting in ${window} minutes`, {
                     description: `"${evt.title}"`,
                     duration: 10000,
+                  });
+                }
+              }
+            }
+          });
+        }
+      });
+
+      // Personal schedule items from Daily Ops
+      const daily = (myDailyLogs || [])[0];
+      const schedule = Array.isArray(daily?.schedule) ? daily.schedule : [];
+      schedule.forEach((blk, idx) => {
+        const t = (blk?.time_block || '').trim();
+        if (!t) return;
+        // parse HH:mm (24h) best-effort
+        let hours = null, minutes = 0;
+        const m = t.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+        if (m) {
+          hours = parseInt(m[1], 10);
+          minutes = m[2] ? parseInt(m[2], 10) : 0;
+          const ampm = m[3]?.toLowerCase();
+          if (ampm) {
+            if (ampm === 'pm' && hours < 12) hours += 12;
+            if (ampm === 'am' && hours === 12) hours = 0;
+          }
+        }
+        if (hours == null || hours > 23 || minutes > 59) return;
+        const schedTime = new Date();
+        schedTime.setHours(hours, minutes, 0, 0);
+        const minutesUntil = (schedTime - now) / (1000 * 60);
+        if (minutesUntil > 0 && minutesUntil <= 120) {
+          scheduleWindows.forEach((window) => {
+            if (Math.abs(minutesUntil - window) <= 1) {
+              const alreadySent = existingNotifications.some(
+                (n) => n.metadata?.daily_date === todayStr && n.metadata?.schedule_index === idx && n.metadata?.reminder_window === window
+              );
+              if (!alreadySent) {
+                createNotification.mutate({
+                  user_id: currentUser.email,
+                  type: 'system',
+                  title: 'Upcoming Task',
+                  message: `"${blk.title || 'Scheduled item'}" starts in ${window} minutes`,
+                  action_url: `/DailyOps`,
+                  action_label: 'Open Daily Ops',
+                  priority: window <= 5 ? 'high' : 'normal',
+                  metadata: { daily_date: todayStr, schedule_index: idx, reminder_window: window },
+                });
+                if (window <= 5) {
+                  toast.info('Upcoming task', {
+                    description: `"${blk.title || 'Scheduled item'}" in ${window} minutes`,
+                    duration: 8000,
                   });
                 }
               }
