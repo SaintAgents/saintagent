@@ -114,7 +114,7 @@ export default function TopBar({
       </form>
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" data-no-top>
         <Link to={createPageUrl('DailyOps')}>
           <Button variant="ghost" size="icon" className="rounded-xl" title="Daily Ops">
             <Calendar className="w-5 h-5 text-slate-600" />
