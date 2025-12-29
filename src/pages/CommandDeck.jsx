@@ -471,7 +471,7 @@ export default function CommandDeck() {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-violet-50 text-neutral-950 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50">
+                <div className="bg-violet-50 text-neutral-950 mb-4 p-3 opacity-100 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50">
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
                     <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG
