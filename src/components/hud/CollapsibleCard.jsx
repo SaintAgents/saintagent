@@ -53,6 +53,21 @@ export default function CollapsibleCard({
         onClick={() => setIsOpen(!isOpen)}>
 
         <div className="flex items-center gap-3 min-w-0">
+          {onPopout && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 -ml-2 hover:bg-slate-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPopout();
+              }}
+              aria-label="Pop out"
+              title="Pop out"
+            >
+              <ExternalLink className="w-4 h-4 text-slate-500" />
+            </Button>
+          )}
           {Icon &&
           <div className="bg-fuchsia-100 p-2 rounded-xl shrink-0">
               <Icon className="w-4 h-4 text-slate-600" />
