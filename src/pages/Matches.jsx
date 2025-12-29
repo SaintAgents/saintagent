@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { 
+import {
   Search,
   Sparkles,
   Users,
@@ -14,8 +14,8 @@ import {
   Calendar,
   GraduationCap,
   SlidersHorizontal,
-  RefreshCw
-} from "lucide-react";
+  RefreshCw } from
+"lucide-react";
 
 import MatchCard from '@/components/hud/MatchCard';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -39,11 +39,11 @@ export default function Matches() {
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', 50)
   });
 
-  const filteredMatches = matches.filter(m => {
+  const filteredMatches = matches.filter((m) => {
     const matchesTab = tab === 'all' || m.target_type === tab;
-    const matchesSearch = !searchQuery || 
-      m.target_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.target_subtitle?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = !searchQuery ||
+    m.target_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    m.target_subtitle?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
 
@@ -59,11 +59,11 @@ export default function Matches() {
 
   const tabCounts = {
     all: matches.length,
-    person: matches.filter(m => m.target_type === 'person').length,
-    offer: matches.filter(m => m.target_type === 'offer').length,
-    mission: matches.filter(m => m.target_type === 'mission').length,
-    event: matches.filter(m => m.target_type === 'event').length,
-    teacher: matches.filter(m => m.target_type === 'teacher').length,
+    person: matches.filter((m) => m.target_type === 'person').length,
+    offer: matches.filter((m) => m.target_type === 'offer').length,
+    mission: matches.filter((m) => m.target_type === 'mission').length,
+    event: matches.filter((m) => m.target_type === 'event').length,
+    teacher: matches.filter((m) => m.target_type === 'teacher').length
   };
 
   return (
@@ -80,7 +80,7 @@ export default function Matches() {
           </div>
           <div className="flex items-center gap-3">
             <AIMatchGenerator profile={profile} />
-            <Button variant="outline" className="rounded-xl gap-2" onClick={() => refetch()}>
+            <Button variant="outline" className="bg-purple-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2" onClick={() => refetch()}>
               <RefreshCw className="w-4 h-4" />
               Refresh
             </Button>
@@ -94,8 +94,8 @@ export default function Matches() {
             placeholder="Search matches..."
             className="pl-12 h-12 rounded-xl bg-white"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+            onChange={(e) => setSearchQuery(e.target.value)} />
+
         </div>
 
         {/* Tabs */}
@@ -128,33 +128,33 @@ export default function Matches() {
         </Tabs>
 
         {/* Matches Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-48 bg-white rounded-xl animate-pulse" />
-            ))}
-          </div>
-        ) : filteredMatches.length === 0 ? (
-          <div className="text-center py-16">
+        {isLoading ?
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((i) =>
+          <div key={i} className="h-48 bg-white rounded-xl animate-pulse" />
+          )}
+          </div> :
+        filteredMatches.length === 0 ?
+        <div className="text-center py-16">
             <Sparkles className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No matches found</h3>
             <p className="text-slate-500 mb-6">Complete your profile to unlock personalized matches</p>
             <Button className="rounded-xl bg-violet-600 hover:bg-violet-700">
               Complete Profile
             </Button>
+          </div> :
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredMatches.map((match) =>
+          <MatchCard
+            key={match.id}
+            match={match}
+            onAction={handleAction} />
+
+          )}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredMatches.map(match => (
-              <MatchCard 
-                key={match.id} 
-                match={match} 
-                onAction={handleAction}
-              />
-            ))}
-          </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
