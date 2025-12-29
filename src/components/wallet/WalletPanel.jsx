@@ -4,6 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function WalletPanel() {
@@ -48,21 +50,49 @@ export default function WalletPanel() {
     enabled: !!user?.email,
   }).data || [];
   const available = wallet?.available_balance ?? profile?.ggg_balance ?? 0;
+  const locked = wallet?.locked_balance ?? 0;
+  const total = (Number(available) || 0) + (Number(locked) || 0);
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
           <p className="text-xs text-violet-600 font-medium">Available</p>
           <p className="text-xl font-bold text-violet-900">{(available ?? 0).toLocaleString?.()} GGG</p>
         </div>
         <div className="p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200">
-          <p className="text-xs text-slate-600 font-medium">Locked</p>
-          <p className="text-xl font-bold text-slate-900">{wallet?.locked_balance?.toLocaleString?.() ?? 0} GGG</p>
+          <div className="flex items-center gap-1">
+            <p className="text-xs text-slate-600 font-medium">Locked</p>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <button className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300">
+                  <HelpCircle className="w-3 h-3" />
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80 text-slate-700 text-sm">
+                <p className="font-semibold mb-1">Locked GGG = money in ceremony</p>
+                <p className="mb-2">It’s your GGG, reserved so it can’t be double‑spent. Used for missions, orders, disputes, or stakes until released.</p>
+                <ul className="list-disc ml-4 space-y-1 text-xs">
+                  <li>Trust & Safety: funds escrowed until completion</li>
+                  <li>Energetic Commitment: “I’m in” signal</li>
+                  <li>Clean Accounting: prevents overspending</li>
+                  <li>Resolution Space: held during disputes</li>
+                </ul>
+                <div className="mt-2 text-xs text-slate-500">
+                  Total = Available + Locked. Locks are always tied to a specific mission/order/stake.
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+          <p className="text-xl font-bold text-slate-900">{(locked ?? 0).toLocaleString?.()} GGG</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="mt-2">
+        <Stat label="Total GGG" value={total} color="violet" />
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 mt-2">
         <Stat label="Total Earned" value={wallet?.total_earned} color="emerald" />
         <Stat label="Total Spent" value={wallet?.total_spent} color="rose" />
         <Stat label="Rewards" value={wallet?.total_rewards} color="amber" />
@@ -94,6 +124,7 @@ function Stat({ label, value, color = 'slate' }) {
     emerald: 'bg-emerald-50 border-emerald-200 text-emerald-900',
     rose: 'bg-rose-50 border-rose-200 text-rose-900',
     amber: 'bg-amber-50 border-amber-200 text-amber-900',
+    violet: 'bg-violet-50 border-violet-200 text-violet-900',
     slate: 'bg-slate-50 border-slate-200 text-slate-900',
   };
   return (
