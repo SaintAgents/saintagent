@@ -364,7 +364,7 @@ export default function Profile() {
                   </> :
 
                     <>
-                    <p className="bg-purple-50 text-slate-800">{profile?.bio || 'No bio yet'}</p>
+                    <p className="bg-purple-100 text-slate-800">{profile?.bio || 'No bio yet'}</p>
                     <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                       {profile?.region &&
                         <span className="flex items-center gap-1">
