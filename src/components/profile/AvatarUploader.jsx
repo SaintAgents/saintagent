@@ -18,12 +18,12 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
     // Validate file
     const maxSize = 5 * 1024 * 1024; // 5MB
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    
+
     if (file.size > maxSize) {
       alert('File size must be less than 5MB');
       return;
     }
-    
+
     if (!allowedTypes.includes(file.type)) {
       alert('Only JPG, PNG, and WEBP files are allowed');
       return;
@@ -55,7 +55,7 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="bg-purple-100 pt-6 p-6">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <Avatar className="w-32 h-32 ring-4 ring-slate-100">
@@ -64,19 +64,19 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
                 {displayName?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
-            {(currentAvatar || preview) && !uploading && (
-              <button
-                onClick={handleRemove}
-                className="absolute -top-2 -right-2 p-1.5 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
-              >
+            {(currentAvatar || preview) && !uploading &&
+            <button
+              onClick={handleRemove}
+              className="absolute -top-2 -right-2 p-1.5 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
+
                 <X className="w-4 h-4" />
               </button>
-            )}
-            {uploading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+            }
+            {uploading &&
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
                 <Loader2 className="w-8 h-8 text-white animate-spin" />
               </div>
-            )}
+            }
           </div>
 
           <div className="text-center">
@@ -90,22 +90,22 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
               type="file"
               accept="image/jpeg,image/png,image/webp"
               onChange={handleFileSelect}
-              className="hidden"
-            />
+              className="hidden" />
+
             
             <Button
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="gap-2"
-            >
+              className="gap-2">
+
               <Upload className="w-4 h-4" />
               {currentAvatar ? 'Change Photo' : 'Upload Photo'}
             </Button>
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }
