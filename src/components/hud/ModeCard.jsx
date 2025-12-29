@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
 const MODE_BACKGROUNDS = {
-  earn: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&q=80",
+  earn: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2d901fa27_Leonardo_Lightning_XL_Global_Digital_Commodity_Exchange_0.jpg",
   learn: "https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=600&q=80",
   build: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80",
   teach: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80",
