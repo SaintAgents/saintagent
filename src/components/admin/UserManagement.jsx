@@ -70,12 +70,14 @@ export default function UserManagement() {
     }
   };
 
-  const handleAdjustGGG = (profile, amount) => {
-    const newBalance = (profile.ggg_balance || 0) + amount;
-    updateProfileMutation.mutate({
-      id: profile.id,
-      data: { ggg_balance: Math.max(0, newBalance) }
+  const handleAdjustGGG = async (profile, amount) => {
+    const direction = amount >= 0 ? 'CREDIT' : 'DEBIT';
+    const absAmount = Math.abs(amount);
+    await base44.functions.invoke('walletEngine', {
+      action: 'adjustment',
+      payload: { user_id: profile.user_id, amount: absAmount, direction, memo: 'Admin adjustment' }
     });
+    await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
   };
 
   const handleProfileSave = () => {

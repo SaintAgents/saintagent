@@ -95,6 +95,20 @@ export default function CommandDeck() {
     enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
+
+  // Wallet (authoritative GGG balance)
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', profile?.user_id],
+    queryFn: async () => {
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'getWallet',
+        payload: { user_id: profile.user_id },
+      });
+      return data;
+    },
+    enabled: !!profile?.user_id,
+  });
+  const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
 
@@ -473,7 +487,7 @@ export default function CommandDeck() {
                 {/* Stats Bar */}
                 <div className="bg-violet-50 text-neutral-950 mb-4 p-3 opacity-100 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50">
                   <div className="text-center">
-                    <p className="text-lg font-bold text-violet-700">{profile?.ggg_balance?.toLocaleString() || "0"}</p>
+                    <p className="text-lg font-bold text-violet-700">{walletAvailable?.toLocaleString?.() || "0"}</p>
                     <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG
 ?
 
@@ -684,7 +698,7 @@ export default function CommandDeck() {
                     <p className="text-xs font-medium uppercase tracking-wider text-amber-200">GGG</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">
-                    {profile?.ggg_balance?.toLocaleString() || "0"}
+                    {walletAvailable?.toLocaleString?.() || "0"}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <TrendingUp className="w-3 h-3 text-emerald-300" />

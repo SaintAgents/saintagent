@@ -39,6 +39,20 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   });
   const profile = profiles?.[0];
 
+  // Wallet for this user (authoritative GGG)
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', userId],
+    queryFn: async () => {
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'getWallet',
+        payload: { user_id: userId },
+      });
+      return data;
+    },
+    enabled: !!userId,
+  });
+  const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
+
   const { data: listings = [] } = useQuery({
     queryKey: ['userListings', userId],
     queryFn: () => base44.entities.Listing.filter({ owner_id: userId }),
@@ -233,7 +247,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="text-center p-3 rounded-xl bg-slate-50">
               <Coins className="w-5 h-5 text-amber-500 mx-auto mb-1" />
-              <p className="text-xl font-bold text-slate-900">{profile.ggg_balance || 0}</p>
+              <p className="text-xl font-bold text-slate-900">{walletAvailable || 0}</p>
               <p className="text-xs text-slate-500">GGG</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-slate-50">
