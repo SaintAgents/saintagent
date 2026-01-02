@@ -1,6 +1,8 @@
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, Square } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { createPageUrl } from "@/utils";
 
 const ACTIONS = [
   { label: "Follow 5 leaders", reward: 0.03 },

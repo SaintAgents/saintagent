@@ -20,6 +20,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
+import ProjectOnboard from './pages/ProjectOnboard';
 import __Layout from './Layout.jsx';
 
 
@@ -46,6 +47,7 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
+    "ProjectOnboard": ProjectOnboard,
 }
 
 export const pagesConfig = {
