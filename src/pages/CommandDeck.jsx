@@ -802,16 +802,7 @@ export default function CommandDeck() {
                   <p className="text-2xl font-bold text-slate-900">1,247</p>
                 </div>
                 <div className="h-8 w-px bg-slate-200" />
-                <button
-                  onClick={() => setOnlineUsersOpen(true)}
-                  className="text-left hover:opacity-80 transition-opacity">
 
-                  <p className="text-xs text-slate-500 mb-1">Online Now</p>
-                  <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    342
-                  </p>
-                </button>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-right">

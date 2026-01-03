@@ -15,6 +15,7 @@ import {
   Zap,
   Coins,
   TrendingUp,
+  Users,
   HelpCircle,
   Clock,
   ArrowRight,
@@ -26,7 +27,7 @@ import {
   ArrowDownRight,
   Activity,
   List } from
-"lucide-react";
+  "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
@@ -428,7 +429,17 @@ export default function SidePanel({
             </div>
           </CollapsibleCard>
 
-          {/* Today's Schedule */}
+          <CollapsibleCard title="Online Now" icon={Users}>
+            <div className="p-4 rounded-xl bg-slate-50 border">
+              <p className="text-xs text-slate-500 mb-1">Online Now</p>
+              <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                342
+              </p>
+            </div>
+          </CollapsibleCard>
+
+           {/* Today's Schedule */}
           <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
             <div className="space-y-2">
               {meetings.length === 0 ?
