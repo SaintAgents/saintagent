@@ -998,14 +998,8 @@ export default function CommandDeck() {
                 </div>
               </div>
             </div>
-          </div>
 
-              </div>
-
-            </div>
-          </div>
-
-              {/* Main Grid */}
+          {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
