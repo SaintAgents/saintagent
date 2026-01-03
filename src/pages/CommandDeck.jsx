@@ -419,7 +419,7 @@ export default function CommandDeck() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
+    <div className="min-h-screen bg-transparent">
       <div className={cn(
         "transition-all duration-300 pb-8",
         sidePanelOpen ? "pr-80" : "pr-0"
