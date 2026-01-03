@@ -124,7 +124,7 @@ export default function ProjectCSVImport() {
         <Button variant="outline" size="sm" onClick={downloadTemplate} className="bg-purple-100 text-zinc-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8">Download Template</Button>
       </div>
       <p className="text-sm text-slate-600">Upload a CSV matching the template to bulk onboard projects.</p>
-      <Input type="file" accept=".csv,text/csv" onChange={(e) => setFile(e.target.files?.[0] || null)} className="rounded-xl" />
+      <Input type="file" accept=".csv,text/csv" onChange={(e) => setFile(e.target.files?.[0] || null)} className="bg-purple-50 text-gray-400 px-3 py-1 text-base rounded-xl flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
       <div className="flex gap-2 items-center flex-wrap">
         <Button onClick={handleImport} disabled={!file || importing} className="bg-violet-600 hover:bg-violet-700 rounded-xl">
           {importing ? "Importing..." : "Import"}
