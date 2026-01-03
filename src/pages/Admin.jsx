@@ -11,7 +11,6 @@ import LeaderApplications from '@/components/admin/LeaderApplications';
 import PlatformSettings from '@/components/admin/PlatformSettings';
 import AdminProjects from '@/components/admin/AdminProjects';
 import ReferralDatasets from '@/components/admin/ReferralDatasets';
-import AdminStats from '@/components/admin/AdminStats';
 
 export default function Admin() {
   const { data: user } = useQuery({
