@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import {
   Search,
   Sparkles,
@@ -26,6 +28,11 @@ import DatingTab from '@/components/dating/DatingTab';
 export default function Matches() {
   const [tab, setTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [valuesQuery, setValuesQuery] = useState('');
+  const [practicesQuery, setPracticesQuery] = useState('');
+  const [scoreRange, setScoreRange] = useState([0, 100]);
+  const [proximity, setProximity] = useState('any'); // 'any' | 'nearby' | 'far'
+  const [sortBy, setSortBy] = useState('match'); // 'match' | 'proximity' | 'lastActive'
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -43,10 +50,38 @@ export default function Matches() {
 
   const filteredMatches = matches.filter((m) => {
     const matchesTab = tab === 'all' || m.target_type === tab;
-    const matchesSearch = !searchQuery ||
-    m.target_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    m.target_subtitle?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
+    const q = (searchQuery || '').toLowerCase();
+    const matchesSearch = !q ||
+      (m.target_name || '').toLowerCase().includes(q) ||
+      (m.target_subtitle || '').toLowerCase().includes(q);
+
+    const vq = (valuesQuery || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+    const pq = (practicesQuery || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+    const starters = (m.conversation_starters || []).map(s => (s || '').toLowerCase());
+    const valuesOk = vq.length === 0 || vq.some(tok => starters.some(s => s.includes(tok)));
+    const practicesOk = pq.length === 0 || pq.some(tok => starters.some(s => s.includes(tok)));
+
+    const scoreOk = (m.match_score || 0) >= (scoreRange[0] ?? 0) && (m.match_score || 0) <= (scoreRange[1] ?? 100);
+    const proximityOk = proximity === 'any' ? true : (
+      proximity === 'nearby' ? (m.proximity_score || 0) >= 50 : (m.proximity_score || 0) < 50
+    );
+
+    return matchesTab && matchesSearch && valuesOk && practicesOk && scoreOk && proximityOk;
+  });
+
+  const sortedMatches = [...filteredMatches].sort((a, b) => {
+    if (sortBy === 'proximity') {
+      const d = (b.proximity_score || 0) - (a.proximity_score || 0);
+      if (d !== 0) return d;
+      return (b.match_score || 0) - (a.match_score || 0);
+    }
+    if (sortBy === 'lastActive') {
+      const d = (b.timing_readiness || 0) - (a.timing_readiness || 0);
+      if (d !== 0) return d;
+      return (b.match_score || 0) - (a.match_score || 0);
+    }
+    // default: match score
+    return (b.match_score || 0) - (a.match_score || 0);
   });
 
   const handleAction = async (action, match) => {
@@ -104,6 +139,51 @@ export default function Matches() {
 
         </div>
 
+        {/* Filters */}
+        <div className="bg-white rounded-xl border p-4 mb-6">
+          <div className="grid gap-3 md:grid-cols-6">
+            <Input
+              placeholder="Filter by values (e.g., compassion, integrity)"
+              value={valuesQuery}
+              onChange={(e) => setValuesQuery(e.target.value)}
+              className="md:col-span-2"
+            />
+            <Input
+              placeholder="Filter by practices (e.g., meditation, yoga)"
+              value={practicesQuery}
+              onChange={(e) => setPracticesQuery(e.target.value)}
+              className="md:col-span-2"
+            />
+            <div className="md:col-span-2">
+              <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                <span>Match score</span>
+                <span>{scoreRange[0]}–{scoreRange[1]}%</span>
+              </div>
+              <Slider value={scoreRange} min={0} max={100} step={1} onValueChange={setScoreRange} />
+            </div>
+            <Select value={proximity} onValueChange={setProximity}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Proximity" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any Proximity</SelectItem>
+                <SelectItem value="nearby">Same Region</SelectItem>
+                <SelectItem value="far">Other Regions</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="match">Sort: Match Score</SelectItem>
+                <SelectItem value="proximity">Sort: Proximity</SelectItem>
+                <SelectItem value="lastActive">Sort: Last Active</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
           <TabsList className="w-full grid grid-cols-7 h-12 bg-white rounded-xl border">
@@ -148,7 +228,7 @@ export default function Matches() {
           <div key={i} className="h-48 bg-white rounded-xl animate-pulse" />
           )}
           </div> :
-        filteredMatches.length === 0 ?
+        sortedMatches.length === 0 ?
         <div className="text-center py-16">
             <Sparkles className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No matches found</h3>
@@ -159,7 +239,7 @@ export default function Matches() {
           </div> :
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredMatches.map((match) =>
+            {sortedMatches.map((match) =>
           <MatchCard
             key={match.id}
             match={match}
