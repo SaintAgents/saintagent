@@ -196,7 +196,7 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const dailyGGG = (dailyLog?.completed || []).reduce((s, c) => s + (Number(c.ggg_earned) || 0), 0);
 
   // Free-form positions for cards (local state)
-  const [cardPositions, setCardPositions] = useState({
+  const DEFAULT_POSITIONS = {
     quick: { x: 0, y: 0 },
     checklist: { x: 420, y: 0 },
     inbox: { x: 840, y: 0 },
@@ -210,7 +210,8 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
     influence: { x: 420, y: 780 },
     leaderC: { x: 840, y: 780 },
     dailyops: { x: 0, y: 1040 },
-  });
+  };
+  const [cardPositions, setCardPositions] = useState(DEFAULT_POSITIONS);
 
   // Load/save layout (per device via localStorage)
   useEffect(() => {
@@ -224,6 +225,22 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   }, [cardPositions]);
 
   const move = (key) => (pos) => setCardPositions((s) => ({ ...s, [key]: pos }));
+
+  const savePreset = () => {
+    try { localStorage.setItem('cmdDeckLayout_preset', JSON.stringify(cardPositions)); } catch {}
+  };
+  const resetLayout = () => {
+    try {
+      const raw = localStorage.getItem('cmdDeckLayout_preset');
+      if (raw) {
+        setCardPositions(JSON.parse(raw));
+      } else {
+        setCardPositions(DEFAULT_POSITIONS);
+      }
+    } catch {
+      setCardPositions(DEFAULT_POSITIONS);
+    }
+  };
 
   const filteredMatches = matches.filter((m) =>
   matchTab === 'people' ? m.target_type === 'person' :
@@ -463,7 +480,6 @@ useEffect(() => {
                 <Button
                   className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
                   onClick={() => setQuickCreateOpen(true)}>
-
                   <Plus className="w-4 h-4" />
                   Quick Create
                 </Button>
@@ -473,6 +489,20 @@ useEffect(() => {
                   onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}
                 >
                   Add Project
+                </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={resetLayout}
+                >
+                  Reset Layout
+                </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={savePreset}
+                >
+                  Save Preset
                 </Button>
               </div>
             </div>
@@ -1007,7 +1037,9 @@ useEffect(() => {
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
               onPopout={() => setQuickStartPopupOpen(true)}>
-              <QuickStartChecklist />
+              <div className="bg-green-50 dark:bg-green-200/40 rounded-xl p-3">
+                <QuickStartChecklist />
+              </div>
             </CollapsibleCard>
           </FreeDraggable>
 
@@ -1067,7 +1099,7 @@ useEffect(() => {
                   <TabsTrigger value="events" className="text-xs">Events</TabsTrigger>
                   <TabsTrigger value="teachers" className="text-xs">Teachers</TabsTrigger>
                 </TabsList>
-                <div className="space-y-3">
+                <div className="space-y-3 overflow-hidden break-words">
                   {filteredMatches.length === 0 ? (
                     <div className="text-center py-8">
                       <Sparkles className="w-10 h-10 text-slate-300 mx-auto mb-3" />
