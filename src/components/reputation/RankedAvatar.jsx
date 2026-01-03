@@ -103,14 +103,21 @@ export default function RankedAvatar({
   userId,
   className = '',
   status,
+  showPhotoIcon = false,
+  galleryImages = [],
 }) {
-  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  
+  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || (showPhotoIcon && galleryImages.length === 0));
   const { data: fetched = [] } = useQuery({
     queryKey: ['rankedAvatarProfile', userId],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: !!needsFetch,
   });
   const fetchedProfile = fetched?.[0];
+  
+  // Combine gallery images from props or fetched profile
+  const allImages = [src, ...(galleryImages.length > 0 ? galleryImages : (fetchedProfile?.gallery_images || []))].filter(Boolean).slice(0, 5);
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
