@@ -788,6 +788,11 @@ export default function SidePanel({
                       {item.description &&
                       <p className="text-xs text-slate-600 mt-1">{item.description}</p>
                       }
+                      {isTrust && item.metrics && (
+                        <p className="text-[11px] text-slate-500 mt-1">
+                          Metrics: {Object.entries(item.metrics).map(([k, v]) => `${k}: ${v}`).join(', ')}
+                        </p>
+                      )}
                       <p className="text-[11px] text-slate-400 mt-1">
                         {format(parseISO(item.created_date), 'MMM d, h:mm a')}
                       </p>
