@@ -1031,13 +1031,12 @@ export default function Profile() {
 
       </div>
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
-      </div>
       <PhotoViewer
         open={viewerOpen}
         images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0,5)}
         startIndex={0}
         onClose={() => setViewerOpen(false)}
       />
-      </div>);
-
-      }
+    </div>
+  );
+}
