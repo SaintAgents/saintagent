@@ -1004,6 +1004,7 @@ useEffect(() => {
                 </Button>
               </div>
             </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Quick Start Checklist */}
             <CollapsibleCard
@@ -1015,6 +1016,7 @@ useEffect(() => {
 
               <QuickStartChecklist />
             </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Inbox & Signals */}
             <CollapsibleCard
@@ -1027,6 +1029,7 @@ useEffect(() => {
 
                                 <InboxSignals notifications={notifications} />
                               </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Circles & Regions */}
             <CollapsibleCard
@@ -1038,6 +1041,7 @@ useEffect(() => {
 
                                 <CirclesRegions />
                               </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Leader Pathway */}
             <CollapsibleCard
@@ -1048,6 +1052,7 @@ useEffect(() => {
 
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
+            </FreeDraggable>
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
@@ -1097,6 +1102,7 @@ useEffect(() => {
                 </div>
               </Tabs>
             </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Meetings & Momentum */}
             <CollapsibleCard
@@ -1127,6 +1133,7 @@ useEffect(() => {
                 }
               </div>
             </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Missions & Quests */}
             <CollapsibleCard
@@ -1158,6 +1165,7 @@ useEffect(() => {
                 }
               </div>
             </CollapsibleCard>
+            </FreeDraggable>
 
             {/* Projects */}
             <CollapsibleCard
@@ -1213,6 +1221,7 @@ useEffect(() => {
                 <Button variant="ghost" className="w-full mt-3 text-violet-600">View more</Button>
               )}
             </CollapsibleCard>
+            </FreeDraggable>
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
@@ -1269,6 +1278,7 @@ useEffect(() => {
                                 </TabsContent>
                               </Tabs>
                             </CollapsibleCard>
+            </FreeDraggable>
                           )}
 
                           {id === 'influence' && (
@@ -1312,6 +1322,7 @@ useEffect(() => {
                                 </div>
                               </div>
                             </CollapsibleCard>
+            </FreeDraggable>
                           )}
 
                           {id === 'leader' && (
@@ -1339,6 +1350,7 @@ useEffect(() => {
                                 </Button>
                               </div>
                             </CollapsibleCard>
+            </FreeDraggable>
                           )}
 
                           {id === 'dailyops' && (
@@ -1364,6 +1376,7 @@ useEffect(() => {
                                 </Button>
                               </div>
                             </CollapsibleCard>
+            </FreeDraggable>
                           )}
                         </div>
                       )}
