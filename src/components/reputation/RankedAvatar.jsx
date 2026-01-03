@@ -128,6 +128,13 @@ export default function RankedAvatar({
   const basePad = cfg.pad; // thickness tuned for 96px
   const padPx = Math.max(2, Math.round((basePad / 96) * size));
   const gradient = `linear-gradient(135deg, ${cfg.grad[0]}, ${cfg.grad[1]})`;
+  // Overlay sizes scale with avatar size
+  const symbolPx = Math.max(10, Math.round(size * 0.18));
+  const rankIconSize = Math.max(8, Math.round(symbolPx * 0.65));
+  const statusPx = Math.max(6, Math.round(size * 0.18));
+  const statusBorder = Math.max(1, Math.round(size * 0.03));
+  const leaderPx = Math.max(12, Math.round(size * 0.26));
+  const leaderIconPx = Math.max(8, Math.round(leaderPx * 0.55));
 
   return (
     <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
@@ -137,8 +144,8 @@ export default function RankedAvatar({
       >
         <div className="rounded-full bg-white p-1 relative">
           {/* Rank symbol top-left */}
-          <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow" style={{ border: '1px solid rgba(255,255,255,0.6)' }}>
-            <RankSymbol code={rpRankCodeFinal} size={12} color="#ffffff" />
+          <div className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow" style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}>
+            <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
           </div>
           <div className="w-full h-full rounded-full overflow-hidden">
             {src ? (
@@ -154,13 +161,14 @@ export default function RankedAvatar({
 
       {/* Status dot (bottom-left) */}
                   <div
-                    className={`absolute -bottom-1 -left-1 w-4 h-4 rounded-full border-2 border-white ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+                    className={`absolute -bottom-1 -left-1 rounded-full ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+                    style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
                     title={statusFinal || 'online'}
                   />
 
                   {leaderTierFinal === 'verified144k' && (
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
-                      <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                    <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md" style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}>
+                      <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
                     </div>
                   )}
     </div>
