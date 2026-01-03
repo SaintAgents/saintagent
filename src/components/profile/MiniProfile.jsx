@@ -69,7 +69,7 @@ export default function MiniProfile({
   return (
     <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
       <div
-        onClick={() => setViewerOpen(true)}
+        onClick={(e) => { e.stopPropagation(); setViewerOpen(true); }}
         className="cursor-pointer"
         title="View photos"
       >
