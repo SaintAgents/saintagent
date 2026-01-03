@@ -211,7 +211,7 @@ export default function MatchCard({ match, onAction }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mt-4">
+      <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 mt-4">
         <Button
           size="sm"
           className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg h-9"
