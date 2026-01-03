@@ -163,12 +163,16 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   const handleStatusChange = async (status) => {
     if (profile) {
       await base44.entities.UserProfile.update(profile.id, { status });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
     }
   };
 
   const handleDMPolicyChange = async (dm_policy) => {
     if (profile) {
       await base44.entities.UserProfile.update(profile.id, { dm_policy });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
     }
   };
 

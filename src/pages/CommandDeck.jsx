@@ -547,7 +547,7 @@ export default function CommandDeck() {
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={rpPoints}
                   userId={profile?.user_id}
-                  status={profile?.status} />
+                  status={profile?.status || 'offline'} />
 
               </div>
 
