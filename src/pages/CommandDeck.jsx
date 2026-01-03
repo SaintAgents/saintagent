@@ -195,17 +195,35 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const dailyInProgress = dailyLog?.in_progress?.length || 0;
   const dailyGGG = (dailyLog?.completed || []).reduce((s, c) => s + (Number(c.ggg_earned) || 0), 0);
 
-  // Drag-and-drop ordering (Column C)
-  const [colCOrder, setColCOrder] = useState(['market', 'influence', 'leader', 'dailyops']);
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
-    if (result.source.droppableId === 'colC' && result.destination.droppableId === 'colC') {
-      const items = Array.from(colCOrder);
-      const [removed] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, removed);
-      setColCOrder(items);
-    }
-  };
+  // Free-form positions for cards (local state)
+  const [cardPositions, setCardPositions] = useState({
+    quick: { x: 0, y: 0 },
+    checklist: { x: 420, y: 0 },
+    inbox: { x: 840, y: 0 },
+    circles: { x: 0, y: 260 },
+    leader: { x: 420, y: 260 },
+    sync: { x: 840, y: 260 },
+    meetings: { x: 0, y: 520 },
+    missions: { x: 420, y: 520 },
+    projects: { x: 840, y: 520 },
+    market: { x: 0, y: 780 },
+    influence: { x: 420, y: 780 },
+    leaderC: { x: 840, y: 780 },
+    dailyops: { x: 0, y: 1040 },
+  });
+
+  // Load/save layout (per device via localStorage)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('cmdDeckLayout_v1');
+      if (raw) setCardPositions(JSON.parse(raw));
+    } catch {}
+  }, []);
+  useEffect(() => {
+    try { localStorage.setItem('cmdDeckLayout_v1', JSON.stringify(cardPositions)); } catch {}
+  }, [cardPositions]);
+
+  const move = (key) => (pos) => setCardPositions((s) => ({ ...s, [key]: pos }));
 
   const filteredMatches = matches.filter((m) =>
   matchTab === 'people' ? m.target_type === 'person' :
