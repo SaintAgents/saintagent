@@ -216,13 +216,13 @@ export default function Messages() {
           </div>
         </div>
         <ScrollArea className="flex-1">
-          <div className="pr-8">
+          <div className="pr-12">
           {convList.map((conv) =>
             <div key={conv.id} className="relative group">
               <button
                 onClick={() => setSelectedConversation(conv)}
                 className={cn(
-                  "w-full flex items-start gap-3 p-4 pr-20 hover:bg-slate-50 transition-colors border-b",
+                  "w-full flex items-start gap-3 p-4 pr-24 hover:bg-slate-50 transition-colors border-b",
                   selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
                 )}>
 
@@ -242,7 +242,7 @@ export default function Messages() {
                 </div>
                 <p className="text-sm text-slate-500 truncate">{conv.lastMessage.content}</p>
                 {conv.unreadCount > 0 &&
-                  <span className="inline-block mt-1 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
+                  <span className="inline-block mt-1 mr-16 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
                     {conv.unreadCount}
                   </span>
                   }
@@ -251,7 +251,7 @@ export default function Messages() {
                 <Button
                 size="sm"
                 variant="ghost"
-                className="absolute right-3 top-3 z-20 pointer-events-auto opacity-100 transition-opacity text-xs gap-1"
+                className="absolute right-5 top-2 z-20 pointer-events-auto opacity-100 transition-opacity text-xs gap-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   console.log('Row popup clicked', conv.otherUser);
