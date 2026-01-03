@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import HelpHint from "@/components/hud/HelpHint";
 import { createPageUrl } from "@/utils";
 
 export default function ProjectCreate() {
@@ -45,7 +46,58 @@ export default function ProjectCreate() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Add Project</h1>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">Add Project
+            <HelpHint
+              content={(
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-1">How to Evaluate Project Impact</h3>
+                  <p className="text-slate-700 mb-2">Understanding Industrial Value vs. Humanitarian Score. These are independent dimensions; score each honestly before any ethical weighting is applied.</p>
+                  <ol className="list-decimal pl-5 space-y-2">
+                    <li>
+                      <strong>Industrial Value (0.0–10.0)</strong>
+                      <div className="mt-1 text-slate-700">
+                        <div className="font-medium">What it measures:</div>
+                        <div>Economic strength, operational advantage, and long-term resilience.</div>
+                        <div className="font-medium mt-1">Consider:</div>
+                        <ul className="list-disc pl-5">
+                          <li>Revenue, cost reduction, funding/market unlocks</li>
+                          <li>Scalability, IP/systems created</li>
+                          <li>Strategic advantage, supplier resilience, stability</li>
+                        </ul>
+                        <div className="mt-1 text-xs text-slate-500">Scale: 0–2.9 minimal • 3–4.9 limited • 5–6.9 solid • 7–8.9 strong • 9–10 transformational.</div>
+                      </div>
+                    </li>
+                    <li>
+                      <strong>Humanitarian Score (1–10)</strong>
+                      <div className="mt-1 text-slate-700">
+                        <div className="font-medium">What it measures:</div>
+                        <div>Impact on human well-being, equity, safety, and sustainability.</div>
+                        <div className="font-medium mt-1">Consider:</div>
+                        <ul className="list-disc pl-5">
+                          <li>Safety & health (risk reduction, prevention)</li>
+                          <li>Equity & inclusion (access, underserved groups)</li>
+                          <li>Sustainability & long-term stewardship</li>
+                        </ul>
+                        <div className="mt-1 text-xs text-rose-600">Ethical floor: scores below 4 are flagged for review.</div>
+                      </div>
+                    </li>
+                    <li>
+                      <strong>Keep Scores Separate</strong>
+                      <div>Industrial uses decimals; Humanitarian uses whole numbers for moral clarity.</div>
+                    </li>
+                    <li>
+                      <strong>Guidance</strong>
+                      <ul className="list-disc pl-5">
+                        <li>Don’t offset one score to compensate the other</li>
+                        <li>Score what is, not hopes</li>
+                        <li>Ask: would I defend this publicly if weights were reversed?</li>
+                      </ul>
+                    </li>
+                  </ol>
+                </div>
+              )}
+            />
+          </h1>
           <p className="text-slate-600 mt-1">Create a single project for ethical review.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-5 bg-white p-6 rounded-2xl border border-slate-200">
@@ -63,11 +115,43 @@ export default function ProjectCreate() {
               <Input type="number" step="0.01" value={form.budget} onChange={(e) => update("budget", e.target.value)} placeholder="0" className="mt-1" />
             </div>
             <div>
-              <Label className="text-sm">Industrial Value</Label>
+              <Label className="text-sm flex items-center gap-1">Industrial Value
+                <HelpHint
+                  content={(
+                    <div>
+                      <h4 className="font-semibold text-slate-900 mb-1">Industrial Value (0.0–10.0)</h4>
+                      <p className="mb-2">Economic viability and strategic strength.</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Revenue impact, cost reduction, new funding/markets</li>
+                        <li>Scalability, replicability, creation of IP/systems</li>
+                        <li>Strategic advantage, resilience, vendor independence</li>
+                      </ul>
+                      <p className="text-xs mt-2">0–2.9 minimal • 3–4.9 limited • 5–6.9 solid • 7–8.9 strong • 9–10 transformational</p>
+                      <p className="text-xs text-slate-500 mt-1">High industrial value ≠ automatic approval.</p>
+                    </div>
+                  )}
+                />
+              </Label>
               <Input type="number" step="0.01" value={form.industrial_value} onChange={(e) => update("industrial_value", e.target.value)} placeholder="0" className="mt-1" />
             </div>
             <div>
-              <Label className="text-sm">Humanitarian Score (1-10)</Label>
+              <Label className="text-sm flex items-center gap-1">Humanitarian Score (1-10)
+                <HelpHint
+                  content={(
+                    <div>
+                      <h4 className="font-semibold text-slate-900 mb-1">Humanitarian Score (1–10)</h4>
+                      <p className="mb-2">Impact on well-being, equity, safety, and sustainability. No zero allowed.</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Safety & health (risk reduction, prevention)</li>
+                        <li>Equity & inclusion (access, underserved populations)</li>
+                        <li>Sustainability & long-term benefit vs. burden</li>
+                      </ul>
+                      <p className="text-xs mt-2">1–2 weak • 3 marginal • 4 minimum ethical floor • 5–6 clear positive • 7–8 strong • 9–10 life-improving at scale</p>
+                      <p className="text-xs text-rose-600 mt-1">Scores &lt; 4 are auto-flagged for ethical review.</p>
+                    </div>
+                  )}
+                />
+              </Label>
               <Input type="number" min="1" max="10" step="1" value={form.humanitarian_score} onChange={(e) => update("humanitarian_score", e.target.value)} placeholder="8" className="mt-1" />
             </div>
           </div>

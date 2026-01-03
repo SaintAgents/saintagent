@@ -13,7 +13,7 @@ export default function HelpHint({ content, side = 'top', align = 'center', clas
           ?
         </button>
       </PopoverTrigger>
-      <PopoverContent side={side} align={align} className="max-w-xs text-slate-700 text-sm">
+      <PopoverContent side={side} align={align} className="max-w-lg max-h-96 overflow-auto text-slate-700 text-sm">
         {typeof content === 'string' ? <p>{content}</p> : content}
       </PopoverContent>
     </Popover>
