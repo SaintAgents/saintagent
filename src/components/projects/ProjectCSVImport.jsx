@@ -44,7 +44,25 @@ export default function ProjectCSVImport() {
     setResult(null);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: { type: 'object', additionalProperties: true } });
+      const jsonSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    additionalProperties: true,
+    properties: {
+      title: { type: 'string' },
+      description: { type: 'string' },
+      budget: { anyOf: [{ type: 'number' }, { type: 'string' }] },
+      industrial_value: { anyOf: [{ type: 'number' }, { type: 'string' }] },
+      humanitarian_score: { anyOf: [{ type: 'number' }, { type: 'string' }] },
+      status: { type: 'string' },
+      impact_tags: { type: 'string' },
+      strategic_intent: { type: 'string' },
+      negative_environmental_impact: { anyOf: [{ type: 'boolean' }, { type: 'string' }, { type: 'number' }] }
+    }
+  }
+};
+const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
       if (extract.status !== "success" || !extract.output) {
         throw new Error(extract.details || "Failed to parse CSV");
       }

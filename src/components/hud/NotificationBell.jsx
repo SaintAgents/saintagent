@@ -86,16 +86,7 @@ export default function NotificationBell({ notifications = [], onAction }) {
               Clear all
             </Button>
           </div>
-            {notifications.length > 0 && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-xs h-7 text-rose-600 hover:text-rose-700"
-                onClick={() => onAction?.('clearAll')}
-              >
-                Clear all
-              </Button>
-            )}
+            
           </div>
         </div>
         <ScrollArea className="h-96">
