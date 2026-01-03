@@ -332,7 +332,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         }
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
           background-color: #0b1220 !important;
-          background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0ea2a3ef3_9426c871-d540-4f5f-8354-f72ac2015cc0.jpg');
+          background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c65131845_gemini-25-flash-image_merge_the_shield_into_the_center-0.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
@@ -384,7 +384,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
       <style>{`
         /* Light theme background for Command Deck */
         [data-theme='light'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1080d86cb_Overheadbirds-eyeviewIsekaianimestyleofawhiteandgoldcircuitboardwithpurplenodesandlightgraysmokeExpressivecompositiontop-downperspective.jpg');
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c65131845_gemini-25-flash-image_merge_the_shield_into_the_center-0.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
@@ -392,7 +392,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         /* Dark theme background for Command Deck */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1080d86cb_Overheadbirds-eyeviewIsekaianimestyleofawhiteandgoldcircuitboardwithpurplenodesandlightgraysmokeExpressivecompositiontop-downperspective.jpg');
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c65131845_gemini-25-flash-image_merge_the_shield_into_the_center-0.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
