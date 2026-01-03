@@ -448,19 +448,13 @@ export default function CommandDeck() {
                   <Plus className="w-4 h-4" />
                   Quick Create
                 </Button>
-                <Button
-                  variant="outline"
-                  className="rounded-xl"
-                  onClick={() => {window.location.href = createPageUrl('ProjectCreate');}}>
 
-                  Add Project
-                </Button>
               </div>
             </div>
           </div>
 
           {/* Profile Identifiers */}
-          <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
+          <div className="mb-6 p-6 rounded-2xl bg-transparent">
             <div className="flex items-start gap-6">
               <div className="relative shrink-0">
                 <div
@@ -947,7 +941,7 @@ export default function CommandDeck() {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="hidden">
+          <div className="block">
             {/* Command Summary */}
             <CollapsibleCard
               title="Quick Actions"
@@ -1031,7 +1025,7 @@ export default function CommandDeck() {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="hidden">
+          <div className="block">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
@@ -1196,7 +1190,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="hidden">
+          <div className="block">
             <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="colC">
               {(provided) =>
