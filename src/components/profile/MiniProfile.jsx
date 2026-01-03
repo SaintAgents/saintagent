@@ -70,9 +70,17 @@ export default function MiniProfile({
     <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
       <div
         onClick={(e) => { e.stopPropagation(); setViewerOpen(true); }}
-        className="cursor-pointer"
+        className="cursor-pointer relative group"
         title="View photos"
       >
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); window.location.href = createPageUrl('Profile') + (userId ? `?id=${encodeURIComponent(userId)}` : ''); }}
+          title="Open full profile"
+          className="absolute -top-1 -right-1 z-10 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white border border-slate-200 shadow hover:bg-slate-50"
+        >
+          <ExternalLink className="w-3.5 h-3.5 text-slate-600" />
+        </button>
         <RankedAvatar
           src={avatar || profile?.avatar_url}
           name={displayName}
