@@ -30,7 +30,10 @@ export default function MiniProfile({
   size = 40,
   showName = true,
   showHandle = true,
-  className
+  className,
+  showRankBadge = true,
+  showTrustBadge = true,
+  showReachBadge = true
 }) {
   const [viewerOpen, setViewerOpen] = React.useState(false);
   const { data: profs = [] } = useQuery({
