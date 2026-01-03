@@ -250,6 +250,15 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
     setCardPositions(next);
   };
 
+  // Repack after sizes known (ensures no overlaps)
+  useEffect(() => {
+    if (!Object.keys(cardSizes).length) return;
+    if (needAutoPack) {
+      autoArrange();
+      setNeedAutoPack(false);
+    }
+  }, [cardSizes, needAutoPack]);
+
   const resetLayout = () => {
     try {
       const raw = localStorage.getItem('cmdDeckLayout_preset');
