@@ -941,7 +941,7 @@ export default function CommandDeck() {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="block">
+          <div className="hidden">
             {/* Command Summary */}
             <CollapsibleCard
               title="Quick Actions"
@@ -1025,7 +1025,7 @@ export default function CommandDeck() {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="block">
+          <div className="hidden">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
@@ -1190,7 +1190,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="block">
+          <div className="hidden">
             <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="colC">
               {(provided) =>
