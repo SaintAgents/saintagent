@@ -33,7 +33,6 @@ export default function MiniProfile({
   showTrustBadge = true,
   showReachBadge = true
 }) {
-  const [viewerOpen, setViewerOpen] = React.useState(false);
   const { data: profs = [] } = useQuery({
     queryKey: ['miniProfile', userId],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
