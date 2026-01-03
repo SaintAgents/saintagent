@@ -1,4 +1,5 @@
 import React from 'react';
+import { base44 } from '@/api/base44Client';
 import { 
   Dialog,
   DialogContent,
@@ -30,6 +31,8 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
     description: '',
     image_url: ''
   });
+  const [uploading, setUploading] = React.useState(false);
+  const [localFile, setLocalFile] = React.useState(null);
 
   React.useEffect(() => {
     if (!open) {
@@ -156,13 +159,31 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
           </div>
 
           <div>
-            <Label>Image URL (optional)</Label>
-            <Input
-              className="mt-2"
-              placeholder="https://..."
-              value={form.image_url}
-              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-            />
+            <Label>Cover Image</Label>
+            <div className="mt-2 grid grid-cols-1 gap-3">
+              {form.image_url && (
+                <div className="rounded-lg border p-2 bg-slate-50">
+                  <img src={form.image_url} alt="Cover" className="w-full h-40 object-cover rounded" />
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <Input type="file" accept="image/*" onChange={(e) => setLocalFile(e.target.files?.[0] || null)} />
+                <Button type="button" variant="outline" disabled={!localFile || uploading} onClick={async () => {
+                  if (!localFile) return;
+                  setUploading(true);
+                  const res = await base44.integrations.Core.UploadFile({ file: localFile });
+                  const url = res?.file_url;
+                  if (url) setForm({ ...form, image_url: url });
+                  setUploading(false);
+                }}>
+                  {uploading ? 'Uploading…' : 'Upload'}
+                </Button>
+              </div>
+              <div>
+                <Label className="text-xs text-slate-500">Or paste image URL</Label>
+                <Input className="mt-1" placeholder="https://..." value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
