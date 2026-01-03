@@ -26,10 +26,16 @@ export default function QuickStartChecklist() {
         <Progress value={0} className="h-2" />
       </div>
       <div className="space-y-3">
-        {user?.role === 'admin' && (
+        {user?.role === 'admin' ? (
           <div className="flex justify-end">
             <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}>
               Import Projects (CSV)
+            </Button>
+          </div>
+        ) : (
+          <div className="flex justify-end">
+            <Button size="sm" className="rounded-lg bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
+              Add Project
             </Button>
           </div>
         )}
