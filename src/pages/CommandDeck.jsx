@@ -546,7 +546,8 @@ export default function CommandDeck() {
                   leaderTier={profile?.leader_tier}
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={rpPoints}
-                  userId={profile?.user_id} />
+                  userId={profile?.user_id}
+                  status={profile?.status} />
 
               </div>
 
