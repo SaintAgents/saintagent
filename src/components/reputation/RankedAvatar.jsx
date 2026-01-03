@@ -124,7 +124,11 @@ export default function RankedAvatar({
         className="rounded-full"
         style={{ padding: padPx, background: gradient }}
       >
-        <div className="rounded-full bg-white p-1">
+        <div className="rounded-full bg-white p-1 relative">
+          {/* Rank symbol top-left */}
+          <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow" style={{ border: '1px solid rgba(255,255,255,0.6)' }}>
+            <RankSymbol code={rpRankCodeFinal} size={12} color="#ffffff" />
+          </div>
           <div className="w-full h-full rounded-full overflow-hidden">
             {src ? (
               <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
