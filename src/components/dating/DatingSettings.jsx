@@ -17,7 +17,7 @@ export default function DatingSettings({ currentUser }) {
       const me = await base44.auth.me();
       return base44.entities.DatingProfile.filter({ user_id: me.email });
     },
-    enabled: !!currentUser?.email,
+    enabled: !!currentUser?.email
   });
   const existing = records?.[0];
 
@@ -30,7 +30,7 @@ export default function DatingSettings({ currentUser }) {
       communication: true,
       growth: true,
       lifestyle: true,
-      synchronicity: false,
+      synchronicity: false
     },
     core_values_ranked: existing?.core_values_ranked || [],
     life_priorities: existing?.life_priorities || [],
@@ -51,7 +51,7 @@ export default function DatingSettings({ currentUser }) {
     daily_rhythm: existing?.daily_rhythm || 'ambivert',
     work_life_balance: existing?.work_life_balance || 'balanced',
     health_lifestyle: existing?.health_lifestyle || '',
-    synchronicity_enabled: existing?.synchronicity_enabled ?? false,
+    synchronicity_enabled: existing?.synchronicity_enabled ?? false
   }));
 
   React.useEffect(() => {
@@ -59,7 +59,7 @@ export default function DatingSettings({ currentUser }) {
       setForm((f) => ({
         ...f,
         ...existing,
-        domains_enabled: { ...f.domains_enabled, ...(existing.domains_enabled || {}) },
+        domains_enabled: { ...f.domains_enabled, ...(existing.domains_enabled || {}) }
       }));
     }
   }, [existing?.id]);
@@ -80,10 +80,10 @@ export default function DatingSettings({ currentUser }) {
   const fromArray = (a) => (a || []).join(', ');
 
   return (
-    <div className="bg-white rounded-xl border p-4 space-y-4">
+    <div className="bg-violet-50 p-4 rounded-xl border space-y-4">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} />
+          <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} className="bg-purple-100 text-pink-300 rounded-full peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input" />
           <Label>Opt-in to Dating & Compatibility</Label>
         </div>
         <div className="flex items-center gap-2">
@@ -95,13 +95,13 @@ export default function DatingSettings({ currentUser }) {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-3">
           <Label>Core Values (comma-separated)</Label>
-          <Input value={fromArray(form.core_values_ranked)} onChange={(e) => setForm({ ...form, core_values_ranked: toArray(e.target.value) })} />
+          <Input value={fromArray(form.core_values_ranked)} onChange={(e) => setForm({ ...form, core_values_ranked: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
           <Label>Life Priorities (comma-separated)</Label>
-          <Input value={fromArray(form.life_priorities)} onChange={(e) => setForm({ ...form, life_priorities: toArray(e.target.value) })} />
+          <Input value={fromArray(form.life_priorities)} onChange={(e) => setForm({ ...form, life_priorities: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
           <Label>Dealbreakers (comma-separated)</Label>
-          <Input value={fromArray(form.dealbreakers)} onChange={(e) => setForm({ ...form, dealbreakers: toArray(e.target.value) })} />
+          <Input value={fromArray(form.dealbreakers)} onChange={(e) => setForm({ ...form, dealbreakers: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
           <Label>Ethical Boundaries (comma-separated)</Label>
-          <Input value={fromArray(form.ethical_boundaries)} onChange={(e) => setForm({ ...form, ethical_boundaries: toArray(e.target.value) })} />
+          <Input value={fromArray(form.ethical_boundaries)} onChange={(e) => setForm({ ...form, ethical_boundaries: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
         </div>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
@@ -177,7 +177,7 @@ export default function DatingSettings({ currentUser }) {
             </div>
           </div>
           <Label>Responsiveness Boundaries</Label>
-          <Input value={form.responsiveness_boundaries} onChange={(e) => setForm({ ...form, responsiveness_boundaries: e.target.value })} />
+          <Input value={form.responsiveness_boundaries} onChange={(e) => setForm({ ...form, responsiveness_boundaries: e.target.value })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
         </div>
       </div>
 
@@ -256,7 +256,7 @@ export default function DatingSettings({ currentUser }) {
 
       <div>
         <Label>Health & Lifestyle (optional)</Label>
-        <Textarea rows={2} value={form.health_lifestyle} onChange={(e) => setForm({ ...form, health_lifestyle: e.target.value })} />
+        <Textarea rows={2} value={form.health_lifestyle} onChange={(e) => setForm({ ...form, health_lifestyle: e.target.value })} className="bg-zinc-50 px-3 py-2 text-base rounded-md flex min-h-[60px] w-full border border-input shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
       </div>
 
       <div className="flex items-center gap-2">
@@ -265,8 +265,8 @@ export default function DatingSettings({ currentUser }) {
       </div>
 
       <div className="text-right">
-        <Button className="rounded-xl" onClick={() => upsert.mutate()}>Save Settings</Button>
+        <Button className="bg-purple-50 text-zinc-400 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow hover:bg-primary/90 h-9" onClick={() => upsert.mutate()}>Save Settings</Button>
       </div>
-    </div>
-  );
+    </div>);
+
 }
