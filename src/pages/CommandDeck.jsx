@@ -25,6 +25,7 @@ import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Folder, Search } from "lucide-react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import MetricTile from '@/components/hud/MetricTile';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -112,6 +113,55 @@ export default function CommandDeck() {
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
+
+        // Rank definitions for hover tooltips
+        const RANK_DEFS = {
+          seeker: {
+            short: "Exploring and learning",
+            full: "A Seeker is in the stage of exploration and discovery. They are engaging with the platform, learning its structure, and demonstrating curiosity and intent without yet applying consistent practice.",
+            core: "Awareness and entry"
+          },
+          initiate: {
+            short: "Committed participant",
+            full: "An Initiate has crossed the threshold from observation into commitment. They understand the fundamentals, follow established processes, and have begun intentional participation.",
+            core: "Commitment and learning"
+          },
+          adept: {
+            short: "Skilled and reliable",
+            full: "An Adept demonstrates growing competence and reliability. They can apply knowledge with consistency and are trusted to operate independently within defined boundaries.",
+            core: "Skill formation"
+          },
+          practitioner: {
+            short: "Consistent application",
+            full: "A Practitioner actively applies knowledge in real scenarios. Their actions are repeatable, grounded, and beneficial to others or the system as a whole.",
+            core: "Application and consistency"
+          },
+          master: {
+            short: "Proven authority",
+            full: "A Master has achieved a high level of proficiency and understanding. They produce dependable outcomes, uphold standards, and are recognized for their expertise.",
+            core: "Authority through mastery"
+          },
+          sage: {
+            short: "Wise guide",
+            full: "A Sage brings wisdom beyond execution. They understand context, consequences, and long-term impact, offering guidance that balances knowledge with discernment.",
+            core: "Wisdom and perspective"
+          },
+          oracle: {
+            short: "Insightful visionary",
+            full: "An Oracle possesses deep insight and foresight. They recognize patterns before they fully emerge and provide clarity that helps others navigate complexity and uncertainty.",
+            core: "Insight and vision"
+          },
+          ascended: {
+            short: "Integrated leadership",
+            full: "An Ascended individual operates from an elevated perspective. They integrate knowledge, wisdom, and responsibility, acting with alignment, restraint, and clarity.",
+            core: "Transcendence and integration"
+          },
+          guardian: {
+            short: "Trusted protector",
+            full: "A Guardian is entrusted with stewardship and protection of the system and its people. They uphold integrity, safeguard values, and act in service of the whole rather than self.",
+            core: "Protection and trust"
+          }
+        };
 
   // Onboarding progress
   const { data: onboardingRecords } = useQuery({
@@ -525,12 +575,37 @@ export default function CommandDeck() {
                             <div className="text-zinc-600 mt-2">
                               <div className="text-xs font-semibold text-slate-700 mb-1">Ranks key</div>
                               <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-600">
-                                {RP_LADDER.map((t) =>
-                              <li key={t.code}>
-                                    <span className="capitalize font-medium">{t.title}</span> • {t.min}+
+                                {RP_LADDER.map((t) => (
+                                  <li key={t.code}>
+                                    <HoverCard>
+                                      <HoverCardTrigger asChild>
+                                        <div className="cursor-help inline-flex items-center gap-1">
+                                          <span className="capitalize font-medium">{t.title}</span> • {t.min}+
+                                          {RANK_DEFS[t.code]?.short && (
+                                            <span className="text-[11px] text-slate-400">— {RANK_DEFS[t.code].short}</span>
+                                          )}
+                                        </div>
+                                      </HoverCardTrigger>
+                                      <HoverCardContent className="w-72">
+                                        <div className="text-sm font-semibold text-slate-800 capitalize">{t.title} • {t.min}+</div>
+                                        {RANK_DEFS[t.code]?.full && (
+                                          <div className="mt-2 text-xs text-slate-700">
+                                            <div className="font-semibold">Definition:</div>
+                                            <div>{RANK_DEFS[t.code].full}</div>
+                                          </div>
+                                        )}
+                                        {RANK_DEFS[t.code]?.core && (
+                                          <div className="mt-2 text-xs text-slate-700">
+                                            <div className="font-semibold">Core Meaning:</div>
+                                            <div>{RANK_DEFS[t.code].core}</div>
+                                          </div>
+                                        )}
+                                      </HoverCardContent>
+                                    </HoverCard>
                                   </li>
-                              )}
+                                ))}
                               </ul>
+                              <div className="mt-1 text-[11px] text-slate-400">Hover any rank for definitions</div>
                             </div>
 
                             {rpInfo.nextMin &&
