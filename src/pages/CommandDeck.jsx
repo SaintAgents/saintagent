@@ -1141,7 +1141,8 @@ useEffect(() => {
               title="Projects"
               icon={Folder}
               defaultOpen={true}
-              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80">
+              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
+              onPopout={() => setProjectsPopupOpen(true)}>
 
               {/* Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
