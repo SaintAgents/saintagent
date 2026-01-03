@@ -2,6 +2,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import { getRPRank } from '@/components/reputation/rpUtils';
+import BadgesBar from '@/components/badges/BadgesBar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Shield, TrendingUp, BadgeCheck } from 'lucide-react';
@@ -45,6 +47,7 @@ export default function MiniProfile({
   const displayName = name || profile?.display_name || userId || 'User';
   const handle = profile?.handle;
   const sa = profile?.sa_number;
+  const rpInfo = getRPRank(profile?.rp_points || 0);
 
   return (
     <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
@@ -75,6 +78,9 @@ export default function MiniProfile({
             </div>
           )}
           <div className="flex flex-wrap items-center gap-1 mt-0.5">
+            <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700">
+              Rank {rpInfo?.title || 'Seeker'}
+            </Badge>
             {roles?.map((r) => (
               <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
                 {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
@@ -97,6 +103,11 @@ export default function MiniProfile({
               </Badge>
             )}
           </div>
+          {miniBadges?.length > 0 && (
+            <div className="mt-1">
+              <BadgesBar badges={miniBadges} defaultIfEmpty={false} />
+            </div>
+          )}
         </div>
       )}
     </div>

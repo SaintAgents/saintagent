@@ -276,39 +276,20 @@ export default function CommandDeck() {
     }
   }, [queryClient]);
 
-  // One-off: enforce creator's SA and identity if this is Mathues
+  // SA#: Assign incrementally for new signups only
   useEffect(() => {
     (async () => {
       if (!currentUser?.email || !profile?.id) return;
-      if (currentUser.email.toLowerCase() !== 'germaintrust@gmail.com') return;
-
-      // Ensure SA#000001 is unique (reassign from others if needed)
-      const holders = await base44.entities.UserProfile.filter({ sa_number: '000001' });
-      for (const p of holders || []) {
-        if (p.user_id?.toLowerCase() !== 'germaintrust@gmail.com') {
-          // generate a replacement SA number not equal to 000001 (try a couple times for uniqueness)
-          let newSa = String(Math.floor(100002 + Math.random() * 899998));
-          for (let i = 0; i < 2; i++) {
-            const collision = await base44.entities.UserProfile.filter({ sa_number: newSa });
-            if (collision?.length) newSa = String(Math.floor(100002 + Math.random() * 899998));else
-            break;
-          }
-          await base44.entities.UserProfile.update(p.id, { sa_number: newSa });
+      if (!profile.sa_number) {
+        try {
+          await base44.functions.invoke('assignSaNumber', {});
+          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        } catch (e) {
+          console.error('SA assignment failed', e);
         }
       }
-
-      // Set creator identity and SA
-      const updates = {};
-      if (profile.sa_number !== '000001') updates.sa_number = '000001';
-      if ((profile.display_name || '').toUpperCase() !== 'MATHUES IMHOTEP') updates.display_name = 'MATHUES IMHOTEP';
-      if (profile.handle !== 'stg') updates.handle = 'stg';
-
-      if (Object.keys(updates).length) {
-        await base44.entities.UserProfile.update(profile.id, updates);
-        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      }
     })();
-  }, [currentUser?.email, profile?.id, profile?.sa_number, profile?.display_name, profile?.handle]);
+  }, [currentUser?.email, profile?.id, profile?.sa_number]);
 
   const updateMatchMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Match.update(id, data),
