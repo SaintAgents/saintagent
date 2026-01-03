@@ -51,6 +51,14 @@ export default function TopBar({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
 
+  const setLanguage = (code) => {
+    try {
+      localStorage.setItem('language', code);
+      document.documentElement.setAttribute('lang', code);
+      window.location.reload();
+    } catch {}
+  };
+
 
   const { data: unreadMessages = [] } = useQuery({
     queryKey: ['unreadMessages', currentUser?.email],
