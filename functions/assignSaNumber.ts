@@ -45,10 +45,10 @@ Deno.serve(async (req) => {
       const currentVal = Number(existing?.value || 0) || 0;
       if (existing) {
         if (currentVal < desired) {
-          await base44.asServiceRole.entities.PlatformSetting.update(existing.id, { value: desired });
+          await base44.asServiceRole.entities.PlatformSetting.update(existing.id, { value: String(desired) });
         }
       } else {
-        await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: desired });
+        await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: String(desired) });
       }
       return Response.json({ sa_number: saStr, assigned: true });
     }
@@ -68,9 +68,9 @@ Deno.serve(async (req) => {
     await base44.entities.UserProfile.update(profile.id, { sa_number: saStr });
 
     if (setting) {
-      await base44.asServiceRole.entities.PlatformSetting.update(setting.id, { value: next });
+      await base44.asServiceRole.entities.PlatformSetting.update(setting.id, { value: String(next) });
     } else {
-      await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: next });
+      await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: String(next) });
     }
 
     return Response.json({ sa_number: saStr, assigned: true });
