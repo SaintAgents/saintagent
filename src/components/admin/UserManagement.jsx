@@ -171,8 +171,8 @@ export default function UserManagement() {
         </Card>
         <Card>
           <CardContent className="bg-purple-100 pt-6 p-6 text-center">
-            <p className="text-3xl font-bold text-slate-900">{profiles.length}</p>
-            <p className="text-sm text-slate-500 mt-1">Total Users</p>
+            <p className="text-purple-950 text-3xl font-bold">{profiles.length}</p>
+            <p className="text-zinc-950 mt-1 text-sm">Total Users</p>
           </CardContent>
         </Card>
       </div>
