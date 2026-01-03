@@ -457,7 +457,7 @@ export default function CommandDeck() {
   <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none z-0" />
             <div className="relative z-10">
               <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
-                                  <p className="text-slate-500 mt-1">Your mission control center</p>
+                                  <p className="text-teal-500 mt-1">Your mission control center</p>
                                   <div className="hidden">
                                     {/* Save */}
                                     <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
@@ -541,7 +541,7 @@ export default function CommandDeck() {
                                                       {profile?.display_name || 'User'}
                                                     </h2>
                     <div className="flex items-center gap-1">
-                      <p className="text-sm text-slate-500 capitalize">
+                      <p className="text-teal-200 text-sm capitalize">
                         {rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
                       </p>
                       <HelpHint
@@ -680,7 +680,7 @@ export default function CommandDeck() {
                 {/* Badges */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs text-slate-500">Badges</p>
+                    <p className="text-teal-200 text-xs">Badges</p>
                     <button className="text-xs text-violet-600 hover:underline" onClick={() => setBadgeGlossaryOpen(true)}>
                       View Glossary
                     </button>
