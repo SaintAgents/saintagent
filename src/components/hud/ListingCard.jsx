@@ -18,6 +18,7 @@ import {
   Edit
 } from "lucide-react";
 import MiniProfile from '@/components/profile/MiniProfile';
+import { createPageUrl } from '@/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +46,10 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
   const DeliveryIcon = deliveryIcons[listing.delivery_mode] || Video;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300">
+    <div
+      className="bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+      onClick={() => window.location.href = createPageUrl('ListingDetail') + '?id=' + listing.id}
+    >
       {listing.image_url && (
         <div className="relative h-36">
           <img 
@@ -81,7 +85,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
           {isOwner && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8">
+                <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={(e) => e.stopPropagation()}>
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -165,7 +169,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
                 ? "bg-amber-600 hover:bg-amber-700"
                 : "bg-violet-600 hover:bg-violet-700"
             )}
-            onClick={() => onAction?.('book', listing)}
+            onClick={(e) => { e.stopPropagation(); onAction?.('book', listing); }}
           >
             {listing.listing_type === 'request' ? 'Offer to Help' : 'Book Now'}
           </Button>
