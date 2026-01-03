@@ -28,6 +28,7 @@ import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
@@ -88,6 +89,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   });
 
   const isOwnProfile = currentUser?.email === userId;
+  const statusColors = { online: 'text-emerald-500', focus: 'text-amber-500', dnd: 'text-rose-500', offline: 'text-slate-400' };
 
   // Drag state for floating window
   const containerRef = React.useRef(null);
@@ -206,15 +208,21 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           {/* Name & Handle */}
           <div className="text-center mb-4">
             <div className="flex items-center justify-center gap-2">
+              {profile.status && <CircleDot className={`w-3 h-3 ${statusColors[profile.status] || 'text-slate-400'}`} />}
               <h2 className="text-xl font-bold text-slate-900">{profile.display_name}</h2>
-              {profile.leader_tier === 'verified144k' &&
-              <Badge className="bg-amber-100 text-amber-700">
+              {profile.leader_tier === 'verified144k' && (
+                <Badge className="bg-amber-100 text-amber-700">
                   <Crown className="w-3 h-3 mr-1" />
                   144K
                 </Badge>
-              }
+              )}
             </div>
             <p className="text-slate-500">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
+            {profile.last_seen_at && (
+              <p className="text-xs text-slate-500 mt-1">
+                Last online {formatDistanceToNow(parseISO(profile.last_seen_at), { addSuffix: true })}
+              </p>
+            )}
           </div>
 
           {/* Actions */}
