@@ -937,6 +937,31 @@ useEffect(() => {
           </div>
         </div>
 
+        {/* Controls */}
+        <div className="px-6 mb-6" data-ggg-controls>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-slate-700">Controls</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/680fcca96_Expandalliconwithgradientglow.png" alt="Expand" className="h-6 w-6" />
+              <span className="text-slate-900">Expand</span>
+            </Button>
+            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/86dc08119_ChatGPTImageJan2202608_50_56PM.png" alt="Collapse" className="h-6 w-6" />
+              <span className="text-slate-900">Collapse</span>
+            </Button>
+            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4a3addf85_save_light_icon.png" alt="Save" className="h-6 w-6" />
+              <span className="text-slate-900">Save</span>
+            </Button>
+            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/78556d56e_reset_light_icon.png" alt="Reset" className="h-6 w-6" />
+              <span className="text-slate-900">Reset</span>
+            </Button>
+          </div>
+        </div>
+
         {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
