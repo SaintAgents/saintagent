@@ -88,6 +88,16 @@ export default function Mentorship() {
                       const menteeId = meProf.role === 'mentee' ? meProf.user_id : profile.user_id;
                       createSession.mutate({ mentorId, menteeId, data: {} });
                     }}
+                    action={
+                      <SessionForm
+                        trigger={<Button size="sm" className="rounded-lg bg-violet-600 hover:bg-violet-700">Request Session</Button>}
+                        onSubmit={(data) => {
+                          const mentorId = meProf.role === 'mentee' ? profile.user_id : meProf.user_id;
+                          const menteeId = meProf.role === 'mentee' ? meProf.user_id : profile.user_id;
+                          createSession.mutate({ mentorId, menteeId, data });
+                        }}
+                      />
+                    }
                   />
                 );
               })}
