@@ -66,6 +66,13 @@ export default function ProjectCSVImport() {
     return rows;
   };
 
+  // Normalize object keys to lowercase (helps with cloud extractor field cases)
+  const lowerKeys = (obj) => {
+    const out = {};
+    Object.entries(obj || {}).forEach(([k, v]) => { out[String(k).toLowerCase()] = v; });
+    return out;
+  };
+
   const handleImport = async () => {
     if (!file) return;
     setImporting(true);
@@ -83,8 +90,12 @@ export default function ProjectCSVImport() {
         const jsonSchema = { type: 'object', additionalProperties: true };
         const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
         if (extract.status === "success" && extract.output) {
-          rows = Array.isArray(extract.output) ? extract.output : [extract.output];
+          const rawRows = Array.isArray(extract.output) ? extract.output : [extract.output];
+          rows = rawRows.map(lowerKeys);
           log(`Cloud parsed ${rows.length} row(s)`);
+          if (rows.length > 0) {
+            log(`Detected columns: ${Object.keys(rows[0]).join(', ')}`);
+          }
         } else {
           throw new Error(extract.details || 'Cloud extraction failed');
         }
@@ -123,8 +134,11 @@ export default function ProjectCSVImport() {
         return rec;
       }).filter((r) => r.title);
       log(`Normalized ${normalized.length} record(s)`);
+      if (normalized.length === 0) {
+        throw new Error('No valid rows found (missing required title). Please use the provided template and ensure headers like projectname/projectnumber/projectid are present.');
+      }
 
-      // Try bulk create first
+       // Try bulk create first
       let created = [];
       if (normalized.length > 0) {
         log(`Importing ${normalized.length} record(s) ...`);
