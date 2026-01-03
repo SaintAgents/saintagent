@@ -212,6 +212,8 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
     dailyops: { x: 0, y: 1040 },
   };
   const [cardPositions, setCardPositions] = useState(DEFAULT_POSITIONS);
+  const [cardSizes, setCardSizes] = useState({});
+  const onSize = (key) => (dim) => setCardSizes((s) => ({ ...s, [key]: dim }));
 
   // Load/save layout (per device via localStorage)
   useEffect(() => {
@@ -229,16 +231,34 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const savePreset = () => {
     try { localStorage.setItem('cmdDeckLayout_preset', JSON.stringify(cardPositions)); } catch {}
   };
+
+  const CARD_ORDER = ['quick','checklist','inbox','circles','leader','sync','meetings','missions','projects','market','influence','leaderC','dailyops'];
+  const autoArrange = () => {
+    const COL_WIDTH = 380;
+    const GUTTER_X = 40;
+    const GUTTER_Y = 24;
+    const xPositions = [0, COL_WIDTH + GUTTER_X, (COL_WIDTH + GUTTER_X) * 2];
+    const colHeights = [0, 0, 0];
+    const next = {};
+    CARD_ORDER.forEach((key) => {
+      const h = (cardSizes[key]?.height || 300);
+      const col = colHeights.indexOf(Math.min(...colHeights));
+      next[key] = { x: xPositions[col], y: colHeights[col] };
+      colHeights[col] += h + GUTTER_Y;
+    });
+    setCardPositions(next);
+  };
+
   const resetLayout = () => {
     try {
       const raw = localStorage.getItem('cmdDeckLayout_preset');
       if (raw) {
         setCardPositions(JSON.parse(raw));
       } else {
-        setCardPositions(DEFAULT_POSITIONS);
+        autoArrange();
       }
     } catch {
-      setCardPositions(DEFAULT_POSITIONS);
+      autoArrange();
     }
   };
 
@@ -996,7 +1016,7 @@ useEffect(() => {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1600px]">
           {/* Quick Actions */}
-          <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')}>
+          <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')} onSizeChange={onSize('quick')}>
             <CollapsibleCard
               title="Quick Actions"
               icon={Zap}
@@ -1030,7 +1050,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Quick Start Checklist */}
-          <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')}>
+          <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')} onSizeChange={onSize('checklist')}>
             <CollapsibleCard
               title="Quick Start Checklist"
               icon={CheckCircle}
@@ -1044,7 +1064,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Inbox & Signals */}
-          <FreeDraggable id="inbox" position={cardPositions.inbox} onPositionChange={move('inbox')}>
+          <FreeDraggable id="inbox" position={cardPositions.inbox} onPositionChange={move('inbox')} onSizeChange={onSize('inbox')}>
             <CollapsibleCard
               title="Inbox & Signals"
               icon={Radio}
@@ -1057,7 +1077,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Circles & Regions */}
-          <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')}>
+          <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')} onSizeChange={onSize('circles')}>
             <CollapsibleCard
               title="Circles & Regions"
               icon={Users}
@@ -1069,7 +1089,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Leader Pathway */}
-          <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')}>
+          <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')} onSizeChange={onSize('leader')}>
             <CollapsibleCard
               title="Leader Pathway"
               icon={Sparkles}
@@ -1080,7 +1100,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Synchronicity Engine */}
-          <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')}>
+          <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')} onSizeChange={onSize('sync')}>
             <CollapsibleCard
               title="Synchronicity Engine"
               icon={Sparkles}
@@ -1123,7 +1143,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Meetings & Momentum */}
-          <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')}>
+          <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')} onSizeChange={onSize('meetings')}>
             <CollapsibleCard
               title="Meetings & Momentum"
               icon={Calendar}
@@ -1150,7 +1170,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Missions & Quests */}
-          <FreeDraggable id="missions" position={cardPositions.missions} onPositionChange={move('missions')}>
+          <FreeDraggable id="missions" position={cardPositions.missions} onPositionChange={move('missions')} onSizeChange={onSize('missions')}>
             <CollapsibleCard
               title="Missions & Quests"
               icon={Target}
@@ -1175,7 +1195,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Projects */}
-          <FreeDraggable id="projects" position={cardPositions.projects} onPositionChange={move('projects')}>
+          <FreeDraggable id="projects" position={cardPositions.projects} onPositionChange={move('projects')} onSizeChange={onSize('projects')}>
             <CollapsibleCard
               title="Projects"
               icon={Folder}
@@ -1220,7 +1240,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Marketplace */}
-          <FreeDraggable id="market" position={cardPositions.market} onPositionChange={move('market')}>
+          <FreeDraggable id="market" position={cardPositions.market} onPositionChange={move('market')} onSizeChange={onSize('market')}>
             <CollapsibleCard
               title="Marketplace: Earn & Learn"
               icon={ShoppingBag}
@@ -1258,7 +1278,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Influence & Reach */}
-          <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')}>
+          <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')} onSizeChange={onSize('influence')}>
             <CollapsibleCard
               title="Influence & Reach"
               icon={TrendingUp}
@@ -1280,7 +1300,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* 144K Leader Channel */}
-          <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')}>
+          <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')} onSizeChange={onSize('leaderC')}>
             <CollapsibleCard
               title="144K Leader Channel"
               icon={Radio}
@@ -1299,7 +1319,7 @@ useEffect(() => {
           </FreeDraggable>
 
           {/* Daily Ops */}
-          <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')}>
+          <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')} onSizeChange={onSize('dailyops')}>
             <CollapsibleCard
               title="Daily Ops"
               icon={Calendar}

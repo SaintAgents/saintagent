@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function FreeDraggable({ id, position, onPositionChange, width = 380, children }) {
+export default function FreeDraggable({ id, position, onPositionChange, width = 380, onSizeChange, children }) {
   const ref = React.useRef(null);
   const [dragging, setDragging] = React.useState(false);
   const startRef = React.useRef({ x: 0, y: 0, left: 0, top: 0 });
@@ -80,6 +80,19 @@ export default function FreeDraggable({ id, position, onPositionChange, width = 
       document.removeEventListener("touchend", onUp);
     };
   }, [dragging, onPositionChange, width]);
+
+  React.useEffect(() => {
+    if (!ref.current || !onSizeChange) return;
+    const el = ref.current;
+    const notify = () => {
+      const r = el.getBoundingClientRect();
+      onSizeChange({ width: Math.round(r.width), height: Math.round(r.height) });
+    };
+    const ro = new ResizeObserver(() => notify());
+    ro.observe(el);
+    notify();
+    return () => ro.disconnect();
+  }, [onSizeChange]);
 
   const style = {
     position: "absolute",
