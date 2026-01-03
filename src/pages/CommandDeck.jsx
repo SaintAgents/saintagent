@@ -310,6 +310,18 @@ export default function CommandDeck() {
         description: `Meeting completed with ${meeting.host_name}`,
         balance_after: (profile.ggg_balance || 0) + 0.03
       });
+      // Gamification: points + badge for first meeting
+      try {
+        await base44.entities.UserProfile.update(profile.id, {
+          engagement_points: (profile.engagement_points || 0) + 25
+        });
+        const hasBadge = await base44.entities.Badge.filter({ user_id: profile.user_id, code: 'first_meeting' });
+        if (!(hasBadge && hasBadge.length)) {
+          await base44.entities.Badge.create({ user_id: profile.user_id, code: 'first_meeting', status: 'active' });
+        }
+      } catch (e) {
+        console.error('Gamification meeting award failed', e);
+      }
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     } else if (action === 'view') {
       window.location.href = createPageUrl('Meetings');

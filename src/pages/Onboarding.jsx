@@ -184,6 +184,22 @@ export default function Onboarding() {
             console.error('Post-onboarding welcome flow failed', e);
           }
 
+          // Gamification: award points and badge for profile completion
+          try {
+            const profileToUpdate = (existingProfiles || [])[0];
+            if (profileToUpdate) {
+              await base44.entities.UserProfile.update(profileToUpdate.id, {
+                engagement_points: (profileToUpdate.engagement_points || 0) + 100
+              });
+              const existing = await base44.entities.Badge.filter({ user_id: user.email, code: 'profile_complete' });
+              if (!(existing && existing.length)) {
+                await base44.entities.Badge.create({ user_id: user.email, code: 'profile_complete', status: 'active' });
+              }
+            }
+          } catch (e) {
+            console.error('Gamification award failed', e);
+          }
+
           // Mark local completion to avoid race redirection and go to Command Deck
           try { localStorage.setItem('onboardingJustCompleted', '1'); } catch {}
           window.location.href = createPageUrl('CommandDeck');

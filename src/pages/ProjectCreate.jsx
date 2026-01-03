@@ -39,6 +39,23 @@ export default function ProjectCreate() {
       status: "pending_review",
     };
     await base44.entities.Project.create(payload);
+    // Gamification: points + badge for project contribution
+    try {
+      const me = await base44.auth.me();
+      const profs = await base44.entities.UserProfile.filter({ user_id: me.email });
+      const myProfile = (profs || [])[0];
+      if (myProfile) {
+        await base44.entities.UserProfile.update(myProfile.id, {
+          engagement_points: (myProfile.engagement_points || 0) + 30
+        });
+        const existing = await base44.entities.Badge.filter({ user_id: myProfile.user_id, code: 'project_contributor' });
+        if (!(existing && existing.length)) {
+          await base44.entities.Badge.create({ user_id: myProfile.user_id, code: 'project_contributor', status: 'active' });
+        }
+      }
+    } catch (e) {
+      console.error('Gamification project award failed', e);
+    }
     window.location.href = createPageUrl("CommandDeck");
   };
 

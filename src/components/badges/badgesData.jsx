@@ -53,6 +53,13 @@ export const BADGE_SECTIONS = [
         icon_desc: 'Flame inside a gold ring with wings',
         definition: 'Marks active inner drive and momentum—an ignited identity badge for consistent participation and output.',
         iconKey: 'flame'
+      },
+      {
+        code: 'profile_complete',
+        label: 'Profile Complete',
+        icon_desc: 'Check on a profile card',
+        definition: 'Completed onboarding profile setup.',
+        iconKey: 'badgeCheck'
       }
     ]
   },
@@ -128,6 +135,20 @@ export const BADGE_SECTIONS = [
         icon_desc: 'Tree growing from open hands with laurel framing',
         definition: 'Nurtures growth and sustainability—long-term building, cultivation, and life-supporting stewardship.',
         iconKey: 'sprout'
+      },
+      {
+        code: 'first_meeting',
+        label: 'First Meeting',
+        icon_desc: 'Calendar with a check',
+        definition: 'Completed your first meeting.',
+        iconKey: 'star'
+      },
+      {
+        code: 'project_contributor',
+        label: 'Project Contributor',
+        icon_desc: 'Folder with a star',
+        definition: 'Created your first project.',
+        iconKey: 'trophy'
       }
     ]
   },
