@@ -179,6 +179,31 @@ export default function RankedAvatar({
                       <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
                     </div>
                   )}
+
+      {/* Photo gallery icon (top-right) */}
+      {showPhotoIcon && allImages.length > 0 && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setViewerOpen(true);
+          }}
+          className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-md transition-colors"
+          style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
+          title="View photos"
+        >
+          <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
+        </button>
+      )}
+
+      {/* Photo Viewer Modal */}
+      {showPhotoIcon && (
+        <PhotoViewer
+          open={viewerOpen}
+          images={allImages}
+          startIndex={0}
+          onClose={() => setViewerOpen(false)}
+        />
+      )}
     </div>
   );
 }
