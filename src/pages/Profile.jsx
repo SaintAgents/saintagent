@@ -289,6 +289,16 @@ export default function Profile() {
                       {ROLE_LABELS[r.role_code] || r.role_code.replace(/_/g, ' ')}
                     </Badge>
                   ))}
+                  {typeof profile?.influence_score === 'number' && (
+                    <Badge className="bg-violet-100 text-violet-700">
+                      <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile.influence_score)}
+                    </Badge>
+                  )}
+                  {typeof profile?.expertise_score === 'number' && (
+                    <Badge className="bg-blue-100 text-blue-700">
+                      <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile.expertise_score)}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
@@ -812,21 +822,17 @@ export default function Profile() {
                 <ReputationScoresCard userId={profile?.user_id} />
             {/* Rank Progress */}
             <Card>
-                                <CardContent className="pt-6 text-center">
-                                  <RPRing rpPoints={rpPoints} className="mx-auto mb-4" />
-                                  <div className="flex items-center justify-center gap-2">
-                                    <h3 className="text-xl font-bold text-slate-900 capitalize">
-                                      {rpInfo.title}
-                                    </h3>
-                                    <AscensionLadderPopover />
-                                  </div>
-                                  <p className="text-sm text-slate-500 mt-1">
-                                    {rpInfo.nextMin ?
-                      `${rpInfo.nextMin - rpPoints} RP to next rank (${rpInfo.nextTitle})` :
-                      'Max rank'}
-                                  </p>
-                                </CardContent>
-                              </Card>
+              <CardContent className="pt-6 text-center">
+                <RPRing rpPoints={rpPoints} className="mx-auto mb-4" />
+                <div className="flex items-center justify-center gap-2">
+                  <h3 className="text-xl font-bold text-slate-900 capitalize">{rpInfo.title}</h3>
+                  <AscensionLadderPopover />
+                </div>
+                <p className="text-sm text-slate-500 mt-1">
+                  {rpInfo.nextMin ? `${rpInfo.nextMin - rpPoints} RP to next rank (${rpInfo.nextTitle})` : 'Max rank'}
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 gap-3">

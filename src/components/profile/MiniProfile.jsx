@@ -31,6 +31,7 @@ export default function MiniProfile({
     queryKey: ['miniProfile', userId],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: !!userId,
+    refetchInterval: 10000,
   });
   const profile = profs?.[0];
 
