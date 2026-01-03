@@ -53,8 +53,8 @@ export default function OnlineUsersModal({ open, onClose }) {
       profile.handle?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesRegion = regionFilter === 'all' || profile.region === regionFilter;
-    const rpCode = profile.rp_rank_code || getRPRank(profile.rp_points || 0).code;
-    const matchesRank = rankFilter === 'all' || rpCode === rankFilter;
+    const effectiveCode = profile.rp_rank_code || profile.rank_code || getRPRank(profile.rp_points || 0).code;
+    const matchesRank = rankFilter === 'all' || effectiveCode === rankFilter;
 
     return matchesSearch && matchesRegion && matchesRank;
   });
