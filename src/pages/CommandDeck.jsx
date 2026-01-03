@@ -944,7 +944,8 @@ useEffect(() => {
         </div>
 
         {/* Main Grid */}
-        <div className="px-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Free-form canvas for draggable cards */}
+        <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
           <div className="space-y-6">
             {/* Command Summary */}
