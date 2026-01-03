@@ -1408,6 +1408,8 @@ export default function CommandDeck() {
             </div>
       </div>
 
+      </div>
+
       {/* Side Panel */}
       <SidePanel
           matches={matches.slice(0, 5)}
