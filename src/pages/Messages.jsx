@@ -214,8 +214,7 @@ export default function Messages() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input placeholder="Search messages..." className="pl-9 h-9 rounded-lg" />
           </div>
-          <div className="flex items-center justify-between pt-2">
-            <span className="text-xs text-slate-500">Notifications</span>
+          <div className="flex items-center justify-end pt-2">
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
@@ -247,72 +246,8 @@ export default function Messages() {
               </Button>
             </div>
           </div>
-          <div className="flex items-center justify-between pt-2">
-            <span className="text-xs text-slate-500">Notifications</span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs"
-                onClick={async () => {
-                  const unread = (allMessages || []).filter(m => m.to_user_id === user?.email && !m.is_read);
-                  await Promise.all(unread.map(m => base44.entities.Message.update(m.id, { is_read: true })));
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                }}
-              >
-                Mark all read
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
-                onClick={async () => {
-                  const mine = (allMessages || []);
-                  await Promise.all(mine.map(m => {
-                    const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                    if (list.includes(user?.email)) return Promise.resolve();
-                    return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
-                  }));
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                }}
-              >
-                Clear all
-              </Button>
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-2">
-            <span className="text-xs text-slate-500">Notifications</span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs"
-                onClick={async () => {
-                  const unread = (allMessages || []).filter(m => m.to_user_id === user?.email && !m.is_read);
-                  await Promise.all(unread.map(m => base44.entities.Message.update(m.id, { is_read: true })));
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                }}
-              >
-                Mark all read
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
-                onClick={async () => {
-                  const mine = (allMessages || []);
-                  await Promise.all(mine.map(m => {
-                    const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                    if (list.includes(user?.email)) return Promise.resolve();
-                    return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
-                  }));
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                }}
-              >
-                Clear all
-              </Button>
-            </div>
-          </div>
+
+
         </div>
         <ScrollArea className="flex-1">
           <div className="pr-12">
@@ -342,12 +277,12 @@ export default function Messages() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm text-slate-500 truncate flex-1">{conv.lastMessage.content}</p>
                   {conv.unreadCount > 0 && (
                     <span className="inline-block px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
                       {conv.unreadCount}
                     </span>
                   )}
+                  <p className="text-sm text-slate-500 truncate flex-1">{conv.lastMessage.content}</p>
                 </div>
               </div>
               <div className="flex items-center pl-2 shrink-0">

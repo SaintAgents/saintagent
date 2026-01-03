@@ -65,16 +65,28 @@ export default function NotificationBell({ notifications = [], onAction }) {
       <PopoverContent align="end" className="w-96 p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
           <h3 className="font-semibold text-slate-900">Notifications</h3>
-          {unreadCount > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-xs h-7"
-              onClick={() => onAction?.('markAllRead')}
-            >
-              Mark all read
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {unreadCount > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs h-7"
+                onClick={() => onAction?.('markAllRead')}
+              >
+                Mark all read
+              </Button>
+            )}
+            {notifications.length > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs h-7 text-rose-600 hover:text-rose-700"
+                onClick={() => onAction?.('clearAll')}
+              >
+                Clear all
+              </Button>
+            )}
+          </div>
         </div>
         <ScrollArea className="h-96">
           {notifications.length === 0 ? (

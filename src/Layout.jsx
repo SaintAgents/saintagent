@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import Sidebar from '@/components/hud/Sidebar';
 import TopBar from '@/components/hud/TopBar';
@@ -20,6 +20,7 @@ export default function Layout({ children, currentPageName }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
   const [theme, setTheme] = useState('light');
+  const queryClient = useQueryClient();
 const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         // Open/close multiple profile drawers (max 6)
@@ -184,8 +185,18 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           }
         };
 
-  const handleNotificationAction = (action, notif) => {
-    console.log('Notification action:', action, notif);
+  const handleNotificationAction = async (action, notif) => {
+    if (action === 'markAllRead') {
+      const unread = (notifications || []).filter(n => !n.is_read);
+      await Promise.all(unread.map(n => base44.entities.Notification.update(n.id, { is_read: true })));
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    } else if (action === 'clearAll') {
+      const all = notifications || [];
+      await Promise.all(all.map(n => base44.entities.Notification.delete(n.id)));
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    } else if (action === 'click' && notif?.action_url) {
+      window.location.href = notif.action_url;
+    }
   };
 
   const handleCreate = async (type, data) => {
