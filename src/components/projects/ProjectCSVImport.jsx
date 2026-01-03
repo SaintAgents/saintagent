@@ -59,10 +59,23 @@ export default function ProjectCSVImport() {
         }
       };
       const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
-      if (extract.status !== "success" || !extract.output) {
-        throw new Error(extract.details || "Failed to parse CSV");
+      let rows;
+      if (extract?.status === "success" && extract?.output) {
+        rows = Array.isArray(extract.output) ? extract.output : [extract.output];
+      } else {
+        // Fallback: parse CSV locally if cloud extract fails
+        log("Cloud extract failed, using local CSV parser fallback");
+        const text = await file.text();
+        const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (lines.length < 2) throw new Error(extract?.details || "CSV appears empty");
+        const headers = lines[0].split(",").map((h) => h.trim());
+        rows = lines.slice(1).map((line) => {
+          const cells = line.split(",");
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = (cells[i] ?? "").trim(); });
+          return obj;
+        });
       }
-      const rows = Array.isArray(extract.output) ? extract.output : [extract.output];
       log(`Parsed ${rows.length} row(s)`);
       // Normalize records to Project shape using your headers
       const normalized = rows.map((r) => {
