@@ -43,8 +43,9 @@ import {
   Crown,
   Target,
   Heart,
-  Compass } from
-"lucide-react";
+  Compass,
+  BadgeCheck } from
+  "lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
