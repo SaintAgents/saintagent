@@ -484,10 +484,7 @@ export default function Profile() {
                       <div key={t.id} className="p-4 rounded-lg bg-slate-50 border border-slate-200">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <Avatar className="w-8 h-8">
-                              <AvatarImage src={t.from_avatar} />
-                              <AvatarFallback className="text-xs">{t.from_name?.charAt(0)}</AvatarFallback>
-                            </Avatar>
+                            <RankedAvatar src={t.from_avatar} name={t.from_name} userId={t.from_user_id} size={32} />
                             <div>
                               <p className="text-sm font-medium">{t.from_name}</p>
                               <div className="flex">
@@ -864,12 +861,7 @@ export default function Profile() {
                     className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
                     data-user-id={follow.following_id}>
 
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage src={follow.following_avatar} />
-                          <AvatarFallback className="text-sm">
-                            {follow.following_name?.charAt(0) || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
+                        <RankedAvatar src={follow.following_avatar} name={follow.following_name} userId={follow.following_id} size={48} />
                         <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
                           {follow.following_name}
                         </p>
@@ -898,12 +890,7 @@ export default function Profile() {
                       className="cursor-pointer"
                       data-user-id={follow.following_id}>
 
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={follow.following_avatar} />
-                            <AvatarFallback className="text-sm">
-                              {follow.following_name?.charAt(0) || 'U'}
-                            </AvatarFallback>
-                          </Avatar>
+                          <RankedAvatar src={follow.following_avatar} name={follow.following_name} userId={follow.following_id} size={48} />
                         </div>
                         <p
                       className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
@@ -942,12 +929,7 @@ export default function Profile() {
                     className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
                     data-user-id={follow.follower_id}>
 
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage src={follow.follower_avatar} />
-                          <AvatarFallback className="text-sm">
-                            {follow.follower_name?.charAt(0) || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
+                        <RankedAvatar src={follow.follower_avatar} name={follow.follower_name} userId={follow.follower_id} size={48} />
                         <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
                           {follow.follower_name}
                         </p>
