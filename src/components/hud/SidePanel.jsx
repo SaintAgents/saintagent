@@ -28,10 +28,12 @@ import {
   List } from
 "lucide-react";
 import ProgressRing from './ProgressRing';
+import { base44 } from '@/api/base44Client';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
+import { RP_LADDER } from '@/components/reputation/rpUtils';
 import { createPageUrl } from '@/utils';
 
 export default function SidePanel({
@@ -121,11 +123,18 @@ export default function SidePanel({
     enabled: !!profile?.user_id
   });
 
+  const { data: trustEvents = [] } = useQuery({
+    queryKey: ['trustEvents', profile?.user_id],
+    queryFn: () => base44.entities.TrustEvent.filter({ user_id: profile.user_id }, '-created_date', 100),
+    enabled: !!profile?.user_id
+  });
+
   const auditItems = React.useMemo(() => {
     const txs = (gggTx || []).map((it) => ({ ...it, _type: 'ggg' }));
     const rps = (rpEvents || []).map((it) => ({ ...it, _type: 'rp' }));
-    return [...txs, ...rps].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-  }, [gggTx, rpEvents]);
+    const trs = (trustEvents || []).map((it) => ({ ...it, _type: 'trust' }));
+    return [...txs, ...rps, ...trs].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+  }, [gggTx, rpEvents, trustEvents]);
 
   const likeMutation = useMutation({
     mutationFn: async ({ postId, userId }) => {
@@ -232,6 +241,21 @@ export default function SidePanel({
     return allLikes.some((l) => l.post_id === postId && l.user_id === profile?.user_id);
   };
 
+  // Rank milestones from RP events
+  const rankMilestones = React.useMemo(() => {
+    const sorted = [...(rpEvents || [])].sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+    const milestones = [];
+    const seen = new Set();
+    for (const tier of RP_LADDER) {
+      const hit = sorted.find((ev) => (ev.rp_after || 0) >= tier.min);
+      if (hit && !seen.has(tier.code)) {
+        milestones.push({ tier, event: hit });
+        seen.add(tier.code);
+      }
+    }
+    return milestones;
+  }, [rpEvents]);
+
   const onVideoChange = (e) => {
     const f = e.target.files?.[0];
     if (!f) {setVideoFile(null);setVideoPreview(null);setVideoDuration(0);setVideoError('');return;}
@@ -280,6 +304,25 @@ export default function SidePanel({
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rankProgress = walletAvailable;
   const nextRankAt = 100;
+
+  // Seed demo data once for Mathues
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const key = 'rankDemoSeeded_v1';
+        if (!profile?.user_id) return;
+        if (typeof window !== 'undefined' && localStorage.getItem(key)) return;
+        const me = await base44.auth.me();
+        if (!me || (me.email || '').toLowerCase() !== 'germaintrust@gmail.com') return;
+        await base44.functions.invoke('seedRankDemo', { target_email: me.email });
+        try { localStorage.setItem(key, '1'); } catch {}
+        queryClient.invalidateQueries({ queryKey: ['rpEvents', profile.user_id] });
+        queryClient.invalidateQueries({ queryKey: ['trustEvents', profile.user_id] });
+      } catch (e) {
+        console.warn('Seed demo failed', e);
+      }
+    })();
+  }, [profile?.user_id]);
 
   return (
     <>
@@ -678,11 +721,34 @@ export default function SidePanel({
                 View audit trail
               </Button>
             </div>
+          {/* Rank Progress Log */}
+          <div className="mt-4">
+            <div className="text-sm font-semibold text-slate-800 mb-2">Rank Progress Log</div>
+            {rankMilestones.length === 0 ? (
+              <p className="text-xs text-slate-500">No milestones yet</p>
+            ) : (
+              <div className="space-y-2">
+                {rankMilestones.map(({ tier, event }) => (
+                  <div key={tier.code} className="flex items-start gap-3 p-2 rounded-lg bg-white border border-slate-200">
+                    <div className="w-2 h-2 rounded-full bg-violet-500 mt-2" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium text-slate-900 capitalize">Reached {tier.title}</div>
+                        <div className="text-xs text-slate-500">{format(parseISO(event.created_date), 'MMM d, h:mm a')}</div>
+                      </div>
+                      <div className="text-xs text-slate-600">{event.reason_code?.replace(/_/g, ' ') || 'progress'}</div>
+                      {event.description && <div className="text-[11px] text-slate-500 mt-0.5">{event.description}</div>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </FloatingPanel>
+          </div>
+          </FloatingPanel>
           }
 
-      {gggAuditOpen &&
+          {gggAuditOpen &&
           <FloatingPanel title="GGG Audit Trail" onClose={() => setGggAuditOpen(false)}>
           <div className="space-y-2">
             {auditItems.length === 0 ?
@@ -690,17 +756,21 @@ export default function SidePanel({
 
               auditItems.map((item) => {
                 const isGGG = item._type === 'ggg';
+                const isRP = item._type === 'rp';
+                const isTrust = item._type === 'trust';
                 const positive = (item.delta || 0) >= 0;
                 return (
                   <div key={`${item._type}-${item.id}`} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
-                    <div className={`p-2 rounded-lg ${isGGG ? 'bg-amber-100' : positive ? 'bg-emerald-100' : 'bg-rose-100'}`}>
-                      {isGGG ?
-                      <Coins className="w-4 h-4 text-amber-600" /> :
-                      positive ?
-                      <ArrowUpRight className="w-4 h-4 text-emerald-600" /> :
-
-                      <ArrowDownRight className="w-4 h-4 text-rose-600" />
-                      }
+                    <div className={`p-2 rounded-lg ${isGGG ? 'bg-amber-100' : isTrust ? (positive ? 'bg-blue-100' : 'bg-blue-50') : positive ? 'bg-emerald-100' : 'bg-rose-100'}`}>
+                      {isGGG ? (
+                        <Coins className="w-4 h-4 text-amber-600" />
+                      ) : isTrust ? (
+                        <Activity className="w-4 h-4 text-blue-600" />
+                      ) : positive ? (
+                        <ArrowUpRight className="w-4 h-4 text-emerald-600" />
+                      ) : (
+                        <ArrowDownRight className="w-4 h-4 text-rose-600" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
@@ -708,11 +778,11 @@ export default function SidePanel({
                           {isGGG ? item.reason_code || 'GGG transaction' : item.reason_code || 'Reputation update'}
                         </p>
                         <span className={`text-sm font-semibold ${isGGG ? positive ? 'text-amber-700' : 'text-slate-700' : positive ? 'text-emerald-700' : 'text-rose-700'}`}>
-                          {positive ? '+' : ''}{item.delta}{isGGG ? ' GGG' : ' RP'}{!isGGG && item.rp_after != null ? ` • ${item.rp_after} RP` : ''}
+                          {positive ? '+' : ''}{item.delta}{isGGG ? ' GGG' : isRP ? ' RP' : ' Trust'}{isRP && item.rp_after != null ? ` • ${item.rp_after} RP` : ''}{isTrust && item.score_after != null ? ` • ${item.score_after} Trust` : ''}
                         </span>
                       </div>
                       <p className="text-xs text-slate-500">
-                        {isGGG ? item.source_type || 'reward' : item.source_type || 'system'}
+                        {isGGG ? (item.source_type || 'reward') : isTrust ? (item.source_type || 'system') : (item.source_type || 'system')}
                         {item.reason_code ? ` • ${item.reason_code}` : ''}
                       </p>
                       {item.description &&

@@ -109,6 +109,13 @@ export default function Profile() {
     enabled: !!profile?.user_id
   });
 
+  // Active roles (for Founder badge)
+  const { data: activeRoles = [] } = useQuery({
+    queryKey: ['userRoles', profile?.user_id],
+    queryFn: () => base44.entities.UserRole.filter({ user_id: profile.user_id, status: 'active' }),
+    enabled: !!profile?.user_id
+  });
+
   // Fetch testimonials
   const { data: testimonials = [] } = useQuery({
     queryKey: ['userTestimonials', profile?.user_id],
@@ -261,6 +268,9 @@ export default function Profile() {
                   {profile?.leader_tier === 'candidate' &&
                   <Badge variant="outline">Leader Candidate</Badge>
                   }
+                  {activeRoles?.some?.(r => r.role_code === 'founder_custodian') && (
+                    <Badge className="bg-amber-100 text-amber-700">Founder</Badge>
+                  )}
                 </div>
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
