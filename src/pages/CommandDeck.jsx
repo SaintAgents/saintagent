@@ -214,6 +214,7 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const [cardPositions, setCardPositions] = useState(DEFAULT_POSITIONS);
   const [cardSizes, setCardSizes] = useState({});
   const [needAutoPack, setNeedAutoPack] = useState(false);
+  const [globalOpen, setGlobalOpen] = useState(null);
   const onSize = (key) => (dim) => setCardSizes((s) => ({ ...s, [key]: dim }));
 
   // Load/save layout (per device via localStorage)
@@ -467,6 +468,8 @@ useEffect(() => {
           }
         });
         window.location.href = createPageUrl('Meetings');
+      } else if (type === 'project') {
+        window.location.href = createPageUrl('ProjectCreate');
       } else if (type === 'mission') {
         await createMutation.mutateAsync({
           entity: 'Mission',
@@ -518,9 +521,16 @@ useEffect(() => {
                 <Button
                   variant="outline"
                   className="rounded-xl"
-                  onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}
+                  onClick={() => setGlobalOpen(false)}
                 >
-                  Add Project
+                  Collapse All
+                </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => setGlobalOpen(true)}
+                >
+                  Expand All
                 </Button>
                 <Button
                   variant="outline"
@@ -1030,7 +1040,8 @@ useEffect(() => {
           {/* Quick Actions */}
           <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')} onSizeChange={onSize('quick')}>
             <CollapsibleCard
-              title="Quick Actions"
+                           forceOpen={globalOpen}
+                           title="Quick Actions"
               icon={Zap}
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
@@ -1064,7 +1075,8 @@ useEffect(() => {
           {/* Quick Start Checklist */}
           <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')} onSizeChange={onSize('checklist')}>
             <CollapsibleCard
-              title="Quick Start Checklist"
+                           forceOpen={globalOpen}
+                           title="Quick Start Checklist"
               icon={CheckCircle}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
@@ -1078,7 +1090,8 @@ useEffect(() => {
           {/* Inbox & Signals */}
           <FreeDraggable id="inbox" position={cardPositions.inbox} onPositionChange={move('inbox')} onSizeChange={onSize('inbox')}>
             <CollapsibleCard
-              title="Inbox & Signals"
+                           forceOpen={globalOpen}
+                           title="Inbox & Signals"
               icon={Radio}
               badge={notifications.length}
               badgeColor="rose"
@@ -1091,7 +1104,8 @@ useEffect(() => {
           {/* Circles & Regions */}
           <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')} onSizeChange={onSize('circles')}>
             <CollapsibleCard
-              title="Circles & Regions"
+                           forceOpen={globalOpen}
+                           title="Circles & Regions"
               icon={Users}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
@@ -1103,7 +1117,8 @@ useEffect(() => {
           {/* Leader Pathway */}
           <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')} onSizeChange={onSize('leader')}>
             <CollapsibleCard
-              title="Leader Pathway"
+                           forceOpen={globalOpen}
+                           title="Leader Pathway"
               icon={Sparkles}
               defaultOpen={true}
               onPopout={() => setLeaderPopupOpen(true)}>
@@ -1114,7 +1129,8 @@ useEffect(() => {
           {/* Synchronicity Engine */}
           <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')} onSizeChange={onSize('sync')}>
             <CollapsibleCard
-              title="Synchronicity Engine"
+                           forceOpen={globalOpen}
+                           title="Synchronicity Engine"
               icon={Sparkles}
               badge={matches.length}
               badgeColor="violet"
@@ -1157,7 +1173,8 @@ useEffect(() => {
           {/* Meetings & Momentum */}
           <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')} onSizeChange={onSize('meetings')}>
             <CollapsibleCard
-              title="Meetings & Momentum"
+                           forceOpen={globalOpen}
+                           title="Meetings & Momentum"
               icon={Calendar}
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
@@ -1184,7 +1201,8 @@ useEffect(() => {
           {/* Missions & Quests */}
           <FreeDraggable id="missions" position={cardPositions.missions} onPositionChange={move('missions')} onSizeChange={onSize('missions')}>
             <CollapsibleCard
-              title="Missions & Quests"
+                           forceOpen={globalOpen}
+                           title="Missions & Quests"
               icon={Target}
               badge={missions.length}
               badgeColor="amber"
@@ -1209,7 +1227,8 @@ useEffect(() => {
           {/* Projects */}
           <FreeDraggable id="projects" position={cardPositions.projects} onPositionChange={move('projects')} onSizeChange={onSize('projects')}>
             <CollapsibleCard
-              title="Projects"
+                           forceOpen={globalOpen}
+                           title="Projects"
               icon={Folder}
               defaultOpen={true}
               backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
@@ -1254,7 +1273,8 @@ useEffect(() => {
           {/* Marketplace */}
           <FreeDraggable id="market" position={cardPositions.market} onPositionChange={move('market')} onSizeChange={onSize('market')}>
             <CollapsibleCard
-              title="Marketplace: Earn & Learn"
+                           forceOpen={globalOpen}
+                           title="Marketplace: Earn & Learn"
               icon={ShoppingBag}
               backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
               onPopout={() => setMarketPopupOpen(true)}>
@@ -1292,7 +1312,8 @@ useEffect(() => {
           {/* Influence & Reach */}
           <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')} onSizeChange={onSize('influence')}>
             <CollapsibleCard
-              title="Influence & Reach"
+                           forceOpen={globalOpen}
+                           title="Influence & Reach"
               icon={TrendingUp}
               backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
               onPopout={() => setInfluencePopupOpen(true)}>
@@ -1314,7 +1335,8 @@ useEffect(() => {
           {/* 144K Leader Channel */}
           <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')} onSizeChange={onSize('leaderC')}>
             <CollapsibleCard
-              title="144K Leader Channel"
+                           forceOpen={globalOpen}
+                           title="144K Leader Channel"
               icon={Radio}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
@@ -1333,7 +1355,8 @@ useEffect(() => {
           {/* Daily Ops */}
           <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')} onSizeChange={onSize('dailyops')}>
             <CollapsibleCard
-              title="Daily Ops"
+                           forceOpen={globalOpen}
+                           title="Daily Ops"
               icon={Calendar}
               defaultOpen={true}
               backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"

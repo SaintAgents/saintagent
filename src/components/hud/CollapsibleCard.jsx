@@ -21,9 +21,14 @@ export default function CollapsibleCard({
   onPin,
   isPinned,
   backgroundImage,
-  onPopout
+  onPopout,
+  forceOpen
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  React.useEffect(() => {
+    if (typeof forceOpen === 'boolean') setIsOpen(forceOpen);
+  }, [forceOpen]);
 
   const badgeColors = {
     slate: "bg-slate-100 text-slate-700",

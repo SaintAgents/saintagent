@@ -26,11 +26,13 @@ import {
   Video,
   X,
   Sparkles,
-  ArrowRight } from
+  ArrowRight,
+  Folder } from
 "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CREATE_OPTIONS = [
+{ id: 'project', label: 'Project', icon: Folder, color: 'bg-indigo-600', description: 'Create a new project' },
 { id: 'post', label: 'Post', icon: FileText, color: 'bg-blue-500', description: 'Share an insight or update' },
 { id: 'offer', label: 'Offer', icon: ShoppingBag, color: 'bg-emerald-500', description: 'Sell your skills or services' },
 { id: 'event', label: 'Event', icon: Calendar, color: 'bg-violet-500', description: 'Host a gathering or workshop' },
@@ -216,6 +218,12 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 onChange={(e) => setFormData({ ...formData, objective: e.target.value })} />
 
             </div>
+          </div>);
+
+      case 'project':
+        return (
+          <div className="space-y-4">
+            <div className="text-sm text-slate-600">You’ll be taken to the full Project editor.</div>
           </div>);
 
       case 'message':
