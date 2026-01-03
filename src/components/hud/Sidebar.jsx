@@ -50,7 +50,6 @@ const NAV_ITEMS = [
   { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', badge: 2 },
   { id: 'missions', label: 'Missions', icon: Target, page: 'Missions' },
   { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects' },
-  { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects' },
   { id: 'collaborators', label: 'Collaborators', icon: Users, page: 'FindCollaborators' },
   { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
   { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', badge: 0 },
