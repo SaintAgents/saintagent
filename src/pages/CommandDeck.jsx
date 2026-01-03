@@ -228,8 +228,14 @@ export default function CommandDeck() {
   const dailyInProgress = dailyLog?.in_progress?.length || 0;
   const dailyGGG = (dailyLog?.completed || []).reduce((s, c) => s + (Number(c.ggg_earned) || 0), 0);
 
-  // Drag-and-drop ordering (Column C)
-  const [colCOrder, setColCOrder] = useState(['market', 'influence', 'leader', 'dailyops']);
+  // Drag-and-drop ordering (Column C) - load from localStorage if available
+  const [colCOrder, setColCOrder] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cmdColCOrder');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return ['market', 'influence', 'leader', 'dailyops'];
+  });
   const onDragEnd = (result) => {
     if (!result.destination) return;
     if (result.source.droppableId === 'colC' && result.destination.droppableId === 'colC') {
