@@ -48,6 +48,7 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import UserRolesPanel from '@/components/roles/UserRolesPanel';
 import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
@@ -283,11 +284,12 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-5">
+          <TabsList className="grid w-full max-w-2xl grid-cols-6">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="onboarding">Profile Details</TabsTrigger>
             <TabsTrigger value="spiritual">Spiritual</TabsTrigger>
             <TabsTrigger value="stats">Stats</TabsTrigger>
+            <TabsTrigger value="roles">Roles</TabsTrigger>
             <TabsTrigger value="friends">
               <span className="inline-flex items-center gap-2">
                 Friends
@@ -844,7 +846,12 @@ export default function Profile() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="friends" className="space-y-6">
+
+          <TabsContent value="roles" className="space-y-6">
+            <UserRolesPanel profile={profile} />
+          </TabsContent>
+
+           <TabsContent value="friends" className="space-y-6">
             {following.length > 0 &&
             <Card>
                 <CardHeader>
