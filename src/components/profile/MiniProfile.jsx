@@ -7,7 +7,7 @@ import PhotoViewer from '@/components/profile/PhotoViewer';
 import BadgesBar from '@/components/badges/BadgesBar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Shield, TrendingUp, BadgeCheck, ExternalLink } from 'lucide-react';
+import { Shield, TrendingUp, BadgeCheck, ExternalLink, Users } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import HelpHint from '@/components/hud/HelpHint';
 
