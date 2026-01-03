@@ -997,6 +997,8 @@ export default function CommandDeck() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
               {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
