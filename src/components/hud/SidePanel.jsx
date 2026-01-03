@@ -859,11 +859,19 @@ export default function SidePanel({
                   rows={3}
                 />
               </div>
+              {/* Video upload */}
+              <div className="flex items-center justify-between gap-3">
+                <input type="file" accept="video/*" onChange={onVideoChange} className="text-xs" />
+                {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
+              </div>
+              {videoPreview && !videoError && (
+                <video src={videoPreview} controls className="w-full rounded-lg" />
+              )}
               <div className="flex items-center justify-between">
                 <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
                   onClick={handleCreatePost}
-                  disabled={!newPostText.trim() || createPostMutation.isPending}
+                  disabled={(!newPostText.trim() && !videoFile) || createPostMutation.isPending}
                   className="bg-violet-600 hover:bg-violet-700"
                   size="sm"
                 >
