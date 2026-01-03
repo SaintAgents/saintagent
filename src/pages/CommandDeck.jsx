@@ -1100,7 +1100,7 @@ export default function CommandDeck() {
                   <Button
                     variant="outline"
                     className="rounded-xl"
-                    onClick={() => { window.location.href = '/Planner'; }}
+                    onClick={() => { window.location.href = createPageUrl('Planner'); }}
                   >
                     Open Planner
                   </Button>
