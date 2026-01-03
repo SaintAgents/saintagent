@@ -649,32 +649,11 @@ export default function CommandDeck() {
                     </div>
                     <div className="relative w-16 h-16">
                       <svg className="w-16 h-16 transform -rotate-90">
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          className="text-slate-200" />
-
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          strokeDasharray={`${2 * Math.PI * 28}`}
-                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.trust_score || 0) / 100)}`}
-                          className="text-violet-600 transition-all duration-500"
-                          strokeLinecap="round" />
-
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-200" />
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 28}`} strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.trust_score || 0) / 100)}`} className="text-emerald-600 transition-all duration-500" strokeLinecap="round" />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xs font-bold text-violet-600">
-                          {profile?.trust_score || 0}
-                        </span>
+                        <span className="text-xs font-bold text-emerald-600">{Math.round(profile?.trust_score || 0)}</span>
                       </div>
                     </div>
                   </div>

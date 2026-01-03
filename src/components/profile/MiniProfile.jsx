@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { Shield } from 'lucide-react';
 
 const ROLE_LABELS = {
   member: 'Member',
@@ -65,15 +66,19 @@ export default function MiniProfile({
               {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
             </div>
           )}
-          {roles?.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-0.5">
-              {roles.map((r) => (
-                <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
-                  {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
-                </Badge>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap items-center gap-1 mt-0.5">
+            {roles?.map((r) => (
+              <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
+                {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
+              </Badge>
+            ))}
+            {typeof profile?.trust_score === 'number' && (
+              <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1">
+                <Shield className="w-3 h-3" />
+                Trust {Math.round(profile.trust_score)}
+              </Badge>
+            )}
+          </div>
         </div>
       )}
     </div>

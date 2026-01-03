@@ -48,6 +48,7 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import TrustScoreCard from '@/components/trust/TrustScoreCard';
 import UserRolesPanel from '@/components/roles/UserRolesPanel';
 import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
@@ -806,6 +807,7 @@ export default function Profile() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Right Column - Stats */}
               <div className="space-y-6">
+                <TrustScoreCard userId={profile?.user_id} />
             {/* Rank Progress */}
             <Card>
                                 <CardContent className="pt-6 text-center">
