@@ -36,6 +36,11 @@ import MeetingsMomentum from '@/components/sections/MeetingsMomentum';
 import MissionsQuests from '@/components/sections/MissionsQuests';
 import MarketplaceEarnLearn from '@/components/sections/MarketplaceEarnLearn';
 import InfluenceReach from '@/components/sections/InfluenceReach';
+import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
+import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Folder, Search } from "lucide-react";
 
 import MetricTile from '@/components/hud/MetricTile';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -77,6 +82,9 @@ export default function CommandDeck() {
         const [quickStartPopupOpen, setQuickStartPopupOpen] = useState(false);
         const [leaderChannelPopupOpen, setLeaderChannelPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
+  const [projectSearch, setProjectSearch] = useState('');
+  const [projectStatus, setProjectStatus] = useState('all');
+  const [selectedProject, setSelectedProject] = useState(null);
 
   // Current user (safe for public use)
   const { data: currentUser } = useQuery({
@@ -158,6 +166,12 @@ export default function CommandDeck() {
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 10)
   });
 
+  // Fetch projects
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => base44.entities.Project.list('-created_date', 50)
+  });
+
   // Fetch notifications
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications'],
@@ -199,6 +213,14 @@ export default function CommandDeck() {
   const pendingMeetings = meetings.filter((m) => m.status === 'pending');
   const scheduledMeetings = meetings.filter((m) => m.status === 'scheduled');
   const completedMeetingsThisWeek = meetings.filter((m) => m.status === 'completed').length;
+
+  // Project filters
+  const filteredProjects = (projects || []).filter((p) => {
+    const statusOk = projectStatus === 'all' || p.status === projectStatus;
+    const q = projectSearch.toLowerCase();
+    const textOk = !q || (p.title || '').toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q);
+    return statusOk && textOk;
+  });
 
   const queryClient = useQueryClient();
 
@@ -1089,6 +1111,52 @@ export default function CommandDeck() {
                 }
               </div>
             </CollapsibleCard>
+
+            {/* Projects */}
+            <CollapsibleCard
+              title="Projects"
+              icon={Folder}
+              defaultOpen={true}
+              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80">
+
+              <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="md:col-span-2 relative">
+                  <Input
+                    placeholder="Search projects..."
+                    value={projectSearch}
+                    onChange={(e) => setProjectSearch(e.target.value)}
+                    className="pl-3"
+                  />
+                </div>
+                <Select value={projectStatus} onValueChange={setProjectStatus}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="pending_review">Pending Review</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                    <SelectItem value="flagged">Flagged</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {filteredProjects.length === 0 ? (
+                  <div className="col-span-full text-center py-8 text-slate-500">No projects found</div>
+                ) : (
+                  filteredProjects.slice(0, 4).map((p) => (
+                    <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
+                  ))
+                )}
+              </div>
+
+              {filteredProjects.length > 4 && (
+                <Button variant="ghost" className="w-full mt-3 text-violet-600">View more</Button>
+              )}
+            </CollapsibleCard>
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
@@ -1304,6 +1372,11 @@ export default function CommandDeck() {
 
         </FloatingPanel>
       }
+      {selectedProject && (
+        <FloatingPanel title={selectedProject.title || 'Project Details'} onClose={() => setSelectedProject(null)}>
+          <ProjectDetailCard project={selectedProject} />
+        </FloatingPanel>
+      )}
       {marketPopupOpen &&
       <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}>
           <MarketplaceEarnLearn
