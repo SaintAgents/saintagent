@@ -31,6 +31,41 @@ export default function ProjectCSVImport() {
     URL.revokeObjectURL(url);
   };
 
+  const parseCSV = (text) => {
+    const norm = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    const lines = norm.split("\n").filter((l) => l.trim().length > 0);
+    if (!lines.length) return [];
+    const splitLine = (line) => {
+      const out = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+          else { inQuotes = !inQuotes; }
+        } else if (ch === ',' && !inQuotes) {
+          out.push(cur);
+          cur = '';
+        } else {
+          cur += ch;
+        }
+      }
+      out.push(cur);
+      return out.map((s) => s.trim());
+    };
+    const headers = splitLine(lines[0]).map((h) => h.replace(/^\uFEFF/, '').toLowerCase());
+    const rows = lines.slice(1).map(splitLine).map((cols) => {
+      const obj = {};
+      cols.forEach((v, i) => {
+        const key = headers[i] || `col_${i}`;
+        obj[key.toLowerCase()] = v;
+      });
+      return obj;
+    });
+    return rows;
+  };
+
   const handleImport = async () => {
     if (!file) return;
     setImporting(true);
@@ -39,31 +74,26 @@ export default function ProjectCSVImport() {
     setLogs([]);
     log('Starting import');
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      const jsonSchema = {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-          properties: {
-            title: { type: 'string' },
-            description: { type: 'string' },
-            budget: { anyOf: [{ type: 'number' }, { type: 'string' }] },
-            industrial_value: { anyOf: [{ type: 'number' }, { type: 'string' }] },
-            humanitarian_score: { anyOf: [{ type: 'number' }, { type: 'string' }] },
-            status: { type: 'string' },
-            impact_tags: { type: 'string' },
-            strategic_intent: { type: 'string' },
-            negative_environmental_impact: { anyOf: [{ type: 'boolean' }, { type: 'string' }, { type: 'number' }] }
-          }
+      let rows = [];
+      try {
+        log('Uploading file to cloud...');
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        log('Upload complete');
+        // Use permissive schema and let the extractor infer columns
+        const jsonSchema = { type: 'object', additionalProperties: true };
+        const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
+        if (extract.status === "success" && extract.output) {
+          rows = Array.isArray(extract.output) ? extract.output : [extract.output];
+          log(`Cloud parsed ${rows.length} row(s)`);
+        } else {
+          throw new Error(extract.details || 'Cloud extraction failed');
         }
-      };
-      const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
-      if (extract.status !== "success" || !extract.output) {
-        throw new Error(extract.details || "Failed to parse CSV");
+      } catch (cloudErr) {
+        log(`Cloud operation unsuccessful. Falling back to local parse: ${cloudErr?.message || cloudErr}`);
+        const text = await file.text();
+        rows = parseCSV(text);
+        log(`Locally parsed ${rows.length} row(s)`);
       }
-      const rows = Array.isArray(extract.output) ? extract.output : [extract.output];
-      log(`Parsed ${rows.length} row(s)`);
       // Normalize records to Project shape using your headers
       const normalized = rows.map((r) => {
         const num = (v) => v === null || v === undefined || v === '' ? undefined : Number(String(v).replace(/[$,]/g, ''));
