@@ -947,7 +947,7 @@ useEffect(() => {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="hidden">
+          <div className="block">
             {/* Command Summary */}
             <CollapsibleCard
                                 title="Quick Actions"
@@ -1031,7 +1031,7 @@ useEffect(() => {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="hidden">
+          <div className="block">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
@@ -1196,7 +1196,7 @@ useEffect(() => {
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="hidden">
+          <div className="block">
             <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="colC">
               {(provided) => (
