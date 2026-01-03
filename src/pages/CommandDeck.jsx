@@ -453,7 +453,7 @@ export default function CommandDeck() {
       )}>
         {/* Page Header */}
         <div className="px-6 pt-6 pb-4">
-          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl">
+          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl bg-transparent">
   <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none z-0" />
             <div className="relative z-10">
               <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
