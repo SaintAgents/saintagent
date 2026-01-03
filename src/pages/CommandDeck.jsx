@@ -51,7 +51,7 @@ import MeetingCard from '@/components/hud/MeetingCard';
 import MissionCard from '@/components/hud/MissionCard';
 import ListingCard from '@/components/hud/ListingCard';
 import ProgressRing from '@/components/hud/ProgressRing';
-// import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+// import FreeDraggable from '@/components/hud/FreeDraggable';
 import FreeDraggable from '@/components/hud/FreeDraggable';
 import SidePanel from '@/components/hud/SidePanel';
 import BadgesBar from '@/components/badges/BadgesBar';
@@ -1005,8 +1005,10 @@ useEffect(() => {
               </div>
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Quick Start Checklist */}
+            <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')}>
             <CollapsibleCard
                                 title="Quick Start Checklist"
                                 icon={CheckCircle}
@@ -1017,8 +1019,10 @@ useEffect(() => {
               <QuickStartChecklist />
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Inbox & Signals */}
+            <FreeDraggable id="inbox" position={cardPositions.inbox} onPositionChange={move('inbox')}>
             <CollapsibleCard
               title="Inbox & Signals"
               icon={Radio}
@@ -1030,8 +1034,10 @@ useEffect(() => {
                                 <InboxSignals notifications={notifications} />
                               </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Circles & Regions */}
+            <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')}>
             <CollapsibleCard
               title="Circles & Regions"
               icon={Users}
@@ -1042,8 +1048,10 @@ useEffect(() => {
                                 <CirclesRegions />
                               </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Leader Pathway */}
+            <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')}>
             <CollapsibleCard
               title="Leader Pathway"
               icon={Sparkles}
@@ -1053,11 +1061,13 @@ useEffect(() => {
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
           <div className="hidden">
             {/* Synchronicity Stack */}
+            <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')}>
             <CollapsibleCard
               title="Synchronicity Engine"
               icon={Sparkles}
@@ -1103,8 +1113,10 @@ useEffect(() => {
               </Tabs>
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Meetings & Momentum */}
+            <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')}>
             <CollapsibleCard
               title="Meetings & Momentum"
               icon={Calendar}
@@ -1134,8 +1146,10 @@ useEffect(() => {
               </div>
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Missions & Quests */}
+            <FreeDraggable id="missions" position={cardPositions.missions} onPositionChange={move('missions')}>
             <CollapsibleCard
               title="Missions & Quests"
               icon={Target}
@@ -1166,8 +1180,10 @@ useEffect(() => {
               </div>
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
 
             {/* Projects */}
+            <FreeDraggable id="projects" position={cardPositions.projects} onPositionChange={move('projects')}>
             <CollapsibleCard
                               title="Projects"
                               icon={Folder}
@@ -1222,6 +1238,7 @@ useEffect(() => {
               )}
             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
@@ -1233,8 +1250,8 @@ useEffect(() => {
                     <Draggable draggableId={id} index={index} key={id}>
                       {(dragProvided) => (
                         <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                          {id === 'market' && (
-                            <CollapsibleCard
+                          <FreeDraggable id="market" position={cardPositions.market} onPositionChange={move('market')}>
+                                                        <CollapsibleCard
                               title="Marketplace: Earn & Learn"
                               icon={ShoppingBag}
                               backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
@@ -1279,10 +1296,11 @@ useEffect(() => {
                               </Tabs>
                             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
                           )}
 
-                          {id === 'influence' && (
-                            <CollapsibleCard
+                          <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')}>
+                                                        <CollapsibleCard
                               title="Influence & Reach"
                               icon={TrendingUp}
                               backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
@@ -1323,10 +1341,11 @@ useEffect(() => {
                               </div>
                             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
                           )}
 
-                          {id === 'leader' && (
-                            <CollapsibleCard
+                          <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')}>
+                                                        <CollapsibleCard
                               title="144K Leader Channel"
                               icon={Radio}
                               defaultOpen={false}
@@ -1351,10 +1370,11 @@ useEffect(() => {
                               </div>
                             </CollapsibleCard>
             </FreeDraggable>
+            </FreeDraggable>
                           )}
 
-                          {id === 'dailyops' && (
-                            <CollapsibleCard
+                          <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')}>
+                                                        <CollapsibleCard
                                               title="Daily Ops"
                                               icon={Calendar}
                                               defaultOpen={true}
@@ -1376,6 +1396,7 @@ useEffect(() => {
                                 </Button>
                               </div>
                             </CollapsibleCard>
+            </FreeDraggable>
             </FreeDraggable>
                           )}
                         </div>
