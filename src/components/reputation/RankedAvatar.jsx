@@ -1,8 +1,9 @@
-import React from 'react';
-import { Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, Image } from 'lucide-react';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import PhotoViewer from '@/components/profile/PhotoViewer';
 
 function getRingConfig(rankCode = 'seeker') {
   const map = {
