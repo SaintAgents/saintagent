@@ -6,8 +6,9 @@ import { getRPRank } from '@/components/reputation/rpUtils';
 import BadgesBar from '@/components/badges/BadgesBar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Shield, TrendingUp, BadgeCheck } from 'lucide-react';
+import { Shield, TrendingUp, BadgeCheck, ExternalLink } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import HelpHint from '@/components/hud/HelpHint';
 
 const ROLE_LABELS = {
   member: 'Member',
@@ -76,7 +77,35 @@ export default function MiniProfile({
       {(showName || showHandle) && (
         <div className="min-w-0">
           {showName && (
-            <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
+            <div className="flex items-center gap-1 min-w-0">
+              <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
+              <button
+                type="button"
+                data-open-profile={userId}
+                title="Open profile"
+                className="inline-flex items-center justify-center w-5 h-5 rounded hover:bg-slate-100"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+              </button>
+              <HelpHint
+                side="right"
+                align="start"
+                className="ml-0.5"
+                content={
+                  <div className="space-y-1.5">
+                    <div className="text-sm font-semibold text-slate-800">Avatar Indicators</div>
+                    <ul className="list-disc ml-4 text-xs text-slate-700 space-y-0.5">
+                      <li><strong>Rank Ring</strong>: outer ring showing rank/progression</li>
+                      <li><strong>Seal Badge</strong>: small circle on edge (role/qualification)</li>
+                      <li><strong>Rank Sigil</strong>: symbol inside badge (rank meaning)</li>
+                      <li><strong>Aura</strong>: subtle glow (elevated/active)</li>
+                      <li><strong>Presence Marker</strong>: status dot (online/focus/dnd)</li>
+                      <li><strong>Event Frame</strong>: decorative frame for special events</li>
+                    </ul>
+                  </div>
+                }
+              />
+            </div>
           )}
           {showHandle && (handle || sa) && (
             <div className="text-xs text-slate-500 truncate">
