@@ -269,7 +269,7 @@ export default function Profile() {
                 status={profile?.status}
               />
               <div className="flex-1 pb-2">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name}</h1>
                   {profile?.leader_tier === 'verified144k' && (
                     <Badge className="bg-amber-100 text-amber-700">
@@ -277,12 +277,16 @@ export default function Profile() {
                       144K Leader
                     </Badge>
                   )}
-                  {profile?.leader_tier === 'candidate' &&
-                  <Badge variant="outline">Leader Candidate</Badge>
-                  }
-                  {activeRoles?.some?.(r => r.role_code === 'founder_custodian') && (
-                    <Badge className="bg-amber-100 text-amber-700">Founder</Badge>
+                  {profile?.leader_tier === 'candidate' && (
+                    <Badge variant="outline">Leader Candidate</Badge>
                   )}
+
+                  {/* Render all active roles as badges */}
+                  {activeRoles?.map?.(r => (
+                    <Badge key={r.id} variant="secondary" className="capitalize">
+                      {ROLE_LABELS[r.role_code] || r.role_code.replace(/_/g, ' ')}
+                    </Badge>
+                  ))}
                 </div>
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
