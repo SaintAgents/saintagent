@@ -137,30 +137,34 @@ export default function MiniProfile({
             </div>
         }
           <div className="flex flex-wrap items-center gap-1 mt-0.5">
-            <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700">
-              Rank {rankTitle}
-            </Badge>
+            {showRankBadge && (
+              <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700">
+                Rank {rankTitle}
+              </Badge>
+            )}
             {roles?.map((r) =>
           <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
                 {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
               </Badge>
           )}
-            <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1">
-              <Shield className="w-3 h-3" />
-              Trust {Math.round(profile?.trust_score ?? 0)}
-            </Badge>
+            {showTrustBadge && (
+              <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1">
+                <Shield className="w-3 h-3" />
+                Trust {Math.round(profile?.trust_score ?? 0)}
+              </Badge>
+            )}
             {typeof profile?.influence_score === 'number' &&
           <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
                 Inf {Math.round(profile.influence_score)}
               </Badge>
           }
-            {typeof profile?.reach_score === 'number' &&
-          <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1">
+            {showReachBadge && typeof profile?.reach_score === 'number' && (
+              <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1">
                 <Users className="w-3 h-3" />
                 Reach {Math.round(profile.reach_score)}
               </Badge>
-          }
+            )}
             {typeof profile?.expertise_score === 'number' &&
           <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1">
                 <BadgeCheck className="w-3 h-3" />
