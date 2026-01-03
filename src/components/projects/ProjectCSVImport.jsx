@@ -16,9 +16,8 @@ export default function ProjectCSVImport() {
     "projectid", "projectnumber", "projectname", "projectarea", "projectdescription", "projectbenefits", "projectmethods", "projectadditional", "projecttotalcost", "projecttype", "projectphase", "projectpartners", "projectscope"];
 
     const sample = [
-    "P-0001,42,Neighborhood Microgrid,energy;resilience,Local solar + storage,Lower outages; lower bills,Install panels and batteries,Resilience; savings,Add EV chargers,1500000,energy,50000,250000,200000,pilot,Utility; City,yes,public,yes,City-wide,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,user-123,2025-12-01,2025-01-15,3",
-    "P-0002,43,Community Garden,food;health,Urban garden network,Fresh produce; community,Permaculture methods,Health; cohesion,Add workshops,120000,community,10000,20000,15000,phase 2,Local NGOs,yes,donations,yes,Neighborhood,no,yes,yes,yes,no,no,no,no,no,yes,no,no,user-987,2025-11-15,2024-09-10,5"].
-    join("\n");
+    "P-0001,42,Neighborhood Microgrid,energy;resilience,Local solar + storage,Lower outages; lower bills,Install panels and batteries,Add EV chargers,1500000,energy,pilot,Utility; City,City-wide",
+    "P-0002,43,Community Garden,food;health,Urban garden network,Fresh produce; community,Permaculture methods,Add workshops,120000,community,phase 2,Local NGOs,Neighborhood"].join("\n");
     const csv = headers.join(",") + "\n" + sample;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
