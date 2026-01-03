@@ -118,7 +118,7 @@ export default function Messages() {
   });
   const typingUsers = React.useMemo(() => {
     const now = Date.now();
-    return (typingStatuses || []).filter(ts => ts.user_id !== user?.email && (now - new Date(ts.updated_date).getTime()) < 5000);
+    return (typingStatuses || []).filter((ts) => ts.user_id !== user?.email && now - new Date(ts.updated_date).getTime() < 5000);
   }, [typingStatuses, user?.email]);
 
   const getStatus = React.useCallback((uid) => {
@@ -202,12 +202,12 @@ export default function Messages() {
   // Delivery receipts: mark incoming as delivered for me
   React.useEffect(() => {
     if (!selectedConversation || !user?.email) return;
-    const incoming = currentMessages.filter(m => m.to_user_id === user.email && !(m.delivered_for_user_ids || []).includes(user.email));
+    const incoming = currentMessages.filter((m) => m.to_user_id === user.email && !(m.delivered_for_user_ids || []).includes(user.email));
     if (incoming.length === 0) return;
     incoming.forEach((m) => {
       const list = Array.isArray(m.delivered_for_user_ids) ? m.delivered_for_user_ids : [];
-      base44.entities.Message.update(m.id, { delivered_for_user_ids: [...list, user.email] })
-        .then(() => queryClient.invalidateQueries({ queryKey: ['messages'] }));
+      base44.entities.Message.update(m.id, { delivered_for_user_ids: [...list, user.email] }).
+      then(() => queryClient.invalidateQueries({ queryKey: ['messages'] }));
     });
   }, [selectedConversation?.id, currentMessages.length, user?.email]);
 
@@ -275,31 +275,31 @@ export default function Messages() {
           <div className="flex items-center justify-end pt-2">
             <div className="flex items-center gap-2">
               <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs"
-                onClick={async () => {
-                  const unread = (allMessages || []).filter(m => m.to_user_id === user?.email && !m.is_read);
-                  await Promise.all(unread.map(m => base44.entities.Message.update(m.id, { is_read: true })));
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                }}
-              >
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  onClick={async () => {
+                    const unread = (allMessages || []).filter((m) => m.to_user_id === user?.email && !m.is_read);
+                    await Promise.all(unread.map((m) => base44.entities.Message.update(m.id, { is_read: true })));
+                    queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  }}>
+
                 Mark all read
               </Button>
               <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
-                onClick={async () => {
-                  const mine = (allMessages || []);
-                  await Promise.all(mine.map(m => {
-                    const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                    if (list.includes(user?.email)) return Promise.resolve();
-                    return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
-                  }));
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
-                }}
-              >
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
+                  onClick={async () => {
+                    const mine = allMessages || [];
+                    await Promise.all(mine.map((m) => {
+                      const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                      if (list.includes(user?.email)) return Promise.resolve();
+                      return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
+                    }));
+                    queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  }}>
+
                 Clear all
               </Button>
             </div>
@@ -310,15 +310,15 @@ export default function Messages() {
         <ScrollArea className="flex-1">
           <div className="pr-12">
           {convList.map((conv) =>
-            <div key={conv.id} className="relative group">
+              <div key={conv.id} className="relative group">
               <div
-                role="button"
-                tabIndex={0}
-                onClick={() => setSelectedConversation(conv)}
-                className={cn(
-                  "w-full flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b",
-                  selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
-                )}>
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSelectedConversation(conv)}
+                  className={cn(
+                    "w-full flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b",
+                    selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
+                  )}>
 
               <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center justify-between">
@@ -328,36 +328,36 @@ export default function Messages() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  {conv.unreadCount > 0 && (
-                    <span className="inline-block px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
+                  {conv.unreadCount > 0 &&
+                      <span className="inline-block px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
                       {conv.unreadCount}
                     </span>
-                  )}
+                      }
                   <p className="text-sm text-slate-500 truncate flex-1">{conv.lastMessage.content}</p>
                 </div>
               </div>
               <div className="flex items-center pl-2 shrink-0">
                 <Button
-                  size="icon"
-                  variant="ghost"
-                  className="shrink-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const event = new CustomEvent('openFloatingChat', {
-                      detail: {
-                        recipientId: conv.otherUser.id,
-                        recipientName: conv.otherUser.name,
-                        recipientAvatar: conv.otherUser.avatar
-                      }
-                    });
-                    document.dispatchEvent(event);
-                  }}>
+                      size="icon"
+                      variant="ghost"
+                      className="shrink-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const event = new CustomEvent('openFloatingChat', {
+                          detail: {
+                            recipientId: conv.otherUser.id,
+                            recipientName: conv.otherUser.name,
+                            recipientAvatar: conv.otherUser.avatar
+                          }
+                        });
+                        document.dispatchEvent(event);
+                      }}>
                   <ExternalLink className="w-4 h-4" />
                 </Button>
               </div>
               </div>
                 </div>
-            )}
+              )}
               </div>
                 </ScrollArea>
       </div>
@@ -368,9 +368,9 @@ export default function Messages() {
           {/* Header */}
           <div className="p-4 border-b bg-white flex items-center gap-3">
             <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} />
-            {typingUsers.length > 0 && (
-              <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
-            )}
+            {typingUsers.length > 0 &&
+            <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
+            }
             <div className="ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -408,8 +408,8 @@ export default function Messages() {
                   <TabsContent value="whiteboard"><Whiteboard conversationId={selectedConversation.id} /></TabsContent>
                   <TabsContent value="cowatch"><CoWatch conversationId={selectedConversation.id} /></TabsContent>
                 </Tabs>
-              </div>
-            );
+              </div>);
+
           })()}
 
           {/* Messages */}
@@ -436,17 +436,17 @@ export default function Messages() {
                         <p className="text-xs text-slate-400 mt-1 px-2">
                           {format(parseISO(msg.created_date), 'h:mm a')}
                         </p>
-                        {isOwn && (
-                          <span className="mt-1 text-xs">
-                            {msg.is_read ? (
-                              <CheckCheck className="w-4 h-4 text-emerald-600" />
-                            ) : (Array.isArray(msg.delivered_for_user_ids) && msg.delivered_for_user_ids.length > 0) ? (
-                              <CheckCheck className="w-4 h-4 text-slate-400" />
-                            ) : (
-                              <Check className="w-4 h-4 text-slate-400" />
-                            )}
+                        {isOwn &&
+                        <span className="mt-1 text-xs">
+                            {msg.is_read ?
+                          <CheckCheck className="w-4 h-4 text-emerald-600" /> :
+                          Array.isArray(msg.delivered_for_user_ids) && msg.delivered_for_user_ids.length > 0 ?
+                          <CheckCheck className="w-4 h-4 text-slate-400" /> :
+
+                          <Check className="w-4 h-4 text-slate-400" />
+                          }
                           </span>
-                        )}
+                        }
                         {isOwn &&
                         <Button
                           variant="ghost"
@@ -476,14 +476,14 @@ export default function Messages() {
           {/* Input */}
           <div className="p-4 border-t bg-white">
             <div className="flex gap-3 items-center">
-              <Button variant="outline" size="sm" className="h-9 px-2 rounded-lg" onClick={() => {
+              <Button variant="outline" size="sm" className="bg-rose-200 text-zinc-600 px-2 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => {
                 if (!user?.email) return;
                 const link = createPageUrl('Profile') + `?id=${encodeURIComponent(user.email)}`;
                 setMessageText((t) => (t ? t + ' ' : '') + link);
               }}>
                 <Link2 className="w-4 h-4" />
               </Button>
-              <Button variant="outline" size="sm" className="h-9 px-2 rounded-lg" onClick={() => {
+              <Button variant="outline" size="sm" className="bg-indigo-200 text-zinc-600 px-2 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => {
                 const otherId = selectedConversation?.otherUser?.id;
                 if (!otherId) return;
                 const link = createPageUrl('Profile') + `?id=${encodeURIComponent(otherId)}`;
@@ -495,7 +495,7 @@ export default function Messages() {
               <Input
                 placeholder="Type a message..."
                 value={messageText}
-                onChange={async (e) => { setMessageText(e.target.value); await sendTypingPing(); }}
+                onChange={async (e) => {setMessageText(e.target.value);await sendTypingPing();}}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 className="flex-1 rounded-xl" />
 
