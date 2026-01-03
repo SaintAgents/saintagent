@@ -577,9 +577,9 @@ useEffect(() => {
                     <p className="text-gray-950 text-xs">Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900">{profile?.meetings_completed || 0}</p>
-                    <p className="text-gray-950 text-xs">Meetings</p>
-                  </div>
+                                            <p className="text-lg font-bold text-slate-900">{profile?.following_count || 0}</p>
+                                            <p className="text-gray-950 text-xs">Following</p>
+                                          </div>
                 </div>
 
                 {/* Setup Progress (if onboarding not complete) */}
