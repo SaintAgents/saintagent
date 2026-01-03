@@ -26,6 +26,7 @@ import {
 "lucide-react";
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
+import { formatDistanceToNow } from 'date-fns';
 import TestimonialButton from '@/components/TestimonialButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
 import { formatDistanceToNow, parseISO } from 'date-fns';
@@ -220,7 +221,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             <p className="text-slate-500">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
             {profile.last_seen_at && (
               <p className="text-xs text-slate-500 mt-1">
-                Last online {formatDistanceToNow(parseISO(profile.last_seen_at), { addSuffix: true })}
+                Last online {formatDistanceToNow(new Date(profile.last_seen_at), { addSuffix: true })}
               </p>
             )}
           </div>

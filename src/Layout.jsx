@@ -130,6 +130,17 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   });
   const profile = profiles?.[0];
 
+  // Heartbeat: update last_seen_at periodically for online indicator
+  useEffect(() => {
+    if (!profile?.id) return;
+    const update = async () => {
+      await base44.entities.UserProfile.update(profile.id, { last_seen_at: new Date().toISOString() });
+    };
+    update();
+    const i = setInterval(update, 60000);
+    return () => clearInterval(i);
+  }, [profile?.id]);
+
   // Fetch notifications
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications'],

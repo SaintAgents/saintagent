@@ -20,11 +20,14 @@ export default function ProjectMiniCard({ project, onClick }) {
 
   return (
     <button onClick={onClick} className="text-left w-full">
-      <Card className="hover:shadow-md transition-shadow border-slate-200">
+      <Card className="hover:shadow-lg transition-all border-slate-200 transform hover:-translate-y-0.5 hover:scale-[1.01]">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
             <CardTitle className="text-base font-semibold text-slate-900 line-clamp-1">
-              {project.title || "Untitled Project"}
+              <span className="inline-flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-slate-400" />
+                {project.title || "Untitled Project"}
+              </span>
             </CardTitle>
             <Badge className={STATUS_STYLES[status] || STATUS_STYLES.pending_review}>
               {status.replace(/_/g, " ")}
