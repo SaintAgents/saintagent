@@ -332,7 +332,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         }
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
                         background-color: #0b1220 !important;
-                        background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5e73db311_Leonardo_Lightning_XL_digital_angel_1.jpg');
+                        background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6b0e8ce10_universal_upscale_0_eb9e4726-a830-4071-a10e-d355ccef4ac1_0.jpg');
                         background-size: cover;
                         background-position: center;
                         background-attachment: fixed;
@@ -392,11 +392,11 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         /* Dark theme background for Command Deck */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-                        background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5e73db311_Leonardo_Lightning_XL_digital_angel_1.jpg');
-                        background-size: cover;
-                        background-position: center;
-                        background-attachment: fixed;
-                      }
+                                      background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6b0e8ce10_universal_upscale_0_eb9e4726-a830-4071-a10e-d355ccef4ac1_0.jpg');
+                                      background-size: cover;
+                                      background-position: center;
+                                      background-attachment: fixed;
+                                    }
 
         `}</style>
         <style>{`
