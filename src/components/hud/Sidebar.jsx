@@ -279,7 +279,7 @@ export default function Sidebar({
           >
             <ScrollArea className="h-48">
               <div className="space-y-2">
-                {topLeaders.map((leader, index) => (
+                {resolvedLeaders.map((leader, index) => (
                   <button
                     key={leader.id}
                     className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
@@ -319,7 +319,7 @@ export default function Sidebar({
           {leadersPopupOpen && (
             <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
               <div className="space-y-2">
-                {topLeaders.map((leader, index) => (
+                {resolvedLeaders.map((leader, index) => (
                   <div
                     key={leader.id}
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors"
