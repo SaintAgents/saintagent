@@ -26,10 +26,9 @@ import {
 "lucide-react";
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
-import { formatDistanceToNow } from 'date-fns';
 import TestimonialButton from '@/components/TestimonialButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
