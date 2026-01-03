@@ -351,16 +351,16 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         /* SidePanel control buttons */
         [data-theme='dark'] [data-ggg-controls] {
-          background-color: #EDE9FE !important; /* violet-100 */
-          border-color: #C4B5FD !important;     /* violet-300 */
+          background-color: #0f172a !important;
+          border-color: #1f2937 !important;
         }
         [data-theme='dark'] [data-ggg-controls] .btn-ctrl {
-          background-color: #E9D5FF !important; /* violet-200 */
-          color: #0b0f19 !important;            /* near-black */
-          border-color: #C4B5FD !important;
+          background-color: #111827 !important;
+          color: #e5e7eb !important;
+          border-color: #374151 !important;
         }
         [data-theme='dark'] [data-ggg-controls] .btn-ctrl:hover {
-          background-color: #DDD6FE !important; /* violet-200/300 hover */
+          background-color: #1f2937 !important;
         }
       `}</style>
 
