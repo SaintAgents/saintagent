@@ -977,7 +977,9 @@ export default function CommandDeck() {
               <div className="px-6 mb-6">
                 <div className="relative p-4 rounded-2xl">
                   <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none" />
-                  <div className="relative z-10 grid grid-cols-2 gap-3">
+                  <div className="relative z-10">
+                    <div className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Controls Deck</div>
+                    <div className="grid grid-cols-2 gap-3">
                     {/* Save */}
                     <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
