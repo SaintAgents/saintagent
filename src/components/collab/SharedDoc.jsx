@@ -26,7 +26,7 @@ export default function SharedDoc({ conversationId }) {
   });
 
   const [value, setValue] = React.useState('');
-  React.useEffect(() => { if (doc && doc.content !== value) setValue(doc.content || ''); }, [doc?.id, doc?.content]);
+  React.useEffect(() => {if (doc && doc.content !== value) setValue(doc.content || '');}, [doc?.id, doc?.content]);
 
   const lastChangeRef = React.useRef(0);
   const onChange = (v) => {
@@ -42,10 +42,10 @@ export default function SharedDoc({ conversationId }) {
     <div className="border rounded-xl bg-white">
       <div className="flex items-center justify-between p-2 border-b">
         <div className="text-sm text-slate-600">Shared Document</div>
-        <Button size="sm" variant="outline" onClick={() => upsert.mutate(value)}>Save</Button>
+        <Button size="sm" variant="outline" onClick={() => upsert.mutate(value)} className="bg-fuchsia-50 text-slate-950 px-3 text-xs font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8">Save</Button>
       </div>
       <ReactQuill theme="snow" value={value} onChange={onChange} className="h-64" />
       <div className="p-2 text-xs text-slate-500">Autosaving… participants see changes live.</div>
-    </div>
-  );
+    </div>);
+
 }
