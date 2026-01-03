@@ -16,6 +16,8 @@ import {
   Users
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/utils';
 import LeaderApplicationModal from './LeaderApplicationModal';
 import LeaderQuizModal from './LeaderQuizModal';
 
@@ -341,6 +343,7 @@ export default function LeaderPathway({ profile }) {
 
         {status === 'active' && (
           <Button
+            onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
             className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white gap-2"
           >
             <Crown className="w-4 h-4" />
