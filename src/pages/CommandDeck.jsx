@@ -794,7 +794,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Platform Stats Mini Dashboard */}
-          <div className="mb-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
             <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">ACTIVITY CARDS
 
 
@@ -1070,7 +1070,7 @@ export default function CommandDeck() {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="block">
+                          <div className="block space-y-6">
             {/* Command Summary */}
             <CollapsibleCard
               title="Quick Actions"
@@ -1147,7 +1147,7 @@ export default function CommandDeck() {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="block">
+                          <div className="block space-y-6">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
