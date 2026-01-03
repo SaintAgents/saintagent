@@ -518,7 +518,7 @@ export default function CommandDeck() {
 
           {/* Profile Identifiers */}
           <div className="relative mb-6 p-6 rounded-2xl">
-            <div className="absolute inset-0 rounded-2xl bg-white/20 dark:bg-white/10 backdrop-blur-sm pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.33)] dark:bg-[rgba(255,255,255,0.18)] backdrop-blur-sm pointer-events-none" />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 <RankedAvatar
@@ -793,6 +793,7 @@ export default function CommandDeck() {
             </div>
           </div>
 
+          <h3 className="text-teal-500 font-semibold mb-2">Activity Cards</h3>
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="relative overflow-hidden rounded-2xl border border-amber-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
