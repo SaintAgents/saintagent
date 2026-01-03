@@ -21,6 +21,7 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import ProjectOnboard from './pages/ProjectOnboard';
+import ProjectCreate from './pages/ProjectCreate';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +49,7 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "ProjectOnboard": ProjectOnboard,
+    "ProjectCreate": ProjectCreate,
 }
 
 export const pagesConfig = {

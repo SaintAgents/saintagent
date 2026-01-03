@@ -1,4 +1,6 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ const ACTIONS = [
 ];
 
 export default function QuickStartChecklist() {
+  const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
   return (
     <div className="space-y-4">
       <div>
@@ -23,11 +26,13 @@ export default function QuickStartChecklist() {
         <Progress value={0} className="h-2" />
       </div>
       <div className="space-y-3">
-        <div className="flex justify-end">
-          <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}>
-            Import Projects (CSV)
-          </Button>
-        </div>
+        {user?.role === 'admin' && (
+          <div className="flex justify-end">
+            <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}>
+              Import Projects (CSV)
+            </Button>
+          </div>
+        )}
         {ACTIONS.map((action, i) => (
           <div
             key={i}

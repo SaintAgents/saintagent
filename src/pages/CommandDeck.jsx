@@ -411,7 +411,7 @@ export default function CommandDeck() {
                 <Button
                   variant="outline"
                   className="rounded-xl"
-                  onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}
+                  onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}
                 >
                   Add Project
                 </Button>
