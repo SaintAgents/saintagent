@@ -81,8 +81,8 @@ export default function MiniProfile({
               <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
               <button
                 type="button"
-                data-open-profile={userId}
-                title="Open profile"
+                onClick={() => { window.location.href = createPageUrl('Profile') + (userId ? `?id=${encodeURIComponent(userId)}` : ''); }}
+                title="Open full profile"
                 className="inline-flex items-center justify-center w-5 h-5 rounded hover:bg-slate-100"
               >
                 <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
