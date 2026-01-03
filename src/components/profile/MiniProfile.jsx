@@ -87,14 +87,6 @@ export default function MiniProfile({
           {showName &&
         <div className="flex items-center gap-1 min-w-0">
               <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
-              <button
-            type="button"
-            onClick={() => {window.location.href = createPageUrl('Profile') + (userId ? `?id=${encodeURIComponent(userId)}` : '');}}
-            title="Open full profile"
-            className="inline-flex items-center justify-center w-5 h-5 rounded hover:bg-slate-100">
-
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
-              </button>
               <HelpHint
             side="right"
             align="start"
