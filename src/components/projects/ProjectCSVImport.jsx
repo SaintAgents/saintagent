@@ -49,6 +49,12 @@ export default function ProjectCSVImport() {
         throw new Error(extract.details || "Failed to parse CSV");
       }
       const rows = Array.isArray(extract.output) ? extract.output : [extract.output];
+      // Coerce keys to consistent casing (optional)
+      const normalizedKeys = rows.map((row) => {
+        const out = {};
+        Object.keys(row || {}).forEach((k) => { out[k.trim()] = row[k]; });
+        return out;
+      });
 
       // Normalize records to Project shape
       const normalized = rows.map((r) => {
