@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { Layers, AlertTriangle } from "lucide-react";
+import MiniProfile from '@/components/profile/MiniProfile';
 
 const STATUS_STYLES = {
   approved: "bg-emerald-100 text-emerald-700",
@@ -19,6 +20,7 @@ export default function ProjectMiniCard({ project, onClick }) {
   const h = project.humanitarian_score;
   const i = project.industrial_value;
   const tags = Array.isArray(project.impact_tags) ? project.impact_tags : [];
+  const ownerId = project.owner_id || project.creator_id || project.claimed_by;
 
   return (
     <button onClick={onClick} className="text-left w-full">
@@ -37,6 +39,11 @@ export default function ProjectMiniCard({ project, onClick }) {
           }
         </CardHeader>
         <CardContent className="pt-0 space-y-2">
+          {ownerId && (
+            <div className="-mt-2 mb-1">
+              <MiniProfile userId={ownerId} size={24} />
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <Badge variant="outline" className="bg-slate-50">Funding: ${budget.toLocaleString()}</Badge>
             {typeof h === "number" &&

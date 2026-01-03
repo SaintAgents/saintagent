@@ -14,6 +14,7 @@ import { createPageUrl } from "@/utils";
 import CreateGroupChatModal from "@/components/messages/CreateGroupChatModal";
 import NewDirectMessageModal from "@/components/messages/NewDirectMessageModal";
 import EmojiPicker from "@/components/messages/EmojiPicker";
+import MiniProfile from '@/components/profile/MiniProfile';
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -262,16 +263,9 @@ export default function Messages() {
                   selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
                 )}>
 
-              <div className="relative">
-                <Avatar className="w-10 h-10 cursor-pointer" data-user-id={conv.otherUser.id}>
-                  <AvatarImage src={conv.otherUser.avatar} />
-                  <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <span className={cn("absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-slate-200", STATUS_COLORS[getStatus(conv.otherUser.id)])} />
-              </div>
               <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-sm text-slate-900">{conv.otherUser.name}</p>
+                  <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} />
                   <p className="text-xs text-slate-400">
                     {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'h:mm a') : ''}
                   </p>
@@ -316,14 +310,7 @@ export default function Messages() {
         <div className="flex-1 flex flex-col">
           {/* Header */}
           <div className="p-4 border-b bg-white flex items-center gap-3">
-            <Avatar className="w-10 h-10 cursor-pointer" data-user-id={selectedConversation.otherUser.id}>
-              <AvatarImage src={selectedConversation.otherUser.avatar} />
-              <AvatarFallback>{selectedConversation.otherUser.name?.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold text-slate-900">{selectedConversation.otherUser.name}</p>
-              <p className="text-xs text-slate-500">{STATUS_LABELS[getStatus(selectedConversation.otherUser.id)]}</p>
-            </div>
+            <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} />
             <div className="ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

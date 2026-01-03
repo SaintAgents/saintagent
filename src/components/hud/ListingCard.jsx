@@ -17,6 +17,7 @@ import {
   Play,
   Edit
 } from "lucide-react";
+import MiniProfile from '@/components/profile/MiniProfile';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -114,11 +115,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
         <p className="text-sm text-slate-500 line-clamp-2 mt-2">{listing.description}</p>
 
         <div className="flex items-center gap-3 mt-3">
-          <Avatar className="w-6 h-6 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={listing.owner_id}>
-            <AvatarImage src={listing.owner_avatar} />
-            <AvatarFallback className="text-xs">{listing.owner_name?.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <span className="text-sm text-slate-600">{listing.owner_name}</span>
+          <MiniProfile userId={listing.owner_id} name={listing.owner_name} avatar={listing.owner_avatar} size={24} />
           {listing.rating && (
             <div className="flex items-center gap-1 ml-auto">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />

@@ -31,6 +31,7 @@ import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
+import MiniProfile from '@/components/profile/MiniProfile';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 import { RP_LADDER } from '@/components/reputation/rpUtils';
 import { createPageUrl } from '@/utils';
@@ -490,17 +491,16 @@ export default function SidePanel({
                           }
                         }}
                         data-user-id={match.target_type === 'person' ? match.target_id : null}>
-
-                        <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all">
-                          <AvatarImage src={match.target_avatar} />
-                          <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                            {match.target_name?.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
-                        <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
+                        {match.target_type === 'person' ? (
+                          <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={36} />
+                        ) : (
+                          <>
+                            <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
+                            <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
+                          </>
+                        )}
                       </div>
                       <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
                     </button>);
@@ -584,19 +584,11 @@ export default function SidePanel({
                   return (
                     <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
                       {/* Post Header */}
-                      <div className="flex items-start gap-3">
-                        <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={post.author_id}>
-                          <AvatarImage src={post.author_avatar} />
-                          <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                            {post.author_name?.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900">{post.author_name}</p>
-                          <p className="text-xs text-slate-500">
-                            {format(parseISO(post.created_date), 'MMM d, h:mm a')}
-                          </p>
-                        </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={36} />
+                        <p className="text-xs text-slate-500">
+                          {format(parseISO(post.created_date), 'MMM d, h:mm a')}
+                        </p>
                       </div>
 
                       {/* Post Content */}
@@ -964,17 +956,9 @@ export default function SidePanel({
                   const showComments = expandedComments[post.id];
                   return (
                     <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-                      <div className="flex items-start gap-3">
-                        <Avatar className="w-9 h-9">
-                          <AvatarImage src={post.author_avatar} />
-                          <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                            {post.author_name?.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900">{post.author_name}</p>
-                          <p className="text-xs text-slate-500">{format(parseISO(post.created_date), 'MMM d, h:mm a')}</p>
-                        </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={36} />
+                        <p className="text-xs text-slate-500">{format(parseISO(post.created_date), 'MMM d, h:mm a')}</p>
                       </div>
                       <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
                       {post.video_url ?

@@ -26,6 +26,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import MiniProfile from '@/components/profile/MiniProfile';
 
 export default function MatchCard({ match, onAction }) {
   const [showExplanation, setShowExplanation] = useState(false);
@@ -164,17 +165,21 @@ export default function MatchCard({ match, onAction }) {
 
       <div className="flex items-start gap-4">
         <div className="relative" onClick={handleNavigateTarget}>
-          <Avatar
-            className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all">
-
-            <AvatarImage src={match.target_avatar} />
-            <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium">
-              {match.target_name?.charAt(0) || "?"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-sm">
-            <TypeIcon className="w-3 h-3 text-violet-500" />
-          </div>
+          {match.target_type === 'person' ? (
+            <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={48} />
+          ) : (
+            <>
+              <Avatar className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all">
+                <AvatarImage src={match.target_avatar} />
+                <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium">
+                  {match.target_name?.charAt(0) || "?"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-sm">
+                <TypeIcon className="w-3 h-3 text-violet-500" />
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex-1 min-w-0">
