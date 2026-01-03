@@ -439,6 +439,35 @@ export default function SidePanel({
             </div>
           </CollapsibleCard>
 
+          <CollapsibleCard title="Users & Regions" icon={Users}>
+            <div className="p-4 rounded-xl bg-white border border-slate-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Total Users</p>
+                  <p className="text-2xl font-bold text-slate-900">1,247</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-right">
+                    <p className="text-xs text-slate-500">North America</p>
+                    <p className="text-sm font-semibold text-slate-900">487</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-slate-500">Europe</p>
+                    <p className="text-sm font-semibold text-slate-900">312</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-slate-500">Asia</p>
+                    <p className="text-sm font-semibold text-slate-900">289</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-slate-500">Other</p>
+                    <p className="text-sm font-semibold text-slate-900">159</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CollapsibleCard>
+
            {/* Today's Schedule */}
           <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
             <div className="space-y-2">
