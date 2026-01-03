@@ -84,9 +84,27 @@ export default function ProjectCSVImport() {
       try {
         log('Uploading file to cloud...');
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        log('Upload complete');
-        // Use permissive schema and let the extractor infer columns
-        const jsonSchema = { type: 'object', additionalProperties: true };
+        log(`Upload complete: ${file_url}`);
+        // Force CSV parsing by giving schema with expected fields
+        const jsonSchema = {
+          type: 'object',
+          properties: {
+            projectid: { type: 'string' },
+            projectnumber: { type: 'string' },
+            projectname: { type: 'string' },
+            projectarea: { type: 'string' },
+            projectdescription: { type: 'string' },
+            projectbenefits: { type: 'string' },
+            projectmethods: { type: 'string' },
+            projectadditional: { type: 'string' },
+            projecttotalcost: { type: 'string' },
+            projecttype: { type: 'string' },
+            projectphase: { type: 'string' },
+            projectpartners: { type: 'string' },
+            projectscope: { type: 'string' }
+          },
+          additionalProperties: true
+        };
         const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
         if (extract.status === "success" && extract.output) {
           const rawRows = Array.isArray(extract.output) ? extract.output : [extract.output];
