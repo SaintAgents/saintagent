@@ -363,6 +363,18 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           background-color: #1f2937 !important;
         }
       `}</style>
+      <style>{`
+        /* Light theme background for Command Deck */
+        [data-theme='light'] main[data-page='CommandDeck'] {
+          background-image: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.92)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6c4796c1a_PrecisearchitecturalcolorphotographycapturingawetrainysceneofawhiteandgoldcircuitboardPurplenodesarevisiblewithlightgraysmokescatteredThebackgroundispredominantlywhitefillingt.jpg');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+        }
+        [data-theme='light'] main[data-page='CommandDeck'] > div {
+          background: transparent !important;
+        }
+      `}</style>
 
       {/* Sidebar */}
       <Sidebar 
