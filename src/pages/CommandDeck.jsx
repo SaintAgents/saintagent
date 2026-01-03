@@ -72,6 +72,7 @@ export default function CommandDeck() {
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
+  const [cardsForceOpen, setCardsForceOpen] = useState(null);
 
   // Current user (safe for public use)
   const { data: currentUser } = useQuery({
@@ -1002,7 +1003,7 @@ export default function CommandDeck() {
                       </div>
                     </button>
                     {/* Collapse */}
-                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                    <button type="button" onClick={() => setCardsForceOpen(false)} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
@@ -1010,7 +1011,7 @@ export default function CommandDeck() {
                       </div>
                     </button>
                     {/* Expand */}
-                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                    <button type="button" onClick={() => setCardsForceOpen(true)} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expand</div>
@@ -1034,7 +1035,7 @@ export default function CommandDeck() {
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
-              onPopout={() => setQuickActionsPopupOpen(true)}>
+              onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
@@ -1063,7 +1064,7 @@ export default function CommandDeck() {
               icon={CheckCircle}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-              onPopout={() => setQuickStartPopupOpen(true)}>
+              onPopout={() => setQuickStartPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <QuickStartChecklist />
             </CollapsibleCard>
@@ -1075,7 +1076,7 @@ export default function CommandDeck() {
               badge={notifications.length}
               badgeColor="rose"
               backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
-              onPopout={() => setInboxPopupOpen(true)}>
+              onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                                 <InboxSignals notifications={notifications} />
                               </CollapsibleCard>
@@ -1086,7 +1087,7 @@ export default function CommandDeck() {
               icon={Users}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
-              onPopout={() => setCirclesPopupOpen(true)}>
+              onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                                 <CirclesRegions />
                               </CollapsibleCard>
@@ -1096,7 +1097,7 @@ export default function CommandDeck() {
               title="Leader Pathway"
               icon={Sparkles}
               defaultOpen={true}
-              onPopout={() => setLeaderPopupOpen(true)}>
+              onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
@@ -1111,7 +1112,7 @@ export default function CommandDeck() {
               badge={matches.length}
               badgeColor="violet"
               backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
-              onPopout={() => setSyncPopupOpen(true)}>
+              onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
@@ -1157,7 +1158,7 @@ export default function CommandDeck() {
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
-              onPopout={() => setMeetingsPopupOpen(true)}>
+              onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
@@ -1187,7 +1188,7 @@ export default function CommandDeck() {
               badge={missions.length}
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
-              onPopout={() => setMissionsPopupOpen(true)}>
+              onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="space-y-3">
                 {missions.length === 0 ?
@@ -1217,7 +1218,7 @@ export default function CommandDeck() {
               icon={Folder}
               defaultOpen={true}
               backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
-              onPopout={() => setProjectsPopupOpen(true)}>
+              onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               {/* Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
@@ -1282,7 +1283,7 @@ export default function CommandDeck() {
                         title="Marketplace: Earn & Learn"
                         icon={ShoppingBag}
                         backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-                        onPopout={() => setMarketPopupOpen(true)}>
+                        onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                               <Tabs defaultValue="offers" className="w-full">
                                 <TabsList className="w-full grid grid-cols-3 mb-4">
@@ -1329,7 +1330,7 @@ export default function CommandDeck() {
                         title="Influence & Reach"
                         icon={TrendingUp}
                         backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-                        onPopout={() => setInfluencePopupOpen(true)}>
+                        onPopout={() => setInfluencePopupOpen(true)} forceOpen={cardsForceOpen}>
 
                               <div className="space-y-4">
                                 <div className="grid grid-cols-3 gap-3">
@@ -1373,7 +1374,7 @@ export default function CommandDeck() {
                         icon={Radio}
                         defaultOpen={false}
                         backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
-                        onPopout={() => setLeaderChannelPopupOpen(true)}>
+                        onPopout={() => setLeaderChannelPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                               <div className="text-center py-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
@@ -1400,7 +1401,7 @@ export default function CommandDeck() {
                         icon={Calendar}
                         defaultOpen={true}
                         backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                        onPopout={() => setDailyOpsPopupOpen(true)}>
+                        onPopout={() => setDailyOpsPopupOpen(true)} forceOpen={cardsForceOpen}>
                               <div className="flex items-center justify-between">
                                 <div>
                                   <div className="text-xs text-slate-500">Today’s GGG</div>
