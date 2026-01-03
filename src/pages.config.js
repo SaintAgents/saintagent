@@ -1,3 +1,4 @@
+import ActivityFeed from './pages/ActivityFeed';
 import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
 import Circles from './pages/Circles';
@@ -9,6 +10,7 @@ import FindCollaborators from './pages/FindCollaborators';
 import InviteLanding from './pages/InviteLanding';
 import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
+import ListingDetail from './pages/ListingDetail';
 import Marketplace from './pages/Marketplace';
 import Matches from './pages/Matches';
 import Meetings from './pages/Meetings';
@@ -26,12 +28,11 @@ import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
-import ListingDetail from './pages/ListingDetail';
-import ActivityFeed from './pages/ActivityFeed';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ActivityFeed": ActivityFeed,
     "Admin": Admin,
     "AffiliateCenter": AffiliateCenter,
     "Circles": Circles,
@@ -43,6 +44,7 @@ export const PAGES = {
     "InviteLanding": InviteLanding,
     "LeaderChannel": LeaderChannel,
     "Leaderboards": Leaderboards,
+    "ListingDetail": ListingDetail,
     "Marketplace": Marketplace,
     "Matches": Matches,
     "Meetings": Meetings,
@@ -60,8 +62,6 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
-    "ListingDetail": ListingDetail,
-    "ActivityFeed": ActivityFeed,
 }
 
 export const pagesConfig = {

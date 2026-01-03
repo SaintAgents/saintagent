@@ -8,6 +8,8 @@ import AvatarUploader from '@/components/profile/AvatarUploader';
 import OnboardingDataEditor from '@/components/profile/OnboardingDataEditor';
 import ConnectionPreferencesEditor from '@/components/profile/ConnectionPreferencesEditor';
 import AscensionLadderPopover from '@/components/profile/AscensionLadderPopover';
+import PortfolioSection from '@/components/profile/PortfolioSection';
+import EndorsementsSection from '@/components/profile/EndorsementsSection';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,6 +68,13 @@ export default function Profile() {
   const [newIntention, setNewIntention] = useState('');
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      try { return await base44.auth.me(); } catch { return null; }
+    }
+  });
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
