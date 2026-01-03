@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2 } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder } from "lucide-react";
 
 import UserManagement from '@/components/admin/UserManagement';
 import GGGRulesManager from '@/components/admin/GGGRulesManager';
 import LeaderApplications from '@/components/admin/LeaderApplications';
 import PlatformSettings from '@/components/admin/PlatformSettings';
+import AdminProjects from '@/components/admin/AdminProjects';
 import ReferralDatasets from '@/components/admin/ReferralDatasets';
 
 export default function Admin() {
@@ -47,7 +48,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-6">
+          <TabsList className="grid w-full max-w-3xl grid-cols-7">
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Users
@@ -71,6 +72,10 @@ export default function Admin() {
             <TabsTrigger value="stats" className="gap-2">
               <BarChart3 className="w-4 h-4" />
               Stats
+            </TabsTrigger>
+            <TabsTrigger value="projects" className="gap-2">
+              <Folder className="w-4 h-4" />
+              Projects
             </TabsTrigger>
           </TabsList>
 
@@ -99,6 +104,10 @@ export default function Admin() {
               <BarChart3 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
               <p className="text-slate-500">Platform statistics coming soon</p>
             </div>
+          </TabsContent>
+
+          <TabsContent value="projects">
+            <AdminProjects />
           </TabsContent>
         </Tabs>
       </div>

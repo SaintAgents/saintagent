@@ -12,22 +12,24 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Coins,
-  TrendingUp,
-  Users,
-  Calendar,
-  Target,
-  DollarSign,
-  CheckCircle,
-  Sparkles,
-  Plus,
-  ArrowRight,
-  Zap,
-  ShoppingBag,
-  Radio,
-  Flame,
-  BarChart3 } from
-"lucide-react";
+        Coins,
+        TrendingUp,
+        Users,
+        Calendar,
+        Target,
+        DollarSign,
+        CheckCircle,
+        Sparkles,
+        Plus,
+        ArrowRight,
+        Zap,
+        ShoppingBag,
+        Radio,
+        Flame,
+        BarChart3,
+        List
+      } from
+      "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
@@ -216,11 +218,15 @@ export default function CommandDeck() {
 
   // Project filters
   const filteredProjects = (projects || []).filter((p) => {
-    const statusOk = projectStatus === 'all' || p.status === projectStatus;
-    const q = projectSearch.toLowerCase();
-    const textOk = !q || (p.title || '').toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q);
-    return statusOk && textOk;
-  });
+        const statusOk = projectStatus === 'all' || p.status === projectStatus;
+        const q = projectSearch.toLowerCase();
+        const textOk = !q || (p.title || '').toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q);
+        return statusOk && textOk;
+      });
+      const totalProjects = (projects || []).length;
+      const approvedCount = (projects || []).filter((p) => p.status === 'approved').length;
+      const pendingCount = (projects || []).filter((p) => p.status === 'pending_review').length;
+      const submittedCount = (projects || []).filter((p) => ['draft','pending_review'].includes(p.status)).length;
 
   const queryClient = useQueryClient();
 
@@ -965,6 +971,14 @@ useEffect(() => {
                   <ShoppingBag className="w-5 h-5" />
                   <span className="text-stone-950 text-xs">Create Offer</span>
                 </Button>
+                <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
+                  <Folder className="w-5 h-5" />
+                  <span className="text-xs">Project +</span>
+                </Button>
+                <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
+                  <List className="w-5 h-5" />
+                  <span className="text-xs">DO +</span>
+                </Button>
               </div>
             </CollapsibleCard>
 
@@ -1128,6 +1142,14 @@ useEffect(() => {
               icon={Folder}
               defaultOpen={true}
               backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80">
+
+              {/* Summary */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{totalProjects}</div></div>
+                <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submittedCount}</div></div>
+                <div className="p-3 rounded-xl bg-emerald-50 border"><div className="text-xs text-emerald-700">Approved</div><div className="text-xl font-bold text-emerald-700">{approvedCount}</div></div>
+                <div className="p-3 rounded-xl bg-amber-50 border"><div className="text-xs text-amber-700">Pending</div><div className="text-xl font-bold text-amber-700">{pendingCount}</div></div>
+              </div>
 
               <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="md:col-span-2 relative">

@@ -70,7 +70,14 @@ export default function ProjectCSVImport() {
         const hs = num(r.humanitarian_score);
         const iv = num(r.industrial_value);
         const budget = num(r.budget);
-        return {
+
+        const known = new Set(["title","description","budget","industrial_value","humanitarian_score","status","impact_tags","tags","strategic_intent","intent","negative_environmental_impact"]);
+        const metadata = {};
+        Object.entries(r || {}).forEach(([k, v]) => {
+          if (!known.has(k)) metadata[k] = v;
+        });
+
+        const rec = {
           title: r.title,
           description: r.description || "",
           budget: typeof budget === "number" ? budget : 0,
@@ -81,6 +88,8 @@ export default function ProjectCSVImport() {
           strategic_intent: r.strategic_intent || r.intent || "",
           negative_environmental_impact: coerceBool(r.negative_environmental_impact)
         };
+        if (Object.keys(metadata).length) rec.metadata = metadata;
+        return rec;
       }).filter((r) => r.title);
 
       // Try bulk create first

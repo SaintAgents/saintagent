@@ -46,6 +46,10 @@ export default function SidePanel({
   const [commentText, setCommentText] = useState({});
   const [expandedComments, setExpandedComments] = useState({});
   const [newPostText, setNewPostText] = useState('');
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [videoError, setVideoError] = useState('');
   const queryClient = useQueryClient();
 
   // Popout states for sections
@@ -176,17 +180,25 @@ export default function SidePanel({
   });
 
   const createPostMutation = useMutation({
-    mutationFn: async (content) => {
+    mutationFn: async (payload) => {
       await base44.entities.Post.create({
         author_id: profile.user_id,
         author_name: profile.display_name,
         author_avatar: profile.avatar_url,
-        content
+        content: payload.content || '',
+        video_url: payload.video_url,
+        video_duration_seconds: payload.video_duration_seconds
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       setNewPostText('');
+      if (videoPreview) { try { URL.revokeObjectURL(videoPreview); } catch {}
+      }
+      setVideoFile(null);
+      setVideoPreview(null);
+      setVideoDuration(0);
+      setVideoError('');
     }
   });
 
@@ -202,14 +214,47 @@ export default function SidePanel({
     }
   };
 
-  const handleCreatePost = () => {
-    if (newPostText.trim()) {
-      createPostMutation.mutate(newPostText.trim());
+  const handleCreatePost = async () => {
+    if (!newPostText.trim() && !videoFile) return;
+    let video_url;
+    if (videoFile) {
+      const up = await base44.integrations.Core.UploadFile({ file: videoFile });
+      video_url = up.file_url;
     }
+    createPostMutation.mutate({
+      content: newPostText.trim(),
+      video_url,
+      video_duration_seconds: videoFile ? Math.round(videoDuration || 0) : undefined
+    });
   };
 
   const isLikedByUser = (postId) => {
     return allLikes.some(l => l.post_id === postId && l.user_id === profile?.user_id);
+  };
+
+  const getPostComments = (postId) => {
+  };
+
+  const onVideoChange = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) { setVideoFile(null); setVideoPreview(null); setVideoDuration(0); setVideoError(''); return; }
+    const url = URL.createObjectURL(f);
+    setVideoFile(f);
+    setVideoPreview(url);
+    setVideoError('');
+    const v = document.createElement('video');
+    v.preload = 'metadata';
+    v.src = url;
+    v.onloadedmetadata = () => {
+      const dur = Number(v.duration || 0);
+      setVideoDuration(dur);
+      if (dur > 120) {
+        setVideoError('Video must be 2 minutes max');
+        setVideoFile(null);
+        setVideoPreview(null);
+        try { URL.revokeObjectURL(url); } catch {}
+      }
+    };
   };
 
   const getPostComments = (postId) => {
@@ -510,13 +555,11 @@ export default function SidePanel({
                       {/* Post Content */}
                       <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
 
-                      {post.image_urls && post.image_urls.length > 0 && (
-                        <img 
-                          src={post.image_urls[0]} 
-                          alt="" 
-                          className="w-full rounded-lg"
-                        />
-                      )}
+                      {post.video_url ? (
+                        <video src={post.video_url} controls className="w-full rounded-lg" />
+                      ) : post.image_urls && post.image_urls.length > 0 ? (
+                        <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" />
+                      ) : null}
 
                       {/* Post Actions */}
                       <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
@@ -847,9 +890,11 @@ export default function SidePanel({
                         </div>
                       </div>
                       <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
-                      {post.image_urls && post.image_urls.length > 0 && (
+                      {post.video_url ? (
+                        <video src={post.video_url} controls className="w-full rounded-lg" />
+                      ) : post.image_urls && post.image_urls.length > 0 ? (
                         <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" />
-                      )}
+                      ) : null}
                       <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
                         <button
                           onClick={() => handleLike(post.id)}
