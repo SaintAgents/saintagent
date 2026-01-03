@@ -572,40 +572,46 @@ export default function CommandDeck() {
                           <div>You're at the highest rank.</div>
                           }
 
-                            <div className="text-zinc-600 mt-2">
-                              <div className="text-xs font-semibold text-slate-700 mb-1">Ranks key</div>
-                              <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-600">
-                                {RP_LADDER.map((t) => (
-                                  <li key={t.code}>
-                                    <HoverCard>
-                                      <HoverCardTrigger asChild>
-                                        <div className="cursor-help inline-flex items-center gap-1">
-                                          <span className="capitalize font-medium">{t.title}</span> • {t.min}+
-                                          {RANK_DEFS[t.code]?.short && (
-                                            <span className="text-[11px] text-slate-400">— {RANK_DEFS[t.code].short}</span>
-                                          )}
-                                        </div>
-                                      </HoverCardTrigger>
-                                      <HoverCardContent className="w-72">
-                                        <div className="text-sm font-semibold text-slate-800 capitalize">{t.title} • {t.min}+</div>
-                                        {RANK_DEFS[t.code]?.full && (
-                                          <div className="mt-2 text-xs text-slate-700">
-                                            <div className="font-semibold">Definition:</div>
-                                            <div>{RANK_DEFS[t.code].full}</div>
-                                          </div>
-                                        )}
-                                        {RANK_DEFS[t.code]?.core && (
-                                          <div className="mt-2 text-xs text-slate-700">
-                                            <div className="font-semibold">Core Meaning:</div>
-                                            <div>{RANK_DEFS[t.code].core}</div>
-                                          </div>
-                                        )}
-                                      </HoverCardContent>
-                                    </HoverCard>
-                                  </li>
-                                ))}
-                              </ul>
-                              <div className="mt-1 text-[11px] text-slate-400">Hover any rank for definitions</div>
+                            <div className="text-zinc-700 mt-2">
+                              <div className="text-xs font-semibold text-slate-800 mb-1">Ranks key</div>
+                              <div className="overflow-hidden rounded-lg border border-slate-200">
+                                <table className="w-full text-xs">
+                                  <thead className="bg-slate-50">
+                                    <tr className="text-slate-800">
+                                      <th className="text-left px-3 py-2 font-semibold">Rank</th>
+                                      <th className="text-left px-3 py-2 font-semibold">Min RP</th>
+                                      <th className="text-left px-3 py-2 font-semibold">Short</th>
+                                      <th className="text-left px-3 py-2 font-semibold">Core Meaning</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {RP_LADDER.map((t) => (
+                                      <tr key={t.code} className="border-t border-slate-100 hover:bg-slate-50">
+                                        <td className="px-3 py-2 text-slate-900 capitalize">
+                                          <HoverCard>
+                                            <HoverCardTrigger asChild>
+                                              <span className="cursor-help font-medium">{t.title}</span>
+                                            </HoverCardTrigger>
+                                            <HoverCardContent className="w-80">
+                                              <div className="text-sm font-semibold text-slate-900 capitalize">{t.title} • {t.min}+</div>
+                                              {RANK_DEFS[t.code]?.full && (
+                                                <div className="mt-2 text-xs text-slate-800">
+                                                  <div className="font-semibold">Definition:</div>
+                                                  <div>{RANK_DEFS[t.code].full}</div>
+                                                </div>
+                                              )}
+                                            </HoverCardContent>
+                                          </HoverCard>
+                                        </td>
+                                        <td className="px-3 py-2 text-slate-900">{t.min}+</td>
+                                        <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.short || '-'}</td>
+                                        <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.core || '-'}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="mt-1 text-[11px] text-slate-500">Hover rank name for full definition</div>
                             </div>
 
                             {rpInfo.nextMin &&
