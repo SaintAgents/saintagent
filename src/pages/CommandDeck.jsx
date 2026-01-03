@@ -43,7 +43,7 @@ import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import LeaderPathway from '@/components/leader/LeaderPathway';
 import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import HelpHint from '@/components/hud/HelpHint';
-import { getRPRank } from '@/components/reputation/rpUtils';
+import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -531,6 +531,28 @@ export default function CommandDeck() {
 
                           <div>You're at the highest rank.</div>
                           }
+
+                            <div className="mt-2">
+                              <div className="text-xs font-semibold text-slate-700 mb-1">Ranks key</div>
+                              <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-600">
+                                {RP_LADDER.map((t) => (
+                                  <li key={t.code}>
+                                    <span className="capitalize font-medium">{t.title}</span> • {t.min}+
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {rpInfo.nextMin && (
+                              <div className="mt-2">
+                                <div className="text-xs font-semibold text-slate-700 mb-1">Ramp up goals</div>
+                                <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
+                                  <li>Complete quality meetings and request testimonials</li>
+                                  <li>Finish missions and contribute to projects</li>
+                                  <li>Maintain positive interactions to raise trust</li>
+                                </ul>
+                              </div>
+                            )}
                           </div>
                         } />
 
