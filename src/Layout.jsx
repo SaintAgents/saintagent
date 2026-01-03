@@ -325,12 +325,12 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           background-attachment: fixed;
           color: #e5e7eb;
         }
-        [data-theme='dark'] [class*='bg-white'] { background-color: #F3E8FF !important; color: #0b0f19 !important; }
-        [data-theme='dark'] [class*='bg-slate-50'] { background-color: #EDE9FE !important; color: #0b0f19 !important; }
-        [data-theme='dark'] [class*='bg-slate-100'] { background-color: #EDE9FE !important; color: #0b0f19 !important; }
-        [data-theme='dark'] [class*='border-slate-100'] { border-color: #1e293b !important; }
+        [data-theme='dark'] [class*='bg-white'] { background-color: #0f172a !important; color: #e5e7eb !important; }
+        [data-theme='dark'] [class*='bg-slate-50'] { background-color: #0b1220 !important; color: #e5e7eb !important; }
+        [data-theme='dark'] [class*='bg-slate-100'] { background-color: #111827 !important; color: #e5e7eb !important; }
+        [data-theme='dark'] [class*='border-slate-100'] { border-color: #1f2937 !important; }
         [data-theme='dark'] [class*='border-slate-200'] { border-color: #334155 !important; }
-        [data-theme='dark'] [class*='text-slate-900'] { color: #0b0f19 !important; }
+        [data-theme='dark'] [class*='text-slate-900'] { color: #e5e7eb !important; }
         [data-theme='dark'] [class*='text-slate-700'] { color: #cbd5e1 !important; }
         [data-theme='dark'] [class*='text-slate-600'] { color: #94a3b8 !important; }
         [data-theme='dark'] [class*='text-slate-500'] { color: #94a3b8 !important; }
