@@ -232,9 +232,6 @@ export default function SidePanel({
     return allLikes.some(l => l.post_id === postId && l.user_id === profile?.user_id);
   };
 
-  const getPostComments = (postId) => {
-  };
-
   const onVideoChange = (e) => {
     const f = e.target.files?.[0];
     if (!f) { setVideoFile(null); setVideoPreview(null); setVideoDuration(0); setVideoError(''); return; }
