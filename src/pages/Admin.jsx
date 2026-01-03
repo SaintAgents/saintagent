@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder } from "lucide-react";
+import AdminStats from '@/components/admin/AdminStats';
 
 import UserManagement from '@/components/admin/UserManagement';
 import GGGRulesManager from '@/components/admin/GGGRulesManager';
@@ -100,10 +101,7 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="stats">
-            <div className="text-center py-12">
-              <BarChart3 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">Platform statistics coming soon</p>
-            </div>
+            <AdminStats />
           </TabsContent>
 
           <TabsContent value="projects">

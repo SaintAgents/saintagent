@@ -97,6 +97,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
       'Matches': 'matches',
       'Meetings': 'meetings',
       'Missions': 'missions',
+      'Projects': 'projects',
       'FindCollaborators': 'collaborators',
       'Marketplace': 'marketplace',
       'LeaderChannel': 'leader',
