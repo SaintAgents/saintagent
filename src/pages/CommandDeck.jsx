@@ -27,7 +27,9 @@ import {
         Radio,
         Flame,
         BarChart3,
-        List
+        List,
+        ChevronDown,
+        ChevronUp
       } from
       "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
@@ -89,6 +91,7 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
+  const [cardsForceOpen, setCardsForceOpen] = useState(null);
 
   // Current user (safe for public use)
   const { data: currentUser } = useQuery({
@@ -432,14 +435,6 @@ useEffect(() => {
               <p className="text-slate-500 mt-1">Your mission control center</p>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="outline" className="bg-zinc-200 text-slate-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
-
-                onClick={() => setSidePanelOpen(!sidePanelOpen)}>
-
-                <BarChart3 className="w-4 h-4" />
-                {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
-              </Button>
 
             </div>
           </div>
@@ -457,6 +452,27 @@ useEffect(() => {
               className="rounded-xl"
               onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
               Add Project
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-xl gap-2"
+              onClick={() => setCardsForceOpen(true)}>
+              <ChevronDown className="w-4 h-4" />
+              Expand All
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-xl gap-2"
+              onClick={() => setCardsForceOpen(false)}>
+              <ChevronUp className="w-4 h-4" />
+              Collapse All
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-xl gap-2"
+              onClick={() => setSidePanelOpen(!sidePanelOpen)}>
+              <BarChart3 className="w-4 h-4" />
+              {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
             </Button>
           </div>
         </div>
@@ -957,7 +973,7 @@ useEffect(() => {
                                 badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
                                 badgeColor="amber"
                                 backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
-                                onPopout={() => setQuickActionsPopupOpen(true)}>
+                                onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="grid grid-cols-2 gap-3">
                 <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
@@ -993,7 +1009,7 @@ useEffect(() => {
                                 icon={CheckCircle}
                                 defaultOpen={false}
                                 backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                                onPopout={() => setQuickStartPopupOpen(true)}>
+                                onPopout={() => setQuickStartPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <QuickStartChecklist />
             </CollapsibleCard>
@@ -1005,7 +1021,7 @@ useEffect(() => {
               badge={notifications.length}
               badgeColor="rose"
               backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
-              onPopout={() => setInboxPopupOpen(true)}>
+              onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                                 <InboxSignals notifications={notifications} />
                               </CollapsibleCard>
@@ -1016,7 +1032,7 @@ useEffect(() => {
               icon={Users}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
-              onPopout={() => setCirclesPopupOpen(true)}>
+              onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                                 <CirclesRegions />
                               </CollapsibleCard>
@@ -1026,7 +1042,7 @@ useEffect(() => {
               title="Leader Pathway"
               icon={Sparkles}
               defaultOpen={true}
-              onPopout={() => setLeaderPopupOpen(true)}>
+              onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
@@ -1041,7 +1057,7 @@ useEffect(() => {
               badge={matches.length}
               badgeColor="violet"
               backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
-              onPopout={() => setSyncPopupOpen(true)}>
+              onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
@@ -1087,7 +1103,7 @@ useEffect(() => {
               badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
-              onPopout={() => setMeetingsPopupOpen(true)}>
+              onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
@@ -1117,7 +1133,7 @@ useEffect(() => {
               badge={missions.length}
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
-              onPopout={() => setMissionsPopupOpen(true)}>
+              onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               <div className="space-y-3">
                 {missions.length === 0 ?
@@ -1147,7 +1163,7 @@ useEffect(() => {
                               icon={Folder}
                               defaultOpen={true}
                               backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
-                              onPopout={() => setProjectsPopupOpen(true)}>
+                              onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen}>
 
               {/* Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
@@ -1212,7 +1228,7 @@ useEffect(() => {
                               title="Marketplace: Earn & Learn"
                               icon={ShoppingBag}
                               backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-                              onPopout={() => setMarketPopupOpen(true)}>
+                              onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                               <Tabs defaultValue="offers" className="w-full">
                                 <TabsList className="w-full grid grid-cols-3 mb-4">
@@ -1259,7 +1275,7 @@ useEffect(() => {
                               title="Influence & Reach"
                               icon={TrendingUp}
                               backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-                              onPopout={() => setInfluencePopupOpen(true)}>
+                              onPopout={() => setInfluencePopupOpen(true)} forceOpen={cardsForceOpen}>
 
                               <div className="space-y-4">
                                 <div className="grid grid-cols-3 gap-3">
@@ -1303,7 +1319,7 @@ useEffect(() => {
                               icon={Radio}
                               defaultOpen={false}
                               backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
-                              onPopout={() => setLeaderChannelPopupOpen(true)}>
+                              onPopout={() => setLeaderChannelPopupOpen(true)} forceOpen={cardsForceOpen}>
 
                               <div className="text-center py-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
@@ -1330,7 +1346,7 @@ useEffect(() => {
                                               icon={Calendar}
                                               defaultOpen={true}
                                               backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                                              onPopout={() => setDailyOpsPopupOpen(true)}>
+                                              onPopout={() => setDailyOpsPopupOpen(true)} forceOpen={cardsForceOpen}>
                               <div className="flex items-center justify-between">
                                 <div>
                                   <div className="text-xs text-slate-500">Today’s GGG</div>
