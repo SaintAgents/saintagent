@@ -518,7 +518,7 @@ export default function CommandDeck() {
 
           {/* Profile Identifiers */}
           <div className="relative mb-6 p-6 rounded-2xl">
-            <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(255,255,255,0.12)] backdrop-blur-sm pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl bg-white/20 dark:bg-white/10 backdrop-blur-sm pointer-events-none" />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 <RankedAvatar
@@ -642,7 +642,7 @@ export default function CommandDeck() {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-violet-50 text-neutral-950 mb-4 p-3 opacity-100 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50" data-stats-bar>
+                <div className="bg-white/20 dark:bg-white/10 text-neutral-950 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3 backdrop-blur-sm" data-stats-bar>
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700">{walletAvailable?.toLocaleString?.() || "0"}</p>
                     <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
