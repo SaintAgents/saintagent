@@ -12,24 +12,24 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-        Coins,
-        TrendingUp,
-        Users,
-        Calendar,
-        Target,
-        DollarSign,
-        CheckCircle,
-        Sparkles,
-        Plus,
-        ArrowRight,
-        Zap,
-        ShoppingBag,
-        Radio,
-        Flame,
-        BarChart3,
-        List
-      } from
-      "lucide-react";
+  Coins,
+  TrendingUp,
+  Users,
+  Calendar,
+  Target,
+  DollarSign,
+  CheckCircle,
+  Sparkles,
+  Plus,
+  ArrowRight,
+  Zap,
+  ShoppingBag,
+  Radio,
+  Flame,
+  BarChart3,
+  List } from
+
+"lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
@@ -80,11 +80,11 @@ export default function CommandDeck() {
   const [marketPopupOpen, setMarketPopupOpen] = useState(false);
   const [influencePopupOpen, setInfluencePopupOpen] = useState(false);
   const [leaderPopupOpen, setLeaderPopupOpen] = useState(false);
-        const [quickActionsPopupOpen, setQuickActionsPopupOpen] = useState(false);
-        const [quickStartPopupOpen, setQuickStartPopupOpen] = useState(false);
-        const [leaderChannelPopupOpen, setLeaderChannelPopupOpen] = useState(false);
-const [projectsPopupOpen, setProjectsPopupOpen] = useState(false);
-const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
+  const [quickActionsPopupOpen, setQuickActionsPopupOpen] = useState(false);
+  const [quickStartPopupOpen, setQuickStartPopupOpen] = useState(false);
+  const [leaderChannelPopupOpen, setLeaderChannelPopupOpen] = useState(false);
+  const [projectsPopupOpen, setProjectsPopupOpen] = useState(false);
+  const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
@@ -118,12 +118,12 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: profile.user_id },
+        payload: { user_id: profile.user_id }
       });
       return data;
     },
     enabled: !!profile?.user_id,
-    refetchInterval: 5000,
+    refetchInterval: 5000
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpPoints = profile?.rp_points || 0;
@@ -220,27 +220,27 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
 
   // Project filters
   const filteredProjects = (projects || []).filter((p) => {
-        const statusOk = projectStatus === 'all' || p.status === projectStatus;
-        const q = projectSearch.toLowerCase();
-        const textOk = !q || (p.title || '').toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q);
-        return statusOk && textOk;
-      });
-      const totalProjects = (projects || []).length;
-      const approvedCount = (projects || []).filter((p) => p.status === 'approved').length;
-      const pendingCount = (projects || []).filter((p) => p.status === 'pending_review').length;
-      const submittedCount = (projects || []).filter((p) => ['draft','pending_review'].includes(p.status)).length;
+    const statusOk = projectStatus === 'all' || p.status === projectStatus;
+    const q = projectSearch.toLowerCase();
+    const textOk = !q || (p.title || '').toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q);
+    return statusOk && textOk;
+  });
+  const totalProjects = (projects || []).length;
+  const approvedCount = (projects || []).filter((p) => p.status === 'approved').length;
+  const pendingCount = (projects || []).filter((p) => p.status === 'pending_review').length;
+  const submittedCount = (projects || []).filter((p) => ['draft', 'pending_review'].includes(p.status)).length;
 
   const queryClient = useQueryClient();
 
-// Seed demo projects once on first visit (local flag)
-useEffect(() => {
-  const k = 'demoProjectsSeeded_v1';
-  if (typeof window !== 'undefined' && !localStorage.getItem(k)) {
-    base44.functions.invoke('seedProjects', {})
-      .then(() => queryClient.invalidateQueries({ queryKey: ['projects'] }))
-      .finally(() => { try { localStorage.setItem(k, '1'); } catch {} });
-  }
-}, [queryClient]);
+  // Seed demo projects once on first visit (local flag)
+  useEffect(() => {
+    const k = 'demoProjectsSeeded_v1';
+    if (typeof window !== 'undefined' && !localStorage.getItem(k)) {
+      base44.functions.invoke('seedProjects', {}).
+      then(() => queryClient.invalidateQueries({ queryKey: ['projects'] })).
+      finally(() => {try {localStorage.setItem(k, '1');} catch {}});
+    }
+  }, [queryClient]);
 
   // One-off: enforce creator's SA and identity if this is Mathues
   useEffect(() => {
@@ -448,13 +448,19 @@ useEffect(() => {
                   <Plus className="w-4 h-4" />
                   Quick Create
                 </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => {window.location.href = createPageUrl('ProjectCreate');}}>
 
+                  Add Project
+                </Button>
               </div>
             </div>
           </div>
 
           {/* Profile Identifiers */}
-          <div className="mb-6 p-6 rounded-2xl bg-transparent">
+          <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
             <div className="flex items-start gap-6">
               <div className="relative shrink-0">
                 <div
@@ -557,23 +563,23 @@ useEffect(() => {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-transparent mb-4 p-3 rounded-xl grid grid-cols-4 gap-3">
+                <div className="bg-violet-50 text-neutral-950 mb-4 p-3 opacity-100 rounded-xl grid grid-cols-4 gap-3 from-violet-50 to-purple-50">
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700">{walletAvailable?.toLocaleString?.() || "0"}</p>
-                    <p className="text-fuchsia-600 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.rank_points || 0}</p>
-                    <p className="text-fuchsia-600 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">{profile?.follower_count || 0}</p>
-                    <p className="text-fuchsia-600 text-xs">Followers</p>
+                    <p className="text-gray-950 text-xs">Followers</p>
                   </div>
                   <div className="text-center">
-                                            <p className="text-lg font-bold text-slate-900">{profile?.following_count || 0}</p>
-                                            <p className="text-fuchsia-600 text-xs">Following</p>
-                                          </div>
+                    <p className="text-lg font-bold text-slate-900">{profile?.meetings_completed || 0}</p>
+                    <p className="text-gray-950 text-xs">Meetings</p>
+                  </div>
                 </div>
 
                 {/* Setup Progress (if onboarding not complete) */}
@@ -937,80 +943,55 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="px-6 mb-6" data-ggg-controls>
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-slate-700">Controls</h3>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/680fcca96_Expandalliconwithgradientglow.png" alt="Expand" className="h-6 w-6" />
-              <span className="text-slate-900">Expand</span>
-            </Button>
-            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/bfda6cd06_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="h-6 w-6" />
-              <span className="text-slate-900">Collapse</span>
-            </Button>
-            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4a3addf85_save_light_icon.png" alt="Save" className="h-6 w-6" />
-              <span className="text-slate-900">Save</span>
-            </Button>
-            <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/78556d56e_reset_light_icon.png" alt="Reset" className="h-6 w-6" />
-              <span className="text-slate-900">Reset</span>
-            </Button>
-          </div>
-        </div>
-
         {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="block">
+          <div className="hidden">
             {/* Command Summary */}
             <CollapsibleCard
-                                title="Quick Actions"
-                                icon={Zap}
-                                badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
-                                badgeColor="amber"
-                                backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
-                                onPopout={() => setQuickActionsPopupOpen(true)}>
+              title="Quick Actions"
+              icon={Zap}
+              badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
+              badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
+              onPopout={() => setQuickActionsPopupOpen(true)}>
 
-              <div className="grid grid-cols-2 gap-3">
-                <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
-                  <Calendar className="w-5 h-5" />
-                  <span className="text-xs">Book Meeting</span>
-                </Button>
-                <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-20 flex-col gap-2" onClick={() => {setQuickCreateType('post');setQuickCreateOpen(true);}}>
-                  <Plus className="w-5 h-5" />
-                  <span className="bg-purple-100 text-stone-950 text-xs">Post Update</span>
-                </Button>
-                <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-20 flex-col gap-2" onClick={() => {setQuickCreateType('mission');setQuickCreateOpen(true);}}>
-                  <Target className="w-5 h-5" />
-                  <span className="text-xs">Launch Mission</span>
-                </Button>
-                <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-20 flex-col gap-2" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>
-                  <ShoppingBag className="w-5 h-5" />
-                  <span className="text-stone-950 text-xs">Create Offer</span>
-                </Button>
-                <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
-                  <Folder className="w-5 h-5" />
-                  <span className="text-xs">Project +</span>
-                </Button>
-                <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
-                  <List className="w-5 h-5" />
-                  <span className="text-xs">DO +</span>
-                </Button>
+              <div className="text-zinc-950">Reset
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               </div>
             </CollapsibleCard>
 
             {/* Quick Start Checklist */}
             <CollapsibleCard
-                                title="Quick Start Checklist"
-                                icon={CheckCircle}
-                                defaultOpen={false}
-                                backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                                onPopout={() => setQuickStartPopupOpen(true)}>
+              title="Quick Start Checklist"
+              icon={CheckCircle}
+              defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+              onPopout={() => setQuickStartPopupOpen(true)}>
 
               <QuickStartChecklist />
             </CollapsibleCard>
@@ -1050,7 +1031,7 @@ useEffect(() => {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="block">
+          <div className="hidden">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
@@ -1160,11 +1141,11 @@ useEffect(() => {
 
             {/* Projects */}
             <CollapsibleCard
-                              title="Projects"
-                              icon={Folder}
-                              defaultOpen={true}
-                              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
-                              onPopout={() => setProjectsPopupOpen(true)}>
+              title="Projects"
+              icon={Folder}
+              defaultOpen={true}
+              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
+              onPopout={() => setProjectsPopupOpen(true)}>
 
               {/* Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
@@ -1180,8 +1161,8 @@ useEffect(() => {
                     placeholder="Search projects..."
                     value={projectSearch}
                     onChange={(e) => setProjectSearch(e.target.value)}
-                    className="pl-3"
-                  />
+                    className="pl-3" />
+
                 </div>
                 <Select value={projectStatus} onValueChange={setProjectStatus}>
                   <SelectTrigger className="w-full">
@@ -1199,37 +1180,37 @@ useEffect(() => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {filteredProjects.length === 0 ? (
-                  <div className="col-span-full text-center py-8 text-slate-500">No projects found</div>
-                ) : (
-                  filteredProjects.slice(0, 4).map((p) => (
-                    <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
-                  ))
-                )}
+                {filteredProjects.length === 0 ?
+                <div className="col-span-full text-center py-8 text-slate-500">No projects found</div> :
+
+                filteredProjects.slice(0, 4).map((p) =>
+                <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
+                )
+                }
               </div>
 
-              {filteredProjects.length > 4 && (
-                <Button variant="ghost" className="w-full mt-3 text-violet-600">View more</Button>
-              )}
+              {filteredProjects.length > 4 &&
+              <Button variant="ghost" className="w-full mt-3 text-violet-600">View more</Button>
+              }
             </CollapsibleCard>
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="block">
+          <div className="hidden">
             <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="colC">
-              {(provided) => (
+              {(provided) =>
                 <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
-                  {colCOrder.map((id, index) => (
-                    <Draggable draggableId={id} index={index} key={id}>
-                      {(dragProvided) => (
-                        <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                          {id === 'market' && (
-                            <CollapsibleCard
-                              title="Marketplace: Earn & Learn"
-                              icon={ShoppingBag}
-                              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-                              onPopout={() => setMarketPopupOpen(true)}>
+                  {colCOrder.map((id, index) =>
+                  <Draggable draggableId={id} index={index} key={id}>
+                      {(dragProvided) =>
+                    <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
+                          {id === 'market' &&
+                      <CollapsibleCard
+                        title="Marketplace: Earn & Learn"
+                        icon={ShoppingBag}
+                        backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
+                        onPopout={() => setMarketPopupOpen(true)}>
 
                               <Tabs defaultValue="offers" className="w-full">
                                 <TabsList className="w-full grid grid-cols-3 mb-4">
@@ -1238,24 +1219,24 @@ useEffect(() => {
                                   <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="offers" className="space-y-3">
-                                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ? (
-                                    <div className="text-center py-6">
+                                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ?
+                            <div className="text-center py-6">
                                       <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                                       <p className="text-sm text-slate-500">No offers yet</p>
                                       <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">
                                         Create your first offer
                                       </Button>
-                                    </div>
-                                  ) : (
-                                    listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) => (
-                                      <ListingCard
-                                        key={listing.id}
-                                        listing={listing}
-                                        isOwner={true}
-                                        onAction={handleListingAction}
-                                      />
-                                    ))
-                                  )}
+                                    </div> :
+
+                            listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) =>
+                            <ListingCard
+                              key={listing.id}
+                              listing={listing}
+                              isOwner={true}
+                              onAction={handleListingAction} />
+
+                            )
+                            }
                                 </TabsContent>
                                 <TabsContent value="requests" className="space-y-3">
                                   <div className="text-center py-6">
@@ -1263,20 +1244,20 @@ useEffect(() => {
                                   </div>
                                 </TabsContent>
                                 <TabsContent value="browse" className="space-y-3">
-                                  {listings.slice(0, 2).map((listing) => (
-                                    <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
-                                  ))}
+                                  {listings.slice(0, 2).map((listing) =>
+                            <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
+                            )}
                                 </TabsContent>
                               </Tabs>
                             </CollapsibleCard>
-                          )}
+                      }
 
-                          {id === 'influence' && (
-                            <CollapsibleCard
-                              title="Influence & Reach"
-                              icon={TrendingUp}
-                              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-                              onPopout={() => setInfluencePopupOpen(true)}>
+                          {id === 'influence' &&
+                      <CollapsibleCard
+                        title="Influence & Reach"
+                        icon={TrendingUp}
+                        backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
+                        onPopout={() => setInfluencePopupOpen(true)}>
 
                               <div className="space-y-4">
                                 <div className="grid grid-cols-3 gap-3">
@@ -1303,8 +1284,8 @@ useEffect(() => {
                                     Spend GGG to amplify your content and attract more followers.
                                   </p>
                                   <Button
-                                    className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
-                                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
+                              className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
+                              onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
 
                                     <Zap className="w-4 h-4 mr-2" />
                                     Boost Now
@@ -1312,15 +1293,15 @@ useEffect(() => {
                                 </div>
                               </div>
                             </CollapsibleCard>
-                          )}
+                      }
 
-                          {id === 'leader' && (
-                            <CollapsibleCard
-                              title="144K Leader Channel"
-                              icon={Radio}
-                              defaultOpen={false}
-                              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
-                              onPopout={() => setLeaderChannelPopupOpen(true)}>
+                          {id === 'leader' &&
+                      <CollapsibleCard
+                        title="144K Leader Channel"
+                        icon={Radio}
+                        defaultOpen={false}
+                        backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
+                        onPopout={() => setLeaderChannelPopupOpen(true)}>
 
                               <div className="text-center py-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
@@ -1331,23 +1312,23 @@ useEffect(() => {
                                   Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
                                 </p>
                                 <Button
-                                  variant="outline"
-                                  className="rounded-xl"
-                                  onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
-                                >
+                            variant="outline"
+                            className="rounded-xl"
+                            onClick={() => {window.location.href = createPageUrl('LeaderChannel');}}>
+
                                   {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
                                 </Button>
                               </div>
                             </CollapsibleCard>
-                          )}
+                      }
 
-                          {id === 'dailyops' && (
-                            <CollapsibleCard
-                                              title="Daily Ops"
-                                              icon={Calendar}
-                                              defaultOpen={true}
-                                              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                                              onPopout={() => setDailyOpsPopupOpen(true)}>
+                          {id === 'dailyops' &&
+                      <CollapsibleCard
+                        title="Daily Ops"
+                        icon={Calendar}
+                        defaultOpen={true}
+                        backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+                        onPopout={() => setDailyOpsPopupOpen(true)}>
                               <div className="flex items-center justify-between">
                                 <div>
                                   <div className="text-xs text-slate-500">Today’s GGG</div>
@@ -1359,19 +1340,19 @@ useEffect(() => {
                                 </div>
                               </div>
                               <div className="mt-3 text-right">
-                                <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
+                                <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
                                   Open DO
                                 </Button>
                               </div>
                             </CollapsibleCard>
-                          )}
+                      }
                         </div>
-                      )}
+                    }
                     </Draggable>
-                  ))}
+                  )}
                   {provided.placeholder}
                 </div>
-              )}
+                }
             </Droppable>
             </DragDropContext>
             </div>
@@ -1379,97 +1360,97 @@ useEffect(() => {
 
       {/* Side Panel */}
       <SidePanel
-        matches={matches.slice(0, 5)}
-        meetings={scheduledMeetings}
-        profile={profile}
-        isOpen={sidePanelOpen}
-        onToggle={() => setSidePanelOpen(!sidePanelOpen)}
-        onMatchAction={handleMatchAction}
-        onMeetingAction={handleMeetingAction} />
+          matches={matches.slice(0, 5)}
+          meetings={scheduledMeetings}
+          profile={profile}
+          isOpen={sidePanelOpen}
+          onToggle={() => setSidePanelOpen(!sidePanelOpen)}
+          onMatchAction={handleMatchAction}
+          onMeetingAction={handleMeetingAction} />
 
 
       {/* Popout Panels */}
       {inboxPopupOpen &&
-      <FloatingPanel title="Inbox & Signals" onClose={() => setInboxPopupOpen(false)}>
+        <FloatingPanel title="Inbox & Signals" onClose={() => setInboxPopupOpen(false)}>
           <InboxSignals notifications={notifications} />
         </FloatingPanel>
-      }
+        }
       {circlesPopupOpen &&
-      <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}>
+        <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}>
           <CirclesRegions />
         </FloatingPanel>
-      }
+        }
       {syncPopupOpen &&
-      <FloatingPanel title="Synchronicity Engine" onClose={() => setSyncPopupOpen(false)}>
+        <FloatingPanel title="Synchronicity Engine" onClose={() => setSyncPopupOpen(false)}>
           <SynchronicityEngine
-          profile={profile}
-          matchTab={matchTab}
-          setMatchTab={setMatchTab}
-          filteredMatches={filteredMatches}
-          matches={matches}
-          onMatchAction={handleMatchAction} />
+            profile={profile}
+            matchTab={matchTab}
+            setMatchTab={setMatchTab}
+            filteredMatches={filteredMatches}
+            matches={matches}
+            onMatchAction={handleMatchAction} />
 
         </FloatingPanel>
-      }
+        }
       {meetingsPopupOpen &&
-      <FloatingPanel title="Meetings & Momentum" onClose={() => setMeetingsPopupOpen(false)}>
+        <FloatingPanel title="Meetings & Momentum" onClose={() => setMeetingsPopupOpen(false)}>
           <MeetingsMomentum
-          pendingMeetings={pendingMeetings}
-          scheduledMeetings={scheduledMeetings}
-          onAction={handleMeetingAction} />
+            pendingMeetings={pendingMeetings}
+            scheduledMeetings={scheduledMeetings}
+            onAction={handleMeetingAction} />
 
         </FloatingPanel>
-      }
+        }
       {missionsPopupOpen &&
-      <FloatingPanel title="Missions & Quests" onClose={() => setMissionsPopupOpen(false)}>
+        <FloatingPanel title="Missions & Quests" onClose={() => setMissionsPopupOpen(false)}>
           <MissionsQuests
-          missions={missions}
-          profile={profile}
-          onAction={handleMissionAction} />
+            missions={missions}
+            profile={profile}
+            onAction={handleMissionAction} />
 
         </FloatingPanel>
-      }
-      {selectedProject && (
+        }
+      {selectedProject &&
         <FloatingPanel title={selectedProject.title || 'Project Details'} onClose={() => setSelectedProject(null)}>
           <ProjectDetailCard project={selectedProject} />
         </FloatingPanel>
-      )}
+        }
       {marketPopupOpen &&
-      <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}>
+        <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}>
           <MarketplaceEarnLearn
-          listings={listings}
-          onAction={handleListingAction} />
+            listings={listings}
+            onAction={handleListingAction} />
 
         </FloatingPanel>
-      }
+        }
       {influencePopupOpen &&
-      <FloatingPanel title="Influence & Reach" onClose={() => setInfluencePopupOpen(false)}>
+        <FloatingPanel title="Influence & Reach" onClose={() => setInfluencePopupOpen(false)}>
           <InfluenceReach
-          profile={profile}
-          onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })} />
+            profile={profile}
+            onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })} />
 
         </FloatingPanel>
-      }
+        }
       {leaderPopupOpen &&
-      <FloatingPanel title="Leader Pathway" onClose={() => setLeaderPopupOpen(false)}>
+        <FloatingPanel title="Leader Pathway" onClose={() => setLeaderPopupOpen(false)}>
           <LeaderPathway profile={profile} />
         </FloatingPanel>
-      }
+        }
 
-      {projectsPopupOpen && (
+      {projectsPopupOpen &&
         <FloatingPanel title="Projects" onClose={() => setProjectsPopupOpen(false)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {filteredProjects.slice(0, 8).map((p) => (
-              <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
-            ))}
+            {filteredProjects.slice(0, 8).map((p) =>
+            <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
+            )}
           </div>
           <div className="mt-3 text-right">
-            <Button variant="outline" className="rounded-xl" onClick={() => { window.location.href = createPageUrl('Projects'); }}>Open Projects</Button>
+            <Button variant="outline" className="rounded-xl" onClick={() => {window.location.href = createPageUrl('Projects');}}>Open Projects</Button>
           </div>
         </FloatingPanel>
-      )}
+        }
 
-      {dailyOpsPopupOpen && (
+      {dailyOpsPopupOpen &&
         <FloatingPanel title="Daily Ops" onClose={() => setDailyOpsPopupOpen(false)}>
           <div className="flex items-center justify-between">
             <div>
@@ -1482,12 +1463,12 @@ useEffect(() => {
             </div>
           </div>
           <div className="mt-3 text-right">
-            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>Open DO</Button>
+            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>Open DO</Button>
           </div>
         </FloatingPanel>
-      )}
+        }
 
-      {quickActionsPopupOpen && (
+      {quickActionsPopupOpen &&
         <FloatingPanel title="Quick Actions" onClose={() => setQuickActionsPopupOpen(false)}>
           <div className="grid grid-cols-2 gap-3">
             <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
@@ -1508,15 +1489,15 @@ useEffect(() => {
             </Button>
           </div>
         </FloatingPanel>
-      )}
+        }
 
-      {quickStartPopupOpen && (
+      {quickStartPopupOpen &&
         <FloatingPanel title="Quick Start Checklist" onClose={() => setQuickStartPopupOpen(false)}>
           <QuickStartChecklist />
         </FloatingPanel>
-      )}
+        }
 
-      {leaderChannelPopupOpen && (
+      {leaderChannelPopupOpen &&
         <FloatingPanel title="144K Leader Channel" onClose={() => setLeaderChannelPopupOpen(false)}>
           <div className="text-center py-6">
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
@@ -1529,57 +1510,57 @@ useEffect(() => {
             <Button
               variant="outline"
               className="rounded-xl"
-              onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
-            >
+              onClick={() => {window.location.href = createPageUrl('LeaderChannel');}}>
+
               {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
             </Button>
           </div>
         </FloatingPanel>
-      )}
+        }
 
       {/* Badge Glossary Modal */}
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
 
       {/* Quick Create Modal */}
       <QuickCreateModal
-        open={quickCreateOpen}
-        initialType={quickCreateType}
-        onClose={() => {setQuickCreateOpen(false);setQuickCreateType(null);}}
-        onCreate={handleCreate} />
+          open={quickCreateOpen}
+          initialType={quickCreateType}
+          onClose={() => {setQuickCreateOpen(false);setQuickCreateType(null);}}
+          onCreate={handleCreate} />
 
 
       {/* Video Meeting Modal */}
       {videoMeeting &&
-      <VideoMeetingModal
-        meeting={videoMeeting}
-        open={!!videoMeeting}
-        onClose={() => setVideoMeeting(null)} />
+        <VideoMeetingModal
+          meeting={videoMeeting}
+          open={!!videoMeeting}
+          onClose={() => setVideoMeeting(null)} />
 
-      }
+        }
 
       {/* Boost Modal */}
       {boostTarget &&
-      <BoostModal
-        open={!!boostTarget}
-        onClose={() => setBoostTarget(null)}
-        targetType={boostTarget.type}
-        targetId={boostTarget.id} />
+        <BoostModal
+          open={!!boostTarget}
+          onClose={() => setBoostTarget(null)}
+          targetType={boostTarget.type}
+          targetId={boostTarget.id} />
 
-      }
+        }
 
       {/* Tune Engine Modal */}
       <TuneEngineModal
-        open={tuneEngineOpen}
-        onClose={() => setTuneEngineOpen(false)} />
+          open={tuneEngineOpen}
+          onClose={() => setTuneEngineOpen(false)} />
 
 
       {/* Online Users Modal */}
       <OnlineUsersModal
-        open={onlineUsersOpen}
-        onClose={() => setOnlineUsersOpen(false)} />
+          open={onlineUsersOpen}
+          onClose={() => setOnlineUsersOpen(false)} />
 
       </div>
-    </div>
-  );
+    </div>);
+
 
 }
