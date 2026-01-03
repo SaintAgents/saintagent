@@ -8,22 +8,16 @@ export default function ProjectCSVImport() {
   const [importing, setImporting] = React.useState(false);
   const [result, setResult] = React.useState(null);
   const [error, setError] = React.useState("");
+  const [logs, setLogs] = React.useState([]);
+  const log = (m) => setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${m}`]);
 
   const downloadTemplate = () => {
     const headers = [
-      "title",
-      "description",
-      "budget",
-      "industrial_value",
-      "humanitarian_score",
-      "status",
-      "impact_tags",
-      "strategic_intent",
-      "negative_environmental_impact"
+      "projectid","projectnumber","projectname","projectarea","projectdescription","projectbenefits","projectmethods","projectmainbenefits","projectadditional","projecttotalcost","projecttype","projectongoingcost","projectrolloutcost","projectmvpcost","projectphase","projectpartners","projectfinsust","projectfintype","projectressust","projectscope","projectneedtech","projectneedit","projectneedpers","projectneedmanag","projectneedinfra","projectneedlegal","projectgivetech","projectgiveit","projectgivepers","projectgivemanag","projectgiveinfra","projectgivelegal","fpersonid","updated","started","timesupdated"
     ];
     const sample = [
-      "Clean Water Initiative,Community well project in rural area,25000,6,9,pending_review,water;health;equity,Improve access to safe water,false",
-      "Factory Automation Upgrade,Increase throughput via robotics,1200000,9,5,pending_review,industry;automation;efficiency,Scale production,true"
+      "P-0001,42,Neighborhood Microgrid,energy;resilience,Local solar + storage,Lower outages; lower bills,Install panels and batteries,Resilience; savings,Add EV chargers,1500000,energy,50000,250000,200000,pilot,Utility; City,yes,public,yes,City-wide,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,user-123,2025-12-01,2025-01-15,3",
+      "P-0002,43,Community Garden,food;health,Urban garden network,Fresh produce; community,Permaculture methods,Health; cohesion,Add workshops,120000,community,10000,20000,15000,phase 2,Local NGOs,yes,donations,yes,Neighborhood,no,yes,yes,yes,no,no,no,no,no,yes,no,no,user-987,2025-11-15,2024-09-10,5"
     ].join("\n");
     const csv = headers.join(",") + "\n" + sample;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -42,6 +36,8 @@ export default function ProjectCSVImport() {
     setImporting(true);
     setError("");
     setResult(null);
+    setLogs([]);
+    log('Starting import');
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       const jsonSchema = {
@@ -67,57 +63,41 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
         throw new Error(extract.details || "Failed to parse CSV");
       }
       const rows = Array.isArray(extract.output) ? extract.output : [extract.output];
-      // Coerce keys to consistent casing (optional)
-      const normalizedKeys = rows.map((row) => {
-        const out = {};
-        Object.keys(row || {}).forEach((k) => { out[k.trim()] = row[k]; });
-        return out;
-      });
-
-      // Normalize records to Project shape
+      log(`Parsed ${rows.length} row(s)`);
+      // Normalize records to Project shape using your headers
       const normalized = rows.map((r) => {
-        const coerceBool = (v) => {
-          if (typeof v === "boolean") return v;
-          if (typeof v === "number") return v !== 0;
-          const s = String(v || "").trim().toLowerCase();
-          return ["true", "yes", "1"].includes(s);
-        };
-        const num = (v) => (v === null || v === undefined || v === "" ? undefined : Number(v));
+        const num = (v) => (v === null || v === undefined || v === '' ? undefined : Number(String(v).replace(/[$,]/g, '')));
         const tags = (() => {
-          const raw = r.impact_tags ?? r.tags;
+          const raw = r.projectarea;
           if (Array.isArray(raw)) return raw.map((t) => String(t));
-          if (typeof raw === "string") return raw.split(/[;,]/).map((t) => t.trim()).filter(Boolean);
+          if (typeof raw === 'string') return raw.split(/[;,]/).map((t) => t.trim()).filter(Boolean);
           return [];
         })();
-        const status = (r.status || "pending_review").toString().toLowerCase().replace(/\s+/g, "_");
-        const hs = num(r.humanitarian_score);
-        const iv = num(r.industrial_value);
-        const budget = num(r.budget);
-
-        const known = new Set(["title","description","budget","industrial_value","humanitarian_score","status","impact_tags","tags","strategic_intent","intent","negative_environmental_impact"]);
-        const metadata = {};
-        Object.entries(r || {}).forEach(([k, v]) => {
-          if (!known.has(k)) metadata[k] = v;
-        });
-
+        const budget = num(r.projecttotalcost);
+        const descParts = [r.projectdescription, r.projectbenefits, r.projectmethods, r.projectadditional].filter(Boolean);
         const rec = {
-          title: r.title,
-          description: r.description || "",
-          budget: typeof budget === "number" ? budget : 0,
-          industrial_value: typeof iv === "number" ? iv : 0,
-          humanitarian_score: typeof hs === "number" ? Math.max(1, Math.min(10, hs)) : 5,
-          status: ["draft","pending_review","approved","rejected","flagged"].includes(status) ? status : "pending_review",
+          title: r.projectname || r.projectnumber || r.projectid,
+          description: descParts.join(' | ') || '',
+          budget: typeof budget === 'number' && !Number.isNaN(budget) ? budget : 0,
+          industrial_value: 0,
+          humanitarian_score: 5,
+          status: 'pending_review',
           impact_tags: tags,
-          strategic_intent: r.strategic_intent || r.intent || "",
-          negative_environmental_impact: coerceBool(r.negative_environmental_impact)
+          strategic_intent: r.projectscope || '',
         };
+        // Attach all original fields into metadata for traceability
+        const known = new Set(['projectname','projectnumber','projectid','projectarea','projectdescription','projectbenefits','projectmethods','projectadditional','projecttotalcost','projecttype','projectphase','projectpartners','projectscope']);
+        const metadata = {};
+        Object.entries(r || {}).forEach(([k, v]) => { if (!known.has(k)) metadata[k] = v; });
         if (Object.keys(metadata).length) rec.metadata = metadata;
         return rec;
       }).filter((r) => r.title);
+      log(`Normalized ${normalized.length} record(s)`);
 
       // Try bulk create first
       let created = [];
       if (normalized.length > 0) {
+        log(`Importing ${normalized.length} record(s) ...`);
         if (base44.entities.Project.bulkCreate) {
           created = await base44.entities.Project.bulkCreate(normalized);
         } else {
@@ -127,9 +107,11 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
           }
         }
       }
+      log(`Imported ${created.length} record(s)`);
       setResult({ imported: created.length });
     } catch (e) {
       setError(e.message || String(e));
+      log(`Error: ${e.message || String(e)}`);
     } finally {
       setImporting(false);
     }
@@ -142,8 +124,8 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
         <Button variant="outline" size="sm" onClick={downloadTemplate} className="rounded-lg">Download Template</Button>
       </div>
       <p className="text-sm text-slate-600">Upload a CSV matching the template to bulk onboard projects.</p>
-      <Input type="file" accept=".csv" onChange={(e) => setFile(e.target.files?.[0] || null)} className="rounded-xl" />
-      <div className="flex gap-2">
+      <Input type="file" accept=".csv,text/csv" onChange={(e) => setFile(e.target.files?.[0] || null)} className="rounded-xl" />
+      <div className="flex gap-2 items-center flex-wrap">
         <Button onClick={handleImport} disabled={!file || importing} className="bg-violet-600 hover:bg-violet-700 rounded-xl">
           {importing ? "Importing..." : "Import"}
         </Button>
@@ -154,6 +136,11 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
           <div className="text-sm text-rose-600">{error}</div>
         )}
       </div>
+      {logs.length > 0 && (
+        <div className="mt-3 p-2 bg-slate-50 border rounded-lg max-h-40 overflow-auto text-xs text-slate-600">
+          {logs.map((l, i) => (<div key={i}>{l}</div>))}
+        </div>
+      )}
     </div>
   );
 }
