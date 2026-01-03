@@ -496,8 +496,8 @@ export default function CommandDeck() {
                   leaderTier={profile?.leader_tier}
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={rpPoints}
-                  userId={profile?.user_id}
-                />
+                  userId={profile?.user_id} />
+
               </div>
 
               <div className="flex-1">
@@ -525,16 +525,16 @@ export default function CommandDeck() {
                             <div className="mt-2">
                               <div className="text-xs font-semibold text-slate-700 mb-1">Ranks key</div>
                               <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-600">
-                                {RP_LADDER.map((t) => (
-                                  <li key={t.code}>
+                                {RP_LADDER.map((t) =>
+                              <li key={t.code}>
                                     <span className="capitalize font-medium">{t.title}</span> • {t.min}+
                                   </li>
-                                ))}
+                              )}
                               </ul>
                             </div>
 
-                            {rpInfo.nextMin && (
-                              <div className="mt-2">
+                            {rpInfo.nextMin &&
+                          <div className="mt-2">
                                 <div className="text-xs font-semibold text-slate-700 mb-1">Ramp up goals</div>
                                 <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
                                   <li>Complete quality meetings and request testimonials</li>
@@ -542,7 +542,7 @@ export default function CommandDeck() {
                                   <li>Maintain positive interactions to raise trust</li>
                                 </ul>
                               </div>
-                            )}
+                          }
                           </div>
                         } />
 
@@ -557,8 +557,8 @@ export default function CommandDeck() {
                         <HelpHint
                           content={
                           <div>
-                              <div className="font-semibold mb-1">What is Trust Score?</div>
-                              <div>0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
+                              <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
+                              <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
                             </div>
                           } />
 
@@ -1042,15 +1042,15 @@ export default function CommandDeck() {
                   <Button
                     variant="outline"
                     className="bg-zinc-200 text-slate-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
-                    onClick={() => setSidePanelOpen(!sidePanelOpen)}
-                  >
+                    onClick={() => setSidePanelOpen(!sidePanelOpen)}>
+
                     <BarChart3 className="w-4 h-4" />
                     {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
                   </Button>
                   <Button
                     className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-                    onClick={() => setQuickCreateOpen(true)}
-                  >
+                    onClick={() => setQuickCreateOpen(true)}>
+
                     <Plus className="w-4 h-4" />
                     Quick Create
                   </Button>
@@ -1632,8 +1632,8 @@ export default function CommandDeck() {
           onClose={() => setOnlineUsersOpen(false)} />
 
     </div>
-    </div>
-  );
+    </div>);
+
 
 
 }
