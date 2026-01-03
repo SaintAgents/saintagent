@@ -5,6 +5,7 @@ import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Shield, TrendingUp, BadgeCheck } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 
 const ROLE_LABELS = {
   member: 'Member',
@@ -47,16 +48,22 @@ export default function MiniProfile({
 
   return (
     <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
-      <RankedAvatar
-        src={avatar || profile?.avatar_url}
-        name={displayName}
-        size={size}
-        userId={userId}
-        status={profile?.status}
-        leaderTier={profile?.leader_tier}
-        rpRankCode={profile?.rp_rank_code}
-        rpPoints={profile?.rp_points}
-      />
+      <div
+        onClick={() => { window.location.href = createPageUrl('Profile') + (userId ? `?id=${encodeURIComponent(userId)}` : ''); }}
+        className="cursor-pointer"
+        title="Open profile"
+      >
+        <RankedAvatar
+          src={avatar || profile?.avatar_url}
+          name={displayName}
+          size={size}
+          userId={userId}
+          status={profile?.status}
+          leaderTier={profile?.leader_tier}
+          rpRankCode={profile?.rp_rank_code}
+          rpPoints={profile?.rp_points}
+        />
+      </div>
       {(showName || showHandle) && (
         <div className="min-w-0">
           {showName && (
@@ -73,12 +80,10 @@ export default function MiniProfile({
                 {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
               </Badge>
             ))}
-            {typeof profile?.trust_score === 'number' && (
-              <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1">
-                <Shield className="w-3 h-3" />
-                Trust {Math.round(profile.trust_score)}
-              </Badge>
-            )}
+            <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1">
+              <Shield className="w-3 h-3" />
+              Trust {Math.round(profile?.trust_score ?? 0)}
+            </Badge>
             {typeof profile?.influence_score === 'number' && (
               <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />

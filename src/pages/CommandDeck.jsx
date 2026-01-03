@@ -575,7 +575,7 @@ export default function CommandDeck() {
                                                     </h2>
                     <div className="flex items-center gap-1">
                       <p className="text-sm text-slate-500 capitalize">
-                        {profile?.rank_code || 'Seeker'} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
+                        {rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
                       </p>
                       <HelpHint
                         content={
@@ -906,7 +906,7 @@ export default function CommandDeck() {
                     <p className="text-xs font-medium uppercase tracking-wider text-white/80">Rank</p>
                   </div>
                   <p className="text-xl font-bold tracking-tight text-white capitalize inline-flex items-center gap-1">
-                    {profile?.rank_code || "Seeker"}
+                    {rpInfo.title}
                     <HelpHint
                       content={
                       <div>
