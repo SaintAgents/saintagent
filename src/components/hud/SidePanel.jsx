@@ -375,7 +375,7 @@ export default function SidePanel({
                 <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
               </div>
               <div className="flex justify-between mt-3">
-                <Button variant="outline" size="sm" className="bg-neutral-700 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8" onClick={() => setWalletPopupOpen(true)}>
+                <Button variant="outline" size="sm" className="bg-fuchsia-300 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8" onClick={() => setWalletPopupOpen(true)}>
                   Open Wallet
                 </Button>
                 <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
