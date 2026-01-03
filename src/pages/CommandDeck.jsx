@@ -454,8 +454,9 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="mb-6 p-6 rounded-2xl bg-transparent">
-            <div className="flex items-start gap-6">
+          <div className="relative mb-6 p-6 rounded-2xl">
+            <div className="absolute inset-0 rounded-2xl bg-white/60 backdrop-blur-sm pointer-events-none" />
+            <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0">
                 <div
                   className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg cursor-pointer hover:scale-105 transition-transform"
@@ -941,7 +942,7 @@ export default function CommandDeck() {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="hidden">
+          <div className="block">
             {/* Command Summary */}
             <CollapsibleCard
               title="Quick Actions"
@@ -1025,7 +1026,7 @@ export default function CommandDeck() {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="hidden">
+          <div className="block">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
@@ -1190,7 +1191,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="hidden">
+          <div className="block">
             <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="colC">
               {(provided) =>
