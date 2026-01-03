@@ -101,7 +101,7 @@ export default function ActivityFeed() {
                       <Separator className="my-3" />
                       {/* Actor / Target context */}
                       <div className="flex items-center gap-3">
-                        {ev.actor_id && <MiniProfile userId={ev.actor_id} size={28} showHandle={false} />}
+                        {ev.actor_id && <MiniProfile userId={ev.actor_id} size={40} showHandle={false} />}
                         {ev.type === 'listings' && (
                           <div className="text-xs text-slate-500">Marketplace</div>
                         )}
