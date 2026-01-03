@@ -101,6 +101,7 @@ export default function RankedAvatar({
   rpPoints,
   userId,
   className = '',
+  status,
 }) {
   const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null);
   const { data: fetched = [] } = useQuery({
@@ -113,6 +114,16 @@ export default function RankedAvatar({
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
   const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? (getRPRank(rpPointsFinal || 0)?.code || 'seeker');
+
+  // Presence indicator mapping
+  const STATUS_STYLES = {
+    online: 'bg-emerald-500',
+    focus: 'bg-amber-500',
+    dnd: 'bg-rose-500',
+    offline: 'bg-slate-400',
+  };
+  const statusFinal = status ?? fetchedProfile?.status ?? 'online';
+
   const cfg = getRingConfig(rpRankCodeFinal);
   const basePad = cfg.pad; // thickness tuned for 96px
   const padPx = Math.max(2, Math.round((basePad / 96) * size));
@@ -141,11 +152,17 @@ export default function RankedAvatar({
         </div>
       </div>
 
-      {leaderTierFinal === 'verified144k' && (
-        <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
-          <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-white" />
-        </div>
-      )}
+      {/* Status dot (bottom-left) */}
+                  <div
+                    className={`absolute -bottom-1 -left-1 w-4 h-4 rounded-full border-2 border-white ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+                    title={statusFinal || 'online'}
+                  />
+
+                  {leaderTierFinal === 'verified144k' && (
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
+                      <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                    </div>
+                  )}
     </div>
   );
 }

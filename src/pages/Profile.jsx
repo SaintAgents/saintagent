@@ -246,6 +246,8 @@ export default function Profile() {
                 leaderTier={profile?.leader_tier}
                 rpRankCode={profile?.rp_rank_code}
                 rpPoints={profile?.rp_points}
+                userId={profile?.user_id}
+                status={profile?.status}
               />
               <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3">

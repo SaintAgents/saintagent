@@ -8,9 +8,11 @@ import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
 import InviteLanding from './pages/InviteLanding';
 import LeaderChannel from './pages/LeaderChannel';
+import Leaderboards from './pages/Leaderboards';
 import Marketplace from './pages/Marketplace';
 import Matches from './pages/Matches';
 import Meetings from './pages/Meetings';
+import Mentorship from './pages/Mentorship';
 import Messages from './pages/Messages';
 import MissionCollaboration from './pages/MissionCollaboration';
 import MissionDetail from './pages/MissionDetail';
@@ -20,12 +22,10 @@ import Profile from './pages/Profile';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
 import Projects from './pages/Projects';
+import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
-import Leaderboards from './pages/Leaderboards';
-import Mentorship from './pages/Mentorship';
-import ResourceHub from './pages/ResourceHub';
 import __Layout from './Layout.jsx';
 
 
@@ -40,9 +40,11 @@ export const PAGES = {
     "FindCollaborators": FindCollaborators,
     "InviteLanding": InviteLanding,
     "LeaderChannel": LeaderChannel,
+    "Leaderboards": Leaderboards,
     "Marketplace": Marketplace,
     "Matches": Matches,
     "Meetings": Meetings,
+    "Mentorship": Mentorship,
     "Messages": Messages,
     "MissionCollaboration": MissionCollaboration,
     "MissionDetail": MissionDetail,
@@ -52,12 +54,10 @@ export const PAGES = {
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
     "Projects": Projects,
+    "ResourceHub": ResourceHub,
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
-    "Leaderboards": Leaderboards,
-    "Mentorship": Mentorship,
-    "ResourceHub": ResourceHub,
 }
 
 export const pagesConfig = {
