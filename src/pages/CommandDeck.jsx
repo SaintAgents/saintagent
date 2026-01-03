@@ -1031,7 +1031,7 @@ useEffect(() => {
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="space-y-6">
+          <div className="hidden">
             {/* Synchronicity Stack */}
             <CollapsibleCard
               title="Synchronicity Engine"
