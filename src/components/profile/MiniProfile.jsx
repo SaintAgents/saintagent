@@ -3,12 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
-import PhotoViewer from '@/components/profile/PhotoViewer';
 import BadgesBar from '@/components/badges/BadgesBar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Shield, TrendingUp, BadgeCheck, ExternalLink, Users } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { Shield, TrendingUp, BadgeCheck, Users } from 'lucide-react';
 import HelpHint from '@/components/hud/HelpHint';
 
 const ROLE_LABELS = {
