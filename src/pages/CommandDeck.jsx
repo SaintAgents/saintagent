@@ -1393,8 +1393,7 @@ useEffect(() => {
                   {provided.placeholder}
                 </div>
               )}
-            </Droppable>
-          </div>
+
         </div>
       </div>
 
