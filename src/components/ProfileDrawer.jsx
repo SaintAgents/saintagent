@@ -46,12 +46,12 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: userId },
+        payload: { user_id: userId }
       });
       return data;
     },
     enabled: !!userId,
-    refetchInterval: 5000,
+    refetchInterval: 5000
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
 
@@ -210,19 +210,19 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             <div className="flex items-center justify-center gap-2">
               {profile.status && <CircleDot className={`w-3 h-3 ${statusColors[profile.status] || 'text-slate-400'}`} />}
               <h2 className="text-xl font-bold text-slate-900">{profile.display_name}</h2>
-              {profile.leader_tier === 'verified144k' && (
-                <Badge className="bg-amber-100 text-amber-700">
+              {profile.leader_tier === 'verified144k' &&
+              <Badge className="bg-amber-100 text-amber-700">
                   <Crown className="w-3 h-3 mr-1" />
                   144K
                 </Badge>
-              )}
+              }
             </div>
             <p className="text-slate-500">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
-            {profile.last_seen_at && (
-              <p className="text-xs text-slate-500 mt-1">
+            {profile.last_seen_at &&
+            <p className="text-xs text-slate-500 mt-1">
                 Last online {formatDistanceToNow(new Date(profile.last_seen_at), { addSuffix: true })}
               </p>
-            )}
+            }
           </div>
 
           {/* Actions */}
@@ -305,7 +305,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                   <p className="text-xs text-slate-500 mb-1">Open to:</p>
                   <div className="flex flex-wrap gap-1">
                     {profile.relationship_type_seeking.map((type, idx) =>
-                <Badge key={idx} variant="outline" className="text-xs capitalize">
+                <Badge key={idx} variant="outline" className="bg-purple-100 text-foreground px-2.5 py-0.5 text-xs font-semibold capitalize rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                         {type.replace('_', ' ')}
                       </Badge>
                 )}
@@ -411,7 +411,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               <h3 className="font-semibold text-slate-900 mb-2">Spiritual Practices</h3>
               <div className="flex flex-wrap gap-1.5">
                 {profile.spiritual_practices.map((practice, idx) =>
-              <Badge key={idx} variant="outline" className="text-xs capitalize">
+              <Badge key={idx} variant="outline" className="bg-purple-100 text-foreground px-2.5 py-0.5 text-xs font-semibold capitalize rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                     {practice.replace('_', ' ')}
                   </Badge>
               )}
