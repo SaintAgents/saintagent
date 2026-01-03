@@ -117,6 +117,35 @@ export default function CreateMissionModal({ open, onClose }) {
             />
           </div>
 
+          {/* Cover Image */}
+          <div>
+            <Label>Cover Image</Label>
+            <div className="mt-2 grid grid-cols-1 gap-3">
+              {formData.image_url && (
+                <div className="rounded-lg border p-2 bg-slate-50">
+                  <img src={formData.image_url} alt="Cover" className="w-full h-40 object-cover rounded" />
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <Input type="file" accept="image/*" onChange={(e) => setLocalFile(e.target.files?.[0] || null)} />
+                <Button type="button" variant="outline" disabled={!localFile || uploading} onClick={async () => {
+                  if (!localFile) return;
+                  setUploading(true);
+                  const res = await base44.integrations.Core.UploadFile({ file: localFile });
+                  const url = res?.file_url;
+                  if (url) setFormData({ ...formData, image_url: url });
+                  setUploading(false);
+                }}>
+                  {uploading ? 'Uploading…' : 'Upload'}
+                </Button>
+              </div>
+              <div>
+                <Label className="text-xs text-slate-500">Or paste image URL</Label>
+                <Input className="mt-1" placeholder="https://..." value={formData.image_url} onChange={(e) => setFormData({ ...formData, image_url: e.target.value })} />
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Mission Type</Label>
