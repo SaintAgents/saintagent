@@ -514,15 +514,15 @@ export default function CommandDeck() {
                       <HelpHint
                         content={
                         <div>
-                            <div className="font-semibold mb-1">Rank progression</div>
-                            <div>Current: {rpInfo.title} ({rpPoints} RP)</div>
+                            <div className="text-gray-800 mb-1 font-semibold">Rank progression</div>
+                            <div className="text-slate-700">Current: {rpInfo.title} ({rpPoints} RP)</div>
                             {rpInfo.nextMin ?
-                          <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div> :
+                          <div className="text-slate-600">Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div> :
 
                           <div>You're at the highest rank.</div>
                           }
 
-                            <div className="mt-2">
+                            <div className="text-zinc-600 mt-2">
                               <div className="text-xs font-semibold text-slate-700 mb-1">Ranks key</div>
                               <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-600">
                                 {RP_LADDER.map((t) =>
@@ -535,10 +535,10 @@ export default function CommandDeck() {
 
                             {rpInfo.nextMin &&
                           <div className="mt-2">
-                                <div className="text-xs font-semibold text-slate-700 mb-1">Ramp up goals</div>
+                                <div className="text-zinc-800 mb-1 text-xs font-semibold">Ramp up goals</div>
                                 <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
-                                  <li>Complete quality meetings and request testimonials</li>
-                                  <li>Finish missions and contribute to projects</li>
+                                  <li className="text-zinc-500">Complete quality meetings and request testimonials</li>
+                                  <li className="text-zinc-500">Finish missions and contribute to projects</li>
                                   <li>Maintain positive interactions to raise trust</li>
                                 </ul>
                               </div>
