@@ -400,13 +400,22 @@ export default function CommandDeck() {
                 <BarChart3 className="w-4 h-4" />
                 {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
               </Button>
-              <Button
-                className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-                onClick={() => setQuickCreateOpen(true)}>
+              <div className="flex flex-col gap-2 items-stretch">
+                <Button
+                  className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
+                  onClick={() => setQuickCreateOpen(true)}>
 
-                <Plus className="w-4 h-4" />
-                Quick Create
-              </Button>
+                  <Plus className="w-4 h-4" />
+                  Quick Create
+                </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}
+                >
+                  Add Project
+                </Button>
+              </div>
             </div>
           </div>
 
