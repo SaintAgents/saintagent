@@ -1405,6 +1405,7 @@ export default function CommandDeck() {
             </Droppable>
             </DragDropContext>
             </div>
+      </div>
       {/* Side Panel */}
       <SidePanel
           matches={matches.slice(0, 5)}
