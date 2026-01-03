@@ -158,12 +158,6 @@ export default function MiniProfile({
         }
         </div>
       }
-    {/* Photo Viewer Overlay */}
-    <PhotoViewer
-        open={viewerOpen}
-        images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0, 5)}
-        onClose={() => setViewerOpen(false)} />
-
     </div>);
 
 }
