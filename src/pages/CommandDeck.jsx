@@ -616,7 +616,7 @@ export default function CommandDeck() {
                   {/* Trust Score Gauge */}
                   <div className="relative z-10 flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-xs text-slate-500 flex items-center gap-1 justify-end">
+                      <p className="text-slate-950 text-xs flex items-center gap-1 justify-end">
                         Trust Score
                         <HelpHint
                           content={
