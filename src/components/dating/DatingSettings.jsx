@@ -1,0 +1,272 @@
+import React from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+
+export default function DatingSettings({ currentUser }) {
+  const qc = useQueryClient();
+
+  const { data: records = [] } = useQuery({
+    queryKey: ['datingProfile', currentUser?.email],
+    queryFn: async () => {
+      const me = await base44.auth.me();
+      return base44.entities.DatingProfile.filter({ user_id: me.email });
+    },
+    enabled: !!currentUser?.email,
+  });
+  const existing = records?.[0];
+
+  const [form, setForm] = React.useState(() => ({
+    opt_in: existing?.opt_in ?? false,
+    visible: existing?.visible ?? true,
+    domains_enabled: existing?.domains_enabled ?? {
+      identity_values: true,
+      emotional_stability: true,
+      communication: true,
+      growth: true,
+      lifestyle: true,
+      synchronicity: false,
+    },
+    core_values_ranked: existing?.core_values_ranked || [],
+    life_priorities: existing?.life_priorities || [],
+    ethical_boundaries: existing?.ethical_boundaries || [],
+    dealbreakers: existing?.dealbreakers || [],
+    regulation_style: existing?.regulation_style || 'adaptive',
+    conflict_response: existing?.conflict_response || 'direct_repair',
+    stress_tolerance: existing?.stress_tolerance || 'medium',
+    comm_depth: existing?.comm_depth || 'balanced',
+    comm_frequency: existing?.comm_frequency || 'daily',
+    responsiveness_boundaries: existing?.responsiveness_boundaries || '',
+    feedback_receptivity: existing?.feedback_receptivity || 'medium',
+    growth_orientation: existing?.growth_orientation || 'steady',
+    learning_mindset: existing?.learning_mindset || 'intermediate',
+    long_term_vision: existing?.long_term_vision || '',
+    relationship_intent: existing?.relationship_intent || 'companionship',
+    location_mobility: existing?.location_mobility || 'flexible',
+    daily_rhythm: existing?.daily_rhythm || 'ambivert',
+    work_life_balance: existing?.work_life_balance || 'balanced',
+    health_lifestyle: existing?.health_lifestyle || '',
+    synchronicity_enabled: existing?.synchronicity_enabled ?? false,
+  }));
+
+  React.useEffect(() => {
+    if (existing) {
+      setForm((f) => ({
+        ...f,
+        ...existing,
+        domains_enabled: { ...f.domains_enabled, ...(existing.domains_enabled || {}) },
+      }));
+    }
+  }, [existing?.id]);
+
+  const upsert = useMutation({
+    mutationFn: async () => {
+      const me = await base44.auth.me();
+      const payload = { ...form, user_id: me.email };
+      if (existing?.id) return base44.entities.DatingProfile.update(existing.id, payload);
+      return base44.entities.DatingProfile.create(payload);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['datingProfile'] });
+    }
+  });
+
+  const toArray = (v) => (v || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const fromArray = (a) => (a || []).join(', ');
+
+  return (
+    <div className="bg-white rounded-xl border p-4 space-y-4">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
+          <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} />
+          <Label>Opt-in to Dating & Compatibility</Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <Switch checked={form.visible} onCheckedChange={(v) => setForm({ ...form, visible: v })} />
+          <Label>Visible to compatible users</Label>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <Label>Core Values (comma-separated)</Label>
+          <Input value={fromArray(form.core_values_ranked)} onChange={(e) => setForm({ ...form, core_values_ranked: toArray(e.target.value) })} />
+          <Label>Life Priorities (comma-separated)</Label>
+          <Input value={fromArray(form.life_priorities)} onChange={(e) => setForm({ ...form, life_priorities: toArray(e.target.value) })} />
+          <Label>Dealbreakers (comma-separated)</Label>
+          <Input value={fromArray(form.dealbreakers)} onChange={(e) => setForm({ ...form, dealbreakers: toArray(e.target.value) })} />
+          <Label>Ethical Boundaries (comma-separated)</Label>
+          <Input value={fromArray(form.ethical_boundaries)} onChange={(e) => setForm({ ...form, ethical_boundaries: toArray(e.target.value) })} />
+        </div>
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Regulation Style</Label>
+              <Select value={form.regulation_style} onValueChange={(v) => setForm({ ...form, regulation_style: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="calm_regulator">Calm Regulator</SelectItem>
+                  <SelectItem value="expressive_processor">Expressive Processor</SelectItem>
+                  <SelectItem value="internal_processor">Internal Processor</SelectItem>
+                  <SelectItem value="adaptive">Adaptive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Conflict Response</Label>
+              <Select value={form.conflict_response} onValueChange={(v) => setForm({ ...form, conflict_response: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="direct_repair">Direct Repair</SelectItem>
+                  <SelectItem value="reflective_space">Reflective Space</SelectItem>
+                  <SelectItem value="avoidant">Avoidant</SelectItem>
+                  <SelectItem value="assertive">Assertive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Stress Tolerance</Label>
+              <Select value={form.stress_tolerance} onValueChange={(v) => setForm({ ...form, stress_tolerance: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Feedback Receptivity</Label>
+              <Select value={form.feedback_receptivity} onValueChange={(v) => setForm({ ...form, feedback_receptivity: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Comm. Depth</Label>
+              <Select value={form.comm_depth} onValueChange={(v) => setForm({ ...form, comm_depth: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="balanced">Balanced</SelectItem>
+                  <SelectItem value="deep">Deep</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Comm. Frequency</Label>
+              <Select value={form.comm_frequency} onValueChange={(v) => setForm({ ...form, comm_frequency: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="few_times_week">Few times/week</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <Label>Responsiveness Boundaries</Label>
+          <Input value={form.responsiveness_boundaries} onChange={(e) => setForm({ ...form, responsiveness_boundaries: e.target.value })} />
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4">
+        <div>
+          <Label>Growth Orientation</Label>
+          <Select value={form.growth_orientation} onValueChange={(v) => setForm({ ...form, growth_orientation: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="steady">Steady</SelectItem>
+              <SelectItem value="accelerated">Accelerated</SelectItem>
+              <SelectItem value="seasonal">Seasonal</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Relationship Intent</Label>
+          <Select value={form.relationship_intent} onValueChange={(v) => setForm({ ...form, relationship_intent: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="companionship">Companionship</SelectItem>
+              <SelectItem value="partnership">Partnership</SelectItem>
+              <SelectItem value="co_creation">Co-creation</SelectItem>
+              <SelectItem value="undecided">Undecided</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Learning Mindset</Label>
+          <Select value={form.learning_mindset} onValueChange={(v) => setForm({ ...form, learning_mindset: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="beginner">Beginner</SelectItem>
+              <SelectItem value="intermediate">Intermediate</SelectItem>
+              <SelectItem value="advanced">Advanced</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4">
+        <div>
+          <Label>Location/Mobility</Label>
+          <Select value={form.location_mobility} onValueChange={(v) => setForm({ ...form, location_mobility: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="fixed">Fixed</SelectItem>
+              <SelectItem value="flexible">Flexible</SelectItem>
+              <SelectItem value="nomadic">Nomadic</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Daily Rhythm</Label>
+          <Select value={form.daily_rhythm} onValueChange={(v) => setForm({ ...form, daily_rhythm: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="introvert">Introvert</SelectItem>
+              <SelectItem value="ambivert">Ambivert</SelectItem>
+              <SelectItem value="extrovert">Extrovert</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Work/Life Balance</Label>
+          <Select value={form.work_life_balance} onValueChange={(v) => setForm({ ...form, work_life_balance: v })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="work_leaning">Work-leaning</SelectItem>
+              <SelectItem value="balanced">Balanced</SelectItem>
+              <SelectItem value="life_leaning">Life-leaning</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div>
+        <Label>Health & Lifestyle (optional)</Label>
+        <Textarea rows={2} value={form.health_lifestyle} onChange={(e) => setForm({ ...form, health_lifestyle: e.target.value })} />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Switch checked={form.synchronicity_enabled} onCheckedChange={(v) => setForm({ ...form, synchronicity_enabled: v })} />
+        <Label>Enable Synchronicity Signals</Label>
+      </div>
+
+      <div className="text-right">
+        <Button className="rounded-xl" onClick={() => upsert.mutate()}>Save Settings</Button>
+      </div>
+    </div>
+  );
+}

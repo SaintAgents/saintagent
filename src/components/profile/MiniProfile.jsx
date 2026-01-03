@@ -91,17 +91,20 @@ export default function MiniProfile({
                 side="right"
                 align="start"
                 className="ml-0.5"
+                size={20}
                 content={
-                  <div className="space-y-1.5">
-                    <div className="text-sm font-semibold text-slate-800">Avatar Indicators</div>
-                    <ul className="list-disc ml-4 text-xs text-slate-700 space-y-0.5">
-                      <li><strong>Rank Ring</strong>: outer ring showing rank/progression</li>
-                      <li><strong>Seal Badge</strong>: small circle on edge (role/qualification)</li>
-                      <li><strong>Rank Sigil</strong>: symbol inside badge (rank meaning)</li>
-                      <li><strong>Aura</strong>: subtle glow (elevated/active)</li>
-                      <li><strong>Presence Marker</strong>: status dot (online/focus/dnd)</li>
-                      <li><strong>Event Frame</strong>: decorative frame for special events</li>
-                    </ul>
+                  <div className="min-w-[900px]">
+                    <div className="space-y-1.5">
+                      <div className="text-sm font-semibold text-slate-800">Avatar Indicators</div>
+                      <ul className="list-disc ml-4 text-xs text-slate-700 space-y-0.5">
+                        <li><strong>Rank Ring</strong>: outer ring showing rank/progression</li>
+                        <li><strong>Seal Badge</strong>: small circle on edge (role/qualification)</li>
+                        <li><strong>Rank Sigil</strong>: symbol inside badge (rank meaning)</li>
+                        <li><strong>Aura</strong>: subtle glow (elevated/active)</li>
+                        <li><strong>Presence Marker</strong>: status dot (online/focus/dnd)</li>
+                        <li><strong>Event Frame</strong>: decorative frame for special events</li>
+                      </ul>
+                    </div>
                   </div>
                 }
               />

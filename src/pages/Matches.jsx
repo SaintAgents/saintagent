@@ -20,6 +20,7 @@ import {
 import MatchCard from '@/components/hud/MatchCard';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
+import DatingTab from '@/components/dating/DatingTab';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -124,10 +125,18 @@ export default function Matches() {
               <GraduationCap className="w-4 h-4" />
               Teachers <span className="text-xs opacity-60">({tabCounts.teacher})</span>
             </TabsTrigger>
+            <TabsTrigger value="dating" className="rounded-lg gap-2">
+              <Heart className="w-4 h-4" />
+              Dating
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
-        {/* Matches Grid */}
+        {tab === 'dating' ? (
+          <DatingTab profile={profile} />
+        ) : (
+          <> 
+         {/* Matches Grid */}
         {isLoading ?
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) =>
@@ -153,8 +162,10 @@ export default function Matches() {
 
           )}
           </div>
-        }
-      </div>
-    </div>);
+          }
+          </>
+          )}
+          </div>
+          </div>);
 
 }
