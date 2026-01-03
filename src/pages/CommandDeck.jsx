@@ -83,6 +83,8 @@ export default function CommandDeck() {
         const [quickActionsPopupOpen, setQuickActionsPopupOpen] = useState(false);
         const [quickStartPopupOpen, setQuickStartPopupOpen] = useState(false);
         const [leaderChannelPopupOpen, setLeaderChannelPopupOpen] = useState(false);
+const [projectsPopupOpen, setProjectsPopupOpen] = useState(false);
+const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
@@ -1138,11 +1140,11 @@ useEffect(() => {
 
             {/* Projects */}
             <CollapsibleCard
-              title="Projects"
-              icon={Folder}
-              defaultOpen={true}
-              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
-              onPopout={() => setProjectsPopupOpen(true)}>
+                              title="Projects"
+                              icon={Folder}
+                              defaultOpen={true}
+                              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
+                              onPopout={() => setProjectsPopupOpen(true)}>
 
               {/* Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
@@ -1320,10 +1322,11 @@ useEffect(() => {
 
                           {id === 'dailyops' && (
                             <CollapsibleCard
-                              title="Daily Ops"
-                              icon={Calendar}
-                              defaultOpen={true}
-                              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80">
+                                              title="Daily Ops"
+                                              icon={Calendar}
+                                              defaultOpen={true}
+                                              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+                                              onPopout={() => setDailyOpsPopupOpen(true)}>
                               <div className="flex items-center justify-between">
                                 <div>
                                   <div className="text-xs text-slate-500">Today’s GGG</div>
@@ -1431,6 +1434,37 @@ useEffect(() => {
           <LeaderPathway profile={profile} />
         </FloatingPanel>
       }
+
+      {projectsPopupOpen && (
+        <FloatingPanel title="Projects" onClose={() => setProjectsPopupOpen(false)}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {filteredProjects.slice(0, 8).map((p) => (
+              <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
+            ))}
+          </div>
+          <div className="mt-3 text-right">
+            <Button variant="outline" className="rounded-xl" onClick={() => { window.location.href = createPageUrl('Projects'); }}>Open Projects</Button>
+          </div>
+        </FloatingPanel>
+      )}
+
+      {dailyOpsPopupOpen && (
+        <FloatingPanel title="Daily Ops" onClose={() => setDailyOpsPopupOpen(false)}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs text-slate-500">Today’s GGG</div>
+              <div className="text-2xl font-bold text-slate-900">{dailyGGG.toFixed(2)} GGG</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-slate-500">Done • In Progress</div>
+              <div className="text-2xl font-bold text-slate-900">{dailyCompleted} • {dailyInProgress}</div>
+            </div>
+          </div>
+          <div className="mt-3 text-right">
+            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>Open DO</Button>
+          </div>
+        </FloatingPanel>
+      )}
 
       {quickActionsPopupOpen && (
         <FloatingPanel title="Quick Actions" onClose={() => setQuickActionsPopupOpen(false)}>

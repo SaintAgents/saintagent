@@ -75,7 +75,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
         return (
           <div className="space-y-4">
             <div>
-              <Label className="text-neutral-950 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">What's on your mind?</Label>
+              <Label className="text-slate-900 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">What's on your mind?</Label>
               <Textarea
                 placeholder="Share an insight, teaching, or update..."
                 className="mt-2 min-h-32"
@@ -84,7 +84,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
 
             </div>
             <div>
-              <Label className="text-stone-950 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Visibility</Label>
+              <Label className="text-slate-900 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Visibility</Label>
               <Select
                 value={formData.visibility || 'public'}
                 onValueChange={(v) => setFormData({ ...formData, visibility: v })}>
@@ -309,7 +309,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-white border border-slate-200 rounded-xl">
         <AnimatePresence mode="wait">
           {!selectedType ?
           <motion.div
@@ -319,7 +319,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
             exit={{ opacity: 0, x: -20 }}>
 
               <DialogHeader className="p-6 pb-2">
-                <DialogTitle className="flex items-center gap-2">
+                <DialogTitle className="flex items-center gap-2 text-slate-900">
                   <Sparkles className="w-5 h-5 text-violet-500" />
                   Quick Create
                 </DialogTitle>
@@ -329,13 +329,13 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
               <button
                 key={option.id}
                 onClick={() => handleTypeSelect(option.id)}
-                className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:border-violet-300 hover:bg-violet-50/50 transition-all text-left group">
+                className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:border-violet-400 hover:bg-violet-500/10 transition-all text-left group">
 
                     <div className={cn("p-2.5 rounded-xl text-white", option.color)}>
                       <option.icon className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-slate-900 group-hover:text-violet-900">
+                      <p className="font-semibold text-slate-900 group-hover:text-violet-400">
                         {option.label}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5">
@@ -364,7 +364,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
 
                     <X className="w-4 h-4" />
                   </Button>
-                  <DialogTitle className="text-zinc-950 text-lg font-semibold tracking-tight leading-none">
+                  <DialogTitle className="text-slate-900 text-lg font-semibold tracking-tight leading-none">
                     Create {CREATE_OPTIONS.find((o) => o.id === selectedType)?.label}
                   </DialogTitle>
                 </div>
@@ -373,7 +373,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 {renderForm()}
               </div>
               <div className="flex justify-end gap-3 p-6 pt-4 border-t border-slate-100 mt-4">
-                <Button variant="outline" onClick={handleClose} className="bg-background text-stone-950 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9">
+                <Button variant="outline" onClick={handleClose} className="bg-background text-slate-900 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9">
                   Cancel
                 </Button>
                 <Button
