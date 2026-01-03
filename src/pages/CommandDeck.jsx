@@ -968,6 +968,7 @@ useEffect(() => {
           {/* Column A: Now + Daily Action */}
           <div className="hidden">
             {/* Command Summary */}
+            <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')}>
             <CollapsibleCard
                                 title="Quick Actions"
                                 icon={Zap}
