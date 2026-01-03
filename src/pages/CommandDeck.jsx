@@ -1354,8 +1354,8 @@ useEffect(() => {
                 </div>
               )}
             </Droppable>
-          </DragDropContext>
-        </div>
+            </DragDropContext>
+            </div>
       </div>
 
       {/* Side Panel */}
