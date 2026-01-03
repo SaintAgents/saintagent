@@ -41,13 +41,15 @@ export default function MatchCard({ match, onAction }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matches'] })
   });
 
-  const handleRate = (stars) => {
+  const handleRate = async (stars) => {
     setRating(stars);
-    updateMatchMutation.mutate({
-      id: match.id,
-      data: { user_rating: stars }
-    });
-    setTimeout(() => setShowRating(false), 1000);
+    updateMatchMutation.mutate({ id: match.id, data: { user_rating: stars } });
+    setTimeout(() => setShowRating(false), 800);
+    // Nudge the engine to refine with feedback
+    try {
+      await base44.functions.invoke('computeMatches', {});
+      queryClient.invalidateQueries({ queryKey: ['matches'] });
+    } catch (_) {}
   };
 
   const handleBlock = async () => {
