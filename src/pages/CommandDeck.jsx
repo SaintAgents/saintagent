@@ -947,7 +947,7 @@ useEffect(() => {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="space-y-6">
+          <div className="hidden">
             {/* Command Summary */}
             <CollapsibleCard
                                 title="Quick Actions"
