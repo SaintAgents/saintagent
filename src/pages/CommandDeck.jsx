@@ -91,8 +91,8 @@ export default function CommandDeck() {
   const { data: profiles } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
-      return base44.entities.UserProfile.filter({ user_id: currentUser.email });
-    },
+              return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+            },
     enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];

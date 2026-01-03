@@ -133,9 +133,9 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.UserProfile.filter({ user_id: user.email });
-    },
+              const user = await base44.auth.me();
+              return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
+            },
     enabled: !!currentUser
   });
   const profile = profiles?.[0];
