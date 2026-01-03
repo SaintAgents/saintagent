@@ -599,10 +599,10 @@ export default function Profile() {
                     <Plus className="w-4 h-4 mr-1" />
                     Add Skills
                   </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+                  </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                  <div className="space-y-3">
                   {skills.filter((s) => s.type === 'offer').length > 0 &&
                       <div>
                       <p className="text-xs text-slate-500 mb-2">I Offer</p>
@@ -633,12 +633,14 @@ export default function Profile() {
                   {skills.length === 0 &&
                       <p className="text-slate-400">No skills added yet</p>
                       }
-                </div>
-              </CardContent>
-            </Card>
-              </div>
-            </div>
-          </TabsContent>
+                  </div>
+                  </CardContent>
+                  </Card>
+                  <PortfolioSection profile={profile} currentUser={currentUser} />
+                  <EndorsementsSection profile={profile} currentUser={currentUser} />
+                  </div>
+                  </div>
+                  </TabsContent>
 
           <TabsContent value="onboarding" className="space-y-6">
             <OnboardingDataEditor
