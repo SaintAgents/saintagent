@@ -224,6 +224,16 @@ export default function CommandDeck() {
 
   const queryClient = useQueryClient();
 
+// Seed demo projects once on first visit (local flag)
+useEffect(() => {
+  const k = 'demoProjectsSeeded_v1';
+  if (typeof window !== 'undefined' && !localStorage.getItem(k)) {
+    base44.functions.invoke('seedProjects', {})
+      .then(() => queryClient.invalidateQueries({ queryKey: ['projects'] }))
+      .finally(() => { try { localStorage.setItem(k, '1'); } catch {} });
+  }
+}, [queryClient]);
+
   // One-off: enforce creator's SA and identity if this is Mathues
   useEffect(() => {
     (async () => {
