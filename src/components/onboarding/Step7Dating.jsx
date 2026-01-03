@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Users, Sparkles, X } from "lucide-react";
+import { Heart, Users, Sparkles, X, Upload } from "lucide-react";
+import { base44 } from '@/api/base44Client';
 
 const relationshipTypes = [
   { value: 'monogamous', label: 'Monogamous', icon: Heart },
@@ -258,8 +259,38 @@ export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete 
         </div>
       </div>
 
+      {/* Photo Uploads (optional) */}
+      <div>
+        <Label className="text-base font-semibold mb-3 block">Photos (optional, up to 5)</Label>
+        <p className="text-xs text-slate-500 mb-2">JPG/PNG/WEBP • Max 5MB each • Helps others get a sense of your presence</p>
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          onChange={async (e) => {
+            const files = Array.from(e.target.files || []);
+            if (files.length === 0) return;
+            const me = await base44.auth.me();
+            const recs = await base44.entities.UserProfile.filter({ user_id: me.email });
+            const prof = recs?.[0];
+            if (!prof) return;
+            let gallery = (prof.gallery_images || []).slice(0,5);
+            for (const file of files) {
+              if (gallery.length >= 5) break;
+              if (file.size > 5 * 1024 * 1024) { alert('Each file must be under 5MB'); continue; }
+              if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { alert('Only JPG, PNG, WEBP'); continue; }
+              const { file_url } = await base44.integrations.Core.UploadFile({ file });
+              gallery = [...gallery, file_url].slice(0,5);
+            }
+            await base44.entities.UserProfile.update(prof.id, { gallery_images: gallery });
+            alert('Photos uploaded');
+          }}
+          className="block"
+        />
+      </div>
+
       {/* Continue */}
-      <Button className="w-full bg-violet-600 hover:bg-violet-700" onClick={() => onComplete && onComplete(data)}>
+      <Button className="w-full bg-violet-600 hover:bg-violet-700 mt-4" onClick={() => onComplete && onComplete(data)}>
         Continue
       </Button>
     </div>

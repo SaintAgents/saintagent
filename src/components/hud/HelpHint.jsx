@@ -15,7 +15,9 @@ export default function HelpHint({ content, side = 'top', align = 'center', clas
         </button>
       </PopoverTrigger>
       <PopoverContent side={side} align={align} sideOffset={8} className="max-w-[95vw] md:max-w-3xl max-h-[80vh] overflow-y-auto overflow-x-auto text-slate-700 text-sm whitespace-normal break-words">
+        <div className="w-[1200px] max-w-none">
         {typeof content === 'string' ? <p>{content}</p> : content}
+        </div>
       </PopoverContent>
     </Popover>
   );

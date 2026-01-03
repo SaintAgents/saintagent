@@ -51,6 +51,7 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import PhotoViewer from '@/components/profile/PhotoViewer';
 import TrustScoreCard from '@/components/trust/TrustScoreCard';
 import ReputationScoresCard from '@/components/reputation/ReputationScoresCard';
 import UserRolesPanel from '@/components/roles/UserRolesPanel';
@@ -59,6 +60,7 @@ import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 
 export default function Profile() {
+  const [viewerOpen, setViewerOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [skillsPickerOpen, setSkillsPickerOpen] = useState(false);
@@ -270,16 +272,18 @@ export default function Profile() {
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-0 p-6 relative">
             <div className="flex items-end gap-6 -mt-12">
-              <RankedAvatar
-                src={profile?.avatar_url}
-                name={profile?.display_name}
-                size={96}
-                leaderTier={profile?.leader_tier}
-                rpRankCode={profile?.rp_rank_code}
-                rpPoints={profile?.rp_points}
-                userId={profile?.user_id}
-                status={profile?.status}
-              />
+              <div className="cursor-pointer" onClick={() => setViewerOpen(true)} title="View photos">
+                <RankedAvatar
+                  src={profile?.avatar_url}
+                  name={profile?.display_name}
+                  size={96}
+                  leaderTier={profile?.leader_tier}
+                  rpRankCode={profile?.rp_rank_code}
+                  rpPoints={profile?.rp_points}
+                  userId={profile?.user_id}
+                  status={profile?.status}
+                />
+              </div>
               <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name}</h1>
@@ -1027,6 +1031,13 @@ export default function Profile() {
 
       </div>
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
+      </div>
+      <PhotoViewer
+        open={viewerOpen}
+        images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0,5)}
+        startIndex={0}
+        onClose={() => setViewerOpen(false)}
+      />
       </div>);
 
-}
+      }

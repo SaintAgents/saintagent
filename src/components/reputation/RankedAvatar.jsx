@@ -113,7 +113,9 @@ export default function RankedAvatar({
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
-  const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? (getRPRank(rpPointsFinal || 0)?.code || 'seeker');
+  const rpRankCodeFinal = (rpPointsFinal != null)
+    ? (getRPRank(rpPointsFinal || 0)?.code || 'seeker')
+    : (rpRankCode ?? fetchedProfile?.rp_rank_code ?? 'seeker');
 
   // Presence indicator mapping
   const STATUS_STYLES = {
