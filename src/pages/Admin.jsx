@@ -3,7 +3,6 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder } from "lucide-react";
-import AdminStats from '@/components/admin/AdminStats';
 
 import UserManagement from '@/components/admin/UserManagement';
 import GGGRulesManager from '@/components/admin/GGGRulesManager';
