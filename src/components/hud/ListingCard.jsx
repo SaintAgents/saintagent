@@ -119,7 +119,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
         <p className="text-sm text-slate-500 line-clamp-2 mt-2">{listing.description}</p>
 
         <div className="flex items-center gap-3 mt-3">
-          <MiniProfile userId={listing.owner_id} name={listing.owner_name} avatar={listing.owner_avatar} size={24} />
+          <MiniProfile userId={listing.owner_id} name={listing.owner_name} avatar={listing.owner_avatar} size={36} />
           {listing.rating && (
             <div className="flex items-center gap-1 ml-auto">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
