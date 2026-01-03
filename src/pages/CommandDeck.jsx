@@ -518,7 +518,7 @@ export default function CommandDeck() {
 
           {/* Profile Identifiers */}
           <div className="relative mb-6 p-6 rounded-2xl">
-            <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(255,255,255,0.12)] backdrop-blur-sm pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.33)] dark:bg-[rgba(255,255,255,0.33)] backdrop-blur-sm pointer-events-none" />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 <RankedAvatar
@@ -793,45 +793,9 @@ export default function CommandDeck() {
             </div>
           </div>
 
-          {/* Platform Stats Mini Dashboard */}
-          <div className="mb-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div>
-                  <p className="text-xs text-slate-500 mb-1">Total Users</p>
-                  <p className="text-2xl font-bold text-slate-900">1,247</p>
-                </div>
-                <div className="h-8 w-px bg-slate-200" />
-                <button
-                  onClick={() => setOnlineUsersOpen(true)}
-                  className="text-left hover:opacity-80 transition-opacity">
-
-                  <p className="text-xs text-slate-500 mb-1">Online Now</p>
-                  <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    342
-                  </p>
-                </button>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="text-xs text-slate-500">North America</p>
-                  <p className="text-sm font-semibold text-slate-900">487</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-500">Europe</p>
-                  <p className="text-sm font-semibold text-slate-900">312</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-500">Asia</p>
-                  <p className="text-sm font-semibold text-slate-900">289</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-500">Other</p>
-                  <p className="text-sm font-semibold text-slate-900">159</p>
-                </div>
-              </div>
-            </div>
+          {/* Activity Cards Header (moved totals to Side Panel) */}
+          <div className="mb-4 px-1">
+            <h3 className="text-teal-600 font-semibold tracking-wide uppercase text-xs">Activity Cards</h3>
           </div>
 
           {/* Hero Metrics */}
