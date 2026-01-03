@@ -22,26 +22,48 @@ Deno.serve(async (req) => {
       return Response.json({ sa_number: profile.sa_number, assigned: false });
     }
 
+    // Cutover: only assign SA for profiles created on/after cutover; creator always allowed
+    const cutoverSetting = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_cutover_ts' });
+    let cutoverTs = cutoverSetting?.[0]?.value;
+    if (!cutoverTs) {
+      cutoverTs = new Date().toISOString();
+      await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_cutover_ts', value: cutoverTs });
+    }
+
+    const isCreator = String(user.email).toLowerCase() === 'germaintrust@gmail.com';
+    const createdAtMs = profile.created_date ? new Date(profile.created_date).getTime() : 0;
+    const cutoverMs = new Date(cutoverTs).getTime();
+
+    // Creator: force #000001 and ensure counter >= 1
+    if (isCreator) {
+      const desired = 1;
+      const saStr = padSix(desired);
+      await base44.entities.UserProfile.update(profile.id, { sa_number: saStr });
+
+      const counterSettings = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_counter' });
+      const existing = counterSettings?.[0];
+      const currentVal = Number(existing?.value || 0) || 0;
+      if (existing) {
+        if (currentVal < desired) {
+          await base44.asServiceRole.entities.PlatformSetting.update(existing.id, { value: desired });
+        }
+      } else {
+        await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: desired });
+      }
+      return Response.json({ sa_number: saStr, assigned: true });
+    }
+
+    // Block pre-cutover users (demo/legacy) from receiving SA#
+    if (!createdAtMs || createdAtMs < cutoverMs) {
+      return Response.json({ assigned: false, reason: 'pre-cutover' });
+    }
+
     // Get or initialize the SA counter in PlatformSetting
     const settings = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_counter' });
     let setting = settings?.[0] || null;
     let current = Number(setting?.value || 0) || 0;
 
-    // Special-case: ensure the creator can be #000001 if counter not initialized yet
-    const isCreator = String(user.email).toLowerCase() === 'germaintrust@gmail.com';
-    let next;
-    if (!setting) {
-      // Create the setting record
-      if (isCreator) {
-        next = 1;
-      } else {
-        // If first assignment isn't creator, still start at 1 for whoever claims first
-        next = 1;
-      }
-    } else {
-      next = current + 1;
-    }
-
+    const next = setting ? current + 1 : 1;
     const saStr = padSix(next);
     await base44.entities.UserProfile.update(profile.id, { sa_number: saStr });
 
