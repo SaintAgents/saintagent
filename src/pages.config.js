@@ -27,6 +27,7 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import ListingDetail from './pages/ListingDetail';
+import ActivityFeed from './pages/ActivityFeed';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "ListingDetail": ListingDetail,
+    "ActivityFeed": ActivityFeed,
 }
 
 export const pagesConfig = {
