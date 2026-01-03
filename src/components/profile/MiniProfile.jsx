@@ -2,7 +2,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
-import { getRPRank } from '@/components/reputation/rpUtils';
+import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
+import PhotoViewer from '@/components/profile/PhotoViewer';
 import BadgesBar from '@/components/badges/BadgesBar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -31,6 +32,7 @@ export default function MiniProfile({
   showHandle = true,
   className,
 }) {
+  const [viewerOpen, setViewerOpen] = React.useState(false);
   const { data: profs = [] } = useQuery({
     queryKey: ['miniProfile', userId],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
@@ -54,14 +56,22 @@ export default function MiniProfile({
   const displayName = name || profile?.display_name || userId || 'User';
   const handle = profile?.handle;
   const sa = profile?.sa_number;
-  const rpInfo = getRPRank(profile?.rp_points || 0);
+  const rpPointsVal = profile?.rp_points || 0;
+  const rankTitle = (() => {
+    const code = profile?.rp_rank_code;
+    if (code) {
+      const found = RP_LADDER.find(t => t.code === code);
+      if (found) return found.title;
+    }
+    return getRPRank(rpPointsVal)?.title || 'Seeker';
+  })();
 
   return (
     <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
       <div
-        onClick={() => { window.location.href = createPageUrl('Profile') + (userId ? `?id=${encodeURIComponent(userId)}` : ''); }}
+        onClick={() => setViewerOpen(true)}
         className="cursor-pointer"
-        title="Open profile"
+        title="View photos"
       >
         <RankedAvatar
           src={avatar || profile?.avatar_url}
@@ -117,7 +127,7 @@ export default function MiniProfile({
           )}
           <div className="flex flex-wrap items-center gap-1 mt-0.5">
             <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700">
-              Rank {rpInfo?.title || 'Seeker'}
+              Rank {rankTitle}
             </Badge>
             {roles?.map((r) => (
               <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
@@ -134,6 +144,12 @@ export default function MiniProfile({
                 Inf {Math.round(profile.influence_score)}
               </Badge>
             )}
+            {typeof profile?.reach_score === 'number' && (
+              <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                Reach {Math.round(profile.reach_score)}
+              </Badge>
+            )}
             {typeof profile?.expertise_score === 'number' && (
               <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1">
                 <BadgeCheck className="w-3 h-3" />
@@ -148,6 +164,12 @@ export default function MiniProfile({
           )}
         </div>
       )}
+    {/* Photo Viewer Overlay */}
+    <PhotoViewer
+      open={viewerOpen}
+      images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0,5)}
+      onClose={() => setViewerOpen(false)}
+    />
     </div>
-  );
-}
+    );
+    }
