@@ -213,6 +213,7 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
   };
   const [cardPositions, setCardPositions] = useState(DEFAULT_POSITIONS);
   const [cardSizes, setCardSizes] = useState({});
+  const [needAutoPack, setNeedAutoPack] = useState(false);
   const onSize = (key) => (dim) => setCardSizes((s) => ({ ...s, [key]: dim }));
 
   // Load/save layout (per device via localStorage)
@@ -256,9 +257,11 @@ const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
         setCardPositions(JSON.parse(raw));
       } else {
         autoArrange();
+        setNeedAutoPack(true);
       }
     } catch {
       autoArrange();
+      setNeedAutoPack(true);
     }
   };
 
