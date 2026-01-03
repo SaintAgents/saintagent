@@ -73,6 +73,7 @@ export default function AdminProjects() {
               <th className="text-left p-3">Status</th>
               <th className="text-right p-3">Budget</th>
               <th className="text-left p-3">Tags</th>
+              <th className="text-left p-3">Ownership</th>
               <th className="text-left p-3">New Fields</th>
             </tr>
           </thead>
@@ -100,6 +101,22 @@ export default function AdminProjects() {
                 </td>
                 <td className="p-3 text-right">${(p.budget || 0).toLocaleString?.() || 0}</td>
                 <td className="p-3 text-slate-600">{(p.impact_tags || []).slice(0,3).join(', ')}</td>
+                <td className="p-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-slate-600">
+                      {(p.claim_status || 'unclaimed').toUpperCase()} {p.claimed_by ? `• ${p.claimed_by}` : ''}
+                    </span>
+                    {p.claim_status === 'pending' && (
+                      <>
+                        <Button size="sm" variant="outline" onClick={() => updateStatus.mutate({ id: p.id, status: p.status }) || base44.entities.Project.update(p.id, { claim_status: 'approved' }).then(() => qc.invalidateQueries({ queryKey: ['projects'] }))}>Approve</Button>
+                        <Button size="sm" variant="ghost" onClick={() => base44.entities.Project.update(p.id, { claim_status: 'rejected' }).then(() => qc.invalidateQueries({ queryKey: ['projects'] }))}>Reject</Button>
+                      </>
+                    )}
+                    {(p.claim_status && p.claim_status !== 'unclaimed') && (
+                      <Button size="sm" variant="ghost" className="text-rose-600" onClick={() => base44.entities.Project.update(p.id, { claim_status: 'unclaimed', claimed_by: null, claimed_at: null }).then(() => qc.invalidateQueries({ queryKey: ['projects'] }))}>Clear</Button>
+                    )}
+                  </div>
+                </td>
                 <td className="p-3 text-slate-600">{p.metadata ? Object.keys(p.metadata).length : 0}</td>
               </tr>
             ))}

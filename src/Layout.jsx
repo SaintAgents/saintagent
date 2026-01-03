@@ -182,6 +182,9 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           if (type === 'profile') {
             openProfile(item.user_id);
             setSearchOpen(false);
+          } else if (type === 'project') {
+            window.location.href = createPageUrl('Projects');
+            setSearchOpen(false);
           }
         };
 

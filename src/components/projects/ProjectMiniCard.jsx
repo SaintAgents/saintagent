@@ -1,6 +1,8 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { base44 } from "@/api/base44Client";
 import { Layers, AlertTriangle } from "lucide-react";
 
 const STATUS_STYLES = {
@@ -63,6 +65,32 @@ export default function ProjectMiniCard({ project, onClick }) {
             }
             </div>
           }
+
+          {/* Claim ownership controls */}
+          {(!project.claim_status || project.claim_status === 'unclaimed') && (
+            <div className="pt-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  const me = await base44.auth.me();
+                  await base44.entities.Project.update(project.id, {
+                    claim_status: 'pending',
+                    claimed_by: me.email,
+                    claimed_at: new Date().toISOString()
+                  });
+                }}
+              >
+                Claim Project
+              </Button>
+            </div>
+          )}
+          {project.claim_status && project.claim_status !== 'unclaimed' && (
+            <div className="pt-2 text-xs text-slate-500">
+              {project.claim_status === 'pending' ? 'Claim pending approval' : project.claim_status === 'approved' ? `Claimed by ${project.claimed_by || 'owner'}` : 'Claim rejected'}
+            </div>
+          )}
         </CardContent>
       </Card>
     </button>);

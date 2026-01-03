@@ -19,6 +19,7 @@ import {
   Calendar,
   CircleDot,
   FileText,
+  Folder,
   X
 } from "lucide-react";
 
@@ -57,6 +58,12 @@ export default function SearchModal({ open, onClose, onSelect }) {
     enabled: open
   });
 
+  const { data: projects = [] } = useQuery({
+    queryKey: ['searchProjects', query],
+    queryFn: () => base44.entities.Project.list('-created_date', 50),
+    enabled: open
+  });
+
   const handleSearch = (e) => {
     if (e.key === 'Enter' && !query.trim()) {
       setShowAll(true);
@@ -82,6 +89,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filteredMissions = filterResults(missions);
   const filteredCircles = filterResults(circles);
   const filteredPosts = filterResults(posts);
+  const filteredProjects = filterResults(projects);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -111,7 +119,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </div>
 
         <Tabs value={tab} onValueChange={setTab} className="px-4">
-          <TabsList className="w-full grid grid-cols-6">
+          <TabsList className="w-full grid grid-cols-7">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="people">
               <Users className="w-4 h-4" />
@@ -124,6 +132,9 @@ export default function SearchModal({ open, onClose, onSelect }) {
             </TabsTrigger>
             <TabsTrigger value="circles">
               <CircleDot className="w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="projects">
+              <Folder className="w-4 h-4" />
             </TabsTrigger>
             <TabsTrigger value="posts">
               <FileText className="w-4 h-4" />
