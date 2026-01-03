@@ -1559,6 +1559,8 @@ useEffect(() => {
         open={onlineUsersOpen}
         onClose={() => setOnlineUsersOpen(false)} />
 
-      </div>);
+      </div>
+    </div>
+  );
 
 }
