@@ -431,7 +431,7 @@ export default function CommandDeck() {
             <div className="relative z-10">
               <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
                                   <p className="text-slate-500 mt-1">Your mission control center</p>
-                                  <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                  <div className="hidden">
                                     {/* Save */}
                                     <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
                                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-8 h-8 object-contain drop-shadow" />
@@ -973,7 +973,48 @@ export default function CommandDeck() {
           </div>
         </div>
 
-        {/* Main Grid */}
+        {/* Control Area (Save/Reset/Collapse/Expand) */}
+              <div className="px-6 mb-6">
+                <div className="relative p-4 rounded-2xl">
+                  <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none" />
+                  <div className="relative z-10 grid grid-cols-2 gap-3">
+                    {/* Save */}
+                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">Save current layout</div>
+                      </div>
+                    </button>
+                    {/* Reset */}
+                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">Restore defaults</div>
+                      </div>
+                    </button>
+                    {/* Collapse */}
+                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">Condense view</div>
+                      </div>
+                    </button>
+                    {/* Expand */}
+                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expand</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">Fuller view</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
@@ -989,41 +1030,22 @@ export default function CommandDeck() {
 
               <div className="text-zinc-950">
                 <div className="grid grid-cols-2 gap-3">
-                  {/* Save */}
-                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
-                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Save current layout</div>
-                    </div>
-                  </button>
-
-                  {/* Reset */}
-                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
-                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Restore defaults</div>
-                    </div>
-                  </button>
-
-                  {/* Collapse */}
-                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
-                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Condense view</div>
-                    </div>
-                  </button>
-
-                  {/* Expand */}
-                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
-                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expand</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Fuller view</div>
-                    </div>
-                  </button>
+                  <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
+                    <Calendar className="w-5 h-5" />
+                    <span className="text-xs">Book Meeting</span>
+                  </Button>
+                  <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => {setQuickCreateType('post');setQuickCreateOpen(true);}}>
+                    <Plus className="w-5 h-5" />
+                    <span className="text-xs">Post Update</span>
+                  </Button>
+                  <Button variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => {setQuickCreateType('mission');setQuickCreateOpen(true);}}>
+                    <Target className="w-5 h-5" />
+                    <span className="text-xs">Launch Mission</span>
+                  </Button>
+                  <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>
+                    <ShoppingBag className="w-5 h-5" />
+                    <span className="text-xs">Create Offer</span>
+                  </Button>
                 </div>
               </div>
             </CollapsibleCard>
