@@ -440,24 +440,26 @@ useEffect(() => {
                 <BarChart3 className="w-4 h-4" />
                 {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
               </Button>
-              <div className="flex flex-col gap-2 items-stretch">
-                <Button
-                  className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-                  onClick={() => setQuickCreateOpen(true)}>
 
-                  <Plus className="w-4 h-4" />
-                  Quick Create
-                </Button>
-                <Button
-                  variant="outline"
-                  className="rounded-xl"
-                  onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}
-                >
-                  Add Project
-                </Button>
-              </div>
             </div>
           </div>
+
+        <div className="px-6 pb-2">
+          <div className="flex flex-wrap gap-3 items-center">
+            <Button
+              className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
+              onClick={() => setQuickCreateOpen(true)}>
+              <Plus className="w-4 h-4" />
+              Quick Create
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
+              Add Project
+            </Button>
+          </div>
+        </div>
 
           {/* Profile Identifiers */}
           <div className="mb-6 p-6 rounded-2xl bg-white border border-slate-200/60 shadow-sm">
