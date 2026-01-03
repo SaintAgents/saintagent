@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ProjectCSVImport() {
   const [file, setFile] = React.useState(null);
@@ -10,6 +11,7 @@ export default function ProjectCSVImport() {
   const [error, setError] = React.useState("");
   const [logs, setLogs] = React.useState([]);
   const log = (m) => setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${m}`]);
+  const queryClient = useQueryClient();
 
   const downloadTemplate = () => {
     const headers = [
@@ -170,6 +172,12 @@ export default function ProjectCSVImport() {
       }
       log(`Imported ${created.length} record(s)`);
       setResult({ imported: created.length });
+      // Auto-refresh project lists across the app
+      try {
+        queryClient.invalidateQueries({ queryKey: ['projects'] });
+        queryClient.invalidateQueries({ queryKey: ['projects_all'] });
+      } catch (_) {}
+      log('Refreshing project views...');
     } catch (e) {
       setError(e.message || String(e));
       log(`Error: ${e.message || String(e)}`);
