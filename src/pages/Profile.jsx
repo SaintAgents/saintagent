@@ -259,6 +259,24 @@ export default function Profile() {
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
 
+  // Wallet query - only run if profile exists
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', profile?.user_id],
+    queryFn: async () => {
+      try {
+        const { data } = await base44.functions.invoke('walletEngine', {
+          action: 'getWallet',
+          payload: { user_id: profile.user_id }
+        });
+        return data;
+      } catch {
+        return null;
+      }
+    },
+    enabled: !!profile?.user_id,
+    retry: false
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
       <div className="max-w-4xl mx-auto">
