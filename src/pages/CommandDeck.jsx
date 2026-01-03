@@ -619,12 +619,12 @@ export default function CommandDeck() {
                     <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 stat-number">{profile?.follower_count || 0}</p>
-                    <p className="text-gray-950 text-xs">Followers</p>
+                    <p className="text-lg font-bold text-slate-900 stat-number mt-0.5">{profile?.follower_count || 0}</p>
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 stat-number">{profile?.meetings_completed || 0}</p>
-                    <p className="text-gray-950 text-xs">Meetings</p>
+                    <p className="text-lg font-bold text-slate-900 stat-number mt-0.5">{profile?.meetings_completed || 0}</p>
+                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
                   </div>
                 </div>
 
