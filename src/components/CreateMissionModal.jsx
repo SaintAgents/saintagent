@@ -18,11 +18,15 @@ export default function CreateMissionModal({ open, onClose }) {
     mission_type: 'personal',
     reward_ggg: '',
     reward_rank_points: '',
-    max_participants: ''
+    max_participants: '',
+    image_url: ''
   });
 
   const MAX_USD = 55;
   const MAX_GGG = MAX_USD / GGG_TO_USD;
+
+  const [uploading, setUploading] = useState(false);
+  const [localFile, setLocalFile] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -64,7 +68,8 @@ export default function CreateMissionModal({ open, onClose }) {
         mission_type: 'personal',
         reward_ggg: '',
         reward_rank_points: '',
-        max_participants: ''
+        max_participants: '',
+        image_url: ''
       });
     }
   });
