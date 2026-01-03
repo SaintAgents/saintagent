@@ -322,7 +322,7 @@ export default function Messages() {
 
               <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center justify-between">
-                  <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} />
+                  <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} showRankBadge={false} showTrustBadge={false} showReachBadge={false} />
                   <p className="text-xs text-slate-400">
                     {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'h:mm a') : ''}
                   </p>
@@ -367,7 +367,7 @@ export default function Messages() {
         <div className="flex-1 flex flex-col">
           {/* Header */}
           <div className="p-4 border-b bg-white flex items-center gap-3">
-            <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} />
+            <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} showRankBadge={false} />
             {typingUsers.length > 0 &&
             <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
             }
