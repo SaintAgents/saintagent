@@ -44,6 +44,12 @@ export default function MiniProfile({
     enabled: !!userId,
   });
 
+  const { data: miniBadges = [] } = useQuery({
+    queryKey: ['miniProfileBadges', userId],
+    queryFn: () => base44.entities.Badge.filter({ user_id: userId, status: 'active' }),
+    enabled: !!userId,
+  });
+
   const displayName = name || profile?.display_name || userId || 'User';
   const handle = profile?.handle;
   const sa = profile?.sa_number;
