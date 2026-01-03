@@ -371,9 +371,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           background-position: center;
           background-attachment: fixed;
         }
-        [data-theme='light'] main[data-page='CommandDeck'] > div {
-          background: transparent !important;
-        }
+
       `}</style>
 
       {/* Sidebar */}
