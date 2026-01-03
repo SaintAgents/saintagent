@@ -80,14 +80,22 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
   useEffect(() => {
     try {
       const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light') setTheme(saved);
+      if (saved === 'dark' || saved === 'light' || saved === 'custom') setTheme(saved);
     } catch {}
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem('theme', theme); } catch {}
+    try { 
+      localStorage.setItem('theme', theme); 
+    } catch {}
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'custom') {
+        const p = localStorage.getItem('custom_primary') || '#7c3aed';
+        const a = localStorage.getItem('custom_accent') || '#f59e0b';
+        document.documentElement.style.setProperty('--primary', p);
+        document.documentElement.style.setProperty('--accent', a);
+      }
     }
   }, [theme]);
 
@@ -131,6 +139,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
     enabled: !!currentUser
   });
   const profile = profiles?.[0];
+  const cmdViewMode = profile?.command_deck_layout?.view_mode;
 
   // Heartbeat: update last_seen_at periodically for online indicator
   useEffect(() => {
@@ -390,8 +399,14 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         }
 
         `}</style>
+        <style>{`
+          :root { --primary: #7c3aed; --accent: #f59e0b; }
+          [data-theme='custom'] .min-h-screen {
+            background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--accent) 12%, white));
+          }
+        `}</style>
 
-      {/* Sidebar */}
+        {/* Sidebar */}
       <Sidebar 
         isCollapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -419,9 +434,12 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
       {/* Main Content */}
       <main
         data-page={currentPageName}
+        data-cmd-view={cmdViewMode || 'standard'}
         className={cn(
           "pt-16 min-h-screen transition-all duration-300",
-          sidebarCollapsed ? "pl-20" : "pl-64"
+          sidebarCollapsed ? "pl-20" : "pl-64",
+          currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
+          currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>
         {children}
       </main>

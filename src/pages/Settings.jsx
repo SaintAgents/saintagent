@@ -37,9 +37,33 @@ export default function Settings() {
   });
   const profile = profiles?.[0];
 
+  React.useEffect(() => {
+    if (!profile) return;
+    setSettings((prev) => ({
+      ...prev,
+      dm_policy: profile.dm_policy || 'everyone',
+      status: profile.status || 'online',
+      profile_visibility: profile.profile_visibility || 'public',
+      visibility_settings: profile.visibility_settings || prev.visibility_settings,
+      notification_prefs: profile.notification_prefs || prev.notification_prefs,
+      theme_preference: profile.theme_preference || prev.theme_preference,
+      custom_theme_colors: profile.custom_theme_colors || prev.custom_theme_colors,
+      command_deck_layout: profile.command_deck_layout || prev.command_deck_layout,
+    }));
+  }, [profile?.id]);
+
   const [settings, setSettings] = useState({
     dm_policy: profile?.dm_policy || 'everyone',
     status: profile?.status || 'online',
+    profile_visibility: profile?.profile_visibility || 'public',
+    visibility_settings: profile?.visibility_settings || { show_email: false, show_location: true, show_earnings: false },
+    notification_prefs: profile?.notification_prefs || { email: true, in_app: true, push: false },
+    theme_preference: profile?.theme_preference || (typeof window !== 'undefined' ? (localStorage.getItem('theme') || 'light') : 'light'),
+    custom_theme_colors: profile?.custom_theme_colors || {
+      primary: (typeof window !== 'undefined' ? (localStorage.getItem('custom_primary') || '#7c3aed') : '#7c3aed'),
+      accent: (typeof window !== 'undefined' ? (localStorage.getItem('custom_accent') || '#f59e0b') : '#f59e0b'),
+    },
+    command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true },
   });
 
   const updateMutation = useMutation({
@@ -48,7 +72,34 @@ export default function Settings() {
   });
 
   const handleSave = () => {
-    updateMutation.mutate(settings);
+    // Apply theme locally for instant feedback
+    try {
+      localStorage.setItem('theme', settings.theme_preference || 'light');
+      if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('data-theme', settings.theme_preference || 'light');
+      }
+      if (settings.theme_preference === 'custom') {
+        const p = settings.custom_theme_colors?.primary || '#7c3aed';
+        const a = settings.custom_theme_colors?.accent || '#f59e0b';
+        localStorage.setItem('custom_primary', p);
+        localStorage.setItem('custom_accent', a);
+        if (typeof document !== 'undefined') {
+          document.documentElement.style.setProperty('--primary', p);
+          document.documentElement.style.setProperty('--accent', a);
+        }
+      }
+    } catch {}
+
+    updateMutation.mutate({
+      dm_policy: settings.dm_policy,
+      status: settings.status,
+      profile_visibility: settings.profile_visibility,
+      visibility_settings: settings.visibility_settings,
+      notification_prefs: settings.notification_prefs,
+      theme_preference: settings.theme_preference,
+      custom_theme_colors: settings.custom_theme_colors,
+      command_deck_layout: settings.command_deck_layout,
+    });
   };
 
   return (
@@ -177,26 +228,49 @@ export default function Settings() {
                 <CardDescription>Control what others can see on your profile</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <Label>Overall visibility</Label>
+                  <Select
+                    value={settings.profile_visibility}
+                    onValueChange={(v) => setSettings({ ...settings, profile_visibility: v })}
+                  >
+                    <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="public">Public</SelectItem>
+                      <SelectItem value="members_only">Members Only</SelectItem>
+                      <SelectItem value="private">Private</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Show email</p>
                     <p className="text-sm text-slate-500">Allow others to see your email address</p>
                   </div>
-                  <Switch />
+                  <Switch 
+                    checked={!!settings.visibility_settings?.show_email}
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_email: !!checked } })}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Show location</p>
                     <p className="text-sm text-slate-500">Display your region on your profile</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch 
+                    checked={!!settings.visibility_settings?.show_location}
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_location: !!checked } })}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Show earnings</p>
                     <p className="text-sm text-slate-500">Display your total earnings publicly</p>
                   </div>
-                  <Switch />
+                  <Switch 
+                    checked={!!settings.visibility_settings?.show_earnings}
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_earnings: !!checked } })}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -204,6 +278,44 @@ export default function Settings() {
 
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Delivery Channels</CardTitle>
+                <CardDescription>Choose how you receive notifications</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Email</p>
+                    <p className="text-sm text-slate-500">Receive notifications via email</p>
+                  </div>
+                  <Switch 
+                    checked={!!settings.notification_prefs?.email}
+                    onCheckedChange={(checked) => setSettings({ ...settings, notification_prefs: { ...settings.notification_prefs, email: !!checked } })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">In-app</p>
+                    <p className="text-sm text-slate-500">Show notifications in the app</p>
+                  </div>
+                  <Switch 
+                    checked={!!settings.notification_prefs?.in_app}
+                    onCheckedChange={(checked) => setSettings({ ...settings, notification_prefs: { ...settings.notification_prefs, in_app: !!checked } })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Push</p>
+                    <p className="text-sm text-slate-500">Send push notifications to your device</p>
+                  </div>
+                  <Switch 
+                    checked={!!settings.notification_prefs?.push}
+                    onCheckedChange={(checked) => setSettings({ ...settings, notification_prefs: { ...settings.notification_prefs, push: !!checked } })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
             <Card>
               <CardHeader>
                 <CardTitle>Email Notifications</CardTitle>
@@ -244,6 +356,84 @@ export default function Settings() {
 
           {/* Preferences */}
           <TabsContent value="preferences" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Theme</CardTitle>
+                <CardDescription>Select light, dark, or custom colors</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Theme</Label>
+                  <Select
+                    value={settings.theme_preference}
+                    onValueChange={(v) => setSettings({ ...settings, theme_preference: v })}
+                  >
+                    <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="custom">Custom</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {settings.theme_preference === 'custom' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Primary color</Label>
+                      <Input
+                        type="color"
+                        className="mt-2 h-10 p-1"
+                        value={settings.custom_theme_colors?.primary || '#7c3aed'}
+                        onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Accent color</Label>
+                      <Input
+                        type="color"
+                        className="mt-2 h-10 p-1"
+                        value={settings.custom_theme_colors?.accent || '#f59e0b'}
+                        onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
+                      />
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Command Deck Layout</CardTitle>
+                <CardDescription>Set your default layout</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>View mode</Label>
+                  <Select
+                    value={settings.command_deck_layout?.view_mode}
+                    onValueChange={(v) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, view_mode: v } })}
+                  >
+                    <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="standard">Standard</SelectItem>
+                      <SelectItem value="compact">Compact</SelectItem>
+                      <SelectItem value="analytics">Analytics</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Show side panel by default</p>
+                    <p className="text-sm text-slate-500">When opening the Command Deck</p>
+                  </div>
+                  <Switch
+                    checked={!!settings.command_deck_layout?.show_side_panel}
+                    onCheckedChange={(checked) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, show_side_panel: !!checked } })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle>Synchronicity Engine</CardTitle>
