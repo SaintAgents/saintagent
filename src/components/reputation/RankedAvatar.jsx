@@ -39,7 +39,7 @@ export default function RankedAvatar({
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
-  const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? getRPRank(rpPointsFinal || 0)?.code || 'seeker';
+  const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? (getRPRank(rpPointsFinal || 0)?.code || 'seeker');
   const cfg = getRingConfig(rpRankCodeFinal);
   const basePad = cfg.pad; // thickness tuned for 96px
   const padPx = Math.max(2, Math.round((basePad / 96) * size));
