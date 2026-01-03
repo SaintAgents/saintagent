@@ -11,7 +11,7 @@ function StatTile({ label, value, Icon, color = 'text-slate-900' }) {
         <div className="flex items-center justify-between">
           <div>
             <div className="text-xs text-slate-500">{label}</div>
-            <div className="text-2xl font-bold {color}">{value}</div>
+            <div className="text-2xl font-bold">{value}</div>
           </div>
           {Icon && <Icon className="w-6 h-6 text-slate-400" />}
         </div>
