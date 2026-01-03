@@ -66,21 +66,6 @@ export default function TopBar({
     } catch {}
   }, []);
 
-  const setLanguage = (code) => {
-    try {
-      localStorage.setItem('language', code);
-      document.documentElement.setAttribute('lang', code);
-      window.location.reload();
-    } catch {}
-  };
-
-  React.useEffect(() => {
-    try {
-      const code = localStorage.getItem('language');
-      if (code) document.documentElement.setAttribute('lang', code);
-    } catch {}
-  }, []);
-
   const { data: unreadMessages = [] } = useQuery({
     queryKey: ['unreadMessages', currentUser?.email],
     queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 1000),
@@ -162,23 +147,6 @@ export default function TopBar({
             )}
           </Button>
         </Link>
-
-        {/* Language */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-xl" title="Language">
-              <Globe className="w-5 h-5 text-slate-600" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setLanguage('en-US')}>English (US)</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('es-ES')}>Español</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('fr-FR')}>Français</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('de-DE')}>Deutsch</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('pt-BR')}>Português</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('ja-JP')}>日本語</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
 
         {/* Language */}
         <DropdownMenu>
