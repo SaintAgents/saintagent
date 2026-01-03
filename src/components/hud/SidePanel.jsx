@@ -254,7 +254,7 @@ export default function SidePanel({
     };
   };
 
-  const getPostComments = (postId) => {
+  const computePostComments = (postId) => {
     return allComments.filter(c => c.post_id === postId);
   };
 
@@ -535,7 +535,7 @@ export default function SidePanel({
                 <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
               ) : (
                 posts.map((post) => {
-                  const postComments = getPostComments(post.id);
+                  const postComments = computePostComments(post.id);
                   const isLiked = isLikedByUser(post.id);
                   const showComments = expandedComments[post.id];
 
@@ -885,7 +885,7 @@ export default function SidePanel({
                 <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
               ) : (
                 posts.map((post) => {
-                  const postComments = getPostComments(post.id);
+                  const postComments = computePostComments(post.id);
                   const isLiked = isLikedByUser(post.id);
                   const showComments = expandedComments[post.id];
                   return (
