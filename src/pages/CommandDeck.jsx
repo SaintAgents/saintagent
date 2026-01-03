@@ -448,13 +448,6 @@ useEffect(() => {
                   <Plus className="w-4 h-4" />
                   Quick Create
                 </Button>
-                <Button
-                  variant="outline"
-                  className="rounded-xl"
-                  onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}
-                >
-                  Add Project
-                </Button>
               </div>
             </div>
           </div>
