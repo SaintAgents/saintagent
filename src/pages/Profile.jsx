@@ -47,6 +47,7 @@ import {
 import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
+import RankedAvatar from '@/components/reputation/RankedAvatar';
 import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
@@ -237,21 +238,23 @@ export default function Profile() {
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-0 p-6 relative">
             <div className="flex items-end gap-6 -mt-12">
-              <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl">
-                <AvatarImage src={profile?.avatar_url} />
-                <AvatarFallback className="text-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-white">
-                  {profile?.display_name?.charAt(0) || 'U'}
-                </AvatarFallback>
-              </Avatar>
+              <RankedAvatar
+                src={profile?.avatar_url}
+                name={profile?.display_name}
+                size={96}
+                leaderTier={profile?.leader_tier}
+                rpRankCode={profile?.rp_rank_code}
+                rpPoints={profile?.rp_points}
+              />
               <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name}</h1>
-                  {profile?.leader_tier === 'verified144k' &&
-                  <Badge className="bg-amber-100 text-amber-700">
+                  {profile?.leader_tier === 'verified144k' && (
+                    <Badge className="bg-amber-100 text-amber-700">
                       <Crown className="w-3 h-3 mr-1" />
                       144K Leader
                     </Badge>
-                  }
+                  )}
                   {profile?.leader_tier === 'candidate' &&
                   <Badge variant="outline">Leader Candidate</Badge>
                   }

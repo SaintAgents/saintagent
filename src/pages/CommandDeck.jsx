@@ -44,6 +44,7 @@ import LeaderPathway from '@/components/leader/LeaderPathway';
 import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import HelpHint from '@/components/hud/HelpHint';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
+import RankedAvatar from '@/components/reputation/RankedAvatar';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -486,28 +487,16 @@ export default function CommandDeck() {
           <div className="relative mb-6 p-6 rounded-2xl">
             <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(255,255,255,0.12)] backdrop-blur-sm pointer-events-none" />
             <div className="relative z-10 flex items-start gap-6">
-              <div className="relative shrink-0">
-                <div
-                  className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-1 shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                  data-user-id={profile?.user_id}>
-
-                  <div className="w-full h-full rounded-full bg-white p-1">
-                    {profile?.avatar_url ?
-                    <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full rounded-full object-cover" /> :
-
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                        <span className="text-3xl font-bold text-violet-600">
-                          {profile?.display_name?.charAt(0) || 'U'}
-                        </span>
-                      </div>
-                    }
-                  </div>
-                </div>
-                {profile?.leader_tier === 'verified144k' &&
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-md">
-                    <Sparkles className="w-4 h-4 text-white" />
-                  </div>
-                }
+              <div className="relative shrink-0" data-user-id={profile?.user_id}>
+                <RankedAvatar
+                  src={profile?.avatar_url}
+                  name={profile?.display_name}
+                  size={96}
+                  leaderTier={profile?.leader_tier}
+                  rpRankCode={profile?.rp_rank_code}
+                  rpPoints={rpPoints}
+                  userId={profile?.user_id}
+                />
               </div>
 
               <div className="flex-1">
@@ -515,8 +504,8 @@ export default function CommandDeck() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h2 className="text-2xl font-bold text-slate-900">
-                            {profile?.display_name || 'User'}
-                          </h2>
+                                                      {profile?.display_name || 'User'}
+                                                    </h2>
                     <div className="flex items-center gap-1">
                       <p className="text-sm text-slate-500 capitalize">
                         {profile?.rank_code || 'Seeker'} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
