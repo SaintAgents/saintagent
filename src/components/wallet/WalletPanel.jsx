@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 export default function WalletPanel() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => base44.auth.me()
   });
 
   const { data: walletRes } = useQuery({
@@ -19,12 +19,12 @@ export default function WalletPanel() {
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: user.email },
+        payload: { user_id: user.email }
       });
       return data;
     },
     enabled: !!user?.email,
-    refetchInterval: 5000,
+    refetchInterval: 5000
   });
 
   const { data: txRes } = useQuery({
@@ -32,12 +32,12 @@ export default function WalletPanel() {
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getTransactions',
-        payload: { user_id: user.email },
+        payload: { user_id: user.email }
       });
       return data;
     },
     enabled: !!user?.email,
-    refetchInterval: 5000,
+    refetchInterval: 5000
   });
 
   const wallet = walletRes?.wallet;
@@ -46,8 +46,8 @@ export default function WalletPanel() {
   // Fallback: if wallet not present yet but profile has ggg_balance, show that
   const [profile] = useQuery({
     queryKey: ['userProfileSelf', user?.email],
-    queryFn: async () => user?.email ? (await base44.entities.UserProfile.filter({ user_id: user.email })) : [],
-    enabled: !!user?.email,
+    queryFn: async () => user?.email ? await base44.entities.UserProfile.filter({ user_id: user.email }) : [],
+    enabled: !!user?.email
   }).data || [];
   const available = wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const locked = wallet?.locked_balance ?? 0;
@@ -84,7 +84,7 @@ export default function WalletPanel() {
               </HoverCardContent>
             </HoverCard>
           </div>
-          <p className="text-xl font-bold text-slate-900">{(locked ?? 0).toLocaleString?.()} GGG</p>
+          <p className="text-gray-500 text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
         </div>
       </div>
 
@@ -105,18 +105,18 @@ export default function WalletPanel() {
         </div>
         <ScrollArea className="h-64 pr-2">
           <div className="space-y-2">
-            {txs.length === 0 ? (
-              <p className="text-sm text-slate-400 py-6 text-center">No transactions yet</p>
-            ) : (
-              txs.slice(0, 50).map((t) => (
-                <TxRow key={t.id} tx={t} />
-              ))
-            )}
+            {txs.length === 0 ?
+            <p className="text-sm text-slate-400 py-6 text-center">No transactions yet</p> :
+
+            txs.slice(0, 50).map((t) =>
+            <TxRow key={t.id} tx={t} />
+            )
+            }
           </div>
         </ScrollArea>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 function Stat({ label, value, color = 'slate' }) {
@@ -125,14 +125,14 @@ function Stat({ label, value, color = 'slate' }) {
     rose: 'bg-rose-50 border-rose-200 text-rose-900',
     amber: 'bg-amber-50 border-amber-200 text-amber-900',
     violet: 'bg-violet-50 border-violet-200 text-violet-900',
-    slate: 'bg-slate-50 border-slate-200 text-slate-900',
+    slate: 'bg-slate-50 border-slate-200 text-slate-900'
   };
   return (
     <div className={cn('p-3 rounded-xl border', colors[color] || colors.slate)}>
       <p className="text-xs font-medium opacity-70">{label}</p>
       <p className="text-lg font-bold">{(value ?? 0).toLocaleString?.()}</p>
-    </div>
-  );
+    </div>);
+
 }
 
 function TxRow({ tx }) {
@@ -152,6 +152,6 @@ function TxRow({ tx }) {
         </div>
         <div className={cn('text-sm font-semibold whitespace-nowrap', color)}>{amount}</div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
