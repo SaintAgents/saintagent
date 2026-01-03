@@ -877,6 +877,26 @@ export default function Profile() {
 
           <TabsContent value="roles" className="space-y-6">
             <UserRolesPanel profile={profile} />
+
+            {/* Quick view of current active roles */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Current Roles</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {activeRoles?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {activeRoles.map((r) => (
+                      <Badge key={r.id} variant="secondary" className="capitalize">
+                        {ROLE_LABELS[r.role_code] || r.role_code.replace(/_/g, ' ')}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-400 text-sm">No active roles assigned</p>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
            <TabsContent value="friends" className="space-y-6">
