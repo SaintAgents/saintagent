@@ -662,7 +662,7 @@ export default function CommandDeck() {
                     <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 stat-number">{profile?.rank_points || 0}</p>
+                    <p className="text-lg font-bold text-slate-900 stat-number">{rpPoints}</p>
                     <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
