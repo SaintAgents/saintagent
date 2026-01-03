@@ -455,7 +455,7 @@ export default function CommandDeck() {
 
           {/* Profile Identifiers */}
           <div className="relative mb-6 p-6 rounded-2xl">
-            <div className="absolute inset-0 rounded-2xl bg-white/60 backdrop-blur-sm pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl bg-white/20 backdrop-blur-sm pointer-events-none" />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0">
                 <div
