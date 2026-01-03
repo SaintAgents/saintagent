@@ -54,12 +54,12 @@ export default function UserManagement() {
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: selectedUser.user_id },
+        payload: { user_id: selectedUser.user_id }
       });
       return data;
     },
     enabled: !!selectedUser?.user_id,
-    refetchInterval: 5000,
+    refetchInterval: 5000
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? selectedUser?.ggg_balance ?? 0;
 
@@ -131,7 +131,7 @@ export default function UserManagement() {
       await base44.entities.User.delete(userRecord.id);
       // Also remove from the directory by deleting their UserProfile if present
       if (selectedUser?.id) {
-        try { await base44.entities.UserProfile.delete(selectedUser.id); } catch {}
+        try {await base44.entities.UserProfile.delete(selectedUser.id);} catch {}
       }
       await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
       await queryClient.refetchQueries({ queryKey: ['allProfiles'] });
@@ -202,7 +202,7 @@ export default function UserManagement() {
                     <Badge className="bg-amber-100 text-amber-700">144K Leader</Badge>
                     }
                       {profile.leader_tier === 'candidate' &&
-                    <Badge variant="outline">Candidate</Badge>
+                    <Badge variant="outline" className="bg-purple-100 text-foreground px-2.5 py-0.5 text-xs font-semibold rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">Candidate</Badge>
                     }
                     </div>
                     <p className="text-sm text-slate-500">@{profile.handle} • {profile.user_id}</p>
