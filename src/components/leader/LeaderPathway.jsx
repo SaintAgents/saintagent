@@ -141,7 +141,7 @@ export default function LeaderPathway({ profile }) {
 
   return (
     <Card className={cn(
-      "relative overflow-hidden border-2 transition-all duration-300",
+      "relative overflow-hidden border-2 transition-all duration-300 opacity-30",
       status === 'locked' && "border-slate-200 bg-slate-50",
       status === 'active' && "border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 shadow-lg",
       status === 'pending' && "border-blue-300 bg-blue-50",
