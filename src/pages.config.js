@@ -25,6 +25,7 @@ import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import Leaderboards from './pages/Leaderboards';
 import Mentorship from './pages/Mentorship';
+import ResourceHub from './pages/ResourceHub';
 import __Layout from './Layout.jsx';
 
 
@@ -56,6 +57,7 @@ export const PAGES = {
     "Terms": Terms,
     "Leaderboards": Leaderboards,
     "Mentorship": Mentorship,
+    "ResourceHub": ResourceHub,
 }
 
 export const pagesConfig = {
