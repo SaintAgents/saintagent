@@ -19,10 +19,10 @@ import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
+import Projects from './pages/Projects';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
-import Projects from './pages/Projects';
 import __Layout from './Layout.jsx';
 
 
@@ -48,10 +48,10 @@ export const PAGES = {
     "Profile": Profile,
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
+    "Projects": Projects,
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
-    "Projects": Projects,
 }
 
 export const pagesConfig = {
