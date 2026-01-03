@@ -852,6 +852,25 @@ export default function Profile() {
             }
           </TabsContent>
 
+          {showDatingTab && (
+            <TabsContent value="dating" className="space-y-6">
+              <Step7Dating
+                data={datingData || {}}
+                onChange={setDatingData}
+                onComplete={async (data) => {
+                  const payload = {
+                    relationship_status: data.relationship_status,
+                    relationship_type_seeking: data.relationship_type_seeking,
+                    dating_preferences: data.dating_preferences,
+                    qualities_seeking: data.qualities_seeking,
+                    qualities_providing: data.qualities_providing,
+                  };
+                  await updateMutation.mutateAsync(payload);
+                }}
+              />
+            </TabsContent>
+          )}
+
           <TabsContent value="stats" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Right Column - Stats */}
