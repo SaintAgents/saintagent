@@ -21,7 +21,71 @@ import LeaderQuizModal from './LeaderQuizModal';
 
 const REQUIRED_POINTS = 10000;
 const REQUIRED_ACCOUNT_AGE_DAYS = 30;
-const REQUIRED_BADGES = ['soulbound', 'calibrator', 'security_trained'];
+const REQUIRED_BADGES = ['soulbound', 'calibrator', 'steward', 'anchor', 'coherent'];
+
+// Leadership badge definitions
+const BADGE_DEFS = {
+  soulbound: {
+    title: 'Soulbound',
+    dimension: 'Identity & Accountability',
+    definition: 'The user has established a persistent, accountable identity and accepts responsibility for their actions within leadership contexts.',
+    earnedThrough: [
+      'Identity verification (platform-level)',
+      'Acceptance of leadership conduct standards',
+      'Demonstrated consistency and integrity',
+      'No unresolved integrity flags'
+    ],
+    represents: 'I stand behind my actions.'
+  },
+  calibrator: {
+    title: 'Calibrator',
+    dimension: 'Judgment & Fairness',
+    definition: 'The user has demonstrated the ability to evaluate situations, people, or content with fairness, nuance, and consistency.',
+    earnedThrough: [
+      'Completion of calibration or review training',
+      'Successful alignment assessments',
+      'History of sound, balanced decisions',
+      'Peer or council validation'
+    ],
+    represents: 'I can judge fairly and responsibly.'
+  },
+  steward: {
+    title: 'Steward',
+    dimension: 'Responsibility & Care',
+    definition: 'The user has shown the ability to hold responsibility without exploiting influence, acting in service of the system and its people.',
+    earnedThrough: [
+      'Sustained positive contribution',
+      'Demonstrated restraint and ethical conduct',
+      'Completion of stewardship training',
+      'Trusted handling of responsibility over time'
+    ],
+    represents: 'I hold responsibility with care.'
+  },
+  anchor: {
+    title: 'Anchor',
+    dimension: 'Stability & Grounding',
+    definition: 'The user consistently demonstrates emotional, behavioral, and decision-making stability, especially during conflict or uncertainty.',
+    earnedThrough: [
+      'History of calm, constructive engagement',
+      'Peer validation during challenging situations',
+      'No pattern of reactive or destabilizing behavior',
+      'Completion of stability or coherence assessment'
+    ],
+    represents: 'I stabilize rather than disrupt.'
+  },
+  coherent: {
+    title: 'Coherent',
+    dimension: 'Alignment & Integrity',
+    definition: 'The user’s actions, decisions, and communication show internal consistency, follow-through, and ethical alignment over time.',
+    earnedThrough: [
+      'Demonstrated follow-through on commitments',
+      'Ethical consistency across contexts',
+      'Alignment review or integrity assessment',
+      'Longitudinal trust validation'
+    ],
+    represents: 'I act in alignment.'
+  }
+};
 
 export default function LeaderPathway({ profile }) {
   const [applicationModalOpen, setApplicationModalOpen] = useState(false);
@@ -103,7 +167,7 @@ export default function LeaderPathway({ profile }) {
             )}
           </div>
           <div>
-            <h3 className="text-xl font-bold">Leader Pathway</h3>
+            <h3 className="text-xl font-bold">Leader Pathway — Trust & Stewardship</h3>
             <p className="text-sm text-slate-500 font-normal">
               {status === 'locked' && "Complete requirements to unlock"}
               {status === 'active' && "Active Leader"}
@@ -147,25 +211,62 @@ export default function LeaderPathway({ profile }) {
             {badgesRequirementMet ? (
               <CheckCircle2 className="w-5 h-5 text-green-500" />
             ) : (
-              <span className="text-sm text-slate-600">{userBadgeCodes.filter(b => REQUIRED_BADGES.includes(b)).length} / 3</span>
+              <span className="text-sm text-slate-600">{userBadgeCodes.filter(b => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}</span>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
-            {REQUIRED_BADGES.map(badgeCode => {
-              const hasBadge = userBadgeCodes.includes(badgeCode);
+          {/* Leadership on SA description */}
+          <div className="mt-2">
+            <p className="text-sm text-slate-700">
+              Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
+            </p>
+          </div>
+
+          {/* Required Leadership Badges */}
+          <div className="mt-3 flex items-center justify-between">
+            <div className="text-sm font-medium text-slate-800">Required Leadership Badges</div>
+            <div className="text-xs text-slate-600">
+              {userBadgeCodes.filter(b => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {REQUIRED_BADGES.map((code) => {
+              const def = BADGE_DEFS[code];
+              const has = userBadgeCodes.includes(code);
               return (
-                <Badge 
-                  key={badgeCode}
-                  variant={hasBadge ? "default" : "outline"}
+                <div
+                  key={code}
                   className={cn(
-                    "text-xs",
-                    hasBadge && "bg-green-100 text-green-700 border-green-300"
+                    "p-3 rounded-xl border bg-white",
+                    has ? "border-green-200 ring-1 ring-green-200" : "border-slate-200"
                   )}
                 >
-                  {badgeCode.replace('_', ' ')}
-                  {hasBadge && <CheckCircle2 className="w-3 h-3 ml-1" />}
-                </Badge>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900">{def.title}</div>
+                      <div className="text-xs text-slate-600">{def.dimension}</div>
+                    </div>
+                    {has ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    ) : (
+                      <Lock className="w-5 h-5 text-slate-400" />
+                    )}
+                  </div>
+                  <div className="mt-2 text-xs text-slate-700">
+                    <span className="font-semibold">Definition:</span> {def.definition}
+                  </div>
+                  <div className="mt-2">
+                    <div className="text-[11px] font-semibold text-slate-700">Earned Through:</div>
+                    <ul className="list-disc ml-5 mt-1 text-xs text-slate-700 space-y-0.5">
+                      {def.earnedThrough.map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="mt-2 text-xs text-slate-700">
+                    <span className="font-semibold">Represents:</span> “{def.represents}”
+                  </div>
+                </div>
               );
             })}
           </div>
