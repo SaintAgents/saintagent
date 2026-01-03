@@ -319,7 +319,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         }
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
           background-color: #0b1220 !important;
-          background-image: radial-gradient(circle at 20% 0%, rgba(30,58,138,0.25), transparent 40%), radial-gradient(circle at 80% 20%, rgba(109,40,217,0.25), transparent 40%), linear-gradient(180deg, rgba(2,6,23,0.9), rgba(2,6,23,0.9));
+          background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0ea2a3ef3_9426c871-d540-4f5f-8354-f72ac2015cc0.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
