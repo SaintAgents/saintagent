@@ -517,7 +517,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl">
+          <div className="relative mb-6 p-6 rounded-2xl bg-transparent">
             <div className="absolute inset-0 rounded-2xl bg-transparent pointer-events-none" />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
