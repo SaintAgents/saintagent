@@ -1000,6 +1000,8 @@ export default function CommandDeck() {
             </div>
           </div>
 
+              </div>
+
               {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
@@ -1611,7 +1613,6 @@ export default function CommandDeck() {
           open={onlineUsersOpen}
           onClose={() => setOnlineUsersOpen(false)} />
 
-      </div>
     </div>);
 
 
