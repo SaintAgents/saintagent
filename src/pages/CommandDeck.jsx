@@ -698,7 +698,7 @@ export default function CommandDeck() {
                         <Sparkles className="w-4 h-4 text-purple-600" />
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Mystical ID</p>
+                        <p className="text-slate-950 text-xs">Mystical ID</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
                       </div>
                     </div>
@@ -710,7 +710,7 @@ export default function CommandDeck() {
                         ✨
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Sun Sign</p>
+                        <p className="text-slate-950 text-xs">Sun Sign</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
                       </div>
                     </div>
@@ -722,7 +722,7 @@ export default function CommandDeck() {
                         🌅
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Rising</p>
+                        <p className="text-slate-950 text-xs">Rising</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
                       </div>
                     </div>
@@ -734,7 +734,7 @@ export default function CommandDeck() {
                         🌙
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Moon</p>
+                        <p className="text-slate-950 text-xs">Moon</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
                       </div>
                     </div>
@@ -746,7 +746,7 @@ export default function CommandDeck() {
                         <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Life Path</p>
+                        <p className="text-slate-950 text-xs">Life Path</p>
                         <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
                       </div>
                     </div>
@@ -758,7 +758,7 @@ export default function CommandDeck() {
                         <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Personality</p>
+                        <p className="text-slate-950 text-xs">Personality</p>
                         <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
                       </div>
                     </div>
@@ -770,7 +770,7 @@ export default function CommandDeck() {
                         🃏
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Birth Card</p>
+                        <p className="text-slate-950 text-xs">Birth Card</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
                       </div>
                     </div>
@@ -782,7 +782,7 @@ export default function CommandDeck() {
                         ☀️
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500">Sun Card</p>
+                        <p className="text-slate-950 text-xs">Sun Card</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
                       </div>
                     </div>
