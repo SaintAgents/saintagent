@@ -247,6 +247,39 @@ export default function Messages() {
               </Button>
             </div>
           </div>
+          <div className="flex items-center justify-between pt-2">
+            <span className="text-xs text-slate-500">Notifications</span>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={async () => {
+                  const unread = (allMessages || []).filter(m => m.to_user_id === user?.email && !m.is_read);
+                  await Promise.all(unread.map(m => base44.entities.Message.update(m.id, { is_read: true })));
+                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                }}
+              >
+                Mark all read
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
+                onClick={async () => {
+                  const mine = (allMessages || []);
+                  await Promise.all(mine.map(m => {
+                    const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                    if (list.includes(user?.email)) return Promise.resolve();
+                    return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
+                  }));
+                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                }}
+              >
+                Clear all
+              </Button>
+            </div>
+          </div>
         </div>
         <ScrollArea className="flex-1">
           <div className="pr-12">
