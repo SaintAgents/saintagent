@@ -1610,6 +1610,7 @@ export default function CommandDeck() {
           open={onlineUsersOpen}
           onClose={() => setOnlineUsersOpen(false)} />
 
+    </div>
   );
 
 
