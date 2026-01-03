@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default function MentorCard({ profile, userProfile, score, onRequest }) {
+export default function MentorCard({ profile, userProfile, score, onRequest, action }) {
   const initials = (userProfile?.display_name || 'U').slice(0,1).toUpperCase();
   const skills = (profile.skills_offering || []).slice(0,6);
   return (
@@ -31,7 +31,9 @@ export default function MentorCard({ profile, userProfile, score, onRequest }) {
               ))}
             </div>
             <div className="mt-3 text-right">
-              <Button size="sm" className="rounded-lg bg-violet-600 hover:bg-violet-700" onClick={onRequest}>Request Session</Button>
+              {action ? action : (
+                <Button size="sm" className="rounded-lg bg-violet-600 hover:bg-violet-700" onClick={onRequest}>Request Session</Button>
+              )}
             </div>
           </div>
         </div>
