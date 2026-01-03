@@ -13,7 +13,7 @@ export default function ProjectCSVImport() {
 
   const downloadTemplate = () => {
     const headers = [
-    "projectid", "projectnumber", "projectname", "projectarea", "projectdescription", "projectbenefits", "projectmethods", "projectmainbenefits", "projectadditional", "projecttotalcost", "projecttype", "projectongoingcost", "projectrolloutcost", "projectmvpcost", "projectphase", "projectpartners", "projectfinsust", "projectfintype", "projectressust", "projectscope", "projectneedtech", "projectneedit", "projectneedpers", "projectneedmanag", "projectneedinfra", "projectneedlegal", "projectgivetech", "projectgiveit", "projectgivepers", "projectgivemanag", "projectgiveinfra", "projectgivelegal", "fpersonid", "updated", "started", "timesupdated"];
+    "projectid", "projectnumber", "projectname", "projectarea", "projectdescription", "projectbenefits", "projectmethods", "projectadditional", "projecttotalcost", "projecttype", "projectphase", "projectpartners", "projectscope"];
 
     const sample = [
     "P-0001,42,Neighborhood Microgrid,energy;resilience,Local solar + storage,Lower outages; lower bills,Install panels and batteries,Resilience; savings,Add EV chargers,1500000,energy,50000,250000,200000,pilot,Utility; City,yes,public,yes,City-wide,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,user-123,2025-12-01,2025-01-15,3",
