@@ -349,6 +349,11 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           color: #0f172a !important;
         }
 
+        /* Dark mode: Stat numbers deep purple */
+        [data-theme='dark'] main[data-page='CommandDeck'] [data-stats-bar] .stat-number {
+          color: #5b21b6 !important;
+        }
+
         /* SidePanel control buttons */
         [data-theme='dark'] [data-ggg-controls] {
           background-color: #0f172a !important;
