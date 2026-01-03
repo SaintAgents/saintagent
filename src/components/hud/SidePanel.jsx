@@ -28,7 +28,6 @@ import {
   List } from
 "lucide-react";
 import ProgressRing from './ProgressRing';
-import { base44 } from '@/api/base44Client';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
