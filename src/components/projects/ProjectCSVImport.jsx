@@ -13,12 +13,12 @@ export default function ProjectCSVImport() {
 
   const downloadTemplate = () => {
     const headers = [
-      "projectid","projectnumber","projectname","projectarea","projectdescription","projectbenefits","projectmethods","projectmainbenefits","projectadditional","projecttotalcost","projecttype","projectongoingcost","projectrolloutcost","projectmvpcost","projectphase","projectpartners","projectfinsust","projectfintype","projectressust","projectscope","projectneedtech","projectneedit","projectneedpers","projectneedmanag","projectneedinfra","projectneedlegal","projectgivetech","projectgiveit","projectgivepers","projectgivemanag","projectgiveinfra","projectgivelegal","fpersonid","updated","started","timesupdated"
-    ];
+    "projectid", "projectnumber", "projectname", "projectarea", "projectdescription", "projectbenefits", "projectmethods", "projectmainbenefits", "projectadditional", "projecttotalcost", "projecttype", "projectongoingcost", "projectrolloutcost", "projectmvpcost", "projectphase", "projectpartners", "projectfinsust", "projectfintype", "projectressust", "projectscope", "projectneedtech", "projectneedit", "projectneedpers", "projectneedmanag", "projectneedinfra", "projectneedlegal", "projectgivetech", "projectgiveit", "projectgivepers", "projectgivemanag", "projectgiveinfra", "projectgivelegal", "fpersonid", "updated", "started", "timesupdated"];
+
     const sample = [
-      "P-0001,42,Neighborhood Microgrid,energy;resilience,Local solar + storage,Lower outages; lower bills,Install panels and batteries,Resilience; savings,Add EV chargers,1500000,energy,50000,250000,200000,pilot,Utility; City,yes,public,yes,City-wide,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,user-123,2025-12-01,2025-01-15,3",
-      "P-0002,43,Community Garden,food;health,Urban garden network,Fresh produce; community,Permaculture methods,Health; cohesion,Add workshops,120000,community,10000,20000,15000,phase 2,Local NGOs,yes,donations,yes,Neighborhood,no,yes,yes,yes,no,no,no,no,no,yes,no,no,user-987,2025-11-15,2024-09-10,5"
-    ].join("\n");
+    "P-0001,42,Neighborhood Microgrid,energy;resilience,Local solar + storage,Lower outages; lower bills,Install panels and batteries,Resilience; savings,Add EV chargers,1500000,energy,50000,250000,200000,pilot,Utility; City,yes,public,yes,City-wide,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,user-123,2025-12-01,2025-01-15,3",
+    "P-0002,43,Community Garden,food;health,Urban garden network,Fresh produce; community,Permaculture methods,Health; cohesion,Add workshops,120000,community,10000,20000,15000,phase 2,Local NGOs,yes,donations,yes,Neighborhood,no,yes,yes,yes,no,no,no,no,no,yes,no,no,user-987,2025-11-15,2024-09-10,5"].
+    join("\n");
     const csv = headers.join(",") + "\n" + sample;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -41,24 +41,24 @@ export default function ProjectCSVImport() {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       const jsonSchema = {
-  type: 'array',
-  items: {
-    type: 'object',
-    additionalProperties: true,
-    properties: {
-      title: { type: 'string' },
-      description: { type: 'string' },
-      budget: { anyOf: [{ type: 'number' }, { type: 'string' }] },
-      industrial_value: { anyOf: [{ type: 'number' }, { type: 'string' }] },
-      humanitarian_score: { anyOf: [{ type: 'number' }, { type: 'string' }] },
-      status: { type: 'string' },
-      impact_tags: { type: 'string' },
-      strategic_intent: { type: 'string' },
-      negative_environmental_impact: { anyOf: [{ type: 'boolean' }, { type: 'string' }, { type: 'number' }] }
-    }
-  }
-};
-const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            title: { type: 'string' },
+            description: { type: 'string' },
+            budget: { anyOf: [{ type: 'number' }, { type: 'string' }] },
+            industrial_value: { anyOf: [{ type: 'number' }, { type: 'string' }] },
+            humanitarian_score: { anyOf: [{ type: 'number' }, { type: 'string' }] },
+            status: { type: 'string' },
+            impact_tags: { type: 'string' },
+            strategic_intent: { type: 'string' },
+            negative_environmental_impact: { anyOf: [{ type: 'boolean' }, { type: 'string' }, { type: 'number' }] }
+          }
+        }
+      };
+      const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ file_url, json_schema: jsonSchema });
       if (extract.status !== "success" || !extract.output) {
         throw new Error(extract.details || "Failed to parse CSV");
       }
@@ -66,7 +66,7 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
       log(`Parsed ${rows.length} row(s)`);
       // Normalize records to Project shape using your headers
       const normalized = rows.map((r) => {
-        const num = (v) => (v === null || v === undefined || v === '' ? undefined : Number(String(v).replace(/[$,]/g, '')));
+        const num = (v) => v === null || v === undefined || v === '' ? undefined : Number(String(v).replace(/[$,]/g, ''));
         const tags = (() => {
           const raw = r.projectarea;
           if (Array.isArray(raw)) return raw.map((t) => String(t));
@@ -83,12 +83,12 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
           humanitarian_score: 5,
           status: 'pending_review',
           impact_tags: tags,
-          strategic_intent: r.projectscope || '',
+          strategic_intent: r.projectscope || ''
         };
         // Attach all original fields into metadata for traceability
-        const known = new Set(['projectname','projectnumber','projectid','projectarea','projectdescription','projectbenefits','projectmethods','projectadditional','projecttotalcost','projecttype','projectphase','projectpartners','projectscope']);
+        const known = new Set(['projectname', 'projectnumber', 'projectid', 'projectarea', 'projectdescription', 'projectbenefits', 'projectmethods', 'projectadditional', 'projecttotalcost', 'projecttype', 'projectphase', 'projectpartners', 'projectscope']);
         const metadata = {};
-        Object.entries(r || {}).forEach(([k, v]) => { if (!known.has(k)) metadata[k] = v; });
+        Object.entries(r || {}).forEach(([k, v]) => {if (!known.has(k)) metadata[k] = v;});
         if (Object.keys(metadata).length) rec.metadata = metadata;
         return rec;
       }).filter((r) => r.title);
@@ -121,7 +121,7 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
     <div className="p-4 rounded-2xl bg-white border border-slate-200 space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-slate-900">Import Projects (CSV)</h3>
-        <Button variant="outline" size="sm" onClick={downloadTemplate} className="rounded-lg">Download Template</Button>
+        <Button variant="outline" size="sm" onClick={downloadTemplate} className="bg-purple-100 text-zinc-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8">Download Template</Button>
       </div>
       <p className="text-sm text-slate-600">Upload a CSV matching the template to bulk onboard projects.</p>
       <Input type="file" accept=".csv,text/csv" onChange={(e) => setFile(e.target.files?.[0] || null)} className="rounded-xl" />
@@ -129,18 +129,18 @@ const extract = await base44.integrations.Core.ExtractDataFromUploadedFile({ fil
         <Button onClick={handleImport} disabled={!file || importing} className="bg-violet-600 hover:bg-violet-700 rounded-xl">
           {importing ? "Importing..." : "Import"}
         </Button>
-        {result && (
-          <div className="text-sm text-emerald-700 font-medium">Imported {result.imported} project(s)</div>
-        )}
-        {error && (
-          <div className="text-sm text-rose-600">{error}</div>
-        )}
+        {result &&
+        <div className="text-sm text-emerald-700 font-medium">Imported {result.imported} project(s)</div>
+        }
+        {error &&
+        <div className="text-sm text-rose-600">{error}</div>
+        }
       </div>
-      {logs.length > 0 && (
-        <div className="mt-3 p-2 bg-slate-50 border rounded-lg max-h-40 overflow-auto text-xs text-slate-600">
-          {logs.map((l, i) => (<div key={i}>{l}</div>))}
+      {logs.length > 0 &&
+      <div className="mt-3 p-2 bg-slate-50 border rounded-lg max-h-40 overflow-auto text-xs text-slate-600">
+          {logs.map((l, i) => <div key={i}>{l}</div>)}
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
