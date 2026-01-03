@@ -74,6 +74,18 @@ export default function Profile() {
   });
   const profile = profiles?.[0];
 
+  const ROLE_LABELS = {
+    member: 'Member',
+    contributor: 'Contributor',
+    moderator: 'Moderator',
+    guardian: 'Guardian',
+    reviewer: 'Reviewer',
+    council_member: 'Council Member',
+    administrator: 'Administrator',
+    architect: 'Architect',
+    founder_custodian: 'Founder'
+  };
+
   // Fetch user skills
   const { data: skills = [] } = useQuery({
     queryKey: ['skills', profile?.user_id],
