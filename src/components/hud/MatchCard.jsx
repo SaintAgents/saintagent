@@ -166,7 +166,7 @@ export default function MatchCard({ match, onAction }) {
       <div className="flex items-start gap-4">
         <div className="relative" onClick={handleNavigateTarget}>
           {match.target_type === 'person' ? (
-            <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={48} />
+            <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={48} showName={false} showHandle={false} />
           ) : (
             <>
               <Avatar className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all">

@@ -102,7 +102,7 @@ export default function Matches() {
 
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-6 h-12 bg-white rounded-xl border">
+          <TabsList className="w-full grid grid-cols-7 h-12 bg-white rounded-xl border">
             <TabsTrigger value="all" className="rounded-lg gap-2">
               All <span className="text-xs opacity-60">({tabCounts.all})</span>
             </TabsTrigger>
