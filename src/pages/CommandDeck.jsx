@@ -1097,6 +1097,13 @@ export default function CommandDeck() {
                     <Plus className="w-4 h-4" />
                     Quick Create
                   </Button>
+                  <Button
+                    variant="outline"
+                    className="rounded-xl"
+                    onClick={() => { window.location.href = '/Planner'; }}
+                  >
+                    Open Planner
+                  </Button>
                 </div>
               </div>
             </CollapsibleCard>

@@ -8,6 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SharedDoc from '@/components/collab/SharedDoc';
+import Whiteboard from '@/components/collab/Whiteboard';
+import CoWatch from '@/components/collab/CoWatch';
 import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
@@ -387,6 +391,26 @@ export default function Messages() {
               </DropdownMenu>
             </div>
           </div>
+
+          {/* Collaboration Tabs (group chats) */}
+          {(() => {
+            const convEntity = conversations.find((c) => c.id === selectedConversation.id);
+            if (!convEntity || convEntity.type !== 'group') return null;
+            return (
+              <div className="p-3 border-b bg-white">
+                <Tabs defaultValue="doc" className="w-full">
+                  <TabsList className="mb-2">
+                    <TabsTrigger value="doc">Doc</TabsTrigger>
+                    <TabsTrigger value="whiteboard">Whiteboard</TabsTrigger>
+                    <TabsTrigger value="cowatch">Co-watch</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="doc"><SharedDoc conversationId={selectedConversation.id} /></TabsContent>
+                  <TabsContent value="whiteboard"><Whiteboard conversationId={selectedConversation.id} /></TabsContent>
+                  <TabsContent value="cowatch"><CoWatch conversationId={selectedConversation.id} /></TabsContent>
+                </Tabs>
+              </div>
+            );
+          })()}
 
           {/* Messages */}
           <ScrollArea className="flex-1 p-4">
