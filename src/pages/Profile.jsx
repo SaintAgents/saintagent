@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
@@ -58,6 +58,7 @@ import UserRolesPanel from '@/components/roles/UserRolesPanel';
 import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
+import Step7Dating from '@/components/onboarding/Step7Dating';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -87,6 +88,26 @@ export default function Profile() {
     }
   });
   const profile = profiles?.[0];
+
+  const [datingData, setDatingData] = useState(null);
+  const showDatingTab = !!(profile && (
+    profile.relationship_status === 'single' ||
+    profile.relationship_status === 'open' ||
+    (profile.relationship_type_seeking || []).includes('polyamorous') ||
+    (profile.relationship_type_seeking || []).includes('open')
+  ));
+
+  useEffect(() => {
+    if (profile) {
+      setDatingData({
+        relationship_status: profile.relationship_status,
+        relationship_type_seeking: profile.relationship_type_seeking || [],
+        dating_preferences: profile.dating_preferences || {},
+        qualities_seeking: profile.qualities_seeking || [],
+        qualities_providing: profile.qualities_providing || [],
+      });
+    }
+  }, [profile?.id]);
 
   const ROLE_LABELS = {
     member: 'Member',
@@ -352,6 +373,7 @@ export default function Profile() {
                 }
               </span>
             </TabsTrigger>
+          {showDatingTab && <TabsTrigger value="dating">Dating</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
