@@ -530,7 +530,22 @@ export default function CommandDeck() {
                   Quick Create
                 </Button>
 
-              </div>
+                {currentUser?.role === 'admin' && (
+                  <Button
+                    variant="outline"
+                    className="rounded-xl"
+                    onClick={async () => {
+                      await base44.functions.invoke('seedLeaderDemo', {});
+                      queryClient.invalidateQueries({ queryKey: ['topLeaders'] });
+                      queryClient.invalidateQueries({ queryKey: ['listings'] });
+                      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+                    }}
+                  >
+                    Seed Leader Demo
+                  </Button>
+                )}
+
+                </div>
             </div>
           </div>
 
