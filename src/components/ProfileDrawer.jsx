@@ -163,11 +163,19 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   };
 
   const handleMessage = () => {
-    window.location.href = createPageUrl('Messages');
+    // Open floating chat with this user
+    document.dispatchEvent(new CustomEvent('openFloatingChat', {
+      detail: {
+        recipientId: userId,
+        recipientName: profile?.display_name,
+        recipientAvatar: profile?.avatar_url
+      }
+    }));
   };
 
   const handleBook = () => {
-    window.location.href = createPageUrl('Marketplace');
+    // Navigate to marketplace with this user's listings
+    window.location.href = createPageUrl('Marketplace') + `?seller=${userId}`;
   };
 
   if (!profile) return null;

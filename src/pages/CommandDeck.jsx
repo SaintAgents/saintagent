@@ -1030,7 +1030,7 @@ export default function CommandDeck() {
                     <div className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Controls Deck</div>
                     <div className="grid grid-cols-2 gap-3">
                     {/* Save */}
-                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                    <button type="button" onClick={() => {try{localStorage.setItem('cmdColCOrder',JSON.stringify(colCOrder));}catch{}alert('Layout saved!');}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
@@ -1038,7 +1038,7 @@ export default function CommandDeck() {
                       </div>
                     </button>
                     {/* Reset */}
-                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                    <button type="button" onClick={() => {setColCOrder(['market','influence','leader','dailyops']);setCardsForceOpen(null);try{localStorage.removeItem('cmdColCOrder');}catch{}}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
@@ -1185,7 +1185,7 @@ export default function CommandDeck() {
                   )
                   }
                   {filteredMatches.length > 3 &&
-                  <Button variant="ghost" className="w-full text-violet-600">
+                  <Button variant="ghost" className="w-full text-violet-600" onClick={() => window.location.href = createPageUrl('Matches')}>
                       View all {filteredMatches.length} matches
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
@@ -1238,7 +1238,7 @@ export default function CommandDeck() {
                 <div className="text-center py-6">
                     <Target className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No active missions</p>
-                    <Button variant="outline" className="mt-3 rounded-xl">
+                    <Button variant="outline" className="mt-3 rounded-xl" onClick={() => window.location.href = createPageUrl('Missions')}>
                       Browse missions
                     </Button>
                   </div> :
@@ -1306,7 +1306,7 @@ export default function CommandDeck() {
               </div>
 
               {filteredProjects.length > 4 &&
-              <Button variant="ghost" className="w-full mt-3 text-violet-600">View more</Button>
+              <Button variant="ghost" className="w-full mt-3 text-violet-600" onClick={() => window.location.href = createPageUrl('Projects')}>View more</Button>
               }
             </CollapsibleCard>
           </div>
@@ -1339,7 +1339,7 @@ export default function CommandDeck() {
                             <div className="text-center py-6">
                                       <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                                       <p className="text-sm text-slate-500">No offers yet</p>
-                                      <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">
+                                      <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>
                                         Create your first offer
                                       </Button>
                                     </div> :

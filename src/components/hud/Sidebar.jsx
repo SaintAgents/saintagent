@@ -54,7 +54,7 @@ const NAV_ITEMS = [
   { id: 'collaborators', label: 'Collaborators', icon: Users, page: 'FindCollaborators' },
   { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
   { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', badge: 0 },
-  { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', locked: true },
+  { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel' },
   { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles' },
   { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio' },
   { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },

@@ -166,17 +166,7 @@ export default function TopBar({
           onAction={onNotificationAction}
         />
 
-        {currentUser && (
-         <Button
-           variant="ghost"
-           size="icon"
-           className="rounded-xl"
-           title="Sign out"
-           onClick={() => base44.auth.logout(createPageUrl('CommandDeck'))}
-         >
-           <LogOut className="w-5 h-5 text-slate-600" />
-         </Button>
-        )}
+
 
         {/* Profile Menu / Auth */}
         {currentUser ? (
