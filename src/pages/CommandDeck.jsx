@@ -1196,7 +1196,7 @@ useEffect(() => {
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <DragDropContext onDragEnd={onDragEnd}>
+          <div className="hidden">
             <Droppable droppableId="colC">
               {(provided) => (
                 <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
