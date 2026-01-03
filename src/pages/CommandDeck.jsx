@@ -966,7 +966,7 @@ useEffect(() => {
         {/* Free-form canvas for draggable cards */}
         <div className="px-6 relative min-h-[1200px]">
           {/* Column A: Now + Daily Action */}
-          <div className="hidden">
+          <div className="">
             {/* Command Summary */}
             <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')}>
             <CollapsibleCard
@@ -1005,7 +1005,6 @@ useEffect(() => {
               </div>
             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
 
             {/* Quick Start Checklist */}
             <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')}>
@@ -1018,7 +1017,6 @@ useEffect(() => {
 
               <QuickStartChecklist />
             </CollapsibleCard>
-            </FreeDraggable>
             </FreeDraggable>
 
             {/* Inbox & Signals */}
@@ -1034,7 +1032,6 @@ useEffect(() => {
                                 <InboxSignals notifications={notifications} />
                               </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
 
             {/* Circles & Regions */}
             <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')}>
@@ -1048,7 +1045,6 @@ useEffect(() => {
                                 <CirclesRegions />
                               </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
 
             {/* Leader Pathway */}
             <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')}>
@@ -1061,11 +1057,10 @@ useEffect(() => {
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
             </div>
 
           {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="hidden">
+          <div className="">
             {/* Synchronicity Stack */}
             <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')}>
             <CollapsibleCard
@@ -1113,7 +1108,6 @@ useEffect(() => {
               </Tabs>
             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
 
             {/* Meetings & Momentum */}
             <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')}>
@@ -1145,7 +1139,6 @@ useEffect(() => {
                 }
               </div>
             </CollapsibleCard>
-            </FreeDraggable>
             </FreeDraggable>
 
             {/* Missions & Quests */}
@@ -1179,7 +1172,6 @@ useEffect(() => {
                 }
               </div>
             </CollapsibleCard>
-            </FreeDraggable>
             </FreeDraggable>
 
             {/* Projects */}
@@ -1238,11 +1230,10 @@ useEffect(() => {
               )}
             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
           </div>
 
           {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="hidden">
+          <div className="">
             <Droppable droppableId="colC">
               {(provided) => (
                 <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
@@ -1296,7 +1287,6 @@ useEffect(() => {
                               </Tabs>
                             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
                           )}
 
                           <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')}>
@@ -1341,7 +1331,6 @@ useEffect(() => {
                               </div>
                             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
                           )}
 
                           <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')}>
@@ -1370,7 +1359,6 @@ useEffect(() => {
                               </div>
                             </CollapsibleCard>
             </FreeDraggable>
-            </FreeDraggable>
                           )}
 
                           <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')}>
@@ -1396,7 +1384,6 @@ useEffect(() => {
                                 </Button>
                               </div>
                             </CollapsibleCard>
-            </FreeDraggable>
             </FreeDraggable>
                           )}
                         </div>
