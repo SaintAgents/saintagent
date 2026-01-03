@@ -182,7 +182,7 @@ export default function Messages() {
         <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-slate-900">Messages</h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap gap-y-2">
             <Button variant="outline" size="sm" className="bg-violet-100 text-stone-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-1.5" onClick={() => setDMOpen(true)}>
               <Plus className="w-3.5 h-3.5" /> New Message
             </Button>
@@ -191,7 +191,8 @@ export default function Messages() {
             </Button>
             <Button
                   variant="ghost"
-                  className="rounded-lg gap-1.5 text-xs"
+                  size="icon"
+                  className="rounded-lg"
                   onClick={() => {
                     const conv = selectedConversation || (convList.length > 0 ? convList[0] : null);
                     if (conv) {
@@ -205,9 +206,7 @@ export default function Messages() {
                       document.dispatchEvent(event);
                     }
                   }}>
-
-              <ExternalLink className="w-3.5 h-3.5" />
-              Popup
+              <ExternalLink className="w-4 h-4" />
             </Button>
           </div>
         </div>
@@ -217,12 +216,13 @@ export default function Messages() {
           </div>
         </div>
         <ScrollArea className="flex-1">
+          <div className="pr-4">
           {convList.map((conv) =>
             <div key={conv.id} className="relative group">
               <button
                 onClick={() => setSelectedConversation(conv)}
                 className={cn(
-                  "w-full flex items-start gap-3 p-4 pr-12 hover:bg-slate-50 transition-colors border-b",
+                  "w-full flex items-start gap-3 p-4 pr-16 hover:bg-slate-50 transition-colors border-b",
                   selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
                 )}>
 
@@ -242,7 +242,7 @@ export default function Messages() {
                 </div>
                 <p className="text-sm text-slate-500 truncate">{conv.lastMessage.content}</p>
                 {conv.unreadCount > 0 &&
-                  <span className="inline-block mt-1 mr-10 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
+                  <span className="inline-block mt-1 mr-14 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
                     {conv.unreadCount}
                   </span>
                   }
@@ -251,7 +251,7 @@ export default function Messages() {
                 <Button
                 size="sm"
                 variant="ghost"
-                className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity text-xs gap-1"
+                className="absolute right-3 top-3 z-10 opacity-100 transition-opacity text-xs gap-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   console.log('Row popup clicked', conv.otherUser);
@@ -270,6 +270,7 @@ export default function Messages() {
                 </Button>
                 </div>
             )}
+              </div>
                 </ScrollArea>
       </div>
 
