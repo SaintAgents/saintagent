@@ -948,7 +948,7 @@ useEffect(() => {
               <span className="text-slate-900">Expand</span>
             </Button>
             <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/86dc08119_ChatGPTImageJan2202608_50_56PM.png" alt="Collapse" className="h-6 w-6" />
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/bfda6cd06_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="h-6 w-6" />
               <span className="text-slate-900">Collapse</span>
             </Button>
             <Button variant="outline" className="rounded-xl flex items-center gap-2 justify-center py-3">
