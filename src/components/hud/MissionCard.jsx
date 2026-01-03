@@ -60,11 +60,11 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
   return (
     <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300">
       {mission.image_url &&
-      <div className="relative h-32 bg-gradient-to-br from-violet-500 to-purple-600">
+      <div className="relative h-40 bg-gradient-to-br from-violet-500 to-purple-600">
           <img
           src={mission.image_url}
           alt={mission.title}
-          className="w-full h-full object-cover opacity-80" />
+          className="w-full h-full object-cover opacity-90" />
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           <Badge className={cn("absolute top-3 left-3", typeColors[mission.mission_type])}>
