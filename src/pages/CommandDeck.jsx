@@ -964,19 +964,16 @@ useEffect(() => {
 
         {/* Main Grid */}
         {/* Free-form canvas for draggable cards */}
-        <div className="px-6 relative min-h-[1200px]">
-          {/* Column A: Now + Daily Action */}
-          <div className="">
-            {/* Command Summary */}
-            <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')}>
+        <div className="px-6 relative min-h-[1600px]">
+          {/* Quick Actions */}
+          <FreeDraggable id="quick" position={cardPositions.quick} onPositionChange={move('quick')}>
             <CollapsibleCard
-                                title="Quick Actions"
-                                icon={Zap}
-                                badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
-                                badgeColor="amber"
-                                backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
-                                onPopout={() => setQuickActionsPopupOpen(true)}>
-
+              title="Quick Actions"
+              icon={Zap}
+              badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined}
+              badgeColor="amber"
+              backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
+              onPopout={() => setQuickActionsPopupOpen(true)}>
               <div className="grid grid-cols-2 gap-3">
                 <Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
                   <Calendar className="w-5 h-5" />
@@ -990,10 +987,6 @@ useEffect(() => {
                   <Target className="w-5 h-5" />
                   <span className="text-xs">Launch Mission</span>
                 </Button>
-                <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-20 flex-col gap-2" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>
-                  <ShoppingBag className="w-5 h-5" />
-                  <span className="text-stone-950 text-xs">Create Offer</span>
-                </Button>
                 <Button variant="outline" className="bg-violet-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm h-20 flex-col gap-2" onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
                   <Folder className="w-5 h-5" />
                   <span className="text-xs">Project +</span>
@@ -1004,23 +997,22 @@ useEffect(() => {
                 </Button>
               </div>
             </CollapsibleCard>
-            </FreeDraggable>
+          </FreeDraggable>
 
-            {/* Quick Start Checklist */}
-            <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')}>
+          {/* Quick Start Checklist */}
+          <FreeDraggable id="checklist" position={cardPositions.checklist} onPositionChange={move('checklist')}>
             <CollapsibleCard
-                                title="Quick Start Checklist"
-                                icon={CheckCircle}
-                                defaultOpen={false}
-                                backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                                onPopout={() => setQuickStartPopupOpen(true)}>
-
+              title="Quick Start Checklist"
+              icon={CheckCircle}
+              defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+              onPopout={() => setQuickStartPopupOpen(true)}>
               <QuickStartChecklist />
             </CollapsibleCard>
-            </FreeDraggable>
+          </FreeDraggable>
 
-            {/* Inbox & Signals */}
-            <FreeDraggable id="inbox" position={cardPositions.inbox} onPositionChange={move('inbox')}>
+          {/* Inbox & Signals */}
+          <FreeDraggable id="inbox" position={cardPositions.inbox} onPositionChange={move('inbox')}>
             <CollapsibleCard
               title="Inbox & Signals"
               icon={Radio}
@@ -1028,41 +1020,35 @@ useEffect(() => {
               badgeColor="rose"
               backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
               onPopout={() => setInboxPopupOpen(true)}>
+              <InboxSignals notifications={notifications} />
+            </CollapsibleCard>
+          </FreeDraggable>
 
-                                <InboxSignals notifications={notifications} />
-                              </CollapsibleCard>
-            </FreeDraggable>
-
-            {/* Circles & Regions */}
-            <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')}>
+          {/* Circles & Regions */}
+          <FreeDraggable id="circles" position={cardPositions.circles} onPositionChange={move('circles')}>
             <CollapsibleCard
               title="Circles & Regions"
               icon={Users}
               defaultOpen={false}
               backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
               onPopout={() => setCirclesPopupOpen(true)}>
+              <CirclesRegions />
+            </CollapsibleCard>
+          </FreeDraggable>
 
-                                <CirclesRegions />
-                              </CollapsibleCard>
-            </FreeDraggable>
-
-            {/* Leader Pathway */}
-            <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')}>
+          {/* Leader Pathway */}
+          <FreeDraggable id="leader" position={cardPositions.leader} onPositionChange={move('leader')}>
             <CollapsibleCard
               title="Leader Pathway"
               icon={Sparkles}
               defaultOpen={true}
               onPopout={() => setLeaderPopupOpen(true)}>
-
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
-            </FreeDraggable>
-            </div>
+          </FreeDraggable>
 
-          {/* Column B: Synchronicity + Meetings + Missions */}
-          <div className="">
-            {/* Synchronicity Stack */}
-            <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')}>
+          {/* Synchronicity Engine */}
+          <FreeDraggable id="sync" position={cardPositions.sync} onPositionChange={move('sync')}>
             <CollapsibleCard
               title="Synchronicity Engine"
               icon={Sparkles}
@@ -1070,7 +1056,6 @@ useEffect(() => {
               badgeColor="violet"
               backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80"
               onPopout={() => setSyncPopupOpen(true)}>
-
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -1083,34 +1068,30 @@ useEffect(() => {
                   <TabsTrigger value="teachers" className="text-xs">Teachers</TabsTrigger>
                 </TabsList>
                 <div className="space-y-3">
-                  {filteredMatches.length === 0 ?
-                  <div className="text-center py-8">
+                  {filteredMatches.length === 0 ? (
+                    <div className="text-center py-8">
                       <Sparkles className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                       <p className="text-sm text-slate-500">No matches yet</p>
                       <p className="text-xs text-slate-400 mt-1">Complete your profile to find matches</p>
-                    </div> :
-
-                  filteredMatches.slice(0, 3).map((match) =>
-                  <MatchCard
-                    key={match.id}
-                    match={match}
-                    onAction={handleMatchAction} />
-
-                  )
-                  }
-                  {filteredMatches.length > 3 &&
-                  <Button variant="ghost" className="w-full text-violet-600">
+                    </div>
+                  ) : (
+                    filteredMatches.slice(0, 3).map((match) => (
+                      <MatchCard key={match.id} match={match} onAction={handleMatchAction} />
+                    ))
+                  )}
+                  {filteredMatches.length > 3 && (
+                    <Button variant="ghost" className="w-full text-violet-600">
                       View all {filteredMatches.length} matches
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
-                  }
+                  )}
                 </div>
               </Tabs>
             </CollapsibleCard>
-            </FreeDraggable>
+          </FreeDraggable>
 
-            {/* Meetings & Momentum */}
-            <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')}>
+          {/* Meetings & Momentum */}
+          <FreeDraggable id="meetings" position={cardPositions.meetings} onPositionChange={move('meetings')}>
             <CollapsibleCard
               title="Meetings & Momentum"
               icon={Calendar}
@@ -1118,31 +1099,26 @@ useEffect(() => {
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
               onPopout={() => setMeetingsPopupOpen(true)}>
-
               <div className="space-y-3">
-                {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
-                <div className="text-center py-6">
+                {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ? (
+                  <div className="text-center py-6">
                     <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No upcoming meetings</p>
                     <Button variant="outline" className="mt-3 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
                       Schedule a meeting
                     </Button>
-                  </div> :
-
-                [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) =>
-                <MeetingCard
-                  key={meeting.id}
-                  meeting={meeting}
-                  onAction={handleMeetingAction} />
-
-                )
-                }
+                  </div>
+                ) : (
+                  [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) => (
+                    <MeetingCard key={meeting.id} meeting={meeting} onAction={handleMeetingAction} />
+                  ))
+                )}
               </div>
             </CollapsibleCard>
-            </FreeDraggable>
+          </FreeDraggable>
 
-            {/* Missions & Quests */}
-            <FreeDraggable id="missions" position={cardPositions.missions} onPositionChange={move('missions')}>
+          {/* Missions & Quests */}
+          <FreeDraggable id="missions" position={cardPositions.missions} onPositionChange={move('missions')}>
             <CollapsibleCard
               title="Missions & Quests"
               icon={Target}
@@ -1150,60 +1126,42 @@ useEffect(() => {
               badgeColor="amber"
               backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80"
               onPopout={() => setMissionsPopupOpen(true)}>
-
               <div className="space-y-3">
-                {missions.length === 0 ?
-                <div className="text-center py-6">
+                {missions.length === 0 ? (
+                  <div className="text-center py-6">
                     <Target className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No active missions</p>
-                    <Button variant="outline" className="mt-3 rounded-xl">
-                      Browse missions
-                    </Button>
-                  </div> :
-
-                missions.slice(0, 2).map((mission) =>
-                <MissionCard
-                  key={mission.id}
-                  mission={mission}
-                  onAction={handleMissionAction}
-                  variant="compact" />
-
-                )
-                }
+                    <Button variant="outline" className="mt-3 rounded-xl">Browse missions</Button>
+                  </div>
+                ) : (
+                  missions.slice(0, 2).map((mission) => (
+                    <MissionCard key={mission.id} mission={mission} onAction={handleMissionAction} variant="compact" />
+                  ))
+                )}
               </div>
             </CollapsibleCard>
-            </FreeDraggable>
+          </FreeDraggable>
 
-            {/* Projects */}
-            <FreeDraggable id="projects" position={cardPositions.projects} onPositionChange={move('projects')}>
+          {/* Projects */}
+          <FreeDraggable id="projects" position={cardPositions.projects} onPositionChange={move('projects')}>
             <CollapsibleCard
-                              title="Projects"
-                              icon={Folder}
-                              defaultOpen={true}
-                              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
-                              onPopout={() => setProjectsPopupOpen(true)}>
-
-              {/* Summary */}
+              title="Projects"
+              icon={Folder}
+              defaultOpen={true}
+              backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80"
+              onPopout={() => setProjectsPopupOpen(true)}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                 <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{totalProjects}</div></div>
                 <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submittedCount}</div></div>
                 <div className="p-3 rounded-xl bg-emerald-50 border"><div className="text-xs text-emerald-700">Approved</div><div className="text-xl font-bold text-emerald-700">{approvedCount}</div></div>
                 <div className="p-3 rounded-xl bg-amber-50 border"><div className="text-xs text-amber-700">Pending</div><div className="text-xl font-bold text-amber-700">{pendingCount}</div></div>
               </div>
-
               <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="md:col-span-2 relative">
-                  <Input
-                    placeholder="Search projects..."
-                    value={projectSearch}
-                    onChange={(e) => setProjectSearch(e.target.value)}
-                    className="pl-3"
-                  />
+                  <Input placeholder="Search projects..." value={projectSearch} onChange={(e) => setProjectSearch(e.target.value)} className="pl-3" />
                 </div>
                 <Select value={projectStatus} onValueChange={setProjectStatus}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
+                  <SelectTrigger className="w-full"><SelectValue placeholder="Status" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="pending_review">Pending Review</SelectItem>
@@ -1214,7 +1172,6 @@ useEffect(() => {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {filteredProjects.length === 0 ? (
                   <div className="col-span-full text-center py-8 text-slate-500">No projects found</div>
@@ -1224,176 +1181,114 @@ useEffect(() => {
                   ))
                 )}
               </div>
-
               {filteredProjects.length > 4 && (
                 <Button variant="ghost" className="w-full mt-3 text-violet-600">View more</Button>
               )}
             </CollapsibleCard>
-            </FreeDraggable>
-          </div>
+          </FreeDraggable>
 
-          {/* Column C: Earnings + Influence + Creator (+ Daily Ops) */}
-          <div className="">
-            <Droppable droppableId="colC">
-              {(provided) => (
-                <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
-                  {colCOrder.map((id, index) => (
-                    <Draggable draggableId={id} index={index} key={id}>
-                      {(dragProvided) => (
-                        <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                          <FreeDraggable id="market" position={cardPositions.market} onPositionChange={move('market')}>
-                                                        <CollapsibleCard
-                              title="Marketplace: Earn & Learn"
-                              icon={ShoppingBag}
-                              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
-                              onPopout={() => setMarketPopupOpen(true)}>
-
-                              <Tabs defaultValue="offers" className="w-full">
-                                <TabsList className="w-full grid grid-cols-3 mb-4">
-                                  <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
-                                  <TabsTrigger value="requests" className="text-xs">Requests</TabsTrigger>
-                                  <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="offers" className="space-y-3">
-                                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ? (
-                                    <div className="text-center py-6">
-                                      <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                                      <p className="text-sm text-slate-500">No offers yet</p>
-                                      <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">
-                                        Create your first offer
-                                      </Button>
-                                    </div>
-                                  ) : (
-                                    listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) => (
-                                      <ListingCard
-                                        key={listing.id}
-                                        listing={listing}
-                                        isOwner={true}
-                                        onAction={handleListingAction}
-                                      />
-                                    ))
-                                  )}
-                                </TabsContent>
-                                <TabsContent value="requests" className="space-y-3">
-                                  <div className="text-center py-6">
-                                    <p className="text-sm text-slate-500">No pending requests</p>
-                                  </div>
-                                </TabsContent>
-                                <TabsContent value="browse" className="space-y-3">
-                                  {listings.slice(0, 2).map((listing) => (
-                                    <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
-                                  ))}
-                                </TabsContent>
-                              </Tabs>
-                            </CollapsibleCard>
-            </FreeDraggable>
-                          )}
-
-                          <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')}>
-                                                        <CollapsibleCard
-                              title="Influence & Reach"
-                              icon={TrendingUp}
-                              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
-                              onPopout={() => setInfluencePopupOpen(true)}>
-
-                              <div className="space-y-4">
-                                <div className="grid grid-cols-3 gap-3">
-                                  <div className="text-center p-3 rounded-xl bg-slate-50">
-                                    <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>
-                                    <p className="text-xs text-slate-500">Followers</p>
-                                  </div>
-                                  <div className="text-center p-3 rounded-xl bg-slate-50">
-                                    <p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p>
-                                    <p className="text-xs text-slate-500">Following</p>
-                                  </div>
-                                  <div className="text-center p-3 rounded-xl bg-violet-50">
-                                    <p className="text-2xl font-bold text-violet-700">{profile?.reach_score || 0}</p>
-                                    <p className="text-xs text-violet-600">Reach</p>
-                                  </div>
-                                </div>
-                                
-                                <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
-                                  <div className="flex items-center gap-3 mb-3">
-                                    <Flame className="w-5 h-5 text-amber-500" />
-                                    <span className="text-yellow-400 font-medium">Boost Your Reach</span>
-                                  </div>
-                                  <p className="text-sm text-slate-600 mb-3">
-                                    Spend GGG to amplify your content and attract more followers.
-                                  </p>
-                                  <Button
-                                    className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
-                                    onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
-
-                                    <Zap className="w-4 h-4 mr-2" />
-                                    Boost Now
-                                  </Button>
-                                </div>
-                              </div>
-                            </CollapsibleCard>
-            </FreeDraggable>
-                          )}
-
-                          <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')}>
-                                                        <CollapsibleCard
-                              title="144K Leader Channel"
-                              icon={Radio}
-                              defaultOpen={false}
-                              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
-                              onPopout={() => setLeaderChannelPopupOpen(true)}>
-
-                              <div className="text-center py-6">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
-                                  <Radio className="w-8 h-8 text-amber-600" />
-                                </div>
-                                <h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4>
-                                <p className="text-sm text-slate-500 mb-4">
-                                  Join the 144,000 Super-Conscious Leaders with special broadcast privileges.
-                                </p>
-                                <Button
-                                  variant="outline"
-                                  className="rounded-xl"
-                                  onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}
-                                >
-                                  {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
-                                </Button>
-                              </div>
-                            </CollapsibleCard>
-            </FreeDraggable>
-                          )}
-
-                          <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')}>
-                                                        <CollapsibleCard
-                                              title="Daily Ops"
-                                              icon={Calendar}
-                                              defaultOpen={true}
-                                              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
-                                              onPopout={() => setDailyOpsPopupOpen(true)}>
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <div className="text-xs text-slate-500">Today’s GGG</div>
-                                  <div className="text-2xl font-bold text-slate-900">{dailyGGG.toFixed(2)} GGG</div>
-                                </div>
-                                <div className="text-right">
-                                  <div className="text-xs text-slate-500">Done • In Progress</div>
-                                  <div className="text-2xl font-bold text-slate-900">{dailyCompleted} • {dailyInProgress}</div>
-                                </div>
-                              </div>
-                              <div className="mt-3 text-right">
-                                <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
-                                  Open DO
-                                </Button>
-                              </div>
-                            </CollapsibleCard>
-            </FreeDraggable>
-                          )}
-                        </div>
-                      )}
-                    </Draggable>
+          {/* Marketplace */}
+          <FreeDraggable id="market" position={cardPositions.market} onPositionChange={move('market')}>
+            <CollapsibleCard
+              title="Marketplace: Earn & Learn"
+              icon={ShoppingBag}
+              backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
+              onPopout={() => setMarketPopupOpen(true)}>
+              <Tabs defaultValue="offers" className="w-full">
+                <TabsList className="w-full grid grid-cols-3 mb-4">
+                  <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
+                  <TabsTrigger value="requests" className="text-xs">Requests</TabsTrigger>
+                  <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
+                </TabsList>
+                <TabsContent value="offers" className="space-y-3">
+                  {listings.filter((l) => l.listing_type === 'offer').length === 0 ? (
+                    <div className="text-center py-6">
+                      <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                      <p className="text-sm text-slate-500">No offers yet</p>
+                      <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700">Create your first offer</Button>
+                    </div>
+                  ) : (
+                    listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) => (
+                      <ListingCard key={listing.id} listing={listing} isOwner={true} onAction={handleListingAction} />
+                    ))
+                  )}
+                </TabsContent>
+                <TabsContent value="requests" className="space-y-3">
+                  <div className="text-center py-6"><p className="text-sm text-slate-500">No pending requests</p></div>
+                </TabsContent>
+                <TabsContent value="browse" className="space-y-3">
+                  {listings.slice(0, 2).map((listing) => (
+                    <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
                   ))}
-                  {provided.placeholder}
-                </div>
-              )}
+                </TabsContent>
+              </Tabs>
+            </CollapsibleCard>
+          </FreeDraggable>
 
+          {/* Influence & Reach */}
+          <FreeDraggable id="influence" position={cardPositions.influence} onPositionChange={move('influence')}>
+            <CollapsibleCard
+              title="Influence & Reach"
+              icon={TrendingUp}
+              backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80"
+              onPopout={() => setInfluencePopupOpen(true)}>
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="text-center p-3 rounded-xl bg-slate-50"><p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p><p className="text-xs text-slate-500">Followers</p></div>
+                  <div className="text-center p-3 rounded-xl bg-slate-50"><p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p><p className="text-xs text-slate-500">Following</p></div>
+                  <div className="text-center p-3 rounded-xl bg-violet-50"><p className="text-2xl font-bold text-violet-700">{profile?.reach_score || 0}</p><p className="text-xs text-violet-600">Reach</p></div>
+                </div>
+                <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                  <div className="flex items-center gap-3 mb-3"><Flame className="w-5 h-5 text-amber-500" /><span className="text-yellow-400 font-medium">Boost Your Reach</span></div>
+                  <p className="text-sm text-slate-600 mb-3">Spend GGG to amplify your content and attract more followers.</p>
+                  <Button className="w-full rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}><Zap className="w-4 h-4 mr-2" />Boost Now</Button>
+                </div>
+              </div>
+            </CollapsibleCard>
+          </FreeDraggable>
+
+          {/* 144K Leader Channel */}
+          <FreeDraggable id="leaderC" position={cardPositions.leaderC} onPositionChange={move('leaderC')}>
+            <CollapsibleCard
+              title="144K Leader Channel"
+              icon={Radio}
+              defaultOpen={false}
+              backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80"
+              onPopout={() => setLeaderChannelPopupOpen(true)}>
+              <div className="text-center py-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4"><Radio className="w-8 h-8 text-amber-600" /></div>
+                <h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4>
+                <p className="text-sm text-slate-500 mb-4">Join the 144,000 Super-Conscious Leaders with special broadcast privileges.</p>
+                <Button variant="outline" className="rounded-xl" onClick={() => { window.location.href = createPageUrl('LeaderChannel'); }}>
+                  {profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}
+                </Button>
+              </div>
+            </CollapsibleCard>
+          </FreeDraggable>
+
+          {/* Daily Ops */}
+          <FreeDraggable id="dailyops" position={cardPositions.dailyops} onPositionChange={move('dailyops')}>
+            <CollapsibleCard
+              title="Daily Ops"
+              icon={Calendar}
+              defaultOpen={true}
+              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80"
+              onPopout={() => setDailyOpsPopupOpen(true)}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-xs text-slate-500">Today’s GGG</div>
+                  <div className="text-2xl font-bold text-slate-900">{dailyGGG.toFixed(2)} GGG</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-slate-500">Done • In Progress</div>
+                  <div className="text-2xl font-bold text-slate-900">{dailyCompleted} • {dailyInProgress}</div>
+                </div>
+              </div>
+              <div className="mt-3 text-right">
+                <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>Open DO</Button>
+              </div>
+            </CollapsibleCard>
+          </FreeDraggable>
         </div>
       </div>
 
