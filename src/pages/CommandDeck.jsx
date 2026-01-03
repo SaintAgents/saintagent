@@ -448,7 +448,7 @@ export default function CommandDeck() {
                                     </button>
                                   </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 relative z-10">
               <Button
                 variant="outline" className="bg-zinc-200 text-slate-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
 
@@ -963,7 +963,7 @@ export default function CommandDeck() {
                     <div className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Controls Deck</div>
                     <div className="grid grid-cols-2 gap-3">
                     {/* Save */}
-                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
@@ -971,7 +971,7 @@ export default function CommandDeck() {
                       </div>
                     </button>
                     {/* Reset */}
-                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
@@ -979,7 +979,7 @@ export default function CommandDeck() {
                       </div>
                     </button>
                     {/* Collapse */}
-                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
@@ -987,7 +987,7 @@ export default function CommandDeck() {
                       </div>
                     </button>
                     {/* Expand */}
-                    <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <button type="button" className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 hover:dark:border-violet-400 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-violet-300 transition-transform duration-200 ease-out hover:-translate-y-0.5">
                       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
                       <div>
                         <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expand</div>
@@ -1013,7 +1013,7 @@ export default function CommandDeck() {
               backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
               onPopout={() => setQuickActionsPopupOpen(true)}>
 
-              <div className="text-zinc-950">
+              <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
                   <Button
                     variant="outline"
