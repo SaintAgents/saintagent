@@ -1353,7 +1353,7 @@ useEffect(() => {
                 </div>
               )}
             </Droppable>
-          </DragDropContext>
+          </div>
         </div>
       </div>
 
