@@ -952,31 +952,44 @@ export default function CommandDeck() {
               backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80"
               onPopout={() => setQuickActionsPopupOpen(true)}>
 
-              <div className="text-zinc-950">Reset
+              <div className="text-zinc-950">
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Save */}
+                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Save current layout</div>
+                    </div>
+                  </button>
 
+                  {/* Reset */}
+                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Restore defaults</div>
+                    </div>
+                  </button>
 
+                  {/* Collapse */}
+                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Condense view</div>
+                    </div>
+                  </button>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                  {/* Expand */}
+                  <button type="button" className="group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expand</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Fuller view</div>
+                    </div>
+                  </button>
+                </div>
               </div>
             </CollapsibleCard>
 
