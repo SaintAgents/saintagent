@@ -7,8 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import EmojiPicker from "@/components/messages/EmojiPicker";
-import { 
-  ChevronLeft, 
+import {
+  ChevronLeft,
   ChevronRight,
   Sparkles,
   Calendar,
@@ -25,8 +25,8 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Activity,
-  List
-} from "lucide-react";
+  List } from
+"lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
@@ -34,9 +34,9 @@ import WalletPanel from '@/components/wallet/WalletPanel';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 import { createPageUrl } from '@/utils';
 
-export default function SidePanel({ 
-  matches = [], 
-  meetings = [], 
+export default function SidePanel({
+  matches = [],
+  meetings = [],
   profile,
   isOpen,
   onToggle,
@@ -75,7 +75,7 @@ export default function SidePanel({
   const onDragEnd = (e) => {
     document.removeEventListener('mousemove', onDragMove);
     document.removeEventListener('mouseup', onDragEnd);
-    if ((e.clientX || 0) < (window.innerWidth || 0) / 2) setDockSide('left'); else setDockSide('right');
+    if ((e.clientX || 0) < (window.innerWidth || 0) / 2) setDockSide('left');else setDockSide('right');
   };
   const onDragStart = (e) => {
     dragRef.current = { startY: e.clientY, startTop: topOffset };
@@ -122,23 +122,23 @@ export default function SidePanel({
   });
 
   const auditItems = React.useMemo(() => {
-    const txs = (gggTx || []).map(it => ({ ...it, _type: 'ggg' }));
-    const rps = (rpEvents || []).map(it => ({ ...it, _type: 'rp' }));
+    const txs = (gggTx || []).map((it) => ({ ...it, _type: 'ggg' }));
+    const rps = (rpEvents || []).map((it) => ({ ...it, _type: 'rp' }));
     return [...txs, ...rps].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
   }, [gggTx, rpEvents]);
 
   const likeMutation = useMutation({
     mutationFn: async ({ postId, userId }) => {
-      const existing = allLikes.find(l => l.post_id === postId && l.user_id === userId);
+      const existing = allLikes.find((l) => l.post_id === postId && l.user_id === userId);
       if (existing) {
         await base44.entities.PostLike.delete(existing.id);
-        const post = posts.find(p => p.id === postId);
+        const post = posts.find((p) => p.id === postId);
         if (post) {
           await base44.entities.Post.update(postId, { likes_count: Math.max(0, (post.likes_count || 0) - 1) });
         }
       } else {
         await base44.entities.PostLike.create({ post_id: postId, user_id: userId });
-        const post = posts.find(p => p.id === postId);
+        const post = posts.find((p) => p.id === postId);
         if (post) {
           await base44.entities.Post.update(postId, { likes_count: (post.likes_count || 0) + 1 });
           if (post.author_id && post.author_id !== profile?.user_id) {
@@ -168,7 +168,7 @@ export default function SidePanel({
         author_avatar: profile.avatar_url,
         content
       });
-      const post = posts.find(p => p.id === postId);
+      const post = posts.find((p) => p.id === postId);
       if (post) {
         await base44.entities.Post.update(postId, { comments_count: (post.comments_count || 0) + 1 });
       }
@@ -193,7 +193,7 @@ export default function SidePanel({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       setNewPostText('');
-      if (videoPreview) { try { URL.revokeObjectURL(videoPreview); } catch {}
+      if (videoPreview) {try {URL.revokeObjectURL(videoPreview);} catch {}
       }
       setVideoFile(null);
       setVideoPreview(null);
@@ -229,12 +229,12 @@ export default function SidePanel({
   };
 
   const isLikedByUser = (postId) => {
-    return allLikes.some(l => l.post_id === postId && l.user_id === profile?.user_id);
+    return allLikes.some((l) => l.post_id === postId && l.user_id === profile?.user_id);
   };
 
   const onVideoChange = (e) => {
     const f = e.target.files?.[0];
-    if (!f) { setVideoFile(null); setVideoPreview(null); setVideoDuration(0); setVideoError(''); return; }
+    if (!f) {setVideoFile(null);setVideoPreview(null);setVideoDuration(0);setVideoError('');return;}
     const url = URL.createObjectURL(f);
     setVideoFile(f);
     setVideoPreview(url);
@@ -249,13 +249,13 @@ export default function SidePanel({
         setVideoError('Video must be 2 minutes max');
         setVideoFile(null);
         setVideoPreview(null);
-        try { URL.revokeObjectURL(url); } catch {}
+        try {URL.revokeObjectURL(url);} catch {}
       }
     };
   };
 
   const computePostComments = (postId) => {
-    return allComments.filter(c => c.post_id === postId);
+    return allComments.filter((c) => c.post_id === postId);
   };
 
   const formatTime = (dateStr) => {
@@ -271,11 +271,11 @@ export default function SidePanel({
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: profile.user_id },
+        payload: { user_id: profile.user_id }
       });
       return data;
     },
-    enabled: !!profile?.user_id,
+    enabled: !!profile?.user_id
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rankProgress = walletAvailable;
@@ -284,43 +284,43 @@ export default function SidePanel({
   return (
     <>
       {/* Hover handle when collapsed */}
-      {!isOpen && (
-        <div
-          onMouseEnter={() => onToggle?.()}
-          className={cn("fixed top-1/2 -translate-y-1/2 z-40 bg-violet-600/80 hover:bg-violet-700 cursor-pointer", dockSide === 'right' ? "rounded-l-lg" : "rounded-r-lg")}
-          style={{ width: '10px', height: '140px', right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
-          title="Open panel"
-        />
-      )}
+      {!isOpen &&
+      <div
+        onMouseEnter={() => onToggle?.()}
+        className={cn("fixed top-1/2 -translate-y-1/2 z-40 bg-violet-600/80 hover:bg-violet-700 cursor-pointer", dockSide === 'right' ? "rounded-l-lg" : "rounded-r-lg")}
+        style={{ width: '10px', height: '140px', right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
+        title="Open panel" />
+
+      }
       <div
         className={cn(
           "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-50 transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "w-80" : "w-0 overflow-hidden"
         )}
-        style={{ top: topOffset, height: `calc(100vh - ${topOffset}px)`, right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}
-      >
+        style={{ top: topOffset, height: `calc(100vh - ${topOffset}px)`, right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}>
+
       {/* Drag Handle */}
       <div
-        onMouseDown={onDragStart}
-        className="h-5 cursor-move bg-slate-100 border-b border-slate-200 flex items-center justify-center text-[10px] text-slate-400"
-        title="Drag to move. Drag toward an edge to dock."
-      >
+          onMouseDown={onDragStart}
+          className="h-5 cursor-move bg-slate-100 border-b border-slate-200 flex items-center justify-center text-[10px] text-slate-400"
+          title="Drag to move. Drag toward an edge to dock.">
+
         Drag
       </div>
 
       {/* Toggle Button */}
       <button
-        onClick={onToggle}
-        className={cn(
-          "absolute top-1/2 -translate-y-1/2 w-10 h-20 bg-white border border-slate-200 flex items-center justify-center shadow-md hover:bg-slate-50 transition-colors",
-          dockSide === 'right' ? "-left-10 rounded-l-xl border-r-0" : "-right-10 rounded-r-xl border-l-0"
-        )}
-      >
-        {dockSide === 'right'
-          ? (isOpen ? <ChevronRight className="w-5 h-5 text-slate-600" /> : <ChevronLeft className="w-5 h-5 text-slate-600" />)
-          : (isOpen ? <ChevronLeft className="w-5 h-5 text-slate-600" /> : <ChevronRight className="w-5 h-5 text-slate-600" />)
-        }
+          onClick={onToggle}
+          className={cn(
+            "absolute top-1/2 -translate-y-1/2 w-10 h-20 bg-white border border-slate-200 flex items-center justify-center shadow-md hover:bg-slate-50 transition-colors",
+            dockSide === 'right' ? "-left-10 rounded-l-xl border-r-0" : "-right-10 rounded-r-xl border-l-0"
+          )}>
+
+        {dockSide === 'right' ?
+          isOpen ? <ChevronRight className="w-5 h-5 text-slate-600" /> : <ChevronLeft className="w-5 h-5 text-slate-600" /> :
+          isOpen ? <ChevronLeft className="w-5 h-5 text-slate-600" /> : <ChevronRight className="w-5 h-5 text-slate-600" />
+          }
       </button>
 
       <ScrollArea className="flex-1">
@@ -340,7 +340,7 @@ export default function SidePanel({
                 <List className="w-4 h-4 mr-1" />
                 Transactions
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => { window.location.href = createPageUrl('DailyOps'); }}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
                 <Calendar className="w-4 h-4 mr-1" />
                 Daily Ops
               </Button>
@@ -361,21 +361,21 @@ export default function SidePanel({
                     {walletAvailable?.toLocaleString?.() || 0}
                   </p>
                 </div>
-                <ProgressRing 
-                  value={rankProgress} 
-                  max={nextRankAt} 
-                  size={64}
-                  strokeWidth={5}
-                  label={profile?.rank_code?.charAt(0).toUpperCase()}
-                  sublabel="Rank"
-                />
+                <ProgressRing
+                    value={rankProgress}
+                    max={nextRankAt}
+                    size={64}
+                    strokeWidth={5}
+                    label={profile?.rank_code?.charAt(0).toUpperCase()}
+                    sublabel="Rank" />
+
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600">To next rank</span>
                 <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
               </div>
               <div className="flex justify-between mt-3">
-                <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
+                <Button variant="outline" size="sm" className="bg-neutral-700 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8" onClick={() => setWalletPopupOpen(true)}>
                   Open Wallet
                 </Button>
                 <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
@@ -388,15 +388,15 @@ export default function SidePanel({
           {/* Today's Schedule */}
           <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
             <div className="space-y-2">
-              {meetings.length === 0 ? (
-                <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p>
-              ) : (
-                meetings.slice(0, 4).map((meeting, i) => (
-                  <button
-                    key={i}
-                    onClick={() => onMeetingAction?.('view', meeting)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left"
-                  >
+              {meetings.length === 0 ?
+                <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
+
+                meetings.slice(0, 4).map((meeting, i) =>
+                <button
+                  key={i}
+                  onClick={() => onMeetingAction?.('view', meeting)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+
                     <div className="p-2 rounded-lg bg-blue-100">
                       <Clock className="w-4 h-4 text-blue-600" />
                     </div>
@@ -406,17 +406,17 @@ export default function SidePanel({
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400" />
                   </button>
-                ))
-              )}
+                )
+                }
             </div>
           </CollapsibleCard>
 
           {/* Top Matches */}
           <CollapsibleCard title="Top Matches" icon={Sparkles} badge={matches.length} badgeColor="violet" onPopout={() => setMatchesPopupOpen(true)}>
             <div className="space-y-2">
-              {matches.length === 0 ? (
-                <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p>
-              ) : (
+              {matches.length === 0 ?
+                <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p> :
+
                 matches.slice(0, 5).map((match, i) => {
                   const handleClick = () => {
                     if (match.target_type === 'person') {
@@ -437,9 +437,9 @@ export default function SidePanel({
                     <button
                       key={i}
                       onClick={handleClick}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left"
-                    >
-                      <div 
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left">
+
+                      <div
                         onClick={(e) => {
                           e.stopPropagation();
                           if (match.target_type === 'person') {
@@ -447,8 +447,8 @@ export default function SidePanel({
                             document.dispatchEvent(event);
                           }
                         }}
-                        data-user-id={match.target_type === 'person' ? match.target_id : null}
-                      >
+                        data-user-id={match.target_type === 'person' ? match.target_id : null}>
+
                         <Avatar className="w-9 h-9 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all">
                           <AvatarImage src={match.target_avatar} />
                           <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
@@ -461,10 +461,10 @@ export default function SidePanel({
                         <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
                       </div>
                       <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
-                    </button>
-                  );
+                    </button>);
+
                 })
-              )}
+                }
             </div>
           </CollapsibleCard>
 
@@ -501,29 +501,29 @@ export default function SidePanel({
                   </AvatarFallback>
                 </Avatar>
                 <Textarea
-                  value={newPostText}
-                  onChange={(e) => setNewPostText(e.target.value)}
-                  placeholder="What's on your mind?"
-                  className="flex-1 resize-none text-sm"
-                  rows={3}
-                />
+                    value={newPostText}
+                    onChange={(e) => setNewPostText(e.target.value)}
+                    placeholder="What's on your mind?"
+                    className="flex-1 resize-none text-sm"
+                    rows={3} />
+
               </div>
               {/* Video upload */}
               <div className="flex items-center justify-between gap-3">
                 <input type="file" accept="video/*" onChange={onVideoChange} className="text-xs" />
                 {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
               </div>
-              {videoPreview && !videoError && (
+              {videoPreview && !videoError &&
                 <video src={videoPreview} controls className="w-full rounded-lg" />
-              )}
+                }
               <div className="flex items-center justify-between">
                 <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
-                  onClick={handleCreatePost}
-                  disabled={(!newPostText.trim() && !videoFile) || createPostMutation.isPending}
-                  className="bg-violet-600 hover:bg-violet-700"
-                  size="sm"
-                >
+                    onClick={handleCreatePost}
+                    disabled={!newPostText.trim() && !videoFile || createPostMutation.isPending}
+                    className="bg-violet-600 hover:bg-violet-700"
+                    size="sm">
+
                   <Send className="w-3 h-3 mr-1" />
                   Post
                 </Button>
@@ -531,9 +531,9 @@ export default function SidePanel({
             </div>
 
             <div className="space-y-4">
-              {posts.length === 0 ? (
-                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
-              ) : (
+              {posts.length === 0 ?
+                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p> :
+
                 posts.map((post) => {
                   const postComments = computePostComments(post.id);
                   const isLiked = isLikedByUser(post.id);
@@ -560,11 +560,11 @@ export default function SidePanel({
                       {/* Post Content */}
                       <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
 
-                      {post.video_url ? (
-                        <video src={post.video_url} controls className="w-full rounded-lg" />
-                      ) : post.image_urls && post.image_urls.length > 0 ? (
-                        <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" />
-                      ) : null}
+                      {post.video_url ?
+                      <video src={post.video_url} controls className="w-full rounded-lg" /> :
+                      post.image_urls && post.image_urls.length > 0 ?
+                      <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> :
+                      null}
 
                       {/* Post Actions */}
                       <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
@@ -573,15 +573,15 @@ export default function SidePanel({
                           className={cn(
                             "flex items-center gap-1.5 text-xs transition-colors",
                             isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600"
-                          )}
-                        >
+                          )}>
+
                           <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
                           <span className="font-medium">{post.likes_count || 0}</span>
                         </button>
                         <button
                           onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
-                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors"
-                        >
+                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors">
+
                           <MessageCircle className="w-4 h-4" />
                           <span className="font-medium">{post.comments_count || 0}</span>
                         </button>
@@ -591,11 +591,11 @@ export default function SidePanel({
                       </div>
 
                       {/* Comments Section */}
-                      {showComments && (
-                        <div className="space-y-3 pt-2">
+                      {showComments &&
+                      <div className="space-y-3 pt-2">
                           {/* Existing Comments */}
-                          {postComments.map((comment) => (
-                            <div key={comment.id} className="flex items-start gap-2">
+                          {postComments.map((comment) =>
+                        <div key={comment.id} className="flex items-start gap-2">
                               <Avatar className="w-7 h-7 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={comment.author_id}>
                                 <AvatarImage src={comment.author_avatar} />
                                 <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
@@ -607,7 +607,7 @@ export default function SidePanel({
                                 <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
                               </div>
                             </div>
-                          ))}
+                        )}
 
                           {/* Comment Input */}
                           <div className="flex items-start gap-2">
@@ -619,35 +619,35 @@ export default function SidePanel({
                             </Avatar>
                             <div className="flex-1 flex items-end gap-2">
                               <Textarea
-                                value={commentText[post.id] || ''}
-                                onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
-                                placeholder="Write a comment..."
-                                className="text-xs h-8 resize-none"
-                                rows={1}
-                              />
-                              <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: ((commentText[post.id] || '') + e) })} />
+                              value={commentText[post.id] || ''}
+                              onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                              placeholder="Write a comment..."
+                              className="text-xs h-8 resize-none"
+                              rows={1} />
+
+                              <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
                               <Button
-                                size="sm"
-                                onClick={() => handleComment(post.id)}
-                                disabled={!commentText[post.id]?.trim()}
-                                className="h-8 w-8 p-0"
-                              >
+                              size="sm"
+                              onClick={() => handleComment(post.id)}
+                              disabled={!commentText[post.id]?.trim()}
+                              className="h-8 w-8 p-0">
+
                                 <Send className="w-3 h-3" />
                               </Button>
                             </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  );
+                      }
+                    </div>);
+
                 })
-              )}
+                }
             </div>
           </CollapsibleCard>
         </div>
       {/* Popout Panels */}
-      {gggPopupOpen && (
-        <FloatingPanel title="GGG & Rank" onClose={() => setGggPopupOpen(false)}>
+      {gggPopupOpen &&
+          <FloatingPanel title="GGG & Rank" onClose={() => setGggPopupOpen(false)}>
           <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -657,14 +657,14 @@ export default function SidePanel({
                   {walletAvailable?.toLocaleString?.() || 0}
                 </p>
               </div>
-              <ProgressRing 
-                value={rankProgress} 
-                max={nextRankAt} 
-                size={64}
-                strokeWidth={5}
-                label={profile?.rank_code?.charAt(0).toUpperCase()}
-                sublabel="Rank"
-              />
+              <ProgressRing
+                  value={rankProgress}
+                  max={nextRankAt}
+                  size={64}
+                  strokeWidth={5}
+                  label={profile?.rank_code?.charAt(0).toUpperCase()}
+                  sublabel="Rank" />
+
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-slate-600">To next rank</span>
@@ -680,66 +680,66 @@ export default function SidePanel({
             </div>
           </div>
         </FloatingPanel>
-      )}
+          }
 
-      {gggAuditOpen && (
-        <FloatingPanel title="GGG Audit Trail" onClose={() => setGggAuditOpen(false)}>
+      {gggAuditOpen &&
+          <FloatingPanel title="GGG Audit Trail" onClose={() => setGggAuditOpen(false)}>
           <div className="space-y-2">
-            {auditItems.length === 0 ? (
-              <p className="text-sm text-slate-400 py-4 text-center">No audit entries yet</p>
-            ) : (
+            {auditItems.length === 0 ?
+              <p className="text-sm text-slate-400 py-4 text-center">No audit entries yet</p> :
+
               auditItems.map((item) => {
                 const isGGG = item._type === 'ggg';
                 const positive = (item.delta || 0) >= 0;
                 return (
                   <div key={`${item._type}-${item.id}`} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
                     <div className={`p-2 rounded-lg ${isGGG ? 'bg-amber-100' : positive ? 'bg-emerald-100' : 'bg-rose-100'}`}>
-                      {isGGG ? (
-                        <Coins className="w-4 h-4 text-amber-600" />
-                      ) : positive ? (
-                        <ArrowUpRight className="w-4 h-4 text-emerald-600" />
-                      ) : (
-                        <ArrowDownRight className="w-4 h-4 text-rose-600" />
-                      )}
+                      {isGGG ?
+                      <Coins className="w-4 h-4 text-amber-600" /> :
+                      positive ?
+                      <ArrowUpRight className="w-4 h-4 text-emerald-600" /> :
+
+                      <ArrowDownRight className="w-4 h-4 text-rose-600" />
+                      }
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-slate-900">
-                          {isGGG ? (item.reason_code || 'GGG transaction') : (item.reason_code || 'Reputation update')}
+                          {isGGG ? item.reason_code || 'GGG transaction' : item.reason_code || 'Reputation update'}
                         </p>
-                        <span className={`text-sm font-semibold ${isGGG ? (positive ? 'text-amber-700' : 'text-slate-700') : (positive ? 'text-emerald-700' : 'text-rose-700')}`}>
+                        <span className={`text-sm font-semibold ${isGGG ? positive ? 'text-amber-700' : 'text-slate-700' : positive ? 'text-emerald-700' : 'text-rose-700'}`}>
                           {positive ? '+' : ''}{item.delta}{isGGG ? ' GGG' : ' RP'}{!isGGG && item.rp_after != null ? ` • ${item.rp_after} RP` : ''}
                         </span>
                       </div>
                       <p className="text-xs text-slate-500">
-                        {isGGG ? (item.source_type || 'reward') : (item.source_type || 'system')}
+                        {isGGG ? item.source_type || 'reward' : item.source_type || 'system'}
                         {item.reason_code ? ` • ${item.reason_code}` : ''}
                       </p>
-                      {item.description && (
-                        <p className="text-xs text-slate-600 mt-1">{item.description}</p>
-                      )}
+                      {item.description &&
+                      <p className="text-xs text-slate-600 mt-1">{item.description}</p>
+                      }
                       <p className="text-[11px] text-slate-400 mt-1">
                         {format(parseISO(item.created_date), 'MMM d, h:mm a')}
                       </p>
                     </div>
-                  </div>
-                );
+                  </div>);
+
               })
-            )}
+              }
           </div>
         </FloatingPanel>
-        )}
+          }
 
-        {gggTxOpen && (
-         <FloatingPanel title="GGG Transactions" onClose={() => setGggTxOpen(false)}>
+        {gggTxOpen &&
+          <FloatingPanel title="GGG Transactions" onClose={() => setGggTxOpen(false)}>
            <div className="space-y-2">
-             {(gggTx || []).length === 0 ? (
-               <p className="text-sm text-slate-400 py-4 text-center">No transactions</p>
-             ) : (
-               gggTx.map((tx) => {
-                 const positive = (tx.delta || 0) >= 0;
-                 return (
-                   <div key={tx.id} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
+             {(gggTx || []).length === 0 ?
+              <p className="text-sm text-slate-400 py-4 text-center">No transactions</p> :
+
+              gggTx.map((tx) => {
+                const positive = (tx.delta || 0) >= 0;
+                return (
+                  <div key={tx.id} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
                      <div className="p-2 rounded-lg bg-amber-100">
                        <Coins className="w-4 h-4 text-amber-600" />
                      </div>
@@ -756,28 +756,28 @@ export default function SidePanel({
                        {tx.description && <p className="text-xs text-slate-600 mt-1">{tx.description}</p>}
                        <p className="text-[11px] text-slate-400 mt-1">{format(parseISO(tx.created_date), 'MMM d, h:mm a')}</p>
                      </div>
-                   </div>
-                 );
-               })
-             )}
+                   </div>);
+
+              })
+              }
            </div>
          </FloatingPanel>
-        )}
+          }
 
-         {walletPopupOpen && (
-           <FloatingPanel title="My Wallet" onClose={() => setWalletPopupOpen(false)}>
+         {walletPopupOpen &&
+          <FloatingPanel title="My Wallet" onClose={() => setWalletPopupOpen(false)}>
              <WalletPanel />
            </FloatingPanel>
-         )}
+          }
 
-         {schedulePopupOpen && (
-        <FloatingPanel title="Today's Schedule" onClose={() => setSchedulePopupOpen(false)}>
+         {schedulePopupOpen &&
+          <FloatingPanel title="Today's Schedule" onClose={() => setSchedulePopupOpen(false)}>
           <div className="space-y-2">
-            {meetings.length === 0 ? (
-              <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p>
-            ) : (
-              meetings.map((meeting, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+            {meetings.length === 0 ?
+              <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
+
+              meetings.map((meeting, i) =>
+              <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
                   <div className="p-2 rounded-lg bg-blue-100">
                     <Clock className="w-4 h-4 text-blue-600" />
                   </div>
@@ -786,20 +786,20 @@ export default function SidePanel({
                     <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
                   </div>
                 </div>
-              ))
-            )}
+              )
+              }
           </div>
         </FloatingPanel>
-      )}
+          }
 
-      {matchesPopupOpen && (
-        <FloatingPanel title="Top Matches" onClose={() => setMatchesPopupOpen(false)}>
+      {matchesPopupOpen &&
+          <FloatingPanel title="Top Matches" onClose={() => setMatchesPopupOpen(false)}>
           <div className="space-y-2">
-            {matches.length === 0 ? (
-              <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p>
-            ) : (
-              matches.map((match, i) => (
-                <div key={i} className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+            {matches.length === 0 ?
+              <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p> :
+
+              matches.map((match, i) =>
+              <div key={i} className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50">
                   <Avatar className="w-9 h-9">
                     <AvatarImage src={match.target_avatar} />
                     <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
@@ -812,14 +812,14 @@ export default function SidePanel({
                   </div>
                   <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
                 </div>
-              ))
-            )}
+              )
+              }
           </div>
         </FloatingPanel>
-      )}
+          }
 
-      {helpPopupOpen && (
-        <FloatingPanel title="Help" onClose={() => setHelpPopupOpen(false)}>
+      {helpPopupOpen &&
+          <FloatingPanel title="Help" onClose={() => setHelpPopupOpen(false)}>
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-slate-200">
@@ -837,10 +837,10 @@ export default function SidePanel({
             </div>
           </div>
         </FloatingPanel>
-      )}
+          }
 
-      {feedPopupOpen && (
-        <FloatingPanel title="Community Feed" onClose={() => setFeedPopupOpen(false)}>
+      {feedPopupOpen &&
+          <FloatingPanel title="Community Feed" onClose={() => setFeedPopupOpen(false)}>
           <div className="space-y-4">
             {/* Create Post */}
             <div className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
@@ -852,38 +852,38 @@ export default function SidePanel({
                   </AvatarFallback>
                 </Avatar>
                 <Textarea
-                  value={newPostText}
-                  onChange={(e) => setNewPostText(e.target.value)}
-                  placeholder="What's on your mind?"
-                  className="flex-1 resize-none text-sm"
-                  rows={3}
-                />
+                    value={newPostText}
+                    onChange={(e) => setNewPostText(e.target.value)}
+                    placeholder="What's on your mind?"
+                    className="flex-1 resize-none text-sm"
+                    rows={3} />
+
               </div>
               {/* Video upload */}
               <div className="flex items-center justify-between gap-3">
                 <input type="file" accept="video/*" onChange={onVideoChange} className="text-xs" />
                 {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
               </div>
-              {videoPreview && !videoError && (
+              {videoPreview && !videoError &&
                 <video src={videoPreview} controls className="w-full rounded-lg" />
-              )}
+                }
               <div className="flex items-center justify-between">
                 <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
-                  onClick={handleCreatePost}
-                  disabled={(!newPostText.trim() && !videoFile) || createPostMutation.isPending}
-                  className="bg-violet-600 hover:bg-violet-700"
-                  size="sm"
-                >
+                    onClick={handleCreatePost}
+                    disabled={!newPostText.trim() && !videoFile || createPostMutation.isPending}
+                    className="bg-violet-600 hover:bg-violet-700"
+                    size="sm">
+
                   <Send className="w-3 h-3 mr-1" />
                   Post
                 </Button>
               </div>
             </div>
             <div className="space-y-4">
-              {posts.length === 0 ? (
-                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p>
-              ) : (
+              {posts.length === 0 ?
+                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p> :
+
                 posts.map((post) => {
                   const postComments = computePostComments(post.id);
                   const isLiked = isLikedByUser(post.id);
@@ -903,23 +903,23 @@ export default function SidePanel({
                         </div>
                       </div>
                       <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
-                      {post.video_url ? (
-                        <video src={post.video_url} controls className="w-full rounded-lg" />
-                      ) : post.image_urls && post.image_urls.length > 0 ? (
-                        <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" />
-                      ) : null}
+                      {post.video_url ?
+                      <video src={post.video_url} controls className="w-full rounded-lg" /> :
+                      post.image_urls && post.image_urls.length > 0 ?
+                      <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> :
+                      null}
                       <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
                         <button
                           onClick={() => handleLike(post.id)}
-                          className={cn("flex items-center gap-1.5 text-xs transition-colors", isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600")}
-                        >
+                          className={cn("flex items-center gap-1.5 text-xs transition-colors", isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600")}>
+
                           <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
                           <span className="font-medium">{post.likes_count || 0}</span>
                         </button>
                         <button
                           onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
-                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors"
-                        >
+                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors">
+
                           <MessageCircle className="w-4 h-4" />
                           <span className="font-medium">{post.comments_count || 0}</span>
                         </button>
@@ -927,10 +927,10 @@ export default function SidePanel({
                           <Share2 className="w-4 h-4" />
                         </button>
                       </div>
-                      {showComments && (
-                        <div className="space-y-3 pt-2">
-                          {postComments.map((comment) => (
-                            <div key={comment.id} className="flex items-start gap-2">
+                      {showComments &&
+                      <div className="space-y-3 pt-2">
+                          {postComments.map((comment) =>
+                        <div key={comment.id} className="flex items-start gap-2">
                               <Avatar className="w-7 h-7">
                                 <AvatarImage src={comment.author_avatar} />
                                 <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
@@ -942,7 +942,7 @@ export default function SidePanel({
                                 <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
                               </div>
                             </div>
-                          ))}
+                        )}
                           <div className="flex items-start gap-2">
                             <Avatar className="w-7 h-7">
                               <AvatarImage src={profile?.avatar_url} />
@@ -952,30 +952,30 @@ export default function SidePanel({
                             </Avatar>
                             <div className="flex-1 flex items-end gap-2">
                              <Textarea
-                               value={commentText[post.id] || ''}
-                               onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
-                               placeholder="Write a comment..."
-                               className="text-xs h-8 resize-none"
-                               rows={1}
-                             />
-                             <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: ((commentText[post.id] || '') + e) })} />
+                              value={commentText[post.id] || ''}
+                              onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                              placeholder="Write a comment..."
+                              className="text-xs h-8 resize-none"
+                              rows={1} />
+
+                             <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
                              <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
                                <Send className="w-3 h-3" />
                              </Button>
                             </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  );
+                      }
+                    </div>);
+
                 })
-              )}
+                }
             </div>
           </div>
         </FloatingPanel>
-      )}
+          }
       </ScrollArea>
     </div>
-  </>
-  );
+  </>);
+
 }
