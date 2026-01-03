@@ -372,6 +372,14 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
           background-attachment: fixed;
         }
 
+        /* Dark theme background for Command Deck */
+        [data-theme='dark'] main[data-page='CommandDeck'] {
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1080d86cb_Overheadbirds-eyeviewIsekaianimestyleofawhiteandgoldcircuitboardwithpurplenodesandlightgraysmokeExpressivecompositiontop-downperspective.jpg');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+        }
+
         `}</style>
 
       {/* Sidebar */}
