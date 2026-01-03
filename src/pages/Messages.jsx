@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
 import CreateGroupChatModal from "@/components/messages/CreateGroupChatModal";
@@ -21,6 +21,7 @@ export default function Messages() {
   const [messageText, setMessageText] = useState('');
   const [groupOpen, setGroupOpen] = useState(false);
   const [dmOpen, setDMOpen] = useState(false);
+  const typingRef = React.useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -104,6 +105,18 @@ export default function Messages() {
 
   const currentMessages = (selectedConversation?.messages || []).filter((m) => !m.deleted_for_user_ids?.includes?.(user?.email));
 
+  // Typing indicators (poll other participants' typing state)
+  const { data: typingStatuses = [] } = useQuery({
+    queryKey: ['typing', selectedConversation?.id],
+    queryFn: () => base44.entities.TypingStatus.filter({ conversation_id: selectedConversation.id, is_typing: true }),
+    enabled: !!selectedConversation?.id,
+    refetchInterval: 1200
+  });
+  const typingUsers = React.useMemo(() => {
+    const now = Date.now();
+    return (typingStatuses || []).filter(ts => ts.user_id !== user?.email && (now - new Date(ts.updated_date).getTime()) < 5000);
+  }, [typingStatuses, user?.email]);
+
   const getStatus = React.useCallback((uid) => {
     const p = profiles.find((pr) => pr.user_id === uid);
     return p?.status || 'offline';
@@ -160,6 +173,13 @@ export default function Messages() {
         message: messageText.slice(0, 120),
         action_url: createPageUrl('Messages')
       });
+      // Update conversation last message
+      try {
+        await base44.entities.Conversation.update(selectedConversation.id, {
+          last_message: messageText.slice(0, 200),
+          last_message_at: new Date().toISOString()
+        });
+      } catch (_) {}
     }
     setMessageText('');
     queryClient.invalidateQueries({ queryKey: ['messages'] });
@@ -174,6 +194,39 @@ export default function Messages() {
       });
     }
   }, [selectedConversation]);
+
+  // Delivery receipts: mark incoming as delivered for me
+  React.useEffect(() => {
+    if (!selectedConversation || !user?.email) return;
+    const incoming = currentMessages.filter(m => m.to_user_id === user.email && !(m.delivered_for_user_ids || []).includes(user.email));
+    if (incoming.length === 0) return;
+    incoming.forEach((m) => {
+      const list = Array.isArray(m.delivered_for_user_ids) ? m.delivered_for_user_ids : [];
+      base44.entities.Message.update(m.id, { delivered_for_user_ids: [...list, user.email] })
+        .then(() => queryClient.invalidateQueries({ queryKey: ['messages'] }));
+    });
+  }, [selectedConversation?.id, currentMessages.length, user?.email]);
+
+  // Typing: helper to upsert typing status (throttled)
+  const sendTypingPing = async () => {
+    const now = Date.now();
+    if (!selectedConversation?.id || !user?.email) return;
+    if (now - (typingRef.current.lastSentAt || 0) < 1200) return;
+    typingRef.current.lastSentAt = now;
+    const existing = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: selectedConversation.id });
+    if (existing?.[0]) {
+      await base44.entities.TypingStatus.update(existing[0].id, { is_typing: true });
+    } else {
+      await base44.entities.TypingStatus.create({ user_id: user.email, conversation_id: selectedConversation.id, is_typing: true });
+    }
+    // auto-clear after 3s
+    setTimeout(async () => {
+      try {
+        const ex = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: selectedConversation.id });
+        if (ex?.[0]) await base44.entities.TypingStatus.update(ex[0].id, { is_typing: false });
+      } catch (_) {}
+    }, 3000);
+  };
 
   return (
     <>
@@ -311,6 +364,9 @@ export default function Messages() {
           {/* Header */}
           <div className="p-4 border-b bg-white flex items-center gap-3">
             <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} />
+            {typingUsers.length > 0 && (
+              <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
+            )}
             <div className="ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -356,6 +412,17 @@ export default function Messages() {
                         <p className="text-xs text-slate-400 mt-1 px-2">
                           {format(parseISO(msg.created_date), 'h:mm a')}
                         </p>
+                        {isOwn && (
+                          <span className="mt-1 text-xs">
+                            {msg.is_read ? (
+                              <CheckCheck className="w-4 h-4 text-emerald-600" />
+                            ) : (Array.isArray(msg.delivered_for_user_ids) && msg.delivered_for_user_ids.length > 0) ? (
+                              <CheckCheck className="w-4 h-4 text-slate-400" />
+                            ) : (
+                              <Check className="w-4 h-4 text-slate-400" />
+                            )}
+                          </span>
+                        )}
                         {isOwn &&
                         <Button
                           variant="ghost"
@@ -385,11 +452,26 @@ export default function Messages() {
           {/* Input */}
           <div className="p-4 border-t bg-white">
             <div className="flex gap-3 items-center">
+              <Button variant="outline" size="sm" className="h-9 px-2 rounded-lg" onClick={() => {
+                if (!user?.email) return;
+                const link = createPageUrl('Profile') + `?id=${encodeURIComponent(user.email)}`;
+                setMessageText((t) => (t ? t + ' ' : '') + link);
+              }}>
+                <Link2 className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="sm" className="h-9 px-2 rounded-lg" onClick={() => {
+                const otherId = selectedConversation?.otherUser?.id;
+                if (!otherId) return;
+                const link = createPageUrl('Profile') + `?id=${encodeURIComponent(otherId)}`;
+                setMessageText((t) => (t ? t + ' ' : '') + link);
+              }}>
+                <ExternalLink className="w-4 h-4" />
+              </Button>
               <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
               <Input
                 placeholder="Type a message..."
                 value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
+                onChange={async (e) => { setMessageText(e.target.value); await sendTypingPing(); }}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 className="flex-1 rounded-xl" />
 
