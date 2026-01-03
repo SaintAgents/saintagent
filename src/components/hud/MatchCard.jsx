@@ -184,13 +184,14 @@ export default function MatchCard({ match, onAction }) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <div>
-              <h4
-                className="font-semibold text-slate-900 truncate cursor-pointer"
-                onClick={handleNavigateTarget}>
-
-                {match.target_name}
-              </h4>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <h4
+                  className="font-semibold text-slate-900 truncate cursor-pointer"
+                  onClick={handleNavigateTarget}>
+                  {match.target_name}
+                </h4>
+              </div>
               <p className="text-sm text-slate-500 truncate">{match.target_subtitle}</p>
             </div>
             <div className={cn(
