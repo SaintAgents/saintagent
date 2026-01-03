@@ -426,11 +426,45 @@ export default function CommandDeck() {
       )}>
         {/* Page Header */}
         <div className="px-6 pt-6 pb-4">
-          <div className="relative flex items-center justify-between mb-6 p-4 rounded-2xl">
+          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl">
   <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none z-0" />
             <div className="relative z-10">
               <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
-              <p className="text-slate-500 mt-1">Your mission control center</p>
+                                  <p className="text-slate-500 mt-1">Your mission control center</p>
+                                  <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                    {/* Save */}
+                                    <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-8 h-8 object-contain drop-shadow" />
+                                      <div>
+                                        <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">Save</div>
+                                        <div className="text-[10px] text-slate-500 dark:text-slate-400">Save current layout</div>
+                                      </div>
+                                    </button>
+                                    {/* Reset */}
+                                    <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-8 h-8 object-contain drop-shadow" />
+                                      <div>
+                                        <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">Reset</div>
+                                        <div className="text-[10px] text-slate-500 dark:text-slate-400">Restore defaults</div>
+                                      </div>
+                                    </button>
+                                    {/* Collapse */}
+                                    <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-8 h-8 object-contain drop-shadow" />
+                                      <div>
+                                        <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
+                                        <div className="text-[10px] text-slate-500 dark:text-slate-400">Condense view</div>
+                                      </div>
+                                    </button>
+                                    {/* Expand */}
+                                    <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
+                                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-8 h-8 object-contain drop-shadow" />
+                                      <div>
+                                        <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">Expand</div>
+                                        <div className="text-[10px] text-slate-500 dark:text-slate-400">Fuller view</div>
+                                      </div>
+                                    </button>
+                                  </div>
             </div>
             <div className="flex items-center gap-3">
               <Button
