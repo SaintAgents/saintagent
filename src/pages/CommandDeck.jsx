@@ -114,54 +114,54 @@ export default function CommandDeck() {
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
 
-        // Rank definitions for hover tooltips
-        const RANK_DEFS = {
-          seeker: {
-            short: "Exploring and learning",
-            full: "A Seeker is in the stage of exploration and discovery. They are engaging with the platform, learning its structure, and demonstrating curiosity and intent without yet applying consistent practice.",
-            core: "Awareness and entry"
-          },
-          initiate: {
-            short: "Committed participant",
-            full: "An Initiate has crossed the threshold from observation into commitment. They understand the fundamentals, follow established processes, and have begun intentional participation.",
-            core: "Commitment and learning"
-          },
-          adept: {
-            short: "Skilled and reliable",
-            full: "An Adept demonstrates growing competence and reliability. They can apply knowledge with consistency and are trusted to operate independently within defined boundaries.",
-            core: "Skill formation"
-          },
-          practitioner: {
-            short: "Consistent application",
-            full: "A Practitioner actively applies knowledge in real scenarios. Their actions are repeatable, grounded, and beneficial to others or the system as a whole.",
-            core: "Application and consistency"
-          },
-          master: {
-            short: "Proven authority",
-            full: "A Master has achieved a high level of proficiency and understanding. They produce dependable outcomes, uphold standards, and are recognized for their expertise.",
-            core: "Authority through mastery"
-          },
-          sage: {
-            short: "Wise guide",
-            full: "A Sage brings wisdom beyond execution. They understand context, consequences, and long-term impact, offering guidance that balances knowledge with discernment.",
-            core: "Wisdom and perspective"
-          },
-          oracle: {
-            short: "Insightful visionary",
-            full: "An Oracle possesses deep insight and foresight. They recognize patterns before they fully emerge and provide clarity that helps others navigate complexity and uncertainty.",
-            core: "Insight and vision"
-          },
-          ascended: {
-            short: "Integrated leadership",
-            full: "An Ascended individual operates from an elevated perspective. They integrate knowledge, wisdom, and responsibility, acting with alignment, restraint, and clarity.",
-            core: "Transcendence and integration"
-          },
-          guardian: {
-            short: "Trusted protector",
-            full: "A Guardian is entrusted with stewardship and protection of the system and its people. They uphold integrity, safeguard values, and act in service of the whole rather than self.",
-            core: "Protection and trust"
-          }
-        };
+  // Rank definitions for hover tooltips
+  const RANK_DEFS = {
+    seeker: {
+      short: "Exploring and learning",
+      full: "A Seeker is in the stage of exploration and discovery. They are engaging with the platform, learning its structure, and demonstrating curiosity and intent without yet applying consistent practice.",
+      core: "Awareness and entry"
+    },
+    initiate: {
+      short: "Committed participant",
+      full: "An Initiate has crossed the threshold from observation into commitment. They understand the fundamentals, follow established processes, and have begun intentional participation.",
+      core: "Commitment and learning"
+    },
+    adept: {
+      short: "Skilled and reliable",
+      full: "An Adept demonstrates growing competence and reliability. They can apply knowledge with consistency and are trusted to operate independently within defined boundaries.",
+      core: "Skill formation"
+    },
+    practitioner: {
+      short: "Consistent application",
+      full: "A Practitioner actively applies knowledge in real scenarios. Their actions are repeatable, grounded, and beneficial to others or the system as a whole.",
+      core: "Application and consistency"
+    },
+    master: {
+      short: "Proven authority",
+      full: "A Master has achieved a high level of proficiency and understanding. They produce dependable outcomes, uphold standards, and are recognized for their expertise.",
+      core: "Authority through mastery"
+    },
+    sage: {
+      short: "Wise guide",
+      full: "A Sage brings wisdom beyond execution. They understand context, consequences, and long-term impact, offering guidance that balances knowledge with discernment.",
+      core: "Wisdom and perspective"
+    },
+    oracle: {
+      short: "Insightful visionary",
+      full: "An Oracle possesses deep insight and foresight. They recognize patterns before they fully emerge and provide clarity that helps others navigate complexity and uncertainty.",
+      core: "Insight and vision"
+    },
+    ascended: {
+      short: "Integrated leadership",
+      full: "An Ascended individual operates from an elevated perspective. They integrate knowledge, wisdom, and responsibility, acting with alignment, restraint, and clarity.",
+      core: "Transcendence and integration"
+    },
+    guardian: {
+      short: "Trusted protector",
+      full: "A Guardian is entrusted with stewardship and protection of the system and its people. They uphold integrity, safeguard values, and act in service of the whole rather than self.",
+      core: "Protection and trust"
+    }
+  };
 
   // Onboarding progress
   const { data: onboardingRecords } = useQuery({
@@ -568,8 +568,8 @@ export default function CommandDeck() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {RP_LADDER.map((t) => (
-                                      <tr key={t.code} className="border-t border-slate-100 hover:bg-slate-50">
+                                    {RP_LADDER.map((t) =>
+                                  <tr key={t.code} className="border-t border-slate-100 hover:bg-slate-50">
                                         <td className="px-3 py-2 text-slate-900 capitalize">
                                           <HoverCard>
                                             <HoverCardTrigger asChild>
@@ -577,12 +577,12 @@ export default function CommandDeck() {
                                             </HoverCardTrigger>
                                             <HoverCardContent className="w-80">
                                               <div className="text-sm font-semibold text-slate-900 capitalize">{t.title} • {t.min}+</div>
-                                              {RANK_DEFS[t.code]?.full && (
-                                                <div className="mt-2 text-xs text-slate-800">
+                                              {RANK_DEFS[t.code]?.full &&
+                                          <div className="mt-2 text-xs text-slate-800">
                                                   <div className="font-semibold">Definition:</div>
                                                   <div>{RANK_DEFS[t.code].full}</div>
                                                 </div>
-                                              )}
+                                          }
                                             </HoverCardContent>
                                           </HoverCard>
                                         </td>
@@ -590,7 +590,7 @@ export default function CommandDeck() {
                                         <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.short || '-'}</td>
                                         <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.core || '-'}</td>
                                       </tr>
-                                    ))}
+                                  )}
                                   </tbody>
                                 </table>
                               </div>
@@ -690,7 +690,7 @@ export default function CommandDeck() {
 
                 {/* Mystical Profile */}
                 <div>
-                  <p className="text-xs text-slate-500 mb-3">✨ Mystical Identity</p>
+                  <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {profile?.mystical_identifier &&
                     <div className="flex items-center gap-2">
@@ -1096,13 +1096,6 @@ export default function CommandDeck() {
 
                     <Plus className="w-4 h-4" />
                     Quick Create
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="rounded-xl"
-                    onClick={() => { window.location.href = createPageUrl('Planner'); }}
-                  >
-                    Open Planner
                   </Button>
                 </div>
               </div>
