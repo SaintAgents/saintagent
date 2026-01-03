@@ -332,7 +332,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
         }
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
                         background-color: #0b1220 !important;
-                        background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/33986a4cb_gemini-25-flash-image_above_the_spaceship_add_sacred_geometry_higher_up_ensuring_it_doesn_t_cover_the_-1.jpg');
+                        background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2f0df9019_gemini-25-flash-image_make_yes_normal_human_with_blue_iris-0.jpg');
                         background-size: cover;
                         background-position: center;
                         background-attachment: fixed;
@@ -392,7 +392,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
 
         /* Dark theme background for Command Deck */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-                                      background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/33986a4cb_gemini-25-flash-image_above_the_spaceship_add_sacred_geometry_higher_up_ensuring_it_doesn_t_cover_the_-1.jpg');
+                                      background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2f0df9019_gemini-25-flash-image_make_yes_normal_human_with_blue_iris-0.jpg');
                                       background-size: cover;
                                       background-position: center;
                                       background-attachment: fixed;
