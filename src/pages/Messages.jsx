@@ -216,20 +216,20 @@ export default function Messages() {
           </div>
         </div>
         <ScrollArea className="flex-1">
-          <div className="pr-12">
+          <div className="pr-8">
           {convList.map((conv) =>
-            <div key={conv.id} className="relative group">
+              <div key={conv.id} className="relative group">
               <button
-                onClick={() => setSelectedConversation(conv)}
-                className={cn(
-                  "w-full flex items-start gap-3 p-4 pr-24 hover:bg-slate-50 transition-colors border-b",
-                  selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
-                )}>
+                  onClick={() => setSelectedConversation(conv)}
+                  className={cn(
+                    "w-full flex items-start gap-3 p-4 pr-20 hover:bg-slate-50 transition-colors border-b",
+                    selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
+                  )}>
 
               <div className="relative">
                 <Avatar className="w-10 h-10 cursor-pointer" data-user-id={conv.otherUser.id}>
                   <AvatarImage src={conv.otherUser.avatar} />
-                  <AvatarFallback>{conv.otherUser.name?.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="bg-transparent rounded-full flex h-full w-full items-center justify-center">{conv.otherUser.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <span className={cn("absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-slate-200", STATUS_COLORS[getStatus(conv.otherUser.id)])} />
               </div>
@@ -242,34 +242,34 @@ export default function Messages() {
                 </div>
                 <p className="text-sm text-slate-500 truncate">{conv.lastMessage.content}</p>
                 {conv.unreadCount > 0 &&
-                  <span className="inline-block mt-1 mr-16 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
+                    <span className="inline-block mt-1 px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
                     {conv.unreadCount}
                   </span>
-                  }
+                    }
                 </div>
                 </button>
                 <Button
-                size="sm"
-                variant="ghost"
-                className="absolute right-5 top-2 z-20 pointer-events-auto opacity-100 transition-opacity text-xs gap-1"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log('Row popup clicked', conv.otherUser);
-                  const event = new CustomEvent('openFloatingChat', {
-                    detail: {
-                      recipientId: conv.otherUser.id,
-                      recipientName: conv.otherUser.name,
-                      recipientAvatar: conv.otherUser.avatar
-                    }
-                  });
-                  document.dispatchEvent(event);
-                }}>
+                  size="sm"
+                  variant="ghost"
+                  className="absolute right-3 top-3 z-20 pointer-events-auto opacity-100 transition-opacity text-xs gap-1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log('Row popup clicked', conv.otherUser);
+                    const event = new CustomEvent('openFloatingChat', {
+                      detail: {
+                        recipientId: conv.otherUser.id,
+                        recipientName: conv.otherUser.name,
+                        recipientAvatar: conv.otherUser.avatar
+                      }
+                    });
+                    document.dispatchEvent(event);
+                  }}>
 
                 <ExternalLink className="w-3.5 h-3.5" />
                 Popup
                 </Button>
                 </div>
-            )}
+              )}
               </div>
                 </ScrollArea>
       </div>
@@ -281,7 +281,7 @@ export default function Messages() {
           <div className="p-4 border-b bg-white flex items-center gap-3">
             <Avatar className="w-10 h-10 cursor-pointer" data-user-id={selectedConversation.otherUser.id}>
               <AvatarImage src={selectedConversation.otherUser.avatar} />
-              <AvatarFallback>{selectedConversation.otherUser.name?.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="bg-transparent rounded-full flex h-full w-full items-center justify-center">{selectedConversation.otherUser.name?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
               <p className="font-semibold text-slate-900">{selectedConversation.otherUser.name}</p>
@@ -317,7 +317,7 @@ export default function Messages() {
                   <div key={msg.id} className={cn("flex gap-3", isOwn && "flex-row-reverse")}>
                     <Avatar className="w-8 h-8 cursor-pointer" data-user-id={msg.from_user_id}>
                       <AvatarImage src={isOwn ? msg.from_avatar : msg.from_avatar} />
-                      <AvatarFallback>{msg.from_name?.charAt(0)}</AvatarFallback>
+                      <AvatarFallback className="bg-transparent rounded-full flex h-full w-full items-center justify-center">{msg.from_name?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className={cn("max-w-md", isOwn && "flex flex-col items-end")}>
                       <div className={cn(
