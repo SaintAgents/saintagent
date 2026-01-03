@@ -29,6 +29,7 @@ import {
   Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getRPRank } from '@/components/reputation/rpUtils';
 
 export default function OnlineUsersModal({ open, onClose }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -52,7 +53,8 @@ export default function OnlineUsersModal({ open, onClose }) {
       profile.handle?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesRegion = regionFilter === 'all' || profile.region === regionFilter;
-    const matchesRank = rankFilter === 'all' || profile.rank_code === rankFilter;
+    const rpCode = profile.rp_rank_code || getRPRank(profile.rp_points || 0).code;
+    const matchesRank = rankFilter === 'all' || rpCode === rankFilter;
 
     return matchesSearch && matchesRegion && matchesRank;
   });
@@ -76,7 +78,7 @@ export default function OnlineUsersModal({ open, onClose }) {
   }, {});
 
   const regions = ['North America', 'Europe', 'Asia', 'South America', 'Africa', 'Oceania', 'Other'];
-  const ranks = ['seeker', 'initiate', 'adept', 'master', 'sage', 'oracle', 'ascended'];
+  const ranks = ['seeker', 'initiate', 'adept', 'practitioner', 'master', 'sage', 'oracle', 'ascended', 'guardian'];
 
   const statusColors = {
     online: 'bg-emerald-500',
@@ -197,7 +199,7 @@ export default function OnlineUsersModal({ open, onClose }) {
 
                       <div className="flex flex-col items-end gap-2">
                         <Badge variant="outline" className="capitalize text-xs">
-                          {profile.rank_code || 'seeker'}
+                          {getRPRank(profile.rp_points || 0).title}
                         </Badge>
                         <div className="flex items-center gap-3 text-xs text-slate-500">
                           <div className="flex items-center gap-1">
