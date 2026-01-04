@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw } from 'lucide-react';
+import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const TYPE_META = {
   listings: { label: 'Listings', icon: ShoppingBag, color: 'bg-emerald-100 text-emerald-700' },
@@ -77,7 +78,35 @@ export default function ActivityFeed() {
         {/* Feed */}
         <div className="space-y-3">
           {items.length === 0 ? (
-            <div className="text-center text-slate-500 py-16">No recent activity</div>
+            <div className="text-center py-16">
+              <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">No recent activity yet</h3>
+              <p className="text-slate-500 mb-6 max-w-md mx-auto">
+                Your feed will show new listings, missions, testimonials, and reputation updates from the community. Start engaging to see activity here!
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link to={createPageUrl('Marketplace')}>
+                  <Button variant="outline" className="rounded-xl gap-2">
+                    <Briefcase className="w-4 h-4" /> Browse Marketplace
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('Missions')}>
+                  <Button variant="outline" className="rounded-xl gap-2">
+                    <Target className="w-4 h-4" /> Explore Missions
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('Messages')}>
+                  <Button variant="outline" className="rounded-xl gap-2">
+                    <MessageSquare className="w-4 h-4" /> Start a Conversation
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('Matches')}>
+                  <Button className="rounded-xl gap-2 bg-violet-600 hover:bg-violet-700">
+                    <Users className="w-4 h-4" /> Find Matches
+                  </Button>
+                </Link>
+              </div>
+            </div>
           ) : (
             items.map((ev) => {
               const meta = TYPE_META[ev.type] || { icon: TrendingUp, color: 'bg-slate-100 text-slate-700' };
