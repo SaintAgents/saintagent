@@ -353,10 +353,19 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { action, payload } = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
+    const { action, payload } = body;
 
     if (action === 'getWallet') {
       const uid = payload?.user_id || user.email;
+      if (!uid) {
+        return Response.json({ wallet: { available_balance: 0, locked_balance: 0 } });
+      }
       const w = await getOrCreateWallet(base44, uid);
       return Response.json({ wallet: w });
     }
