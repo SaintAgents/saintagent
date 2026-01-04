@@ -21,9 +21,11 @@ import {
   Crown,
   Shield,
   LogOut,
-  Globe
+  Globe,
+  HelpCircle
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
+import ModeHelpModal from './ModeHelpModal';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -50,6 +52,7 @@ export default function TopBar({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [helpMode, setHelpMode] = useState(null);
 
   const setLanguage = (code) => {
     try {
@@ -80,30 +83,48 @@ export default function TopBar({
       {/* Mode Selector */}
       <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1" data-no-top>
         {MODE_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => {
-              if (!tab.locked && tab.page) {
-                window.location.href = createPageUrl(tab.page);
-              } else if (!tab.locked) {
-                onModeChange?.(tab.id);
-              }
-            }}
-            disabled={tab.locked}
-            className={cn(
-              "px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5",
-              mode === tab.id 
-                ? "bg-white text-violet-700 shadow-sm" 
-                : "text-slate-600 hover:text-slate-900",
-              tab.locked && "opacity-50 cursor-not-allowed"
-            )}
-          >
-            {tab.icon && <tab.icon className="w-4 h-4" />}
-            {tab.label}
-            {tab.locked && <Crown className="w-3 h-3 text-amber-500" />}
-          </button>
+          <div key={tab.id} className="flex items-center">
+            <button
+              onClick={() => {
+                if (!tab.locked && tab.page) {
+                  window.location.href = createPageUrl(tab.page);
+                } else if (!tab.locked) {
+                  onModeChange?.(tab.id);
+                }
+              }}
+              disabled={tab.locked}
+              className={cn(
+                "px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5",
+                mode === tab.id 
+                  ? "bg-white text-violet-700 shadow-sm" 
+                  : "text-slate-600 hover:text-slate-900",
+                tab.locked && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              {tab.icon && <tab.icon className="w-4 h-4" />}
+              {tab.label}
+              {tab.locked && <Crown className="w-3 h-3 text-amber-500" />}
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setHelpMode(tab.id);
+              }}
+              className="p-1 rounded-full hover:bg-slate-200 transition-colors ml-0.5"
+              title={`Learn about ${tab.label}`}
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-slate-400 hover:text-violet-600" />
+            </button>
+          </div>
         ))}
       </div>
+
+      {/* Mode Help Modal */}
+      <ModeHelpModal
+        open={!!helpMode}
+        onClose={() => setHelpMode(null)}
+        mode={helpMode || 'command'}
+      />
 
       {/* Search */}
       <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto" data-no-top>
