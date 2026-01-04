@@ -182,143 +182,143 @@ export default function DailyOps() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-violet-950/30 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Date & Overview */}
-        <Card>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2"><CalendarDays className="w-5 h-5" /> Daily Ops & Progress Tracker</CardTitle>
+            <CardTitle className="flex items-center gap-2 dark:text-slate-100"><CalendarDays className="w-5 h-5" /> Daily Ops & Progress Tracker</CardTitle>
             <div className="flex items-center gap-3">
-              <Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-40" />
+              <Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-40 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
               <Button onClick={() => updateLog({ overview })} className="gap-2"><Save className="w-4 h-4" /> Save Overview</Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-slate-600">Date: {selectedDate} ({format(parseISO(selectedDate), 'EEEE')})</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Date: {selectedDate} ({format(parseISO(selectedDate), 'EEEE')})</div>
             <div className="mt-3">
-              <Textarea placeholder="Short overview (1–2 sentences)" value={overview} onChange={(e) => setOverview(e.target.value)} />
+              <Textarea placeholder="Short overview (1–2 sentences)" value={overview} onChange={(e) => setOverview(e.target.value)} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
             </div>
           </CardContent>
         </Card>
 
         {/* Schedule / To-Do */}
-        <Card>
-          <CardHeader><CardTitle>Schedule / To-Do</CardTitle></CardHeader>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="dark:text-slate-100">Schedule / To-Do</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-2 mb-3">
               <Select value={schedDraft.priority} onValueChange={(v) => setSchedDraft({ ...schedDraft, priority: v })}>
-                <SelectTrigger><SelectValue placeholder="Priority" /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"><SelectValue placeholder="Priority" /></SelectTrigger>
+                <SelectContent className="dark:bg-slate-800 dark:border-slate-700">
                   <SelectItem value="High">High</SelectItem>
                   <SelectItem value="Medium">Medium</SelectItem>
                   <SelectItem value="Low">Low</SelectItem>
                 </SelectContent>
               </Select>
-              <Input placeholder="09:00–10:00" value={schedDraft.time_block} onChange={(e) => setSchedDraft({ ...schedDraft, time_block: e.target.value })} />
-              <Input placeholder="Task title" value={schedDraft.title} onChange={(e) => setSchedDraft({ ...schedDraft, title: e.target.value })} />
-              <Input placeholder="Note (optional)" value={schedDraft.note} onChange={(e) => setSchedDraft({ ...schedDraft, note: e.target.value })} />
+              <Input placeholder="09:00–10:00" value={schedDraft.time_block} onChange={(e) => setSchedDraft({ ...schedDraft, time_block: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
+              <Input placeholder="Task title" value={schedDraft.title} onChange={(e) => setSchedDraft({ ...schedDraft, title: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
+              <Input placeholder="Note (optional)" value={schedDraft.note} onChange={(e) => setSchedDraft({ ...schedDraft, note: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
               <div className="flex gap-2">
-                <Input placeholder="Link (optional)" value={schedDraft.link} onChange={(e) => setSchedDraft({ ...schedDraft, link: e.target.value })} />
+                <Input placeholder="Link (optional)" value={schedDraft.link} onChange={(e) => setSchedDraft({ ...schedDraft, link: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={addSchedule} className="whitespace-nowrap"><Plus className="w-4 h-4 mr-1" /> Add</Button>
               </div>
             </div>
             <div className="space-y-2">
               {(dailyLog?.schedule || []).map((it, idx) => (
-                <div key={idx} className="flex items-start justify-between rounded-lg border p-3 bg-white">
+                <div key={idx} className="flex items-start justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600">
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2 text-sm">
-                      <Badge variant="outline">{it.priority}</Badge>
-                      {it.time_block && <span className="text-slate-600">{it.time_block}</span>}
-                      <span className="font-medium text-slate-900">{it.title}</span>
+                      <Badge variant="outline" className="dark:border-slate-500 dark:text-slate-300">{it.priority}</Badge>
+                      {it.time_block && <span className="text-slate-600 dark:text-slate-400">{it.time_block}</span>}
+                      <span className="font-medium text-slate-900 dark:text-slate-100">{it.title}</span>
                     </div>
-                    {it.note && <div className="text-xs text-slate-600">{it.note}</div>}
-                    {it.link && <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-violet-600">Open link</a>}
+                    {it.note && <div className="text-xs text-slate-600 dark:text-slate-400">{it.note}</div>}
+                    {it.link && <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-violet-600 dark:text-violet-400">Open link</a>}
                   </div>
                   <Button variant="ghost" size="icon" onClick={() => removeSchedule(idx)}><Trash2 className="w-4 h-4 text-slate-400" /></Button>
                 </div>
               ))}
               {(!dailyLog?.schedule || dailyLog.schedule.length === 0) && (
-                <div className="text-sm text-slate-500">No to-do items yet.</div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">No to-do items yet.</div>
               )}
             </div>
           </CardContent>
         </Card>
 
         {/* In Progress */}
-        <Card>
-          <CardHeader><CardTitle>In Progress</CardTitle></CardHeader>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="dark:text-slate-100">In Progress</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
-              <Input placeholder="Work item" value={inProgDraft.title} onChange={(e) => setInProgDraft({ ...inProgDraft, title: e.target.value })} />
-              <Input placeholder="Note (optional)" value={inProgDraft.note} onChange={(e) => setInProgDraft({ ...inProgDraft, note: e.target.value })} />
+              <Input placeholder="Work item" value={inProgDraft.title} onChange={(e) => setInProgDraft({ ...inProgDraft, title: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
+              <Input placeholder="Note (optional)" value={inProgDraft.note} onChange={(e) => setInProgDraft({ ...inProgDraft, note: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
               <div className="flex gap-2">
-                <Input placeholder="Link (optional)" value={inProgDraft.link} onChange={(e) => setInProgDraft({ ...inProgDraft, link: e.target.value })} />
+                <Input placeholder="Link (optional)" value={inProgDraft.link} onChange={(e) => setInProgDraft({ ...inProgDraft, link: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={addInProgress}><Plus className="w-4 h-4 mr-1" /> Add</Button>
               </div>
             </div>
             <div className="space-y-2">
               {(dailyLog?.in_progress || []).map((it, idx) => (
-                <div key={idx} className="flex items-start justify-between rounded-lg border p-3 bg-white">
+                <div key={idx} className="flex items-start justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600">
                   <div className="space-y-0.5">
-                    <div className="text-sm font-medium text-slate-900">{it.title}</div>
-                    {it.note && <div className="text-xs text-slate-600">{it.note}</div>}
-                    {it.link && <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-violet-600">Open link</a>}
+                    <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{it.title}</div>
+                    {it.note && <div className="text-xs text-slate-600 dark:text-slate-400">{it.note}</div>}
+                    {it.link && <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-violet-600 dark:text-violet-400">Open link</a>}
                   </div>
                   <Button variant="ghost" size="icon" onClick={() => removeInProgress(idx)}><Trash2 className="w-4 h-4 text-slate-400" /></Button>
                 </div>
               ))}
-              {(!dailyLog?.in_progress || dailyLog.in_progress.length === 0) && <div className="text-sm text-slate-500">Nothing in progress.</div>}
+              {(!dailyLog?.in_progress || dailyLog.in_progress.length === 0) && <div className="text-sm text-slate-500 dark:text-slate-400">Nothing in progress.</div>}
             </div>
           </CardContent>
         </Card>
 
         {/* Completed Today */}
-        <Card>
-          <CardHeader><CardTitle>Completed Today (What Was Done)</CardTitle></CardHeader>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="dark:text-slate-100">Completed Today (What Was Done)</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-3">
-              <Input placeholder="Action name" value={completedDraft.action} onChange={(e) => setCompletedDraft({ ...completedDraft, action: e.target.value })} />
-              <Input type="number" step="0.01" placeholder="GGG earned" value={completedDraft.ggg_earned} onChange={(e) => setCompletedDraft({ ...completedDraft, ggg_earned: e.target.value })} />
-              <Input placeholder="Note (optional)" value={completedDraft.note} onChange={(e) => setCompletedDraft({ ...completedDraft, note: e.target.value })} />
+              <Input placeholder="Action name" value={completedDraft.action} onChange={(e) => setCompletedDraft({ ...completedDraft, action: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
+              <Input type="number" step="0.01" placeholder="GGG earned" value={completedDraft.ggg_earned} onChange={(e) => setCompletedDraft({ ...completedDraft, ggg_earned: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
+              <Input placeholder="Note (optional)" value={completedDraft.note} onChange={(e) => setCompletedDraft({ ...completedDraft, note: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
               <div className="flex gap-2">
-                <Input placeholder="Link (optional)" value={completedDraft.link} onChange={(e) => setCompletedDraft({ ...completedDraft, link: e.target.value })} />
+                <Input placeholder="Link (optional)" value={completedDraft.link} onChange={(e) => setCompletedDraft({ ...completedDraft, link: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={addCompleted}><Plus className="w-4 h-4 mr-1" /> Add</Button>
               </div>
             </div>
             <div className="space-y-2">
               {(dailyLog?.completed || []).map((it, idx) => (
-                <div key={idx} className="flex items-start justify-between rounded-lg border p-3 bg-white">
+                <div key={idx} className="flex items-start justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600">
                   <div>
-                    <div className="text-sm font-medium text-slate-900">{it.action} {typeof it.ggg_earned === 'number' && (<span className="text-amber-700 font-semibold">— {it.ggg_earned.toFixed(2)} GGG</span>)}</div>
-                    {it.note && <div className="text-xs text-slate-600">{it.note}</div>}
-                    {it.link && <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-violet-600">Open link</a>}
+                    <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{it.action} {typeof it.ggg_earned === 'number' && (<span className="text-amber-700 dark:text-amber-400 font-semibold">— {it.ggg_earned.toFixed(2)} GGG</span>)}</div>
+                    {it.note && <div className="text-xs text-slate-600 dark:text-slate-400">{it.note}</div>}
+                    {it.link && <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-violet-600 dark:text-violet-400">Open link</a>}
                   </div>
                   <Button variant="ghost" size="icon" onClick={() => removeCompleted(idx)}><Trash2 className="w-4 h-4 text-slate-400" /></Button>
                 </div>
               ))}
-              {(!dailyLog?.completed || dailyLog.completed.length === 0) && <div className="text-sm text-slate-500">No completions logged yet.</div>}
+              {(!dailyLog?.completed || dailyLog.completed.length === 0) && <div className="text-sm text-slate-500 dark:text-slate-400">No completions logged yet.</div>}
             </div>
           </CardContent>
         </Card>
 
         {/* Daily Transactions */}
-        <Card>
-          <CardHeader><CardTitle>Daily Transactions (GGG, rank, trust)</CardTitle></CardHeader>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="dark:text-slate-100">Daily Transactions (GGG, rank, trust)</CardTitle></CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {txToday.length === 0 && <div className="text-sm text-slate-500">No GGG transactions for this date.</div>}
+              {txToday.length === 0 && <div className="text-sm text-slate-500 dark:text-slate-400">No GGG transactions for this date.</div>}
               {txToday.map((t) => (
-                <div key={t.id} className="flex items-center justify-between rounded-lg border p-3 bg-white text-sm">
+                <div key={t.id} className="flex items-center justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600 text-sm">
                   <div className="flex items-center gap-3">
                     <Clock className="w-4 h-4 text-slate-400" />
-                    <span className="text-slate-600">{format(parseISO(t.created_date), 'HH:mm')}</span>
-                    <span className="font-medium text-slate-900">{t.reason_code || t.source_type || 'Action'}</span>
+                    <span className="text-slate-600 dark:text-slate-400">{format(parseISO(t.created_date), 'HH:mm')}</span>
+                    <span className="font-medium text-slate-900 dark:text-slate-100">{t.reason_code || t.source_type || 'Action'}</span>
                   </div>
-                  <div className={`font-semibold ${(t.delta || 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>{(t.delta || 0) >= 0 ? '+' : ''}{(t.delta || 0).toFixed(2)} GGG</div>
+                  <div className={`font-semibold ${(t.delta || 0) >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>{(t.delta || 0) >= 0 ? '+' : ''}{(t.delta || 0).toFixed(2)} GGG</div>
                 </div>
               ))}
             </div>
-            <div className="mt-3 text-sm">
+            <div className="mt-3 text-sm text-slate-700 dark:text-slate-300">
               <div>Total GGG earned today: <span className="font-semibold">{earnedToday.toFixed(2)} GGG</span></div>
               <div>Starting rank: {startRank.title} ({Math.round(startRank.progress * 100)}/100)</div>
               <div>Ending rank: {endRank.title} ({Math.round(endRank.progress * 100)}/100)</div>
@@ -327,28 +327,28 @@ export default function DailyOps() {
         </Card>
 
         {/* Daily Field Update */}
-        <Card>
-          <CardHeader><CardTitle>Daily Field Update</CardTitle></CardHeader>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="dark:text-slate-100">Daily Field Update</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <div className="text-xs text-slate-500 mb-1">Focus</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Focus</div>
               <div className="flex gap-2">
-                <Input placeholder="Primary focus themes" value={fieldDraft.focus} onChange={(e) => setFieldDraft({ ...fieldDraft, focus: e.target.value })} />
+                <Input placeholder="Primary focus themes" value={fieldDraft.focus} onChange={(e) => setFieldDraft({ ...fieldDraft, focus: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={() => addFieldUpdate('focus')}><Save className="w-4 h-4 mr-1" /> Save</Button>
               </div>
               {dailyLog?.field_update?.focus && (
-                <div className="mt-2 text-sm text-slate-800">{dailyLog.field_update.focus}</div>
+                <div className="mt-2 text-sm text-slate-800 dark:text-slate-200">{dailyLog.field_update.focus}</div>
               )}
             </div>
             <div>
-              <div className="text-xs text-slate-500 mb-1">Wins</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Wins</div>
               <div className="flex gap-2">
-                <Input placeholder="Add a win" value={fieldDraft.win} onChange={(e) => setFieldDraft({ ...fieldDraft, win: e.target.value })} />
+                <Input placeholder="Add a win" value={fieldDraft.win} onChange={(e) => setFieldDraft({ ...fieldDraft, win: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={() => addFieldUpdate('wins')}><Plus className="w-4 h-4 mr-1" /> Add</Button>
               </div>
               <ul className="mt-2 space-y-1">
                 {(dailyLog?.field_update?.wins || []).map((w, idx) => (
-                  <li key={idx} className="flex items-center justify-between text-sm">
+                  <li key={idx} className="flex items-center justify-between text-sm text-slate-700 dark:text-slate-300">
                     <span>• {w}</span>
                     <Button variant="ghost" size="icon" onClick={() => removeFieldItem('wins', idx)}><Trash2 className="w-4 h-4 text-slate-400" /></Button>
                   </li>
@@ -356,14 +356,14 @@ export default function DailyOps() {
               </ul>
             </div>
             <div>
-              <div className="text-xs text-slate-500 mb-1">Blockers</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Blockers</div>
               <div className="flex gap-2">
-                <Input placeholder="Add a blocker" value={fieldDraft.blocker} onChange={(e) => setFieldDraft({ ...fieldDraft, blocker: e.target.value })} />
+                <Input placeholder="Add a blocker" value={fieldDraft.blocker} onChange={(e) => setFieldDraft({ ...fieldDraft, blocker: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={() => addFieldUpdate('blockers')}><Plus className="w-4 h-4 mr-1" /> Add</Button>
               </div>
               <ul className="mt-2 space-y-1">
                 {(dailyLog?.field_update?.blockers || []).map((b, idx) => (
-                  <li key={idx} className="flex items-center justify-between text-sm">
+                  <li key={idx} className="flex items-center justify-between text-sm text-slate-700 dark:text-slate-300">
                     <span>• {b}</span>
                     <Button variant="ghost" size="icon" onClick={() => removeFieldItem('blockers', idx)}><Trash2 className="w-4 h-4 text-slate-400" /></Button>
                   </li>
@@ -371,14 +371,14 @@ export default function DailyOps() {
               </ul>
             </div>
             <div>
-              <div className="text-xs text-slate-500 mb-1">Insights</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Insights</div>
               <div className="flex gap-2">
-                <Input placeholder="Add an insight" value={fieldDraft.insight} onChange={(e) => setFieldDraft({ ...fieldDraft, insight: e.target.value })} />
+                <Input placeholder="Add an insight" value={fieldDraft.insight} onChange={(e) => setFieldDraft({ ...fieldDraft, insight: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
                 <Button onClick={() => addFieldUpdate('insights')}><Plus className="w-4 h-4 mr-1" /> Add</Button>
               </div>
               <ul className="mt-2 space-y-1">
                 {(dailyLog?.field_update?.insights || []).map((i, idx) => (
-                  <li key={idx} className="flex items-center justify-between text-sm">
+                  <li key={idx} className="flex items-center justify-between text-sm text-slate-700 dark:text-slate-300">
                     <span>• {i}</span>
                     <Button variant="ghost" size="icon" onClick={() => removeFieldItem('insights', idx)}><Trash2 className="w-4 h-4 text-slate-400" /></Button>
                   </li>
@@ -389,20 +389,20 @@ export default function DailyOps() {
         </Card>
 
         {/* Events Calendar (Week) */}
-        <Card>
-          <CardHeader><CardTitle>Events Calendar (Week of {format(weekStart, 'yyyy-MM-dd')} to {format(weekEnd, 'yyyy-MM-dd')})</CardTitle></CardHeader>
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="dark:text-slate-100">Events Calendar (Week of {format(weekStart, 'yyyy-MM-dd')} to {format(weekEnd, 'yyyy-MM-dd')})</CardTitle></CardHeader>
           <CardContent>
             {eventsWeek.length === 0 ? (
-              <div className="text-sm text-slate-500">No events posted for this week.</div>
+              <div className="text-sm text-slate-500 dark:text-slate-400">No events posted for this week.</div>
             ) : (
               <div className="space-y-2">
                 {eventsWeek.map((ev, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-lg border p-3 bg-white text-sm">
+                  <div key={i} className="flex items-center justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600 text-sm">
                     <div className="flex items-center gap-3">
-                      <span className="text-slate-600">{format(parseISO(ev.date), 'yyyy-MM-dd — HH:mm')}</span>
-                      <span className="font-medium text-slate-900">{ev.title}</span>
+                      <span className="text-slate-600 dark:text-slate-400">{format(parseISO(ev.date), 'yyyy-MM-dd — HH:mm')}</span>
+                      <span className="font-medium text-slate-900 dark:text-slate-100">{ev.title}</span>
                     </div>
-                    <Badge variant="outline">{ev.type === 'meeting' ? 'Call' : 'Event'}</Badge>
+                    <Badge variant="outline" className="dark:border-slate-500 dark:text-slate-300">{ev.type === 'meeting' ? 'Call' : 'Event'}</Badge>
                   </div>
                 ))}
               </div>
