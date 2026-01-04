@@ -108,11 +108,17 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
             <div>
               <Label>Price ($)</Label>
               <Input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 className="mt-2"
                 placeholder="0"
                 value={form.price_amount}
-                onChange={(e) => setForm({ ...form, price_amount: e.target.value })}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                    setForm({ ...form, price_amount: val });
+                  }
+                }}
                 disabled={form.is_free}
               />
             </div>
