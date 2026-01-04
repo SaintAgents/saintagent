@@ -19,7 +19,11 @@ export default function ReputationScoresCard({ userId, onUpdated }) {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('computeReputationScores', { target_user_id: userId });
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timed out')), 15000)
+      );
+      const fetchPromise = base44.functions.invoke('computeReputationScores', { target_user_id: userId });
+      const { data } = await Promise.race([fetchPromise, timeoutPromise]);
       if (data?.influence?.score != null) setInfluence(data.influence.score);
       if (data?.expertise?.score != null) setExpertise(data.expertise.score);
       setIB(data?.influence?.breakdown || null);
@@ -27,7 +31,7 @@ export default function ReputationScoresCard({ userId, onUpdated }) {
       qc.invalidateQueries({ queryKey: ['userProfile'] });
       onUpdated?.(data);
     } catch (err) {
-      setError('Failed to load');
+      setError(err.message === 'Request timed out' ? 'Request timed out' : 'Failed to load');
     } finally {
       setLoading(false);
     }
@@ -45,7 +49,24 @@ export default function ReputationScoresCard({ userId, onUpdated }) {
       </CardHeader>
       <CardContent className="pt-2">
         {loading ? (
-          <div className="flex items-center justify-center py-6 text-slate-400 text-sm">Loading...</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex items-center gap-6">
+              <div className="w-[88px] h-[88px] rounded-full bg-slate-100 animate-pulse" />
+              <div className="space-y-2">
+                <div className="h-5 w-24 bg-slate-200 rounded animate-pulse" />
+                <div className="h-3 w-32 bg-slate-100 rounded animate-pulse" />
+                <div className="h-3 w-28 bg-slate-100 rounded animate-pulse" />
+              </div>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="w-[88px] h-[88px] rounded-full bg-slate-100 animate-pulse" />
+              <div className="space-y-2">
+                <div className="h-5 w-24 bg-slate-200 rounded animate-pulse" />
+                <div className="h-3 w-32 bg-slate-100 rounded animate-pulse" />
+                <div className="h-3 w-28 bg-slate-100 rounded animate-pulse" />
+              </div>
+            </div>
+          </div>
         ) : error ? (
           <div className="flex items-center justify-center py-6 text-red-500 text-sm">{error}</div>
         ) : (
