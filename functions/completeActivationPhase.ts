@@ -1,13 +1,13 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 const PHASE_GGG = {
-  phase_1_profile: 50,
-  phase_2_assessments: 75,
-  phase_3_matches: 50,
-  phase_4_mission: 100,
-  phase_5_introduction: 75,
-  phase_6_ggg: 50,
-  phase_7_synchronicity: 150,
+  phase_1_profile: 0.15,
+  phase_2_assessments: 0.15,
+  phase_3_matches: 0.10,
+  phase_4_mission: 0.20,
+  phase_5_introduction: 0.15,
+  phase_6_ggg: 0.10,
+  phase_7_synchronicity: 0.15,
 };
 
 const PHASE_LABELS = {

@@ -18,7 +18,7 @@ const PHASES = [
     label: 'Claim Your Identity', 
     desc: 'Set up your SA number & profile',
     icon: User,
-    ggg: 50,
+    ggg: 0.15,
     action: 'Profile',
     actionLabel: 'Complete Profile'
   },
@@ -27,7 +27,7 @@ const PHASES = [
     label: 'Define Your Path', 
     desc: 'Complete spiritual & skills assessments',
     icon: Compass,
-    ggg: 75,
+    ggg: 0.15,
     action: 'Profile',
     actionLabel: 'Add Assessments'
   },
@@ -36,7 +36,7 @@ const PHASES = [
     label: 'Discover Alignment', 
     desc: 'View your first AI-powered matches',
     icon: Users,
-    ggg: 50,
+    ggg: 0.10,
     action: 'Matches',
     actionLabel: 'View Matches'
   },
@@ -45,7 +45,7 @@ const PHASES = [
     label: 'Join the Mission', 
     desc: 'Join or create your first mission',
     icon: Target,
-    ggg: 100,
+    ggg: 0.20,
     action: 'Missions',
     actionLabel: 'Browse Missions'
   },
@@ -54,7 +54,7 @@ const PHASES = [
     label: 'Make a Connection', 
     desc: 'Send your first message or follow someone',
     icon: Share2,
-    ggg: 75,
+    ggg: 0.15,
     action: 'Messages',
     actionLabel: 'Start Connecting'
   },
@@ -63,7 +63,7 @@ const PHASES = [
     label: 'Earn Your First GGG', 
     desc: 'Complete an action that earns rewards',
     icon: Award,
-    ggg: 50,
+    ggg: 0.10,
     action: 'Marketplace',
     actionLabel: 'Explore Ways to Earn'
   },
@@ -72,7 +72,7 @@ const PHASES = [
     label: 'Activate Synchronicity', 
     desc: 'Unlock the Synchronicity Engine',
     icon: Zap,
-    ggg: 150,
+    ggg: 0.15,
     action: 'CommandDeck',
     actionLabel: 'Go to Command Deck'
   },
@@ -149,7 +149,7 @@ export default function ActivationChecklist({ compact = false }) {
         </div>
         <div className="flex items-center gap-2 mt-4 text-violet-100">
           <Coins className="w-4 h-4" />
-          <span className="font-semibold">{checklist.total_ggg_earned || TOTAL_GGG} GGG earned</span>
+          <span className="font-semibold">{(checklist.total_ggg_earned || TOTAL_GGG).toFixed(2)} GGG earned</span>
         </div>
       </motion.div>
     );
@@ -198,7 +198,7 @@ export default function ActivationChecklist({ compact = false }) {
           <div className="text-2xl font-bold text-violet-600">{completedCount}/7</div>
           <div className="text-xs text-slate-500 flex items-center gap-1 justify-end">
             <Coins className="w-3 h-3 text-amber-500" />
-            {TOTAL_GGG} GGG available
+            {TOTAL_GGG.toFixed(2)} GGG available
           </div>
         </div>
       </div>
