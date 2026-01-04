@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import ProjectCSVImport from "@/components/projects/ProjectCSVImport";
+import LegacySAImport from "@/components/admin/LegacySAImport";
 
 export default function AdminProjects() {
   const qc = useQueryClient();
@@ -35,6 +36,9 @@ export default function AdminProjects() {
 
   return (
     <div className="space-y-6">
+      {/* Legacy SA Import */}
+      <LegacySAImport />
+
       {/* Bulk Import */}
       <ProjectCSVImport />
 

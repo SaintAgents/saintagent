@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   X,
@@ -28,6 +27,7 @@ import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
+import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
@@ -204,14 +204,33 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-6">
-          {/* Avatar */}
-          <Avatar className="w-24 h-24 ring-4 ring-white shadow-xl mx-auto mb-4">
-            <AvatarImage src={profile.avatar_url} />
-            <AvatarFallback className="text-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-white">
-              {profile.display_name?.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+        {/* Hero Background */}
+        <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
+          {profile.hero_image_url && (
+            <img 
+              src={profile.hero_image_url} 
+              alt="" 
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent" />
+        </div>
+
+        <div className="px-6 pb-6 -mt-16 relative">
+          {/* Avatar with Rank Ring */}
+          <div className="flex justify-center mb-4">
+            <RankedAvatar
+              src={profile.avatar_url}
+              name={profile.display_name}
+              size={96}
+              userId={profile.user_id}
+              status={profile.status}
+              leaderTier={profile.leader_tier}
+              rpRankCode={profile.rp_rank_code}
+              rpPoints={profile.rp_points}
+              className="ring-4 ring-white shadow-xl"
+            />
+          </div>
 
           {/* Name & Handle */}
           <div className="text-center mb-4">
@@ -551,11 +570,11 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             </div>
           }
         </div>
+      </ScrollArea>
       {/* Resize handles */}
       <div onMouseDown={startResize('right')} className="absolute top-0 right-0 h-full w-1.5 cursor-ew-resize z-10" />
       <div onMouseDown={startResize('bottom')} className="absolute bottom-0 left-0 w-full h-1.5 cursor-ns-resize z-10" />
       <div onMouseDown={startResize('bottom-right')} className="absolute bottom-0 right-0 w-3.5 h-3.5 cursor-nwse-resize z-20" />
-      </ScrollArea>
       </div>);
 
 }
