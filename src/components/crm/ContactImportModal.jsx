@@ -386,8 +386,9 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                     <tr>
                       <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Name</th>
                       <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Email</th>
+                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Phone</th>
                       <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Company</th>
-                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Domain</th>
+                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Notes</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -395,10 +396,9 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                   <tr key={idx} className="import-table-row" style={isDark ? { borderTop: '1px solid #334155' } : { borderTop: '1px solid #e2e8f0' }}>
                         <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>{contact.name || '-'}</td>
                         <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>{contact.email || '-'}</td>
+                        <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>{contact.phone || '-'}</td>
                         <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>{contact.company || '-'}</td>
-                        <td className="px-3 py-2">
-                          <Badge variant="outline" className="text-xs capitalize import-badge" style={isDark ? { backgroundColor: '#334155', borderColor: '#475569', color: '#e5e7eb' } : {}}>{contact.domain}</Badge>
-                        </td>
+                        <td className="px-3 py-2 import-table-td max-w-[150px] truncate" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }} title={contact.notes}>{contact.notes || '-'}</td>
                       </tr>
                   )}
                   </tbody>
