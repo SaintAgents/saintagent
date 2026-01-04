@@ -361,15 +361,34 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={onClose} style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
-              Close
+          <div className="flex justify-between pt-2 border-t" style={isDark ? { borderColor: '#334155' } : {}}>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={handleDelete}
+              className={cn(
+                "gap-1 text-xs",
+                confirmDelete ? "text-white bg-rose-600 hover:bg-rose-700" : "text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+              )}
+              disabled={deleteMutation.isPending}
+            >
+              <Trash2 className="w-3 h-3" />
+              {confirmDelete ? 'Confirm Delete' : 'Delete'}
             </Button>
-            {onEdit && (
-              <Button onClick={() => { onClose(); onEdit(contact); }} className="bg-violet-600 hover:bg-violet-700 text-white">
-                Edit Contact
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={onClose} style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
+                Close
               </Button>
-            )}
+              {onEdit && (
+                <Button 
+                  size="sm"
+                  onClick={() => { onClose(); onEdit(contact); }} 
+                  className="bg-violet-600 hover:bg-violet-700 text-white gap-1"
+                >
+                  <Edit className="w-3 h-3" /> Edit
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </DialogContent>
