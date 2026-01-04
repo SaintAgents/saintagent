@@ -146,58 +146,132 @@ export default function AdminProjects() {
             <tr>
               <th className="text-left p-3">Title</th>
               <th className="text-left p-3">Status</th>
+              <th className="text-center p-3">Score</th>
+              <th className="text-center p-3">Risk</th>
+              <th className="text-center p-3">Tier</th>
               <th className="text-right p-3">Budget</th>
-              <th className="text-left p-3">Tags</th>
-              <th className="text-left p-3">Ownership</th>
-              <th className="text-left p-3">New Fields</th>
+              <th className="text-left p-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={5} className="p-6 text-center text-slate-400">Loading...</td></tr>
+              <tr><td colSpan={7} className="p-6 text-center text-slate-400">Loading...</td></tr>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={5} className="p-6 text-center text-slate-400">No projects found</td></tr>
+              <tr><td colSpan={7} className="p-6 text-center text-slate-400">No projects found</td></tr>
             ) : filtered.map((p) => (
-              <tr key={p.id} className="border-t">
-                <td className="p-3 font-medium text-slate-900">{p.title}</td>
+              <tr key={p.id} className="border-t hover:bg-slate-50">
+                <td className="p-3">
+                  <div className="font-medium text-slate-900">{p.title}</div>
+                  <div className="text-xs text-slate-500">
+                    {p.lane_code && <span className="capitalize">{p.lane_code.replace(/_/g, ' ')}</span>}
+                    {p.stage && <span> • {p.stage}</span>}
+                  </div>
+                </td>
                 <td className="p-3">
                   <Select value={p.status} onValueChange={(v) => updateStatus.mutate({ id: p.id, status: v })}>
-                    <SelectTrigger className="h-8 w-40">
+                    <SelectTrigger className="h-8 w-36">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="pending_review">Pending Review</SelectItem>
                       <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
+                      <SelectItem value="incubate">Incubating</SelectItem>
+                      <SelectItem value="declined">Declined</SelectItem>
+                      <SelectItem value="rfi_pending">RFI Pending</SelectItem>
                       <SelectItem value="flagged">Flagged</SelectItem>
                       <SelectItem value="draft">Draft</SelectItem>
                     </SelectContent>
                   </Select>
                 </td>
-                <td className="p-3 text-right">${(p.budget || 0).toLocaleString?.() || 0}</td>
-                <td className="p-3 text-slate-600">{(p.impact_tags || []).slice(0,3).join(', ')}</td>
-                <td className="p-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-slate-600">
-                      {(p.claim_status || 'unclaimed').toUpperCase()} {p.claimed_by ? `• ${p.claimed_by}` : ''}
+                <td className="p-3 text-center">
+                  {p.final_score !== undefined && p.final_score !== null ? (
+                    <span className={`font-bold ${
+                      p.final_score >= 80 ? 'text-emerald-600' :
+                      p.final_score >= 60 ? 'text-amber-600' :
+                      p.final_score >= 40 ? 'text-blue-600' : 'text-rose-600'
+                    }`}>
+                      {p.final_score.toFixed(0)}
                     </span>
-                    {p.claim_status === 'pending' && (
-                      <>
-                        <Button size="sm" variant="outline" onClick={() => updateStatus.mutate({ id: p.id, status: p.status }) || base44.entities.Project.update(p.id, { claim_status: 'approved' }).then(() => qc.invalidateQueries({ queryKey: ['projects'] }))}>Approve</Button>
-                        <Button size="sm" variant="ghost" onClick={() => base44.entities.Project.update(p.id, { claim_status: 'rejected' }).then(() => qc.invalidateQueries({ queryKey: ['projects'] }))}>Reject</Button>
-                      </>
-                    )}
-                    {(p.claim_status && p.claim_status !== 'unclaimed') && (
-                      <Button size="sm" variant="ghost" className="text-rose-600" onClick={() => base44.entities.Project.update(p.id, { claim_status: 'unclaimed', claimed_by: null, claimed_at: null }).then(() => qc.invalidateQueries({ queryKey: ['projects'] }))}>Clear</Button>
-                    )}
+                  ) : (
+                    <span className="text-slate-400">—</span>
+                  )}
+                </td>
+                <td className="p-3 text-center">
+                  {p.phase3_risk_grade ? (
+                    <Badge className={`
+                      ${p.phase3_risk_grade === 'A' ? 'bg-emerald-100 text-emerald-700' : ''}
+                      ${p.phase3_risk_grade === 'B' ? 'bg-green-100 text-green-700' : ''}
+                      ${p.phase3_risk_grade === 'C' ? 'bg-amber-100 text-amber-700' : ''}
+                      ${p.phase3_risk_grade === 'D' ? 'bg-orange-100 text-orange-700' : ''}
+                      ${p.phase3_risk_grade === 'F' ? 'bg-rose-100 text-rose-700' : ''}
+                    `}>
+                      {p.phase3_risk_grade}
+                    </Badge>
+                  ) : (
+                    <span className="text-slate-400">—</span>
+                  )}
+                </td>
+                <td className="p-3 text-center">
+                  {p.decision_tier ? (
+                    <Badge className={`text-xs ${
+                      p.decision_tier === 'approve_fund' ? 'bg-emerald-100 text-emerald-700' :
+                      p.decision_tier === 'incubate_derisk' ? 'bg-amber-100 text-amber-700' :
+                      p.decision_tier === 'review_reevaluate' ? 'bg-blue-100 text-blue-700' :
+                      'bg-rose-100 text-rose-700'
+                    }`}>
+                      {p.decision_tier === 'approve_fund' && 'Approve'}
+                      {p.decision_tier === 'incubate_derisk' && 'Incubate'}
+                      {p.decision_tier === 'review_reevaluate' && 'Review'}
+                      {p.decision_tier === 'decline' && 'Decline'}
+                    </Badge>
+                  ) : (
+                    <span className="text-slate-400">—</span>
+                  )}
+                </td>
+                <td className="p-3 text-right text-slate-600">${(p.budget || 0).toLocaleString()}</td>
+                <td className="p-3">
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => setSelectedProject(p)}
+                      className="gap-1"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => runSingleEvaluation(p.id)}
+                      disabled={evaluatingIds.has(p.id)}
+                      className="gap-1"
+                    >
+                      {evaluatingIds.has(p.id) ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Brain className="w-4 h-4" />
+                      )}
+                      {p.ai_evaluated_at ? 'Re-eval' : 'Eval'}
+                    </Button>
                   </div>
                 </td>
-                <td className="p-3 text-slate-600">{p.metadata ? Object.keys(p.metadata).length : 0}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Project Detail Panel */}
+      {selectedProject && (
+        <FloatingPanel 
+          title={selectedProject.title} 
+          onClose={() => setSelectedProject(null)}
+          className="max-w-3xl"
+        >
+          <ProjectDetailCard project={selectedProject} />
+        </FloatingPanel>
+      )}
     </div>
   );
 }
