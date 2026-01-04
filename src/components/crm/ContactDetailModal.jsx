@@ -35,12 +35,86 @@ const DOMAIN_COLORS = {
   other: 'bg-gray-100 text-gray-700'
 };
 
-export default function ContactDetailModal({ open, onClose, contact, onEdit }) {
+export default function ContactDetailModal({ open, onClose, contact, onEdit, onDelete }) {
+  const [isAddingNote, setIsAddingNote] = useState(false);
+  const [newNote, setNewNote] = useState('');
+  const [isGeneratingNote, setIsGeneratingNote] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const queryClient = useQueryClient();
+
   if (!contact) return null;
   
   const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
   const permConfig = PERMISSION_CONFIG[contact.permission_level] || PERMISSION_CONFIG.private;
   const PermIcon = permConfig.icon;
+
+  const updateNotesMutation = useMutation({
+    mutationFn: (notes) => base44.entities.Contact.update(contact.id, { notes }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myContacts'] });
+      setIsAddingNote(false);
+      setNewNote('');
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => base44.entities.Contact.delete(contact.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myContacts'] });
+      onClose();
+    }
+  });
+
+  const handleAddNote = () => {
+    const existingNotes = contact.notes || '';
+    const timestamp = format(new Date(), 'MMM d, yyyy');
+    const updatedNotes = existingNotes 
+      ? `${existingNotes}\n\n[${timestamp}]\n${newNote}`
+      : `[${timestamp}]\n${newNote}`;
+    updateNotesMutation.mutate(updatedNotes);
+  };
+
+  const handleGenerateAINote = async () => {
+    setIsGeneratingNote(true);
+    try {
+      const prompt = `Based on this contact information, generate a brief professional note with potential talking points or follow-up suggestions:
+Name: ${contact.name}
+Role: ${contact.role || 'Unknown'}
+Company: ${contact.company || 'Unknown'}
+Domain: ${contact.domain || 'Unknown'}
+Location: ${contact.location || 'Unknown'}
+Tags: ${contact.tags?.join(', ') || 'None'}
+Existing notes: ${contact.notes || 'None'}
+
+Generate 2-3 bullet points for potential conversation starters or follow-up actions. Keep it brief and actionable.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+      
+      if (result.suggestions) {
+        setNewNote(result.suggestions.map(s => `• ${s}`).join('\n'));
+      }
+    } catch (err) {
+      console.error('AI note generation failed:', err);
+    }
+    setIsGeneratingNote(false);
+  };
+
+  const handleDelete = () => {
+    if (confirmDelete) {
+      deleteMutation.mutate();
+    } else {
+      setConfirmDelete(true);
+      setTimeout(() => setConfirmDelete(false), 3000);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
