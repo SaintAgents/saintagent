@@ -57,20 +57,25 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Map common header variations
+      // Map common header variations (Google, Android, iPhone, generic)
+      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
+      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
+      const middleName = record['middle name'] || record.middle || '';
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+      
       const mapped = {
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || '',
-        email: record.email || record.email_address || record['email address'] || '',
-        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
-        company: record.company || record.organization || record.org || '',
-        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || '',
+        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
+        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
+        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
+        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || '',
-        notes: record.notes || record.note || record.comments || '',
-        tags: record.tags || '',
+        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
+        notes: record.notes || record.note || record.comments || record.biography || '',
+        tags: record.tags || record['group membership'] || record.groups || record.labels || '',
         linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
         twitter: record.twitter || record.twitter_url || '',
-        website: record.website || record.url || ''
+        website: record.website || record.url || record['website 1 - value'] || ''
       };
 
       if (mapped.name || mapped.email) {
@@ -133,24 +138,30 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
+      // Build full name from parts (Google, Android, iPhone formats)
+      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
+      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
+      const middleName = record['middle name'] || record.middle || '';
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+
       const mapped = {
         owner_id: currentUserId,
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || 'Unknown',
-        email: record.email || record.email_address || record['email address'] || '',
-        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
-        company: record.company || record.organization || record.org || '',
-        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || 'Unknown',
+        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
+        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
+        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
+        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || '',
-        notes: record.notes || record.note || record.comments || '',
-        tags: (record.tags || '').split(/[,;]/).map((t) => t.trim()).filter(Boolean),
+        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
+        notes: record.notes || record.note || record.comments || record.biography || '',
+        tags: (record.tags || record['group membership'] || record.groups || record.labels || '').split(/[,;:::]+/).map((t) => t.trim().replace(/^\* /, '')).filter(Boolean),
         permission_level: 'private',
         relationship_strength: 3,
         is_federated: false,
         social_links: {
           linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
           twitter: record.twitter || record.twitter_url || '',
-          website: record.website || record.url || ''
+          website: record.website || record.url || record['website 1 - value'] || ''
         }
       };
 
@@ -208,7 +219,41 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-gray-800 p-6 fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl">
+      <DialogContent className="max-w-2xl import-modal-content">
+        <style>{`
+          [data-theme='dark'] .import-modal-content {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-modal-content .bg-slate-50 {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-modal-content .text-slate-900 {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .import-modal-content .text-slate-700 {
+            color: #cbd5e1 !important;
+          }
+          [data-theme='dark'] .import-modal-content .text-slate-600 {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-modal-content .text-slate-500 {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-modal-content .border-slate-200 {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-modal-content .bg-violet-50 {
+            background-color: rgba(139, 92, 246, 0.15) !important;
+          }
+          [data-theme='dark'] .import-modal-content .divide-y > * {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-modal-content .hover\\:bg-slate-50:hover {
+            background-color: #1e293b !important;
+          }
+        `}</style>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileSpreadsheet className="w-5 h-5 text-violet-600" />
