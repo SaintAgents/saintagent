@@ -13,8 +13,11 @@ import ProjectDetailCard from "@/components/projects/ProjectDetailCard";
 
 export default function AdminProjects() {
   const qc = useQueryClient();
-  const [q, setQ] = React.useState("");
-  const [status, setStatus] = React.useState("all");
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState("all");
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [bulkEvaluating, setBulkEvaluating] = useState(false);
+  const [evaluatingIds, setEvaluatingIds] = useState(new Set());
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["projects"],
