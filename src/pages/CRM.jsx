@@ -299,6 +299,13 @@ export default function CRM() {
         open={helpOpen}
         onClose={() => setHelpOpen(false)}
       />
+
+      <ContactDetailModal
+        open={!!selectedContact}
+        onClose={() => setSelectedContact(null)}
+        contact={selectedContact}
+        onEdit={handleEdit}
+      />
     </div>
   );
 }
