@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Brain, Loader2, CheckCircle, XCircle, AlertTriangle, Clock, Eye } from "lucide-react";
 import ProjectCSVImport from "@/components/projects/ProjectCSVImport";
 import LegacySAImport from "@/components/admin/LegacySAImport";
+import FloatingPanel from "@/components/hud/FloatingPanel";
+import ProjectDetailCard from "@/components/projects/ProjectDetailCard";
 
 export default function AdminProjects() {
   const qc = useQueryClient();
