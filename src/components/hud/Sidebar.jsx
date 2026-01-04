@@ -39,8 +39,16 @@ import {
   TrendingUp,
   ExternalLink,
   Sun,
-  Folder
+  Folder,
+  Lock,
+  Info
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -189,48 +197,92 @@ export default function Sidebar({
         </div>
         {navOpen && (
           <nav className="p-3 pt-0 space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const isActive = currentPage === item.id;
-              const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : (item.badge || 0);
-              return (
-                <Link
-                  key={item.id}
-                  to={createPageUrl(item.page)}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
-                    isActive 
-                      ? "bg-violet-100 text-violet-700" 
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                    item.locked && "opacity-50 pointer-events-none"
-                  )}
-                >
-                  <item.icon className={cn(
-                    "w-5 h-5 shrink-0",
-                    isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
-                  )} />
-                  {!isCollapsed && (
-                    <>
-                      <span className="font-medium text-sm">{item.label}</span>
-                      {badgeValue > 0 && (
-                        <Badge className="ml-auto bg-violet-600 text-white text-xs">
-                          {badgeValue}
-                        </Badge>
-                      )}
-                      {item.locked && (
-                        <Badge variant="outline" className="ml-auto text-xs">
-                          Locked
-                        </Badge>
-                      )}
-                    </>
-                  )}
-                  {isCollapsed && badgeValue > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                      {badgeValue}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
+            <TooltipProvider delayDuration={200}>
+              {NAV_ITEMS.map((item) => {
+                const isActive = currentPage === item.id;
+                const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : (item.badge || 0);
+                
+                // Check if Leader Channel should be locked
+                const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
+                const isLocked = item.locked || isLeaderLocked;
+                
+                const navLink = (
+                  <Link
+                    key={item.id}
+                    to={isLocked ? '#' : createPageUrl(item.page)}
+                    onClick={(e) => isLocked && e.preventDefault()}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
+                      isActive 
+                        ? "bg-violet-100 text-violet-700" 
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                      isLocked && "opacity-60 cursor-not-allowed"
+                    )}
+                  >
+                    <item.icon className={cn(
+                      "w-5 h-5 shrink-0",
+                      isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
+                    )} />
+                    {!isCollapsed && (
+                      <>
+                        <span className="font-medium text-sm">{item.label}</span>
+                        {badgeValue > 0 && !isLocked && (
+                          <Badge className="ml-auto bg-violet-600 text-white text-xs">
+                            {badgeValue}
+                          </Badge>
+                        )}
+                        {isLocked && (
+                          <div className="ml-auto flex items-center gap-1">
+                            <Lock className="w-3 h-3 text-slate-400" />
+                            <Badge variant="outline" className="text-xs text-slate-500">
+                              Locked
+                            </Badge>
+                          </div>
+                        )}
+                      </>
+                    )}
+                    {isCollapsed && badgeValue > 0 && !isLocked && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                        {badgeValue}
+                      </span>
+                    )}
+                    {isCollapsed && isLocked && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center">
+                        <Lock className="w-2.5 h-2.5" />
+                      </span>
+                    )}
+                  </Link>
+                );
+                
+                // Wrap locked items with tooltip
+                if (isLocked && item.id === 'leader') {
+                  return (
+                    <Tooltip key={item.id}>
+                      <TooltipTrigger asChild>
+                        {navLink}
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <div className="space-y-1">
+                          <p className="font-medium text-sm">Leader Channel Locked</p>
+                          <p className="text-xs text-slate-500">
+                            Become a Verified 144k Leader to unlock. Complete the Leader Pathway quiz and get approved to access exclusive leader tools and broadcasts.
+                          </p>
+                          <Link 
+                            to={createPageUrl('LeaderChannel')} 
+                            className="text-xs text-violet-600 hover:underline inline-flex items-center gap-1 mt-1"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            Learn how to become a leader <Info className="w-3 h-3" />
+                          </Link>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                }
+                
+                return navLink;
+              })}
+            </TooltipProvider>
           </nav>
         )}
       </div>
