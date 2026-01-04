@@ -5,7 +5,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import MiniProfile from '@/components/profile/MiniProfile';
-import { Clock, Share2, MapPin, Video } from 'lucide-react';
+import { Clock, Share2, MapPin, Video, Zap, CheckCircle2 } from 'lucide-react';
 import Breadcrumb from '@/components/hud/Breadcrumb';
 
 export default function ListingDetail() {
@@ -138,10 +138,22 @@ export default function ListingDetail() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-6">
+      <div className="max-w-5xl mx-auto px-6 py-6 space-y-4">
         <div className="bg-white rounded-xl border p-4">
           <h3 className="font-semibold text-slate-900 mb-3">Hosted by</h3>
           <MiniProfile userId={listing.owner_id} name={listing.owner_name} avatar={listing.owner_avatar} size={40} />
+          <div className="flex items-center gap-4 mt-3 pt-3 border-t border-slate-100 text-sm">
+            <div className="flex items-center gap-1.5 text-emerald-600">
+              <Zap className="w-4 h-4" />
+              <span>Usually responds within 2 hours</span>
+            </div>
+            {(listing.bookings_count || 0) > 0 && (
+              <div className="flex items-center gap-1.5 text-slate-600">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span>{listing.bookings_count} successful booking{listing.bookings_count > 1 ? 's' : ''}</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
