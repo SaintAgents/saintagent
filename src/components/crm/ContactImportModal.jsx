@@ -57,20 +57,28 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Map common header variations
+      // Map common header variations (Google, Android, iPhone, generic)
+      // Google Contacts uses: "First Name", "Last Name", "Given Name", "Family Name"
+      // iPhone uses: "First", "Last", "First Name", "Last Name"
+      // Android uses similar to Google
+      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
+      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
+      const middleName = record['middle name'] || record.middle || '';
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+      
       const mapped = {
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || '',
-        email: record.email || record.email_address || record['email address'] || '',
-        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
-        company: record.company || record.organization || record.org || '',
-        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || '',
+        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
+        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
+        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
+        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || '',
-        notes: record.notes || record.note || record.comments || '',
-        tags: record.tags || '',
+        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
+        notes: record.notes || record.note || record.comments || record.biography || '',
+        tags: record.tags || record['group membership'] || record.groups || record.labels || '',
         linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
         twitter: record.twitter || record.twitter_url || '',
-        website: record.website || record.url || ''
+        website: record.website || record.url || record['website 1 - value'] || ''
       };
 
       if (mapped.name || mapped.email) {
@@ -133,24 +141,30 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
+      // Build full name from parts (Google, Android, iPhone formats)
+      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
+      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
+      const middleName = record['middle name'] || record.middle || '';
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+
       const mapped = {
         owner_id: currentUserId,
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || 'Unknown',
-        email: record.email || record.email_address || record['email address'] || '',
-        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
-        company: record.company || record.organization || record.org || '',
-        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || 'Unknown',
+        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
+        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
+        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
+        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || '',
-        notes: record.notes || record.note || record.comments || '',
-        tags: (record.tags || '').split(/[,;]/).map(t => t.trim()).filter(Boolean),
+        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
+        notes: record.notes || record.note || record.comments || record.biography || '',
+        tags: (record.tags || record['group membership'] || record.groups || record.labels || '').split(/[,;:::]+/).map(t => t.trim().replace(/^\* /, '')).filter(Boolean),
         permission_level: 'private',
         relationship_strength: 3,
         is_federated: false,
         social_links: {
           linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
           twitter: record.twitter || record.twitter_url || '',
-          website: record.website || record.url || ''
+          website: record.website || record.url || record['website 1 - value'] || ''
         }
       };
 
