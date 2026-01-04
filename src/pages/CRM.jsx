@@ -7,13 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Search, Globe, Lock, Eye, Share2, 
-  TrendingUp, Award, Filter, LayoutGrid, List
+  TrendingUp, Award, Filter, LayoutGrid, List, Upload
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
 import FederatedGraphView from '@/components/crm/FederatedGraphView';
 import AccessRequestsPanel from '@/components/crm/AccessRequestsPanel';
 import CRMStatsBar from '@/components/crm/CRMStatsBar';
+import ContactImportModal from '@/components/crm/ContactImportModal';
 import { cn } from '@/lib/utils';
 
 export default function CRM() {
@@ -23,6 +24,7 @@ export default function CRM() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingContact, setEditingContact] = useState(null);
   const [domainFilter, setDomainFilter] = useState('all');
+  const [importOpen, setImportOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -98,6 +100,10 @@ export default function CRM() {
                 {accessRequests.length} pending request{accessRequests.length > 1 ? 's' : ''}
               </Badge>
             )}
+            <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2">
+              <Upload className="w-4 h-4" />
+              Import CSV
+            </Button>
             <Button onClick={() => setFormOpen(true)} className="bg-violet-600 hover:bg-violet-700">
               <Plus className="w-4 h-4 mr-2" />
               Add Contact
@@ -246,6 +252,12 @@ export default function CRM() {
         open={formOpen}
         onClose={handleCloseForm}
         contact={editingContact}
+        currentUserId={currentUser?.email}
+      />
+
+      <ContactImportModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
         currentUserId={currentUser?.email}
       />
     </div>
