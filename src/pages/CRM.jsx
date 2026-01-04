@@ -157,6 +157,16 @@ export default function CRM() {
           contribution={myContribution}
         />
 
+        {/* Summary Header with Cleanup & Enrich */}
+        {tab === 'my-contacts' && myContacts.length > 0 && (
+          <ContactSummaryHeader 
+            contacts={myContacts}
+            onOpenCleanup={() => setCleanupOpen(true)}
+            onOpenEnrich={() => setEnrichOpen(true)}
+            onFilterByCategory={(cat) => setCategoryFilter(cat)}
+          />
+        )}
+
         {/* Main Content */}
         <Tabs value={tab} onValueChange={setTab}>
           <div className="flex items-center justify-between mb-4">
