@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Search, Globe, Lock, Eye, Share2, 
-  TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle
+  TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle, Sparkles
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
@@ -17,6 +17,9 @@ import CRMStatsBar from '@/components/crm/CRMStatsBar';
 import ContactImportModal from '@/components/crm/ContactImportModal';
 import NetworkHelpModal from '@/components/crm/NetworkHelpModal';
 import ContactDetailModal from '@/components/crm/ContactDetailModal';
+import ContactSummaryHeader from '@/components/crm/ContactSummaryHeader';
+import ContactCleanupModal from '@/components/crm/ContactCleanupModal';
+import ContactEnrichModal from '@/components/crm/ContactEnrichModal';
 import { cn } from '@/lib/utils';
 
 export default function CRM() {
