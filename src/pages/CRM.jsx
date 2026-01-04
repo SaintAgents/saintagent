@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Search, Globe, Lock, Eye, Share2, 
-  TrendingUp, Award, Filter, LayoutGrid, List, Upload
+  TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
@@ -15,6 +15,7 @@ import FederatedGraphView from '@/components/crm/FederatedGraphView';
 import AccessRequestsPanel from '@/components/crm/AccessRequestsPanel';
 import CRMStatsBar from '@/components/crm/CRMStatsBar';
 import ContactImportModal from '@/components/crm/ContactImportModal';
+import NetworkHelpModal from '@/components/crm/NetworkHelpModal';
 import { cn } from '@/lib/utils';
 
 export default function CRM() {
@@ -25,7 +26,16 @@ export default function CRM() {
   const [editingContact, setEditingContact] = useState(null);
   const [domainFilter, setDomainFilter] = useState('all');
   const [importOpen, setImportOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  // Check for ?help in URL
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('help')) {
+      setHelpOpen(true);
+    }
+  }, []);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -89,6 +99,13 @@ export default function CRM() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Users className="w-6 h-6 text-violet-600" />
               Contact Network
+              <button 
+                onClick={() => setHelpOpen(true)}
+                className="p-1 rounded-full hover:bg-slate-100 transition-colors"
+                title="Learn how it works"
+              >
+                <HelpCircle className="w-5 h-5 text-slate-400 hover:text-violet-600" />
+              </button>
             </h1>
             <p className="text-sm text-slate-500 mt-1">
               Your private CRM with optional federated sharing
@@ -259,6 +276,11 @@ export default function CRM() {
         open={importOpen}
         onClose={() => setImportOpen(false)}
         currentUserId={currentUser?.email}
+      />
+
+      <NetworkHelpModal
+        open={helpOpen}
+        onClose={() => setHelpOpen(false)}
       />
     </div>
   );
