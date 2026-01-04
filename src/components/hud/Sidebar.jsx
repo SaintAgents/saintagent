@@ -347,6 +347,7 @@ export default function Sidebar({
           <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}
           >
             <ScrollArea className="h-48">
+              <TooltipProvider delayDuration={200}>
               <div className="space-y-2">
                 {resolvedLeaders.map((leader, index) => (
                   <button
@@ -372,10 +373,18 @@ export default function Sidebar({
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-slate-900 truncate">{leader.display_name}</p>
-                      <div className="flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3 text-violet-500" />
-                        <span className="text-[10px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
-                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1 cursor-help">
+                            <TrendingUp className="w-3 h-3 text-violet-500" />
+                            <span className="text-[10px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-[200px]">
+                          <p className="text-xs font-medium">Rank Points (RP)</p>
+                          <p className="text-xs text-slate-500">Earned through missions, introductions, meetings, and positive community contributions.</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     {leader.leader_tier === 'verified144k' && (
                       <Crown className="w-3 h-3 text-amber-500 shrink-0" />
@@ -383,10 +392,12 @@ export default function Sidebar({
                   </button>
                 ))}
               </div>
+              </TooltipProvider>
             </ScrollArea>
           </div>
           {leadersPopupOpen && (
             <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
+              <TooltipProvider delayDuration={200}>
               <div className="space-y-2">
                 {resolvedLeaders.map((leader, index) => (
                   <div
@@ -411,10 +422,18 @@ export default function Sidebar({
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-900 truncate">{leader.display_name}</p>
-                      <div className="flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3 text-violet-500" />
-                        <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
-                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1 cursor-help">
+                            <TrendingUp className="w-3 h-3 text-violet-500" />
+                            <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-[200px]">
+                          <p className="text-xs font-medium">Rank Points (RP)</p>
+                          <p className="text-xs text-slate-500">Earned through missions, introductions, meetings, and positive community contributions.</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     {leader.leader_tier === 'verified144k' && (
                       <Crown className="w-4 h-4 text-amber-500 shrink-0" />
@@ -422,6 +441,7 @@ export default function Sidebar({
                   </div>
                 ))}
               </div>
+              </TooltipProvider>
             </FloatingPanel>
           )}
         </div>
