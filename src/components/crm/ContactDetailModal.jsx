@@ -118,7 +118,7 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg" style={isDark ? { backgroundColor: '#0f172a', borderColor: '#334155', color: '#e5e7eb' } : {}}>
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto" style={isDark ? { backgroundColor: '#0f172a', borderColor: '#334155', color: '#e5e7eb' } : {}}>
         <style>{`
           [data-theme='dark'] .contact-detail-section {
             background-color: #1e293b !important;
