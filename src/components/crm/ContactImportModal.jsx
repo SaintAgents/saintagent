@@ -206,34 +206,102 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
     URL.revokeObjectURL(url);
   };
 
+  const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-gray-800 p-6 fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl">
+      <DialogContent className="max-w-2xl" style={isDark ? { backgroundColor: '#0f172a', borderColor: '#334155', color: '#e5e7eb' } : {}}>
+        <style>{`
+          [data-theme='dark'] [data-radix-dialog-content] {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-info-box {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-info-title {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .import-info-text {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-badge {
+            background-color: #334155 !important;
+            border-color: #475569 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-btn-outline {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-btn-outline:hover {
+            background-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-upload-zone {
+            border-color: #475569 !important;
+            background-color: transparent !important;
+          }
+          [data-theme='dark'] .import-upload-zone:hover {
+            border-color: #8b5cf6 !important;
+            background-color: rgba(139, 92, 246, 0.1) !important;
+          }
+          [data-theme='dark'] .import-upload-zone.has-file {
+            border-color: #8b5cf6 !important;
+            background-color: rgba(139, 92, 246, 0.15) !important;
+          }
+          [data-theme='dark'] .import-file-name {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .import-file-info {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-table-wrapper {
+            border-color: #334155 !important;
+            background-color: #0f172a !important;
+          }
+          [data-theme='dark'] .import-table-head {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-table-th {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-table-td {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-table-row:hover {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-table-row {
+            border-color: #334155 !important;
+          }
+        `}</style>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2" style={isDark ? { color: '#f1f5f9' } : {}}>
             <FileSpreadsheet className="w-5 h-5 text-violet-600" />
             Import Contacts
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription style={isDark ? { color: '#94a3b8' } : {}}>
             Upload a CSV file to import your contacts in bulk
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Format Info */}
-          <div className="bg-slate-50 rounded-lg p-4 space-y-3">
-            <div className="text-sm font-medium text-slate-900">Accepted Formats</div>
+          <div className="rounded-lg p-4 space-y-3 import-info-box" style={isDark ? { backgroundColor: '#1e293b' } : { backgroundColor: '#f8fafc' }}>
+            <div className="text-sm font-medium import-info-title" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>Accepted Formats</div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline" className="gap-1">
+              <Badge variant="outline" className="gap-1 import-badge" style={isDark ? { backgroundColor: '#334155', borderColor: '#475569', color: '#e5e7eb' } : {}}>
                 <FileText className="w-3 h-3" />
                 CSV (.csv)
               </Badge>
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs import-info-text" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>
               <strong>Supported columns:</strong> name, email, phone, company, role/title, domain/industry, 
               location, notes, tags, linkedin, twitter, website
             </div>
-            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2">
+            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2 import-btn-outline" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
               <Download className="w-4 h-4" />
               Download Template
             </Button>
@@ -243,9 +311,10 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           {!result &&
           <div
             className={cn(
-              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
-              file ? "border-violet-300 bg-violet-50" : "border-slate-200 hover:border-violet-300 hover:bg-violet-50/50"
+              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer import-upload-zone",
+              file && "has-file"
             )}
+            style={isDark ? { borderColor: file ? '#8b5cf6' : '#475569', backgroundColor: file ? 'rgba(139, 92, 246, 0.15)' : 'transparent' } : { borderColor: file ? '#c4b5fd' : '#e2e8f0', backgroundColor: file ? '#f5f3ff' : 'transparent' }}
             onClick={() => fileRef.current?.click()}>
 
               <input
@@ -258,8 +327,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
               {file ?
             <div className="space-y-2">
                   <FileSpreadsheet className="w-10 h-10 text-violet-600 mx-auto" />
-                  <div className="font-medium text-slate-900">{file.name}</div>
-                  <div className="text-sm text-slate-500">
+                  <div className="font-medium import-file-name" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>{file.name}</div>
+                  <div className="text-sm import-file-info" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>
                     {preview.length > 0 ? `${preview.length}+ contacts found` : 'Processing...'}
                   </div>
                   <Button
@@ -270,17 +339,17 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                   setFile(null);
                   setPreview([]);
                   setError(null);
-                }}>
-
+                }}
+                style={isDark ? { color: '#e5e7eb' } : {}}>
                     <X className="w-4 h-4 mr-1" />
                     Remove
                   </Button>
                 </div> :
 
             <div className="space-y-2">
-                  <Upload className="w-10 h-10 text-slate-400 mx-auto" />
-                  <div className="font-medium text-slate-700">Click to upload or drag and drop</div>
-                  <div className="text-sm text-slate-500">CSV file up to 10MB</div>
+                  <Upload className="w-10 h-10 mx-auto" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
+                  <div className="font-medium" style={isDark ? { color: '#e5e7eb' } : { color: '#334155' }}>Click to upload or drag and drop</div>
+                  <div className="text-sm" style={isDark ? { color: '#64748b' } : { color: '#64748b' }}>CSV file up to 10MB</div>
                 </div>
             }
             </div>
@@ -288,34 +357,34 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
           {/* Error */}
           {error &&
-          <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-rose-700">{error}</div>
+          <div className="rounded-lg p-3 flex items-start gap-2" style={isDark ? { backgroundColor: 'rgba(244, 63, 94, 0.15)', borderColor: '#be123c', border: '1px solid' } : { backgroundColor: '#fff1f2', borderColor: '#fecdd3', border: '1px solid' }}>
+              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#f43f5e' }} />
+              <div className="text-sm" style={isDark ? { color: '#fda4af' } : { color: '#be123c' }}>{error}</div>
             </div>
           }
 
           {/* Preview */}
           {preview.length > 0 && !result &&
           <div className="space-y-2">
-              <div className="text-sm font-medium text-slate-900">Preview (first 10 contacts)</div>
-              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+              <div className="text-sm font-medium" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>Preview (first 10 contacts)</div>
+              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto import-table-wrapper" style={isDark ? { borderColor: '#334155', backgroundColor: '#0f172a' } : {}}>
                 <table className="w-full text-xs">
-                  <thead className="bg-slate-50 sticky top-0">
+                  <thead className="sticky top-0 import-table-head" style={isDark ? { backgroundColor: '#1e293b' } : { backgroundColor: '#f8fafc' }}>
                     <tr>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Name</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Email</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Company</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Domain</th>
+                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Name</th>
+                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Email</th>
+                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Company</th>
+                      <th className="text-left px-3 py-2 font-medium import-table-th" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>Domain</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y">
+                  <tbody>
                     {preview.map((contact, idx) =>
-                  <tr key={idx} className="hover:bg-slate-50">
-                        <td className="px-3 py-2 text-slate-900">{contact.name || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600">{contact.email || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600">{contact.company || '-'}</td>
+                  <tr key={idx} className="import-table-row" style={isDark ? { borderTop: '1px solid #334155' } : { borderTop: '1px solid #e2e8f0' }}>
+                        <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>{contact.name || '-'}</td>
+                        <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>{contact.email || '-'}</td>
+                        <td className="px-3 py-2 import-table-td" style={isDark ? { color: '#94a3b8' } : { color: '#475569' }}>{contact.company || '-'}</td>
                         <td className="px-3 py-2">
-                          <Badge variant="outline" className="text-xs capitalize">{contact.domain}</Badge>
+                          <Badge variant="outline" className="text-xs capitalize import-badge" style={isDark ? { backgroundColor: '#334155', borderColor: '#475569', color: '#e5e7eb' } : {}}>{contact.domain}</Badge>
                         </td>
                       </tr>
                   )}
@@ -327,24 +396,24 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
           {/* Result */}
           {result &&
-          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center space-y-2">
-              <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
-              <div className="font-semibold text-emerald-800">Import Complete!</div>
-              <div className="text-sm text-emerald-700">
+          <div className="rounded-lg p-4 text-center space-y-2" style={isDark ? { backgroundColor: 'rgba(16, 185, 129, 0.15)', border: '1px solid #059669' } : { backgroundColor: '#ecfdf5', border: '1px solid #a7f3d0' }}>
+              <CheckCircle className="w-10 h-10 mx-auto" style={{ color: '#10b981' }} />
+              <div className="font-semibold" style={isDark ? { color: '#6ee7b7' } : { color: '#065f46' }}>Import Complete!</div>
+              <div className="text-sm" style={isDark ? { color: '#a7f3d0' } : { color: '#047857' }}>
                 Successfully imported <strong>{result.created}</strong> contacts
-                {result.failed > 0 && <span className="text-rose-600"> ({result.failed} failed)</span>}
+                {result.failed > 0 && <span style={{ color: '#f43f5e' }}> ({result.failed} failed)</span>}
               </div>
             </div>
           }
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={handleClose}>
+            <Button variant="outline" onClick={handleClose} className="import-btn-outline" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
               {result ? 'Done' : 'Cancel'}
             </Button>
             {!result && preview.length > 0 &&
             <Button
-              className="bg-violet-600 hover:bg-violet-700"
+              className="bg-violet-600 hover:bg-violet-700 text-white"
               onClick={handleImport}
               disabled={importing}>
 
