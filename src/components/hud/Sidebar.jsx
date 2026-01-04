@@ -53,19 +53,19 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
-  { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck' },
-  { id: 'matches', label: 'Matches', icon: Sparkles, page: 'Matches', badge: 5 },
-  { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', badge: 2 },
-  { id: 'missions', label: 'Missions', icon: Target, page: 'Missions' },
-  { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects' },
-  { id: 'activity', label: 'Activity Feed', icon: TrendingUp, page: 'ActivityFeed' },
-  { id: 'collaborators', label: 'Collaborators', icon: Users, page: 'FindCollaborators' },
-  { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
-  { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', badge: 0 },
-  { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel' },
+  { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
+  { id: 'matches', label: 'Matches', icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
+  { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
+  { id: 'missions', label: 'Missions', icon: Target, page: 'Missions', hint: 'Join collaborative missions and quests' },
+  { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
+  { id: 'activity', label: 'Activity Feed', icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
+  { id: 'collaborators', label: 'Collaborators', icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
+  { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
+  { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
+  { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
   { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles', hint: 'Join local and interest-based communities' },
   { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
-  { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },
+  { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
 const STATUS_OPTIONS = [
@@ -200,7 +200,8 @@ export default function Sidebar({
             <TooltipProvider delayDuration={200}>
               {NAV_ITEMS.map((item) => {
                 const isActive = currentPage === item.id;
-                const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : (item.badge || 0);
+                // Only show badge for messages (real unread count), remove hardcoded badges
+                const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
                 
                 // Check if Leader Channel should be locked
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
@@ -254,15 +255,16 @@ export default function Sidebar({
                   </Link>
                 );
                 
-                // Wrap items with hints in tooltips
-                if (item.hint && !isLocked) {
+                // Wrap all items with tooltips when collapsed, or items with hints when expanded
+                if ((isCollapsed || item.hint) && !isLocked) {
                   return (
                     <Tooltip key={item.id}>
                       <TooltipTrigger asChild>
                         {navLink}
                       </TooltipTrigger>
                       <TooltipContent side="right" className="max-w-xs">
-                        <p className="text-sm">{item.hint}</p>
+                        <p className="text-sm font-medium">{item.label}</p>
+                        {item.hint && <p className="text-xs text-slate-500">{item.hint}</p>}
                       </TooltipContent>
                     </Tooltip>
                   );

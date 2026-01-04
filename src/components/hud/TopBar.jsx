@@ -128,8 +128,11 @@ export default function TopBar({
         {/* Language */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-xl" title="Language">
+            <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Language">
               <Globe className="w-5 h-5 text-slate-600" />
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Language
+              </span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -143,19 +146,25 @@ export default function TopBar({
         </DropdownMenu>
 
         <Link to={createPageUrl('DailyOps')}>
-          <Button variant="ghost" size="icon" className="rounded-xl" title="Daily Ops">
+          <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Calendar">
             <Calendar className="w-5 h-5 text-slate-600" />
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              Calendar
+            </span>
           </Button>
         </Link>
         {/* Messages */}
         <Link to={createPageUrl('Messages')}>
-          <Button variant="ghost" size="icon" className="relative">
+          <Button variant="ghost" size="icon" className="relative group" title="Messages">
             <MessageCircle className="w-5 h-5 text-slate-600" />
             {unreadMessages.length > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-rose-500 rounded-full">
                 {unreadMessages.length}
               </span>
             )}
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              Messages
+            </span>
           </Button>
         </Link>
 
