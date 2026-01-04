@@ -57,17 +57,22 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Map common header variations
+      // Build full name from parts (Google, Android, iPhone formats)
+      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
+      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
+      const middleName = record['middle name'] || record.middle || '';
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+
       const mapped = {
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || '',
-        email: record.email || record.email_address || record['email address'] || '',
-        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
-        company: record.company || record.organization || record.org || '',
-        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record['display name'] || fullName || '',
+        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || '',
+        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record.phone_number || record['phone number'] || record.mobile || '',
+        company: record.company || record.organization || record['organization 1 - name'] || record.org || '',
+        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || '',
+        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
         notes: record.notes || record.note || record.comments || '',
-        tags: record.tags || '',
+        tags: record.tags || record['group membership'] || record.groups || '',
         linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
         twitter: record.twitter || record.twitter_url || '',
         website: record.website || record.url || ''
@@ -133,17 +138,23 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
+      // Build full name from parts (Google, Android, iPhone formats)
+      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
+      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
+      const middleName = record['middle name'] || record.middle || '';
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+
       const mapped = {
         owner_id: currentUserId,
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || 'Unknown',
-        email: record.email || record.email_address || record['email address'] || '',
-        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
-        company: record.company || record.organization || record.org || '',
-        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record['display name'] || fullName || 'Unknown',
+        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || '',
+        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record.phone_number || record['phone number'] || record.mobile || '',
+        company: record.company || record.organization || record['organization 1 - name'] || record.org || '',
+        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || '',
+        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
         notes: record.notes || record.note || record.comments || '',
-        tags: (record.tags || '').split(/[,;]/).map((t) => t.trim()).filter(Boolean),
+        tags: (record.tags || record['group membership'] || record.groups || '').split(/[,;:]+/).map((t) => t.trim().replace(/^\* /, '')).filter(Boolean),
         permission_level: 'private',
         relationship_strength: 3,
         is_federated: false,
