@@ -252,14 +252,15 @@ export default function CRM() {
                   : "space-y-2"
               )}>
                 {filteredContacts.map(contact => (
-                  <ContactCard 
-                    key={contact.id} 
-                    contact={contact} 
-                    viewMode={viewMode}
-                    isOwner={true}
-                    onEdit={() => handleEdit(contact)}
-                  />
-                ))}
+                                        <ContactCard 
+                                          key={contact.id} 
+                                          contact={contact} 
+                                          viewMode={viewMode}
+                                          isOwner={true}
+                                          onEdit={() => handleEdit(contact)}
+                                          onClick={() => setSelectedContact(contact)}
+                                        />
+                                      ))}
               </div>
             )}
           </TabsContent>
