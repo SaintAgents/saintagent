@@ -20,7 +20,7 @@ import CreateMissionModal from '@/components/CreateMissionModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 
 export default function Missions() {
-  const [tab, setTab] = useState('all');
+  const [tab, setTab] = useState('active');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [matrixOpen, setMatrixOpen] = useState(false);
 
@@ -29,9 +29,23 @@ export default function Missions() {
     queryFn: () => base44.entities.Mission.list('-created_date', 50)
   });
 
-  const filteredMissions = tab === 'all' ?
-  missions :
-  missions.filter((m) => m.mission_type === tab);
+  // Separate active vs past missions
+  const now = new Date();
+  const activeMissions = missions.filter((m) => {
+    if (m.status === 'completed' || m.status === 'cancelled') return false;
+    if (m.end_time && new Date(m.end_time) < now) return false;
+    return true;
+  });
+  const pastMissions = missions.filter((m) => {
+    if (m.status === 'completed' || m.status === 'cancelled') return true;
+    if (m.end_time && new Date(m.end_time) < now) return true;
+    return false;
+  });
+
+  const filteredMissions = tab === 'active' ? activeMissions :
+    tab === 'past' ? pastMissions :
+    tab === 'all' ? missions :
+    activeMissions.filter((m) => m.mission_type === tab);
 
   const handleAction = (action, mission) => {
     console.log('Mission action:', action, mission);
