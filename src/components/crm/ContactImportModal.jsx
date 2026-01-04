@@ -253,6 +253,35 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           [data-theme='dark'] .import-modal-content .hover\\:bg-slate-50:hover {
             background-color: #1e293b !important;
           }
+          [data-theme='dark'] .import-modal-content .import-btn-outline {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-modal-content .import-btn-outline:hover {
+            background-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-modal-content button {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-modal-content .border {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-modal-content table {
+            background-color: #0f172a !important;
+          }
+          [data-theme='dark'] .import-modal-content thead {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-modal-content th {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-modal-content td {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-modal-content tbody tr:hover {
+            background-color: #1e293b !important;
+          }
         `}</style>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -278,7 +307,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
               <strong>Supported columns:</strong> name, email, phone, company, role/title, domain/industry, 
               location, notes, tags, linkedin, twitter, website
             </div>
-            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2">
+            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2 import-btn-outline">
               <Download className="w-4 h-4" />
               Download Template
             </Button>
@@ -384,7 +413,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={handleClose}>
+            <Button variant="outline" onClick={handleClose} className="import-btn-outline">
               {result ? 'Done' : 'Cancel'}
             </Button>
             {!result && preview.length > 0 &&
