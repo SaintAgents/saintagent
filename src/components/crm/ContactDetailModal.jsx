@@ -149,9 +149,16 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <h2 className="text-xl font-semibold truncate" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
-                {contact.name}
-              </h2>
+              {/* Check if name looks like an email - if so, don't show it here */}
+              {contact.name && !contact.name.includes('@') ? (
+                <h2 className="text-xl font-semibold truncate" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
+                  {contact.name}
+                </h2>
+              ) : (
+                <h2 className="text-xl font-semibold truncate italic" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }}>
+                  No name
+                </h2>
+              )}
               {contact.role && (
                 <p className="text-sm truncate" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>
                   {contact.role} {contact.company && `at ${contact.company}`}
