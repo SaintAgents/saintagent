@@ -12,14 +12,17 @@ import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import { createPageUrl } from '@/utils';
 
+const ITEMS_PER_PAGE = 12;
+
 export default function Projects() {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState('all');
   const [selected, setSelected] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects_all'],
-    queryFn: () => base44.entities.Project.list('-created_date', 100),
+    queryFn: () => base44.entities.Project.list('-created_date', 500),
   });
 
   const filtered = (projects || []).filter((p) => {
@@ -83,6 +86,11 @@ export default function Projects() {
           </Select>
         </div>
 
+        {/* Results count */}
+        <div className="mb-4 text-sm text-slate-500">
+          Showing {Math.min(visibleCount, filtered.length)} of {filtered.length} projects
+        </div>
+
         {/* List */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -96,11 +104,24 @@ export default function Projects() {
             <p className="text-slate-500">No projects match your filters</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((p) => (
-              <ProjectMiniCard key={p.id} project={p} onClick={() => setSelected(p)} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filtered.slice(0, visibleCount).map((p) => (
+                <ProjectMiniCard key={p.id} project={p} onClick={() => setSelected(p)} />
+              ))}
+            </div>
+            {visibleCount < filtered.length && (
+              <div className="mt-6 text-center">
+                <Button 
+                  variant="outline" 
+                  className="rounded-xl px-8"
+                  onClick={() => setVisibleCount((v) => v + ITEMS_PER_PAGE)}
+                >
+                  Load More ({filtered.length - visibleCount} remaining)
+                </Button>
+              </div>
+            )}
+          </>
         )}
 
         {/* Detail Popout */}
