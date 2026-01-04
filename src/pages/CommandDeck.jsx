@@ -544,7 +544,7 @@ export default function CommandDeck() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h2 className="text-2xl font-bold text-slate-900">
-                                                      {profile?.display_name || 'User'}
+                                                      {profile?.display_name || currentUser?.full_name || 'User'}
                                                     </h2>
                     <div className="flex items-center gap-1">
                       <p className="text-teal-200 text-sm capitalize">
