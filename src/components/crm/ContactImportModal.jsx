@@ -6,14 +6,14 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+  DialogDescription } from
+'@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Upload, FileSpreadsheet, CheckCircle, AlertCircle, 
-  Download, Loader2, FileText, X
-} from 'lucide-react';
+import {
+  Upload, FileSpreadsheet, CheckCircle, AlertCircle,
+  Download, Loader2, FileText, X } from
+'lucide-react';
 import { cn } from '@/lib/utils';
 
 const DOMAIN_OPTIONS = ['finance', 'tech', 'governance', 'health', 'education', 'media', 'legal', 'spiritual', 'creative', 'nonprofit', 'other'];
@@ -38,14 +38,14 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
     // Parse CSV
     const text = await selectedFile.text();
-    const lines = text.split('\n').filter(line => line.trim());
-    
+    const lines = text.split('\n').filter((line) => line.trim());
+
     if (lines.length < 2) {
       setError('File must have a header row and at least one data row');
       return;
     }
 
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
+    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/"/g, ''));
     const records = [];
 
     for (let i = 1; i < lines.length; i++) {
@@ -57,28 +57,20 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Map common header variations (Google, Android, iPhone, generic)
-      // Google Contacts uses: "First Name", "Last Name", "Given Name", "Family Name"
-      // iPhone uses: "First", "Last", "First Name", "Last Name"
-      // Android uses similar to Google
-      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
-      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
-      const middleName = record['middle name'] || record.middle || '';
-      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
-      
+      // Map common header variations
       const mapped = {
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || '',
-        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
-        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
-        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
-        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || '',
+        email: record.email || record.email_address || record['email address'] || '',
+        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
+        company: record.company || record.organization || record.org || '',
+        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
-        notes: record.notes || record.note || record.comments || record.biography || '',
-        tags: record.tags || record['group membership'] || record.groups || record.labels || '',
+        location: record.location || record.city || record.address || '',
+        notes: record.notes || record.note || record.comments || '',
+        tags: record.tags || '',
         linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
         twitter: record.twitter || record.twitter_url || '',
-        website: record.website || record.url || record['website 1 - value'] || ''
+        website: record.website || record.url || ''
       };
 
       if (mapped.name || mapped.email) {
@@ -116,7 +108,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
     const lower = value.toLowerCase();
     if (DOMAIN_OPTIONS.includes(lower)) return lower;
     // Try to match partial
-    const match = DOMAIN_OPTIONS.find(d => lower.includes(d) || d.includes(lower));
+    const match = DOMAIN_OPTIONS.find((d) => lower.includes(d) || d.includes(lower));
     return match || 'other';
   };
 
@@ -128,9 +120,9 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
     // Re-parse full file
     const text = await file.text();
-    const lines = text.split('\n').filter(line => line.trim());
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
-    
+    const lines = text.split('\n').filter((line) => line.trim());
+    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/"/g, ''));
+
     const allRecords = [];
     for (let i = 1; i < lines.length; i++) {
       const values = parseCSVLine(lines[i]);
@@ -141,30 +133,24 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Build full name from parts (Google, Android, iPhone formats)
-      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
-      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
-      const middleName = record['middle name'] || record.middle || '';
-      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
-
       const mapped = {
         owner_id: currentUserId,
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || 'Unknown',
-        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
-        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
-        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
-        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || 'Unknown',
+        email: record.email || record.email_address || record['email address'] || '',
+        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
+        company: record.company || record.organization || record.org || '',
+        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
-        notes: record.notes || record.note || record.comments || record.biography || '',
-        tags: (record.tags || record['group membership'] || record.groups || record.labels || '').split(/[,;:::]+/).map(t => t.trim().replace(/^\* /, '')).filter(Boolean),
+        location: record.location || record.city || record.address || '',
+        notes: record.notes || record.note || record.comments || '',
+        tags: (record.tags || '').split(/[,;]/).map((t) => t.trim()).filter(Boolean),
         permission_level: 'private',
         relationship_strength: 3,
         is_federated: false,
         social_links: {
           linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
           twitter: record.twitter || record.twitter_url || '',
-          website: record.website || record.url || record['website 1 - value'] || ''
+          website: record.website || record.url || ''
         }
       };
 
@@ -222,98 +208,28 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
-        <style>{`
-          [data-theme='dark'] [data-radix-dialog-content] {
-            background-color: #0f172a !important;
-            border-color: #334155 !important;
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] .import-title {
-            color: #ffffff !important;
-          }
-          [data-theme='dark'] .import-desc {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-format-box {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-format-title {
-            color: #f1f5f9 !important;
-          }
-          [data-theme='dark'] .import-format-hint {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-upload-zone {
-            border-color: #334155 !important;
-            background-color: transparent !important;
-          }
-          [data-theme='dark'] .import-upload-zone:hover {
-            border-color: #6d28d9 !important;
-            background-color: rgba(139, 92, 246, 0.1) !important;
-          }
-          [data-theme='dark'] .import-upload-zone.has-file {
-            border-color: #6d28d9 !important;
-            background-color: rgba(139, 92, 246, 0.1) !important;
-          }
-          [data-theme='dark'] .import-file-name {
-            color: #f1f5f9 !important;
-          }
-          [data-theme='dark'] .import-file-hint {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-upload-text {
-            color: #cbd5e1 !important;
-          }
-          [data-theme='dark'] .import-preview-title {
-            color: #f1f5f9 !important;
-          }
-          [data-theme='dark'] .import-table {
-            border-color: #334155 !important;
-          }
-          [data-theme='dark'] .import-table thead {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-table th {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-table tbody {
-            background-color: #0f172a !important;
-          }
-          [data-theme='dark'] .import-table tbody tr {
-            border-color: #334155 !important;
-          }
-          [data-theme='dark'] .import-table tbody tr:hover {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-table td {
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] .import-table .td-secondary {
-            color: #94a3b8 !important;
-          }
-        `}</style>
+      <DialogContent className="bg-gray-800 p-6 fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 import-title">
+          <DialogTitle className="flex items-center gap-2">
             <FileSpreadsheet className="w-5 h-5 text-violet-600" />
             Import Contacts
           </DialogTitle>
-          <DialogDescription className="import-desc">
+          <DialogDescription>
             Upload a CSV file to import your contacts in bulk
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Format Info */}
-          <div className="bg-slate-50 rounded-lg p-4 space-y-3 import-format-box">
-            <div className="text-sm font-medium text-slate-900 import-format-title">Accepted Formats</div>
+          <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+            <div className="text-sm font-medium text-slate-900">Accepted Formats</div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className="gap-1">
                 <FileText className="w-3 h-3" />
                 CSV (.csv)
               </Badge>
             </div>
-            <div className="text-xs text-slate-500 import-format-hint">
+            <div className="text-xs text-slate-500">
               <strong>Supported columns:</strong> name, email, phone, company, role/title, domain/industry, 
               location, notes, tags, linkedin, twitter, website
             </div>
@@ -324,65 +240,65 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           </div>
 
           {/* File Upload */}
-          {!result && (
-            <div
-              className={cn(
-                "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer import-upload-zone",
-                file ? "border-violet-300 bg-violet-50 has-file" : "border-slate-200 hover:border-violet-300 hover:bg-violet-50/50"
-              )}
-              onClick={() => fileRef.current?.click()}
-            >
+          {!result &&
+          <div
+            className={cn(
+              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
+              file ? "border-violet-300 bg-violet-50" : "border-slate-200 hover:border-violet-300 hover:bg-violet-50/50"
+            )}
+            onClick={() => fileRef.current?.click()}>
+
               <input
-                ref={fileRef}
-                type="file"
-                accept=".csv"
-                className="hidden"
-                onChange={handleFileSelect}
-              />
-              {file ? (
-                <div className="space-y-2">
+              ref={fileRef}
+              type="file"
+              accept=".csv"
+              className="hidden"
+              onChange={handleFileSelect} />
+
+              {file ?
+            <div className="space-y-2">
                   <FileSpreadsheet className="w-10 h-10 text-violet-600 mx-auto" />
-                  <div className="font-medium text-slate-900 import-file-name">{file.name}</div>
-                  <div className="text-sm text-slate-500 import-file-hint">
+                  <div className="font-medium text-slate-900">{file.name}</div>
+                  <div className="text-sm text-slate-500">
                     {preview.length > 0 ? `${preview.length}+ contacts found` : 'Processing...'}
                   </div>
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setFile(null);
-                      setPreview([]);
-                      setError(null);
-                    }}
-                  >
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFile(null);
+                  setPreview([]);
+                  setError(null);
+                }}>
+
                     <X className="w-4 h-4 mr-1" />
                     Remove
                   </Button>
-                </div>
-              ) : (
-                <div className="space-y-2">
+                </div> :
+
+            <div className="space-y-2">
                   <Upload className="w-10 h-10 text-slate-400 mx-auto" />
-                  <div className="font-medium text-slate-700 import-upload-text">Click to upload or drag and drop</div>
-                  <div className="text-sm text-slate-500 import-file-hint">CSV file up to 10MB</div>
+                  <div className="font-medium text-slate-700">Click to upload or drag and drop</div>
+                  <div className="text-sm text-slate-500">CSV file up to 10MB</div>
                 </div>
-              )}
+            }
             </div>
-          )}
+          }
 
           {/* Error */}
-          {error && (
-            <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 flex items-start gap-2">
+          {error &&
+          <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 flex items-start gap-2">
               <AlertCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-rose-700">{error}</div>
             </div>
-          )}
+          }
 
           {/* Preview */}
-          {preview.length > 0 && !result && (
-            <div className="space-y-2">
-              <div className="text-sm font-medium text-slate-900 import-preview-title">Preview (first 10 contacts)</div>
-              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto import-table">
+          {preview.length > 0 && !result &&
+          <div className="space-y-2">
+              <div className="text-sm font-medium text-slate-900">Preview (first 10 contacts)</div>
+              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto">
                 <table className="w-full text-xs">
                   <thead className="bg-slate-50 sticky top-0">
                     <tr>
@@ -393,25 +309,25 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {preview.map((contact, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50">
+                    {preview.map((contact, idx) =>
+                  <tr key={idx} className="hover:bg-slate-50">
                         <td className="px-3 py-2 text-slate-900">{contact.name || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600 td-secondary">{contact.email || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600 td-secondary">{contact.company || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600">{contact.email || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600">{contact.company || '-'}</td>
                         <td className="px-3 py-2">
                           <Badge variant="outline" className="text-xs capitalize">{contact.domain}</Badge>
                         </td>
                       </tr>
-                    ))}
+                  )}
                   </tbody>
                 </table>
               </div>
             </div>
-          )}
+          }
 
           {/* Result */}
-          {result && (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center space-y-2">
+          {result &&
+          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center space-y-2">
               <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
               <div className="font-semibold text-emerald-800">Import Complete!</div>
               <div className="text-sm text-emerald-700">
@@ -419,35 +335,35 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                 {result.failed > 0 && <span className="text-rose-600"> ({result.failed} failed)</span>}
               </div>
             </div>
-          )}
+          }
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
             <Button variant="outline" onClick={handleClose}>
               {result ? 'Done' : 'Cancel'}
             </Button>
-            {!result && preview.length > 0 && (
-              <Button
-                className="bg-violet-600 hover:bg-violet-700"
-                onClick={handleImport}
-                disabled={importing}
-              >
-                {importing ? (
-                  <>
+            {!result && preview.length > 0 &&
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={handleImport}
+              disabled={importing}>
+
+                {importing ?
+              <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Importing...
-                  </>
-                ) : (
-                  <>
+                  </> :
+
+              <>
                     <Upload className="w-4 h-4 mr-2" />
                     Import Contacts
                   </>
-                )}
+              }
               </Button>
-            )}
+            }
           </div>
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>);
+
 }
