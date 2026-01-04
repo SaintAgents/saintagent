@@ -200,11 +200,12 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
 
           {/* Contact Info */}
           <div className="space-y-3 p-4 rounded-lg border contact-detail-section" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#334155' } : { backgroundColor: '#f8fafc' }}>
-            {contact.email && (
+            {/* Show email - include name field if it's an email */}
+            {(contact.email || (contact.name && contact.name.includes('@'))) && (
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
-                <a href={`mailto:${contact.email}`} className="text-sm hover:underline contact-detail-value" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
-                  {contact.email}
+                <a href={`mailto:${contact.email || contact.name}`} className="text-sm hover:underline contact-detail-value" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
+                  {contact.email || contact.name}
                 </a>
               </div>
             )}
