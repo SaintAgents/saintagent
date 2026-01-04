@@ -45,7 +45,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
       return;
     }
 
-    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/"/g, ''));
+    const headerLine = parseCSVLine(lines[0]);
+    const headers = headerLine.map((h) => h.trim().toLowerCase().replace(/"/g, ''));
     const records = [];
 
     for (let i = 1; i < lines.length; i++) {
