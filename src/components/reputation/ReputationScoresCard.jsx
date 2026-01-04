@@ -7,7 +7,8 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import { TrendingUp, BadgeCheck } from 'lucide-react';
 
 export default function ReputationScoresCard({ userId, onUpdated }) {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
   const [influence, setInfluence] = React.useState(0);
   const [expertise, setExpertise] = React.useState(0);
   const [ib, setIB] = React.useState(null);
@@ -16,6 +17,7 @@ export default function ReputationScoresCard({ userId, onUpdated }) {
 
   const recompute = async () => {
     setLoading(true);
+    setError(null);
     try {
       const { data } = await base44.functions.invoke('computeReputationScores', { target_user_id: userId });
       if (data?.influence?.score != null) setInfluence(data.influence.score);
@@ -24,6 +26,8 @@ export default function ReputationScoresCard({ userId, onUpdated }) {
       setEB(data?.expertise?.breakdown || null);
       qc.invalidateQueries({ queryKey: ['userProfile'] });
       onUpdated?.(data);
+    } catch (err) {
+      setError('Failed to load');
     } finally {
       setLoading(false);
     }

@@ -7,13 +7,15 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import { Shield } from 'lucide-react';
 
 export default function TrustScoreCard({ userId, onUpdated }) {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
   const [score, setScore] = React.useState(0);
   const [breakdown, setBreakdown] = React.useState(null);
   const qc = useQueryClient();
 
   const recompute = async () => {
     setLoading(true);
+    setError(null);
     try {
       const { data } = await base44.functions.invoke('computeTrustScore', { target_user_id: userId });
       if (data?.score != null) {
@@ -22,6 +24,8 @@ export default function TrustScoreCard({ userId, onUpdated }) {
         qc.invalidateQueries({ queryKey: ['userProfile'] });
         onUpdated?.(data.score);
       }
+    } catch (err) {
+      setError('Failed to load');
     } finally {
       setLoading(false);
     }
