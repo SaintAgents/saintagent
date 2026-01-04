@@ -179,8 +179,9 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
                 : "bg-violet-600 hover:bg-violet-700"
             )}
             onClick={(e) => { e.stopPropagation(); onAction?.('book', listing); }}
+            title={listing.listing_type === 'request' ? 'Send an offer to help with this request' : 'Send a booking request to the host'}
           >
-            {listing.listing_type === 'request' ? 'Offer to Help' : 'Book Now'}
+            {listing.listing_type === 'request' ? 'Offer to Help' : 'Request to Book'}
           </Button>
         </div>
       </div>

@@ -95,8 +95,13 @@ export default function ListingDetail() {
                   <div className="text-xl font-bold text-slate-900">${listing.price_amount}</div>
                 )}
                 <Button className="bg-violet-600 hover:bg-violet-700 rounded-lg" onClick={() => bookMutation.mutate()} disabled={bookMutation.isPending}>
-                  Book Now
+                  {bookMutation.isPending ? 'Sending Request…' : listing.listing_type === 'request' ? 'Offer to Help' : 'Request to Book'}
                 </Button>
+                <p className="text-xs text-slate-500 max-w-[200px]">
+                  {listing.listing_type === 'request' 
+                    ? 'The host will be notified and can accept your offer' 
+                    : 'A booking request will be sent to the host for confirmation'}
+                </p>
                 <Button variant="outline" size="icon"><Share2 className="w-4 h-4" /></Button>
               </div>
             </div>
