@@ -31,7 +31,8 @@ export default function MiniProfile({
   className,
   showRankBadge = true,
   showTrustBadge = true,
-  showReachBadge = true
+  showReachBadge = true,
+  showHelpHint = true
 }) {
   const { data: profs = [] } = useQuery({
     queryKey: ['miniProfile', userId],
@@ -85,31 +86,29 @@ export default function MiniProfile({
       {(showName || showHandle) &&
       <div className="min-w-0">
           {showName &&
-        <div className="flex items-center gap-1 min-w-0">
+          <div className="flex items-center gap-1 min-w-0">
               <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
-              <HelpHint
-            side="right"
-            align="start"
-            className="ml-0.5"
-            size={20}
-            content={
-            <div className="min-w-[900px]">
-                    <div className="bg-zinc-50 text-zinc-950 space-y-1.5">
-                      <div className="text-sm font-semibold text-slate-800">Avatar Indicators</div>
-                      <ul className="list-disc ml-4 text-xs text-slate-700 space-y-0.5">
-                        <li className="text-zinc-950"><strong>Rank Ring</strong>: outer ring showing rank/progression</li>
-                        <li className="text-zinc-950"><strong>Seal Badge</strong>: small circle on edge (role/qualification)</li>
-                        <li className="text-zinc-950"><strong>Rank Sigil</strong>: symbol inside badge (rank meaning)</li>
-                        <li className="text-zinc-950"><strong>Aura</strong>: subtle glow (elevated/active)</li>
-                        <li className="text-zinc-950"><strong>Presence Marker</strong>: status dot (online/focus/dnd)</li>
-                        <li className="text-zinc-950"><strong>Event Frame</strong>: decorative frame for special events</li>
+              {showHelpHint && (
+                <HelpHint
+                  side="right"
+                  align="start"
+                  className="ml-0.5"
+                  size={16}
+                  content={
+                    <div className="max-w-xs">
+                      <div className="text-sm font-semibold text-slate-800 mb-1">Avatar Indicators</div>
+                      <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
+                        <li><strong>Rank Ring</strong>: outer ring showing rank</li>
+                        <li><strong>Rank Sigil</strong>: symbol at top-left</li>
+                        <li><strong>Status Dot</strong>: online/focus/dnd</li>
+                        <li><strong>Leader Badge</strong>: verified 144k sparkle</li>
                       </ul>
                     </div>
-                  </div>
-            } />
-
+                  }
+                />
+              )}
             </div>
-        }
+          }
           {showHandle && (handle || sa) &&
         <div className="text-xs text-slate-500 truncate">
               {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
