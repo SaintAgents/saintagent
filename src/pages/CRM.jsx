@@ -16,6 +16,7 @@ import AccessRequestsPanel from '@/components/crm/AccessRequestsPanel';
 import CRMStatsBar from '@/components/crm/CRMStatsBar';
 import ContactImportModal from '@/components/crm/ContactImportModal';
 import NetworkHelpModal from '@/components/crm/NetworkHelpModal';
+import ContactDetailModal from '@/components/crm/ContactDetailModal';
 import { cn } from '@/lib/utils';
 
 export default function CRM() {
