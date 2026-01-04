@@ -20,12 +20,12 @@ import {
   Heart } from
   "lucide-react";
 
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import MatchCard from '@/components/hud/MatchCard';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
