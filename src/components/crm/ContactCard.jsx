@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { 
   MoreVertical, Edit, Trash2, Globe, Lock, Eye, EyeOff,
-  Building2, MapPin, Star, Calendar, ExternalLink, MessageCircle
+  Building2, MapPin, Star, Calendar, ExternalLink, MessageCircle, Phone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -79,9 +79,15 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
           <div className="text-sm text-slate-500 truncate">
             {contact.role} {contact.company && `at ${contact.company}`}
           </div>
-        </div>
+          {contact.phone && (
+            <div className="text-xs text-slate-400 truncate flex items-center gap-1">
+              <Phone className="w-3 h-3" />
+              {contact.phone}
+            </div>
+          )}
+          </div>
 
-        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
           {[...Array(5)].map((_, i) => (
             <Star 
               key={i} 
@@ -178,6 +184,12 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
       </div>
 
       <div className="space-y-2 mb-3">
+        {contact.phone && (
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Phone className="w-4 h-4 text-slate-400" />
+            {contact.phone}
+          </div>
+        )}
         {contact.company && (
           <div className="flex items-center gap-2 text-sm text-slate-600">
             <Building2 className="w-4 h-4 text-slate-400" />
