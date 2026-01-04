@@ -25,6 +25,7 @@ import {
 import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
 import AIDiscussionAssistant from '@/components/ai/AIDiscussionAssistant';
+import Breadcrumb from '@/components/hud/Breadcrumb';
 
 export default function MissionDetail() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -129,14 +130,10 @@ export default function MissionDetail() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <Button 
-            variant="ghost" 
-            onClick={() => window.location.href = createPageUrl('Missions')}
-            className="mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Missions
-          </Button>
+          <Breadcrumb items={[
+            { label: 'Missions', page: 'Missions' },
+            { label: mission?.title || 'Mission Details' }
+          ]} />
           
           <div className="flex items-start justify-between">
             <div className="flex-1">

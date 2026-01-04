@@ -63,8 +63,8 @@ const NAV_ITEMS = [
   { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
   { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', badge: 0 },
   { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel' },
-  { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles' },
-  { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio' },
+  { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles', hint: 'Join local and interest-based communities' },
+  { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
   { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },
 ];
 
@@ -253,6 +253,20 @@ export default function Sidebar({
                     )}
                   </Link>
                 );
+                
+                // Wrap items with hints in tooltips
+                if (item.hint && !isLocked) {
+                  return (
+                    <Tooltip key={item.id}>
+                      <TooltipTrigger asChild>
+                        {navLink}
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p className="text-sm">{item.hint}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                }
                 
                 // Wrap locked items with tooltip
                 if (isLocked && item.id === 'leader') {

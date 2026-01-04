@@ -5,7 +5,8 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import MiniProfile from '@/components/profile/MiniProfile';
-import { Clock, ArrowLeft, Share2, MapPin, Video } from 'lucide-react';
+import { Clock, Share2, MapPin, Video } from 'lucide-react';
+import Breadcrumb from '@/components/hud/Breadcrumb';
 
 export default function ListingDetail() {
   const queryClient = useQueryClient();
@@ -70,9 +71,10 @@ export default function ListingDetail() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-6 py-4">
-          <Button variant="ghost" onClick={() => window.location.href = createPageUrl('Marketplace')} className="mb-3">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Marketplace
-          </Button>
+          <Breadcrumb items={[
+            { label: 'Marketplace', page: 'Marketplace' },
+            { label: listing?.title || 'Listing Details' }
+          ]} />
           <div className="flex items-start gap-4">
             {listing.image_url && (
               <img src={listing.image_url} alt={listing.title} className="w-40 h-40 object-cover rounded-xl border" />
