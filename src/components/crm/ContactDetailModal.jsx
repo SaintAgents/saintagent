@@ -267,18 +267,88 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             </div>
           )}
 
-          {/* Notes */}
-          {contact.notes && (
-            <div>
-              <div className="flex items-center gap-2 mb-2">
+          {/* Notes Section */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
                 <span className="text-sm contact-detail-label" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>Notes</span>
               </div>
-              <div className="p-3 rounded-lg text-sm contact-detail-notes" style={isDark ? { backgroundColor: '#1e293b', color: '#cbd5e1' } : { backgroundColor: '#f8fafc', color: '#475569' }}>
+              {!isAddingNote && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setIsAddingNote(true)}
+                  className="h-7 text-xs gap-1"
+                  style={isDark ? { color: '#e5e7eb' } : {}}
+                >
+                  <Plus className="w-3 h-3" /> Add Note
+                </Button>
+              )}
+            </div>
+            
+            {/* Existing Notes */}
+            {contact.notes && (
+              <div className="p-3 rounded-lg text-sm contact-detail-notes whitespace-pre-wrap mb-3" style={isDark ? { backgroundColor: '#1e293b', color: '#cbd5e1' } : { backgroundColor: '#f8fafc', color: '#475569' }}>
                 {contact.notes}
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Add Note Form */}
+            {isAddingNote && (
+              <div className="space-y-2 p-3 rounded-lg border" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#334155' } : { backgroundColor: '#f8fafc' }}>
+                <Textarea
+                  placeholder="Add a note about this contact..."
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  className="min-h-[80px] text-sm"
+                  style={isDark ? { backgroundColor: '#0f172a', borderColor: '#475569', color: '#e5e7eb' } : {}}
+                />
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleGenerateAINote}
+                    disabled={isGeneratingNote}
+                    className="gap-1 text-xs"
+                    style={isDark ? { backgroundColor: '#334155', borderColor: '#475569', color: '#e5e7eb' } : {}}
+                  >
+                    {isGeneratingNote ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-3 h-3 text-amber-500" />
+                    )}
+                    AI Suggest
+                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => { setIsAddingNote(false); setNewNote(''); }}
+                      className="h-7 text-xs"
+                      style={isDark ? { color: '#e5e7eb' } : {}}
+                    >
+                      <X className="w-3 h-3 mr-1" /> Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleAddNote}
+                      disabled={!newNote.trim() || updateNotesMutation.isPending}
+                      className="h-7 text-xs bg-violet-600 hover:bg-violet-700"
+                    >
+                      <Save className="w-3 h-3 mr-1" /> Save
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {!contact.notes && !isAddingNote && (
+              <div className="p-3 rounded-lg text-sm text-center" style={isDark ? { backgroundColor: '#1e293b', color: '#64748b' } : { backgroundColor: '#f8fafc', color: '#94a3b8' }}>
+                No notes yet
+              </div>
+            )}
+          </div>
 
           {/* Metadata */}
           <div className="flex items-center justify-between text-xs pt-3 border-t" style={isDark ? { borderColor: '#334155', color: '#64748b' } : { color: '#94a3b8' }}>
