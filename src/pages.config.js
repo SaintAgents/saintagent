@@ -30,6 +30,7 @@ import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
+import EvaluationSpec from './pages/EvaluationSpec';
 import __Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
+    "EvaluationSpec": EvaluationSpec,
 }
 
 export const pagesConfig = {
