@@ -57,25 +57,20 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Map common header variations (Google, Android, iPhone, generic)
-      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
-      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
-      const middleName = record['middle name'] || record.middle || '';
-      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
-      
+      // Map common header variations
       const mapped = {
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || '',
-        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
-        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
-        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
-        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || '',
+        email: record.email || record.email_address || record['email address'] || '',
+        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
+        company: record.company || record.organization || record.org || '',
+        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
-        notes: record.notes || record.note || record.comments || record.biography || '',
-        tags: record.tags || record['group membership'] || record.groups || record.labels || '',
+        location: record.location || record.city || record.address || '',
+        notes: record.notes || record.note || record.comments || '',
+        tags: record.tags || '',
         linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
         twitter: record.twitter || record.twitter_url || '',
-        website: record.website || record.url || record['website 1 - value'] || ''
+        website: record.website || record.url || ''
       };
 
       if (mapped.name || mapped.email) {
@@ -138,30 +133,24 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         record[header] = values[idx]?.trim().replace(/"/g, '') || '';
       });
 
-      // Build full name from parts (Google, Android, iPhone formats)
-      const firstName = record['first name'] || record['given name'] || record.first || record.firstname || '';
-      const lastName = record['last name'] || record['family name'] || record.last || record.lastname || '';
-      const middleName = record['middle name'] || record.middle || '';
-      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim();
-
       const mapped = {
         owner_id: currentUserId,
-        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || record['display name'] || fullName || 'Unknown',
-        email: record.email || record['e-mail 1 - value'] || record['e-mail address'] || record.email_address || record['email address'] || record['e-mail'] || record['primary email'] || record['email 1 - value'] || '',
-        phone: record.phone || record['phone 1 - value'] || record['mobile phone'] || record['primary phone'] || record.phone_number || record['phone number'] || record.mobile || record['home phone'] || record['work phone'] || '',
-        company: record.company || record.organization || record['organization 1 - name'] || record.org || record.employer || '',
-        role: record.role || record.title || record['organization 1 - title'] || record.job_title || record['job title'] || record.position || '',
+        name: record.name || record.full_name || record.fullname || record.contact_name || record['contact name'] || 'Unknown',
+        email: record.email || record.email_address || record['email address'] || '',
+        phone: record.phone || record.phone_number || record['phone number'] || record.mobile || '',
+        company: record.company || record.organization || record.org || '',
+        role: record.role || record.title || record.job_title || record['job title'] || record.position || '',
         domain: normalizeDomain(record.domain || record.industry || record.sector || ''),
-        location: record.location || record.city || record.address || record['address 1 - formatted'] || '',
-        notes: record.notes || record.note || record.comments || record.biography || '',
-        tags: (record.tags || record['group membership'] || record.groups || record.labels || '').split(/[,;:::]+/).map((t) => t.trim().replace(/^\* /, '')).filter(Boolean),
+        location: record.location || record.city || record.address || '',
+        notes: record.notes || record.note || record.comments || '',
+        tags: (record.tags || '').split(/[,;]/).map((t) => t.trim()).filter(Boolean),
         permission_level: 'private',
         relationship_strength: 3,
         is_federated: false,
         social_links: {
           linkedin: record.linkedin || record.linkedin_url || record['linkedin url'] || '',
           twitter: record.twitter || record.twitter_url || '',
-          website: record.website || record.url || record['website 1 - value'] || ''
+          website: record.website || record.url || ''
         }
       };
 
@@ -219,89 +208,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl import-modal-content" style={{ backgroundColor: 'var(--modal-bg, white)' }}>
-        <style>{`
-          :root { --modal-bg: white; }
-          [data-theme='dark'] { --modal-bg: #0f172a; }
-          [data-theme='dark'] .import-modal-content,
-          [data-theme='dark'] .import-modal-content > div {
-            background-color: #0f172a !important;
-            border-color: #334155 !important;
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] [data-radix-dialog-content].import-modal-content {
-            background-color: #0f172a !important;
-          }
-          [data-theme='dark'] .import-modal-content .bg-slate-50 {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-modal-content .text-slate-900,
-          [data-theme='dark'] .import-modal-content .font-medium {
-            color: #f1f5f9 !important;
-          }
-          [data-theme='dark'] .import-modal-content .text-slate-700 {
-            color: #cbd5e1 !important;
-          }
-          [data-theme='dark'] .import-modal-content .text-slate-600 {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-modal-content .text-slate-500 {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-modal-content .border-slate-200,
-          [data-theme='dark'] .import-modal-content .border-dashed {
-            border-color: #475569 !important;
-          }
-          [data-theme='dark'] .import-modal-content .bg-violet-50,
-          [data-theme='dark'] .import-modal-content .border-violet-300 {
-            background-color: rgba(139, 92, 246, 0.15) !important;
-            border-color: #8b5cf6 !important;
-          }
-          [data-theme='dark'] .import-modal-content .divide-y > * {
-            border-color: #334155 !important;
-          }
-          [data-theme='dark'] .import-modal-content .hover\\:bg-slate-50:hover {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-modal-content .import-btn-outline {
-            background-color: #1e293b !important;
-            border-color: #475569 !important;
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] .import-modal-content .import-btn-outline:hover {
-            background-color: #334155 !important;
-          }
-          [data-theme='dark'] .import-modal-content button {
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] .import-modal-content .border {
-            border-color: #334155 !important;
-          }
-          [data-theme='dark'] .import-modal-content table {
-            background-color: #0f172a !important;
-          }
-          [data-theme='dark'] .import-modal-content thead {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-modal-content th {
-            color: #94a3b8 !important;
-          }
-          [data-theme='dark'] .import-modal-content td {
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] .import-modal-content tbody tr:hover {
-            background-color: #1e293b !important;
-          }
-          [data-theme='dark'] .import-modal-content [data-slot="badge"],
-          [data-theme='dark'] .import-modal-content .badge-domain {
-            background-color: #334155 !important;
-            border-color: #475569 !important;
-            color: #e5e7eb !important;
-          }
-          [data-theme='dark'] .import-modal-content .import-table-wrapper {
-            background-color: #0f172a !important;
-          }
-        `}</style>
+      <DialogContent className="bg-gray-800 p-6 fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileSpreadsheet className="w-5 h-5 text-violet-600" />
@@ -326,7 +233,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
               <strong>Supported columns:</strong> name, email, phone, company, role/title, domain/industry, 
               location, notes, tags, linkedin, twitter, website
             </div>
-            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2 import-btn-outline">
+            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2">
               <Download className="w-4 h-4" />
               Download Template
             </Button>
@@ -391,24 +298,24 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           {preview.length > 0 && !result &&
           <div className="space-y-2">
               <div className="text-sm font-medium text-slate-900">Preview (first 10 contacts)</div>
-              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto import-table-wrapper">
-                <table className="w-full text-xs table-fixed">
+              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                <table className="w-full text-xs">
                   <thead className="bg-slate-50 sticky top-0">
                     <tr>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[30%]">Name</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[30%]">Email</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[20%]">Company</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[20%]">Domain</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600">Name</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600">Email</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600">Company</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600">Domain</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {preview.map((contact, idx) =>
                   <tr key={idx} className="hover:bg-slate-50">
-                        <td className="px-3 py-2 text-slate-900 truncate">{contact.name || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600 truncate">{contact.email || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600 truncate">{contact.company || '-'}</td>
+                        <td className="px-3 py-2 text-slate-900">{contact.name || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600">{contact.email || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600">{contact.company || '-'}</td>
                         <td className="px-3 py-2">
-                          <span className="inline-block px-2 py-0.5 text-xs rounded border capitalize badge-domain">{contact.domain}</span>
+                          <Badge variant="outline" className="text-xs capitalize">{contact.domain}</Badge>
                         </td>
                       </tr>
                   )}
@@ -432,7 +339,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={handleClose} className="import-btn-outline">
+            <Button variant="outline" onClick={handleClose}>
               {result ? 'Done' : 'Cancel'}
             </Button>
             {!result && preview.length > 0 &&
