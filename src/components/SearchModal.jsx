@@ -152,7 +152,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </Tabs>
 
         <ScrollArea className="h-96 px-4 pb-4">
-          {!showAll && query.length < 3 ? (
+          {!showAll && query.length < 1 ? (
             <div className="text-center py-12 text-slate-400">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>Type to search or press Enter to browse all</p>
