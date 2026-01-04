@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   Building2, MapPin, Star, Calendar, Mail, Phone, Globe, 
-  Linkedin, Twitter, ExternalLink, FileText, Tag, Lock, Eye, EyeOff
+  Linkedin, Twitter, ExternalLink, FileText, Tag, Lock, Eye, EyeOff,
+  Edit, Trash2, Plus, Save, X, Sparkles, Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
