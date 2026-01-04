@@ -127,7 +127,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
     // Re-parse full file
     const text = await file.text();
     const lines = text.split('\n').filter((line) => line.trim());
-    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/"/g, ''));
+    const headerLine = parseCSVLine(lines[0]);
+    const headers = headerLine.map((h) => h.trim().toLowerCase().replace(/"/g, ''));
 
     const allRecords = [];
     for (let i = 1; i < lines.length; i++) {
