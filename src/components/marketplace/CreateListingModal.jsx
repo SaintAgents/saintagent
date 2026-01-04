@@ -132,20 +132,20 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
               "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all",
               i < step ? "bg-emerald-500 text-white" :
               i === step ? "bg-violet-600 text-white" :
-              "bg-slate-100 text-slate-400"
+              "bg-slate-100 text-slate-400 listing-modal-step-inactive"
             )}>
               {i < step ? <Check className="w-4 h-4" /> : i + 1}
             </div>
             <span className={cn(
               "text-sm hidden sm:inline",
-              i === step ? "text-slate-900 font-medium" : "text-slate-400"
+              i === step ? "text-slate-900 font-medium listing-modal-step-label-active" : "text-slate-400 listing-modal-step-label"
             )}>
               {s.label}
             </span>
           </div>
           {i < STEPS.length - 1 && (
             <div className={cn(
-              "w-8 h-0.5",
+              "w-8 h-0.5 listing-modal-divider",
               i < step ? "bg-emerald-500" : "bg-slate-200"
             )} />
           )}
@@ -170,11 +170,11 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
         return (
           <div className="space-y-4">
             <div>
-              <Label className={errors.title ? 'text-red-600' : ''}>
+              <Label className={cn("listing-modal-label", errors.title ? 'text-red-600' : '')}>
                 Title <span className="text-red-500">*</span>
               </Label>
               <Input
-                className={cn("mt-2", errors.title && "border-red-300 focus:border-red-500")}
+                className={cn("mt-2 listing-modal-input", errors.title && "border-red-300 focus:border-red-500")}
                 placeholder="e.g., 1:1 Mentorship Session"
                 value={form.title}
                 onChange={(e) => {
@@ -187,9 +187,9 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Type</Label>
+                <Label className="listing-modal-label">Type</Label>
                 <Select value={form.listing_type} onValueChange={(v) => setForm({ ...form, listing_type: v })}>
-                  <SelectTrigger className="mt-2">
+                  <SelectTrigger className="mt-2 listing-modal-input">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -197,14 +197,14 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
                     <SelectItem value="request">Request</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 mt-1 listing-modal-hint">
                   {form.listing_type === 'offer' ? 'You\'re offering a service' : 'You\'re looking for help'}
                 </p>
               </div>
               <div>
-                <Label>Category</Label>
+                <Label className="listing-modal-label">Category</Label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-                  <SelectTrigger className="mt-2">
+                  <SelectTrigger className="mt-2 listing-modal-input">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -227,11 +227,11 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3 items-start">
               <div>
-                <Label className={errors.price_amount ? 'text-red-600' : ''}>Price ($)</Label>
+                <Label className={cn("listing-modal-label", errors.price_amount ? 'text-red-600' : '')}>Price ($)</Label>
                 <Input
                   type="text"
                   inputMode="decimal"
-                  className={cn("mt-2", errors.price_amount && "border-red-300")}
+                  className={cn("mt-2 listing-modal-input", errors.price_amount && "border-red-300")}
                   placeholder="0"
                   value={form.price_amount}
                   onChange={(e) => {
@@ -254,25 +254,25 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
                     if (v) setErrors({ ...errors, price_amount: null });
                   }} 
                 />
-                <label htmlFor="free" className="text-sm text-slate-700">Offer for free</label>
+                <label htmlFor="free" className="text-sm text-slate-700 listing-modal-checkbox-label">Offer for free</label>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Duration (minutes)</Label>
+                <Label className="listing-modal-label">Duration (minutes)</Label>
                 <Input
                   type="number"
-                  className="mt-2"
+                  className="mt-2 listing-modal-input"
                   placeholder="60"
                   value={form.duration_minutes}
                   onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })}
                 />
               </div>
               <div>
-                <Label>Delivery</Label>
+                <Label className="listing-modal-label">Delivery</Label>
                 <Select value={form.delivery_mode} onValueChange={(v) => setForm({ ...form, delivery_mode: v })}>
-                  <SelectTrigger className="mt-2">
+                  <SelectTrigger className="mt-2 listing-modal-input">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -285,11 +285,11 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
             </div>
 
             <div>
-              <Label className={errors.description ? 'text-red-600' : ''}>
+              <Label className={cn("listing-modal-label", errors.description ? 'text-red-600' : '')}>
                 Description <span className="text-red-500">*</span>
               </Label>
               <Textarea
-                className={cn("mt-2 min-h-24", errors.description && "border-red-300")}
+                className={cn("mt-2 min-h-24 listing-modal-input", errors.description && "border-red-300")}
                 placeholder="Describe what you're offering or looking for. Be specific about what's included, your experience, and what participants can expect."
                 value={form.description}
                 onChange={(e) => {
@@ -299,7 +299,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
               />
               <div className="flex justify-between mt-1">
                 {renderError('description')}
-                <span className="text-xs text-slate-400 ml-auto">
+                <span className="text-xs text-slate-400 listing-modal-hint ml-auto">
                   {form.description.length} characters
                 </span>
               </div>
@@ -311,14 +311,14 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
         return (
           <div className="space-y-4">
             <div>
-              <Label>Cover Image (optional)</Label>
-              <p className="text-xs text-slate-500 mt-1 mb-3">
+              <Label className="listing-modal-label">Cover Image (optional)</Label>
+              <p className="text-xs text-slate-500 mt-1 mb-3 listing-modal-hint">
                 Add an image to make your listing stand out
               </p>
               
               {/* Image preview */}
               {form.image_url && (
-                <div className="relative rounded-lg border p-2 bg-slate-50 mb-4">
+                <div className="relative rounded-lg border p-2 bg-slate-50 mb-4 listing-modal-preview">
                   <img src={form.image_url} alt="Cover" className="w-full h-40 object-cover rounded" />
                   <Button 
                     variant="ghost" 
@@ -358,17 +358,17 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
                   </div>
 
                   {imageMode === 'upload' ? (
-                    <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center">
+                    <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center listing-modal-upload-area">
                       <Image className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                       <Input 
                         type="file" 
                         accept="image/*" 
-                        className="mb-3"
+                        className="mb-3 listing-modal-input"
                         onChange={(e) => setLocalFile(e.target.files?.[0] || null)} 
                       />
                       {localFile && (
                         <div className="flex items-center justify-center gap-2">
-                          <span className="text-sm text-slate-600">{localFile.name}</span>
+                          <span className="text-sm text-slate-600 listing-modal-hint">{localFile.name}</span>
                           <Button 
                             type="button" 
                             size="sm"
@@ -384,11 +384,12 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
                   ) : (
                     <div>
                       <Input 
+                        className="listing-modal-input"
                         placeholder="https://example.com/image.jpg" 
                         value={form.image_url} 
                         onChange={(e) => setForm({ ...form, image_url: e.target.value })} 
                       />
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-500 mt-1 listing-modal-hint">
                         Paste a direct link to an image (JPG, PNG, WebP)
                       </p>
                     </div>
@@ -407,8 +408,75 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
+        <style>{`
+          [data-theme='dark'] [data-radix-dialog-content] {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .listing-modal-title {
+            color: #ffffff !important;
+          }
+          [data-theme='dark'] .listing-modal-label {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .listing-modal-hint {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .listing-modal-input {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .listing-modal-input::placeholder {
+            color: #64748b !important;
+          }
+          [data-theme='dark'] .listing-modal-step-inactive {
+            background-color: #1e293b !important;
+            color: #64748b !important;
+          }
+          [data-theme='dark'] .listing-modal-step-label {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .listing-modal-step-label-active {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .listing-modal-divider {
+            background-color: #334155 !important;
+          }
+          [data-theme='dark'] .listing-modal-border-top {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .listing-modal-upload-area {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .listing-modal-preview {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .listing-modal-checkbox-label {
+            color: #cbd5e1 !important;
+          }
+          [data-theme='dark'] [data-radix-select-trigger] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] [data-radix-select-content] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] [data-radix-select-item] {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] [data-radix-select-item]:hover,
+          [data-theme='dark'] [data-radix-select-item][data-highlighted] {
+            background-color: #334155 !important;
+          }
+        `}</style>
         <DialogHeader>
-          <DialogTitle>Create Listing</DialogTitle>
+          <DialogTitle className="listing-modal-title">Create Listing</DialogTitle>
         </DialogHeader>
         
         {renderStepIndicator()}
@@ -417,7 +485,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
           {renderStep()}
         </div>
 
-        <div className="flex justify-between gap-2 pt-4 border-t">
+        <div className="flex justify-between gap-2 pt-4 border-t listing-modal-border-top">
           <div>
             {step > 0 && (
               <Button variant="ghost" onClick={handleBack}>
