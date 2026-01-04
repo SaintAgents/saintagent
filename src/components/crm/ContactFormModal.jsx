@@ -124,16 +124,83 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <style>{`
+          [data-theme='dark'] [data-radix-dialog-content] {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .contact-form-title {
+            color: #ffffff !important;
+          }
+          [data-theme='dark'] .contact-form-label {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .contact-form-input {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .contact-form-input::placeholder {
+            color: #64748b !important;
+          }
+          [data-theme='dark'] .contact-form-hint {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .contact-form-sharing {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .contact-form-sharing-title {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .contact-form-perm-btn {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .contact-form-perm-btn:hover {
+            border-color: #475569 !important;
+          }
+          [data-theme='dark'] .contact-form-perm-btn.active {
+            background-color: rgba(139, 92, 246, 0.2) !important;
+            border-color: #8b5cf6 !important;
+          }
+          [data-theme='dark'] .contact-form-perm-label {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .contact-form-perm-desc {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .contact-form-border-top {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] [data-radix-select-trigger] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] [data-radix-select-content] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] [data-radix-select-item] {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] [data-radix-select-item]:hover,
+          [data-theme='dark'] [data-radix-select-item][data-highlighted] {
+            background-color: #334155 !important;
+          }
+        `}</style>
         <DialogHeader>
-          <DialogTitle>{isEdit ? 'Edit Contact' : 'Add New Contact'}</DialogTitle>
+          <DialogTitle className="contact-form-title">{isEdit ? 'Edit Contact' : 'Add New Contact'}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Name *</Label>
+              <Label className="contact-form-label">Name *</Label>
               <Input 
+                className="contact-form-input"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Contact name"
@@ -141,8 +208,9 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
               />
             </div>
             <div>
-              <Label>Email</Label>
+              <Label className="contact-form-label">Email</Label>
               <Input 
+                className="contact-form-input"
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -150,16 +218,18 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
               />
             </div>
             <div>
-              <Label>Phone</Label>
+              <Label className="contact-form-label">Phone</Label>
               <Input 
+                className="contact-form-input"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="+1 234 567 8900"
               />
             </div>
             <div>
-              <Label>Location</Label>
+              <Label className="contact-form-label">Location</Label>
               <Input 
+                className="contact-form-input"
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 placeholder="City, Country"
@@ -170,25 +240,27 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
           {/* Professional Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Company</Label>
+              <Label className="contact-form-label">Company</Label>
               <Input 
+                className="contact-form-input"
                 value={form.company}
                 onChange={(e) => setForm({ ...form, company: e.target.value })}
                 placeholder="Company name"
               />
             </div>
             <div>
-              <Label>Role</Label>
+              <Label className="contact-form-label">Role</Label>
               <Input 
+                className="contact-form-input"
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
                 placeholder="Job title"
               />
             </div>
             <div className="col-span-2">
-              <Label>Domain</Label>
+              <Label className="contact-form-label">Domain</Label>
               <Select value={form.domain} onValueChange={(v) => setForm({ ...form, domain: v })}>
-                <SelectTrigger>
+                <SelectTrigger className="contact-form-input">
                   <SelectValue placeholder="Select domain" />
                 </SelectTrigger>
                 <SelectContent>
@@ -202,7 +274,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
 
           {/* Relationship Strength */}
           <div>
-            <Label className="mb-2 block">Relationship Strength</Label>
+            <Label className="mb-2 block contact-form-label">Relationship Strength</Label>
             <div className="flex items-center gap-2">
               {[1, 2, 3, 4, 5].map((level) => (
                 <button
@@ -221,7 +293,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
                   />
                 </button>
               ))}
-              <span className="text-sm text-slate-500 ml-2">
+              <span className="text-sm text-slate-500 ml-2 contact-form-hint">
                 {form.relationship_strength === 1 && 'Acquaintance'}
                 {form.relationship_strength === 2 && 'Casual'}
                 {form.relationship_strength === 3 && 'Professional'}
@@ -233,7 +305,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
 
           {/* Tags */}
           <div>
-            <Label className="mb-2 block">Tags</Label>
+            <Label className="mb-2 block contact-form-label">Tags</Label>
             <div className="flex flex-wrap gap-2 mb-2">
               {form.tags.map((tag, i) => (
                 <Badge key={i} variant="secondary" className="gap-1">
@@ -246,6 +318,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
             </div>
             <div className="flex gap-2">
               <Input 
+                className="contact-form-input"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 placeholder="Add a tag"
@@ -259,8 +332,9 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
 
           {/* Notes */}
           <div>
-            <Label>Notes (Private)</Label>
+            <Label className="contact-form-label">Notes (Private)</Label>
             <Textarea 
+              className="contact-form-input"
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="Private notes about this contact..."
@@ -270,19 +344,22 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
 
           {/* Social Links */}
           <div>
-            <Label className="mb-2 block">Social Links</Label>
+            <Label className="mb-2 block contact-form-label">Social Links</Label>
             <div className="grid grid-cols-3 gap-4">
               <Input 
+                className="contact-form-input"
                 value={form.social_links.linkedin}
                 onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value }})}
                 placeholder="LinkedIn URL"
               />
               <Input 
+                className="contact-form-input"
                 value={form.social_links.twitter}
                 onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, twitter: e.target.value }})}
                 placeholder="Twitter/X URL"
               />
               <Input 
+                className="contact-form-input"
                 value={form.social_links.website}
                 onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, website: e.target.value }})}
                 placeholder="Website URL"
@@ -291,11 +368,11 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
           </div>
 
           {/* Sharing Settings */}
-          <div className="p-4 bg-slate-50 rounded-xl space-y-4">
+          <div className="p-4 bg-slate-50 rounded-xl space-y-4 contact-form-sharing">
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-base">Share to Federated Network</Label>
-                <p className="text-sm text-slate-500">Make this contact available in the global graph</p>
+                <Label className="text-base contact-form-sharing-title">Share to Federated Network</Label>
+                <p className="text-sm text-slate-500 contact-form-hint">Make this contact available in the global graph</p>
               </div>
               <Switch 
                 checked={form.is_federated}
@@ -309,7 +386,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
 
             {form.is_federated && (
               <div>
-                <Label className="mb-2 block">Permission Level</Label>
+                <Label className="mb-2 block contact-form-label">Permission Level</Label>
                 <div className="space-y-2">
                   {PERMISSION_OPTIONS.filter(p => p.value !== 'private').map((opt) => (
                     <button
@@ -317,9 +394,9 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
                       type="button"
                       onClick={() => setForm({ ...form, permission_level: opt.value })}
                       className={cn(
-                        "w-full p-3 rounded-lg border text-left flex items-center gap-3 transition-colors",
+                        "w-full p-3 rounded-lg border text-left flex items-center gap-3 transition-colors contact-form-perm-btn",
                         form.permission_level === opt.value 
-                          ? "border-violet-500 bg-violet-50" 
+                          ? "border-violet-500 bg-violet-50 active" 
                           : "border-slate-200 hover:border-slate-300"
                       )}
                     >
@@ -328,8 +405,8 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
                         form.permission_level === opt.value ? "text-violet-600" : "text-slate-400"
                       )} />
                       <div>
-                        <p className="font-medium text-slate-900">{opt.label}</p>
-                        <p className="text-sm text-slate-500">{opt.desc}</p>
+                        <p className="font-medium text-slate-900 contact-form-perm-label">{opt.label}</p>
+                        <p className="text-sm text-slate-500 contact-form-perm-desc">{opt.desc}</p>
                       </div>
                     </button>
                   ))}
@@ -339,7 +416,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
+          <div className="flex justify-end gap-3 pt-4 border-t contact-form-border-top">
             <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
             <Button type="submit" className="bg-violet-600 hover:bg-violet-700" disabled={mutation.isPending}>
               {mutation.isPending ? 'Saving...' : isEdit ? 'Update Contact' : 'Add Contact'}
