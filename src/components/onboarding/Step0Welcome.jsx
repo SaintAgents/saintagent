@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -83,6 +84,26 @@ export default function Step0Welcome({ data, onComplete }) {
         })}
       </div>
 
+      {/* Terms acceptance */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+        <Checkbox
+          id="terms"
+          checked={acceptTerms}
+          onCheckedChange={(checked) => setAcceptTerms(!!checked)}
+          className="mt-0.5"
+        />
+        <label htmlFor="terms" className="text-sm text-slate-600 cursor-pointer">
+          I agree to the{' '}
+          <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank">
+            Privacy Policy
+          </Link>
+        </label>
+      </div>
+
       <div className="flex items-center justify-between pt-4">
         <p className="text-sm text-slate-500">
           {selected.length}/7 selected
@@ -95,6 +116,10 @@ export default function Step0Welcome({ data, onComplete }) {
           Continue
         </Button>
       </div>
+      
+      {selected.length === 0 && (
+        <p className="text-xs text-amber-600 text-center">Please select at least one intention to continue</p>
+      )}
     </div>
   );
 }

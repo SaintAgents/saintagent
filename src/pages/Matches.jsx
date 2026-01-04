@@ -24,6 +24,8 @@ import MatchCard from '@/components/hud/MatchCard';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -231,11 +233,20 @@ export default function Matches() {
         sortedMatches.length === 0 ?
         <div className="text-center py-16">
             <Sparkles className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">No matches found</h3>
-            <p className="text-slate-500 mb-6">Complete your profile to unlock personalized matches</p>
-            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700">
-              Complete Profile
-            </Button>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">No matches found yet</h3>
+            <p className="text-slate-500 mb-6 max-w-md mx-auto">
+              The Synchronicity Engine finds people, offers, and missions aligned with your values and skills. 
+              Complete your profile or generate AI matches to discover connections.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link to={createPageUrl('Profile')}>
+                <Button variant="outline" className="rounded-xl gap-2">
+                  <Users className="w-4 h-4" />
+                  Complete Profile
+                </Button>
+              </Link>
+              <AIMatchGenerator profile={profile} />
+            </div>
           </div> :
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

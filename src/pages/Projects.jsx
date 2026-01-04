@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Folder, Search, Plus, Filter } from 'lucide-react';
+import { Folder, Search, Plus, Filter, AlertCircle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -19,6 +21,18 @@ export default function Projects() {
   const [status, setStatus] = useState('all');
   const [selected, setSelected] = useState(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: onboardingRecords } = useQuery({
+    queryKey: ['onboardingProgress', currentUser?.email],
+    queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const onboardingComplete = onboardingRecords?.[0]?.status === 'complete';
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects_all'],
@@ -50,10 +64,30 @@ export default function Projects() {
             <p className="text-slate-500 mt-1">Browse, filter, and manage all projects</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => (window.location.href = createPageUrl('ProjectCreate'))}>
-              <Plus className="w-4 h-4" />
-              Add Project
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button 
+                      className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                      onClick={() => (window.location.href = createPageUrl('ProjectCreate'))}
+                      disabled={!onboardingComplete}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Project
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                {!onboardingComplete && (
+                  <TooltipContent side="bottom" className="max-w-[200px]">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-500" />
+                      <span>Complete onboarding first to create projects</span>
+                    </div>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 
@@ -101,7 +135,37 @@ export default function Projects() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
             <Folder className="w-14 h-14 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500">No projects match your filters</p>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              {projects.length === 0 ? 'No projects yet' : 'No projects match your filters'}
+            </h3>
+            <p className="text-slate-500 mb-6 max-w-md mx-auto">
+              {projects.length === 0 
+                ? 'Create your first project to start collaborating with others and tracking your work.'
+                : 'Try adjusting your search or filter criteria.'}
+            </p>
+            {projects.length === 0 && (
+              onboardingComplete ? (
+                <Button 
+                  className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2"
+                  onClick={() => (window.location.href = createPageUrl('ProjectCreate'))}
+                >
+                  <Plus className="w-4 h-4" />
+                  Create Your First Project
+                </Button>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-sm text-amber-600 flex items-center justify-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    Complete onboarding to create projects
+                  </p>
+                  <Link to={createPageUrl('Onboarding')}>
+                    <Button className="rounded-xl bg-violet-600 hover:bg-violet-700">
+                      Complete Onboarding
+                    </Button>
+                  </Link>
+                </div>
+              )
+            )}
           </div>
         ) : (
           <>
