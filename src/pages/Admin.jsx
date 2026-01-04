@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network } from "lucide-react";
 
 import UserManagement from '@/components/admin/UserManagement';
 import GGGRulesManager from '@/components/admin/GGGRulesManager';
@@ -11,6 +11,7 @@ import PlatformSettings from '@/components/admin/PlatformSettings';
 import AdminProjects from '@/components/admin/AdminProjects';
 import ReferralDatasets from '@/components/admin/ReferralDatasets';
 import AdminStats from '@/components/admin/AdminStats';
+import AdminCRM from '@/components/admin/AdminCRM';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -49,7 +50,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-7">
+          <TabsList className="grid w-full max-w-4xl grid-cols-8">
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Users
@@ -77,6 +78,10 @@ export default function Admin() {
             <TabsTrigger value="projects" className="gap-2">
               <Folder className="w-4 h-4" />
               Projects
+            </TabsTrigger>
+            <TabsTrigger value="crm" className="gap-2">
+              <Network className="w-4 h-4" />
+              CRM
             </TabsTrigger>
           </TabsList>
 
@@ -106,6 +111,10 @@ export default function Admin() {
 
           <TabsContent value="projects">
             <AdminProjects />
+          </TabsContent>
+
+          <TabsContent value="crm">
+            <AdminCRM />
           </TabsContent>
         </Tabs>
       </div>
