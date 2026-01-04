@@ -219,12 +219,18 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl import-modal-content">
+      <DialogContent className="max-w-2xl import-modal-content" style={{ backgroundColor: 'var(--modal-bg, white)' }}>
         <style>{`
-          [data-theme='dark'] .import-modal-content {
+          :root { --modal-bg: white; }
+          [data-theme='dark'] { --modal-bg: #0f172a; }
+          [data-theme='dark'] .import-modal-content,
+          [data-theme='dark'] .import-modal-content > div {
             background-color: #0f172a !important;
             border-color: #334155 !important;
             color: #e5e7eb !important;
+          }
+          [data-theme='dark'] [data-radix-dialog-content].import-modal-content {
+            background-color: #0f172a !important;
           }
           [data-theme='dark'] .import-modal-content .bg-slate-50 {
             background-color: #1e293b !important;
@@ -291,6 +297,9 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
             background-color: #334155 !important;
             border-color: #475569 !important;
             color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-modal-content .import-table-wrapper {
+            background-color: #0f172a !important;
           }
         `}</style>
         <DialogHeader>
@@ -382,24 +391,24 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           {preview.length > 0 && !result &&
           <div className="space-y-2">
               <div className="text-sm font-medium text-slate-900">Preview (first 10 contacts)</div>
-              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto">
-                <table className="w-full text-xs">
+              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto import-table-wrapper">
+                <table className="w-full text-xs table-fixed">
                   <thead className="bg-slate-50 sticky top-0">
                     <tr>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Name</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Email</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Company</th>
-                      <th className="text-left px-3 py-2 font-medium text-slate-600">Domain</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[30%]">Name</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[30%]">Email</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[20%]">Company</th>
+                      <th className="text-left px-3 py-2 font-medium text-slate-600 w-[20%]">Domain</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {preview.map((contact, idx) =>
                   <tr key={idx} className="hover:bg-slate-50">
-                        <td className="px-3 py-2 text-slate-900">{contact.name || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600">{contact.email || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600">{contact.company || '-'}</td>
+                        <td className="px-3 py-2 text-slate-900 truncate">{contact.name || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600 truncate">{contact.email || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600 truncate">{contact.company || '-'}</td>
                         <td className="px-3 py-2">
-                          <Badge variant="outline" className="text-xs capitalize badge-domain">{contact.domain}</Badge>
+                          <span className="inline-block px-2 py-0.5 text-xs rounded border capitalize badge-domain">{contact.domain}</span>
                         </td>
                       </tr>
                   )}
