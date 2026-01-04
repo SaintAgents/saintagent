@@ -29,6 +29,7 @@ import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
+import CRM from './pages/CRM';
 import __Layout from './Layout.jsx';
 
 
@@ -64,6 +65,7 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
+    "CRM": CRM,
 }
 
 export const pagesConfig = {
