@@ -48,18 +48,24 @@ export default function TrustScoreCard({ userId, onUpdated }) {
         </Button>
       </CardHeader>
       <CardContent className="pt-2">
-        <div className="flex items-center gap-6">
-          <ProgressRing value={score} max={100} size={88} strokeWidth={8} color="emerald" label={`${score}`} sublabel="/100" />
-          {breakdown && (
-            <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-              <div className="text-slate-500">Testimonials</div><div className="font-medium text-slate-900">{Math.round(breakdown.testimonials)}</div>
-              <div className="text-slate-500">Collaborations</div><div className="font-medium text-slate-900">{Math.round(breakdown.collaborations)}</div>
-              <div className="text-slate-500">Interactions</div><div className="font-medium text-slate-900">{Math.round(breakdown.interactions)}</div>
-              <div className="text-slate-500">Presence</div><div className="font-medium text-slate-900">{Math.round(breakdown.presence)}</div>
-              <div className="text-slate-500">RP</div><div className="font-medium text-slate-900">{Math.round(breakdown.rp)}</div>
-            </div>
-          )}
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-6 text-slate-400 text-sm">Loading...</div>
+        ) : error ? (
+          <div className="flex items-center justify-center py-6 text-red-500 text-sm">{error}</div>
+        ) : (
+          <div className="flex items-center gap-6">
+            <ProgressRing value={score} max={100} size={88} strokeWidth={8} color="emerald" label={`${score}`} sublabel="/100" />
+            {breakdown && (
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                <div className="text-slate-500">Testimonials</div><div className="font-medium text-slate-900">{Math.round(breakdown.testimonials)}</div>
+                <div className="text-slate-500">Collaborations</div><div className="font-medium text-slate-900">{Math.round(breakdown.collaborations)}</div>
+                <div className="text-slate-500">Interactions</div><div className="font-medium text-slate-900">{Math.round(breakdown.interactions)}</div>
+                <div className="text-slate-500">Presence</div><div className="font-medium text-slate-900">{Math.round(breakdown.presence)}</div>
+                <div className="text-slate-500">RP</div><div className="font-medium text-slate-900">{Math.round(breakdown.rp)}</div>
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
