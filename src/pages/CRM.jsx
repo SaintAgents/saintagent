@@ -117,7 +117,7 @@ export default function CRM() {
                 {accessRequests.length} pending request{accessRequests.length > 1 ? 's' : ''}
               </Badge>
             )}
-            <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2">
+            <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700">
               <Upload className="w-4 h-4" />
               Import CSV
             </Button>

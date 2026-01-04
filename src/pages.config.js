@@ -1,7 +1,6 @@
 import ActivityFeed from './pages/ActivityFeed';
 import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
-import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import DailyOps from './pages/DailyOps';
@@ -30,6 +29,7 @@ import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
+import CRM from './pages/CRM';
 import __Layout from './Layout.jsx';
 
 
@@ -37,7 +37,6 @@ export const PAGES = {
     "ActivityFeed": ActivityFeed,
     "Admin": Admin,
     "AffiliateCenter": AffiliateCenter,
-    "CRM": CRM,
     "Circles": Circles,
     "CommandDeck": CommandDeck,
     "DailyOps": DailyOps,
@@ -66,6 +65,7 @@ export const PAGES = {
     "Settings": Settings,
     "Studio": Studio,
     "Terms": Terms,
+    "CRM": CRM,
 }
 
 export const pagesConfig = {
