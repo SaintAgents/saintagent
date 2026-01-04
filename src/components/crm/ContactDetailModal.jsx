@@ -141,23 +141,23 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
 
         <div className="space-y-4">
           {/* Header with Avatar */}
-          <div className="flex items-center gap-4">
-            <Avatar className="w-16 h-16">
+          <div className="flex items-start gap-4">
+            <Avatar className="w-16 h-16 flex-shrink-0">
               <AvatarImage src={contact.avatar_url} />
               <AvatarFallback className="bg-violet-100 text-violet-600 text-xl">
                 {contact.name?.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h2 className="text-xl font-semibold" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl font-semibold truncate" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
                 {contact.name}
               </h2>
               {contact.role && (
-                <p className="text-sm" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>
+                <p className="text-sm truncate" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>
                   {contact.role} {contact.company && `at ${contact.company}`}
                 </p>
               )}
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex flex-wrap items-center gap-2 mt-2">
                 {contact.domain && (
                   <Badge className={cn("text-xs", DOMAIN_COLORS[contact.domain])}>
                     {contact.domain}
