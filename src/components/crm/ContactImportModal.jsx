@@ -209,27 +209,97 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl">
+        <style>{`
+          [data-theme='dark'] [data-radix-dialog-content] {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-title {
+            color: #ffffff !important;
+          }
+          [data-theme='dark'] .import-desc {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-format-box {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-format-title {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .import-format-hint {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-upload-zone {
+            border-color: #334155 !important;
+            background-color: transparent !important;
+          }
+          [data-theme='dark'] .import-upload-zone:hover {
+            border-color: #6d28d9 !important;
+            background-color: rgba(139, 92, 246, 0.1) !important;
+          }
+          [data-theme='dark'] .import-upload-zone.has-file {
+            border-color: #6d28d9 !important;
+            background-color: rgba(139, 92, 246, 0.1) !important;
+          }
+          [data-theme='dark'] .import-file-name {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .import-file-hint {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-upload-text {
+            color: #cbd5e1 !important;
+          }
+          [data-theme='dark'] .import-preview-title {
+            color: #f1f5f9 !important;
+          }
+          [data-theme='dark'] .import-table {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-table thead {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-table th {
+            color: #94a3b8 !important;
+          }
+          [data-theme='dark'] .import-table tbody {
+            background-color: #0f172a !important;
+          }
+          [data-theme='dark'] .import-table tbody tr {
+            border-color: #334155 !important;
+          }
+          [data-theme='dark'] .import-table tbody tr:hover {
+            background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-table td {
+            color: #e5e7eb !important;
+          }
+          [data-theme='dark'] .import-table .td-secondary {
+            color: #94a3b8 !important;
+          }
+        `}</style>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 import-title">
             <FileSpreadsheet className="w-5 h-5 text-violet-600" />
             Import Contacts
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="import-desc">
             Upload a CSV file to import your contacts in bulk
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Format Info */}
-          <div className="bg-slate-50 rounded-lg p-4 space-y-3">
-            <div className="text-sm font-medium text-slate-900">Accepted Formats</div>
+          <div className="bg-slate-50 rounded-lg p-4 space-y-3 import-format-box">
+            <div className="text-sm font-medium text-slate-900 import-format-title">Accepted Formats</div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className="gap-1">
                 <FileText className="w-3 h-3" />
                 CSV (.csv)
               </Badge>
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-500 import-format-hint">
               <strong>Supported columns:</strong> name, email, phone, company, role/title, domain/industry, 
               location, notes, tags, linkedin, twitter, website
             </div>
@@ -243,8 +313,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           {!result && (
             <div
               className={cn(
-                "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
-                file ? "border-violet-300 bg-violet-50" : "border-slate-200 hover:border-violet-300 hover:bg-violet-50/50"
+                "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer import-upload-zone",
+                file ? "border-violet-300 bg-violet-50 has-file" : "border-slate-200 hover:border-violet-300 hover:bg-violet-50/50"
               )}
               onClick={() => fileRef.current?.click()}
             >
@@ -258,8 +328,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
               {file ? (
                 <div className="space-y-2">
                   <FileSpreadsheet className="w-10 h-10 text-violet-600 mx-auto" />
-                  <div className="font-medium text-slate-900">{file.name}</div>
-                  <div className="text-sm text-slate-500">
+                  <div className="font-medium text-slate-900 import-file-name">{file.name}</div>
+                  <div className="text-sm text-slate-500 import-file-hint">
                     {preview.length > 0 ? `${preview.length}+ contacts found` : 'Processing...'}
                   </div>
                   <Button
@@ -279,8 +349,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
               ) : (
                 <div className="space-y-2">
                   <Upload className="w-10 h-10 text-slate-400 mx-auto" />
-                  <div className="font-medium text-slate-700">Click to upload or drag and drop</div>
-                  <div className="text-sm text-slate-500">CSV file up to 10MB</div>
+                  <div className="font-medium text-slate-700 import-upload-text">Click to upload or drag and drop</div>
+                  <div className="text-sm text-slate-500 import-file-hint">CSV file up to 10MB</div>
                 </div>
               )}
             </div>
@@ -297,8 +367,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           {/* Preview */}
           {preview.length > 0 && !result && (
             <div className="space-y-2">
-              <div className="text-sm font-medium text-slate-900">Preview (first 10 contacts)</div>
-              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+              <div className="text-sm font-medium text-slate-900 import-preview-title">Preview (first 10 contacts)</div>
+              <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto import-table">
                 <table className="w-full text-xs">
                   <thead className="bg-slate-50 sticky top-0">
                     <tr>
@@ -312,8 +382,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                     {preview.map((contact, idx) => (
                       <tr key={idx} className="hover:bg-slate-50">
                         <td className="px-3 py-2 text-slate-900">{contact.name || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600">{contact.email || '-'}</td>
-                        <td className="px-3 py-2 text-slate-600">{contact.company || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600 td-secondary">{contact.email || '-'}</td>
+                        <td className="px-3 py-2 text-slate-600 td-secondary">{contact.company || '-'}</td>
                         <td className="px-3 py-2">
                           <Badge variant="outline" className="text-xs capitalize">{contact.domain}</Badge>
                         </td>
