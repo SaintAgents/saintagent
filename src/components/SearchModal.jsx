@@ -92,12 +92,13 @@ export default function SearchModal({ open, onClose, onSelect }) {
     });
   };
 
-  const filteredProfiles = filterResults(profiles);
-  const filteredListings = filterResults(listings);
-  const filteredMissions = filterResults(missions);
-  const filteredCircles = filterResults(circles);
-  const filteredPosts = filterResults(posts);
-  const filteredProjects = filterResults(projects);
+  // Search profiles by handle, display_name, bio
+  const filteredProfiles = filterResults(profiles, ['handle', 'display_name', 'bio', 'user_id']);
+  const filteredListings = filterResults(listings, ['title', 'description', 'owner_name']);
+  const filteredMissions = filterResults(missions, ['title', 'description', 'objective']);
+  const filteredCircles = filterResults(circles, ['name', 'description', 'purpose']);
+  const filteredPosts = filterResults(posts, ['content', 'title']);
+  const filteredProjects = filterResults(projects, ['title', 'description']);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
