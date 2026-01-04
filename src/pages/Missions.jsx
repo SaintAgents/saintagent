@@ -83,10 +83,15 @@ export default function Missions() {
 
         {/* Filters */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-5 h-11 bg-white rounded-xl border">
-            <TabsTrigger value="all" className="rounded-lg gap-2">
-              <Filter className="w-4 h-4" />
-              All
+          <TabsList className="w-full grid grid-cols-7 h-11 bg-white rounded-xl border">
+            <TabsTrigger value="active" className="rounded-lg gap-2">
+              <Target className="w-4 h-4" />
+              Active
+              {activeMissions.length > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-emerald-100 text-emerald-700">{activeMissions.length}</Badge>}
+            </TabsTrigger>
+            <TabsTrigger value="past" className="rounded-lg gap-2">
+              Past
+              {pastMissions.length > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-slate-100 text-slate-600">{pastMissions.length}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="platform" className="rounded-lg gap-2">
               <Sparkles className="w-4 h-4" />
@@ -103,6 +108,10 @@ export default function Missions() {
             <TabsTrigger value="leader" className="rounded-lg gap-2">
               <Crown className="w-4 h-4" />
               Leader
+            </TabsTrigger>
+            <TabsTrigger value="all" className="rounded-lg gap-2">
+              <Filter className="w-4 h-4" />
+              All
             </TabsTrigger>
           </TabsList>
         </Tabs>
