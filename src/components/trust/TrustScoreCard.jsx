@@ -17,7 +17,11 @@ export default function TrustScoreCard({ userId, onUpdated }) {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('computeTrustScore', { target_user_id: userId });
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('timeout')), 10000)
+      );
+      const fetchPromise = base44.functions.invoke('computeTrustScore', { target_user_id: userId });
+      const { data } = await Promise.race([fetchPromise, timeoutPromise]);
       if (data?.score != null) {
         setScore(data.score);
         setBreakdown(data.breakdown || null);
@@ -25,7 +29,7 @@ export default function TrustScoreCard({ userId, onUpdated }) {
         onUpdated?.(data.score);
       }
     } catch (err) {
-      setError('Failed to load');
+      setError(err.message === 'timeout' ? 'Request timed out' : 'Unable to load stats');
     } finally {
       setLoading(false);
     }
@@ -49,9 +53,24 @@ export default function TrustScoreCard({ userId, onUpdated }) {
       </CardHeader>
       <CardContent className="pt-2">
         {loading ? (
-          <div className="flex items-center justify-center py-6 text-slate-400 text-sm">Loading...</div>
+          <div className="flex items-center gap-6">
+            <div className="w-[88px] h-[88px] rounded-full bg-slate-100 animate-pulse" />
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+              {[...Array(5)].map((_, i) => (
+                <React.Fragment key={i}>
+                  <div className="h-4 w-20 bg-slate-100 rounded animate-pulse" />
+                  <div className="h-4 w-8 bg-slate-200 rounded animate-pulse" />
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         ) : error ? (
-          <div className="flex items-center justify-center py-6 text-red-500 text-sm">{error}</div>
+          <div className="flex flex-col items-center justify-center py-6 gap-2">
+            <p className="text-red-500 text-sm">{error}</p>
+            <Button size="sm" variant="outline" onClick={recompute} className="rounded-lg">
+              Retry
+            </Button>
+          </div>
         ) : (
           <div className="flex items-center gap-6">
             <ProgressRing value={score} max={100} size={88} strokeWidth={8} color="emerald" label={`${score}`} sublabel="/100" />
