@@ -44,7 +44,8 @@ import {
   Target,
   Heart,
   Compass,
-  BadgeCheck } from
+  BadgeCheck,
+  MessageSquare } from
   "lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
@@ -59,6 +60,7 @@ import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import Step7Dating from '@/components/onboarding/Step7Dating';
+import { createPageUrl } from '@/utils';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -573,7 +575,22 @@ export default function Profile() {
               </CardHeader>
               <CardContent>
                 {testimonials.length === 0 ?
-                    <p className="text-slate-400">No testimonials yet</p> :
+                    <div className="text-center py-4">
+                      <Star className="w-10 h-10 text-slate-200 mx-auto mb-2" />
+                      <p className="text-slate-500 mb-3">No testimonials yet</p>
+                      <p className="text-xs text-slate-400 mb-4">Testimonials from collaborators help build your reputation</p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="gap-2"
+                        onClick={() => {
+                          window.location.href = createPageUrl('Messages');
+                        }}
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        Ask a Collaborator for Feedback
+                      </Button>
+                    </div> :
 
                     <div className="space-y-3">
                     {testimonials.map((t) =>
