@@ -220,17 +220,23 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
         <div className="px-6 pb-6 -mt-16 relative">
           {/* Avatar with Rank Ring */}
           <div className="flex justify-center mb-4">
-            <RankedAvatar
-              src={profile.avatar_url}
-              name={profile.display_name}
-              size={96}
-              userId={profile.user_id}
-              status={profile.status}
-              leaderTier={profile.leader_tier}
-              rpRankCode={profile.rp_rank_code}
-              rpPoints={profile.rp_points}
-              className="ring-4 ring-white shadow-xl"
-            />
+            <div 
+              className="cursor-pointer"
+              onClick={() => window.location.href = createPageUrl('Profile') + `?id=${profile.user_id}`}
+            >
+              <RankedAvatar
+                src={profile.avatar_url}
+                name={profile.display_name}
+                size={96}
+                userId={profile.user_id}
+                status={profile.status}
+                leaderTier={profile.leader_tier}
+                rpRankCode={profile.rp_rank_code}
+                rpPoints={profile.rp_points}
+                showPhotoIcon={true}
+                galleryImages={profile.gallery_images || []}
+              />
+            </div>
           </div>
 
           {/* Name & Handle */}
