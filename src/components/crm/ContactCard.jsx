@@ -133,6 +133,7 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
     <div 
       className="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow cursor-pointer"
       onClick={onClick}
+    >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <Avatar className="w-12 h-12">
