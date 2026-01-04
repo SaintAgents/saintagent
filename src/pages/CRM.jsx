@@ -322,6 +322,18 @@ export default function CRM() {
         contact={selectedContact}
         onEdit={handleEdit}
       />
+
+      <ContactCleanupModal
+        open={cleanupOpen}
+        onClose={() => setCleanupOpen(false)}
+        contacts={myContacts}
+      />
+
+      <ContactEnrichModal
+        open={enrichOpen}
+        onClose={() => setEnrichOpen(false)}
+        contacts={myContacts}
+      />
     </div>
   );
 }
