@@ -16,7 +16,7 @@ export default function NetworkHelpModal({ open, onClose }) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto dark:bg-slate-900 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl dark:text-slate-100">
+          <DialogTitle className="flex items-center gap-2 text-xl dark:text-white">
             <Network className="w-6 h-6 text-violet-600 dark:text-violet-400" />
             Network Introduction Platform
           </DialogTitle>
@@ -24,9 +24,9 @@ export default function NetworkHelpModal({ open, onClose }) {
 
         <div className="space-y-6 mt-4">
           {/* Core Idea */}
-          <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950 rounded-xl p-5 border border-violet-100 dark:border-violet-800">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Core Idea</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
+          <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/50 dark:to-purple-900/50 rounded-xl p-5 border border-violet-100 dark:border-violet-700">
+            <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Core Idea</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-200">
               A platform that enables people to leverage their networks for introductions by searching others' 
               notes about people they know, requesting introductions through mutual connections, and earning 
               GGG rewards for facilitating connections—all while maintaining privacy and curation of shared network information.
@@ -35,7 +35,7 @@ export default function NetworkHelpModal({ open, onClose }) {
 
           {/* Key Features */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
               Key Features
             </h3>
