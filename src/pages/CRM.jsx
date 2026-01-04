@@ -92,6 +92,20 @@ export default function CRM() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
+      <style>{`
+        [data-theme='dark'] .crm-import-btn {
+          background-color: #1e293b !important;
+          border-color: #475569 !important;
+          color: #e5e7eb !important;
+        }
+        [data-theme='dark'] .crm-import-btn:hover {
+          background-color: #334155 !important;
+        }
+        [data-theme='dark'] .crm-stats-bar {
+          background-color: #1e293b !important;
+          border-color: #334155 !important;
+        }
+      `}</style>
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -117,7 +131,7 @@ export default function CRM() {
                 {accessRequests.length} pending request{accessRequests.length > 1 ? 's' : ''}
               </Badge>
             )}
-            <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700">
+            <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2 crm-import-btn">
               <Upload className="w-4 h-4" />
               Import CSV
             </Button>
