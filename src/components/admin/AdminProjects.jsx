@@ -87,6 +87,38 @@ export default function AdminProjects() {
         <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submitted}</div></div>
       </div>
 
+      {/* AI Evaluation Controls */}
+      <div className="p-4 rounded-xl bg-violet-50 border border-violet-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-violet-900 flex items-center gap-2">
+              <Brain className="w-5 h-5" />
+              AI Evaluation Engine
+            </h3>
+            <p className="text-sm text-violet-700 mt-1">
+              {unevaluatedCount} projects awaiting evaluation
+            </p>
+          </div>
+          <Button 
+            onClick={runBulkEvaluation}
+            disabled={bulkEvaluating || unevaluatedCount === 0}
+            className="bg-violet-600 hover:bg-violet-700 gap-2"
+          >
+            {bulkEvaluating ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Evaluating...
+              </>
+            ) : (
+              <>
+                <Brain className="w-4 h-4" />
+                Bulk Evaluate ({Math.min(unevaluatedCount, 10)})
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects..." />
@@ -98,7 +130,9 @@ export default function AdminProjects() {
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="pending_review">Pending Review</SelectItem>
             <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
+            <SelectItem value="incubate">Incubating</SelectItem>
+            <SelectItem value="declined">Declined</SelectItem>
+            <SelectItem value="rfi_pending">RFI Pending</SelectItem>
             <SelectItem value="flagged">Flagged</SelectItem>
             <SelectItem value="draft">Draft</SelectItem>
           </SelectContent>
