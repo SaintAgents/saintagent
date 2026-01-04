@@ -68,9 +68,16 @@ export default function MiniProfile({
     return getRPRank(rpPointsVal)?.title || 'Seeker';
   })();
 
+  const handleAvatarClick = (e) => {
+    e.stopPropagation();
+    if (userId) {
+      document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
+    }
+  };
+
   return (
     <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
-      <div className="relative">
+      <div className="relative cursor-pointer" onClick={handleAvatarClick}>
         <RankedAvatar
           src={avatar || profile?.avatar_url}
           name={displayName}
