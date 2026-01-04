@@ -65,45 +65,77 @@ export default function Messages() {
   });
 
   // Group messages into conversations (includes entity-defined Conversations)
+  // Deduplicate by otherUser.id for direct conversations to avoid multiple entries for same person
   const convList = React.useMemo(() => {
     const convMap = {};
     const visibleMsgs = allMessages.filter((m) => !m.deleted_for_user_ids?.includes?.(user?.email));
-    visibleMsgs.forEach((msg) => {
-      const convId = msg.conversation_id || [msg.from_user_id, msg.to_user_id].sort().join('_');
-      if (!convMap[convId]) {
-        convMap[convId] = {
-          id: convId,
-          messages: [],
-          otherUser: msg.from_user_id === user?.email ?
-          { id: msg.to_user_id, name: msg.to_name, avatar: msg.to_avatar } :
-          { id: msg.from_user_id, name: msg.from_name, avatar: msg.from_avatar },
-          lastMessage: msg,
-          unreadCount: 0
-        };
-      }
-      convMap[convId].messages.push(msg);
-      if (!msg.is_read && msg.to_user_id === user?.email) convMap[convId].unreadCount++;
-    });
+    
+    // First, process Conversation entities (they take priority)
     const myConvs = conversations.filter((c) => c.participant_ids?.includes(user?.email));
     myConvs.forEach((c) => {
-      if (!convMap[c.id]) {
-        const others = (c.participant_ids || []).filter((pid) => pid !== user?.email);
-        let otherUser;
-        if (c.type === 'direct' && others.length === 1) {
-          const p = profiles.find((pr) => pr.user_id === others[0]);
-          otherUser = { id: others[0], name: p?.display_name || others[0], avatar: p?.avatar_url || null };
-        } else {
-          otherUser = { id: c.id, name: c.name || (others.length > 1 ? `${others.length}+ members` : others[0] || 'Group'), avatar: null };
+      const others = (c.participant_ids || []).filter((pid) => pid !== user?.email);
+      let otherUser;
+      if (c.type === 'direct' && others.length === 1) {
+        const p = profiles.find((pr) => pr.user_id === others[0]);
+        otherUser = { id: others[0], name: p?.display_name || others[0], avatar: p?.avatar_url || null };
+      } else {
+        otherUser = { id: c.id, name: c.name || (others.length > 1 ? `${others.length}+ members` : others[0] || 'Group'), avatar: null };
+      }
+      convMap[c.id] = {
+        id: c.id,
+        messages: [],
+        otherUser,
+        lastMessage: { created_date: c.last_message_at || new Date(0).toISOString(), content: c.last_message || '' },
+        unreadCount: 0,
+        isGroup: c.type === 'group'
+      };
+    });
+    
+    // Process messages and group them
+    visibleMsgs.forEach((msg) => {
+      const convId = msg.conversation_id || [msg.from_user_id, msg.to_user_id].sort().join('_');
+      const otherUserId = msg.from_user_id === user?.email ? msg.to_user_id : msg.from_user_id;
+      
+      // Check if this message belongs to an existing Conversation entity
+      if (convMap[convId]) {
+        convMap[convId].messages.push(msg);
+        if (!msg.is_read && msg.to_user_id === user?.email) convMap[convId].unreadCount++;
+        // Update lastMessage if this one is newer
+        if (new Date(msg.created_date) > new Date(convMap[convId].lastMessage.created_date)) {
+          convMap[convId].lastMessage = msg;
         }
-        convMap[c.id] = {
-          id: c.id,
-          messages: [],
-          otherUser,
-          lastMessage: { created_date: c.last_message_at || new Date(0).toISOString(), content: c.last_message || '' },
-          unreadCount: visibleMsgs.filter((m) => m.conversation_id === c.id && !m.is_read && m.to_user_id === user?.email).length
+        return;
+      }
+      
+      // For direct messages without a Conversation entity, dedupe by other user
+      // Find if we already have a conversation with this user
+      const existingConvKey = Object.keys(convMap).find((key) => {
+        const conv = convMap[key];
+        return !conv.isGroup && conv.otherUser.id === otherUserId;
+      });
+      
+      if (existingConvKey) {
+        // Merge into existing conversation
+        convMap[existingConvKey].messages.push(msg);
+        if (!msg.is_read && msg.to_user_id === user?.email) convMap[existingConvKey].unreadCount++;
+        if (new Date(msg.created_date) > new Date(convMap[existingConvKey].lastMessage.created_date)) {
+          convMap[existingConvKey].lastMessage = msg;
+        }
+      } else {
+        // Create new conversation entry
+        convMap[convId] = {
+          id: convId,
+          messages: [msg],
+          otherUser: msg.from_user_id === user?.email ?
+            { id: msg.to_user_id, name: msg.to_name, avatar: msg.to_avatar } :
+            { id: msg.from_user_id, name: msg.from_name, avatar: msg.from_avatar },
+          lastMessage: msg,
+          unreadCount: (!msg.is_read && msg.to_user_id === user?.email) ? 1 : 0,
+          isGroup: false
         };
       }
     });
+    
     return Object.values(convMap).sort((a, b) => new Date(b.lastMessage.created_date) - new Date(a.lastMessage.created_date));
   }, [allMessages, conversations, profiles, user]);
 
