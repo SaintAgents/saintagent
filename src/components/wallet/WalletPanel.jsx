@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, Wallet, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import WithdrawModal from './WithdrawModal';
+
+const GGG_TO_USD = 145.00;
+const MIN_WITHDRAWAL_USD = 350.00;
 
 export default function WalletPanel() {
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
+  
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -52,6 +58,8 @@ export default function WalletPanel() {
   const available = wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const locked = wallet?.locked_balance ?? 0;
   const total = (Number(available) || 0) + (Number(locked) || 0);
+  const availableUSD = available * GGG_TO_USD;
+  const canWithdraw = availableUSD >= MIN_WITHDRAWAL_USD;
 
   return (
     <div className="space-y-4">
@@ -90,6 +98,35 @@ export default function WalletPanel() {
 
       <div className="mt-2">
         <Stat label="Total GGG" value={total} color="violet" />
+        <div className="text-xs text-slate-500 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
+      </div>
+
+      {/* Withdraw Section */}
+      <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-800">Withdraw to USDT</span>
+          </div>
+          <Badge className="bg-emerald-100 text-emerald-700 text-xs">
+            1 GGG = ${GGG_TO_USD}
+          </Badge>
+        </div>
+        {canWithdraw ? (
+          <Button 
+            size="sm" 
+            className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
+            onClick={() => setWithdrawOpen(true)}
+          >
+            <ArrowUpRight className="w-4 h-4" />
+            Withdraw (${availableUSD.toFixed(2)} available)
+          </Button>
+        ) : (
+          <div className="text-xs text-emerald-700">
+            <p className="font-medium">Min. withdrawal: ${MIN_WITHDRAWAL_USD}</p>
+            <p className="text-emerald-600">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 gap-3 mt-2">
@@ -115,6 +152,13 @@ export default function WalletPanel() {
           </div>
         </ScrollArea>
       </div>
+
+      <WithdrawModal 
+        open={withdrawOpen} 
+        onClose={() => setWithdrawOpen(false)} 
+        wallet={wallet}
+        userId={user?.email}
+      />
     </div>);
 
 }
