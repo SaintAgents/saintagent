@@ -229,7 +229,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           [data-theme='dark'] .import-modal-content .bg-slate-50 {
             background-color: #1e293b !important;
           }
-          [data-theme='dark'] .import-modal-content .text-slate-900 {
+          [data-theme='dark'] .import-modal-content .text-slate-900,
+          [data-theme='dark'] .import-modal-content .font-medium {
             color: #f1f5f9 !important;
           }
           [data-theme='dark'] .import-modal-content .text-slate-700 {
@@ -241,11 +242,14 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           [data-theme='dark'] .import-modal-content .text-slate-500 {
             color: #94a3b8 !important;
           }
-          [data-theme='dark'] .import-modal-content .border-slate-200 {
-            border-color: #334155 !important;
+          [data-theme='dark'] .import-modal-content .border-slate-200,
+          [data-theme='dark'] .import-modal-content .border-dashed {
+            border-color: #475569 !important;
           }
-          [data-theme='dark'] .import-modal-content .bg-violet-50 {
+          [data-theme='dark'] .import-modal-content .bg-violet-50,
+          [data-theme='dark'] .import-modal-content .border-violet-300 {
             background-color: rgba(139, 92, 246, 0.15) !important;
+            border-color: #8b5cf6 !important;
           }
           [data-theme='dark'] .import-modal-content .divide-y > * {
             border-color: #334155 !important;
@@ -281,6 +285,12 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
           }
           [data-theme='dark'] .import-modal-content tbody tr:hover {
             background-color: #1e293b !important;
+          }
+          [data-theme='dark'] .import-modal-content [data-slot="badge"],
+          [data-theme='dark'] .import-modal-content .badge-domain {
+            background-color: #334155 !important;
+            border-color: #475569 !important;
+            color: #e5e7eb !important;
           }
         `}</style>
         <DialogHeader>
@@ -389,7 +399,7 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
                         <td className="px-3 py-2 text-slate-600">{contact.email || '-'}</td>
                         <td className="px-3 py-2 text-slate-600">{contact.company || '-'}</td>
                         <td className="px-3 py-2">
-                          <Badge variant="outline" className="text-xs capitalize">{contact.domain}</Badge>
+                          <Badge variant="outline" className="text-xs capitalize badge-domain">{contact.domain}</Badge>
                         </td>
                       </tr>
                   )}
