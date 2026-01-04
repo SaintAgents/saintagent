@@ -32,6 +32,9 @@ export default function CRM() {
   const [importOpen, setImportOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [cleanupOpen, setCleanupOpen] = useState(false);
+  const [enrichOpen, setEnrichOpen] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState(null);
   const queryClient = useQueryClient();
 
   // Check for ?help in URL
