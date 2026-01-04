@@ -215,11 +215,8 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent" />
-        </div>
-
-        <div className="px-6 pb-6 -mt-16 relative">
-          {/* Avatar with Rank Ring */}
-          <div className="flex justify-center mb-4">
+          {/* Avatar positioned inside hero */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2">
             <div 
               className="cursor-pointer"
               onClick={() => window.location.href = createPageUrl('Profile') + `?id=${profile.user_id}`}
@@ -238,6 +235,9 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               />
             </div>
           </div>
+        </div>
+
+        <div className="px-6 pb-6 pt-4 relative">
 
           {/* Name & Handle */}
           <div className="text-center mb-4">
