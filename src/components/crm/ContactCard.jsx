@@ -59,6 +59,7 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
       <div 
         className="bg-white rounded-lg border p-3 flex items-center gap-4 hover:shadow-sm transition-shadow cursor-pointer"
         onClick={onClick}
+      >
         <Avatar className="w-10 h-10">
           <AvatarImage src={contact.avatar_url} />
           <AvatarFallback className="bg-violet-100 text-violet-600">
