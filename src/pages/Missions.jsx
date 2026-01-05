@@ -403,8 +403,21 @@ export default function Missions() {
 
       <CreateMissionModal
         open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)} />
+        onClose={() => {
+          setCreateModalOpen(false);
+          setPrefillMission(null);
+        }}
+        prefillData={prefillMission}
+      />
 
+      <AIMissionGenerator
+        open={aiGeneratorOpen}
+        onClose={() => setAiGeneratorOpen(false)}
+        onUseMission={(mission) => {
+          setPrefillMission(mission);
+          setCreateModalOpen(true);
+        }}
+      />
 
       <EarningsMatrixModal open={matrixOpen} onOpenChange={setMatrixOpen} />
     </div>);
