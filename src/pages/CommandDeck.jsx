@@ -459,8 +459,9 @@ export default function CommandDeck() {
       )}>
         {/* Page Header */}
         <div className="px-6 pt-6 pb-4">
-          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl">
-  <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none z-0" />
+          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden">
+          <div className="absolute inset-0 rounded-2xl bg-cover bg-center pointer-events-none z-0" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5091f36e8_Screenshot2026-01-04192310.png)' }} />
+          <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none z-0" />
             <div className="relative z-10">
               <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
                                   <p className="text-teal-500 mt-1">Your mission control center</p>
