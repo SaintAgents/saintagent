@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CircleDot, Plus, Users, Search, MessageCircle, Heart, Sparkles } from "lucide-react";
+import { CircleDot, Plus, Users, Search, MessageCircle, Heart, Sparkles, ArrowRight } from "lucide-react";
 import CircleManageModal from "@/components/circles/CircleManageModal";
 import CreateCircleModal from "@/components/community/CreateCircleModal";
 import CircleChatPanel from "@/components/community/CircleChatPanel";
+import GroupDetailPage from "@/components/groups/GroupDetailPage";
 
 export default function Circles() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -20,6 +21,7 @@ export default function Circles() {
   const [searchQuery, setSearchQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -101,25 +103,25 @@ export default function Circles() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <CircleDot className="w-6 h-6 text-blue-500" />
-              Circles & Communities
+              <Users className="w-6 h-6 text-blue-500" />
+              Groups & Communities
             </h1>
             <p className="text-slate-500 mt-1">Find your tribe based on shared values and interests</p>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
             <Plus className="w-4 h-4" />
-            Create Circle
+            Create Group
           </Button>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="p-4 rounded-xl bg-white border">
-            <p className="text-xs text-slate-500">Total Circles</p>
+            <p className="text-xs text-slate-500">Total Groups</p>
             <p className="text-2xl font-bold text-slate-900">{circles.length}</p>
           </div>
           <div className="p-4 rounded-xl bg-white border">
-            <p className="text-xs text-slate-500">My Circles</p>
+            <p className="text-xs text-slate-500">My Groups</p>
             <p className="text-2xl font-bold text-violet-600">{myCirclesCount}</p>
           </div>
           <div className="p-4 rounded-xl bg-white border">
@@ -159,8 +161,8 @@ export default function Circles() {
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
           <TabsList className="h-12 bg-white rounded-xl border">
-            <TabsTrigger value="all" className="rounded-lg">All Circles</TabsTrigger>
-            <TabsTrigger value="my_circles" className="rounded-lg">My Circles</TabsTrigger>
+            <TabsTrigger value="all" className="rounded-lg">All Groups</TabsTrigger>
+            <TabsTrigger value="my_circles" className="rounded-lg">My Groups</TabsTrigger>
             <TabsTrigger value="owned" className="rounded-lg">I Created</TabsTrigger>
             <TabsTrigger value="featured" className="rounded-lg">Featured</TabsTrigger>
           </TabsList>
@@ -247,15 +249,14 @@ export default function Circles() {
                   <div className="flex gap-2">
                     {isMember ? (
                       <>
-                        {isOwner ? (
-                          <Button variant="outline" onClick={() => setManageCircle(circle)} className="flex-1 rounded-xl">
-                            Manage
-                          </Button>
-                        ) : (
-                          <Button variant="outline" onClick={() => leaveMutation.mutate(circle)} className="flex-1 rounded-xl">
-                            Leave
-                          </Button>
-                        )}
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setSelectedGroup(circle)} 
+                          className="flex-1 rounded-xl gap-1"
+                        >
+                          <ArrowRight className="w-4 h-4" />
+                          Enter
+                        </Button>
                         {circle.chat_enabled && (
                           <Button 
                             onClick={() => setActiveChat(circle)} 
@@ -265,11 +266,6 @@ export default function Circles() {
                             Chat
                           </Button>
                         )}
-                        {!circle.chat_enabled && (
-                          <Button disabled className="flex-1 rounded-xl bg-emerald-100 text-emerald-700">
-                            Joined
-                          </Button>
-                        )}
                       </>
                     ) : (
                       <Button 
@@ -277,7 +273,7 @@ export default function Circles() {
                         disabled={joinMutation.isPending}
                         className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
                       >
-                        Join Circle
+                        Join Group
                       </Button>
                     )}
                   </div>
@@ -290,11 +286,11 @@ export default function Circles() {
         {filteredCircles.length === 0 && (
           <div className="text-center py-16">
             <CircleDot className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">No circles found</h3>
-            <p className="text-slate-500 mb-6">Create your own circle to gather like-minded people</p>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">No groups found</h3>
+            <p className="text-slate-500 mb-6">Create your own group to gather like-minded people</p>
             <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
               <Plus className="w-4 h-4" />
-              Create Circle
+              Create Group
             </Button>
           </div>
         )}
@@ -326,6 +322,17 @@ export default function Circles() {
             onClose={() => setActiveChat(null)}
             expanded={chatExpanded}
             onToggleExpand={() => setChatExpanded(!chatExpanded)}
+          />
+        </div>
+      )}
+
+      {/* Group Detail View */}
+      {selectedGroup && (
+        <div className="fixed inset-0 z-50 bg-slate-50">
+          <GroupDetailPage 
+            circle={selectedGroup}
+            user={user}
+            onBack={() => setSelectedGroup(null)}
           />
         </div>
       )}
