@@ -47,6 +47,7 @@ import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import HelpHint from '@/components/hud/HelpHint';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -947,6 +948,10 @@ export default function CommandDeck() {
 
             <CollapsibleCard title="Inbox & Signals" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen}>
               <InboxSignals notifications={notifications} />
+            </CollapsibleCard>
+
+            <CollapsibleCard title="Potential Collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen}>
+              <CollaborationSuggestions profile={profile} compact={false} />
             </CollapsibleCard>
 
             <CollapsibleCard title="Circles & Regions" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen}>
