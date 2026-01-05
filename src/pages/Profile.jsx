@@ -379,21 +379,43 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-6">
-            <TabsTrigger value="basic">Basic Info</TabsTrigger>
-            <TabsTrigger value="onboarding">Profile Details</TabsTrigger>
-            <TabsTrigger value="spiritual">Spiritual</TabsTrigger>
-            <TabsTrigger value="stats">Stats</TabsTrigger>
-            <TabsTrigger value="roles">Roles</TabsTrigger>
-            <TabsTrigger value="friends">
-              <span className="inline-flex items-center gap-2">
-                Friends
-                {following.length > 0 &&
-                <Badge className="ml-1 bg-violet-600 text-white h-5 px-2 text-xs">{following.length}</Badge>
-                }
-              </span>
+          <TabsList className={cn(
+            "flex flex-nowrap overflow-x-auto w-full max-w-3xl gap-1",
+            showDatingTab ? "grid-cols-7" : "grid-cols-6"
+          )}>
+            <TabsTrigger value="basic" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Basic Info</span>
+              <User className="sm:hidden w-4 h-4" />
             </TabsTrigger>
-          {showDatingTab && <TabsTrigger value="dating">Dating</TabsTrigger>}
+            <TabsTrigger value="onboarding" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Details</span>
+              <Compass className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="spiritual" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Spiritual</span>
+              <Star className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="stats" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Stats</span>
+              <TrendingUp className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="roles" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Roles</span>
+              <Crown className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Friends</span>
+              <Users className="sm:hidden w-4 h-4" />
+              {following.length > 0 && (
+                <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
+              )}
+            </TabsTrigger>
+            {showDatingTab && (
+              <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Dating</span>
+                <Heart className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
