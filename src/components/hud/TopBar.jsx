@@ -84,21 +84,7 @@ export default function TopBar({
     refetchInterval: 5000
   });
 
-  // Fetch dating profile opt-in status
-  const { data: myDatingProfile } = useQuery({
-    queryKey: ['myDatingProfileTopBar', currentUser?.email],
-    queryFn: () => base44.entities.DatingProfile.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
-  });
-  const isDatingOptedIn = myDatingProfile?.[0]?.opt_in === true;
 
-  // Fetch dating matches count (people in dating pool)
-  const { data: datingMatches = [] } = useQuery({
-    queryKey: ['datingMatchesTopBar', currentUser?.email],
-    queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }, '-updated_date', 100),
-    enabled: isDatingOptedIn
-  });
-  const datingMatchCount = datingMatches.filter(p => p.user_id !== currentUser?.email).length;
 
   const handleSearch = (e) => {
     e.preventDefault();
