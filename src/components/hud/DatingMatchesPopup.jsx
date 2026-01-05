@@ -418,6 +418,21 @@ export default function DatingMatchesPopup({ currentUser }) {
                       </span>
                     </div>
               }
+
+                  {/* Compatibility Breakdown */}
+                  <div className="border-t border-slate-100 dark:border-slate-700/50 pt-2">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setShowCompatibility(!showCompatibility); }}
+                      className="w-full px-4 py-1 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                    >
+                      <span className="flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-violet-500" />
+                        Compatibility Breakdown
+                      </span>
+                      {showCompatibility ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                    </button>
+                    {showCompatibility && <CompatibilityChart match={currentMatch} />}
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
