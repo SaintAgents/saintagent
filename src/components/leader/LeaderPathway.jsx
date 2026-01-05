@@ -77,7 +77,7 @@ const BADGE_DEFS = {
   coherent: {
     title: 'Coherent',
     dimension: 'Alignment & Integrity',
-    definition: 'The user's actions, decisions, and communication show internal consistency, follow-through, and ethical alignment over time.',
+    definition: "The user's actions, decisions, and communication show internal consistency, follow-through, and ethical alignment over time.",
     earnedThrough: [
     'Demonstrated follow-through on commitments',
     'Ethical consistency across contexts',
