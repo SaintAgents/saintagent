@@ -19,10 +19,12 @@ import {
   Settings,
   Check,
   X,
-  Sparkles
+  Sparkles,
+  Send
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { createPageUrl } from "@/utils";
 
 export default function NotificationBell({ notifications = [], onAction }) {
   const [open, setOpen] = useState(false);
