@@ -47,6 +47,8 @@ export default function Missions() {
   const [tab, setTab] = useState('active');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [matrixOpen, setMatrixOpen] = useState(false);
+  const [aiGeneratorOpen, setAiGeneratorOpen] = useState(false);
+  const [prefillMission, setPrefillMission] = useState(null);
   
   // Advanced filters
   const [filtersOpen, setFiltersOpen] = useState(false);
