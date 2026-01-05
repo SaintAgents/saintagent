@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import AffiliateTracker from '@/components/affiliate/AffiliateTracker';
 import { 
   Sparkles, 
   DollarSign, 
