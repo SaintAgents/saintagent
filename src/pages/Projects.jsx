@@ -61,7 +61,7 @@ export default function Projects() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Folder className="w-6 h-6 text-violet-600" />
               Projects
-              <HelpHint content="Projects are initiatives submitted for evaluation and potential funding. Browse all projects, filter by status, and click any project to see full details including AI evaluation scores. Create your own project after completing onboarding." />
+              <HelpHint content="Every project undergoes a 4-phase AI audit designed to be hard to game and anti-grift. Phase 1 (Ethical Firewall): Screens for fraud, coercion, and 'Anti-Cult' indicators. Phase 2 (Quantitative Scoring): 0-100 score based on Planetary Well-being (20%), Human Well-being (20%), and Feasibility. Phase 3 (Risk Model): Calculates Execution Multiplier (0.6x-1.0x) and checks Harm Gates. Phase 4 (Decision Tiers): Routes to Approve, Incubate, Review, or Decline. Click any project to see full evaluation details." />
             </h1>
             <p className="text-slate-500 mt-1">Browse, filter, and manage all projects</p>
           </div>

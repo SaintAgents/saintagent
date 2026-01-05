@@ -115,7 +115,7 @@ export default function Matches() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-violet-500" />
               Synchronicity Engine
-              <HelpHint content="The Synchronicity Engine uses AI to find meaningful connections based on your profile, skills, intentions, and spiritual alignment. Matches are scored on intent alignment, skill complementarity, proximity, timing, and trust. Filter by values, practices, or score range to refine results." />
+              <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment into a 0-100 score. Match Types include People, Offers, Missions, Events, and Teachers—each category surfaces different opportunities. AI-generated Conversation Starters help break the ice based on shared values. Complete your 'Skills' and 'Mystical Identity' for the best results." />
             </h1>
             <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
           </div>

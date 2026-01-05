@@ -82,7 +82,7 @@ export default function Meetings() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Calendar className="w-6 h-6 text-blue-500" />
               Meetings & Connections
-              <HelpHint content="Meetings & Connections lets you schedule, manage, and track your meetings. Accept meeting requests, confirm completed sessions, and earn GGG rewards. Both parties must confirm a meeting as completed to receive GGG." />
+              <HelpHint content="Meetings are verified touchpoints that build trust and earn GGG. Request & Accept: Send meeting requests to matches or accept incoming requests. Dual Confirmation: Both parties MUST confirm completion to trigger GGG rewards—this prevents gaming. Meeting Types: Collaboration, Mentorship, Consultation, Casual, or Mission-related—each serves different purposes. Pending meetings await response, Upcoming are scheduled, and Completed have been verified by both parties." />
             </h1>
             <p className="text-slate-500 mt-1">Schedule, attend, and verify your meetings to earn GGG</p>
           </div>
