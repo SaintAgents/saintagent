@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Target,
   Plus,
@@ -12,8 +25,17 @@ import {
   Users,
   MapPin,
   Crown,
-  Filter } from
-"lucide-react";
+  Filter,
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+  ArrowUpDown,
+  Coins,
+  TrendingUp,
+  Zap,
+  Clock,
+  X
+} from "lucide-react";
 
 import MissionCard from '@/components/hud/MissionCard';
 import CreateMissionModal from '@/components/CreateMissionModal';
