@@ -50,40 +50,40 @@ export default function Circles() {
       const newMembers = (circle.member_ids || []).filter((id) => id !== user.email);
       return base44.entities.Circle.update(circle.id, {
         member_ids: newMembers,
-        member_count: newMembers.length,
+        member_count: newMembers.length
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['circles'] })
   });
 
   // Filter circles
-  const filteredCircles = circles.filter(c => {
+  const filteredCircles = circles.filter((c) => {
     // Tab filter
     if (tab === 'my_circles' && !c.member_ids?.includes(user?.email)) return false;
     if (tab === 'owned' && c.owner_id !== user?.email) return false;
     if (tab === 'featured' && !c.is_featured) return false;
-    
+
     // Category filter
     if (categoryFilter !== 'all' && c.category !== categoryFilter) return false;
-    
+
     // Search
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      if (!c.name?.toLowerCase().includes(q) && 
-          !c.description?.toLowerCase().includes(q) &&
-          !c.purpose?.toLowerCase().includes(q) &&
-          !c.values?.some(v => v.toLowerCase().includes(q)) &&
-          !c.interests?.some(i => i.toLowerCase().includes(q))) {
+      if (!c.name?.toLowerCase().includes(q) &&
+      !c.description?.toLowerCase().includes(q) &&
+      !c.purpose?.toLowerCase().includes(q) &&
+      !c.values?.some((v) => v.toLowerCase().includes(q)) &&
+      !c.interests?.some((i) => i.toLowerCase().includes(q))) {
         return false;
       }
     }
-    
+
     return true;
   });
 
   // Stats
-  const myCirclesCount = circles.filter(c => c.member_ids?.includes(user?.email)).length;
-  const ownedCount = circles.filter(c => c.owner_id === user?.email).length;
+  const myCirclesCount = circles.filter((c) => c.member_ids?.includes(user?.email)).length;
+  const ownedCount = circles.filter((c) => c.owner_id === user?.email).length;
 
   const categoryColors = {
     spiritual: 'bg-purple-100 text-purple-700',
@@ -138,8 +138,8 @@ export default function Circles() {
               placeholder="Search by name, values, or interests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 rounded-xl bg-white"
-            />
+              className="pl-12 h-12 rounded-xl bg-white" />
+
           </div>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-40 h-12 rounded-xl">
@@ -170,69 +170,69 @@ export default function Circles() {
 
         {/* Circles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCircles.map(circle => {
+          {filteredCircles.map((circle) => {
             const isMember = circle.member_ids?.includes(user?.email);
             const isOwner = circle.owner_id === user?.email;
-            
+
             return (
               <div key={circle.id} className="bg-white rounded-xl border overflow-hidden hover:shadow-lg transition-all">
                 {/* Header gradient */}
                 <div className={cn(
                   "h-24 relative",
-                  circle.image_url 
-                    ? "" 
-                    : "bg-gradient-to-r from-blue-500 to-indigo-600"
+                  circle.image_url ?
+                  "" :
+                  "bg-gradient-to-r from-blue-500 to-indigo-600"
                 )}>
-                  {circle.image_url && (
-                    <img src={circle.image_url} alt={circle.name} className="w-full h-full object-cover" />
-                  )}
-                  {circle.is_featured && (
-                    <Badge className="absolute top-2 left-2 bg-amber-500 text-white gap-1">
+                  {circle.image_url &&
+                  <img src={circle.image_url} alt={circle.name} className="w-full h-full object-cover" />
+                  }
+                  {circle.is_featured &&
+                  <Badge className="absolute top-2 left-2 bg-amber-500 text-white gap-1">
                       <Sparkles className="w-3 h-3" /> Featured
                     </Badge>
-                  )}
+                  }
                 </div>
                 
                 <div className="p-4">
                   {/* Category & Visibility */}
                   <div className="flex flex-wrap gap-1.5 mb-2">
-                    {circle.category && (
-                      <Badge className={cn("text-xs", categoryColors[circle.category] || categoryColors.other)}>
+                    {circle.category &&
+                    <Badge className={cn("text-xs", categoryColors[circle.category] || categoryColors.other)}>
                         {circle.category}
                       </Badge>
-                    )}
-                    <Badge variant="outline" className="text-xs">
+                    }
+                    <Badge variant="outline" className="bg-purple-200 text-foreground px-2.5 py-0.5 text-xs font-semibold rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                       {circle.visibility}
                     </Badge>
                   </div>
 
                   <h3 className="font-semibold text-slate-900 mb-1">{circle.name}</h3>
-                  {circle.purpose && (
-                    <p className="text-xs text-violet-600 mb-2">{circle.purpose}</p>
-                  )}
+                  {circle.purpose &&
+                  <p className="text-xs text-violet-600 mb-2">{circle.purpose}</p>
+                  }
                   <p className="text-sm text-slate-500 mb-3 line-clamp-2">{circle.description}</p>
                   
                   {/* Values */}
-                  {circle.values?.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {circle.values.slice(0, 3).map((val, i) => (
-                        <Badge key={i} variant="outline" className="text-xs bg-violet-50">
+                  {circle.values?.length > 0 &&
+                  <div className="flex flex-wrap gap-1 mb-2">
+                      {circle.values.slice(0, 3).map((val, i) =>
+                    <Badge key={i} variant="outline" className="text-xs bg-violet-50">
                           <Heart className="w-2.5 h-2.5 mr-1" />{val}
                         </Badge>
-                      ))}
+                    )}
                     </div>
-                  )}
+                  }
 
                   {/* Interests */}
-                  {circle.interests?.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {circle.interests.slice(0, 3).map((int, i) => (
-                        <Badge key={i} variant="outline" className="text-xs">
+                  {circle.interests?.length > 0 &&
+                  <div className="flex flex-wrap gap-1 mb-3">
+                      {circle.interests.slice(0, 3).map((int, i) =>
+                    <Badge key={i} variant="outline" className="text-xs">
                           {int}
                         </Badge>
-                      ))}
+                    )}
                     </div>
-                  )}
+                  }
 
                   {/* Member count */}
                   <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
@@ -240,51 +240,51 @@ export default function Circles() {
                       <Users className="w-4 h-4" />
                       {circle.member_count || 0} members
                     </span>
-                    {circle.meeting_frequency && circle.meeting_frequency !== 'as_needed' && (
-                      <span className="text-xs capitalize">{circle.meeting_frequency}</span>
-                    )}
+                    {circle.meeting_frequency && circle.meeting_frequency !== 'as_needed' &&
+                    <span className="text-xs capitalize">{circle.meeting_frequency}</span>
+                    }
                   </div>
 
                   {/* Actions */}
                   <div className="flex gap-2">
-                    {isMember ? (
-                      <>
-                        <Button 
-                          variant="outline" 
-                          onClick={() => setSelectedGroup(circle)} 
-                          className="flex-1 rounded-xl gap-1"
-                        >
+                    {isMember ?
+                    <>
+                        <Button
+                        variant="outline"
+                        onClick={() => setSelectedGroup(circle)}
+                        className="flex-1 rounded-xl gap-1">
+
                           <ArrowRight className="w-4 h-4" />
                           Enter
                         </Button>
-                        {circle.chat_enabled && (
-                          <Button 
-                            onClick={() => setActiveChat(circle)} 
-                            className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 gap-1"
-                          >
+                        {circle.chat_enabled &&
+                      <Button
+                        onClick={() => setActiveChat(circle)}
+                        className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 gap-1">
+
                             <MessageCircle className="w-4 h-4" />
                             Chat
                           </Button>
-                        )}
-                      </>
-                    ) : (
-                      <Button 
-                        onClick={() => joinMutation.mutate(circle)} 
-                        disabled={joinMutation.isPending}
-                        className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
-                      >
+                      }
+                      </> :
+
+                    <Button
+                      onClick={() => joinMutation.mutate(circle)}
+                      disabled={joinMutation.isPending}
+                      className="w-full rounded-xl bg-violet-600 hover:bg-violet-700">
+
                         Join Group
                       </Button>
-                    )}
+                    }
                   </div>
                 </div>
-              </div>
-            );
+              </div>);
+
           })}
         </div>
 
-        {filteredCircles.length === 0 && (
-          <div className="text-center py-16">
+        {filteredCircles.length === 0 &&
+        <div className="text-center py-16">
             <CircleDot className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No groups found</h3>
             <p className="text-slate-500 mb-6">Create your own group to gather like-minded people</p>
@@ -293,49 +293,49 @@ export default function Circles() {
               Create Group
             </Button>
           </div>
-        )}
+        }
       </div>
 
       {/* Modals */}
-      <CreateCircleModal 
+      <CreateCircleModal
         open={createOpen}
         onOpenChange={setCreateOpen}
-        user={user}
-      />
+        user={user} />
 
-      <CircleManageModal 
+
+      <CircleManageModal
         open={!!manageCircle}
         onOpenChange={(o) => !o && setManageCircle(null)}
         circle={manageCircle}
-        currentUser={user}
-      />
+        currentUser={user} />
+
 
       {/* Circle Chat Panel */}
-      {activeChat && (
-        <div className={cn(
-          "fixed z-50",
-          chatExpanded ? "inset-4" : "bottom-4 right-4 w-96"
-        )}>
-          <CircleChatPanel 
-            circle={activeChat}
-            user={user}
-            onClose={() => setActiveChat(null)}
-            expanded={chatExpanded}
-            onToggleExpand={() => setChatExpanded(!chatExpanded)}
-          />
+      {activeChat &&
+      <div className={cn(
+        "fixed z-50",
+        chatExpanded ? "inset-4" : "bottom-4 right-4 w-96"
+      )}>
+          <CircleChatPanel
+          circle={activeChat}
+          user={user}
+          onClose={() => setActiveChat(null)}
+          expanded={chatExpanded}
+          onToggleExpand={() => setChatExpanded(!chatExpanded)} />
+
         </div>
-      )}
+      }
 
       {/* Group Detail View */}
-      {selectedGroup && (
-        <div className="fixed inset-0 z-50 bg-slate-50">
-          <GroupDetailPage 
-            circle={selectedGroup}
-            user={user}
-            onBack={() => setSelectedGroup(null)}
-          />
+      {selectedGroup &&
+      <div className="fixed inset-0 z-50 bg-slate-50">
+          <GroupDetailPage
+          circle={selectedGroup}
+          user={user}
+          onBack={() => setSelectedGroup(null)} />
+
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
