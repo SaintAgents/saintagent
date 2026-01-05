@@ -362,7 +362,7 @@ export default function Messages() {
                     <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} showRankBadge={false} showTrustBadge={false} showReachBadge={false} />
                   </div>
                   <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] shrink-0 whitespace-nowrap mr-3">
-                    {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'h:mm a') : ''}
+                    {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'MMM d, h:mm a') : ''}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
@@ -475,7 +475,7 @@ export default function Messages() {
                       </div>
                       <div className="flex items-center gap-2">
                         <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] mt-1 px-1">
-                          {format(parseISO(msg.created_date), 'h:mm a')}
+                          {format(parseISO(msg.created_date), 'MMM d, h:mm a')}
                         </p>
                         {isOwn &&
                         <span className="mt-1 text-xs">
