@@ -31,7 +31,8 @@ import {
   Globe,
   HelpCircle,
   BookOpen,
-  Lock
+  Lock,
+  Heart
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
