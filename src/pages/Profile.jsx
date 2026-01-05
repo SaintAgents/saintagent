@@ -60,6 +60,7 @@ import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import Step7Dating from '@/components/onboarding/Step7Dating';
+import ProfileMetrics from '@/components/profile/ProfileMetrics';
 import { createPageUrl } from '@/utils';
 
 export default function Profile() {
@@ -380,8 +381,7 @@ export default function Profile() {
 
         <Tabs defaultValue="basic" className="space-y-6">
           <TabsList className={cn(
-            "flex flex-nowrap overflow-x-auto w-full max-w-3xl gap-1",
-            showDatingTab ? "grid-cols-7" : "grid-cols-6"
+            "flex flex-nowrap overflow-x-auto w-full max-w-4xl gap-1"
           )}>
             <TabsTrigger value="basic" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Basic Info</span>
@@ -395,9 +395,13 @@ export default function Profile() {
               <span className="hidden sm:inline">Spiritual</span>
               <Star className="sm:hidden w-4 h-4" />
             </TabsTrigger>
+            <TabsTrigger value="metrics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Metrics</span>
+              <TrendingUp className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
             <TabsTrigger value="stats" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Stats</span>
-              <TrendingUp className="sm:hidden w-4 h-4" />
+              <Target className="sm:hidden w-4 h-4" />
             </TabsTrigger>
             <TabsTrigger value="roles" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Roles</span>
@@ -734,6 +738,10 @@ export default function Profile() {
               intentions={intentions} />
 
             <ConnectionPreferencesEditor profile={profile} />
+          </TabsContent>
+
+          <TabsContent value="metrics" className="space-y-6">
+            <ProfileMetrics profile={profile} />
           </TabsContent>
 
           <TabsContent value="spiritual" className="space-y-6">
