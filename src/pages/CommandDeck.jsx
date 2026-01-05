@@ -950,7 +950,7 @@ export default function CommandDeck() {
               <CirclesRegions />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Leader Pathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen}>
+            <CollapsibleCard title="Leader Pathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card">
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
           </div>
