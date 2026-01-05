@@ -266,15 +266,12 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  // Redirect unauthenticated users to login (skip for public pages)
+  // Redirect unauthenticated users to login
     useEffect(() => {
-              // Skip redirect entirely for public pages
-              if (PUBLIC_PAGES.includes(currentPageName)) return;
-              
               if (currentUser === null) {
                 base44.auth.redirectToLogin(createPageUrl('Onboarding'));
               }
-            }, [currentUser, currentPageName]);
+            }, [currentUser]);
 
   // If authenticated and onboarding missing or not complete, force Onboarding
   useEffect(() => {
