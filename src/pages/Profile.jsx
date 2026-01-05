@@ -293,6 +293,28 @@ export default function Profile() {
     retry: false
   });
 
+  // If viewing another user's profile that doesn't exist, show not found
+  if (viewingUserId && profiles !== undefined && !profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
+        <Card className="max-w-md w-full">
+          <CardContent className="pt-8 pb-6 text-center">
+            <User className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-slate-900 mb-2">Profile Not Found</h2>
+            <p className="text-slate-500 mb-6">This user profile doesn't exist or may have been removed.</p>
+            <Button 
+              onClick={() => window.history.back()}
+              variant="outline"
+              className="rounded-xl"
+            >
+              Go Back
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
       <div className="max-w-4xl mx-auto">
