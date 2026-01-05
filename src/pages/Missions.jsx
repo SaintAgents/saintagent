@@ -76,6 +76,12 @@ export default function Missions() {
     return false;
   });
 
+  // Count missions by type (from active missions only)
+  const platformCount = activeMissions.filter((m) => m.mission_type === 'platform').length;
+  const circleCount = activeMissions.filter((m) => m.mission_type === 'circle').length;
+  const regionCount = activeMissions.filter((m) => m.mission_type === 'region').length;
+  const leaderCount = activeMissions.filter((m) => m.mission_type === 'leader').length;
+
   // Apply all filters and sorting
   const filteredMissions = useMemo(() => {
     // Start with tab-based filtering
