@@ -6,14 +6,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sparkles, Heart, MessageCircle, Bookmark, X, Loader2, RefreshCw, Zap, ChevronDown, ChevronUp } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Sparkles, Heart, MessageCircle, Bookmark, X, Loader2, RefreshCw, Zap, ChevronDown, ChevronUp, ThumbsUp, ThumbsDown, Star, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function AIMatchAssistant({ profile, datingProfile }) {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
+  const [feedbackId, setFeedbackId] = useState(null);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackRating, setFeedbackRating] = useState(null);
   const queryClient = useQueryClient();
+
+  // Fetch past feedback to improve suggestions
+  const { data: pastFeedback = [] } = useQuery({
+    queryKey: ['matchFeedback', profile?.user_id],
+    queryFn: () => base44.entities.Match.filter({ 
+      user_id: profile?.user_id,
+      target_type: 'person'
+    }, '-updated_date', 100),
+    enabled: !!profile?.user_id
+  });
 
   // Fetch all dating profiles
   const { data: allDatingProfiles = [] } = useQuery({
@@ -77,6 +91,32 @@ export default function AIMatchAssistant({ profile, datingProfile }) {
       // Sort boosted profiles first
       candidateData.sort((a, b) => (b.isBoosted ? 1 : 0) - (a.isBoosted ? 1 : 0));
 
+      // Build feedback context for AI learning
+      const feedbackContext = pastFeedback
+        .filter(f => f.user_rating || f.user_feedback)
+        .map(f => ({
+          target_id: f.target_id,
+          rating: f.user_rating,
+          feedback: f.user_feedback,
+          wasGoodMatch: f.user_rating >= 4
+        }));
+
+      const likedTraits = feedbackContext
+        .filter(f => f.wasGoodMatch)
+        .map(f => {
+          const match = candidateData.find(c => c.user_id === f.target_id);
+          return match ? { values: match.values, intent: match.intent, rhythm: match.rhythm } : null;
+        })
+        .filter(Boolean);
+
+      const dislikedTraits = feedbackContext
+        .filter(f => !f.wasGoodMatch && f.rating)
+        .map(f => {
+          const match = candidateData.find(c => c.user_id === f.target_id);
+          return match ? { values: match.values, intent: match.intent, rhythm: match.rhythm } : null;
+        })
+        .filter(Boolean);
+
       const prompt = `You are a conscious matchmaking assistant for a spiritual community platform. Analyze the user's profile and suggest the best matches from the candidates.
 
 USER PROFILE:
@@ -104,6 +144,11 @@ ${i + 1}. ${c.name} (${c.user_id})${c.isBoosted ? ' [BOOSTED]' : ''}
    Seeking: ${c.seeking}
    Bio: ${c.bio}
 `).join('\n')}
+
+USER FEEDBACK HISTORY (use this to personalize suggestions):
+${likedTraits.length > 0 ? `Previously LIKED matches had these traits: ${JSON.stringify(likedTraits.slice(0, 5))}` : 'No positive feedback yet.'}
+${dislikedTraits.length > 0 ? `Previously DISLIKED matches had these traits: ${JSON.stringify(dislikedTraits.slice(0, 5))}` : 'No negative feedback yet.'}
+${feedbackContext.filter(f => f.feedback).slice(0, 3).map(f => `User feedback: "${f.feedback}" (Rating: ${f.rating}/5)`).join('\n')}
 
 Analyze compatibility based on:
 1. Value alignment (shared core values)
@@ -176,9 +221,63 @@ Return the top 5 matches with detailed explanations. Be specific about WHY each 
         conversation_starters: [suggestion.conversation_starter]
       });
       queryClient.invalidateQueries({ queryKey: ['matches'] });
+      queryClient.invalidateQueries({ queryKey: ['matchFeedback'] });
     } else if (action === 'dismiss') {
       setSuggestions(prev => prev.filter(s => s.user_id !== suggestion.user_id));
     }
+  };
+
+  const handleFeedback = async (suggestion, rating) => {
+    setFeedbackRating(rating);
+    setFeedbackId(suggestion.user_id);
+  };
+
+  const submitFeedback = async (suggestion) => {
+    if (!feedbackRating) return;
+
+    // Check if match record exists
+    const existingMatches = await base44.entities.Match.filter({
+      user_id: profile.user_id,
+      target_id: suggestion.user_id,
+      target_type: 'person'
+    });
+
+    if (existingMatches?.length > 0) {
+      // Update existing match with feedback
+      await base44.entities.Match.update(existingMatches[0].id, {
+        user_rating: feedbackRating,
+        user_feedback: feedbackText || null
+      });
+    } else {
+      // Create new match record with feedback
+      await base44.entities.Match.create({
+        user_id: profile.user_id,
+        target_type: 'person',
+        target_id: suggestion.user_id,
+        target_name: suggestion.name,
+        target_avatar: suggestion.avatar,
+        match_score: suggestion.compatibility_score,
+        status: feedbackRating >= 4 ? 'active' : 'declined',
+        user_rating: feedbackRating,
+        user_feedback: feedbackText || null,
+        ai_reasoning: suggestion.why_compatible
+      });
+    }
+
+    // Update local state to show feedback was submitted
+    setSuggestions(prev => prev.map(s => 
+      s.user_id === suggestion.user_id 
+        ? { ...s, userRating: feedbackRating, userFeedback: feedbackText }
+        : s
+    ));
+
+    // Reset feedback form
+    setFeedbackId(null);
+    setFeedbackText('');
+    setFeedbackRating(null);
+
+    queryClient.invalidateQueries({ queryKey: ['matchFeedback'] });
+    queryClient.invalidateQueries({ queryKey: ['matches'] });
   };
 
   return (
@@ -326,23 +425,100 @@ Return the top 5 matches with detailed explanations. Be specific about WHY each 
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2 mt-3">
-                    <Button
-                      size="sm"
-                      className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg gap-1"
-                      onClick={() => handleAction('save', suggestion)}
-                    >
-                      <Bookmark className="w-3 h-3" /> Save Match
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="rounded-lg"
-                      onClick={() => handleAction('dismiss', suggestion)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  {/* Feedback Section */}
+                  {feedbackId === suggestion.user_id ? (
+                    <div className="mt-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-3">
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Rate this suggestion:</p>
+                      <div className="flex items-center gap-2">
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <button
+                            key={star}
+                            onClick={() => setFeedbackRating(star)}
+                            className={cn(
+                              "p-1 rounded transition-colors",
+                              feedbackRating >= star 
+                                ? "text-amber-500" 
+                                : "text-slate-300 hover:text-amber-400"
+                            )}
+                          >
+                            <Star className={cn("w-6 h-6", feedbackRating >= star && "fill-current")} />
+                          </button>
+                        ))}
+                        <span className="text-xs text-slate-500 ml-2">
+                          {feedbackRating === 1 && 'Not a match'}
+                          {feedbackRating === 2 && 'Poor match'}
+                          {feedbackRating === 3 && 'Okay match'}
+                          {feedbackRating === 4 && 'Good match'}
+                          {feedbackRating === 5 && 'Excellent match!'}
+                        </span>
+                      </div>
+                      <Textarea
+                        placeholder="Optional: Tell us why (helps improve future suggestions)..."
+                        value={feedbackText}
+                        onChange={(e) => setFeedbackText(e.target.value)}
+                        className="text-sm h-16 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-600"
+                      />
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg gap-1"
+                          onClick={() => submitFeedback(suggestion)}
+                          disabled={!feedbackRating}
+                        >
+                          <Send className="w-3 h-3" /> Submit Feedback
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-lg"
+                          onClick={() => { setFeedbackId(null); setFeedbackRating(null); setFeedbackText(''); }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : suggestion.userRating ? (
+                    <div className="mt-3 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <Star 
+                            key={star} 
+                            className={cn(
+                              "w-4 h-4",
+                              suggestion.userRating >= star ? "text-amber-500 fill-current" : "text-slate-300"
+                            )} 
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs text-emerald-700 dark:text-emerald-400">Feedback submitted — thanks!</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 mt-3">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 rounded-lg gap-1 text-emerald-600 border-emerald-300 hover:bg-emerald-50"
+                        onClick={() => handleFeedback(suggestion, 4)}
+                      >
+                        <ThumbsUp className="w-3 h-3" /> Good Match
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 rounded-lg gap-1 text-rose-600 border-rose-300 hover:bg-rose-50"
+                        onClick={() => handleFeedback(suggestion, 2)}
+                      >
+                        <ThumbsDown className="w-3 h-3" /> Not Interested
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-violet-600 hover:bg-violet-700 text-white rounded-lg"
+                        onClick={() => handleAction('save', suggestion)}
+                      >
+                        <Bookmark className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
