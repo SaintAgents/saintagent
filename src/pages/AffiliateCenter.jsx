@@ -379,8 +379,8 @@ export default function AffiliateCenter() {
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
-                              <p className="font-medium text-sm">{listing.title}</p>
-                              <p className="text-xs">${listing.price_amount}</p>
+                              <p className="font-medium text-sm text-slate-900">{listing.title}</p>
+                              <p className="text-xs text-slate-600">${listing.price_amount}</p>
                             </div>
                             <ChevronRight className="w-4 h-4 text-slate-400" />
                           </div>
