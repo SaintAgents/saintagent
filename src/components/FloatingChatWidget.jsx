@@ -183,6 +183,13 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
       {/* Messages */}
       <ScrollArea className="flex-1 p-3" ref={scrollRef}>
         <div className="space-y-3">
+          {conversationMessages.length === 0 && (
+            <div className="text-center py-6">
+              <Sparkles className="w-8 h-8 text-violet-300 mx-auto mb-2" />
+              <p className="text-sm text-slate-500">Start the conversation!</p>
+              <p className="text-xs text-slate-400 mt-1">Send an icebreaker to break the ice</p>
+            </div>
+          )}
           {conversationMessages.map((msg) => {
             const isOwn = msg.from_user_id === user?.email;
             return (
@@ -197,11 +204,27 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
                       ? 'bg-violet-600 text-white rounded-br-sm' 
                       : 'bg-slate-100 text-slate-900 rounded-bl-sm'
                   }`}>
+                    {msg.message_type === 'icebreaker' && (
+                      <div className={cn("flex items-center gap-1 text-[10px] mb-1", isOwn ? "text-white/70" : "text-violet-500")}>
+                        <Sparkles className="w-3 h-3" />
+                        Icebreaker
+                      </div>
+                    )}
+                    {msg.message_type === 'image' && msg.media_url && (
+                      <img src={msg.media_url} alt="" className="rounded mb-1 max-w-full" />
+                    )}
                     {msg.content}
                   </div>
-                  <span className="text-xs text-slate-400 mt-1">
-                    {format(parseISO(msg.created_date), 'h:mm a')}
-                  </span>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-xs text-slate-400">
+                      {format(parseISO(msg.created_date), 'h:mm a')}
+                    </span>
+                    {isOwn && (
+                      msg.is_read 
+                        ? <CheckCheck className="w-3 h-3 text-emerald-500" />
+                        : <Check className="w-3 h-3 text-slate-400" />
+                    )}
+                  </div>
                 </div>
               </div>
             );
