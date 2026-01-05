@@ -180,27 +180,8 @@ export default function TopBar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Dating Heart - only shows when opted in */}
-        {isDatingOptedIn && (
-          <Link to={createPageUrl('Matches') + '?tab=dating'}>
-            <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Dating Matches">
-              <div 
-                className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center"
-                style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}
-              >
-                <Heart className="w-3.5 h-3.5 text-white fill-white" />
-              </div>
-              {datingMatchCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
-                  {datingMatchCount > 99 ? '99+' : datingMatchCount}
-                </span>
-              )}
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                Dating
-              </span>
-            </Button>
-          </Link>
-        )}
+        {/* Dating Heart Popup */}
+        <DatingMatchesPopup currentUser={currentUser} />
 
         <Link to={createPageUrl('DailyOps')}>
           <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Calendar">
