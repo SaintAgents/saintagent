@@ -148,19 +148,21 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
     sendMessage(input);
   };
 
-  if (!isOpen) {
-    return (
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all hover:scale-105"
-        title="Help & Support"
-      >
-        <HelpCircle className="w-6 h-6 text-white" />
-      </Button>
-    );
-  }
-
   return (
+    <>
+      {/* Floating button when closed */}
+      {!isOpen && (
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all hover:scale-105"
+          title="Help & Support"
+        >
+          <HelpCircle className="w-6 h-6 text-white" />
+        </Button>
+      )}
+
+      {/* Chat panel when open */}
+      {isOpen && (
     <div 
       className={cn(
         "fixed z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 transition-all duration-300",
@@ -306,5 +308,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
         </>
       )}
     </div>
+      )}
+    </>
   );
 }
