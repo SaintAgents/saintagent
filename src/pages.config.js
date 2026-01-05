@@ -16,6 +16,7 @@ import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
 import Marketplace from './pages/Marketplace';
+import MatchSettings from './pages/MatchSettings';
 import Matches from './pages/Matches';
 import Meetings from './pages/Meetings';
 import Mentorship from './pages/Mentorship';
@@ -34,7 +35,7 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import MatchSettings from './pages/MatchSettings';
+import Events from './pages/Events';
 import __Layout from './Layout.jsx';
 
 
@@ -57,6 +58,7 @@ export const PAGES = {
     "Leaderboards": Leaderboards,
     "ListingDetail": ListingDetail,
     "Marketplace": Marketplace,
+    "MatchSettings": MatchSettings,
     "Matches": Matches,
     "Meetings": Meetings,
     "Mentorship": Mentorship,
@@ -75,7 +77,7 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "MatchSettings": MatchSettings,
+    "Events": Events,
 }
 
 export const pagesConfig = {

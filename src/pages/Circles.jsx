@@ -4,24 +4,22 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { CircleDot, Plus, Users, MapPin, Search } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CircleDot, Plus, Users, Search, MessageCircle, Heart, Sparkles } from "lucide-react";
 import CircleManageModal from "@/components/circles/CircleManageModal";
+import CreateCircleModal from "@/components/community/CreateCircleModal";
+import CircleChatPanel from "@/components/community/CircleChatPanel";
 
 export default function Circles() {
   const [createOpen, setCreateOpen] = useState(false);
   const [manageCircle, setManageCircle] = useState(null);
+  const [activeChat, setActiveChat] = useState(null);
+  const [chatExpanded, setChatExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [formData, setFormData] = useState({ name: '', description: '', purpose: '' });
+  const [tab, setTab] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -31,16 +29,7 @@ export default function Circles() {
 
   const { data: circles = [] } = useQuery({
     queryKey: ['circles'],
-    queryFn: () => base44.entities.Circle.list('-created_date', 50)
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Circle.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['circles'] });
-      setCreateOpen(false);
-      setFormData({ name: '', description: '', purpose: '' });
-    }
+    queryFn: () => base44.entities.Circle.list('-created_date', 100)
   });
 
   const joinMutation = useMutation({
@@ -65,31 +54,57 @@ export default function Circles() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['circles'] })
   });
 
-  const handleCreate = () => {
-    createMutation.mutate({
-      ...formData,
-      owner_id: user.email,
-      owner_name: user.full_name,
-      member_ids: [user.email],
-      member_count: 1,
-      visibility: 'public'
-    });
-  };
+  // Filter circles
+  const filteredCircles = circles.filter(c => {
+    // Tab filter
+    if (tab === 'my_circles' && !c.member_ids?.includes(user?.email)) return false;
+    if (tab === 'owned' && c.owner_id !== user?.email) return false;
+    if (tab === 'featured' && !c.is_featured) return false;
+    
+    // Category filter
+    if (categoryFilter !== 'all' && c.category !== categoryFilter) return false;
+    
+    // Search
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      if (!c.name?.toLowerCase().includes(q) && 
+          !c.description?.toLowerCase().includes(q) &&
+          !c.purpose?.toLowerCase().includes(q) &&
+          !c.values?.some(v => v.toLowerCase().includes(q)) &&
+          !c.interests?.some(i => i.toLowerCase().includes(q))) {
+        return false;
+      }
+    }
+    
+    return true;
+  });
 
-  const filteredCircles = circles.filter(c =>
-    !searchQuery || c.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Stats
+  const myCirclesCount = circles.filter(c => c.member_ids?.includes(user?.email)).length;
+  const ownedCount = circles.filter(c => c.owner_id === user?.email).length;
+
+  const categoryColors = {
+    spiritual: 'bg-purple-100 text-purple-700',
+    creative: 'bg-pink-100 text-pink-700',
+    business: 'bg-blue-100 text-blue-700',
+    wellness: 'bg-emerald-100 text-emerald-700',
+    learning: 'bg-amber-100 text-amber-700',
+    social: 'bg-cyan-100 text-cyan-700',
+    activism: 'bg-rose-100 text-rose-700',
+    other: 'bg-slate-100 text-slate-700'
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <CircleDot className="w-6 h-6 text-blue-500" />
               Circles & Communities
             </h1>
-            <p className="text-slate-500 mt-1">Find your tribe and co-create together</p>
+            <p className="text-slate-500 mt-1">Find your tribe based on shared values and interests</p>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
             <Plus className="w-4 h-4" />
@@ -97,57 +112,173 @@ export default function Circles() {
           </Button>
         </div>
 
-        <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <Input
-            placeholder="Search circles..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 h-12 rounded-xl bg-white"
-          />
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="p-4 rounded-xl bg-white border">
+            <p className="text-xs text-slate-500">Total Circles</p>
+            <p className="text-2xl font-bold text-slate-900">{circles.length}</p>
+          </div>
+          <div className="p-4 rounded-xl bg-white border">
+            <p className="text-xs text-slate-500">My Circles</p>
+            <p className="text-2xl font-bold text-violet-600">{myCirclesCount}</p>
+          </div>
+          <div className="p-4 rounded-xl bg-white border">
+            <p className="text-xs text-slate-500">I Created</p>
+            <p className="text-2xl font-bold text-blue-600">{ownedCount}</p>
+          </div>
         </div>
 
+        {/* Search & Filters */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Input
+              placeholder="Search by name, values, or interests..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 h-12 rounded-xl bg-white"
+            />
+          </div>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-40 h-12 rounded-xl">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="spiritual">Spiritual</SelectItem>
+              <SelectItem value="creative">Creative</SelectItem>
+              <SelectItem value="business">Business</SelectItem>
+              <SelectItem value="wellness">Wellness</SelectItem>
+              <SelectItem value="learning">Learning</SelectItem>
+              <SelectItem value="social">Social</SelectItem>
+              <SelectItem value="activism">Activism</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Tabs */}
+        <Tabs value={tab} onValueChange={setTab} className="mb-6">
+          <TabsList className="h-12 bg-white rounded-xl border">
+            <TabsTrigger value="all" className="rounded-lg">All Circles</TabsTrigger>
+            <TabsTrigger value="my_circles" className="rounded-lg">My Circles</TabsTrigger>
+            <TabsTrigger value="owned" className="rounded-lg">I Created</TabsTrigger>
+            <TabsTrigger value="featured" className="rounded-lg">Featured</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* Circles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCircles.map(circle => {
             const isMember = circle.member_ids?.includes(user?.email);
+            const isOwner = circle.owner_id === user?.email;
+            
             return (
               <div key={circle.id} className="bg-white rounded-xl border overflow-hidden hover:shadow-lg transition-all">
-                {circle.image_url && (
-                  <div className="h-32 bg-gradient-to-r from-blue-500 to-indigo-600">
-                    <img src={circle.image_url} alt={circle.name} className="w-full h-full object-cover opacity-80" />
-                  </div>
-                )}
+                {/* Header gradient */}
+                <div className={cn(
+                  "h-24 relative",
+                  circle.image_url 
+                    ? "" 
+                    : "bg-gradient-to-r from-blue-500 to-indigo-600"
+                )}>
+                  {circle.image_url && (
+                    <img src={circle.image_url} alt={circle.name} className="w-full h-full object-cover" />
+                  )}
+                  {circle.is_featured && (
+                    <Badge className="absolute top-2 left-2 bg-amber-500 text-white gap-1">
+                      <Sparkles className="w-3 h-3" /> Featured
+                    </Badge>
+                  )}
+                </div>
+                
                 <div className="p-4">
-                  <h3 className="font-semibold text-slate-900 mb-2">{circle.name}</h3>
-                  <p className="text-sm text-slate-500 mb-4 line-clamp-2">{circle.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
-                    <span className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      {circle.member_count} members
-                    </span>
+                  {/* Category & Visibility */}
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {circle.category && (
+                      <Badge className={cn("text-xs", categoryColors[circle.category] || categoryColors.other)}>
+                        {circle.category}
+                      </Badge>
+                    )}
+                    <Badge variant="outline" className="text-xs">
+                      {circle.visibility}
+                    </Badge>
                   </div>
-                  {circle.tags?.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {circle.tags.slice(0, 3).map((tag, i) => (
-                        <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
+
+                  <h3 className="font-semibold text-slate-900 mb-1">{circle.name}</h3>
+                  {circle.purpose && (
+                    <p className="text-xs text-violet-600 mb-2">{circle.purpose}</p>
+                  )}
+                  <p className="text-sm text-slate-500 mb-3 line-clamp-2">{circle.description}</p>
+                  
+                  {/* Values */}
+                  {circle.values?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {circle.values.slice(0, 3).map((val, i) => (
+                        <Badge key={i} variant="outline" className="text-xs bg-violet-50">
+                          <Heart className="w-2.5 h-2.5 mr-1" />{val}
+                        </Badge>
                       ))}
                     </div>
                   )}
+
+                  {/* Interests */}
+                  {circle.interests?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {circle.interests.slice(0, 3).map((int, i) => (
+                        <Badge key={i} variant="outline" className="text-xs">
+                          {int}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Member count */}
+                  <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      {circle.member_count || 0} members
+                    </span>
+                    {circle.meeting_frequency && circle.meeting_frequency !== 'as_needed' && (
+                      <span className="text-xs capitalize">{circle.meeting_frequency}</span>
+                    )}
+                  </div>
+
+                  {/* Actions */}
                   <div className="flex gap-2">
                     {isMember ? (
-                      circle.owner_id === user?.email ? (
-                        <>
-                          <Button variant="outline" onClick={() => setManageCircle(circle)} className="flex-1 rounded-xl">Manage</Button>
-                          <Button disabled className="flex-1 rounded-xl bg-emerald-100 text-emerald-700">Joined</Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button variant="outline" onClick={() => leaveMutation.mutate(circle)} className="flex-1 rounded-xl">Leave</Button>
-                          <Button disabled className="flex-1 rounded-xl bg-emerald-100 text-emerald-700">Joined</Button>
-                        </>
-                      )
+                      <>
+                        {isOwner ? (
+                          <Button variant="outline" onClick={() => setManageCircle(circle)} className="flex-1 rounded-xl">
+                            Manage
+                          </Button>
+                        ) : (
+                          <Button variant="outline" onClick={() => leaveMutation.mutate(circle)} className="flex-1 rounded-xl">
+                            Leave
+                          </Button>
+                        )}
+                        {circle.chat_enabled && (
+                          <Button 
+                            onClick={() => setActiveChat(circle)} 
+                            className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 gap-1"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            Chat
+                          </Button>
+                        )}
+                        {!circle.chat_enabled && (
+                          <Button disabled className="flex-1 rounded-xl bg-emerald-100 text-emerald-700">
+                            Joined
+                          </Button>
+                        )}
+                      </>
                     ) : (
-                      <Button onClick={() => joinMutation.mutate(circle)} className="w-full rounded-xl bg-violet-600 hover:bg-violet-700">Join Circle</Button>
+                      <Button 
+                        onClick={() => joinMutation.mutate(circle)} 
+                        disabled={joinMutation.isPending}
+                        className="w-full rounded-xl bg-violet-600 hover:bg-violet-700"
+                      >
+                        Join Circle
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -156,58 +287,48 @@ export default function Circles() {
           })}
         </div>
 
-        <CircleManageModal 
-          open={!!manageCircle}
-          onOpenChange={(o) => !o && setManageCircle(null)}
-          circle={manageCircle}
-          currentUser={user}
-        />
-
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create a Circle</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-4">
-              <div>
-                <Label>Circle Name</Label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g., Meditation Collective"
-                  className="mt-2"
-                />
-              </div>
-              <div>
-                <Label>Purpose</Label>
-                <Input
-                  value={formData.purpose}
-                  onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
-                  placeholder="What brings this circle together?"
-                  className="mt-2"
-                />
-              </div>
-              <div>
-                <Label>Description</Label>
-                <Textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Tell potential members about this circle..."
-                  className="mt-2 min-h-24"
-                />
-              </div>
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setCreateOpen(false)} className="flex-1 rounded-xl">
-                  Cancel
-                </Button>
-                <Button onClick={handleCreate} className="flex-1 rounded-xl bg-violet-600 hover:bg-violet-700">
-                  Create Circle
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        {filteredCircles.length === 0 && (
+          <div className="text-center py-16">
+            <CircleDot className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">No circles found</h3>
+            <p className="text-slate-500 mb-6">Create your own circle to gather like-minded people</p>
+            <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
+              <Plus className="w-4 h-4" />
+              Create Circle
+            </Button>
+          </div>
+        )}
       </div>
+
+      {/* Modals */}
+      <CreateCircleModal 
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        user={user}
+      />
+
+      <CircleManageModal 
+        open={!!manageCircle}
+        onOpenChange={(o) => !o && setManageCircle(null)}
+        circle={manageCircle}
+        currentUser={user}
+      />
+
+      {/* Circle Chat Panel */}
+      {activeChat && (
+        <div className={cn(
+          "fixed z-50",
+          chatExpanded ? "inset-4" : "bottom-4 right-4 w-96"
+        )}>
+          <CircleChatPanel 
+            circle={activeChat}
+            user={user}
+            onClose={() => setActiveChat(null)}
+            expanded={chatExpanded}
+            onToggleExpand={() => setChatExpanded(!chatExpanded)}
+          />
+        </div>
+      )}
     </div>
   );
 }
