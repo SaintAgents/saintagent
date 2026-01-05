@@ -531,87 +531,112 @@ export default function AffiliateCenter() {
               />
             )}
 
-            {/* Referrals List */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Referrals</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="pending">
-                  <TabsList className="w-full">
-                    <TabsTrigger value="pending" className="flex-1">
-                      Pending ({pendingReferrals.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="paid" className="flex-1">
-                      Paid ({paidReferrals.length})
-                    </TabsTrigger>
-                  </TabsList>
+            {activeTab === 'referrals' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>All Referrals</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="pending">
+                    <TabsList className="w-full">
+                      <TabsTrigger value="pending" className="flex-1">
+                        Pending ({pendingReferrals.length})
+                      </TabsTrigger>
+                      <TabsTrigger value="paid" className="flex-1">
+                        Paid ({paidReferrals.length})
+                      </TabsTrigger>
+                    </TabsList>
 
-                  <TabsContent value="pending" className="space-y-3 mt-4">
-                    {pendingReferrals.length === 0 ? (
-                      <div className="text-center py-8">
-                        <Users className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                        <p className="text-sm text-slate-500">No pending referrals</p>
-                      </div>
-                    ) : (
-                      pendingReferrals.map((ref) => (
-                        <div 
-                          key={ref.id}
-                          className="flex items-center justify-between p-3 rounded-lg bg-slate-50"
-                        >
-                          <div>
-                            <p className="text-sm font-medium">
-                              {ref.referred_user_id}
-                            </p>
-                            <p className="text-xs">
-                              {ref.status === 'pending' ? 'Signed up' : 'Onboarding complete'}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-xs font-medium text-amber-600">
-                              {ref.status === 'pending' ? 'Complete onboarding' : 'Awaiting first action'}
-                            </p>
-                          </div>
+                    <TabsContent value="pending" className="space-y-3 mt-4">
+                      {pendingReferrals.length === 0 ? (
+                        <div className="text-center py-8">
+                          <Users className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                          <p className="text-sm text-slate-500">No pending referrals</p>
                         </div>
-                      ))
-                    )}
-                  </TabsContent>
+                      ) : (
+                        pendingReferrals.map((ref) => (
+                          <div 
+                            key={ref.id}
+                            className="flex items-center justify-between p-3 rounded-lg bg-slate-50"
+                          >
+                            <div>
+                              <p className="text-sm font-medium">
+                                {ref.referred_user_id}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <p className="text-xs text-slate-500">
+                                  {ref.status === 'pending' ? 'Signed up' : 'Onboarding complete'}
+                                </p>
+                                {ref.campaign_name && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-100 text-violet-700">
+                                    {ref.campaign_name}
+                                  </span>
+                                )}
+                                {ref.target_name && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+                                    {ref.target_name}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs font-medium text-amber-600">
+                                {ref.status === 'pending' ? 'Complete onboarding' : 'Awaiting first action'}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </TabsContent>
 
-                  <TabsContent value="paid" className="space-y-3 mt-4">
-                    {paidReferrals.length === 0 ? (
-                      <div className="text-center py-8">
-                        <DollarSign className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                        <p className="text-sm text-slate-500">No paid referrals yet</p>
-                      </div>
-                    ) : (
-                      paidReferrals.map((ref) => (
-                        <div 
-                          key={ref.id}
-                          className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200"
-                        >
-                          <div>
-                            <p className="text-sm font-medium">
-                              {ref.referred_user_id}
-                            </p>
-                            <p className="text-xs">
-                              {ref.qualifying_action}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-bold text-emerald-600">
-                              +{ref.ggg_amount} GGG
-                            </p>
-                            <p className="text-xs">
-                              ${ref.credited_value_usd}
-                            </p>
-                          </div>
+                    <TabsContent value="paid" className="space-y-3 mt-4">
+                      {paidReferrals.length === 0 ? (
+                        <div className="text-center py-8">
+                          <DollarSign className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                          <p className="text-sm text-slate-500">No paid referrals yet</p>
                         </div>
-                      ))
-                    )}
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
+                      ) : (
+                        paidReferrals.map((ref) => (
+                          <div 
+                            key={ref.id}
+                            className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200"
+                          >
+                            <div>
+                              <p className="text-sm font-medium">
+                                {ref.referred_user_id}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <p className="text-xs text-slate-600">
+                                  {ref.qualifying_action}
+                                </p>
+                                {ref.campaign_name && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-100 text-violet-700">
+                                    {ref.campaign_name}
+                                  </span>
+                                )}
+                                {ref.target_name && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+                                    {ref.target_name}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-bold text-emerald-600">
+                                +{ref.ggg_amount} GGG
+                              </p>
+                              <p className="text-xs text-slate-600">
+                                ${ref.credited_value_usd}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Right Column - Guide & Stats */}
