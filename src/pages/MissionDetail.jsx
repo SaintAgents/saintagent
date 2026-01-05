@@ -120,11 +120,6 @@ export default function MissionDetail() {
     );
   }
 
-  const isParticipant = mission.participant_ids?.includes(profile?.user_id);
-  const completedTasks = mission.tasks?.filter(t => t.completed).length || 0;
-  const totalTasks = mission.tasks?.length || 0;
-  const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-
   // Default mission images by type (fallback)
   const MISSION_IMAGES = {
     platform: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80',
@@ -135,7 +130,11 @@ export default function MissionDetail() {
     default: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80'
   };
 
-  const heroImage = mission.image_url || MISSION_IMAGES[mission.mission_type] || MISSION_IMAGES.default;
+  const isParticipant = mission?.participant_ids?.includes(profile?.user_id);
+  const completedTasks = mission?.tasks?.filter(t => t.completed).length || 0;
+  const totalTasks = mission?.tasks?.length || 0;
+  const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+  const heroImage = mission?.image_url || MISSION_IMAGES[mission?.mission_type] || MISSION_IMAGES.default;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
