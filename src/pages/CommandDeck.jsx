@@ -463,7 +463,10 @@ export default function CommandDeck() {
           <div className="absolute inset-0 rounded-2xl bg-cover bg-center pointer-events-none z-0" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5091f36e8_Screenshot2026-01-04192310.png)' }} />
           <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10">
-              <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
+              <h1 className="text-4xl font-bold text-slate-900 relative">
+                      <span className="absolute inset-0 blur-lg bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 bg-clip-text opacity-70 animate-pulse"></span>
+                      <span className="relative drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" style={{ textShadow: '0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.4), 0 0 60px rgba(251,191,36,0.2)' }}>Command Deck</span>
+                    </h1>
                                   <p className="text-teal-500 mt-1">Your mission control center</p>
                                   <div className="hidden">
                                     {/* Save */}
