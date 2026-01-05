@@ -11,6 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Search,
   MessageCircle,
@@ -23,7 +30,8 @@ import {
   LogOut,
   Globe,
   HelpCircle,
-  BookOpen
+  BookOpen,
+  Lock
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -54,6 +62,7 @@ export default function TopBar({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [helpMode, setHelpMode] = useState(null);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   const setLanguage = (code) => {
     try {
@@ -244,6 +253,10 @@ export default function TopBar({
                   Terms & Conditions
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setPrivacyOpen(true)} className="flex items-center gap-2">
+                <Lock className="w-4 h-4" />
+                Privacy & Data
+              </DropdownMenuItem>
               {currentUser?.role === 'admin' && (
                 <>
                   <DropdownMenuSeparator />
@@ -273,6 +286,86 @@ export default function TopBar({
           </div>
         )}
       </div>
+      {/* Privacy Modal */}
+      <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Lock className="w-5 h-5 text-violet-600" />
+              Privacy & Data Ownership
+            </DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="max-h-[65vh] pr-4">
+            <div className="space-y-6 text-sm">
+              <p className="text-slate-600">
+                SaintAgent prioritizes your privacy and data ownership in ways traditional social platforms don't:
+              </p>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-violet-50 border border-violet-100">
+                  <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-violet-600" />
+                    Privacy & Data Control
+                  </h3>
+                  <ul className="space-y-1.5 text-slate-600">
+                    <li>• Your data stays yours—SaintAgent doesn't mine, sell, or monetize your personal information</li>
+                    <li>• No algorithmic manipulation or surveillance capitalism model</li>
+                    <li>• You control what you share and with whom</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100">
+                  <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-emerald-600" />
+                    Decentralized Architecture
+                  </h3>
+                  <ul className="space-y-1.5 text-slate-600">
+                    <li>• Built on decentralized principles, reducing single-point-of-failure risks</li>
+                    <li>• Not controlled by a single corporate entity harvesting user data for ad revenue</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-amber-50 border border-amber-100">
+                  <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-600" />
+                    Transparent Business Model
+                  </h3>
+                  <ul className="space-y-1.5 text-slate-600">
+                    <li>• Revenue comes from value-added services, not from selling your attention and data to advertisers</li>
+                    <li>• No hidden data collection or opaque terms of service</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                  <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                    <User className="w-4 h-4 text-blue-600" />
+                    Community-Owned
+                  </h3>
+                  <ul className="space-y-1.5 text-slate-600">
+                    <li>• Designed for genuine collaboration and skill-sharing through the marketplace</li>
+                    <li>• Focus on peer-to-peer value exchange rather than engagement addiction</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-rose-50 border border-rose-100">
+                  <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-rose-600" />
+                    No Surveillance Advertising
+                  </h3>
+                  <ul className="space-y-1.5 text-slate-600">
+                    <li>• Unlike other platforms' tracking across the web, SaintAgent doesn't follow you around the internet</li>
+                    <li>• No psychological profiling or micro-targeted manipulation</li>
+                  </ul>
+                </div>
+              </div>
+
+              <p className="text-slate-700 font-medium text-center pt-4 border-t">
+                SaintAgent represents a fundamentally different approach: a platform that serves its users rather than treating them as the product.
+              </p>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
