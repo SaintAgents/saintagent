@@ -39,15 +39,14 @@ export default function AffiliateCenter() {
 
   // Fetch or create affiliate code
   const { data: affiliateCodes = [], isLoading: codeLoading } = useQuery({
-    queryKey: ['affiliateCode', profile?.handle],
+    queryKey: ['affiliateCode', currentUser?.email, profile?.handle],
     queryFn: async () => {
-      const user = await base44.auth.me();
-      let codes = await base44.entities.AffiliateCode.filter({ user_id: user.email });
+      let codes = await base44.entities.AffiliateCode.filter({ user_id: currentUser.email });
       
       if (codes.length === 0 && profile?.handle) {
         // Create affiliate code
         const newCode = await base44.entities.AffiliateCode.create({
-          user_id: user.email,
+          user_id: currentUser.email,
           code: profile.handle,
           status: 'active'
         });
@@ -56,26 +55,22 @@ export default function AffiliateCenter() {
       
       return codes;
     },
-    enabled: !!profile?.handle
+    enabled: !!currentUser?.email && !!profile?.handle
   });
   const affiliateCode = affiliateCodes[0];
 
   // Fetch referrals
   const { data: referrals = [] } = useQuery({
-    queryKey: ['referrals'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.Referral.filter({ affiliate_user_id: user.email }, '-created_date');
-    }
+    queryKey: ['referrals', currentUser?.email],
+    queryFn: () => base44.entities.Referral.filter({ affiliate_user_id: currentUser.email }, '-created_date'),
+    enabled: !!currentUser?.email
   });
 
   // Fetch listings for offer-level links
   const { data: listings = [] } = useQuery({
-    queryKey: ['myListings'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.Listing.filter({ owner_id: user.email, status: 'active' });
-    }
+    queryKey: ['myListings', currentUser?.email],
+    queryFn: () => base44.entities.Listing.filter({ owner_id: currentUser.email, status: 'active' }),
+    enabled: !!currentUser?.email
   });
 
   const affiliateUrl = affiliateCode 
