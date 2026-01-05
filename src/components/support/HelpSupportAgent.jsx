@@ -200,7 +200,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
             "dark:shadow-[0_0_12px_rgba(0,255,136,0.3)]",
             "dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.5)]"
           )}
-          style={{ top: 'calc(50% - 4rem)' }}
+          style={{ top: 'calc(50% + 4rem)' }}
           title="Help & Support"
         >
           <HelpCircle className={cn(
