@@ -631,7 +631,7 @@ export default function AffiliateCenter() {
                 })}
                 
                 <div className="pt-2 border-t border-slate-100">
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-600">
                     <Zap className="w-3 h-3 inline mr-1 text-amber-500" />
                     Referrals also boost your <span className="font-medium">Connector</span> rank and <span className="font-medium">Reach</span> score
                   </p>
