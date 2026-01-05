@@ -165,50 +165,43 @@ export default function RankedAvatar({
   return (
     <TooltipProvider delayDuration={200}>
       <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
-        {/* Rank Ring with Tooltip */}
+        {/* Main Avatar with Rank Ring */}
+        <div
+          className="rounded-full"
+          style={{ padding: padPx, background: gradient }}
+        >
+          <div className="rounded-full bg-white p-1 relative">
+            <div className="w-full h-full rounded-full overflow-hidden">
+              {src ? (
+                <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Rank symbol top-left with Tooltip */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div
-              className="rounded-full cursor-help"
-              style={{ padding: padPx, background: gradient }}
+            <div 
+              className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow cursor-help z-20 hover:scale-110 transition-transform" 
+              style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="rounded-full bg-white p-1 relative">
-                {/* Rank symbol top-left with Tooltip */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div 
-                      className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow cursor-help z-20 hover:scale-110 transition-transform" 
-                      style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="bg-slate-900 text-white text-xs px-3 py-2 max-w-[200px]">
-                    <p className="font-semibold capitalize">{rpInfo?.title || rpRankCodeFinal}</p>
-                    <p className="text-slate-300">{rpPointsFinal || 0} Rank Points</p>
-                    {rpInfo?.nextTitle && (
-                      <p className="text-slate-400 text-[10px] mt-1">
-                        {rpInfo.nextMin - (rpPointsFinal || 0)} RP to {rpInfo.nextTitle}
-                      </p>
-                    )}
-                  </TooltipContent>
-                </Tooltip>
-                
-                <div className="w-full h-full rounded-full overflow-hidden">
-                  {src ? (
-                    <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                      <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
             </div>
           </TooltipTrigger>
-          <TooltipContent side="bottom" className="bg-slate-900 text-white text-xs px-3 py-2">
-            <p>Rank Ring: <span className="capitalize font-semibold">{rpInfo?.title || rpRankCodeFinal}</span></p>
+          <TooltipContent side="top" className="bg-slate-900 text-white text-xs px-3 py-2 max-w-[200px]">
+            <p className="font-semibold capitalize">{rpInfo?.title || rpRankCodeFinal}</p>
+            <p className="text-slate-300">{rpPointsFinal || 0} Rank Points</p>
+            {rpInfo?.nextTitle && (
+              <p className="text-slate-400 text-[10px] mt-1">
+                {rpInfo.nextMin - (rpPointsFinal || 0)} RP to {rpInfo.nextTitle}
+              </p>
+            )}
           </TooltipContent>
         </Tooltip>
 
