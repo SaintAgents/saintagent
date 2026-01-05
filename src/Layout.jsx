@@ -563,8 +563,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
-// Main export - routes public pages directly, authenticated pages through full layout
-export default function Layout({ children, currentPageName }) {
+// Main Layout component - routes public pages directly, authenticated pages through full layout
+function Layout({ children, currentPageName }) {
   // Public pages render immediately without any auth
   if (PUBLIC_PAGES.includes(currentPageName)) {
     return <>{children}</>;
@@ -573,3 +573,5 @@ export default function Layout({ children, currentPageName }) {
   // All other pages go through authenticated layout
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
+
+export default Layout;
