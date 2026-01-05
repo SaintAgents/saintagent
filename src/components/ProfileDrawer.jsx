@@ -320,20 +320,20 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
         <div className="px-6 pb-6">
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="text-center p-3 rounded-xl bg-slate-50">
-              <Coins className="w-5 h-5 text-amber-500 mx-auto mb-1" />
-              <p className="text-xl font-bold text-slate-900">{walletAvailable || 0}</p>
-              <p className="text-xs text-slate-500">GGG</p>
+            <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
+              <Coins className="w-5 h-5 text-amber-500 dark:text-amber-400 mx-auto mb-1" />
+              <p className="text-xl font-bold text-slate-900 dark:text-white">{walletAvailable || 0}</p>
+              <p className="text-xs text-slate-500 dark:text-[#00ff88]">GGG</p>
             </div>
-            <div className="text-center p-3 rounded-xl bg-slate-50">
-              <TrendingUp className="w-5 h-5 text-violet-500 mx-auto mb-1" />
-              <p className="text-xl font-bold text-slate-900 capitalize">{profile.rank_code || 'Seeker'}</p>
-              <p className="text-xs text-slate-500">Rank</p>
+            <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
+              <TrendingUp className="w-5 h-5 text-violet-500 dark:text-[#a855f7] mx-auto mb-1" />
+              <p className="text-xl font-bold text-slate-900 dark:text-white capitalize">{profile.rank_code || 'Seeker'}</p>
+              <p className="text-xs text-slate-500 dark:text-[#00ff88]">Rank</p>
             </div>
-            <div className="text-center p-3 rounded-xl bg-slate-50">
-              <Users className="w-5 h-5 text-blue-500 mx-auto mb-1" />
-              <p className="text-xl font-bold text-slate-900">{profile.follower_count || 0}</p>
-              <p className="text-xs text-slate-500">Followers</p>
+            <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
+              <Users className="w-5 h-5 text-blue-500 dark:text-[#00d4ff] mx-auto mb-1" />
+              <p className="text-xl font-bold text-slate-900 dark:text-white">{profile.follower_count || 0}</p>
+              <p className="text-xs text-slate-500 dark:text-[#00ff88]">Followers</p>
             </div>
           </div>
 
