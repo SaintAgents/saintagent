@@ -888,28 +888,28 @@ export default function CommandDeck() {
               <div className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Controls Deck</div>
               <div className="grid grid-cols-2 gap-3">
                 <button type="button" onClick={() => {try{localStorage.setItem('cmdColCOrder',JSON.stringify(colCOrder));}catch{}alert('Layout saved!');}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/616b1a65d_save_light_icon.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c38b3c63f_save_light_iconcopy.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Save current layout</div>
                   </div>
                 </button>
                 <button type="button" onClick={() => {setColCOrder(['market','influence','leader','dailyops']);setCardsForceOpen(null);try{localStorage.removeItem('cmdColCOrder');}catch{}}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ea26f53c1_reset_light_icon.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ef349f0a6_Screenshot2026-01-04224148.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Restore defaults</div>
                   </div>
                 </button>
                 <button type="button" onClick={() => setCardsForceOpen(false)} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c456c1ac9_ChatGPTImageJan2202608_46_20PM.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5c98c6a72_downcopy.png" alt="Collapse" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Collapse</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Condense view</div>
                   </div>
                 </button>
                 <button type="button" onClick={() => setCardsForceOpen(true)} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4e41be9ab_Expandalliconwithgradientglow.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5c57e4485_upcopy.png" alt="Expand" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Expand</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Fuller view</div>
