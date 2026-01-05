@@ -24,7 +24,8 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['collaborationProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-last_seen_at', 100),
-    refetchInterval: 60000 // Refresh every minute
+    refetchInterval: 60000, // Refresh every minute
+    enabled: !!profile?.user_id
   });
 
   // Get user's skills
@@ -33,6 +34,11 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
     queryFn: () => base44.entities.Skill.filter({ user_id: profile.user_id }),
     enabled: !!profile?.user_id
   });
+
+  // Early return if no profile
+  if (!profile?.user_id) {
+    return null;
+  }
 
   // Calculate collaboration suggestions
   const suggestions = React.useMemo(() => {
