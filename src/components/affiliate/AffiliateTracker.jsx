@@ -1,47 +1,27 @@
 import { useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 
 // This component handles affiliate tracking on app load
+// It ONLY stores the ref code in localStorage - no API calls on public pages
 export default function AffiliateTracker() {
   useEffect(() => {
-    const handleAffiliateTracking = async () => {
-      // Check URL for affiliate code
-      const urlParams = new URLSearchParams(window.location.search);
-      const refCode = urlParams.get('ref');
-      
-      if (refCode) {
-        // Store in localStorage with expiry
-        const attribution = {
-          code: refCode,
-          timestamp: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        };
+    // Check URL for affiliate code
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode) {
+      // Store in localStorage with expiry - this is all we do on public pages
+      const attribution = {
+        code: refCode,
+        timestamp: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+      };
+      try {
         localStorage.setItem('affiliate_attribution', JSON.stringify(attribution));
-        
-        // Track click
-        try {
-          await base44.entities.AffiliateClick.create({
-            affiliate_code: refCode,
-            session_id: getSessionId(),
-            user_agent: navigator.userAgent,
-            referrer_url: document.referrer,
-            landing_page: window.location.pathname
-          });
-          
-          // Update click count
-          const codes = await base44.entities.AffiliateCode.filter({ code: refCode });
-          if (codes.length > 0) {
-            await base44.entities.AffiliateCode.update(codes[0].id, {
-              total_clicks: (codes[0].total_clicks || 0) + 1
-            });
-          }
-        } catch (error) {
-          console.error('Affiliate tracking error:', error);
-        }
+        console.log('Affiliate code stored:', refCode);
+      } catch (e) {
+        console.error('Failed to store affiliate code:', e);
       }
-    };
-
-    handleAffiliateTracking();
+    }
   }, []);
 
   return null;
