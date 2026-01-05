@@ -8,6 +8,7 @@ import DailyOps from './pages/DailyOps';
 import EvaluationDocs from './pages/EvaluationDocs';
 import EvaluationSpec from './pages/EvaluationSpec';
 import EventDetail from './pages/EventDetail';
+import Events from './pages/Events';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
 import Home from './pages/Home';
@@ -35,7 +36,6 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Events from './pages/Events';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +50,7 @@ export const PAGES = {
     "EvaluationDocs": EvaluationDocs,
     "EvaluationSpec": EvaluationSpec,
     "EventDetail": EventDetail,
+    "Events": Events,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
     "Home": Home,
@@ -77,7 +78,6 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Events": Events,
 }
 
 export const pagesConfig = {
