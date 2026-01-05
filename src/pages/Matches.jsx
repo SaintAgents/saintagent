@@ -26,6 +26,7 @@ import MatchCard from '@/components/hud/MatchCard';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -114,6 +115,7 @@ export default function Matches() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-violet-500" />
               Synchronicity Engine
+              <HelpHint content="The Synchronicity Engine uses AI to find meaningful connections based on your profile, skills, intentions, and spiritual alignment. Matches are scored on intent alignment, skill complementarity, proximity, timing, and trust. Filter by values, practices, or score range to refine results." />
             </h1>
             <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
           </div>
