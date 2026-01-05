@@ -392,9 +392,18 @@ export default function Messages() {
           {/* Header */}
           <div className="p-4 border-b dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] flex items-center gap-3">
             <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} showRankBadge={false} />
-            {typingUsers.length > 0 &&
-            <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
-            }
+            {typingUsers.length > 0 && (
+              <div className="flex items-center gap-1 ml-2">
+                <span className="text-xs text-violet-600">
+                  {typingUsers.length === 1 ? 'Typing' : 'Multiple typing'}
+                </span>
+                <div className="flex gap-0.5">
+                  <span className="w-1 h-1 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1 h-1 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1 h-1 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            )}
             <div className="ml-auto flex items-center gap-2">
               {/* Video Call Button */}
               {!selectedConversation.isGroup && (
