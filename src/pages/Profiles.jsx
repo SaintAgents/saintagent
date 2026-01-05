@@ -23,8 +23,15 @@ import {
   Grid3X3,
   Network,
   Heart,
-  Zap
+  Zap,
+  HelpCircle
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
   Collapsible,
@@ -309,6 +316,16 @@ export default function Profiles() {
                   <span className="flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-amber-500" />
                     Synergy
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="w-3 h-3 text-slate-400 ml-1" />
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-[200px]">
+                          <p className="text-xs">Ranks profiles by compatibility with you based on shared skills, region, intentions, and values.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </span>
                 </SelectItem>
                 <SelectItem value="influence">Influence</SelectItem>
