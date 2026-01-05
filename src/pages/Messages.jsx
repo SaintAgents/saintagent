@@ -355,7 +355,7 @@ export default function Messages() {
               <div className="flex-1 min-w-0 text-left pr-2">
                 <div className="flex items-center justify-between gap-2">
                   <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} showRankBadge={false} showTrustBadge={false} showReachBadge={false} />
-                  <p className="text-xs text-slate-400 shrink-0 pr-1">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] shrink-0 pr-1">
                     {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'h:mm a') : ''}
                   </p>
                 </div>
