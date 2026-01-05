@@ -104,25 +104,57 @@ export default function AffiliateCenter() {
 
   // Fetch or create affiliate code
   const { data: affiliateCodes = [], isLoading: codeLoading } = useQuery({
-    queryKey: ['affiliateCode', currentUser?.email, profile?.handle],
+    queryKey: ['affiliateCodes', currentUser?.email, profile?.handle],
     queryFn: async () => {
       let codes = await base44.entities.AffiliateCode.filter({ user_id: currentUser.email });
       
-      if (codes.length === 0 && profile?.handle) {
-        // Create affiliate code
+      // Ensure primary code exists
+      const primaryCode = codes.find(c => !c.campaign_name);
+      if (!primaryCode && profile?.handle) {
         const newCode = await base44.entities.AffiliateCode.create({
           user_id: currentUser.email,
           code: profile.handle,
+          target_type: 'general',
           status: 'active'
         });
-        codes = [newCode];
+        codes = [newCode, ...codes];
       }
       
       return codes;
     },
     enabled: !!currentUser?.email && !!profile?.handle
   });
-  const affiliateCode = affiliateCodes[0];
+  const affiliateCode = affiliateCodes.find(c => !c.campaign_name) || affiliateCodes[0];
+
+  // Fetch clicks for analytics
+  const { data: clicks = [] } = useQuery({
+    queryKey: ['affiliateClicks', currentUser?.email],
+    queryFn: () => base44.entities.AffiliateClick.filter({ affiliate_code: affiliateCode?.code }, '-created_date', 500),
+    enabled: !!affiliateCode?.code
+  });
+
+  // Fetch events for campaign creation
+  const { data: events = [] } = useQuery({
+    queryKey: ['myEvents', currentUser?.email],
+    queryFn: () => base44.entities.Event.filter({ host_id: currentUser.email, status: 'upcoming' }),
+    enabled: !!currentUser?.email
+  });
+
+  // Fetch missions for campaign creation
+  const { data: missions = [] } = useQuery({
+    queryKey: ['myMissions', currentUser?.email],
+    queryFn: () => base44.entities.Mission.filter({ creator_id: currentUser.email, status: 'active' }),
+    enabled: !!currentUser?.email
+  });
+
+  // Delete campaign mutation
+  const deleteCampaignMutation = useMutation({
+    mutationFn: (campaignId) => base44.entities.AffiliateCode.delete(campaignId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['affiliateCodes'] });
+      toast.success('Campaign deleted');
+    }
+  });
 
   // Fetch referrals
   const { data: referrals = [] } = useQuery({
