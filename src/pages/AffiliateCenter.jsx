@@ -783,6 +783,17 @@ export default function AffiliateCenter() {
           </div>
         </div>
       </div>
+
+      {/* Create Campaign Modal */}
+      <CreateCampaignModal
+        open={createCampaignOpen}
+        onOpenChange={setCreateCampaignOpen}
+        userId={currentUser?.email}
+        userHandle={profile?.handle}
+        listings={listings}
+        events={events}
+        missions={missions}
+      />
     </div>
   );
 }
