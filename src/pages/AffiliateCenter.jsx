@@ -14,10 +14,69 @@ import {
   DollarSign,
   ChevronRight,
   Sparkles,
-  AlertCircle
+  AlertCircle,
+  Award,
+  Crown,
+  Star,
+  Gift,
+  Lock,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Progress } from "@/components/ui/progress";
+
+// Affiliate Tier System
+const AFFILIATE_TIERS = [
+  { 
+    id: 'bronze', 
+    name: 'Bronze', 
+    minPaid: 0, 
+    commission: 0.25, 
+    color: 'from-amber-600 to-amber-700',
+    bgColor: 'bg-amber-100',
+    textColor: 'text-amber-700',
+    borderColor: 'border-amber-300',
+    icon: Award,
+    benefits: ['Base 0.25 GGG per referral', 'Personal invite link', 'Basic analytics']
+  },
+  { 
+    id: 'silver', 
+    name: 'Silver', 
+    minPaid: 5, 
+    commission: 0.35, 
+    color: 'from-slate-400 to-slate-500',
+    bgColor: 'bg-slate-100',
+    textColor: 'text-slate-600',
+    borderColor: 'border-slate-300',
+    icon: Star,
+    benefits: ['0.35 GGG per referral (+40%)', 'Offer-specific links', 'Priority support', 'Early feature access']
+  },
+  { 
+    id: 'gold', 
+    name: 'Gold', 
+    minPaid: 20, 
+    commission: 0.50, 
+    color: 'from-amber-400 to-yellow-500',
+    bgColor: 'bg-yellow-50',
+    textColor: 'text-yellow-700',
+    borderColor: 'border-yellow-400',
+    icon: Crown,
+    benefits: ['0.50 GGG per referral (+100%)', 'Custom promo materials', 'Exclusive leader channel', 'Co-marketing opportunities', 'VIP badge on profile']
+  }
+];
+
+function getAffiliateTier(paidReferrals) {
+  if (paidReferrals >= 20) return AFFILIATE_TIERS[2]; // Gold
+  if (paidReferrals >= 5) return AFFILIATE_TIERS[1]; // Silver
+  return AFFILIATE_TIERS[0]; // Bronze
+}
+
+function getNextTier(paidReferrals) {
+  if (paidReferrals >= 20) return null; // Already Gold
+  if (paidReferrals >= 5) return AFFILIATE_TIERS[2]; // Next is Gold
+  return AFFILIATE_TIERS[1]; // Next is Silver
+}
 
 export default function AffiliateCenter() {
   const [selectedOffer, setSelectedOffer] = useState(null);
@@ -102,6 +161,13 @@ export default function AffiliateCenter() {
   const pendingReferrals = referrals.filter(r => r.status === 'pending' || r.status === 'activated');
   const paidReferrals = referrals.filter(r => r.status === 'paid');
 
+  // Calculate tier
+  const currentTier = getAffiliateTier(stats.paid);
+  const nextTier = getNextTier(stats.paid);
+  const progressToNext = nextTier 
+    ? ((stats.paid - (currentTier.minPaid)) / (nextTier.minPaid - currentTier.minPaid)) * 100
+    : 100;
+
   // Show loading state - wait for user and profile to load
   const isLoading = userLoading || (currentUser && profileLoading);
   
@@ -147,6 +213,46 @@ export default function AffiliateCenter() {
             Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
           </p>
         </div>
+
+        {/* Tier Status Card */}
+        <Card className={cn("mb-8 border-2", currentTier.borderColor)}>
+          <CardContent className="pt-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className={cn("w-16 h-16 rounded-xl bg-gradient-to-br flex items-center justify-center", currentTier.color)}>
+                  <currentTier.icon className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-slate-500">Your Affiliate Tier</p>
+                  <h2 className={cn("text-2xl font-bold", currentTier.textColor)}>{currentTier.name} Affiliate</h2>
+                  <p className="text-sm">
+                    Earning <span className="font-semibold text-emerald-600">{currentTier.commission} GGG</span> per referral (${(currentTier.commission * 145).toFixed(2)})
+                  </p>
+                </div>
+              </div>
+              
+              {nextTier && (
+                <div className="flex-1 max-w-xs">
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span>{stats.paid} paid referrals</span>
+                    <span className={nextTier.textColor}>{nextTier.name} at {nextTier.minPaid}</span>
+                  </div>
+                  <Progress value={progressToNext} className="h-2" />
+                  <p className="text-xs mt-1 text-slate-500">
+                    {nextTier.minPaid - stats.paid} more to unlock {nextTier.name}
+                  </p>
+                </div>
+              )}
+              
+              {!nextTier && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-white">
+                  <Crown className="w-5 h-5" />
+                  <span className="font-semibold">Max Tier Achieved!</span>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
@@ -448,27 +554,78 @@ export default function AffiliateCenter() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-violet-600" />
-                  Rank Impact
+                  Affiliate Tiers
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm mb-3">
-                  Successful referrals contribute to your rank progression, especially:
-                </p>
-                <ul className="space-y-2 text-xs">
-                  <li className="flex items-start gap-2">
-                    <span className="text-violet-600">•</span>
-                    <span>Connector rank (network growth)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-violet-600">•</span>
-                    <span>Facilitator rank (platform contribution)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-violet-600">•</span>
-                    <span>Reach score (influence)</span>
-                  </li>
-                </ul>
+              <CardContent className="space-y-4">
+                {AFFILIATE_TIERS.map((tier, idx) => {
+                  const isCurrentTier = tier.id === currentTier.id;
+                  const isLocked = tier.minPaid > stats.paid;
+                  const TierIcon = tier.icon;
+                  
+                  return (
+                    <div 
+                      key={tier.id}
+                      className={cn(
+                        "p-3 rounded-lg border-2 transition-all",
+                        isCurrentTier ? cn(tier.borderColor, tier.bgColor) : "border-slate-200",
+                        isLocked && "opacity-60"
+                      )}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className={cn(
+                          "w-8 h-8 rounded-lg flex items-center justify-center",
+                          isLocked ? "bg-slate-200" : `bg-gradient-to-br ${tier.color}`
+                        )}>
+                          {isLocked ? (
+                            <Lock className="w-4 h-4 text-slate-400" />
+                          ) : (
+                            <TierIcon className="w-4 h-4 text-white" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className={cn("font-semibold text-sm", isCurrentTier && tier.textColor)}>
+                              {tier.name}
+                            </span>
+                            {isCurrentTier && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-600 text-white">CURRENT</span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-500">
+                            {tier.minPaid === 0 ? 'Starting tier' : `${tier.minPaid}+ paid referrals`}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className={cn("font-bold text-sm", isLocked ? "text-slate-400" : "text-emerald-600")}>
+                            {tier.commission} GGG
+                          </p>
+                          <p className="text-[10px] text-slate-500">per referral</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1 mt-2">
+                        {tier.benefits.map((benefit, i) => (
+                          <div key={i} className="flex items-center gap-2 text-xs">
+                            {isLocked ? (
+                              <Lock className="w-3 h-3 text-slate-300" />
+                            ) : (
+                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                            )}
+                            <span className={isLocked ? "text-slate-400" : "text-slate-600"}>{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                <div className="pt-2 border-t border-slate-100">
+                  <p className="text-xs text-slate-500">
+                    <Zap className="w-3 h-3 inline mr-1 text-amber-500" />
+                    Referrals also boost your <span className="font-medium">Connector</span> rank and <span className="font-medium">Reach</span> score
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
