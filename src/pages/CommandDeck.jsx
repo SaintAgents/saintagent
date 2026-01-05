@@ -463,7 +463,7 @@ export default function CommandDeck() {
       )}>
         {/* Page Header */}
         <div className="px-6 pt-6 pb-4">
-          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-gray-800/50 backdrop-blur-sm border border-slate-700/50">
+          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50">
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10">
               <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
@@ -489,7 +489,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-gray-800/50 backdrop-blur-sm border border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
