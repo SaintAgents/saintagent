@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -7,9 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Check } from 'lucide-react';
 
 export default function DatingSettings({ currentUser }) {
   const qc = useQueryClient();
+  const [showSaved, setShowSaved] = useState(false);
 
   const { data: records = [] } = useQuery({
     queryKey: ['datingProfile', currentUser?.email],
@@ -73,6 +75,8 @@ export default function DatingSettings({ currentUser }) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['datingProfile'] });
+      setShowSaved(true);
+      setTimeout(() => setShowSaved(false), 2500);
     }
   });
 
@@ -264,8 +268,20 @@ export default function DatingSettings({ currentUser }) {
         <Label>Enable Synchronicity Signals</Label>
       </div>
 
-      <div className="text-right">
-        <Button className="bg-purple-50 text-zinc-400 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow hover:bg-primary/90 h-9" onClick={() => upsert.mutate()}>Save Settings</Button>
+      <div className="flex items-center justify-end gap-3">
+        {showSaved && (
+          <span className="flex items-center gap-1 text-sm text-teal-600 font-medium animate-in fade-in duration-200">
+            <Check className="w-4 h-4" />
+            Settings Saved
+          </span>
+        )}
+        <Button 
+          className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9" 
+          onClick={() => upsert.mutate()}
+          disabled={upsert.isPending}
+        >
+          {upsert.isPending ? 'Saving…' : 'Save Settings'}
+        </Button>
       </div>
     </div>);
 
