@@ -19,8 +19,14 @@ import {
   MapPin,
   X,
   Images,
-  User } from
-"lucide-react";
+  User,
+  ChevronDown,
+  ChevronUp,
+  Shield,
+  MessageSquare,
+  TrendingUp,
+  Home
+} from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
