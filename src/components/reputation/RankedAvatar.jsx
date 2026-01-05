@@ -221,64 +221,44 @@ export default function RankedAvatar({
 
         {/* 144K Leader Badge with Tooltip */}
         {leaderTierFinal === 'verified144k' && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div 
-                className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-                style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="bg-amber-900 text-amber-100 text-xs px-3 py-2 max-w-[200px]">
-              <p className="font-semibold">144K Sovereign Agent</p>
-              <p className="text-amber-200 text-[10px]">Verified community node with leadership privileges</p>
-            </TooltipContent>
-          </Tooltip>
+          <div 
+            className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+            style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+            onClick={(e) => e.stopPropagation()}
+            title="144K Sovereign Agent - Verified community node with leadership privileges"
+          >
+            <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
+          </div>
         )}
 
         {/* Trust Sigil (top-right, opposite of rank) - only show if not showing photo icon */}
         {!showPhotoIcon && trustScoreFinal > 0 && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div 
-                className="absolute -top-1 -right-1 rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-                style={{ width: trustPx, height: trustPx, border: '2px solid white' }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="bg-emerald-900 text-emerald-100 text-xs px-3 py-2 max-w-[220px]">
-              <p className="font-semibold">Trust Score: {trustScoreFinal}%</p>
-              <p className="text-emerald-200 text-[10px]">Verified through community interactions, testimonials, and collaborations</p>
-            </TooltipContent>
-          </Tooltip>
+          <div 
+            className="absolute -top-1 -right-1 rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+            style={{ width: trustPx, height: trustPx, border: '2px solid white' }}
+            onClick={(e) => e.stopPropagation()}
+            title={`Trust Score: ${trustScoreFinal}% - Verified through community interactions`}
+          >
+            <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
+          </div>
         )}
 
         {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
         {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  if (allImages.length > 0) {
-                    setViewerOpen(true);
-                  }
-                }}
-                className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
-                style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
-              >
-                <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="bg-slate-900 text-white text-xs px-3 py-2">
-              <p>View Photos ({allImages.length})</p>
-            </TooltipContent>
-          </Tooltip>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              if (allImages.length > 0) {
+                setViewerOpen(true);
+              }
+            }}
+            className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
+            style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
+            title={`View Photos (${allImages.length})`}
+          >
+            <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
+          </button>
         )}
 
         {/* Photo Viewer Modal */}
