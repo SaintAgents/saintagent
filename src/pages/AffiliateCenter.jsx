@@ -551,7 +551,7 @@ export default function AffiliateCenter() {
                 <div className="flex items-start gap-3 mb-3">
                   <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-amber-900 mb-1">Keep It Genuine</p>
+                    <p className="text-sm font-medium text-amber-800 mb-1">Keep It Genuine</p>
                     <p className="text-xs text-amber-700">
                       Only share with people who would truly benefit. Quality over quantity builds trust and credibility.
                     </p>
