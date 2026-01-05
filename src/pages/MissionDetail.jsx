@@ -25,6 +25,7 @@ import {
 import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
 import AIDiscussionAssistant from '@/components/ai/AIDiscussionAssistant';
+import AIMissionCopilot from '@/components/ai/AIMissionCopilot';
 import Breadcrumb from '@/components/hud/Breadcrumb';
 
 export default function MissionDetail() {
@@ -214,10 +215,13 @@ export default function MissionDetail() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="w-full grid grid-cols-4 bg-white rounded-xl border">
+              <TabsList className="w-full grid grid-cols-5 bg-white rounded-xl border">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="ai-brief">
+                <TabsTrigger value="copilot">
                   <Sparkles className="w-4 h-4 mr-2" />
+                  AI Co-pilot
+                </TabsTrigger>
+                <TabsTrigger value="ai-brief">
                   AI Brief
                 </TabsTrigger>
                 <TabsTrigger value="team-builder">
@@ -226,7 +230,7 @@ export default function MissionDetail() {
                 </TabsTrigger>
                 <TabsTrigger value="discussion">
                   <MessageSquare className="w-4 h-4 mr-2" />
-                  Discussion AI
+                  Discussion
                 </TabsTrigger>
               </TabsList>
 
@@ -301,6 +305,14 @@ export default function MissionDetail() {
                     </CardContent>
                   </Card>
                 )}
+              </TabsContent>
+
+              <TabsContent value="copilot" className="mt-6">
+                <AIMissionCopilot 
+                  mission={mission} 
+                  participants={participants} 
+                  currentProfile={profile} 
+                />
               </TabsContent>
 
               <TabsContent value="ai-brief" className="mt-6">
