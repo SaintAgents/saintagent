@@ -186,7 +186,133 @@ export default function Missions() {
           </div>
         </div>
 
-        {/* Filters */}
+        {/* Search and Quick Filters */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              placeholder="Search missions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-white rounded-xl border-slate-200"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          
+          <Button
+            variant="outline"
+            className={cn(
+              "rounded-xl gap-2",
+              filtersOpen && "bg-violet-50 border-violet-200"
+            )}
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            Filters
+            {activeFilterCount > 0 && (
+              <Badge className="h-5 px-1.5 text-xs bg-violet-600 text-white">
+                {activeFilterCount}
+              </Badge>
+            )}
+            <ChevronDown className={cn("w-4 h-4 transition-transform", filtersOpen && "rotate-180")} />
+          </Button>
+
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-44 rounded-xl bg-white">
+              <ArrowUpDown className="w-4 h-4 mr-2 text-slate-400" />
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="relevance">Relevance</SelectItem>
+              <SelectItem value="end_date">Ending Soon</SelectItem>
+              <SelectItem value="participants">Most Participants</SelectItem>
+              <SelectItem value="rewards">Highest Rewards</SelectItem>
+              <SelectItem value="newest">Newest First</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Advanced Filters Panel */}
+        <Collapsible open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <CollapsibleContent>
+            <div className="bg-white rounded-xl border border-slate-200 p-4 mb-4">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600">Status:</span>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-36 h-9 rounded-lg">
+                      <SelectValue placeholder="All statuses" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Statuses</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600">Rewards:</span>
+                  <Select value={rewardFilter} onValueChange={setRewardFilter}>
+                    <SelectTrigger className="w-40 h-9 rounded-lg">
+                      <SelectValue placeholder="All rewards" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Rewards</SelectItem>
+                      <SelectItem value="ggg">
+                        <div className="flex items-center gap-2">
+                          <Coins className="w-3.5 h-3.5 text-amber-500" />
+                          Has GGG
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="rp">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
+                          Has Rank Points
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="boost">
+                        <div className="flex items-center gap-2">
+                          <Zap className="w-3.5 h-3.5 text-blue-500" />
+                          Has Boost
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="high_reward">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          High Reward (50+ GGG)
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {activeFilterCount > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-slate-500 hover:text-slate-700 gap-1.5"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Clear filters
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Mission Type Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
           <TabsList className="w-full grid grid-cols-7 h-11 bg-white rounded-xl border">
             <TabsTrigger value="active" className="rounded-lg gap-2">
@@ -220,6 +346,14 @@ export default function Missions() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
+
+        {/* Results count */}
+        {(searchQuery || activeFilterCount > 0) && (
+          <p className="text-sm text-slate-500 mb-4">
+            Showing {filteredMissions.length} mission{filteredMissions.length !== 1 ? 's' : ''}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </p>
+        )}
 
         {/* Missions Grid */}
         {isLoading ?
