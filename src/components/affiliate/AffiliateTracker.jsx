@@ -27,17 +27,9 @@ export default function AffiliateTracker() {
   return null;
 }
 
-function getSessionId() {
-  let sessionId = sessionStorage.getItem('session_id');
-  if (!sessionId) {
-    sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
-    sessionStorage.setItem('session_id', sessionId);
-  }
-  return sessionId;
-}
-
 // Helper function to attach referral to user after signup
-export async function attachAffiliateToUser(userId) {
+// Call this from onboarding completion or after user signs up
+export async function attachAffiliateToUser(userId, base44) {
   const attributionStr = localStorage.getItem('affiliate_attribution');
   if (!attributionStr) return;
 
