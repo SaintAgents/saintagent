@@ -187,8 +187,8 @@ export default function DatingMatchesPopup({ currentUser }) {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-0 dark:bg-slate-800 dark:border-slate-700">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20">
+      <PopoverContent align="end" className="w-80 p-0 bg-white dark:bg-[#0a0a0a] border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-[rgba(0,255,136,0.15)] bg-gradient-to-r from-pink-50 to-rose-50 dark:from-[#0a0a0a] dark:to-[#050505]">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
             Dating Matches
@@ -201,7 +201,7 @@ export default function DatingMatchesPopup({ currentUser }) {
         </div>
 
         {enrichedMatches.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500 px-4">
+          <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-[rgba(0,212,255,0.6)] px-4">
             <Heart className="w-10 h-10 mb-3 opacity-50" />
             <p className="text-sm text-center">No matches yet</p>
             <p className="text-xs text-center mt-1">Check back soon for new connections</p>
@@ -215,21 +215,21 @@ export default function DatingMatchesPopup({ currentUser }) {
                   onClick={handlePrev}
                   disabled={currentIndex === 0}
                   className={cn(
-                    "absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-all",
-                    currentIndex === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-white hover:scale-110"
+                    "absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 dark:bg-[#0a0a0a]/90 dark:border dark:border-[rgba(0,255,136,0.3)] shadow-md flex items-center justify-center transition-all",
+                    currentIndex === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-white dark:hover:bg-[#0a0a0a] hover:scale-110"
                   )}
                 >
-                  <ChevronLeft className="w-5 h-5 text-slate-600" />
+                  <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-[#00ff88]" />
                 </button>
                 <button
                   onClick={handleNext}
                   disabled={currentIndex === enrichedMatches.length - 1}
                   className={cn(
-                    "absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-all",
-                    currentIndex === enrichedMatches.length - 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-white hover:scale-110"
+                    "absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 dark:bg-[#0a0a0a]/90 dark:border dark:border-[rgba(0,255,136,0.3)] shadow-md flex items-center justify-center transition-all",
+                    currentIndex === enrichedMatches.length - 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-white dark:hover:bg-[#0a0a0a] hover:scale-110"
                   )}
                 >
-                  <ChevronRight className="w-5 h-5 text-slate-600" />
+                  <ChevronRight className="w-5 h-5 text-slate-600 dark:text-[#00ff88]" />
                 </button>
               </>
             )}
@@ -261,17 +261,22 @@ export default function DatingMatchesPopup({ currentUser }) {
                     {/* Photo Gallery Icon */}
                     {currentMatch.all_images.length > 0 && (
                       <button
-                        onClick={(e) => handlePhotoClick(e, currentMatch.all_images)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setPhotoViewerOpen(true);
+                        }}
                         className={cn(
-                          "absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all",
-                          "bg-black/50 hover:bg-black/70 backdrop-blur-sm",
-                          "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_10px_#00ff00]"
+                          "absolute top-2 right-2 w-10 h-10 rounded-full flex items-center justify-center transition-all z-20 cursor-pointer",
+                          "bg-black/60 hover:bg-black/80 backdrop-blur-sm border-2 border-white/30 hover:border-white/60",
+                          "dark:bg-[#0a0a0a]/80 dark:border-[rgba(0,255,136,0.5)] dark:hover:border-[#00ff88]",
+                          "dark:shadow-[0_0_12px_rgba(0,255,136,0.4)] dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.6)]"
                         )}
                         title="View all photos"
                       >
-                        <Images className="w-4 h-4 text-white [data-theme='hacker']_&:text-[#00ff00]" />
+                        <Images className="w-5 h-5 text-white dark:text-[#00ff88] dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.8)]" />
                         {currentMatch.all_images.length > 1 && (
-                          <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 [data-theme='hacker']_&:bg-[#00ff00] text-white [data-theme='hacker']_&:text-black text-[10px] rounded-full flex items-center justify-center font-bold">
+                          <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-pink-500 dark:bg-[#00ff88] text-white dark:text-black text-[10px] rounded-full flex items-center justify-center font-bold shadow-md">
                             {currentMatch.all_images.length}
                           </span>
                         )}
@@ -350,13 +355,13 @@ export default function DatingMatchesPopup({ currentUser }) {
                         {currentMatch.values_tags.slice(0, 3).map((tag, i) => (
                           <span 
                             key={i} 
-                            className="px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 text-xs rounded-full"
+                            className="px-2 py-0.5 bg-pink-100 dark:bg-[rgba(0,255,136,0.1)] text-pink-700 dark:text-[#00ff88] text-xs rounded-full dark:border dark:border-[rgba(0,255,136,0.2)]"
                           >
                             {tag}
                           </span>
                         ))}
                         {currentMatch.values_tags.length > 3 && (
-                          <span className="text-xs text-slate-400">+{currentMatch.values_tags.length - 3}</span>
+                          <span className="text-xs text-slate-400 dark:text-[rgba(0,212,255,0.6)]">+{currentMatch.values_tags.length - 3}</span>
                         )}
                       </div>
                     </div>
@@ -417,8 +422,8 @@ export default function DatingMatchesPopup({ currentUser }) {
                         className={cn(
                           "w-2 h-2 rounded-full transition-all",
                           i === currentIndex 
-                            ? "bg-pink-500 w-4" 
-                            : "bg-slate-300 hover:bg-slate-400"
+                            ? "bg-pink-500 dark:bg-[#00ff88] w-4" 
+                            : "bg-slate-300 dark:bg-[rgba(0,255,136,0.3)] hover:bg-slate-400 dark:hover:bg-[rgba(0,255,136,0.5)]"
                         )}
                       />
                     ))}
@@ -426,7 +431,7 @@ export default function DatingMatchesPopup({ currentUser }) {
                 )}
 
                 {/* Counter */}
-                <p className="text-center text-xs text-slate-400 mt-2">
+                <p className="text-center text-xs text-slate-400 dark:text-[rgba(0,212,255,0.6)] mt-2">
                   {currentIndex + 1} of {enrichedMatches.length}
                 </p>
               </div>

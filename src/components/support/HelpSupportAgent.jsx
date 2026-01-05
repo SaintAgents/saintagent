@@ -186,23 +186,29 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Floating button when closed */}
+      {/* Half-circle button on right side when closed */}
       {!isOpen && (
-        <Button
+        <button
           onClick={() => setIsOpen(true)}
           className={cn(
-            "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105",
+            "fixed right-0 z-50 h-16 w-8 transition-all duration-300 group",
+            "rounded-l-full shadow-lg hover:shadow-xl hover:w-10",
             "bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700",
-            "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:from-[#0a0a0a] [data-theme='hacker']_&:to-[#001a00]",
-            "[data-theme='hacker']_&:border [data-theme='hacker']_&:border-[#00ff00]",
-            "[data-theme='hacker']_&:hacker-pulse"
+            "flex items-center justify-center",
+            "dark:bg-[#0a0a0a] dark:from-[#0a0a0a] dark:to-[#050505]",
+            "dark:border-l dark:border-t dark:border-b dark:border-[rgba(0,255,136,0.5)]",
+            "dark:shadow-[0_0_12px_rgba(0,255,136,0.3)]",
+            "dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.5)]"
           )}
+          style={{ top: 'calc(50% - 4rem)' }}
           title="Help & Support"
         >
-          <div className="[data-theme='hacker']_&:hacker-glitch">
-            <Shield className="w-6 h-6 text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:drop-shadow-[0_0_8px_#00ff00]" />
-          </div>
-        </Button>
+          <HelpCircle className={cn(
+            "w-5 h-5 text-white transition-all",
+            "dark:text-[#00ff88] dark:drop-shadow-[0_0_8px_rgba(0,255,136,0.8)]",
+            "group-hover:scale-110"
+          )} />
+        </button>
       )}
 
       {/* Chat panel when open */}
