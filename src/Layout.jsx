@@ -1042,10 +1042,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] [data-avatar-card], [data-theme='hacker'] [data-avatar-card] * { background-color: #000 !important; color: #00ff00 !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
-          [data-theme='hacker'] img:not([data-no-filter]) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
+          [data-theme='hacker'] img:not([data-no-filter]):not(.mission-image) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
           [data-theme='hacker'] .mission-card img,
+          [data-theme='hacker'] .mission-image,
           [data-theme='hacker'] img[data-no-filter] { filter: none !important; }
-          [data-theme='dark'] .mission-card img { filter: none !important; }
+          [data-theme='dark'] .mission-card img,
+          [data-theme='dark'] .mission-image { filter: none !important; }
         `}</style>
 
         {/* Sidebar */}
