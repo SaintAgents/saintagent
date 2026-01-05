@@ -46,10 +46,18 @@ export default function Missions() {
   const [tab, setTab] = useState('active');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [matrixOpen, setMatrixOpen] = useState(false);
+  
+  // Advanced filters
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [rewardFilter, setRewardFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('relevance');
 
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
-    queryFn: () => base44.entities.Mission.list('-created_date', 50)
+    queryFn: () => base44.entities.Mission.list('-created_date', 100),
+    staleTime: 2 * 60 * 1000,
   });
 
   // Separate active vs past missions
@@ -65,10 +73,83 @@ export default function Missions() {
     return false;
   });
 
-  const filteredMissions = tab === 'active' ? activeMissions :
-  tab === 'past' ? pastMissions :
-  tab === 'all' ? missions :
-  activeMissions.filter((m) => m.mission_type === tab);
+  // Apply all filters and sorting
+  const filteredMissions = useMemo(() => {
+    // Start with tab-based filtering
+    let result = tab === 'active' ? activeMissions :
+      tab === 'past' ? pastMissions :
+      tab === 'all' ? missions :
+      activeMissions.filter((m) => m.mission_type === tab);
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((m) =>
+        m.title?.toLowerCase().includes(query) ||
+        m.objective?.toLowerCase().includes(query) ||
+        m.description?.toLowerCase().includes(query)
+      );
+    }
+
+    // Status filter (for active tab mainly)
+    if (statusFilter !== 'all') {
+      result = result.filter((m) => m.status === statusFilter);
+    }
+
+    // Reward filter
+    if (rewardFilter !== 'all') {
+      result = result.filter((m) => {
+        if (rewardFilter === 'ggg') return (m.reward_ggg || 0) > 0;
+        if (rewardFilter === 'rp') return (m.reward_rank_points || 0) > 0;
+        if (rewardFilter === 'boost') return (m.reward_boost || 0) > 0;
+        if (rewardFilter === 'high_reward') return (m.reward_ggg || 0) >= 50;
+        return true;
+      });
+    }
+
+    // Sorting
+    result = [...result].sort((a, b) => {
+      switch (sortBy) {
+        case 'end_date':
+          if (!a.end_time && !b.end_time) return 0;
+          if (!a.end_time) return 1;
+          if (!b.end_time) return -1;
+          return new Date(a.end_time) - new Date(b.end_time);
+        case 'participants':
+          return (b.participant_count || 0) - (a.participant_count || 0);
+        case 'rewards':
+          return (b.reward_ggg || 0) - (a.reward_ggg || 0);
+        case 'newest':
+          return new Date(b.created_date) - new Date(a.created_date);
+        case 'relevance':
+        default:
+          // Relevance: prioritize active, with rewards, ending soon
+          const aScore = (a.status === 'active' ? 100 : 0) + 
+            (a.reward_ggg || 0) + 
+            (a.end_time ? 50 / Math.max(1, (new Date(a.end_time) - now) / (1000 * 60 * 60 * 24)) : 0);
+          const bScore = (b.status === 'active' ? 100 : 0) + 
+            (b.reward_ggg || 0) + 
+            (b.end_time ? 50 / Math.max(1, (new Date(b.end_time) - now) / (1000 * 60 * 60 * 24)) : 0);
+          return bScore - aScore;
+      }
+    });
+
+    return result;
+  }, [missions, activeMissions, pastMissions, tab, searchQuery, statusFilter, rewardFilter, sortBy, now]);
+
+  const activeFilterCount = [
+    searchQuery.trim() ? 1 : 0,
+    statusFilter !== 'all' ? 1 : 0,
+    rewardFilter !== 'all' ? 1 : 0,
+    sortBy !== 'relevance' ? 1 : 0,
+  ].reduce((a, b) => a + b, 0);
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setStatusFilter('all');
+    setRewardFilter('all');
+    setSortBy('relevance');
+  };
 
   const handleAction = (action, mission) => {
     console.log('Mission action:', action, mission);
