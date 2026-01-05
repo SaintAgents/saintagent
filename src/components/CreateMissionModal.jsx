@@ -104,8 +104,11 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
         mission_type: 'personal',
         reward_ggg: '',
         reward_rank_points: '',
+        reward_boost: '',
         max_participants: '',
-        image_url: ''
+        image_url: '',
+        roles_needed: [],
+        tasks: []
       });
     }
   });
