@@ -87,13 +87,12 @@ export default function TopBar({
           <div key={tab.id} className="flex items-center">
             <button
               onClick={() => {
-                if (!tab.locked && tab.page) {
+                if (tab.page) {
                   window.location.href = createPageUrl(tab.page);
-                } else if (!tab.locked) {
+                } else {
                   onModeChange?.(tab.id);
                 }
               }}
-              disabled={tab.locked}
               className={cn(
                 "px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5",
                 mode === tab.id 
