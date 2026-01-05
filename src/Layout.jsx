@@ -282,7 +282,7 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
 
   // If on public page, render without layout chrome (sidebar/topbar)
   if (PUBLIC_PAGES.includes(currentPageName)) {
-    return <div className="min-h-screen bg-slate-50">{children}</div>;
+    return <>{children}</>;
   }
   
   // If no user and not public page, show blank while redirecting to login
