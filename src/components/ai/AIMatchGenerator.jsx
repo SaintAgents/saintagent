@@ -288,7 +288,7 @@ Return ONLY the 5 best matches.`;
     <Button
       onClick={() => generateMatchesMutation.mutate()}
       disabled={isGenerating || generateMatchesMutation.isPending}
-      className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl gap-2"
+      className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] text-white rounded-xl gap-2 transition-all duration-200 dark:from-[#00ff88]/20 dark:to-emerald-900/40 dark:border dark:border-[#00ff88]/50 dark:hover:border-[#00ff88] dark:hover:shadow-[0_0_25px_rgba(0,255,136,0.5)]"
     >
       {isGenerating ? (
         <>
