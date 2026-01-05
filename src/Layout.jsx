@@ -286,7 +286,12 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
   if (PUBLIC_PAGES.includes(currentPageName)) {
     return <>{children}</>;
   }
-  
+
+  // If auth state is still loading (undefined), show loading
+  if (currentUser === undefined) {
+    return <div className="min-h-screen bg-slate-50" />;
+  }
+
   // If no user and not public page, show blank while redirecting to login
   if (currentUser === null) {
     return <div className="min-h-screen bg-slate-50" />;
