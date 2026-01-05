@@ -23,13 +23,17 @@ export default function AffiliateCenter() {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const queryClient = useQueryClient();
 
+  // Fetch current user first
+  const { data: currentUser, isLoading: userLoading } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   // Fetch user profile
   const { data: profiles, isLoading: profileLoading } = useQuery({
-    queryKey: ['userProfile'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.UserProfile.filter({ user_id: user.email });
-    }
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
 
