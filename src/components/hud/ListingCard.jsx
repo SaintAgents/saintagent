@@ -119,16 +119,18 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
         <p className="text-sm text-slate-500 line-clamp-2 mt-2">{listing.description}</p>
 
         <div className="flex items-center gap-3 mt-3">
-          <MiniProfile 
-            userId={listing.owner_id} 
-            name={listing.owner_name} 
-            avatar={listing.owner_avatar} 
-            size={36} 
-            showHelpHint={false}
-            showRankBadge={true}
-            showTrustBadge={false}
-            showReachBadge={false}
-          />
+          <div 
+            className="flex items-center gap-2 cursor-pointer" 
+            data-user-id={listing.owner_id}
+          >
+            <Avatar className="w-9 h-9">
+              <AvatarImage src={listing.owner_avatar} />
+              <AvatarFallback className="text-sm bg-violet-100 text-violet-700">
+                {listing.owner_name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm font-medium text-slate-700">{listing.owner_name}</span>
+          </div>
           {listing.rating && (
             <div className="flex items-center gap-1 ml-auto">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
