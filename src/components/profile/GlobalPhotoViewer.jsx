@@ -66,17 +66,28 @@ export default function GlobalPhotoViewer() {
     setCurrentIndex((i) => (i < images.length - 1 ? i + 1 : 0));
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') handleClose();
-    if (e.key === 'ArrowLeft') handlePrev(e);
-    if (e.key === 'ArrowRight') handleNext(e);
-  };
-
   useEffect(() => {
-    if (open) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
+    if (!open) return;
+    
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+        setImages([]);
+        setCurrentIndex(0);
+        setScanning(false);
+      }
+      if (e.key === 'ArrowLeft') {
+        e.stopPropagation();
+        setCurrentIndex((i) => (i > 0 ? i - 1 : images.length - 1));
+      }
+      if (e.key === 'ArrowRight') {
+        e.stopPropagation();
+        setCurrentIndex((i) => (i < images.length - 1 ? i + 1 : 0));
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, images.length]);
 
   if (!open || images.length === 0) return null;
