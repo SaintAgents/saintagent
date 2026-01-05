@@ -440,39 +440,53 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
             background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--accent) 12%, white));
           }
 
-          /* Hacker theme - light green on black */
-          [data-theme='hacker'] body, [data-theme='hacker'] .min-h-screen {
+          /* Hacker theme - Complete green on black, no white anywhere */
+          [data-theme='hacker'] *, [data-theme='hacker'] *::before, [data-theme='hacker'] *::after {
+            border-color: #00ff00 !important;
+          }
+          [data-theme='hacker'] body, [data-theme='hacker'] .min-h-screen, [data-theme='hacker'] div, [data-theme='hacker'] section, [data-theme='hacker'] main, [data-theme='hacker'] aside, [data-theme='hacker'] header, [data-theme='hacker'] footer, [data-theme='hacker'] nav {
             background-color: #000 !important;
             background-image: none !important;
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='bg-white'] { background-color: #000 !important; color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='bg-slate-50'] { background-color: #000 !important; color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='bg-slate-100'] { background-color: #0a0a0a !important; color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='border-slate-100'] { border-color: #003300 !important; }
-          [data-theme='hacker'] [class*='border-slate-200'] { border-color: #004400 !important; }
-          [data-theme='hacker'] [class*='text-slate-900'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='text-slate-800'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='text-slate-700'] { color: #00dd00 !important; }
-          [data-theme='hacker'] [class*='text-slate-600'] { color: #00cc00 !important; }
-          [data-theme='hacker'] [class*='text-slate-500'] { color: #00aa00 !important; }
-          [data-theme='hacker'] [class*='text-slate-400'] { color: #009900 !important; }
-          [data-theme='hacker'] [class*='text-violet-'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='text-purple-'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='text-teal-'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='text-cyan-'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='text-fuchsia-'] { color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='bg-violet-'] { background-color: #003300 !important; color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='bg-purple-'] { background-color: #003300 !important; color: #00ff00 !important; }
-          [data-theme='hacker'] [class*='hover\\:bg-slate-50']:hover { background-color: #001100 !important; }
-          [data-theme='hacker'] [class*='hover\\:bg-violet-']:hover { background-color: #004400 !important; }
-          [data-theme='hacker'] main[data-page='CommandDeck'] {
-            background-image: none !important;
-            background-color: #000 !important;
+          [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4, [data-theme='hacker'] h5, [data-theme='hacker'] h6, [data-theme='hacker'] p, [data-theme='hacker'] span, [data-theme='hacker'] a, [data-theme='hacker'] li, [data-theme='hacker'] label {
+            color: #00ff00 !important;
           }
+          [data-theme='hacker'] [class*='bg-'] { background-color: #000 !important; }
+          [data-theme='hacker'] [class*='text-'] { color: #00ff00 !important; }
+          [data-theme='hacker'] button, [data-theme='hacker'] [role="button"] {
+            background-color: #000 !important;
+            color: #00ff00 !important;
+            border: 1px solid #00ff00 !important;
+          }
+          [data-theme='hacker'] button:hover, [data-theme='hacker'] [role="button"]:hover {
+            background-color: #001a00 !important;
+            box-shadow: 0 0 10px #00ff00 !important;
+          }
+          [data-theme='hacker'] input, [data-theme='hacker'] textarea, [data-theme='hacker'] select {
+            background-color: #001a00 !important;
+            color: #00ff00 !important;
+            border: 1px solid #00ff00 !important;
+          }
+          [data-theme='hacker'] input::placeholder, [data-theme='hacker'] textarea::placeholder {
+            color: #006600 !important;
+          }
+          [data-theme='hacker'] [role="dialog"], [data-theme='hacker'] [data-radix-popper-content-wrapper] *, [data-theme='hacker'] [data-state="open"] {
+            background-color: #000 !important;
+            color: #00ff00 !important;
+            border-color: #00ff00 !important;
+          }
+          [data-theme='hacker'] svg { color: #00ff00 !important; stroke: #00ff00 !important; }
+          [data-theme='hacker'] svg path, [data-theme='hacker'] svg circle, [data-theme='hacker'] svg rect, [data-theme='hacker'] svg line { stroke: #00ff00 !important; fill: none !important; }
+          [data-theme='hacker'] svg[fill] path { fill: #00ff00 !important; }
+          [data-theme='hacker'] ::-webkit-scrollbar { background-color: #000 !important; }
+          [data-theme='hacker'] ::-webkit-scrollbar-thumb { background-color: #00ff00 !important; }
+          [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
+          [data-theme='hacker'] [class*='shadow'] { box-shadow: 0 0 8px #00ff00 !important; }
+          [data-theme='hacker'] [data-avatar-card], [data-theme='hacker'] [data-avatar-card] * { background-color: #000 !important; color: #00ff00 !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
-          [data-theme='hacker'] [data-avatar-card] { background-color: #000 !important; border-color: #003300 !important; }
+          [data-theme='hacker'] img { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
         `}</style>
 
         {/* Sidebar */}
