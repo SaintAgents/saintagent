@@ -157,22 +157,25 @@ export default function Join() {
             </p>
           </div>
         
-        <div className="relative">
-          {/* Connection line */}
-          <div className="absolute top-8 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-600 via-purple-500 to-amber-500 hidden md:block" />
-          
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-6">
-            {PHASES.map((phase) => (
-              <div key={phase.phase} className="relative text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-violet-500/25 relative z-10">
-                  <phase.icon className="w-7 h-7 text-white" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {PHASES.map((phase) => (
+            <div 
+              key={phase.phase} 
+              className={`relative p-6 rounded-xl bg-gradient-to-br ${phase.gradient} shadow-lg`}
+              style={{ border: `2px solid ${phase.border}`, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)' }}
+            >
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                  <phase.icon className="w-6 h-6 text-white" />
                 </div>
-                <div className="text-xs text-violet-400 font-semibold mb-1">PHASE {phase.phase}</div>
-                <h3 className="text-sm font-semibold text-white mb-1">{phase.title}</h3>
-                <p className="text-xs text-cyan-400">{phase.description}</p>
+                <div>
+                  <div className="text-xs text-violet-300 font-semibold tracking-wide">PHASE {phase.phase}</div>
+                  <h3 className="text-lg font-bold text-white" style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)' }}>{phase.title}</h3>
+                </div>
               </div>
-            ))}
-          </div>
+              <p className="text-sm text-gray-100 leading-relaxed font-medium">{phase.description}</p>
+            </div>
+          ))}
         </div>
       </div>
 
