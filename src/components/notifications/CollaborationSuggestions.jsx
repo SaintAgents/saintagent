@@ -143,7 +143,7 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
     document.dispatchEvent(event);
   };
 
-  if (suggestions.length === 0) return null;
+  if (!profile?.user_id || suggestions.length === 0) return null;
 
   if (compact) {
     return (
