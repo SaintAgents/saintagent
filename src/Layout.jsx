@@ -1108,6 +1108,113 @@ function AuthenticatedLayout({ children, currentPageName }) {
 }
 
 // Main Layout component - check public pages BEFORE any hooks
+// Starfield canvas component for cosmic background effect
+function StarfieldCanvas({ rankCode = 'seeker' }) {
+  const canvasRef = React.useRef(null);
+  const animationRef = React.useRef(null);
+  
+  // Rank-based star colors
+  const rankColors = {
+    seeker: ['#6b7280', '#9ca3af', '#00d4ff'],
+    initiate: ['#60a5fa', '#93c5fd', '#00d4ff'],
+    adept: ['#34d399', '#6ee7b7', '#00ff88'],
+    practitioner: ['#10b981', '#a7f3d0', '#00ff88'],
+    master: ['#f59e0b', '#fcd34d', '#fef3c7'],
+    sage: ['#8b5cf6', '#c4b5fd', '#f59e0b'],
+    oracle: ['#6366f1', '#a5b4fc', '#fde68a'],
+    ascended: ['#fef3c7', '#fde68a', '#f59e0b'],
+    guardian: ['#f59e0b', '#fcd34d', '#ffffff']
+  };
+  
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const stars = [];
+    const numStars = 150;
+    const colors = rankColors[rankCode] || rankColors.seeker;
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Initialize stars with varying depths
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 3 + 0.5, // depth/parallax
+        size: Math.random() * 2 + 0.5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        twinkle: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.02 + 0.01
+      });
+    }
+    
+    const animate = () => {
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      stars.forEach(star => {
+        // Parallax movement
+        star.x -= star.z * 0.15;
+        star.twinkle += star.twinkleSpeed;
+        
+        // Wrap around
+        if (star.x < 0) {
+          star.x = canvas.width;
+          star.y = Math.random() * canvas.height;
+        }
+        
+        // Twinkle effect
+        const alpha = 0.5 + Math.sin(star.twinkle) * 0.4;
+        const glowSize = star.size * (1 + Math.sin(star.twinkle) * 0.3);
+        
+        // Draw glow
+        const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowSize * 3);
+        gradient.addColorStop(0, star.color);
+        gradient.addColorStop(0.5, star.color + '40');
+        gradient.addColorStop(1, 'transparent');
+        
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, glowSize * 3, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.globalAlpha = alpha * 0.3;
+        ctx.fill();
+        
+        // Draw star core
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = star.color;
+        ctx.globalAlpha = alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [rankCode]);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0"
+      style={{ opacity: 0.7 }}
+    />
+  );
+}
+
 export default function Layout({ children, currentPageName }) {
   // CRITICAL: Public pages bypass ALL hooks and render immediately
   if (PUBLIC_PAGES.includes(currentPageName)) {
