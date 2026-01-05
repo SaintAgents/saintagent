@@ -15,16 +15,20 @@ import {
   Heart,
   Crown,
   MapPin,
-  Globe
+  Globe,
+  Video
 } from "lucide-react";
 import GroupForum from './GroupForum';
 import GroupMemberDirectory from './GroupMemberDirectory';
 import GroupEvents from './GroupEvents';
 import CircleChatPanel from '@/components/community/CircleChatPanel';
+import VideoCallRoom from '@/components/video/VideoCallRoom';
 
 export default function GroupDetailPage({ circle, user, onBack }) {
   const [activeTab, setActiveTab] = useState('forum');
   const [showChat, setShowChat] = useState(false);
+  const [showVideoCall, setShowVideoCall] = useState(false);
+  const [videoFullscreen, setVideoFullscreen] = useState(false);
   const queryClient = useQueryClient();
 
   const isMember = circle?.member_ids?.includes(user?.email);
@@ -94,6 +98,15 @@ export default function GroupDetailPage({ circle, user, onBack }) {
               )}
             </div>
             <div className="flex gap-2">
+              {isMember && (
+                <Button 
+                  onClick={() => setShowVideoCall(true)}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+                >
+                  <Video className="w-4 h-4" />
+                  Start Video Call
+                </Button>
+              )}
               {isMember && circle.chat_enabled && (
                 <Button 
                   onClick={() => setShowChat(true)}
@@ -207,6 +220,22 @@ export default function GroupDetailPage({ circle, user, onBack }) {
             circle={circle}
             user={user}
             onClose={() => setShowChat(false)}
+          />
+        </div>
+      )}
+
+      {/* Video Call Room */}
+      {showVideoCall && (
+        <div className={cn(
+          "fixed z-50",
+          videoFullscreen ? "inset-0" : "bottom-4 right-4 w-[800px] h-[600px]"
+        )}>
+          <VideoCallRoom 
+            circle={circle}
+            user={user}
+            onClose={() => setShowVideoCall(false)}
+            isFullscreen={videoFullscreen}
+            onToggleFullscreen={() => setVideoFullscreen(!videoFullscreen)}
           />
         </div>
       )}
