@@ -156,24 +156,24 @@ export default function LeaderPathway({ profile }) {
       <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 via-yellow-400/20 to-amber-400/20 animate-pulse" />
       }
 
-      <CardHeader>
+      <CardHeader className="relative z-10">
         <CardTitle className="flex items-center gap-3">
           <div className={cn(
             "p-3 rounded-xl",
-            status === 'locked' && "bg-slate-200",
+            status === 'locked' && "bg-slate-700/80",
             status === 'active' && "bg-gradient-to-br from-amber-400 to-orange-500",
-            status === 'pending' && "bg-blue-400",
-            (status === 'quiz_needed' || status === 'approved') && "bg-violet-500"
+            status === 'pending' && "bg-blue-500/80",
+            (status === 'quiz_needed' || status === 'approved') && "bg-violet-500/80"
           )}>
             {status === 'locked' ?
-            <Lock className="w-6 h-6 text-slate-400" /> :
+            <Lock className="w-6 h-6 text-slate-300" /> :
 
             <Crown className="w-6 h-6 text-white" />
             }
           </div>
           <div>
-            <h3 className="text-xl font-bold">Leader Pathway — Trust & Stewardship</h3>
-            <p className="text-sm text-slate-500 font-normal">
+            <h3 className="text-xl font-bold text-white">Leader Pathway — Trust & Stewardship</h3>
+            <p className="text-sm text-slate-300 font-normal">
               {status === 'locked' && "Complete requirements to unlock"}
               {status === 'active' && "Active Leader"}
               {status === 'pending' && "Application under review"}
