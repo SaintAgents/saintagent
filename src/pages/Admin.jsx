@@ -39,6 +39,7 @@ export default function Admin() {
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
+            <BackButton />
             <div className="p-3 rounded-xl bg-violet-100">
               <Shield className="w-6 h-6 text-violet-600" />
             </div>
