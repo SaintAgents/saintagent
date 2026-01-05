@@ -616,6 +616,29 @@ export default function Messages() {
       </div>
     )}
 
+    {/* Image Viewer Modal */}
+    {imageViewerUrl && (
+      <div 
+        className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center cursor-pointer"
+        onClick={() => setImageViewerUrl(null)}
+      >
+        <img 
+          src={imageViewerUrl} 
+          alt="Full size" 
+          className="max-w-[90vw] max-h-[90vh] object-contain"
+          onClick={(e) => e.stopPropagation()}
+        />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 right-4 text-white hover:bg-white/10"
+          onClick={() => setImageViewerUrl(null)}
+        >
+          <Trash2 className="w-6 h-6" />
+        </Button>
+      </div>
+    )}
+
     </>);
 
 }
