@@ -40,6 +40,7 @@ import {
 import MissionCard from '@/components/hud/MissionCard';
 import CreateMissionModal from '@/components/CreateMissionModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
+import AIMissionGenerator from '@/components/missions/AIMissionGenerator';
 import HelpHint from '@/components/hud/HelpHint';
 
 export default function Missions() {
