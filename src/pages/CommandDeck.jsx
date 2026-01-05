@@ -458,7 +458,7 @@ export default function CommandDeck() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0dc21a68c_universal_upscale_0_a5d23188-7f6b-42cb-bc65-4b64e2ef4707_0.jpg)' }}>
+    <div className="min-h-screen bg-transparent bg-cover bg-center bg-fixed">
       <div className={cn(
         "transition-all duration-300 pb-8",
         sidePanelOpen ? "pr-80" : "pr-0"
