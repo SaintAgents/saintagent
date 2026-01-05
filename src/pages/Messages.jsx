@@ -499,35 +499,60 @@ export default function Messages() {
 
           {/* Input */}
           <div className="p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a]">
-            <div className="flex gap-3 items-center">
-              <Button variant="outline" size="sm" className="bg-rose-200 text-zinc-600 px-2 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => {
-                if (!user?.email) return;
-                const link = createPageUrl('Profile') + `?id=${encodeURIComponent(user.email)}`;
-                setMessageText((t) => (t ? t + ' ' : '') + link);
-              }}>
-                <Link2 className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="sm" className="bg-indigo-200 text-zinc-600 px-2 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => {
-                const otherId = selectedConversation?.otherUser?.id;
-                if (!otherId) return;
-                const link = createPageUrl('Profile') + `?id=${encodeURIComponent(otherId)}`;
-                setMessageText((t) => (t ? t + ' ' : '') + link);
-              }}>
-                <ExternalLink className="w-4 h-4" />
-              </Button>
+            <div className="flex gap-2 items-center flex-wrap">
+              {/* Media Attachment */}
+              <MediaAttachment 
+                onAttach={async (attachment) => {
+                  const payload = {
+                    conversation_id: selectedConversation.id,
+                    from_user_id: user.email,
+                    to_user_id: selectedConversation.otherUser.id,
+                    from_name: user.full_name,
+                    to_name: selectedConversation.otherUser.name,
+                    content: attachment.fileName || 'Shared media',
+                    message_type: attachment.type,
+                    media_url: attachment.url,
+                    media_thumbnail: attachment.thumbnail,
+                    file_name: attachment.fileName,
+                    file_size: attachment.fileSize
+                  };
+                  await base44.entities.Message.create(payload);
+                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                }}
+              />
+
+              {/* Icebreaker Prompts */}
+              <IcebreakerPrompts
+                recipientName={selectedConversation?.otherUser?.name}
+                onSelect={async (prompt) => {
+                  const payload = {
+                    conversation_id: selectedConversation.id,
+                    from_user_id: user.email,
+                    to_user_id: selectedConversation.otherUser.id,
+                    from_name: user.full_name,
+                    to_name: selectedConversation.otherUser.name,
+                    content: prompt,
+                    message_type: 'icebreaker',
+                    icebreaker_prompt: prompt
+                  };
+                  await base44.entities.Message.create(payload);
+                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                }}
+              />
+
               <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
+
               <Input
                 placeholder="Type a message..."
                 value={messageText}
                 onChange={async (e) => {setMessageText(e.target.value);await sendTypingPing();}}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 rounded-xl" />
+                className="flex-1 rounded-xl min-w-[150px]" />
 
               <Button
                 onClick={handleSend}
                 disabled={!messageText.trim()}
                 className="rounded-xl bg-violet-600 hover:bg-violet-700">
-
                 <Send className="w-4 h-4" />
               </Button>
             </div>
