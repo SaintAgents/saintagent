@@ -234,10 +234,26 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
 
       {/* Input */}
       <div className="p-3 border-t">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          <IcebreakerPrompts
+            recipientName={recipientName}
+            onSelect={async (prompt) => {
+              sendMutation.mutate({
+                from_user_id: user.email,
+                to_user_id: recipientId,
+                from_name: user.full_name,
+                to_name: recipientName,
+                from_avatar: user.avatar_url,
+                to_avatar: recipientAvatar,
+                content: prompt,
+                message_type: 'icebreaker',
+                icebreaker_prompt: prompt
+              });
+            }}
+          />
           <Input
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => { setMessage(e.target.value); sendTypingPing(); }}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Type a message..."
             className="flex-1 h-9"
