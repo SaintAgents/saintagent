@@ -612,19 +612,31 @@ export default function SidePanel({
                     rows={3} />
 
               </div>
-              {/* Video upload */}
-              <div className="flex items-center justify-between gap-3">
-                <input type="file" accept="video/*" onChange={onVideoChange} className="text-xs" />
+              {/* Video & Audio upload */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                  <Video className="w-4 h-4" />
+                  Video
+                  <input type="file" accept="video/*" onChange={onVideoChange} className="hidden" />
+                </label>
+                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                  <Mic className="w-4 h-4" />
+                  Audio
+                  <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
+                </label>
                 {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
               </div>
               {videoPreview && !videoError &&
                 <video src={videoPreview} controls className="w-full rounded-lg" />
                 }
+              {audioPreview &&
+                <audio src={audioPreview} controls className="w-full" />
+                }
               <div className="flex items-center justify-between">
                 <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
                     onClick={handleCreatePost}
-                    disabled={!newPostText.trim() && !videoFile || createPostMutation.isPending}
+                    disabled={(!newPostText.trim() && !videoFile && !audioFile) || createPostMutation.isPending}
                     className="bg-violet-600 hover:bg-violet-700"
                     size="sm">
 
@@ -989,18 +1001,23 @@ export default function SidePanel({
                     rows={3} />
 
               </div>
-              {/* Video upload */}
-              <div className="flex items-center justify-between gap-3">
-                <input type="file" accept="video/*" onChange={onVideoChange} className="text-xs" />
+              {/* Video & Audio upload */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                  <Video className="w-4 h-4" />
+                  Video
+                  <input type="file" accept="video/*" onChange={onVideoChange} className="hidden" />
+                </label>
+                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                  <Mic className="w-4 h-4" />
+                  Audio
+                  <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
+                </label>
                 {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
               </div>
               {videoPreview && !videoError &&
                 <video src={videoPreview} controls className="w-full rounded-lg" />
               }
-              {/* Audio upload */}
-              <div className="flex items-center justify-between gap-3">
-                <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="text-xs" />
-              </div>
               {audioPreview &&
                 <audio src={audioPreview} controls className="w-full" />
               }
