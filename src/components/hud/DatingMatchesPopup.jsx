@@ -32,43 +32,59 @@ import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 
-// Compatibility breakdown mini chart component
+// Compatibility breakdown mini chart component with its own state
 function CompatibilityChart({ match }) {
-  // Generate compatibility scores based on dating profile data
-  const domains = [
+  const [expanded, setExpanded] = useState(true);
+  
+  // Generate compatibility scores based on dating profile data - use useMemo to stabilize random values
+  const domains = React.useMemo(() => [
     { label: 'Values', icon: Heart, score: match?.core_values_ranked?.length > 0 ? 75 + Math.random() * 20 : 60 + Math.random() * 25, color: 'from-pink-500 to-rose-500' },
     { label: 'Emotional', icon: Shield, score: match?.regulation_style ? 70 + Math.random() * 25 : 55 + Math.random() * 30, color: 'from-purple-500 to-violet-500' },
     { label: 'Communication', icon: MessageSquare, score: match?.comm_depth ? 65 + Math.random() * 30 : 50 + Math.random() * 35, color: 'from-blue-500 to-cyan-500' },
     { label: 'Growth', icon: TrendingUp, score: match?.growth_orientation ? 72 + Math.random() * 23 : 58 + Math.random() * 27, color: 'from-emerald-500 to-teal-500' },
     { label: 'Lifestyle', icon: Home, score: match?.location_mobility ? 68 + Math.random() * 27 : 52 + Math.random() * 33, color: 'from-amber-500 to-orange-500' },
-  ];
+  ], [match?.user_id]);
 
   const overallScore = Math.round(domains.reduce((sum, d) => sum + d.score, 0) / domains.length);
 
   return (
-    <div className="px-4 pb-3">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-slate-600 dark:text-slate-300 flex items-center gap-1">
+    <div className="border-t border-slate-100 dark:border-slate-700/50 pt-2">
+      <button 
+        onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+        className="w-full px-4 py-1 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+      >
+        <span className="flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-violet-500" />
-          Compatibility
+          Compatibility Breakdown
         </span>
-        <span className="text-sm font-bold text-violet-600 dark:text-violet-400">{overallScore}%</span>
-      </div>
-      <div className="space-y-1.5">
-        {domains.map((domain, idx) => (
-          <div key={idx} className="flex items-center gap-2">
-            <domain.icon className="w-3 h-3 text-slate-400 dark:text-slate-500 shrink-0" />
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 w-16 truncate">{domain.label}</span>
-            <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className={`h-full bg-gradient-to-r ${domain.color} rounded-full transition-all duration-500`}
-                style={{ width: `${Math.round(domain.score)}%` }}
-              />
-            </div>
-            <span className="text-[10px] font-medium text-slate-600 dark:text-slate-300 w-6 text-right">{Math.round(domain.score)}</span>
+        {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+      </button>
+      {expanded && (
+        <div className="px-4 pb-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-slate-600 dark:text-slate-300 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-violet-500" />
+              Compatibility
+            </span>
+            <span className="text-sm font-bold text-violet-600 dark:text-violet-400">{overallScore}%</span>
           </div>
-        ))}
-      </div>
+          <div className="space-y-1.5">
+            {domains.map((domain, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <domain.icon className="w-3 h-3 text-slate-400 dark:text-slate-500 shrink-0" />
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 w-16 truncate">{domain.label}</span>
+                <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full bg-gradient-to-r ${domain.color} rounded-full transition-all duration-500`}
+                    style={{ width: `${Math.round(domain.score)}%` }}
+                  />
+                </div>
+                <span className="text-[10px] font-medium text-slate-600 dark:text-slate-300 w-6 text-right">{Math.round(domain.score)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -79,7 +95,6 @@ export default function DatingMatchesPopup({ currentUser }) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [photoViewerOpen, setPhotoViewerOpen] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
-  const [showCompatibility, setShowCompatibility] = useState(true);
   const scrollRef = useRef(null);
 
   // Fetch dating profile opt-in status
