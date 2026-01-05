@@ -77,7 +77,7 @@ const BADGE_DEFS = {
   coherent: {
     title: 'Coherent',
     dimension: 'Alignment & Integrity',
-    definition: 'The user’s actions, decisions, and communication show internal consistency, follow-through, and ethical alignment over time.',
+    definition: 'The user's actions, decisions, and communication show internal consistency, follow-through, and ethical alignment over time.',
     earnedThrough: [
     'Demonstrated follow-through on commitments',
     'Ethical consistency across contexts',
@@ -184,22 +184,22 @@ export default function LeaderPathway({ profile }) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 relative z-10">
         {/* Requirements */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Trophy className={cn(
                 "w-4 h-4",
-                pointsRequirementMet ? "text-green-500" : "text-slate-400"
+                pointsRequirementMet ? "text-green-400" : "text-slate-400"
               )} />
-              <span className="text-sm font-medium">10,000 Points</span>
+              <span className="text-sm font-medium text-white">10,000 Points</span>
             </div>
             <div className="flex items-center gap-2">
               {pointsRequirementMet ?
-              <CheckCircle2 className="w-5 h-5 text-green-500" /> :
+              <CheckCircle2 className="w-5 h-5 text-green-400" /> :
 
-              <span className="text-sm text-slate-600">{currentPoints.toLocaleString()} / 10,000</span>
+              <span className="text-sm text-slate-300">{currentPoints.toLocaleString()} / 10,000</span>
               }
             </div>
           </div>
@@ -209,28 +209,28 @@ export default function LeaderPathway({ profile }) {
             <div className="flex items-center gap-2">
               <Shield className={cn(
                 "w-4 h-4",
-                badgesRequirementMet ? "text-green-500" : "text-slate-400"
+                badgesRequirementMet ? "text-green-400" : "text-slate-400"
               )} />
-              <span className="text-sm font-medium">Required Badges</span>
+              <span className="text-sm font-medium text-white">Required Badges</span>
             </div>
             {badgesRequirementMet ?
-            <CheckCircle2 className="w-5 h-5 text-green-500" /> :
+            <CheckCircle2 className="w-5 h-5 text-green-400" /> :
 
-            <span className="text-sm text-slate-600">{userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}</span>
+            <span className="text-sm text-slate-300">{userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}</span>
             }
           </div>
 
           {/* Leadership on SA description */}
           <div className="mt-2">
-            <p className="text-gray-700 text-sm">Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
+            <p className="text-slate-300 text-sm">Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
 
             </p>
           </div>
 
           {/* Required Leadership Badges */}
           <div className="mt-3 flex items-center justify-between">
-            <div className="text-sm font-medium text-slate-900">Required Leadership Badges</div>
-            <div className="text-xs text-slate-700">
+            <div className="text-sm font-medium text-white">Required Leadership Badges</div>
+            <div className="text-xs text-slate-300">
               {userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}
             </div>
           </div>
@@ -242,34 +242,34 @@ export default function LeaderPathway({ profile }) {
                 <div
                   key={code}
                   className={cn(
-                    "p-3 rounded-xl border bg-white",
-                    has ? "border-green-200 ring-1 ring-green-200" : "border-slate-200"
+                    "p-3 rounded-xl border backdrop-blur-sm",
+                    has ? "border-green-400/50 bg-slate-800/60 ring-1 ring-green-400/30" : "border-slate-600/50 bg-slate-800/60"
                   )}>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-semibold text-slate-900">{def.title}</div>
-                      <div className="text-xs text-slate-700">{def.dimension}</div>
+                      <div className="text-sm font-semibold text-white">{def.title}</div>
+                      <div className="text-xs text-purple-300">{def.dimension}</div>
                     </div>
                     {has ?
-                    <CheckCircle2 className="w-5 h-5 text-green-600" /> :
+                    <CheckCircle2 className="w-5 h-5 text-green-400" /> :
 
-                    <Lock className="w-5 h-5 text-slate-400" />
+                    <Lock className="w-5 h-5 text-slate-500" />
                     }
                   </div>
-                  <div className="mt-2 text-xs text-slate-800">
-                    <span className="font-semibold">Definition:</span> {def.definition}
+                  <div className="mt-2 text-xs text-slate-300">
+                    <span className="font-semibold text-slate-200">Definition:</span> {def.definition}
                   </div>
                   <div className="mt-2">
-                    <div className="text-[11px] font-semibold text-slate-800">Earned Through:</div>
-                    <ul className="list-disc ml-5 mt-1 text-xs text-slate-800 space-y-0.5">
+                    <div className="text-[11px] font-semibold text-slate-200">Earned Through:</div>
+                    <ul className="list-disc ml-5 mt-1 text-xs text-slate-300 space-y-0.5">
                       {def.earnedThrough.map((item, idx) =>
                       <li key={idx}>{item}</li>
                       )}
                     </ul>
                   </div>
-                  <div className="mt-2 text-xs text-slate-900">
-                    <span className="font-semibold">Represents:</span> “{def.represents}”
+                  <div className="mt-2 text-xs text-slate-200">
+                    <span className="font-semibold">Represents:</span> "{def.represents}"
                   </div>
                 </div>);
 
@@ -280,14 +280,14 @@ export default function LeaderPathway({ profile }) {
             <div className="flex items-center gap-2">
               <Clock className={cn(
                 "w-4 h-4",
-                ageRequirementMet ? "text-green-500" : "text-slate-400"
+                ageRequirementMet ? "text-green-400" : "text-slate-400"
               )} />
-              <span className="text-sm font-medium">30 Days Active</span>
+              <span className="text-sm font-medium text-white">30 Days Active</span>
             </div>
             {ageRequirementMet ?
-            <CheckCircle2 className="w-5 h-5 text-green-500" /> :
+            <CheckCircle2 className="w-5 h-5 text-green-400" /> :
 
-            <span className="text-sm text-slate-600">{accountAge} / 30 days</span>
+            <span className="text-sm text-slate-300">{accountAge} / 30 days</span>
             }
           </div>
         </div>
@@ -301,7 +301,7 @@ export default function LeaderPathway({ profile }) {
             "w-full rounded-xl gap-2",
             canUnlock ?
             "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg" :
-            "bg-slate-300 text-slate-500 cursor-not-allowed"
+            "bg-slate-700 text-slate-400 cursor-not-allowed"
           )}>
 
             {canUnlock ?
@@ -319,10 +319,10 @@ export default function LeaderPathway({ profile }) {
         }
 
         {status === 'pending' &&
-        <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-center">
-            <Clock className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-            <p className="text-sm font-medium text-blue-900">Application Under Review</p>
-            <p className="text-xs text-blue-700 mt-1">You'll be notified when approved</p>
+        <div className="p-4 rounded-xl bg-blue-900/60 border border-blue-500/50 text-center backdrop-blur-sm">
+            <Clock className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+            <p className="text-sm font-medium text-blue-100">Application Under Review</p>
+            <p className="text-xs text-blue-300 mt-1">You'll be notified when approved</p>
           </div>
         }
 
@@ -337,10 +337,10 @@ export default function LeaderPathway({ profile }) {
         }
 
         {status === 'approved' &&
-        <div className="p-4 rounded-xl bg-green-50 border border-green-200 text-center">
-            <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <p className="text-sm font-medium text-green-900">Quiz Passed!</p>
-            <p className="text-xs text-green-700 mt-1">Awaiting final approval to activate leader status</p>
+        <div className="p-4 rounded-xl bg-green-900/60 border border-green-500/50 text-center backdrop-blur-sm">
+            <CheckCircle2 className="w-8 h-8 text-green-400 mx-auto mb-2" />
+            <p className="text-sm font-medium text-green-100">Quiz Passed!</p>
+            <p className="text-xs text-green-300 mt-1">Awaiting final approval to activate leader status</p>
           </div>
         }
 
