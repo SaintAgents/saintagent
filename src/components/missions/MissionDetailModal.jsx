@@ -45,7 +45,9 @@ export default function MissionDetailModal({ mission, open, onClose }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 5 * 60 * 1000,
+    enabled: open
   });
 
   const { data: profiles } = useQuery({
@@ -54,18 +56,20 @@ export default function MissionDetailModal({ mission, open, onClose }) {
       const currentUser = await base44.auth.me();
       return base44.entities.UserProfile.filter({ user_id: currentUser.email });
     },
-    enabled: !!user
+    enabled: !!user && open,
+    staleTime: 5 * 60 * 1000,
   });
   const profile = profiles?.[0];
 
   const { data: participants = [] } = useQuery({
-    queryKey: ['missionParticipants', mission?.participant_ids],
+    queryKey: ['missionParticipants', mission?.id],
     queryFn: async () => {
       if (!mission?.participant_ids?.length) return [];
       const allProfiles = await base44.entities.UserProfile.list();
       return allProfiles.filter(p => mission.participant_ids.includes(p.user_id));
     },
-    enabled: !!mission?.participant_ids?.length && open
+    enabled: !!mission?.participant_ids?.length && open,
+    staleTime: 5 * 60 * 1000,
   });
 
   const joinMissionMutation = useMutation({
