@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { 
-  Sparkles, 
-  Loader2, 
+import {
+  Sparkles,
+  Loader2,
   RefreshCw,
   Heart,
   MessageCircle,
@@ -16,8 +16,8 @@ import {
   Lightbulb,
   Eye,
   ChevronRight,
-  Zap
-} from 'lucide-react';
+  Zap } from
+'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -73,17 +73,17 @@ export default function AIDiscoverMatches({ profile, compact = false }) {
 
   const discoverMutation = useMutation({
     mutationFn: async () => {
-      const candidates = allDatingProfiles
-        .filter(p => p.user_id !== currentUser?.email)
-        .slice(0, 15);
+      const candidates = allDatingProfiles.
+      filter((p) => p.user_id !== currentUser?.email).
+      slice(0, 15);
 
       if (candidates.length === 0) {
         return { discoveries: [] };
       }
 
       // Build rich context
-      const candidateProfiles = candidates.map(c => {
-        const up = userProfiles.find(u => u.user_id === c.user_id);
+      const candidateProfiles = candidates.map((c) => {
+        const up = userProfiles.find((u) => u.user_id === c.user_id);
         return {
           id: c.user_id,
           name: up?.display_name || c.user_id?.split('@')[0],
@@ -111,7 +111,7 @@ export default function AIDiscoverMatches({ profile, compact = false }) {
         rhythm: myDP?.daily_rhythm,
         practices: profile?.spiritual_practices || [],
         skills: profile?.skills || [],
-        recentTopics: userPosts.slice(0, 5).map(p => p.content?.slice(0, 100)),
+        recentTopics: userPosts.slice(0, 5).map((p) => p.content?.slice(0, 100)),
         meetingHistory: userMeetings.length
       };
 
@@ -144,7 +144,7 @@ For each, explain the UNIQUE insight that makes them special - something the use
                 type: "object",
                 properties: {
                   user_id: { type: "string" },
-                  discovery_type: { 
+                  discovery_type: {
                     type: "string",
                     enum: ["unexpected_synergy", "shared_depth", "growth_catalyst", "timing_match", "conversation_spark"]
                   },
@@ -163,13 +163,13 @@ For each, explain the UNIQUE insight that makes them special - something the use
       // Enrich with profile data and assign unique demo avatars
       const usedMaleIdx = new Set();
       const usedFemaleIdx = new Set();
-      
+
       const enriched = (response.discoveries || []).map((d, idx) => {
-        const dp = allDatingProfiles.find(p => p.user_id === d.user_id);
-        const up = userProfiles.find(u => u.user_id === d.user_id);
+        const dp = allDatingProfiles.find((p) => p.user_id === d.user_id);
+        const up = userProfiles.find((u) => u.user_id === d.user_id);
         const rawName = up?.display_name || d.user_id?.split('@')[0]?.replace(/_/g, ' ') || 'User';
         const displayName = up?.display_name ? `${up.display_name}-Demo` : rawName;
-        
+
         // Assign unique demo avatar if no real avatar
         let avatar = up?.avatar_url;
         if (!avatar) {
@@ -193,7 +193,7 @@ For each, explain the UNIQUE insight that makes them special - something the use
             }
           }
         }
-        
+
         return {
           ...d,
           display_name: displayName,
@@ -239,28 +239,28 @@ For each, explain the UNIQUE insight that makes them special - something the use
               size="sm"
               onClick={() => discoverMutation.mutate()}
               disabled={discoverMutation.isPending}
-              className="h-7 px-2"
-            >
-              {discoverMutation.isPending ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
-              ) : (
-                <RefreshCw className="w-3 h-3" />
-              )}
+              className="h-7 px-2">
+
+              {discoverMutation.isPending ?
+              <Loader2 className="w-3 h-3 animate-spin" /> :
+
+              <RefreshCw className="w-3 h-3" />
+              }
             </Button>
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          {discoveries?.length > 0 ? (
-            <div className="space-y-2">
+          {discoveries?.length > 0 ?
+          <div className="space-y-2">
               {discoveries.slice(0, 2).map((d, idx) => {
-                const config = discoveryTypeConfig[d.discovery_type] || discoveryTypeConfig.shared_depth;
-                const Icon = config.icon;
-                return (
-                  <div 
-                    key={idx}
-                    className="flex items-center gap-2 p-2 rounded-lg bg-white border cursor-pointer hover:border-violet-300 transition-colors"
-                    onClick={() => openChat(d.user_id, d.display_name, d.avatar)}
-                  >
+              const config = discoveryTypeConfig[d.discovery_type] || discoveryTypeConfig.shared_depth;
+              const Icon = config.icon;
+              return (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 p-2 rounded-lg bg-white border cursor-pointer hover:border-violet-300 transition-colors"
+                  onClick={() => openChat(d.user_id, d.display_name, d.avatar)}>
+
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={d.avatar} />
                       <AvatarFallback>{d.display_name?.charAt(0)}</AvatarFallback>
@@ -270,39 +270,39 @@ For each, explain the UNIQUE insight that makes them special - something the use
                       <p className="text-xs text-slate-500 truncate">{d.headline}</p>
                     </div>
                     <Icon className={cn("w-4 h-4 shrink-0", config.color)} />
-                  </div>
-                );
-              })}
+                  </div>);
+
+            })}
               <Link to={createPageUrl('Matches') + '?tab=dating'}>
                 <Button variant="ghost" size="sm" className="w-full text-xs gap-1">
                   View all <ChevronRight className="w-3 h-3" />
                 </Button>
               </Link>
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => discoverMutation.mutate()}
-              disabled={discoverMutation.isPending}
-              className="w-full gap-2"
-            >
-              {discoverMutation.isPending ? (
-                <>
+            </div> :
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => discoverMutation.mutate()}
+            disabled={discoverMutation.isPending}
+            className="w-full gap-2">
+
+              {discoverMutation.isPending ?
+            <>
                   <Loader2 className="w-3 h-3 animate-spin" />
                   Discovering...
-                </>
-              ) : (
-                <>
+                </> :
+
+            <>
                   <Sparkles className="w-3 h-3" />
                   Find Hidden Matches
                 </>
-              )}
+            }
             </Button>
-          )}
+          }
         </CardContent>
-      </Card>
-    );
+      </Card>);
+
   }
 
   return (
@@ -318,20 +318,20 @@ For each, explain the UNIQUE insight that makes them special - something the use
             variant="outline"
             size="sm"
             onClick={() => discoverMutation.mutate()}
-            disabled={discoverMutation.isPending}
-            className="gap-2 rounded-lg"
-          >
-            {discoverMutation.isPending ? (
-              <>
+            disabled={discoverMutation.isPending} className="bg-lime-400 text-slate-50 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-2">
+
+
+            {discoverMutation.isPending ?
+            <>
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Analyzing...
-              </>
-            ) : (
-              <>
+              </> :
+
+            <>
                 <Sparkles className="w-4 h-4" />
                 Discover Matches
               </>
-            )}
+            }
           </Button>
         </div>
         <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -339,17 +339,17 @@ For each, explain the UNIQUE insight that makes them special - something the use
         </p>
       </CardHeader>
       <CardContent>
-        {discoveries?.length > 0 ? (
-          <ScrollArea className="w-full">
+        {discoveries?.length > 0 ?
+        <ScrollArea className="w-full">
             <div className="flex gap-4 pb-4">
               {discoveries.map((d, idx) => {
-                const config = discoveryTypeConfig[d.discovery_type] || discoveryTypeConfig.shared_depth;
-                const Icon = config.icon;
-                return (
-                  <Card 
-                    key={idx}
-                    className="w-72 shrink-0 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-violet-300 dark:hover:border-violet-500 transition-all hover:shadow-md cursor-pointer"
-                  >
+              const config = discoveryTypeConfig[d.discovery_type] || discoveryTypeConfig.shared_depth;
+              const Icon = config.icon;
+              return (
+                <Card
+                  key={idx}
+                  className="w-72 shrink-0 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-violet-300 dark:hover:border-violet-500 transition-all hover:shadow-md cursor-pointer">
+
                     <CardContent className="p-4 space-y-3">
                       <div className="flex items-start gap-3">
                         <Avatar className="w-12 h-12 border-2 border-white dark:border-slate-700 shadow">
@@ -372,67 +372,67 @@ For each, explain the UNIQUE insight that makes them special - something the use
                         <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{d.insight}</p>
                       </div>
 
-                      {d.conversation_starter && (
-                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-900/30 border border-violet-100 dark:border-violet-800">
+                      {d.conversation_starter &&
+                    <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-900/30 border border-violet-100 dark:border-violet-800">
                           <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">💬 Try asking:</p>
                           <p className="text-sm text-violet-700 dark:text-violet-300 italic">"{d.conversation_starter}"</p>
                         </div>
-                      )}
+                    }
 
                       <div className="flex gap-2">
                         <Button
-                          size="sm"
-                          className="flex-1 gap-1 rounded-lg bg-violet-600 hover:bg-violet-700"
-                          onClick={() => openChat(d.user_id, d.display_name, d.avatar)}
-                        >
+                        size="sm"
+                        className="flex-1 gap-1 rounded-lg bg-violet-600 hover:bg-violet-700"
+                        onClick={() => openChat(d.user_id, d.display_name, d.avatar)}>
+
                           <MessageCircle className="w-3 h-3" />
                           Connect
                         </Button>
                         <Button
-                          size="sm"
-                          variant="outline"
-                          className="rounded-lg"
-                          onClick={() => {
-                            const event = new CustomEvent('openProfile', { detail: { userId: d.user_id } });
-                            document.dispatchEvent(event);
-                          }}
-                        >
+                        size="sm"
+                        variant="outline"
+                        className="rounded-lg"
+                        onClick={() => {
+                          const event = new CustomEvent('openProfile', { detail: { userId: d.user_id } });
+                          document.dispatchEvent(event);
+                        }}>
+
                           <Eye className="w-3 h-3" />
                         </Button>
                       </div>
                     </CardContent>
-                  </Card>
-                );
-              })}
+                  </Card>);
+
+            })}
             </div>
             <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        ) : (
-          <div className="text-center py-8">
+          </ScrollArea> :
+
+        <div className="text-center py-8">
             <Lightbulb className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 mb-4">
               Let AI analyze profiles to find surprising connections
             </p>
             <Button
-              onClick={() => discoverMutation.mutate()}
-              disabled={discoverMutation.isPending}
-              className="gap-2 bg-violet-600 hover:bg-violet-700"
-            >
-              {discoverMutation.isPending ? (
-                <>
+            onClick={() => discoverMutation.mutate()}
+            disabled={discoverMutation.isPending}
+            className="gap-2 bg-violet-600 hover:bg-violet-700">
+
+              {discoverMutation.isPending ?
+            <>
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Analyzing profiles...
-                </>
-              ) : (
-                <>
+                </> :
+
+            <>
                   <Sparkles className="w-4 h-4" />
                   Start Discovery
                 </>
-              )}
+            }
             </Button>
           </div>
-        )}
+        }
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }
