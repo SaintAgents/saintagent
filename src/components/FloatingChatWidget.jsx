@@ -55,35 +55,6 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
     }
   });
 
-  // Mark messages as read when viewing
-  useEffect(() => {
-    const unread = conversationMessages.filter(m => 
-      m.to_user_id === user?.email && !m.is_read
-    );
-    unread.forEach(m => {
-      base44.entities.Message.update(m.id, { is_read: true, read_at: new Date().toISOString() });
-    });
-  }, [conversationMessages.length, user?.email]);
-
-  // Typing indicator
-  const sendTypingPing = async () => {
-    const now = Date.now();
-    const convId = [user?.email, recipientId].sort().join('_');
-    if (!convId || !user?.email) return;
-    if (now - (typingRef.current.lastSentAt || 0) < 1200) return;
-    typingRef.current.lastSentAt = now;
-    const existing = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: convId });
-    if (existing?.[0]) {
-      await base44.entities.TypingStatus.update(existing[0].id, { is_typing: true });
-    } else {
-      await base44.entities.TypingStatus.create({ user_id: user.email, conversation_id: convId, is_typing: true });
-    }
-    setTimeout(async () => {
-      const ex = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: convId });
-      if (ex?.[0]) await base44.entities.TypingStatus.update(ex[0].id, { is_typing: false });
-    }, 3000);
-  };
-
   const conversationMessages = allMessages
     .filter(m => 
       (m.from_user_id === user?.email && m.to_user_id === recipientId) ||
