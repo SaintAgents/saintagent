@@ -270,12 +270,12 @@ export default function Messages() {
 
   return (
     <>
-    <div className="h-[calc(100vh-4rem)] bg-slate-50 flex">
+    <div className="h-[calc(100vh-4rem)] bg-slate-50 dark:bg-[#050505] flex">
       {/* Conversations List */}
-      <div className="w-80 shrink-0 border-r bg-white flex flex-col">
-        <div className="p-4 border-b space-y-3 sticky top-0 z-20 bg-white">
+      <div className="w-80 shrink-0 border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col">
+        <div className="p-4 border-b dark:border-[rgba(0,255,136,0.2)] space-y-3 sticky top-0 z-20 bg-white dark:bg-[#0a0a0a]">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-slate-900 shrink-0">Messages</h2>
+          <h2 className="font-semibold text-slate-900 dark:text-white shrink-0">Messages</h2>
           <div className="flex items-center gap-2 flex-wrap gap-y-2 ml-2">
             <Button variant="outline" size="sm" className="bg-violet-100 text-stone-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-1.5" onClick={() => setDMOpen(true)}>
               <Plus className="w-3.5 h-3.5" /> New Message
@@ -367,7 +367,7 @@ export default function Messages() {
                       {conv.unreadCount}
                     </span>
                       }
-                  <p className="text-sm text-slate-500 truncate flex-1">{conv.lastMessage.content}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-300 truncate flex-1">{conv.lastMessage.content}</p>
                 </div>
               </div>
               </div>
@@ -381,7 +381,7 @@ export default function Messages() {
       {selectedConversation ?
         <div className="flex-1 flex flex-col">
           {/* Header */}
-          <div className="p-4 border-b bg-white flex items-center gap-3">
+          <div className="p-4 border-b dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] flex items-center gap-3">
             <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} showRankBadge={false} />
             {typingUsers.length > 0 &&
             <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
@@ -465,9 +465,9 @@ export default function Messages() {
                         "px-4 py-2 rounded-2xl",
                         isOwn ?
                         "bg-violet-600 text-white rounded-br-sm" :
-                        "bg-white border border-slate-200 rounded-bl-sm"
+                        "bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] rounded-bl-sm"
                       )}>
-                        <p className="text-sm">{msg.content}</p>
+                        <p className="text-sm dark:text-white">{msg.content}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] mt-1 px-2">
@@ -511,7 +511,7 @@ export default function Messages() {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t bg-white">
+          <div className="p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a]">
             <div className="flex gap-3 items-center">
               <Button variant="outline" size="sm" className="bg-rose-200 text-zinc-600 px-2 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => {
                 if (!user?.email) return;
@@ -549,8 +549,8 @@ export default function Messages() {
 
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <MessageCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500">Select a conversation to start messaging</p>
+            <MessageCircle className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+            <p className="text-slate-500 dark:text-slate-400">Select a conversation to start messaging</p>
           </div>
         </div>
         }

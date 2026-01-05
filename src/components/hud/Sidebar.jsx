@@ -519,12 +519,12 @@ export default function Sidebar({
               )} />
               {(!isCollapsed || inPopup) && (
                 <Select value={status} onValueChange={handleStatusChange}>
-                  <SelectTrigger className="h-9 text-sm">
+                  <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                     {STATUS_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
+                      <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
                         <div className="flex items-center gap-2">
                           <div className={cn("w-2 h-2 rounded-full", opt.color)} />
                           {opt.label}
@@ -538,14 +538,14 @@ export default function Sidebar({
 
             {(!isCollapsed || inPopup) && (
               <div className="flex items-center gap-3">
-                <MessageCircle className="w-4 h-4 text-slate-400" />
+                <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <Select value={dmPolicy} onValueChange={handleDMChange}>
-                  <SelectTrigger className="h-9 text-sm">
+                  <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                     {DM_POLICY_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
+                      <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
                         DMs: {opt.label}
                       </SelectItem>
                     ))}
