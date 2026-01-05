@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Zap, Clock, Sparkles, TrendingUp, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const BOOST_OPTIONS = [
   { duration: 1, cost: 2, label: '1 Hour', multiplier: '2x' },
@@ -18,6 +19,7 @@ const BOOST_OPTIONS = [
 
 export default function ProfileBoostCard({ datingProfile, userProfile, walletBalance = 0 }) {
   const [selectedDuration, setSelectedDuration] = useState('24');
+  const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const queryClient = useQueryClient();
 
   const isCurrentlyBoosted = datingProfile?.is_boosted && 
@@ -28,6 +30,25 @@ export default function ProfileBoostCard({ datingProfile, userProfile, walletBal
   const timeRemaining = boostExpiresAt ? Math.max(0, boostExpiresAt - new Date()) : 0;
   const hoursRemaining = Math.floor(timeRemaining / (1000 * 60 * 60));
   const minutesRemaining = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+  // Live countdown timer
+  useEffect(() => {
+    if (!isCurrentlyBoosted || !boostExpiresAt) return;
+    
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = Math.max(0, boostExpiresAt - now);
+      setCountdown({
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000)
+      });
+    };
+    
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [isCurrentlyBoosted, boostExpiresAt]);
 
   const selectedOption = BOOST_OPTIONS.find(o => o.duration === parseInt(selectedDuration));
   const canAfford = walletBalance >= (selectedOption?.cost || 0);
@@ -71,8 +92,22 @@ export default function ProfileBoostCard({ datingProfile, userProfile, walletBal
       });
     },
     onSuccess: () => {
+      const option = BOOST_OPTIONS.find(o => o.duration === parseInt(selectedDuration));
       queryClient.invalidateQueries({ queryKey: ['datingProfile'] });
       queryClient.invalidateQueries({ queryKey: ['wallet'] });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      
+      // Show success toast
+      toast.success(`Profile Boost Active!`, {
+        description: `Your visibility is now increased ${option?.multiplier || '3x'} for ${option?.label || '24 Hours'}.`,
+        duration: 5000,
+        icon: <Zap className="w-5 h-5 text-amber-500" />
+      });
+      
+      // Dispatch event for avatar glow effect in navbar
+      window.dispatchEvent(new CustomEvent('boostActivated', {
+        detail: { multiplier: option?.multiplier, duration: option?.duration }
+      }));
     }
   });
 
@@ -113,15 +148,38 @@ export default function ProfileBoostCard({ datingProfile, userProfile, walletBal
               </p>
             </div>
 
-            <div className="space-y-2">
+            {/* Live Countdown Timer */}
+            <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1">
                   <Clock className="w-4 h-4" /> Time Remaining
                 </span>
-                <span className="font-semibold text-amber-700 dark:text-amber-400">
-                  {hoursRemaining}h {minutesRemaining}m
-                </span>
               </div>
+              
+              {/* Digital countdown display */}
+              <div className="flex justify-center gap-2">
+                <div className="text-center px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/50">
+                  <p className="text-2xl font-mono font-bold text-amber-800 dark:text-amber-300">
+                    {String(countdown.hours).padStart(2, '0')}
+                  </p>
+                  <p className="text-[10px] uppercase text-amber-600 dark:text-amber-400">Hours</p>
+                </div>
+                <span className="text-2xl font-bold text-amber-600 self-center">:</span>
+                <div className="text-center px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/50">
+                  <p className="text-2xl font-mono font-bold text-amber-800 dark:text-amber-300">
+                    {String(countdown.minutes).padStart(2, '0')}
+                  </p>
+                  <p className="text-[10px] uppercase text-amber-600 dark:text-amber-400">Mins</p>
+                </div>
+                <span className="text-2xl font-bold text-amber-600 self-center">:</span>
+                <div className="text-center px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/50">
+                  <p className="text-2xl font-mono font-bold text-amber-800 dark:text-amber-300">
+                    {String(countdown.seconds).padStart(2, '0')}
+                  </p>
+                  <p className="text-[10px] uppercase text-amber-600 dark:text-amber-400">Secs</p>
+                </div>
+              </div>
+              
               <Progress 
                 value={(timeRemaining / (datingProfile.boost_multiplier === 3 ? 72 : 24) / (1000 * 60 * 60)) * 100} 
                 className="h-2 bg-amber-100"
