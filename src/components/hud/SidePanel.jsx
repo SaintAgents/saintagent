@@ -656,6 +656,8 @@ export default function SidePanel({
 
                       {post.video_url ?
                       <video src={post.video_url} controls className="w-full rounded-lg" /> :
+                      post.audio_url ?
+                      <audio src={post.audio_url} controls className="w-full" /> :
                       post.image_urls && post.image_urls.length > 0 ?
                       <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> :
                       null}
@@ -992,12 +994,19 @@ export default function SidePanel({
               </div>
               {videoPreview && !videoError &&
                 <video src={videoPreview} controls className="w-full rounded-lg" />
-                }
+              }
+              {/* Audio upload */}
+              <div className="flex items-center justify-between gap-3">
+                <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="text-xs" />
+              </div>
+              {audioPreview &&
+                <audio src={audioPreview} controls className="w-full" />
+              }
               <div className="flex items-center justify-between">
                 <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
                 <Button
                     onClick={handleCreatePost}
-                    disabled={!newPostText.trim() && !videoFile || createPostMutation.isPending}
+                    disabled={(!newPostText.trim() && !videoFile && !audioFile) || createPostMutation.isPending}
                     className="bg-violet-600 hover:bg-violet-700"
                     size="sm">
 
@@ -1023,6 +1032,8 @@ export default function SidePanel({
                       <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
                       {post.video_url ?
                       <video src={post.video_url} controls className="w-full rounded-lg" /> :
+                      post.audio_url ?
+                      <audio src={post.audio_url} controls className="w-full" /> :
                       post.image_urls && post.image_urls.length > 0 ?
                       <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> :
                       null}
