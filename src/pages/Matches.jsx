@@ -123,13 +123,13 @@ export default function Matches() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] p-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-violet-500" />
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-emerald-500 dark:text-[#00ff88]" />
               Synchronicity Engine
               {isDatingOptedIn && (
                 <span 
@@ -143,7 +143,7 @@ export default function Matches() {
               )}
               <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment into a 0-100 score. Match Types include People, Offers, Missions, Events, and Teachers—each category surfaces different opportunities. AI-generated Conversation Starters help break the ice based on shared values. Complete your 'Skills' and 'Mystical Identity' for the best results." />
             </h1>
-            <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
+            <p className="text-slate-500 dark:text-emerald-400/70 mt-1">AI-powered matches based on values, skills, and intentions</p>
           </div>
           <div className="flex items-center gap-3">
             <AIMatchGenerator profile={profile} />
@@ -160,17 +160,16 @@ export default function Matches() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-emerald-500/70" />
           <Input
             placeholder="Search matches..."
-            className="pl-12 h-12 rounded-xl bg-white"
+            className="pl-12 h-12 rounded-xl bg-white dark:bg-[#050505] dark:border-[#00ff88]/30 dark:text-white dark:placeholder:text-emerald-600/50 dark:focus:border-[#00ff88] dark:focus:shadow-[0_0_12px_rgba(0,255,136,0.3)]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)} />
-
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl border p-4 mb-6">
+        <div className="bg-white dark:bg-[#050505] rounded-xl border dark:border-[#00ff88]/30 p-4 mb-6">
           <div className="grid gap-3 md:grid-cols-6">
             <div className="md:col-span-2">
               <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
@@ -229,33 +228,33 @@ export default function Matches() {
 
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-7 h-12 bg-white rounded-xl border">
-            <TabsTrigger value="all" className="rounded-lg gap-2">
-              All <span className="text-xs opacity-60">({tabCounts.all})</span>
+          <TabsList className="w-full grid grid-cols-7 h-12 bg-white dark:bg-[#050505] rounded-xl border dark:border-[#00ff88]/30">
+            <TabsTrigger value="all" className="rounded-lg gap-2 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-[#00ff88]/15 dark:data-[state=active]:text-[#00ff88]">
+              All <span className="text-xs opacity-60 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">({tabCounts.all})</span>
             </TabsTrigger>
-            <TabsTrigger value="person" className="rounded-lg gap-2">
+            <TabsTrigger value="person" className="rounded-lg gap-2 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-[#00ff88]/15 dark:data-[state=active]:text-[#00ff88]">
               <Users className="w-4 h-4" />
-              People <span className="text-xs opacity-60">({tabCounts.person})</span>
+              People <span className="text-xs opacity-60 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">({tabCounts.person})</span>
             </TabsTrigger>
-            <TabsTrigger value="offer" className="rounded-lg gap-2">
+            <TabsTrigger value="offer" className="rounded-lg gap-2 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-[#00ff88]/15 dark:data-[state=active]:text-[#00ff88]">
               <ShoppingBag className="w-4 h-4" />
-              Offers <span className="text-xs opacity-60">({tabCounts.offer})</span>
+              Offers <span className="text-xs opacity-60 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">({tabCounts.offer})</span>
             </TabsTrigger>
-            <TabsTrigger value="mission" className="rounded-lg gap-2">
+            <TabsTrigger value="mission" className="rounded-lg gap-2 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-[#00ff88]/15 dark:data-[state=active]:text-[#00ff88]">
               <Target className="w-4 h-4" />
-              Missions <span className="text-xs opacity-60">({tabCounts.mission})</span>
+              Missions <span className="text-xs opacity-60 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">({tabCounts.mission})</span>
             </TabsTrigger>
-            <TabsTrigger value="event" className="rounded-lg gap-2">
+            <TabsTrigger value="event" className="rounded-lg gap-2 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-[#00ff88]/15 dark:data-[state=active]:text-[#00ff88]">
               <Calendar className="w-4 h-4" />
-              Events <span className="text-xs opacity-60">({tabCounts.event})</span>
+              Events <span className="text-xs opacity-60 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">({tabCounts.event})</span>
             </TabsTrigger>
-            <TabsTrigger value="teacher" className="rounded-lg gap-2">
+            <TabsTrigger value="teacher" className="rounded-lg gap-2 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-[#00ff88]/15 dark:data-[state=active]:text-[#00ff88]">
               <GraduationCap className="w-4 h-4" />
-              Teachers <span className="text-xs opacity-60">({tabCounts.teacher})</span>
+              Teachers <span className="text-xs opacity-60 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">({tabCounts.teacher})</span>
             </TabsTrigger>
-            <TabsTrigger value="dating" className="rounded-lg gap-2">
+            <TabsTrigger value="dating" className="rounded-lg gap-2 data-[state=active]:bg-pink-100 data-[state=active]:text-pink-700 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <Heart className="w-4 h-4" />
-              Dating <span className="text-xs opacity-60">({tabCounts.dating})</span>
+              Dating <span className="text-xs opacity-60 bg-pink-100 dark:bg-pink-900/50 text-pink-700 dark:text-pink-400 px-1.5 py-0.5 rounded-full">({tabCounts.dating})</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
