@@ -173,7 +173,18 @@ export default function Missions() {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              onClick={() => setCreateModalOpen(true)}
+              variant="outline"
+              onClick={() => setAiGeneratorOpen(true)}
+              className="rounded-xl gap-2 border-violet-200 text-violet-700 hover:bg-violet-50"
+            >
+              <Sparkles className="w-4 h-4" />
+              AI Ideas
+            </Button>
+            <Button
+              onClick={() => {
+                setPrefillMission(null);
+                setCreateModalOpen(true);
+              }}
               className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2">
 
               <Plus className="w-4 h-4" />
