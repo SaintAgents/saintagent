@@ -98,8 +98,16 @@ export default function Onboarding() {
     });
 
     if (currentStep === STEPS.length - 1) {
-          // Onboarding complete: send welcome message, notification, clear old notifications, then redirect
-          try {
+              // Onboarding complete: process affiliate referral first
+              try {
+                await attachAffiliateToUser(user.email, base44);
+                await activateReferral(user.email, base44);
+              } catch (e) {
+                console.error('Affiliate processing failed:', e);
+              }
+
+              // Send welcome message, notification, clear old notifications, then redirect
+              try {
             const firstName = user?.full_name?.split(' ')?.[0] || 'there';
             const fromEmail = 'admin@saintagents.app';
             const supportEmail = 'support@saintagents.app';
