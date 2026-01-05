@@ -3,13 +3,13 @@ import { ArrowLeft } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 export default function BackButton({ className }) {
-  const canGoBack = typeof window !== 'undefined' && window.history.length > 1;
-
-  if (!canGoBack) return null;
-
   const handleBack = () => {
     window.history.back();
   };
+
+  const canGoBack = typeof window !== 'undefined' && window.history.length > 1;
+
+  if (!canGoBack) return null;
 
   return (
     <button
