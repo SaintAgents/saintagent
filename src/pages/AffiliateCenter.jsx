@@ -24,7 +24,7 @@ export default function AffiliateCenter() {
   const queryClient = useQueryClient();
 
   // Fetch user profile
-  const { data: profiles } = useQuery({
+  const { data: profiles, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
       const user = await base44.auth.me();
@@ -34,8 +34,8 @@ export default function AffiliateCenter() {
   const profile = profiles?.[0];
 
   // Fetch or create affiliate code
-  const { data: affiliateCodes = [] } = useQuery({
-    queryKey: ['affiliateCode'],
+  const { data: affiliateCodes = [], isLoading: codeLoading } = useQuery({
+    queryKey: ['affiliateCode', profile?.handle],
     queryFn: async () => {
       const user = await base44.auth.me();
       let codes = await base44.entities.AffiliateCode.filter({ user_id: user.email });
@@ -52,9 +52,41 @@ export default function AffiliateCenter() {
       
       return codes;
     },
-    enabled: !!profile
+    enabled: !!profile?.handle
   });
   const affiliateCode = affiliateCodes[0];
+
+  // Show loading state
+  if (profileLoading || (profile?.handle && codeLoading)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600">Loading affiliate center...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If no profile/handle yet
+  if (!profile?.handle) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardContent className="pt-6 text-center">
+            <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Profile Required</h2>
+            <p className="text-sm text-slate-600 mb-4">
+              Complete your profile and set a handle to access your affiliate link.
+            </p>
+            <Button onClick={() => window.location.href = '/Profile'}>
+              Go to Profile
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   // Fetch referrals
   const { data: referrals = [] } = useQuery({
