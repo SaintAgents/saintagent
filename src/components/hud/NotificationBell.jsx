@@ -18,8 +18,10 @@ import {
   TrendingUp,
   Settings,
   Check,
-  X
+  X,
+  Sparkles
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow, parseISO } from "date-fns";
 
 export default function NotificationBell({ notifications = [], onAction }) {
@@ -36,6 +38,9 @@ export default function NotificationBell({ notifications = [], onAction }) {
     ggg: Coins,
     rank: TrendingUp,
     system: Settings,
+    collaboration: Users,
+    post: MessageCircle,
+    event: Calendar,
   };
 
   const typeColors = {
@@ -48,6 +53,9 @@ export default function NotificationBell({ notifications = [], onAction }) {
     ggg: "text-amber-500 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400",
     rank: "text-purple-500 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-400",
     system: "text-slate-500 bg-slate-50 dark:bg-slate-700/50 dark:text-slate-400",
+    collaboration: "text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400",
+    post: "text-blue-500 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400",
+    event: "text-rose-500 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400",
   };
 
   return (
@@ -108,12 +116,21 @@ export default function NotificationBell({ notifications = [], onAction }) {
                     )}
                     onClick={() => onAction?.('click', notif)}
                   >
-                    <div className={cn(
-                      "shrink-0 p-2 rounded-lg",
-                      typeColors[notif.type]
-                    )}>
-                      <Icon className="w-4 h-4" />
-                    </div>
+                    {notif.source_user_avatar ? (
+                      <Avatar className="w-10 h-10 shrink-0">
+                        <AvatarImage src={notif.source_user_avatar} />
+                        <AvatarFallback className={cn("text-xs", typeColors[notif.type])}>
+                          {notif.source_user_name?.charAt(0) || <Icon className="w-4 h-4" />}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <div className={cn(
+                        "shrink-0 p-2 rounded-lg",
+                        typeColors[notif.type]
+                      )}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className={cn(
                         "text-sm text-slate-900 dark:text-slate-100",
@@ -124,9 +141,17 @@ export default function NotificationBell({ notifications = [], onAction }) {
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
                         {notif.message}
                       </p>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                        {notif.created_date && formatDistanceToNow(parseISO(notif.created_date), { addSuffix: true })}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                          {notif.created_date && formatDistanceToNow(parseISO(notif.created_date), { addSuffix: true })}
+                        </p>
+                        {notif.priority === 'high' && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">High priority</span>
+                        )}
+                        {notif.priority === 'urgent' && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700">Urgent</span>
+                        )}
+                      </div>
                     </div>
                     {!notif.is_read && (
                       <div className="w-2 h-2 rounded-full bg-violet-500 shrink-0 mt-2" />

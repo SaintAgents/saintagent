@@ -22,8 +22,10 @@ import {
   Shield,
   MessageCircle,
   Eye,
-  Save
+  Save,
+  Check
 } from "lucide-react";
+import NotificationSettings from '@/components/notifications/NotificationSettings';
 
 export default function Settings() {
   const queryClient = useQueryClient();
@@ -278,80 +280,10 @@ export default function Settings() {
 
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Delivery Channels</CardTitle>
-                <CardDescription>Choose how you receive notifications</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Email</p>
-                    <p className="text-sm text-slate-500">Receive notifications via email</p>
-                  </div>
-                  <Switch 
-                    checked={!!settings.notification_prefs?.email}
-                    onCheckedChange={(checked) => setSettings({ ...settings, notification_prefs: { ...settings.notification_prefs, email: !!checked } })}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">In-app</p>
-                    <p className="text-sm text-slate-500">Show notifications in the app</p>
-                  </div>
-                  <Switch 
-                    checked={!!settings.notification_prefs?.in_app}
-                    onCheckedChange={(checked) => setSettings({ ...settings, notification_prefs: { ...settings.notification_prefs, in_app: !!checked } })}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Push</p>
-                    <p className="text-sm text-slate-500">Send push notifications to your device</p>
-                  </div>
-                  <Switch 
-                    checked={!!settings.notification_prefs?.push}
-                    onCheckedChange={(checked) => setSettings({ ...settings, notification_prefs: { ...settings.notification_prefs, push: !!checked } })}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Email Notifications</CardTitle>
-                <CardDescription>Manage what emails you receive</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">New matches</p>
-                    <p className="text-sm text-slate-500">Get notified of high-score matches</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Meeting reminders</p>
-                    <p className="text-sm text-slate-500">Receive reminders before meetings</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Mission updates</p>
-                    <p className="text-sm text-slate-500">Get updates on missions you've joined</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Booking requests</p>
-                    <p className="text-sm text-slate-500">Get notified of new booking requests</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-              </CardContent>
-            </Card>
+            <NotificationSettings 
+              settings={settings.notification_prefs}
+              onChange={(newPrefs) => setSettings({ ...settings, notification_prefs: newPrefs })}
+            />
           </TabsContent>
 
           {/* Preferences */}
