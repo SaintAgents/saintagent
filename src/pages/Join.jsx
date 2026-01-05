@@ -48,7 +48,7 @@ const TRUST_FEATURES = [
 
 export default function Join() {
   const handleJoin = () => {
-    base44.auth.redirectToLogin(createPageUrl('Onboarding'));
+    window.location.href = createPageUrl('Onboarding');
   };
 
   const handleSignIn = () => {
