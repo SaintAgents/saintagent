@@ -44,9 +44,9 @@ export default function Missions() {
   });
 
   const filteredMissions = tab === 'active' ? activeMissions :
-    tab === 'past' ? pastMissions :
-    tab === 'all' ? missions :
-    activeMissions.filter((m) => m.mission_type === tab);
+  tab === 'past' ? pastMissions :
+  tab === 'all' ? missions :
+  activeMissions.filter((m) => m.mission_type === tab);
 
   const handleAction = (action, mission) => {
     console.log('Mission action:', action, mission);
@@ -74,7 +74,7 @@ export default function Missions() {
               Create Mission
             </Button>
             <Button
-              variant="outline" className="bg-violet-100 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9"
+              variant="outline" className="bg-slate-50 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9"
 
               onClick={() => setMatrixOpen(true)}>
 
