@@ -188,8 +188,7 @@ export default function DatingMatchesPopup({ currentUser }) {
   };
 
   const handleViewProfile = (match) => {
-    const event = new CustomEvent('openProfile', { detail: { userId: match.user_id } });
-    document.dispatchEvent(event);
+    window.location.href = createPageUrl('Profile') + `?id=${encodeURIComponent(match.user_id)}`;
     setOpen(false);
   };
 
