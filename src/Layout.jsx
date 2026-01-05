@@ -384,7 +384,7 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
       <style>{`
         /* Light theme background for Command Deck */
         [data-theme='light'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/3a4873feb_Screenshot2026-01-04182249.png');
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/98d67726c_gemini-25-flash-image_merge_the_shield_into_the_center-0.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
