@@ -55,17 +55,20 @@ export default function GlobalSidePanelNudge() {
     <div
       onClick={handleClick}
       className={cn(
-        "fixed top-1/2 -translate-y-1/2 z-[100] cursor-pointer transition-all duration-300",
+        "fixed top-1/2 -translate-y-1/2 z-[9998] cursor-pointer transition-all duration-300",
         "hover:scale-105 group",
         dockSide === 'right' ? "right-0" : "left-0"
       )}
       title="Open Side Panel"
+      data-side-panel-handle
     >
-      {/* Main handle */}
+      {/* Main handle - theme aware */}
       <div
         className={cn(
-          "bg-gradient-to-b from-violet-600 to-violet-700 shadow-lg flex flex-col items-center justify-center gap-1.5 transition-all",
-          "hover:from-violet-500 hover:to-violet-600",
+          "shadow-lg flex flex-col items-center justify-center gap-1.5 transition-all",
+          // Light theme
+          "bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600",
+          // Dark/Hacker theme overrides applied via CSS
           dockSide === 'right' ? "rounded-l-xl" : "rounded-r-xl"
         )}
         style={{ 
@@ -74,14 +77,14 @@ export default function GlobalSidePanelNudge() {
         }}
       >
         {/* Decorative dots */}
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors" />
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors" />
+        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
+        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
         <PanelRightOpen className={cn(
-          "w-4 h-4 text-white/70 group-hover:text-white transition-colors my-1",
+          "w-4 h-4 text-white/70 group-hover:text-white transition-colors my-1 icon-glow",
           dockSide === 'left' && "rotate-180"
         )} />
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors" />
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors" />
+        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
+        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
       </div>
       
       {/* Tooltip on hover */}
