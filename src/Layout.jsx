@@ -14,17 +14,8 @@ import { createPageUrl } from '@/utils';
 
 const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ'];
 
-// Wrapper component to handle public pages without hooks
-function PublicPageWrapper({ children }) {
-  return <>{children}</>;
-}
-
-export default function Layout({ children, currentPageName }) {
-  // CRITICAL: Check public pages FIRST - return simple wrapper immediately
-  if (PUBLIC_PAGES.includes(currentPageName)) {
-    return <PublicPageWrapper>{children}</PublicPageWrapper>;
-  }
-
+// Main layout with all the hooks - only used for authenticated pages
+function AuthenticatedLayout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
