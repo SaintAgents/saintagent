@@ -17,6 +17,7 @@ import Step4Desires from '@/components/onboarding/Step4Desires';
 import Step5Hopes from '@/components/onboarding/Step5Hopes';
 import Step6Actions from '@/components/onboarding/Step6Actions';
 import Step7Dating from '@/components/onboarding/Step7Dating';
+import { attachAffiliateToUser, activateReferral } from '@/components/affiliate/AffiliateTracker';
 
 const STEPS = [
   { id: 0, title: "Welcome", component: Step0Welcome, skippable: false },
