@@ -589,28 +589,31 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-attachment: fixed;
         }
 
-        /* Dark theme background for Command Deck */
+        /* Dark theme background for Command Deck - solid obsidian with subtle matrix */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-                                      background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2f0df9019_gemini-25-flash-image_make_yes_normal_human_with_blue_iris-0.jpg');
-                                      background-size: cover;
-                                      background-position: center;
-                                      background-attachment: fixed;
-                                    }
+          background-color: #050505 !important;
+          background-image: none !important;
+        }
 
-        /* Avatar card background - light mode uses gold shield, dark mode uses dark image */
-                    [data-theme='light'] [data-avatar-card] [data-avatar-bg] {
-                      display: block;
-                      background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f95689693_Screenshot2026-01-04192526.png') !important;
-                    }
+        /* Avatar card background - light mode uses gold shield, dark mode solid obsidian */
+        [data-theme='light'] [data-avatar-card] [data-avatar-bg] {
+          display: block;
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f95689693_Screenshot2026-01-04192526.png') !important;
+        }
         [data-theme='light'] [data-avatar-card] [data-avatar-overlay] {
-                    background: transparent;
-                  }
-                  [data-theme='dark'] [data-avatar-card] [data-avatar-bg] {
-                    display: none;
-                  }
-                  [data-theme='dark'] [data-avatar-card] [data-avatar-overlay] {
-                    background: transparent;
-                  }
+          background: transparent;
+        }
+        [data-theme='dark'] [data-avatar-card] {
+          background-color: #050505 !important;
+          border: 1px solid rgba(0, 255, 136, 0.2) !important;
+          box-shadow: 0 0 30px rgba(0, 255, 136, 0.08), inset 0 0 60px rgba(0, 212, 255, 0.03) !important;
+        }
+        [data-theme='dark'] [data-avatar-card] [data-avatar-bg] {
+          display: none;
+        }
+        [data-theme='dark'] [data-avatar-card] [data-avatar-overlay] {
+          background: transparent;
+        }
 
         `}</style>
         <style>{`
