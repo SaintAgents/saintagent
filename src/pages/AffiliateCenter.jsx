@@ -121,11 +121,11 @@ export default function AffiliateCenter() {
   if (!profile?.handle) {
     return (
       <div className="p-6">
-        <Card className="max-w-md mx-auto dark:bg-slate-800 dark:border-slate-700">
+        <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center">
             <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Profile Required</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+            <h2 className="text-lg font-semibold mb-2">Profile Required</h2>
+            <p className="text-sm mb-4">
               Complete your profile and set a handle to access your affiliate link.
             </p>
             <Button onClick={() => window.location.href = '/Profile'}>
@@ -142,64 +142,64 @@ export default function AffiliateCenter() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Affiliate Center</h1>
-          <p className="text-slate-600 dark:text-slate-400">
+          <h1 className="text-3xl font-bold mb-2">Affiliate Center</h1>
+          <p>
             Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
           </p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
-          <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.clicks}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Clicks</p>
+                <p className="text-2xl font-bold">{stats.clicks}</p>
+                <p className="text-xs mt-1">Clicks</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.signups}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Signups</p>
+                <p className="text-2xl font-bold">{stats.signups}</p>
+                <p className="text-xs mt-1">Signups</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-violet-600 dark:text-violet-400">{stats.activated}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Activated</p>
+                <p className="text-2xl font-bold text-violet-600">{stats.activated}</p>
+                <p className="text-xs mt-1">Activated</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.paid}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Paid</p>
+                <p className="text-2xl font-bold text-emerald-600">{stats.paid}</p>
+                <p className="text-xs mt-1">Paid</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.gggEarned.toFixed(2)}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">GGG Earned</p>
+                <p className="text-2xl font-bold text-amber-600">{stats.gggEarned.toFixed(2)}</p>
+                <p className="text-xs mt-1">GGG Earned</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">{conversionRate}%</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Conversion</p>
+                <p className="text-2xl font-bold">{conversionRate}%</p>
+                <p className="text-xs mt-1">Conversion</p>
               </div>
             </CardContent>
           </Card>
@@ -209,9 +209,9 @@ export default function AffiliateCenter() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Links */}
           <div className="lg:col-span-2 space-y-6">
-            <Card className="dark:bg-slate-800 dark:border-slate-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 dark:text-white">
+                <CardTitle className="flex items-center gap-2">
                   <Link2 className="w-5 h-5" />
                   Your Affiliate Links
                 </CardTitle>
@@ -219,7 +219,7 @@ export default function AffiliateCenter() {
               <CardContent className="space-y-6">
                 {/* Personal Link */}
                 <div>
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">
+                  <label className="text-sm font-medium mb-2 block">
                     Personal Invite Link
                   </label>
                   <div className="flex gap-2">
@@ -235,7 +235,7 @@ export default function AffiliateCenter() {
                       <Copy className="w-4 h-4" />
                     </Button>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                  <p className="text-xs mt-2">
                     Share this link anywhere. When someone signs up through it, you'll be credited.
                   </p>
                 </div>
@@ -243,10 +243,10 @@ export default function AffiliateCenter() {
                 {/* Offer-Specific Links */}
                 {listings.length > 0 && (
                   <div>
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">
+                    <label className="text-sm font-medium mb-2 block">
                       Offer-Specific Links
                     </label>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                    <p className="text-xs mb-3">
                       Create custom links for specific offers to track which promotions work best.
                     </p>
                     <div className="space-y-2">
@@ -256,15 +256,15 @@ export default function AffiliateCenter() {
                           className={cn(
                             "p-3 rounded-lg border cursor-pointer transition-colors",
                             selectedOffer?.id === listing.id 
-                              ? "border-violet-300 bg-violet-50 dark:bg-violet-900/30 dark:border-violet-500" 
-                              : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500"
+                              ? "border-violet-300 bg-violet-50" 
+                              : "border-slate-200 hover:border-slate-300"
                           )}
                           onClick={() => setSelectedOffer(listing)}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
-                              <p className="font-medium text-slate-900 dark:text-white text-sm">{listing.title}</p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400">${listing.price_amount}</p>
+                              <p className="font-medium text-sm">{listing.title}</p>
+                              <p className="text-xs">${listing.price_amount}</p>
                             </div>
                             <ChevronRight className="w-4 h-4 text-slate-400" />
                           </div>
@@ -273,8 +273,8 @@ export default function AffiliateCenter() {
                     </div>
 
                     {selectedOffer && (
-                      <div className="mt-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
-                        <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      <div className="mt-4 p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <p className="text-xs font-medium mb-2">
                           Link for: {selectedOffer.title}
                         </p>
                         <div className="flex gap-2">
@@ -299,9 +299,9 @@ export default function AffiliateCenter() {
             </Card>
 
             {/* Referrals List */}
-            <Card className="dark:bg-slate-800 dark:border-slate-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="dark:text-white">Recent Referrals</CardTitle>
+                <CardTitle>Recent Referrals</CardTitle>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="pending">
@@ -324,13 +324,13 @@ export default function AffiliateCenter() {
                       pendingReferrals.map((ref) => (
                         <div 
                           key={ref.id}
-                          className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700"
+                          className="flex items-center justify-between p-3 rounded-lg bg-slate-50"
                         >
                           <div>
-                            <p className="text-sm font-medium text-slate-900 dark:text-white">
+                            <p className="text-sm font-medium">
                               {ref.referred_user_id}
                             </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                            <p className="text-xs">
                               {ref.status === 'pending' ? 'Signed up' : 'Onboarding complete'}
                             </p>
                           </div>
@@ -354,21 +354,21 @@ export default function AffiliateCenter() {
                       paidReferrals.map((ref) => (
                         <div 
                           key={ref.id}
-                          className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700"
+                          className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200"
                         >
                           <div>
-                            <p className="text-sm font-medium text-slate-900 dark:text-white">
+                            <p className="text-sm font-medium">
                               {ref.referred_user_id}
                             </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                            <p className="text-xs">
                               {ref.qualifying_action}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                            <p className="text-sm font-bold text-emerald-600">
                               +{ref.ggg_amount} GGG
                             </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                            <p className="text-xs">
                               ${ref.credited_value_usd}
                             </p>
                           </div>
@@ -383,60 +383,60 @@ export default function AffiliateCenter() {
 
           {/* Right Column - Guide & Stats */}
           <div className="space-y-6">
-            <Card className="dark:bg-slate-800 dark:border-slate-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="text-lg dark:text-white">How It Works</CardTitle>
+                <CardTitle className="text-lg">How It Works</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-bold text-violet-600 dark:text-violet-400">1</span>
+                  <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-violet-600">1</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white">Share Your Link</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">Send to people who'd benefit</p>
+                    <p className="text-sm font-medium">Share Your Link</p>
+                    <p className="text-xs">Send to people who'd benefit</p>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-bold text-violet-600 dark:text-violet-400">2</span>
+                  <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-violet-600">2</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white">They Sign Up</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">Create account & complete onboarding</p>
+                    <p className="text-sm font-medium">They Sign Up</p>
+                    <p className="text-xs">Create account & complete onboarding</p>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-bold text-violet-600 dark:text-violet-400">3</span>
+                  <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-violet-600">3</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white">First Paid Action</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">Booking, event, or mission</p>
+                    <p className="text-sm font-medium">First Paid Action</p>
+                    <p className="text-xs">Booking, event, or mission</p>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-white">You Earn 0.25 GGG</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">Worth $36.25</p>
+                    <p className="text-sm font-medium">You Earn 0.25 GGG</p>
+                    <p className="text-xs">Worth $36.25</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/30">
+            <Card className="border-amber-200 bg-amber-50">
               <CardContent className="pt-6">
                 <div className="flex items-start gap-3 mb-3">
-                  <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-amber-900 dark:text-amber-200 mb-1">Keep It Genuine</p>
-                    <p className="text-xs text-amber-700 dark:text-amber-300">
+                    <p className="text-sm font-medium text-amber-900 mb-1">Keep It Genuine</p>
+                    <p className="text-xs text-amber-700">
                       Only share with people who would truly benefit. Quality over quantity builds trust and credibility.
                     </p>
                   </div>
@@ -444,18 +444,18 @@ export default function AffiliateCenter() {
               </CardContent>
             </Card>
 
-            <Card className="dark:bg-slate-800 dark:border-slate-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2 dark:text-white">
-                  <Sparkles className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-violet-600" />
                   Rank Impact
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                <p className="text-sm mb-3">
                   Successful referrals contribute to your rank progression, especially:
                 </p>
-                <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+                <ul className="space-y-2 text-xs">
                   <li className="flex items-start gap-2">
                     <span className="text-violet-600">•</span>
                     <span>Connector rank (network growth)</span>
