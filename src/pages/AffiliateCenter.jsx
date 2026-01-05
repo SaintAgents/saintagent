@@ -443,10 +443,10 @@ export default function AffiliateCenter() {
                           className="flex items-center justify-between p-3 rounded-lg bg-slate-50"
                         >
                           <div>
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium text-slate-900">
                               {ref.referred_user_id}
                             </p>
-                            <p className="text-xs">
+                            <p className="text-xs text-slate-600">
                               {ref.status === 'pending' ? 'Signed up' : 'Onboarding complete'}
                             </p>
                           </div>
