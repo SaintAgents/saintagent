@@ -158,6 +158,20 @@ export default function NotificationBell({ notifications = [], onAction }) {
                     {!notif.is_read && (
                       <div className="w-2 h-2 rounded-full bg-violet-500 shrink-0 mt-2" />
                     )}
+                    {notif.type === 'collaboration' && notif.metadata?.request_id && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 text-xs shrink-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = createPageUrl('FindCollaborators');
+                        }}
+                      >
+                        <Send className="w-3 h-3 mr-1" />
+                        View
+                      </Button>
+                    )}
                   </div>
                 );
               })}
