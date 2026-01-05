@@ -552,12 +552,12 @@ export default function CommandDeck() {
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-900">
-                                                      {profile?.display_name || currentUser?.full_name || 'User'}
-                                                    </h2>
-                    <div className="flex items-center gap-1">
-                      <p className="text-teal-200 text-sm capitalize">
-                        {rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
+                    <h2 className="text-2xl font-bold text-violet-950">
+                                                                {profile?.display_name || currentUser?.full_name || 'User'}
+                                                              </h2>
+                                              <div className="flex items-center gap-1">
+                                                <p className="text-violet-800 text-sm capitalize">
+                                                  {rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
                       </p>
                       <HelpHint
                         content={
@@ -631,8 +631,8 @@ export default function CommandDeck() {
                   {/* Trust Score Gauge */}
                   <div className="relative z-10 flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-teal-500 text-xs flex items-center gap-1 justify-end">
-                        Trust Score
+                      <p className="text-violet-700 text-xs flex items-center gap-1 justify-end">
+                                                    Trust Score
                         <HelpHint
                           content={
                           <div>
@@ -642,7 +642,7 @@ export default function CommandDeck() {
                           } />
 
                       </p>
-                      <p className="text-teal-300 text-2xl font-bold">{profile?.trust_score || 0}</p>
+                      <p className="text-violet-950 text-2xl font-bold">{profile?.trust_score || 0}</p>
                     </div>
                     <div className="relative w-16 h-16">
                       <svg className="w-16 h-16 transform -rotate-90">
@@ -695,7 +695,7 @@ export default function CommandDeck() {
                 {/* Badges */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-teal-200 text-xs">Badges</p>
+                    <p className="text-violet-800 text-xs font-medium">Badges</p>
                     <button className="text-xs text-violet-600 hover:underline" onClick={() => setBadgeGlossaryOpen(true)}>
                       View Glossary
                     </button>
@@ -705,7 +705,7 @@ export default function CommandDeck() {
 
                 {/* Mystical Profile */}
                 <div>
-                  <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
+                  <p className="text-violet-800 mb-3 text-xs font-medium">✨ Mystical Identity</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {profile?.mystical_identifier &&
                     <div className="flex items-center gap-2">
@@ -713,7 +713,7 @@ export default function CommandDeck() {
                         <Sparkles className="w-4 h-4 text-purple-600" />
                       </div>
                       <div>
-                        <p className="text-cyan-400 text-xs">Mystical ID</p>
+                        <p className="text-violet-600 text-xs">Mystical ID</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
                       </div>
                     </div>
@@ -725,7 +725,7 @@ export default function CommandDeck() {
                         ✨
                       </div>
                       <div>
-                        <p className="text-cyan-400 text-xs">Sun Sign</p>
+                        <p className="text-violet-600 text-xs">Sun Sign</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
                       </div>
                     </div>
@@ -737,7 +737,7 @@ export default function CommandDeck() {
                         🌅
                       </div>
                       <div>
-                        <p className="text-cyan-400 text-xs">Rising</p>
+                        <p className="text-violet-600 text-xs">Rising</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
                       </div>
                     </div>
@@ -749,7 +749,7 @@ export default function CommandDeck() {
                         🌙
                       </div>
                       <div>
-                        <p className="text-teal-400 text-xs">Moon</p>
+                        <p className="text-violet-600 text-xs">Moon</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
                       </div>
                     </div>
@@ -761,7 +761,7 @@ export default function CommandDeck() {
                         <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
                       </div>
                       <div>
-                        <p className="text-teal-400 text-xs">Life Path</p>
+                        <p className="text-violet-600 text-xs">Life Path</p>
                         <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
                       </div>
                     </div>
@@ -773,7 +773,7 @@ export default function CommandDeck() {
                         <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
                       </div>
                       <div>
-                        <p className="text-cyan-400 text-xs">Personality</p>
+                        <p className="text-violet-600 text-xs">Personality</p>
                         <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
                       </div>
                     </div>
@@ -785,7 +785,7 @@ export default function CommandDeck() {
                         🃏
                       </div>
                       <div>
-                        <p className="text-cyan-400 text-xs">Birth Card</p>
+                        <p className="text-violet-600 text-xs">Birth Card</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
                       </div>
                     </div>
@@ -797,7 +797,7 @@ export default function CommandDeck() {
                         ☀️
                       </div>
                       <div>
-                        <p className="text-cyan-400 text-xs">Sun Card</p>
+                        <p className="text-violet-600 text-xs">Sun Card</p>
                         <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
                       </div>
                     </div>
