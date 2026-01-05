@@ -1,5 +1,6 @@
 import ActivityFeed from './pages/ActivityFeed';
 import Admin from './pages/Admin';
+import AffiliateCenter from './pages/AffiliateCenter';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
@@ -33,13 +34,13 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import AffiliateCenter from './pages/AffiliateCenter';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "ActivityFeed": ActivityFeed,
     "Admin": Admin,
+    "AffiliateCenter": AffiliateCenter,
     "CRM": CRM,
     "Circles": Circles,
     "CommandDeck": CommandDeck,
@@ -73,7 +74,6 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "AffiliateCenter": AffiliateCenter,
 }
 
 export const pagesConfig = {
