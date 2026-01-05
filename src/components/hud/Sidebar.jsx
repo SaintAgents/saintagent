@@ -557,31 +557,36 @@ export default function Sidebar({
           </>
         )}
 
-        {/* Theme Toggle */}
+        {/* Theme Toggle - Collapsible */}
         {(!isCollapsed || inPopup) && (
-        <div className="mt-2 space-y-2">
-          <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
-          <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-              <RadioGroupItem value="light" id={inPopup ? "theme-light-pop" : "theme-light"} className="h-3.5 w-3.5" />
-              <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <RadioGroupItem value="dark" id={inPopup ? "theme-dark-pop" : "theme-dark"} className="h-3.5 w-3.5" />
-              <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <RadioGroupItem value="hacker" id={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="h-3.5 w-3.5" />
-              <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
+        <Collapsible>
+          <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
+            <ChevronDown className="w-4 h-4 text-slate-500" />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="pt-2 space-y-2">
+            <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="light" id={inPopup ? "theme-light-pop" : "theme-light"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="dark" id={inPopup ? "theme-dark-pop" : "theme-dark"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="hacker" id={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
+                </Label>
+              </div>
+            </RadioGroup>
+          </CollapsibleContent>
+        </Collapsible>
         )}
 
         {/* Background Effects - only for Dark/Hacker themes */}
