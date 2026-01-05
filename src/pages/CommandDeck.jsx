@@ -619,20 +619,20 @@ export default function CommandDeck() {
                 {/* Stats Bar */}
                 <div className="bg-slate-800/80 text-white mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-violet-700">{walletAvailable?.toLocaleString?.() || "0"}</p>
-                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
+                    <p className="text-lg font-bold text-amber-400">{walletAvailable?.toLocaleString?.() || "0"}</p>
+                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 stat-number">{rpPoints}</p>
-                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
+                    <p className="text-lg font-bold text-violet-400">{rpPoints}</p>
+                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 stat-number mt-0.5">{profile?.follower_count || 0}</p>
-                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
+                    <p className="text-lg font-bold text-blue-400 mt-0.5">{profile?.follower_count || 0}</p>
+                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 stat-number mt-0.5">{profile?.meetings_completed || 0}</p>
-                    <p className="text-gray-950 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
+                    <p className="text-lg font-bold text-emerald-400 mt-0.5">{profile?.meetings_completed || 0}</p>
+                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
                   </div>
                 </div>
 
