@@ -131,6 +131,16 @@ export default function Matches() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-violet-500" />
               Synchronicity Engine
+              {isDatingOptedIn && (
+                <span 
+                  className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg animate-pulse cursor-pointer"
+                  style={{ boxShadow: '0 0 12px rgba(236, 72, 153, 0.6)' }}
+                  title="Dating profile is live!"
+                  onClick={() => setTab('dating')}
+                >
+                  <Heart className="w-4 h-4 text-white fill-white" />
+                </span>
+              )}
               <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment into a 0-100 score. Match Types include People, Offers, Missions, Events, and Teachers—each category surfaces different opportunities. AI-generated Conversation Starters help break the ice based on shared values. Complete your 'Skills' and 'Mystical Identity' for the best results." />
             </h1>
             <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
