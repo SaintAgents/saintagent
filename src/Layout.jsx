@@ -23,6 +23,11 @@ export default function Layout({ children, currentPageName }) {
   const queryClient = useQueryClient();
 const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ'];
 
+  // CRITICAL: Render public pages immediately without any auth checks
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <>{children}</>;
+  }
+
         // Open/close multiple profile drawers (max 6)
         const openProfile = (id) => {
           if (!id) return;
