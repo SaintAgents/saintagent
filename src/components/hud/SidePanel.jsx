@@ -73,6 +73,24 @@ export default function SidePanel({
     } catch {}
   }, []);
 
+  // Popout states for sections
+  const [gggPopupOpen, setGggPopupOpen] = useState(false);
+  const [gggAuditOpen, setGggAuditOpen] = useState(false);
+  const [gggTxOpen, setGggTxOpen] = useState(false);
+  const [walletPopupOpen, setWalletPopupOpen] = useState(false);
+  const [schedulePopupOpen, setSchedulePopupOpen] = useState(false);
+  const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
+  const [helpPopupOpen, setHelpPopupOpen] = useState(false);
+  const [feedPopupOpen, setFeedPopupOpen] = useState(false);
+  const [onlinePopupOpen, setOnlinePopupOpen] = useState(false);
+  const [usersPopupOpen, setUsersPopupOpen] = useState(false);
+  const [recentJoinsPopupOpen, setRecentJoinsPopupOpen] = useState(false);
+
+  // Docking & Dragging
+  const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
+  const [topOffset, setTopOffset] = useState(80); // px from top
+  const dragRef = React.useRef({ startY: 0, startTop: 0 });
+
   // Save state when it changes
   React.useEffect(() => {
     try {
@@ -91,24 +109,6 @@ export default function SidePanel({
     document.addEventListener('toggleSidePanel', handleToggle);
     return () => document.removeEventListener('toggleSidePanel', handleToggle);
   }, [isOpen, onToggle]);
-
-  // Popout states for sections
-  const [gggPopupOpen, setGggPopupOpen] = useState(false);
-  const [gggAuditOpen, setGggAuditOpen] = useState(false);
-  const [gggTxOpen, setGggTxOpen] = useState(false);
-  const [walletPopupOpen, setWalletPopupOpen] = useState(false);
-  const [schedulePopupOpen, setSchedulePopupOpen] = useState(false);
-  const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
-  const [helpPopupOpen, setHelpPopupOpen] = useState(false);
-  const [feedPopupOpen, setFeedPopupOpen] = useState(false);
-  const [onlinePopupOpen, setOnlinePopupOpen] = useState(false);
-  const [usersPopupOpen, setUsersPopupOpen] = useState(false);
-  const [recentJoinsPopupOpen, setRecentJoinsPopupOpen] = useState(false);
-
-  // Docking & Dragging
-  const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
-  const [topOffset, setTopOffset] = useState(80); // px from top
-  const dragRef = React.useRef({ startY: 0, startTop: 0 });
 
   const onDragMove = (e) => {
     const dy = e.clientY - dragRef.current.startY;
