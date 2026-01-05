@@ -34,8 +34,9 @@ import { formatDistanceToNow } from 'date-fns';
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
 
+  // Always call hooks unconditionally with stable keys
   const { data: profiles } = useQuery({
-    queryKey: ['profile', userId],
+    queryKey: ['profile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: !!userId
   });
@@ -43,7 +44,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
 
   // Wallet for this user (authoritative GGG)
   const { data: walletRes } = useQuery({
-    queryKey: ['wallet', userId],
+    queryKey: ['wallet', userId || 'none'],
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
@@ -57,19 +58,19 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
 
   const { data: listings = [] } = useQuery({
-    queryKey: ['userListings', userId],
+    queryKey: ['userListings', userId || 'none'],
     queryFn: () => base44.entities.Listing.filter({ owner_id: userId }),
     enabled: !!userId
   });
 
   const { data: testimonials = [] } = useQuery({
-    queryKey: ['userTestimonials', userId],
+    queryKey: ['userTestimonials', userId || 'none'],
     queryFn: () => base44.entities.Testimonial.filter({ to_user_id: userId, visibility: 'public' }),
     enabled: !!userId
   });
 
   const { data: creatorTiers = [] } = useQuery({
-    queryKey: ['creatorTiers', userId],
+    queryKey: ['creatorTiers', userId || 'none'],
     queryFn: () => base44.entities.CreatorTier.filter({ creator_id: userId, status: 'active' }),
     enabled: !!userId
   });
@@ -80,7 +81,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   });
 
   const { data: subscriptions = [] } = useQuery({
-    queryKey: ['subscriptions', currentUser?.email, userId],
+    queryKey: ['subscriptions', currentUser?.email || 'none', userId || 'none'],
     queryFn: () => base44.entities.Subscription.filter({
       subscriber_id: currentUser?.email,
       creator_id: userId,
