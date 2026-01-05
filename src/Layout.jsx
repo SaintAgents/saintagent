@@ -563,4 +563,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
-export default Layout;
+// Main Layout component - check public pages BEFORE any hooks
+export default function Layout({ children, currentPageName }) {
+  // CRITICAL: Public pages bypass ALL hooks and render immediately
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <>{children}</>;
+  }
+  
+  // Non-public pages use the authenticated layout with hooks
+  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
+}
