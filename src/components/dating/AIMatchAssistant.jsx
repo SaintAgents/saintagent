@@ -158,7 +158,18 @@ Analyze compatibility based on:
 5. Energy/rhythm compatibility
 6. Synchronicity signals
 
-Return the top 5 matches with detailed explanations. Be specific about WHY each match is suggested - reference actual values, priorities, and synchronicity notes from both profiles.`;
+For each match, provide:
+- A compatibility score (0-100)
+- A compelling headline summarizing the connection
+- WHY they're compatible (reference specific values, priorities, synchronicity notes)
+- Shared values between both profiles
+- Complementary traits that balance each other
+- IMPORTANT: Identify 2-3 specific potential friction points or challenges based on differences in their profiles (e.g., different communication frequencies, growth orientations, daily rhythms, or intent misalignment)
+- For each friction point, provide a conscious navigation tip - practical advice on how they might work through this difference mindfully
+- A conversation starter
+- A synchronicity insight connecting their journeys
+
+Be honest about challenges - users appreciate authenticity over false positivity. Frame challenges as growth opportunities.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -176,7 +187,18 @@ Return the top 5 matches with detailed explanations. Be specific about WHY each 
                   why_compatible: { type: "string" },
                   shared_values: { type: "array", items: { type: "string" } },
                   complementary_traits: { type: "array", items: { type: "string" } },
-                  potential_challenges: { type: "string" },
+                  friction_points: { 
+                    type: "array", 
+                    items: { 
+                      type: "object",
+                      properties: {
+                        challenge: { type: "string" },
+                        navigation_tip: { type: "string" }
+                      }
+                    } 
+                  },
+                  overall_challenge_level: { type: "string", enum: ["low", "moderate", "significant"] },
+                  growth_opportunity: { type: "string" },
                   conversation_starter: { type: "string" },
                   synchronicity_insight: { type: "string" }
                 }
@@ -398,10 +420,41 @@ Return the top 5 matches with detailed explanations. Be specific about WHY each 
                         </div>
                       )}
 
-                      {suggestion.potential_challenges && (
-                        <div>
-                          <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Things to Navigate:</p>
-                          <p className="text-slate-600 dark:text-slate-400">{suggestion.potential_challenges}</p>
+                      {suggestion.friction_points?.length > 0 && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium text-slate-700 dark:text-slate-300">Potential Friction Points:</p>
+                            {suggestion.overall_challenge_level && (
+                              <Badge 
+                                variant="outline" 
+                                className={cn(
+                                  "text-xs",
+                                  suggestion.overall_challenge_level === 'low' && "border-emerald-300 text-emerald-600",
+                                  suggestion.overall_challenge_level === 'moderate' && "border-amber-300 text-amber-600",
+                                  suggestion.overall_challenge_level === 'significant' && "border-rose-300 text-rose-600"
+                                )}
+                              >
+                                {suggestion.overall_challenge_level} challenge
+                              </Badge>
+                            )}
+                          </div>
+                          {suggestion.friction_points.map((fp, i) => (
+                            <div key={i} className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                              <p className="text-amber-800 dark:text-amber-300 text-xs font-medium mb-1">⚡ {fp.challenge}</p>
+                              <p className="text-amber-700 dark:text-amber-400 text-xs">
+                                <span className="font-medium">Navigate consciously:</span> {fp.navigation_tip}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {suggestion.growth_opportunity && (
+                        <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+                          <p className="font-medium text-emerald-700 dark:text-emerald-400 mb-1 flex items-center gap-1">
+                            🌱 Growth Opportunity
+                          </p>
+                          <p className="text-emerald-600 dark:text-emerald-300 text-xs">{suggestion.growth_opportunity}</p>
                         </div>
                       )}
 
