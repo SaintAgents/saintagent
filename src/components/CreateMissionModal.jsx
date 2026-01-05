@@ -211,20 +211,23 @@ export default function CreateMissionModal({ open, onClose }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={createMutation.isPending || !formData.title || !formData.objective}
-              className="bg-violet-600 hover:bg-violet-700"
-            >
-              {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Create Mission
-            </Button>
-          </div>
         </form>
+        
+        <div className="flex justify-end gap-3 pt-4 border-t shrink-0 mt-4">
+          <Button type="button" variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            form="mission-form"
+            disabled={createMutation.isPending || !formData.title || !formData.objective}
+            className="bg-violet-600 hover:bg-violet-700"
+            onClick={handleSubmit}
+          >
+            {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            Create Mission
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
