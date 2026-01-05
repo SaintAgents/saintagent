@@ -41,7 +41,8 @@ import {
   Sun,
   Folder,
   Lock,
-  Info
+  Info,
+  User
 } from "lucide-react";
 import {
   Tooltip,
@@ -544,6 +545,27 @@ export default function Sidebar({
             <Switch checked={isDark} onCheckedChange={(v) => onThemeToggle?.(v ? 'dark' : 'light')} />
           </div>
           )}
+
+          {/* My Profile Button - visible on mobile/collapsed view */}
+          <Link
+            to={createPageUrl('Profile')}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mt-2 bg-violet-50 hover:bg-violet-100 text-violet-700 md:hidden",
+              isCollapsed && "justify-center px-2"
+            )}
+          >
+            {profile?.avatar_url ? (
+              <Avatar className="w-6 h-6">
+                <AvatarImage src={profile.avatar_url} />
+                <AvatarFallback className="text-xs">{profile?.display_name?.charAt(0)}</AvatarFallback>
+              </Avatar>
+            ) : (
+              <User className="w-5 h-5" />
+            )}
+            {!isCollapsed && (
+              <span className="font-medium text-sm">My Profile</span>
+            )}
+          </Link>
 
           {/* Collapse Toggle (when collapsed) */}
         {isCollapsed && (
