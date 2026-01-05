@@ -55,7 +55,7 @@ const TRUST_FEATURES = [
   { icon: TrendingUp, text: 'Transparent rank progression' },
 ];
 
-export default function Join() {
+export default function JoinPage() {
   const handleJoin = async () => {
     const isAuthed = await base44.auth.isAuthenticated();
     if (isAuthed) {
