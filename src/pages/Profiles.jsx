@@ -42,6 +42,7 @@ import { Badge } from "@/components/ui/badge";
 import ProfileDataSlate from '@/components/profiles/ProfileDataSlate';
 import NetworkMapView from '@/components/profiles/NetworkMapView';
 import MiniDatingCard from '@/components/profiles/MiniDatingCard';
+import BackButton from '@/components/hud/BackButton';
 
 const RANK_ORDER = ['guardian', 'ascended', 'oracle', 'sage', 'master', 'practitioner', 'adept', 'initiate', 'seeker'];
 const QUICK_RANKS = ['seeker', 'adept', 'master', 'sage', 'guardian'];
@@ -253,10 +254,11 @@ export default function Profiles() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BackButton />
               <Users className="w-6 h-6 text-violet-500" />
               Community Profiles
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">
               Discover members by rank, expertise, and influence
             </p>
           </div>

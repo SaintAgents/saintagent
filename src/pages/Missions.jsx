@@ -42,6 +42,7 @@ import CreateMissionModal from '@/components/CreateMissionModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import AIMissionGenerator from '@/components/missions/AIMissionGenerator';
 import HelpHint from '@/components/hud/HelpHint';
+import BackButton from '@/components/hud/BackButton';
 
 export default function Missions() {
   const [tab, setTab] = useState('active');
@@ -171,12 +172,13 @@ export default function Missions() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BackButton />
               <Target className="w-6 h-6 text-amber-500" />
               Missions & Quests
               <HelpHint content="Missions: Structured units of work driving real-world impact. Browse & Join: Find missions by Lane (Food Security, Regenerative Ag, etc.) or Region. Execute Tasks: Complete assigned tasks and submit Evidence (files, links, photos). Verification & Payout: Once the Leader verifies your evidence, GGG is released from mission escrow to your wallet. Mission Types: Platform (system), Circle, Region, Leader. Rewards: GGG, Rank Points, Boost multipliers. Leaders design missions with milestone-based bounties (capped at $55)." />
             </h1>
-            <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts (mission rewards capped at $55).</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Join collaborative missions to earn GGG, rank points, and boosts (mission rewards capped at $55).</p>
           </div>
           <div className="flex items-center gap-2">
             <Button
