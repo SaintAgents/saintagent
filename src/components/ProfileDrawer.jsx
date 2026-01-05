@@ -206,7 +206,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
 
       <ScrollArea className="flex-1">
         {/* Hero Background */}
-        <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
+        <div className="relative h-24 bg-gradient-to-r from-violet-500 to-purple-600">
           {profile.hero_image_url && (
             <img 
               src={profile.hero_image_url} 
@@ -215,16 +215,20 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent" />
-          {/* Avatar positioned inside hero */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2">
+        </div>
+
+        <div className="flex">
+          {/* Left Vertical Sidebar - Avatar, Status, Badges */}
+          <div className="w-24 flex-shrink-0 flex flex-col items-center py-4 px-2 border-r border-slate-100 bg-slate-50/50 -mt-12 relative z-10">
+            {/* Avatar */}
             <div 
-              className="cursor-pointer"
+              className="cursor-pointer mb-3"
               onClick={() => window.location.href = createPageUrl('Profile') + `?id=${profile.user_id}`}
             >
               <RankedAvatar
                 src={profile.avatar_url}
                 name={profile.display_name}
-                size={96}
+                size={72}
                 userId={profile.user_id}
                 status={profile.status}
                 leaderTier={profile.leader_tier}
@@ -234,30 +238,44 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                 galleryImages={profile.gallery_images || []}
               />
             </div>
-          </div>
-        </div>
 
-        <div className="px-6 pb-6 pt-4 relative">
-
-          {/* Name & Handle */}
-          <div className="text-center mb-4">
-            <div className="flex items-center justify-center gap-2">
-              {profile.status && <CircleDot className={`w-3 h-3 ${statusColors[profile.status] || 'text-slate-400'}`} />}
-              <h2 className="text-xl font-bold text-slate-900">{profile.display_name}</h2>
-              {profile.leader_tier === 'verified144k' &&
-              <Badge className="bg-amber-100 text-amber-700">
-                  <Crown className="w-3 h-3 mr-1" />
-                  144K
-                </Badge>
-              }
+            {/* Online Status */}
+            <div className="flex items-center gap-1.5 mb-3">
+              <CircleDot className={`w-3 h-3 ${statusColors[profile.status] || 'text-slate-400'}`} />
+              <span className="text-[10px] font-medium text-slate-600 capitalize">{profile.status || 'offline'}</span>
             </div>
-            <p className="text-slate-500">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
-            {profile.last_seen_at &&
-            <p className="text-xs text-slate-500 mt-1">
-                Last online {formatDistanceToNow(new Date(profile.last_seen_at), { addSuffix: true })}
-              </p>
-            }
+
+            {/* Leader Badge */}
+            {profile.leader_tier === 'verified144k' && (
+              <Badge className="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 mb-2">
+                <Crown className="w-2.5 h-2.5 mr-0.5" />
+                144K
+              </Badge>
+            )}
+
+            {/* Photo Gallery Icon */}
+            {(profile.gallery_images?.length > 0 || profile.avatar_url) && (
+              <div className="mt-auto pt-2">
+                <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-100 cursor-pointer" title="View photos">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Main Content */}
+          <div className="flex-1 px-4 pb-6 pt-4">
+
+            {/* Name & Handle */}
+            <div className="mb-4">
+              <h2 className="text-xl font-bold text-slate-900">{profile.display_name}</h2>
+              <p className="text-slate-500 text-sm">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
+              {profile.last_seen_at && (
+                <p className="text-xs text-slate-400 mt-1">
+                  Last online {formatDistanceToNow(new Date(profile.last_seen_at), { addSuffix: true })}
+                </p>
+              )}
+            </div>
 
           {/* Actions */}
           {!isOwnProfile &&
