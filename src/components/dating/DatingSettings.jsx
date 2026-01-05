@@ -7,8 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Check } from 'lucide-react';
+import { Check, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import HelpHint from '@/components/hud/HelpHint';
+import AIProfileEnhancer from '@/components/profile/AIProfileEnhancer';
 
 export default function DatingSettings({ currentUser }) {
   const qc = useQueryClient();
@@ -84,17 +87,41 @@ export default function DatingSettings({ currentUser }) {
   const toArray = (v) => (v || '').split(',').map((s) => s.trim()).filter(Boolean);
   const fromArray = (a) => (a || []).join(', ');
 
+  // Fetch user profile for AI enhancer
+  const { data: userProfiles = [] } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser?.email }),
+    enabled: !!currentUser?.email
+  });
+  const userProfile = userProfiles?.[0];
+
   return (
-    <div className="bg-violet-50 dark:bg-slate-800/80 p-4 rounded-xl border border-violet-200 dark:border-slate-700 space-y-4">
-      <div className="flex items-center gap-6">
+    <div className="space-y-4">
+      {/* AI Profile Enhancer */}
+      <AIProfileEnhancer 
+        userProfile={userProfile} 
+        datingProfile={existing}
+        onUpdate={() => qc.invalidateQueries({ queryKey: ['datingProfile'] })}
+      />
+
+      <div className="bg-violet-50 dark:bg-slate-800/80 p-4 rounded-xl border border-violet-200 dark:border-slate-700 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
           <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} />
           <Label className="text-slate-900 dark:text-slate-100">Opt-in to Dating & Compatibility</Label>
         </div>
-        <div className="flex items-center gap-2">
-          <Switch checked={form.visible} onCheckedChange={(v) => setForm({ ...form, visible: v })} />
-          <Label className="text-slate-900 dark:text-slate-100">Visible to compatible users</Label>
+          <div className="flex items-center gap-2">
+            <Switch checked={form.visible} onCheckedChange={(v) => setForm({ ...form, visible: v })} />
+            <Label className="text-slate-900 dark:text-slate-100">Visible to compatible users</Label>
+          </div>
         </div>
+        <Link to={createPageUrl('MatchSettings')}>
+          <Button variant="outline" size="sm" className="rounded-lg gap-2">
+            <Settings className="w-4 h-4" />
+            Match Weights
+          </Button>
+        </Link>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -286,6 +313,7 @@ export default function DatingSettings({ currentUser }) {
         >
           {upsert.isPending ? 'Saving…' : 'Save Settings'}
         </Button>
+      </div>
       </div>
     </div>);
 
