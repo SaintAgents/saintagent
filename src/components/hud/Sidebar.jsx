@@ -71,6 +71,7 @@ const NAV_ITEMS = [
   { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
   { id: 'circles', label: 'Circles & Regions', icon: CircleDot, page: 'Circles', hint: 'Join local and interest-based communities' },
   { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
+  { id: 'affiliate', label: 'Affiliate Center', icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
   { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
