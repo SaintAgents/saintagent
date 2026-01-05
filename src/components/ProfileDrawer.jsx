@@ -215,7 +215,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white/80 dark:from-[#0a0a0a]/90 to-transparent" />
         </div>
 
         <div className="px-6 pb-6 pt-4 relative flex gap-4">
@@ -241,14 +241,14 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             </div>
             
             {/* Online Status Indicator */}
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100">
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100 dark:bg-[rgba(0,255,136,0.1)]">
               <CircleDot className={`w-3 h-3 ${statusColors[profile.status] || 'text-slate-400'}`} />
-              <span className="text-[10px] font-medium text-slate-600 capitalize">{profile.status || 'offline'}</span>
+              <span className="text-[10px] font-medium text-slate-600 dark:text-[#00ff88] capitalize">{profile.status || 'offline'}</span>
             </div>
             
             {/* Leader Badge */}
             {profile.leader_tier === 'verified144k' && (
-              <Badge className="bg-amber-100 text-amber-700 text-[10px] px-2 py-0.5">
+              <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] px-2 py-0.5">
                 <Crown className="w-3 h-3 mr-1" />
                 144K
               </Badge>
@@ -257,7 +257,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {/* Photo Gallery Icon */}
             {(profile.gallery_images?.length > 0 || profile.avatar_url) && (
               <button 
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors"
+                className="p-1.5 rounded-lg bg-slate-100 dark:bg-[rgba(0,255,136,0.1)] hover:bg-slate-200 dark:hover:bg-[rgba(0,255,136,0.2)] transition-colors"
                 onClick={() => {
                   const event = new CustomEvent('openPhotoViewer', { 
                     detail: { images: [profile.avatar_url, ...(profile.gallery_images || [])].filter(Boolean) } 
@@ -266,7 +266,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                 }}
                 title="View photos"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-500 dark:text-[#00ff88]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
                   <circle cx="9" cy="9" r="2"/>
                   <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
@@ -279,10 +279,10 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           <div className="flex-1 min-w-0">
             {/* Name & Handle */}
             <div className="mb-4">
-              <h2 className="text-xl font-bold text-slate-900">{profile.display_name}</h2>
-              <p className="text-slate-500">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{profile.display_name}</h2>
+              <p className="text-slate-500 dark:text-[#00d4ff]">@{profile.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               {profile.last_seen_at && (
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 dark:text-[#00ff88]/70 mt-1">
                   Last online {formatDistanceToNow(new Date(profile.last_seen_at), { addSuffix: true })}
                 </p>
               )}
@@ -292,11 +292,11 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {!isOwnProfile && (
               <div className="space-y-3 mb-6">
                 <div className="grid grid-cols-2 gap-3">
-                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
+                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 dark:bg-[rgba(0,255,136,0.2)] dark:hover:bg-[rgba(0,255,136,0.3)] dark:text-[#00ff88] dark:border dark:border-[#00ff88] rounded-xl gap-2">
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
-                  <Button onClick={handleBook} variant="outline" className="bg-purple-100 text-neutral-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2">
+                  <Button onClick={handleBook} variant="outline" className="bg-purple-100 dark:bg-[rgba(0,255,136,0.1)] text-neutral-950 dark:text-[#00ff88] px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input dark:border-[#00ff88]/50 shadow-sm hover:bg-accent dark:hover:bg-[rgba(0,255,136,0.2)] h-9 gap-2">
                     <Calendar className="w-4 h-4" />
                     Book
                   </Button>
