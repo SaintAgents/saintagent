@@ -703,7 +703,62 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] [role="menu"][data-state="open"] {
           animation: glitchSlideIn 0.25s ease-out forwards !important;
         }
-      `}</style>
+
+        /* Side Panel Handle - Dark/Hacker Theme */
+        [data-theme='dark'] [data-side-panel-handle] > div,
+        [data-theme='hacker'] [data-side-panel-handle] > div {
+          background: #050505 !important;
+          background-image: none !important;
+          border: 1px solid var(--neon-green, #00ff88) !important;
+          border-right: none !important;
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.05) !important;
+        }
+
+        [data-theme='dark'] [data-side-panel-handle]:hover > div,
+        [data-theme='hacker'] [data-side-panel-handle]:hover > div {
+          box-shadow: 0 0 25px rgba(0, 255, 136, 0.5), inset 0 0 30px rgba(0, 255, 136, 0.1) !important;
+        }
+
+        [data-theme='dark'] [data-side-panel-handle] .dot-glow,
+        [data-theme='hacker'] [data-side-panel-handle] .dot-glow {
+          background-color: rgba(0, 255, 136, 0.5) !important;
+          box-shadow: 0 0 6px rgba(0, 255, 136, 0.8);
+        }
+
+        [data-theme='dark'] [data-side-panel-handle]:hover .dot-glow,
+        [data-theme='hacker'] [data-side-panel-handle]:hover .dot-glow {
+          background-color: var(--neon-green, #00ff88) !important;
+          box-shadow: 0 0 10px var(--neon-green, #00ff88);
+        }
+
+        [data-theme='dark'] [data-side-panel-handle] .icon-glow,
+        [data-theme='hacker'] [data-side-panel-handle] .icon-glow {
+          color: rgba(0, 255, 136, 0.7) !important;
+          filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.6));
+        }
+
+        [data-theme='dark'] [data-side-panel-handle]:hover .icon-glow,
+        [data-theme='hacker'] [data-side-panel-handle]:hover .icon-glow {
+          color: var(--neon-green, #00ff88) !important;
+          filter: drop-shadow(0 0 8px var(--neon-green, #00ff88));
+        }
+
+        /* Hacker theme handle - pure green on black */
+        [data-theme='hacker'] [data-side-panel-handle] > div {
+          border-color: #00ff00 !important;
+          box-shadow: 0 0 15px rgba(0, 255, 0, 0.4), inset 0 0 20px rgba(0, 255, 0, 0.08) !important;
+        }
+
+        [data-theme='hacker'] [data-side-panel-handle] .dot-glow {
+          background-color: rgba(0, 255, 0, 0.5) !important;
+          box-shadow: 0 0 6px rgba(0, 255, 0, 0.8);
+        }
+
+        [data-theme='hacker'] [data-side-panel-handle] .icon-glow {
+          color: rgba(0, 255, 0, 0.7) !important;
+          filter: drop-shadow(0 0 4px rgba(0, 255, 0, 0.6));
+        }
+        `}</style>
       <style>{`
         /* Light theme background for Command Deck */
         [data-theme='light'] main[data-page='CommandDeck'] {
