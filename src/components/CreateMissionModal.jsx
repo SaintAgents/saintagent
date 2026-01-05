@@ -216,9 +216,9 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <Label>GGG Reward (optional)</Label>
+              <Label>GGG Reward</Label>
               <Input
                 type="number"
                 step="0.01"
@@ -239,15 +239,15 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
                   const g = Number(formData.reward_ggg) || 0;
                   const usd = g * GGG_TO_USD;
                   if (canOverrideCap) {
-                    return `≈ $${usd.toFixed(2)} (no cap - override enabled)`;
+                    return `≈ $${usd.toFixed(2)}`;
                   }
-                  return `≈ $${Math.min(usd, effectiveMaxUSD).toFixed(2)} (capped at $${configuredCapUSD.toFixed(2)})`;
+                  return `≈ $${Math.min(usd, effectiveMaxUSD).toFixed(2)}`;
                 })()}
               </div>
             </div>
 
             <div>
-              <Label>Rank Points (optional)</Label>
+              <Label>Rank Points</Label>
               <Input
                 type="number"
                 value={formData.reward_rank_points}
@@ -255,7 +255,69 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
                 placeholder="0"
               />
             </div>
+
+            <div>
+              <Label>Boost Multiplier</Label>
+              <Input
+                type="number"
+                step="0.5"
+                value={formData.reward_boost}
+                onChange={(e) => setFormData({ ...formData, reward_boost: e.target.value })}
+                placeholder="0"
+              />
+            </div>
           </div>
+
+          {/* Roles Needed */}
+          {formData.roles_needed?.length > 0 && (
+            <div>
+              <Label>Roles Needed</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {formData.roles_needed.map((role, i) => (
+                  <Badge key={i} variant="secondary" className="gap-1">
+                    {role}
+                    <button
+                      type="button"
+                      onClick={() => setFormData({
+                        ...formData,
+                        roles_needed: formData.roles_needed.filter((_, idx) => idx !== i)
+                      })}
+                      className="ml-1 hover:text-red-500"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Tasks Preview */}
+          {formData.tasks?.length > 0 && (
+            <div>
+              <Label>Tasks ({formData.tasks.length})</Label>
+              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                {formData.tasks.map((task, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm text-slate-600 bg-slate-50 p-2 rounded">
+                    <span className="w-5 h-5 rounded-full bg-violet-100 text-violet-600 text-xs flex items-center justify-center shrink-0">
+                      {i + 1}
+                    </span>
+                    <span className="flex-1">{task}</span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({
+                        ...formData,
+                        tasks: formData.tasks.filter((_, idx) => idx !== i)
+                      })}
+                      className="text-slate-400 hover:text-red-500"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
         </form>
         
