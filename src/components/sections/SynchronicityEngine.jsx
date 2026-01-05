@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
 import MatchCard from '@/components/hud/MatchCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function SynchronicityEngine({ profile, matchTab, setMatchTab, filteredMatches = [], matches = [], onMatchAction }) {
   return (
     <div>
-      <div className="mb-4">
+      <div className="flex items-center justify-between mb-4">
         <AIMatchGenerator profile={profile} />
+        <HelpHint content="The Synchronicity Engine uses AI to find meaningful connections based on your profile, skills, intentions, and spiritual alignment. Matches are refreshed regularly and scored on multiple dimensions including intent alignment, skill complementarity, and timing." />
       </div>
       <Tabs value={matchTab} onValueChange={setMatchTab} className="w-full">
         <TabsList className="w-full grid grid-cols-5 mb-4">

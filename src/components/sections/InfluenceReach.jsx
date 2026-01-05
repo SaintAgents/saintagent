@@ -1,10 +1,14 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Flame } from "lucide-react";
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function InfluenceReach({ profile, onBoost }) {
   return (
     <div className="space-y-4">
+      <div className="flex justify-end -mt-2 mb-2">
+        <HelpHint content="Influence & Reach tracks your social impact on the platform. Followers are members who follow you, Following is who you follow, and Reach is a calculated score based on your activity and engagement. Boost your reach by spending GGG to amplify your content." />
+      </div>
       <div className="grid grid-cols-3 gap-3">
         <div className="text-center p-3 rounded-xl bg-slate-50">
           <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>

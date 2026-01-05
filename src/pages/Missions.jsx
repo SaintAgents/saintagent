@@ -18,6 +18,7 @@ import {
 import MissionCard from '@/components/hud/MissionCard';
 import CreateMissionModal from '@/components/CreateMissionModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function Missions() {
   const [tab, setTab] = useState('active');
@@ -60,6 +61,7 @@ export default function Missions() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Target className="w-6 h-6 text-amber-500" />
               Missions & Quests
+              <HelpHint content="Missions are collaborative tasks you can join to earn GGG, rank points, and boosts. Platform missions are system-created, while Circle, Region, and Leader missions come from the community. Complete tasks, fulfill roles, and collaborate with others. Mission rewards are capped at $55 equivalent." />
             </h1>
             <p className="text-slate-500 mt-1">Join collaborative missions to earn GGG, rank points, and boosts (mission rewards capped at $55).</p>
           </div>

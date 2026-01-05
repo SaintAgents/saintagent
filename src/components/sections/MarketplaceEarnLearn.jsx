@@ -3,9 +3,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import ListingCard from '@/components/hud/ListingCard';
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function MarketplaceEarnLearn({ listings = [], onAction }) {
   return (
+    <div>
+      <div className="flex justify-end mb-2">
+        <HelpHint content="The Marketplace lets you offer your skills and services, request help from others, or browse available offerings. Create listings for mentorship, sessions, courses, or collaboration. Earn GGG by completing bookings." />
+      </div>
     <Tabs defaultValue="offers" className="w-full">
       <TabsList className="w-full grid grid-cols-3 mb-4">
         <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
@@ -47,5 +52,6 @@ export default function MarketplaceEarnLearn({ listings = [], onAction }) {
         ))}
       </TabsContent>
     </Tabs>
+    </div>
   );
 }

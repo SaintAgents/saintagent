@@ -1,10 +1,14 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Radio, ArrowRight, Calendar } from "lucide-react";
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function InboxSignals({ notifications = [] }) {
   return (
     <div className="space-y-3">
+      <div className="flex justify-end -mt-2 mb-2">
+        <HelpHint content="Inbox & Signals shows your notifications including match alerts, meeting requests, mission updates, messages, follows, GGG transactions, and rank changes. Click any notification to take action." />
+      </div>
       {notifications.length === 0 ? (
         <div className="text-center py-6">
           <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
