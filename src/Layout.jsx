@@ -260,11 +260,12 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
     }
   };
 
-  // Redirect unauthenticated users to login, then go to Command Deck
+  // Redirect unauthenticated users to login (skip for public pages)
     useEffect(() => {
-              if (currentUser === null && !PUBLIC_PAGES.includes(currentPageName)) {
-                // Don't redirect if we're still checking auth status (currentUser is undefined)
-                // Only redirect when we know for sure user is not logged in (currentUser is null)
+              // Skip redirect entirely for public pages
+              if (PUBLIC_PAGES.includes(currentPageName)) return;
+              
+              if (currentUser === null) {
                 base44.auth.redirectToLogin(createPageUrl('Onboarding'));
               }
             }, [currentUser, currentPageName]);
