@@ -97,13 +97,21 @@ export default function Matches() {
     }
   };
 
+  // Get dating profiles count
+  const { data: datingProfiles = [] } = useQuery({
+    queryKey: ['datingProfilesCount'],
+    queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true }, '-updated_date', 100)
+  });
+  const datingCount = datingProfiles.filter(p => p.user_id !== profile?.user_id).length;
+
   const tabCounts = {
     all: matches.length,
     person: matches.filter((m) => m.target_type === 'person').length,
     offer: matches.filter((m) => m.target_type === 'offer').length,
     mission: matches.filter((m) => m.target_type === 'mission').length,
     event: matches.filter((m) => m.target_type === 'event').length,
-    teacher: matches.filter((m) => m.target_type === 'teacher').length
+    teacher: matches.filter((m) => m.target_type === 'teacher').length,
+    dating: datingCount
   };
 
   return (
@@ -216,7 +224,7 @@ export default function Matches() {
             </TabsTrigger>
             <TabsTrigger value="dating" className="rounded-lg gap-2">
               <Heart className="w-4 h-4" />
-              Dating
+              Dating <span className="text-xs opacity-60">({tabCounts.dating})</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
