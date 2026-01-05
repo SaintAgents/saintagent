@@ -92,9 +92,9 @@ export default function MatchCard({ match, onAction }) {
 
   const TypeIcon = typeIcons[match.target_type] || Users;
 
-  // Fetch target profile for rank/trust data
+  // Fetch target profile for rank/trust data - always call hook unconditionally
   const { data: targetProfiles = [] } = useQuery({
-    queryKey: ['matchTargetProfile', match.target_id],
+    queryKey: ['matchTargetProfile', match.target_id || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: match.target_id }),
     enabled: !!match.target_id && match.target_type === 'person'
   });
