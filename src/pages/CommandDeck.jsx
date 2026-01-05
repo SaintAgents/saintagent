@@ -516,7 +516,7 @@ export default function CommandDeck() {
                       {profile?.display_name || currentUser?.full_name || 'User'}
                     </h2>
                     <div className="flex items-center gap-1">
-                      <p className="text-teal-200 text-sm capitalize">
+                      <p className="text-purple-500 text-sm capitalize">
                         {rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
                       </p>
                       <HelpHint
