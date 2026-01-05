@@ -132,8 +132,18 @@ export default function AffiliateCenter() {
     enabled: !!currentUser?.email
   });
 
+  // Use live domain instead of sandbox prefix
+  const getLiveUrl = () => {
+    const origin = window.location.origin;
+    // Replace sandbox prefix with live domain
+    if (origin.includes('sandbox.base44.app')) {
+      return origin.replace('sandbox.base44.app', 'base44.app');
+    }
+    return origin;
+  };
+
   const affiliateUrl = affiliateCode 
-    ? `${window.location.origin}?ref=${affiliateCode.code}`
+    ? `${getLiveUrl()}?ref=${affiliateCode.code}`
     : '';
 
   const offerUrl = selectedOffer
