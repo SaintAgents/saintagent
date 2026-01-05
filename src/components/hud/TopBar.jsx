@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,6 +67,22 @@ export default function TopBar({
   const [helpMode, setHelpMode] = useState(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+  const [isBoostActive, setIsBoostActive] = useState(false);
+  
+  // Listen for boost activation event
+  useEffect(() => {
+    const handleBoostActivated = () => {
+      setIsBoostActive(true);
+    };
+    
+    // Check if boost is already active from profile data
+    if (profile?.is_boosted || (profile?.boost_expires_at && new Date(profile.boost_expires_at) > new Date())) {
+      setIsBoostActive(true);
+    }
+    
+    window.addEventListener('boostActivated', handleBoostActivated);
+    return () => window.removeEventListener('boostActivated', handleBoostActivated);
+  }, [profile]);
 
   const setLanguage = (code) => {
     try {
@@ -220,14 +236,31 @@ export default function TopBar({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-10 px-2 gap-2 rounded-xl">
-                <Avatar className="w-8 h-8" data-user-id={profile?.user_id || currentUser?.email}>
-                  <AvatarImage src={profile?.avatar_url} />
-                  <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                    {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
+                <div className={cn(
+                  "relative",
+                  isBoostActive && "animate-pulse"
+                )}>
+                  {/* Glowing ring when boost is active */}
+                  {isBoostActive && (
+                    <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-400 opacity-75 blur-sm animate-spin-slow" style={{ animationDuration: '3s' }} />
+                  )}
+                  <Avatar className={cn(
+                    "w-8 h-8 relative",
+                    isBoostActive && "ring-2 ring-amber-400 ring-offset-2 ring-offset-white"
+                  )} data-user-id={profile?.user_id || currentUser?.email}>
+                    <AvatarImage src={profile?.avatar_url} />
+                    <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                      {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
 
-                {profile?.leader_tier === 'verified144k' && (
+                {isBoostActive && (
+                  <Badge className="bg-gradient-to-r from-amber-400 to-yellow-400 text-white text-[10px] px-1.5 animate-pulse">
+                    BOOSTED
+                  </Badge>
+                )}
+                {profile?.leader_tier === 'verified144k' && !isBoostActive && (
                   <Badge className="bg-amber-100 text-amber-700 text-xs">144K</Badge>
                 )}
               </Button>
