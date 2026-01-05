@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,8 @@ import {
 import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
+import MissionDetailModal from '@/components/missions/MissionDetailModal';
+import MiniProfile from '@/components/profile/MiniProfile';
 
 // Futuristic Ultranet-themed mission images by type
 const MISSION_IMAGES = {
@@ -30,6 +32,7 @@ const MISSION_IMAGES = {
 };
 
 export default function MissionCard({ mission, onAction, variant = "default" }) {
+  const [detailOpen, setDetailOpen] = useState(false);
   const completedTasks = mission.tasks?.filter((t) => t.completed)?.length || 0;
   const totalTasks = mission.tasks?.length || 0;
   const progressPercent = totalTasks > 0 ? completedTasks / totalTasks * 100 : 0;
@@ -71,7 +74,11 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
   const missionImage = mission.image_url || MISSION_IMAGES[mission.mission_type] || MISSION_IMAGES.default;
 
   return (
-    <div className="mission-card bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.3)] overflow-hidden hover:shadow-lg transition-all duration-300">
+    <>
+    <div 
+      className="mission-card bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.3)] overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+      onClick={() => setDetailOpen(true)}
+    >
       {/* Always show image */}
       <div className="relative h-40 bg-gradient-to-br from-violet-500 to-purple-600">
         <img
@@ -153,11 +160,24 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
           </div>
         </div>
 
+        {/* Creator */}
+        {mission.creator_name && (
+          <div className="flex items-center gap-2 mb-4 pt-3 border-t border-slate-100">
+            <MiniProfile
+              userId={mission.creator_id}
+              name={mission.creator_name}
+              size={28}
+              showRankBadge={false}
+              showTrustBadge={false}
+              showReachBadge={false}
+            />
+          </div>
+        )}
+
         <div className="flex items-center gap-2">
           <Button
             className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
-            onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}>
-
+            onClick={(e) => { e.stopPropagation(); setDetailOpen(true); }}>
             <Target className="w-4 h-4 mr-1.5" />
             View Mission
           </Button>
@@ -165,12 +185,13 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
             variant="outline"
             size="icon"
             className="shrink-0"
-            onClick={() => onAction?.('share', mission)}>
-
+            onClick={(e) => { e.stopPropagation(); onAction?.('share', mission); }}>
             <Share2 className="w-4 h-4" />
           </Button>
         </div>
       </div>
-    </div>);
-
+    </div>
+    <MissionDetailModal mission={mission} open={detailOpen} onClose={() => setDetailOpen(false)} />
+    </>
+  );
 }
