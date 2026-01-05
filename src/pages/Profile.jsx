@@ -76,6 +76,10 @@ export default function Profile() {
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const queryClient = useQueryClient();
 
+  // Check for ?id= URL parameter to view another user's profile
+  const urlParams = new URLSearchParams(window.location.search);
+  const viewingUserId = urlParams.get('id');
+
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
@@ -83,12 +87,21 @@ export default function Profile() {
     }
   });
 
+  // If viewing another user's profile via ?id=, fetch that user's profile
+  // Otherwise fetch the current user's own profile
+  const targetUserId = viewingUserId || currentUser?.email;
+  const isOwnProfile = !viewingUserId || viewingUserId === currentUser?.email;
+
   const { data: profiles } = useQuery({
-    queryKey: ['userProfile'],
+    queryKey: ['userProfile', targetUserId],
     queryFn: async () => {
-              const user = await base44.auth.me();
-              return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
-            }
+      if (viewingUserId) {
+        return base44.entities.UserProfile.filter({ user_id: viewingUserId }, '-updated_date', 1);
+      }
+      const user = await base44.auth.me();
+      return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
+    },
+    enabled: !!targetUserId
   });
   const profile = profiles?.[0];
 
