@@ -28,7 +28,8 @@ import {
   Activity,
   List,
   Video,
-  Mic } from
+  Mic,
+  ExternalLink } from
   "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -68,6 +69,8 @@ export default function SidePanel({
   const [matchesPopupOpen, setMatchesPopupOpen] = useState(false);
   const [helpPopupOpen, setHelpPopupOpen] = useState(false);
   const [feedPopupOpen, setFeedPopupOpen] = useState(false);
+  const [onlinePopupOpen, setOnlinePopupOpen] = useState(false);
+  const [usersPopupOpen, setUsersPopupOpen] = useState(false);
 
   // Docking & Dragging
   const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
@@ -328,6 +331,34 @@ export default function SidePanel({
   const rankProgress = walletAvailable;
   const nextRankAt = 100;
 
+  // Fetch total users and online users (realtime polling every 10s)
+  const { data: allUserProfiles = [] } = useQuery({
+    queryKey: ['allUserProfilesCount'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
+    refetchInterval: 10000
+  });
+
+  const totalUsers = allUserProfiles.length;
+  const onlineUsers = allUserProfiles.filter(u => {
+    if (!u.last_seen_at) return false;
+    const lastSeen = new Date(u.last_seen_at);
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    return lastSeen > fiveMinutesAgo;
+  }).length;
+
+  // Region breakdown
+  const regionCounts = React.useMemo(() => {
+    const counts = { 'North America': 0, 'Europe': 0, 'Asia': 0, 'Other': 0 };
+    allUserProfiles.forEach(u => {
+      const region = u.region || '';
+      if (region.includes('America') || region.includes('US') || region.includes('Canada')) counts['North America']++;
+      else if (region.includes('Europe') || region.includes('UK') || region.includes('Germany') || region.includes('France')) counts['Europe']++;
+      else if (region.includes('Asia') || region.includes('India') || region.includes('China') || region.includes('Japan')) counts['Asia']++;
+      else counts['Other']++;
+    });
+    return counts;
+  }, [allUserProfiles]);
+
   // Seed demo data once for Mathues
   React.useEffect(() => {
     (async () => {
@@ -451,39 +482,40 @@ export default function SidePanel({
             </div>
           </CollapsibleCard>
 
-          <CollapsibleCard title="Online Now" icon={Users}>
+          <CollapsibleCard title="Online Now" icon={Users} onPopout={() => setOnlinePopupOpen(true)}>
             <div className="p-4 rounded-xl bg-slate-50 border">
               <p className="text-xs text-slate-500 mb-1">Online Now</p>
               <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                342
+                {onlineUsers}
               </p>
+              <p className="text-xs text-slate-400 mt-1">Updates every 10s</p>
             </div>
           </CollapsibleCard>
 
-          <CollapsibleCard title="Users & Regions" icon={Users}>
+          <CollapsibleCard title="Users & Regions" icon={Users} onPopout={() => setUsersPopupOpen(true)}>
             <div className="p-4 rounded-xl bg-white border border-slate-200">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-slate-500 mb-1">Total Users</p>
-                  <p className="text-2xl font-bold text-slate-900">1,247</p>
+                  <p className="text-2xl font-bold text-slate-900">{totalUsers}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-right">
                     <p className="text-xs text-slate-500">North America</p>
-                    <p className="text-sm font-semibold text-slate-900">487</p>
+                    <p className="text-sm font-semibold text-slate-900">{regionCounts['North America']}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-slate-500">Europe</p>
-                    <p className="text-sm font-semibold text-slate-900">312</p>
+                    <p className="text-sm font-semibold text-slate-900">{regionCounts['Europe']}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-slate-500">Asia</p>
-                    <p className="text-sm font-semibold text-slate-900">289</p>
+                    <p className="text-sm font-semibold text-slate-900">{regionCounts['Asia']}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-slate-500">Other</p>
-                    <p className="text-sm font-semibold text-slate-900">159</p>
+                    <p className="text-sm font-semibold text-slate-900">{regionCounts['Other']}</p>
                   </div>
                 </div>
               </div>
@@ -979,6 +1011,49 @@ export default function SidePanel({
             </div>
           </div>
         </FloatingPanel>
+          }
+
+      {onlinePopupOpen &&
+          <FloatingPanel title="Online Now" onClose={() => setOnlinePopupOpen(false)}>
+            <div className="p-4 rounded-xl bg-slate-50 border">
+              <p className="text-xs text-slate-500 mb-1">Currently Online</p>
+              <p className="text-3xl font-bold text-emerald-600 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+                {onlineUsers}
+              </p>
+              <p className="text-sm text-slate-500 mt-2">out of {totalUsers} total users</p>
+              <p className="text-xs text-slate-400 mt-1">Updates every 10 seconds</p>
+            </div>
+          </FloatingPanel>
+          }
+
+      {usersPopupOpen &&
+          <FloatingPanel title="Users & Regions" onClose={() => setUsersPopupOpen(false)}>
+            <div className="p-4 rounded-xl bg-white border border-slate-200 space-y-4">
+              <div>
+                <p className="text-xs text-slate-500 mb-1">Total Users</p>
+                <p className="text-3xl font-bold text-slate-900">{totalUsers}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">North America</p>
+                  <p className="text-xl font-semibold text-slate-900">{regionCounts['North America']}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Europe</p>
+                  <p className="text-xl font-semibold text-slate-900">{regionCounts['Europe']}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Asia</p>
+                  <p className="text-xl font-semibold text-slate-900">{regionCounts['Asia']}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Other</p>
+                  <p className="text-xl font-semibold text-slate-900">{regionCounts['Other']}</p>
+                </div>
+              </div>
+            </div>
+          </FloatingPanel>
           }
 
       {feedPopupOpen &&
