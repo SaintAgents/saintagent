@@ -509,8 +509,8 @@ export default function AffiliateCenter() {
                     <span className="text-sm font-bold text-violet-600">1</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Share Your Link</p>
-                    <p className="text-xs">Send to people who'd benefit</p>
+                    <p className="text-sm font-medium text-slate-900">Share Your Link</p>
+                    <p className="text-xs text-slate-600">Send to people who'd benefit</p>
                   </div>
                 </div>
 
@@ -519,8 +519,8 @@ export default function AffiliateCenter() {
                     <span className="text-sm font-bold text-violet-600">2</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">They Sign Up</p>
-                    <p className="text-xs">Create account & complete onboarding</p>
+                    <p className="text-sm font-medium text-slate-900">They Sign Up</p>
+                    <p className="text-xs text-slate-600">Create account & complete onboarding</p>
                   </div>
                 </div>
 
@@ -529,8 +529,8 @@ export default function AffiliateCenter() {
                     <span className="text-sm font-bold text-violet-600">3</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">First Paid Action</p>
-                    <p className="text-xs">Booking, event, or mission</p>
+                    <p className="text-sm font-medium text-slate-900">First Paid Action</p>
+                    <p className="text-xs text-slate-600">Booking, event, or mission</p>
                   </div>
                 </div>
 
@@ -539,8 +539,8 @@ export default function AffiliateCenter() {
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">You Earn 0.25 GGG</p>
-                    <p className="text-xs">Worth $36.25</p>
+                    <p className="text-sm font-medium text-slate-900">You Earn 0.25 GGG</p>
+                    <p className="text-xs text-slate-600">Worth $36.25</p>
                   </div>
                 </div>
               </CardContent>
