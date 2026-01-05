@@ -217,10 +217,9 @@ export default function AffiliateCenter() {
     <div className="p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Affiliate Center</h1>
-          <p className="text-slate-500">
+          <h1 className="text-3xl font-bold mb-2 text-slate-900">Affiliate Center</h1>
+          <p className="text-slate-600">
             Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
           </p>
         </div>
@@ -234,7 +233,7 @@ export default function AffiliateCenter() {
                   <currentTier.icon className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-slate-400">Your Affiliate Tier</p>
+                  <p className="text-xs uppercase tracking-wide text-slate-500">Your Affiliate Tier</p>
                   <h2 className={cn("text-2xl font-bold", currentTier.textColor)}>{currentTier.name} Affiliate</h2>
                   <p className="text-sm">
                     Earning <span className="font-semibold text-emerald-600">{currentTier.commission} GGG</span> per referral (${(currentTier.commission * 145).toFixed(2)})
@@ -245,11 +244,11 @@ export default function AffiliateCenter() {
               {nextTier && (
                 <div className="flex-1 max-w-xs">
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-slate-500">{stats.paid} paid referrals</span>
+                    <span className="text-slate-600">{stats.paid} paid referrals</span>
                     <span className={nextTier.textColor}>{nextTier.name} at {nextTier.minPaid}</span>
                   </div>
                   <Progress value={progressToNext} className="h-2" />
-                  <p className="text-xs mt-1 text-slate-500">
+                  <p className="text-xs mt-1 text-slate-600">
                     {nextTier.minPaid - stats.paid} more to unlock {nextTier.name}
                   </p>
                 </div>
@@ -444,10 +443,10 @@ export default function AffiliateCenter() {
                           className="flex items-center justify-between p-3 rounded-lg bg-slate-50"
                         >
                           <div>
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium text-slate-900">
                               {ref.referred_user_id}
                             </p>
-                            <p className="text-xs">
+                            <p className="text-xs text-slate-600">
                               {ref.status === 'pending' ? 'Signed up' : 'Onboarding complete'}
                             </p>
                           </div>
@@ -465,7 +464,7 @@ export default function AffiliateCenter() {
                     {paidReferrals.length === 0 ? (
                       <div className="text-center py-8">
                         <DollarSign className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                        <p className="text-sm text-slate-500">No paid referrals yet</p>
+                        <p className="text-sm text-slate-600">No paid referrals yet</p>
                       </div>
                     ) : (
                       paidReferrals.map((ref) => (
@@ -474,10 +473,10 @@ export default function AffiliateCenter() {
                           className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200"
                         >
                           <div>
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium text-slate-900">
                               {ref.referred_user_id}
                             </p>
-                            <p className="text-xs">
+                            <p className="text-xs text-slate-600">
                               {ref.qualifying_action}
                             </p>
                           </div>
@@ -510,8 +509,8 @@ export default function AffiliateCenter() {
                     <span className="text-sm font-bold text-violet-600">1</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-700">Share Your Link</p>
-                    <p className="text-xs text-slate-500">Send to people who'd benefit</p>
+                    <p className="text-sm font-medium">Share Your Link</p>
+                    <p className="text-xs">Send to people who'd benefit</p>
                   </div>
                 </div>
 
@@ -520,8 +519,8 @@ export default function AffiliateCenter() {
                     <span className="text-sm font-bold text-violet-600">2</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-700">They Sign Up</p>
-                    <p className="text-xs text-slate-500">Create account & complete onboarding</p>
+                    <p className="text-sm font-medium">They Sign Up</p>
+                    <p className="text-xs">Create account & complete onboarding</p>
                   </div>
                 </div>
 
@@ -530,8 +529,8 @@ export default function AffiliateCenter() {
                     <span className="text-sm font-bold text-violet-600">3</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-700">First Paid Action</p>
-                    <p className="text-xs text-slate-500">Booking, event, or mission</p>
+                    <p className="text-sm font-medium">First Paid Action</p>
+                    <p className="text-xs">Booking, event, or mission</p>
                   </div>
                 </div>
 
@@ -540,8 +539,8 @@ export default function AffiliateCenter() {
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-700">You Earn 0.25 GGG</p>
-                    <p className="text-xs text-slate-500">Worth $36.25</p>
+                    <p className="text-sm font-medium">You Earn 0.25 GGG</p>
+                    <p className="text-xs">Worth $36.25</p>
                   </div>
                 </div>
               </CardContent>
@@ -632,7 +631,7 @@ export default function AffiliateCenter() {
                 })}
                 
                 <div className="pt-2 border-t border-slate-100">
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-500">
                     <Zap className="w-3 h-3 inline mr-1 text-amber-500" />
                     Referrals also boost your <span className="font-medium">Connector</span> rank and <span className="font-medium">Reach</span> score
                   </p>
