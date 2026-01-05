@@ -56,6 +56,13 @@ export default function Profiles() {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'network' | 'dating'
   const [rpRange, setRpRange] = useState([0, 10000]);
   const [skillFilter, setSkillFilter] = useState('');
+  // Advanced mystical/spiritual filters
+  const [astroFilter, setAstroFilter] = useState('all');
+  const [humanDesignFilter, setHumanDesignFilter] = useState('all');
+  const [enneagramFilter, setEnneagramFilter] = useState('all');
+  const [mbtiFilter, setMbtiFilter] = useState('all');
+  const [practiceFilter, setPracticeFilter] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('');
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ['allProfiles'],
@@ -179,6 +186,41 @@ export default function Profiles() {
       );
     }
 
+    // Astrological sign filter
+    if (astroFilter !== 'all') {
+      result = result.filter((p) => p.astrological_sign?.toLowerCase() === astroFilter.toLowerCase());
+    }
+
+    // Human Design filter
+    if (humanDesignFilter !== 'all') {
+      result = result.filter((p) => p.human_design_type === humanDesignFilter);
+    }
+
+    // Enneagram filter
+    if (enneagramFilter !== 'all') {
+      result = result.filter((p) => p.enneagram_type === enneagramFilter);
+    }
+
+    // MBTI filter
+    if (mbtiFilter !== 'all') {
+      result = result.filter((p) => p.mbti_type?.toUpperCase() === mbtiFilter.toUpperCase());
+    }
+
+    // Spiritual practice filter
+    if (practiceFilter !== 'all') {
+      result = result.filter((p) => 
+        (p.spiritual_practices || []).includes(practiceFilter)
+      );
+    }
+
+    // Location keyword filter
+    if (locationFilter.trim()) {
+      const loc = locationFilter.toLowerCase();
+      result = result.filter((p) => 
+        p.location?.toLowerCase().includes(loc)
+      );
+    }
+
     // Sorting
     result.sort((a, b) => {
       switch (sortBy) {
@@ -203,13 +245,19 @@ export default function Profiles() {
     });
 
     return result;
-  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, currentProfile]);
+  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, astroFilter, humanDesignFilter, enneagramFilter, mbtiFilter, practiceFilter, locationFilter, currentProfile]);
 
   const activeFilterCount = [
     rankFilter !== 'all' ? 1 : 0,
     regionFilter !== 'all' ? 1 : 0,
     rpRange[0] > 0 || rpRange[1] < 10000 ? 1 : 0,
     skillFilter.trim() ? 1 : 0,
+    astroFilter !== 'all' ? 1 : 0,
+    humanDesignFilter !== 'all' ? 1 : 0,
+    enneagramFilter !== 'all' ? 1 : 0,
+    mbtiFilter !== 'all' ? 1 : 0,
+    practiceFilter !== 'all' ? 1 : 0,
+    locationFilter.trim() ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
   const clearFilters = () => {
@@ -218,6 +266,12 @@ export default function Profiles() {
     setSearchQuery('');
     setRpRange([0, 10000]);
     setSkillFilter('');
+    setAstroFilter('all');
+    setHumanDesignFilter('all');
+    setEnneagramFilter('all');
+    setMbtiFilter('all');
+    setPracticeFilter('all');
+    setLocationFilter('');
   };
 
   const handleTagClick = (tag) => {
@@ -455,6 +509,150 @@ export default function Profiles() {
                     onChange={(e) => setSkillFilter(e.target.value)}
                     className="w-32 h-9 text-sm"
                   />
+                </div>
+
+                {/* Location Filter */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Location:</span>
+                  <Input
+                    placeholder="e.g. Austin"
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    className="w-32 h-9 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Mystical/Spiritual Filters Row */}
+              <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <span className="text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-wider flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  Mystical Filters
+                </span>
+
+                {/* Astrological Sign */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Sign:</span>
+                  <Select value={astroFilter} onValueChange={setAstroFilter}>
+                    <SelectTrigger className="w-32 h-9 rounded-lg">
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Signs</SelectItem>
+                      <SelectItem value="aries">Aries</SelectItem>
+                      <SelectItem value="taurus">Taurus</SelectItem>
+                      <SelectItem value="gemini">Gemini</SelectItem>
+                      <SelectItem value="cancer">Cancer</SelectItem>
+                      <SelectItem value="leo">Leo</SelectItem>
+                      <SelectItem value="virgo">Virgo</SelectItem>
+                      <SelectItem value="libra">Libra</SelectItem>
+                      <SelectItem value="scorpio">Scorpio</SelectItem>
+                      <SelectItem value="sagittarius">Sagittarius</SelectItem>
+                      <SelectItem value="capricorn">Capricorn</SelectItem>
+                      <SelectItem value="aquarius">Aquarius</SelectItem>
+                      <SelectItem value="pisces">Pisces</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Human Design */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">HD:</span>
+                  <Select value={humanDesignFilter} onValueChange={setHumanDesignFilter}>
+                    <SelectTrigger className="w-40 h-9 rounded-lg">
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="generator">Generator</SelectItem>
+                      <SelectItem value="manifesting_generator">Manifesting Generator</SelectItem>
+                      <SelectItem value="projector">Projector</SelectItem>
+                      <SelectItem value="manifestor">Manifestor</SelectItem>
+                      <SelectItem value="reflector">Reflector</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Enneagram */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Enneagram:</span>
+                  <Select value={enneagramFilter} onValueChange={setEnneagramFilter}>
+                    <SelectTrigger className="w-24 h-9 rounded-lg">
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="1">Type 1</SelectItem>
+                      <SelectItem value="2">Type 2</SelectItem>
+                      <SelectItem value="3">Type 3</SelectItem>
+                      <SelectItem value="4">Type 4</SelectItem>
+                      <SelectItem value="5">Type 5</SelectItem>
+                      <SelectItem value="6">Type 6</SelectItem>
+                      <SelectItem value="7">Type 7</SelectItem>
+                      <SelectItem value="8">Type 8</SelectItem>
+                      <SelectItem value="9">Type 9</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* MBTI */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">MBTI:</span>
+                  <Select value={mbtiFilter} onValueChange={setMbtiFilter}>
+                    <SelectTrigger className="w-28 h-9 rounded-lg">
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="INTJ">INTJ</SelectItem>
+                      <SelectItem value="INTP">INTP</SelectItem>
+                      <SelectItem value="ENTJ">ENTJ</SelectItem>
+                      <SelectItem value="ENTP">ENTP</SelectItem>
+                      <SelectItem value="INFJ">INFJ</SelectItem>
+                      <SelectItem value="INFP">INFP</SelectItem>
+                      <SelectItem value="ENFJ">ENFJ</SelectItem>
+                      <SelectItem value="ENFP">ENFP</SelectItem>
+                      <SelectItem value="ISTJ">ISTJ</SelectItem>
+                      <SelectItem value="ISFJ">ISFJ</SelectItem>
+                      <SelectItem value="ESTJ">ESTJ</SelectItem>
+                      <SelectItem value="ESFJ">ESFJ</SelectItem>
+                      <SelectItem value="ISTP">ISTP</SelectItem>
+                      <SelectItem value="ISFP">ISFP</SelectItem>
+                      <SelectItem value="ESTP">ESTP</SelectItem>
+                      <SelectItem value="ESFP">ESFP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Spiritual Practice */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Practice:</span>
+                  <Select value={practiceFilter} onValueChange={setPracticeFilter}>
+                    <SelectTrigger className="w-36 h-9 rounded-lg">
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Practices</SelectItem>
+                      <SelectItem value="meditation">Meditation</SelectItem>
+                      <SelectItem value="yoga">Yoga</SelectItem>
+                      <SelectItem value="breathwork">Breathwork</SelectItem>
+                      <SelectItem value="prayer">Prayer</SelectItem>
+                      <SelectItem value="contemplative_silence">Contemplative Silence</SelectItem>
+                      <SelectItem value="energy_work">Energy Work</SelectItem>
+                      <SelectItem value="martial_arts_internal">Martial Arts (Internal)</SelectItem>
+                      <SelectItem value="shamanic_practice">Shamanic Practice</SelectItem>
+                      <SelectItem value="sound_mantra">Sound/Mantra</SelectItem>
+                      <SelectItem value="ritual_ceremony">Ritual/Ceremony</SelectItem>
+                      <SelectItem value="study_philosophy">Study/Philosophy</SelectItem>
+                      <SelectItem value="plant_medicine">Plant Medicine</SelectItem>
+                      <SelectItem value="fasting">Fasting</SelectItem>
+                      <SelectItem value="dream_work">Dream Work</SelectItem>
+                      <SelectItem value="channeling">Channeling</SelectItem>
+                      <SelectItem value="qigong">Qigong</SelectItem>
+                      <SelectItem value="tai_chi">Tai Chi</SelectItem>
+                      <SelectItem value="reiki">Reiki</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {activeFilterCount > 0 && (
