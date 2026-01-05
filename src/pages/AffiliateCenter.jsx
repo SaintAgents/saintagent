@@ -20,11 +20,15 @@ import {
   Star,
   Gift,
   Lock,
-  Zap
+  Zap,
+  Plus,
+  BarChart3
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
+import CreateCampaignModal from '@/components/affiliate/CreateCampaignModal';
+import CampaignAnalytics from '@/components/affiliate/CampaignAnalytics';
 
 // Affiliate Tier System
 const AFFILIATE_TIERS = [
