@@ -60,6 +60,26 @@ export default function SidePanel({
   const [audioPreview, setAudioPreview] = useState(null);
   const queryClient = useQueryClient();
 
+  // Persist collapsed state in localStorage
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem('sidePanelOpen');
+      if (saved !== null && onToggle) {
+        const shouldBeOpen = saved === 'true';
+        if (shouldBeOpen !== isOpen) {
+          onToggle();
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Save state when it changes
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('sidePanelOpen', String(isOpen));
+    } catch {}
+  }, [isOpen]);
+
   // Popout states for sections
   const [gggPopupOpen, setGggPopupOpen] = useState(false);
   const [gggAuditOpen, setGggAuditOpen] = useState(false);
