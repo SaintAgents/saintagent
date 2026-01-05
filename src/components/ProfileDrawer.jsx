@@ -488,54 +488,54 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           {/* Mystical Identifiers */}
           {(profile.mystical_identifier || profile.astrological_sign || profile.birth_card) &&
           <div className="mb-6">
-              <h3 className="font-semibold text-slate-900 mb-2">Mystical Profile</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Mystical Profile</h3>
               <div className="space-y-2 text-sm">
                 {profile.mystical_identifier &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Mystical ID:</span>
-                    <span className="font-medium">{profile.mystical_identifier}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Mystical ID:</span>
+                    <span className="font-medium dark:text-white">{profile.mystical_identifier}</span>
                   </div>
               }
                 {profile.astrological_sign &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Sun:</span>
-                    <span className="font-medium">{profile.astrological_sign}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Sun:</span>
+                    <span className="font-medium dark:text-white">{profile.astrological_sign}</span>
                   </div>
               }
                 {profile.rising_sign &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Rising:</span>
-                    <span className="font-medium">{profile.rising_sign}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Rising:</span>
+                    <span className="font-medium dark:text-white">{profile.rising_sign}</span>
                   </div>
               }
                 {profile.moon_sign &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Moon:</span>
-                    <span className="font-medium">{profile.moon_sign}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Moon:</span>
+                    <span className="font-medium dark:text-white">{profile.moon_sign}</span>
                   </div>
               }
                 {profile.numerology_life_path &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Life Path:</span>
-                    <span className="font-medium">{profile.numerology_life_path}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Life Path:</span>
+                    <span className="font-medium dark:text-white">{profile.numerology_life_path}</span>
                   </div>
               }
                 {profile.numerology_personality &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Personality:</span>
-                    <span className="font-medium">{profile.numerology_personality}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Personality:</span>
+                    <span className="font-medium dark:text-white">{profile.numerology_personality}</span>
                   </div>
               }
                 {profile.birth_card &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Birth Card:</span>
-                    <span className="font-medium">{profile.birth_card}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Birth Card:</span>
+                    <span className="font-medium dark:text-white">{profile.birth_card}</span>
                   </div>
               }
                 {profile.sun_card &&
               <div className="flex justify-between">
-                    <span className="text-slate-500">Sun Card:</span>
-                    <span className="font-medium">{profile.sun_card}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Sun Card:</span>
+                    <span className="font-medium dark:text-white">{profile.sun_card}</span>
                   </div>
               }
               </div>
