@@ -248,7 +248,7 @@ export default function AffiliateCenter() {
                     <span className={nextTier.textColor}>{nextTier.name} at {nextTier.minPaid}</span>
                   </div>
                   <Progress value={progressToNext} className="h-2" />
-                  <p className="text-xs mt-1 text-slate-500">
+                  <p className="text-xs mt-1 text-slate-600">
                     {nextTier.minPaid - stats.paid} more to unlock {nextTier.name}
                   </p>
                 </div>
