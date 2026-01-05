@@ -227,7 +227,7 @@ export default function Circles() {
                   {circle.interests?.length > 0 &&
                   <div className="flex flex-wrap gap-1 mb-3">
                       {circle.interests.slice(0, 3).map((int, i) =>
-                    <Badge key={i} variant="outline" className="text-xs">
+                    <Badge key={i} variant="outline" className="bg-fuchsia-300 text-foreground px-2.5 py-0.5 text-xs font-semibold rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                           {int}
                         </Badge>
                     )}
