@@ -119,7 +119,31 @@ export default function DatingMatchesPopup({ currentUser }) {
     enabled: !!currentUser?.email && isDatingOptedIn && datingProfiles.length > 0
   });
 
-  const otherProfiles = isDatingOptedIn ? datingProfiles.filter((p) => p.user_id !== currentUser?.email) : [];
+  // Get my dating profile preferences
+  const myProfile = myDatingProfile?.[0];
+  const myInterestedIn = myProfile?.interested_in || [];
+  const myGender = myProfile?.gender;
+
+  // Filter matches based on gender preferences (both ways)
+  const otherProfiles = isDatingOptedIn ? datingProfiles.filter((p) => {
+    if (p.user_id === currentUser?.email) return false;
+    
+    // Check if I'm interested in their gender
+    const theirGender = p.gender;
+    const theyMatch = !theirGender || myInterestedIn.length === 0 || myInterestedIn.includes('all') ||
+      (theirGender === 'woman' && myInterestedIn.includes('women')) ||
+      (theirGender === 'man' && myInterestedIn.includes('men')) ||
+      (theirGender === 'non_binary' && myInterestedIn.includes('non_binary'));
+    
+    // Check if they're interested in my gender
+    const theirInterestedIn = p.interested_in || [];
+    const iMatch = !myGender || theirInterestedIn.length === 0 || theirInterestedIn.includes('all') ||
+      (myGender === 'woman' && theirInterestedIn.includes('women')) ||
+      (myGender === 'man' && theirInterestedIn.includes('men')) ||
+      (myGender === 'non_binary' && theirInterestedIn.includes('non_binary'));
+    
+    return theyMatch && iMatch;
+  }) : [];
 
   // Enrich with user profile data and assign unique demo avatars
   const usedMaleIdx = new Set();
