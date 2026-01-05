@@ -8,6 +8,8 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
+import GlobalChatWidget from '@/components/community/GlobalChatWidget';
+import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
@@ -154,6 +156,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
     const i = setInterval(update, 60000);
     return () => clearInterval(i);
   }, [profile?.id]);
+
+  // Initialize live status tracking
+  useLiveStatus();
 
   // Fetch notifications
   const { data: notifications = [] } = useQuery({
@@ -551,6 +556,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
           onClose={() => setFloatingChat(null)}
         />
       )}
+
+      {/* Global Chat Widget */}
+      <GlobalChatWidget />
 
 
 
