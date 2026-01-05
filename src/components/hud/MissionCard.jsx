@@ -19,7 +19,6 @@ import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 import MissionDetailModal from '@/components/missions/MissionDetailModal';
-import MiniProfile from '@/components/profile/MiniProfile';
 
 // Futuristic Ultranet-themed mission images by type
 const MISSION_IMAGES = {
