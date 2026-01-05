@@ -29,7 +29,11 @@ export default function PlatformSettings() {
     marketplace_enabled: true,
     messages_enabled: true,
     synchronicity_engine_enabled: true,
+    mission_reward_cap_usd: 55,
+    mission_cap_override_emails: [],
   });
+
+  const [overrideEmailInput, setOverrideEmailInput] = React.useState('');
 
   React.useEffect(() => {
     if (current) setForm({ ...form, ...current });
@@ -105,6 +109,75 @@ export default function PlatformSettings() {
             <ToggleRow label="Marketplace Enabled" value={form.marketplace_enabled} onChange={(v) => handleChange('marketplace_enabled', v)} />
             <ToggleRow label="Messaging Enabled" value={form.messages_enabled} onChange={(v) => handleChange('messages_enabled', v)} />
             <ToggleRow label="Synchronicity Engine Enabled" value={form.synchronicity_engine_enabled} onChange={(v) => handleChange('synchronicity_engine_enabled', v)} />
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Mission Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Mission Reward Cap (USD)</Label>
+              <Input 
+                type="number" 
+                step="1"
+                value={form.mission_reward_cap_usd} 
+                onChange={(e) => handleChange('mission_reward_cap_usd', parseFloat(e.target.value) || 55)} 
+                placeholder="55"
+              />
+              <p className="text-xs text-slate-500 mt-1">Maximum USD reward allowed per mission</p>
+            </div>
+            <div>
+              <Label>Users Who Can Override Cap</Label>
+              <div className="flex gap-2 mt-1">
+                <Input 
+                  value={overrideEmailInput} 
+                  onChange={(e) => setOverrideEmailInput(e.target.value)} 
+                  placeholder="user@email.com"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && overrideEmailInput.trim()) {
+                      e.preventDefault();
+                      const emails = form.mission_cap_override_emails || [];
+                      if (!emails.includes(overrideEmailInput.trim())) {
+                        handleChange('mission_cap_override_emails', [...emails, overrideEmailInput.trim()]);
+                      }
+                      setOverrideEmailInput('');
+                    }
+                  }}
+                />
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => {
+                    if (overrideEmailInput.trim()) {
+                      const emails = form.mission_cap_override_emails || [];
+                      if (!emails.includes(overrideEmailInput.trim())) {
+                        handleChange('mission_cap_override_emails', [...emails, overrideEmailInput.trim()]);
+                      }
+                      setOverrideEmailInput('');
+                    }
+                  }}
+                >
+                  Add
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {(form.mission_cap_override_emails || []).map((email, i) => (
+                  <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-violet-100 text-violet-700 text-xs">
+                    {email}
+                    <button 
+                      type="button"
+                      onClick={() => handleChange('mission_cap_override_emails', (form.mission_cap_override_emails || []).filter((_, idx) => idx !== i))}
+                      className="hover:text-violet-900"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-1">These users can create missions without reward limits</p>
+            </div>
           </CardContent>
         </Card>
 

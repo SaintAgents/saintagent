@@ -22,8 +22,8 @@ export default function CreateMissionModal({ open, onClose }) {
     image_url: ''
   });
 
-  const MAX_USD = 55;
-  const MAX_GGG = MAX_USD / GGG_TO_USD;
+  const DEFAULT_MAX_USD = 55;
+  const DEFAULT_MAX_GGG = DEFAULT_MAX_USD / GGG_TO_USD;
 
   const [uploading, setUploading] = useState(false);
   const [localFile, setLocalFile] = useState(null);
@@ -44,6 +44,19 @@ export default function CreateMissionModal({ open, onClose }) {
   });
   const profile = profiles?.[0];
 
+  // Fetch platform settings for mission cap
+  const { data: platformSettings = [] } = useQuery({
+    queryKey: ['platformSettings'],
+    queryFn: () => base44.entities.PlatformSetting.list()
+  });
+  const settings = platformSettings[0];
+  
+  // Check if user can override cap
+  const canOverrideCap = user?.role === 'admin' || (settings?.mission_cap_override_emails || []).includes(user?.email);
+  const configuredCapUSD = settings?.mission_reward_cap_usd ?? 55;
+  const effectiveMaxUSD = canOverrideCap ? Infinity : configuredCapUSD;
+  const effectiveMaxGGG = canOverrideCap ? Infinity : (effectiveMaxUSD / GGG_TO_USD);
+
   const createMutation = useMutation({
     mutationFn: async (data) => {
       return base44.entities.Mission.create({
@@ -51,7 +64,7 @@ export default function CreateMissionModal({ open, onClose }) {
         creator_id: user.email,
         creator_name: profile?.display_name || user.full_name,
         status: 'active',
-        reward_ggg: Math.min(parseFloat(data.reward_ggg) || 0, MAX_GGG),
+        reward_ggg: canOverrideCap ? (parseFloat(data.reward_ggg) || 0) : Math.min(parseFloat(data.reward_ggg) || 0, effectiveMaxGGG),
         reward_rank_points: parseInt(data.reward_rank_points) || 0,
         max_participants: parseInt(data.max_participants) || null,
         participant_count: 0,
@@ -186,16 +199,23 @@ export default function CreateMissionModal({ open, onClose }) {
                 value={formData.reward_ggg}
                 onChange={(e) => {
                   const raw = parseFloat(e.target.value);
-                  const safe = isNaN(raw) ? '' : Math.min(raw, MAX_GGG);
-                  setFormData({ ...formData, reward_ggg: safe });
+                  if (canOverrideCap) {
+                    setFormData({ ...formData, reward_ggg: isNaN(raw) ? '' : raw });
+                  } else {
+                    const safe = isNaN(raw) ? '' : Math.min(raw, effectiveMaxGGG);
+                    setFormData({ ...formData, reward_ggg: safe });
+                  }
                 }}
                 placeholder="0.00"
               />
               <div className="mt-1 text-xs text-slate-500">
                 {(() => {
                   const g = Number(formData.reward_ggg) || 0;
-                  const usd = Math.min(g * GGG_TO_USD, MAX_USD);
-                  return `≈ $${usd.toFixed(2)} (capped at $${MAX_USD.toFixed(2)})`;
+                  const usd = g * GGG_TO_USD;
+                  if (canOverrideCap) {
+                    return `≈ $${usd.toFixed(2)} (no cap - override enabled)`;
+                  }
+                  return `≈ $${Math.min(usd, effectiveMaxUSD).toFixed(2)} (capped at $${configuredCapUSD.toFixed(2)})`;
                 })()}
               </div>
             </div>
