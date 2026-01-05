@@ -157,114 +157,92 @@ export default function RankedAvatar({
   const trustIconPx = Math.max(8, Math.round(trustPx * 0.55));
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
-        {/* Main Avatar with Rank Ring */}
-        <div
-          className="rounded-full"
-          style={{ padding: padPx, background: gradient }}
-        >
-          <div className="rounded-full bg-white p-1 relative">
-            <div className="w-full h-full rounded-full overflow-hidden">
-              {src ? (
-                <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
-                </div>
-              )}
-            </div>
+    <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
+      {/* Main Avatar with Rank Ring */}
+      <div
+        className="rounded-full"
+        style={{ padding: padPx, background: gradient }}
+      >
+        <div className="rounded-full bg-white p-1 relative">
+          <div className="w-full h-full rounded-full overflow-hidden">
+            {src ? (
+              <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Rank symbol top-left with Tooltip */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div 
-              className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow cursor-help z-20 hover:scale-110 transition-transform" 
-              style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="top" className="bg-slate-900 text-white text-xs px-3 py-2 max-w-[200px]">
-            <p className="font-semibold capitalize">{rpInfo?.title || rpRankCodeFinal}</p>
-            <p className="text-slate-300">{rpPointsFinal || 0} Rank Points</p>
-            {rpInfo?.nextTitle && (
-              <p className="text-slate-400 text-[10px] mt-1">
-                {rpInfo.nextMin - (rpPointsFinal || 0)} RP to {rpInfo.nextTitle}
-              </p>
-            )}
-          </TooltipContent>
-        </Tooltip>
-
-        {/* Status dot (bottom-left) with Tooltip */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div
-              className={`absolute -bottom-1 -left-1 rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
-              style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </TooltipTrigger>
-          <TooltipContent side="bottom" className="bg-slate-900 text-white text-xs px-3 py-2">
-            <p>Status: <span className="capitalize font-semibold">{statusFinal || 'online'}</span></p>
-          </TooltipContent>
-        </Tooltip>
-
-        {/* 144K Leader Badge with Tooltip */}
-        {leaderTierFinal === 'verified144k' && (
-          <div 
-            className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-            style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
-            onClick={(e) => e.stopPropagation()}
-            title="144K Sovereign Agent - Verified community node with leadership privileges"
-          >
-            <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
-          </div>
-        )}
-
-        {/* Trust Sigil (top-right, opposite of rank) - only show if not showing photo icon */}
-        {!showPhotoIcon && trustScoreFinal > 0 && (
-          <div 
-            className="absolute -top-1 -right-1 rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-            style={{ width: trustPx, height: trustPx, border: '2px solid white' }}
-            onClick={(e) => e.stopPropagation()}
-            title={`Trust Score: ${trustScoreFinal}% - Verified through community interactions`}
-          >
-            <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
-          </div>
-        )}
-
-        {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
-        {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              if (allImages.length > 0) {
-                setViewerOpen(true);
-              }
-            }}
-            className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
-            style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
-            title={`View Photos (${allImages.length})`}
-          >
-            <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
-          </button>
-        )}
-
-        {/* Photo Viewer Modal */}
-        {showPhotoIcon && (
-          <PhotoViewer
-            open={viewerOpen}
-            images={allImages}
-            startIndex={0}
-            onClose={() => setViewerOpen(false)}
-          />
-        )}
       </div>
-    </TooltipProvider>
+
+      {/* Rank symbol top-left */}
+      <div 
+        className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow cursor-help z-20 hover:scale-110 transition-transform" 
+        style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}
+        onClick={(e) => e.stopPropagation()}
+        title={`${rpInfo?.title || rpRankCodeFinal} • ${rpPointsFinal || 0} RP${rpInfo?.nextTitle ? ` • ${rpInfo.nextMin - (rpPointsFinal || 0)} to ${rpInfo.nextTitle}` : ''}`}
+      >
+        <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
+      </div>
+
+      {/* Status dot (bottom-left) */}
+      <div
+        className={`absolute -bottom-1 -left-1 rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+        style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+        onClick={(e) => e.stopPropagation()}
+        title={`Status: ${statusFinal || 'online'}`}
+      />
+
+      {/* 144K Leader Badge */}
+      {leaderTierFinal === 'verified144k' && (
+        <div 
+          className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+          style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+          onClick={(e) => e.stopPropagation()}
+          title="144K Sovereign Agent - Verified community node with leadership privileges"
+        >
+          <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
+        </div>
+      )}
+
+      {/* Trust Sigil (top-right, opposite of rank) - only show if not showing photo icon */}
+      {!showPhotoIcon && trustScoreFinal > 0 && (
+        <div 
+          className="absolute -top-1 -right-1 rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+          style={{ width: trustPx, height: trustPx, border: '2px solid white' }}
+          onClick={(e) => e.stopPropagation()}
+          title={`Trust Score: ${trustScoreFinal}% - Verified through community interactions`}
+        >
+          <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
+        </div>
+      )}
+
+      {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
+      {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            if (allImages.length > 0) {
+              setViewerOpen(true);
+            }
+          }}
+          className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
+          style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
+          title={`View Photos (${allImages.length})`}
+        >
+          <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
+        </button>
+      )}
+
+      {/* Photo Viewer Modal - always render to keep hooks consistent */}
+      <PhotoViewer
+        open={viewerOpen}
+        images={allImages}
+        startIndex={0}
+        onClose={() => setViewerOpen(false)}
+      />
+    </div>
   );
 }
