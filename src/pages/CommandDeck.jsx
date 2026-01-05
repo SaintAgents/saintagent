@@ -514,7 +514,7 @@ export default function CommandDeck() {
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-900">
+                    <h2 className="text-2xl font-bold text-white">
                       {profile?.display_name || currentUser?.full_name || 'User'}
                     </h2>
                     <div className="flex items-center gap-1">
