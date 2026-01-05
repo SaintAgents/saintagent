@@ -3,12 +3,14 @@ import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
+import CommandDeck from './pages/CommandDeck';
 import DailyOps from './pages/DailyOps';
 import EvaluationDocs from './pages/EvaluationDocs';
 import EvaluationSpec from './pages/EvaluationSpec';
 import EventDetail from './pages/EventDetail';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
+import Join from './pages/Join';
 import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
@@ -31,8 +33,6 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import CommandDeck from './pages/CommandDeck';
-import Join from './pages/Join';
 import __Layout from './Layout.jsx';
 
 
@@ -42,12 +42,14 @@ export const PAGES = {
     "AffiliateCenter": AffiliateCenter,
     "CRM": CRM,
     "Circles": Circles,
+    "CommandDeck": CommandDeck,
     "DailyOps": DailyOps,
     "EvaluationDocs": EvaluationDocs,
     "EvaluationSpec": EvaluationSpec,
     "EventDetail": EventDetail,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
+    "Join": Join,
     "LeaderChannel": LeaderChannel,
     "Leaderboards": Leaderboards,
     "ListingDetail": ListingDetail,
@@ -70,8 +72,6 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "CommandDeck": CommandDeck,
-    "Join": Join,
 }
 
 export const pagesConfig = {

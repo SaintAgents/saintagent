@@ -12,11 +12,17 @@ import FloatingChatWidget from '@/components/FloatingChatWidget';
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 
+const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ'];
+
+// Wrapper component to handle public pages without hooks
+function PublicPageWrapper({ children }) {
+  return <>{children}</>;
+}
+
 export default function Layout({ children, currentPageName }) {
-  // CRITICAL: Check public pages FIRST at the very top - before ANY hooks or state
-  const PUBLIC_PAGES_CHECK = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ'];
-  if (PUBLIC_PAGES_CHECK.includes(currentPageName)) {
-    return <>{children}</>;
+  // CRITICAL: Check public pages FIRST - return simple wrapper immediately
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <PublicPageWrapper>{children}</PublicPageWrapper>;
   }
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
