@@ -649,6 +649,60 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: rgba(0, 255, 136, 0.1) !important;
           border-color: var(--neon-green) !important;
         }
+
+        /* Profile Menu - solid obsidian with neon glow and glitch slide effect */
+        [data-theme='dark'] [data-radix-menu-content],
+        [data-theme='dark'] [role="menu"] {
+          background-color: #050505 !important;
+          border: 1px solid var(--neon-green) !important;
+          box-shadow: 0 0 25px rgba(0, 255, 136, 0.4), 0 0 50px rgba(0, 255, 136, 0.15) !important;
+          z-index: 9999 !important;
+        }
+
+        [data-theme='dark'] [data-radix-menu-content] [role="menuitem"],
+        [data-theme='dark'] [role="menu"] [role="menuitem"] {
+          color: #ffffff !important;
+          background-color: transparent !important;
+        }
+
+        [data-theme='dark'] [data-radix-menu-content] [role="menuitem"]:hover,
+        [data-theme='dark'] [data-radix-menu-content] [role="menuitem"]:focus,
+        [data-theme='dark'] [role="menu"] [role="menuitem"]:hover {
+          background-color: rgba(0, 255, 136, 0.15) !important;
+          color: var(--neon-green) !important;
+          box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.2) !important;
+        }
+
+        [data-theme='dark'] [data-radix-menu-content] [role="separator"],
+        [data-theme='dark'] [role="menu"] [role="separator"] {
+          background-color: rgba(0, 255, 136, 0.3) !important;
+        }
+
+        /* Glitch transition animation for menus */
+        @keyframes glitchSlideIn {
+          0% { 
+            opacity: 0; 
+            transform: translateX(20px) skewX(-2deg);
+            filter: blur(2px);
+          }
+          30% { 
+            opacity: 0.7; 
+            transform: translateX(-5px) skewX(1deg);
+            filter: blur(0);
+          }
+          60% { 
+            transform: translateX(3px) skewX(-0.5deg);
+          }
+          100% { 
+            opacity: 1; 
+            transform: translateX(0) skewX(0);
+          }
+        }
+
+        [data-theme='dark'] [data-radix-menu-content][data-state="open"],
+        [data-theme='dark'] [role="menu"][data-state="open"] {
+          animation: glitchSlideIn 0.25s ease-out forwards !important;
+        }
       `}</style>
       <style>{`
         /* Light theme background for Command Deck */
