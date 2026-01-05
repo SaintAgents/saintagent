@@ -172,21 +172,34 @@ export default function Matches() {
         {/* Filters */}
         <div className="bg-white rounded-xl border p-4 mb-6">
           <div className="grid gap-3 md:grid-cols-6">
-            <Input
-              placeholder="Filter by values (e.g., compassion, integrity)"
-              value={valuesQuery}
-              onChange={(e) => setValuesQuery(e.target.value)}
-              className="md:col-span-2"
-            />
-            <Input
-              placeholder="Filter by practices (e.g., meditation, yoga)"
-              value={practicesQuery}
-              onChange={(e) => setPracticesQuery(e.target.value)}
-              className="md:col-span-2"
-            />
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
+                <span>Filter by values</span>
+                <HelpHint content="Invite specific energies into your field by filtering for shared intentions and practices. Type keywords like 'integrity' or 'compassion' to find members who list these in their Core Values." />
+              </div>
+              <Input
+                placeholder="e.g., compassion, integrity"
+                value={valuesQuery}
+                onChange={(e) => setValuesQuery(e.target.value)}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
+                <span>Filter by practices</span>
+                <HelpHint content="Search for specific tags, skills, or daily practices within the community. Type keywords like 'meditation' or 'yoga' to find members who explicitly list these." />
+              </div>
+              <Input
+                placeholder="e.g., meditation, yoga"
+                value={practicesQuery}
+                onChange={(e) => setPracticesQuery(e.target.value)}
+              />
+            </div>
             <div className="md:col-span-2">
               <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span>Match score</span>
+                <span className="flex items-center gap-1">
+                  Match score
+                  <HelpHint content="Set your threshold for synchronicity. Higher scores indicate deeper potential for alignment. Adjust this to filter connections based on their resonance with your profile—a higher percentage requires closer alignment in values and interests." />
+                </span>
                 <span>{scoreRange[0]}–{scoreRange[1]}%</span>
               </div>
               <Slider value={scoreRange} min={0} max={100} step={1} onValueChange={setScoreRange} />
