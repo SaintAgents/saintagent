@@ -152,24 +152,24 @@ export default function LeaderPathway({ profile }) {
       <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 via-yellow-400/20 to-amber-400/20 animate-pulse" />
       }
 
-      <CardHeader className="relative z-10">
+      <CardHeader>
         <CardTitle className="flex items-center gap-3">
           <div className={cn(
             "p-3 rounded-xl",
-            status === 'locked' && "bg-slate-700",
+            status === 'locked' && "bg-slate-200",
             status === 'active' && "bg-gradient-to-br from-amber-400 to-orange-500",
             status === 'pending' && "bg-blue-400",
             (status === 'quiz_needed' || status === 'approved') && "bg-violet-500"
           )}>
             {status === 'locked' ?
-            <Lock className="w-6 h-6 text-slate-300" /> :
+            <Lock className="w-6 h-6 text-slate-400" /> :
 
             <Crown className="w-6 h-6 text-white" />
             }
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white drop-shadow-lg">Leader Pathway — Trust & Stewardship</h3>
-            <p className="text-sm text-cyan-300 font-normal drop-shadow">
+            <h3 className="text-xl font-bold">Leader Pathway — Trust & Stewardship</h3>
+            <p className="text-sm text-slate-500 font-normal">
               {status === 'locked' && "Complete requirements to unlock"}
               {status === 'active' && "Active Leader"}
               {status === 'pending' && "Application under review"}
@@ -180,22 +180,22 @@ export default function LeaderPathway({ profile }) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-6 relative z-10">
+      <CardContent className="space-y-6">
         {/* Requirements */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Trophy className={cn(
                 "w-4 h-4",
-                pointsRequirementMet ? "text-green-400" : "text-slate-400"
+                pointsRequirementMet ? "text-green-500" : "text-slate-400"
               )} />
-              <span className="text-sm font-medium text-white">10,000 Points</span>
+              <span className="text-sm font-medium">10,000 Points</span>
             </div>
             <div className="flex items-center gap-2">
               {pointsRequirementMet ?
-              <CheckCircle2 className="w-5 h-5 text-green-400" /> :
+              <CheckCircle2 className="w-5 h-5 text-green-500" /> :
 
-              <span className="text-sm text-cyan-300">{currentPoints.toLocaleString()} / 10,000</span>
+              <span className="text-sm text-slate-600">{currentPoints.toLocaleString()} / 10,000</span>
               }
             </div>
           </div>
@@ -205,32 +205,32 @@ export default function LeaderPathway({ profile }) {
             <div className="flex items-center gap-2">
               <Shield className={cn(
                 "w-4 h-4",
-                badgesRequirementMet ? "text-green-400" : "text-slate-400"
+                badgesRequirementMet ? "text-green-500" : "text-slate-400"
               )} />
-              <span className="text-sm font-medium text-white">Required Badges</span>
+              <span className="text-sm font-medium">Required Badges</span>
             </div>
             {badgesRequirementMet ?
-            <CheckCircle2 className="w-5 h-5 text-green-400" /> :
+            <CheckCircle2 className="w-5 h-5 text-green-500" /> :
 
-            <span className="text-sm text-cyan-300">{userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}</span>
+            <span className="text-sm text-slate-600">{userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}</span>
             }
           </div>
 
           {/* Leadership on SA description */}
           <div className="mt-2">
-            <p className="text-cyan-100 text-sm">Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
+            <p className="text-gray-700 text-sm">Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
 
             </p>
           </div>
 
           {/* Required Leadership Badges */}
           <div className="mt-3 flex items-center justify-between">
-            <div className="text-sm font-medium text-amber-300">Required Leadership Badges</div>
-            <div className="text-xs text-cyan-300">
+            <div className="text-sm font-medium text-slate-900">Required Leadership Badges</div>
+            <div className="text-xs text-slate-700">
               {userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {REQUIRED_BADGES.map((code) => {
               const def = BADGE_DEFS[code];
               const has = userBadgeCodes.includes(code);
@@ -276,14 +276,14 @@ export default function LeaderPathway({ profile }) {
             <div className="flex items-center gap-2">
               <Clock className={cn(
                 "w-4 h-4",
-                ageRequirementMet ? "text-green-400" : "text-slate-400"
+                ageRequirementMet ? "text-green-500" : "text-slate-400"
               )} />
-              <span className="text-sm font-medium text-white">30 Days Active</span>
+              <span className="text-sm font-medium">30 Days Active</span>
             </div>
             {ageRequirementMet ?
-            <CheckCircle2 className="w-5 h-5 text-green-400" /> :
+            <CheckCircle2 className="w-5 h-5 text-green-500" /> :
 
-            <span className="text-sm text-cyan-300">{accountAge} / 30 days</span>
+            <span className="text-sm text-slate-600">{accountAge} / 30 days</span>
             }
           </div>
         </div>
