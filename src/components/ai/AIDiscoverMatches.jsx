@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 
 export default function AIDiscoverMatches({ profile, compact = false }) {
   const queryClient = useQueryClient();
@@ -159,17 +160,44 @@ For each, explain the UNIQUE insight that makes them special - something the use
         }
       });
 
-      // Enrich with profile data
-      const enriched = (response.discoveries || []).map(d => {
+      // Enrich with profile data and assign unique demo avatars
+      const usedMaleIdx = new Set();
+      const usedFemaleIdx = new Set();
+      
+      const enriched = (response.discoveries || []).map((d, idx) => {
         const dp = allDatingProfiles.find(p => p.user_id === d.user_id);
         const up = userProfiles.find(u => u.user_id === d.user_id);
-        // Use display_name from UserProfile, fallback to a clean name with "-Demo" suffix
         const rawName = up?.display_name || d.user_id?.split('@')[0]?.replace(/_/g, ' ') || 'User';
         const displayName = up?.display_name ? `${up.display_name}-Demo` : rawName;
+        
+        // Assign unique demo avatar if no real avatar
+        let avatar = up?.avatar_url;
+        if (!avatar) {
+          // Alternate male/female and ensure no duplicates
+          const isMale = idx % 2 === 0;
+          if (isMale) {
+            for (let i = 0; i < DEMO_AVATARS_MALE.length; i++) {
+              if (!usedMaleIdx.has(i)) {
+                usedMaleIdx.add(i);
+                avatar = DEMO_AVATARS_MALE[i];
+                break;
+              }
+            }
+          } else {
+            for (let i = 0; i < DEMO_AVATARS_FEMALE.length; i++) {
+              if (!usedFemaleIdx.has(i)) {
+                usedFemaleIdx.add(i);
+                avatar = DEMO_AVATARS_FEMALE[i];
+                break;
+              }
+            }
+          }
+        }
+        
         return {
           ...d,
           display_name: displayName,
-          avatar: up?.avatar_url,
+          avatar,
           values: dp?.core_values_ranked || [],
           intent: dp?.relationship_intent
         };
