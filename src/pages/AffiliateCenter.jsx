@@ -464,7 +464,7 @@ export default function AffiliateCenter() {
                     {paidReferrals.length === 0 ? (
                       <div className="text-center py-8">
                         <DollarSign className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                        <p className="text-sm text-slate-500">No paid referrals yet</p>
+                        <p className="text-sm text-slate-600">No paid referrals yet</p>
                       </div>
                     ) : (
                       paidReferrals.map((ref) => (
