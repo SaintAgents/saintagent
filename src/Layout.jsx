@@ -286,12 +286,6 @@ export default function Layout({ children, currentPageName }) {
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
-  // CRITICAL: Check public pages FIRST before any auth checks
-  // This ensures public pages render immediately without waiting for auth
-  if (PUBLIC_PAGES.includes(currentPageName)) {
-    return <>{children}</>;
-  }
-
   // If auth state is still loading (undefined), show loading
   if (currentUser === undefined) {
     return <div className="min-h-screen bg-slate-50" />;
