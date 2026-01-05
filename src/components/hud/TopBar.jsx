@@ -37,6 +37,7 @@ import {
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
 import WalkthroughModal from './WalkthroughModal';
+import DatingMatchesPopup from './DatingMatchesPopup';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
