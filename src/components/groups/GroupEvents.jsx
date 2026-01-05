@@ -48,18 +48,50 @@ export default function GroupEvents({ circle, user }) {
     enabled: !!circle.id
   });
 
+  // Fetch circle member profiles for notifications
+  const { data: memberProfiles = [] } = useQuery({
+    queryKey: ['circleMemberProfiles', circle.id],
+    queryFn: async () => {
+      if (!circle.member_ids?.length) return [];
+      const profiles = await base44.entities.UserProfile.list('-updated_date', 200);
+      return profiles.filter(p => circle.member_ids.includes(p.user_id));
+    },
+    enabled: !!circle.member_ids?.length
+  });
+
   const createEventMutation = useMutation({
-    mutationFn: (data) => base44.entities.Event.create({
-      ...data,
-      circle_id: circle.id,
-      host_id: user.email,
-      host_name: user.full_name,
-      status: 'upcoming',
-      attendee_ids: [user.email],
-      attendee_count: 1
-    }),
+    mutationFn: async (data) => {
+      // Create the event
+      const event = await base44.entities.Event.create({
+        ...data,
+        circle_id: circle.id,
+        host_id: user.email,
+        host_name: user.full_name,
+        status: 'upcoming',
+        attendee_ids: [user.email],
+        attendee_count: 1
+      });
+      
+      // Send notifications to all circle members (except host)
+      const otherMembers = (circle.member_ids || []).filter(id => id !== user.email);
+      await Promise.all(otherMembers.map(memberId => 
+        base44.entities.Notification.create({
+          user_id: memberId,
+          type: 'event',
+          title: `New event in ${circle.name}`,
+          message: `${user.full_name} scheduled "${data.title}" for ${format(new Date(data.start_time), 'MMM d, h:mm a')}`,
+          action_url: `/Circles`,
+          priority: 'normal',
+          source_user_id: user.email,
+          source_user_name: user.full_name
+        })
+      ));
+      
+      return event;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['groupEvents', circle.id] });
+      queryClient.invalidateQueries({ queryKey: ['circleEvents'] });
       setCreateOpen(false);
       setNewEvent({
         title: '',
