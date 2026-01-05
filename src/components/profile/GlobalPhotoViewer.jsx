@@ -47,7 +47,7 @@ export default function GlobalPhotoViewer() {
       setScanning(true);
       setScanProgress(0);
     }
-  }, [currentIndex]);
+  }, [currentIndex, open]);
 
   const handleClose = () => {
     setOpen(false);
