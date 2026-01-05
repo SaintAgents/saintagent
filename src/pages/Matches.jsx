@@ -46,6 +46,14 @@ export default function Matches() {
   });
   const profile = profiles?.[0];
 
+  // Check if user has opted into dating
+  const { data: myDatingProfile } = useQuery({
+    queryKey: ['myDatingProfile', profile?.user_id],
+    queryFn: () => base44.entities.DatingProfile.filter({ user_id: profile.user_id }),
+    enabled: !!profile?.user_id
+  });
+  const isDatingOptedIn = myDatingProfile?.[0]?.opt_in === true;
+
   const { data: matches = [], isLoading, refetch } = useQuery({
     queryKey: ['matches'],
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', 50)
