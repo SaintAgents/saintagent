@@ -71,18 +71,33 @@ export default function DatingSettings({ currentUser }) {
   }, [existing?.id]);
 
   const upsert = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (overridePayload) => {
       const me = await base44.auth.me();
-      const payload = { ...form, user_id: me.email };
+      const payload = { ...(overridePayload || form), user_id: me.email };
       if (existing?.id) return base44.entities.DatingProfile.update(existing.id, payload);
       return base44.entities.DatingProfile.create(payload);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['datingProfile'] });
+      qc.invalidateQueries({ queryKey: ['datingProfilesCount'] });
+      qc.invalidateQueries({ queryKey: ['allDatingProfiles'] });
       setShowSaved(true);
       setTimeout(() => setShowSaved(false), 2500);
     }
   });
+
+  // Auto-save when opt_in or visible toggles change
+  const handleOptInChange = (v) => {
+    const newForm = { ...form, opt_in: v };
+    setForm(newForm);
+    upsert.mutate(newForm);
+  };
+
+  const handleVisibleChange = (v) => {
+    const newForm = { ...form, visible: v };
+    setForm(newForm);
+    upsert.mutate(newForm);
+  };
 
   const toArray = (v) => (v || '').split(',').map((s) => s.trim()).filter(Boolean);
   const fromArray = (a) => (a || []).join(', ');
@@ -108,11 +123,11 @@ export default function DatingSettings({ currentUser }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} />
+          <Switch checked={form.opt_in} onCheckedChange={handleOptInChange} />
           <Label className="text-slate-900 dark:text-slate-100">Opt-in to Dating & Compatibility</Label>
         </div>
           <div className="flex items-center gap-2">
-            <Switch checked={form.visible} onCheckedChange={(v) => setForm({ ...form, visible: v })} />
+            <Switch checked={form.visible} onCheckedChange={handleVisibleChange} />
             <Label className="text-slate-900 dark:text-slate-100">Visible to compatible users</Label>
           </div>
         </div>
