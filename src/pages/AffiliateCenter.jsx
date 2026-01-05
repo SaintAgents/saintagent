@@ -102,8 +102,8 @@ export default function AffiliateCenter() {
   const pendingReferrals = referrals.filter(r => r.status === 'pending' || r.status === 'activated');
   const paidReferrals = referrals.filter(r => r.status === 'paid');
 
-  // Show loading state
-  if (profileLoading || (profile?.handle && codeLoading)) {
+  // Show loading state only when actively fetching user or profile
+  if (userLoading || (currentUser && profileLoading)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
         <div className="text-center">
