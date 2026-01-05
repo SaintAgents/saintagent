@@ -108,11 +108,11 @@ export default function Join() {
       {/* 5 Pillars Section */}
       <div className="max-w-6xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">The Five Pillars</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
-            Everything you need to thrive in the new conscious economy
-          </p>
-        </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">The Five Pillars</h2>
+            <p className="text-cyan-400 max-w-xl mx-auto">
+              Everything you need to thrive in the new conscious economy
+            </p>
+          </div>
         
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {PILLARS.map((pillar) => (
@@ -122,7 +122,7 @@ export default function Join() {
                   <pillar.icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{pillar.label}</h3>
-                <p className="text-sm text-slate-400">{pillar.description}</p>
+                <p className="text-sm text-cyan-400">{pillar.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -140,7 +140,7 @@ export default function Join() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-1">{feature.title}</h3>
-                  <p className="text-slate-400">{feature.description}</p>
+                  <p className="text-cyan-400">{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -151,11 +151,11 @@ export default function Join() {
       {/* 7 Phases Journey */}
       <div className="max-w-6xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Your 7-Phase Journey</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
-            A guided path from newcomer to conscious leader
-          </p>
-        </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Your 7-Phase Journey</h2>
+            <p className="text-cyan-400 max-w-xl mx-auto">
+              A guided path from newcomer to conscious leader
+            </p>
+          </div>
         
         <div className="relative">
           {/* Connection line */}
@@ -169,7 +169,7 @@ export default function Join() {
                 </div>
                 <div className="text-xs text-violet-400 font-semibold mb-1">PHASE {phase.phase}</div>
                 <h3 className="text-sm font-semibold text-white mb-1">{phase.title}</h3>
-                <p className="text-xs text-slate-400">{phase.description}</p>
+                <p className="text-xs text-cyan-400">{phase.description}</p>
               </div>
             ))}
           </div>
