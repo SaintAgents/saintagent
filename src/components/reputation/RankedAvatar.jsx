@@ -109,12 +109,13 @@ export default function RankedAvatar({
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
-  // Always fetch profile when showPhotoIcon is true to get gallery images
+  // Always call useQuery unconditionally to avoid hook order issues
+  // The enabled flag controls whether it actually fetches
   const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon);
   const { data: fetched = [] } = useQuery({
-    queryKey: ['rankedAvatarProfile', userId],
+    queryKey: ['rankedAvatarProfile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
-    enabled: !!needsFetch,
+    enabled: needsFetch,
   });
   const fetchedProfile = fetched?.[0];
   
