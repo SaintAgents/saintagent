@@ -484,7 +484,7 @@ export default function AffiliateCenter() {
                             <p className="text-sm font-bold text-emerald-600">
                               +{ref.ggg_amount} GGG
                             </p>
-                            <p className="text-xs">
+                            <p className="text-xs text-slate-600">
                               ${ref.credited_value_usd}
                             </p>
                           </div>
