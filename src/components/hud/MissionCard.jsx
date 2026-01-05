@@ -77,9 +77,8 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
         <img
           src={missionImage}
           alt={mission.title}
-          data-no-filter="true"
-          className="w-full h-full object-cover opacity-90 mission-image"
-          style={{ filter: 'none !important' }} />
+          className="w-full h-full object-cover opacity-90"
+          style={{ filter: 'none' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <Badge className={cn("absolute top-3 left-3 mission-type-badge", typeColors[mission.mission_type])}>
           {mission.mission_type}
