@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { RefreshCw } from 'lucide-react';
 import DatingSettings from './DatingSettings';
 import CompatibilityResults from './CompatibilityResults';
+import AIMatchAssistant from './AIMatchAssistant';
+import ProfileBoostCard from './ProfileBoostCard';
 
 // Default weights - can be overridden by user preferences
 const DEFAULT_WEIGHTS = {
@@ -110,6 +112,24 @@ export default function DatingTab({ profile }) {
     queryKey: ['datingUserProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 200),
   });
+
+  // Fetch wallet balance for boost feature
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', currentUser?.email],
+    queryFn: async () => {
+      try {
+        const { data } = await base44.functions.invoke('walletEngine', {
+          action: 'getWallet',
+          payload: { user_id: currentUser.email }
+        });
+        return data;
+      } catch (e) {
+        return { wallet: { available_balance: 0 } };
+      }
+    },
+    enabled: !!currentUser?.email
+  });
+  const walletBalance = walletRes?.wallet?.available_balance || 0;
 
   const compute = useCallback(async () => {
     if (!currentUser?.email) return;
@@ -270,6 +290,23 @@ export default function DatingTab({ profile }) {
   return (
     <div className="space-y-6">
       <DatingSettings currentUser={currentUser} />
+      
+      {/* AI Match Assistant & Profile Boost */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <AIMatchAssistant 
+            profile={profile} 
+            datingProfile={myDP} 
+          />
+        </div>
+        <div>
+          <ProfileBoostCard 
+            datingProfile={myDP}
+            userProfile={profile}
+            walletBalance={walletBalance}
+          />
+        </div>
+      </div>
       
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
