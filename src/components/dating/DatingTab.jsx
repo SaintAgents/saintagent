@@ -11,6 +11,7 @@ import AIMatchAssistant from './AIMatchAssistant';
 import ProfileBoostCard from './ProfileBoostCard';
 import AdvancedMatchFilters, { DEFAULT_FILTERS } from './AdvancedMatchFilters';
 import AIDiscoverMatches from '@/components/ai/AIDiscoverMatches';
+import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 
 // Default weights - can be overridden by user preferences
 const DEFAULT_WEIGHTS = {
@@ -230,11 +231,20 @@ export default function DatingTab({ profile }) {
       // Calculate prediction score
       const prediction = calculatePrediction(domainScores, strengths, frictions);
 
-      // Build display info
+      // Build display info with unique demo avatars
       const displayName = otherUserProfile?.display_name || other.user_id?.split('@')[0] || 'User';
-      const avatar = otherUserProfile?.avatar_url;
+      let avatar = otherUserProfile?.avatar_url;
       const isDemo = other.is_demo === true;
       const isSaved = savedMatches.includes(other.user_id);
+      
+      // Assign unique demo avatar if no real avatar exists
+      if (!avatar && isDemo) {
+        // Use candidate index to pick unique avatar, alternate M/F
+        const candidateIdx = candidates.indexOf(other);
+        const isMale = candidateIdx % 2 === 0;
+        const avatarIdx = Math.floor(candidateIdx / 2) % 5;
+        avatar = isMale ? DEMO_AVATARS_MALE[avatarIdx] : DEMO_AVATARS_FEMALE[avatarIdx];
+      }
 
       out.push({
         user_id: other.user_id,
