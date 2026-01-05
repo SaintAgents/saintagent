@@ -21,7 +21,7 @@ export default function Layout({ children, currentPageName }) {
   const [floatingChat, setFloatingChat] = useState(null);
   const [theme, setTheme] = useState('light');
   const queryClient = useQueryClient();
-const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
+const PUBLIC_PAGES = ['InviteLanding', 'Join', 'SignUp', 'Welcome', 'Onboarding'];
 
         // Open/close multiple profile drawers (max 6)
         const openProfile = (id) => {
