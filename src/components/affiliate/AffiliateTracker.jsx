@@ -29,9 +29,12 @@ export default function AffiliateTracker() {
 
 // Helper function to attach referral to user after signup
 // Call this from onboarding completion or after user signs up
-export async function attachAffiliateToUser(userId, base44) {
+export async function attachAffiliateToUser(userId, base44Instance) {
   const attributionStr = localStorage.getItem('affiliate_attribution');
-  if (!attributionStr) return;
+  if (!attributionStr) {
+    console.log('No affiliate attribution found');
+    return;
+  }
 
   try {
     const attribution = JSON.parse(attributionStr);
@@ -40,23 +43,55 @@ export async function attachAffiliateToUser(userId, base44) {
     // Check if attribution is still valid
     if (new Date() > expiresAt) {
       localStorage.removeItem('affiliate_attribution');
+      console.log('Affiliate attribution expired');
       return;
     }
 
-    // Find affiliate user
-    const codes = await base44.entities.AffiliateCode.filter({ code: attribution.code });
-    if (codes.length === 0) return;
+    console.log('Processing affiliate attribution:', attribution.code);
+
+    // Find affiliate code
+    const codes = await base44Instance.entities.AffiliateCode.filter({ code: attribution.code });
+    if (codes.length === 0) {
+      console.log('Affiliate code not found:', attribution.code);
+      localStorage.removeItem('affiliate_attribution');
+      return;
+    }
 
     const affiliateCode = codes[0];
 
     // Prevent self-referral
     if (affiliateCode.user_id === userId) {
       localStorage.removeItem('affiliate_attribution');
+      console.log('Self-referral prevented');
       return;
     }
 
+    // Check if referral already exists
+    const existingReferrals = await base44Instance.entities.Referral.filter({ referred_user_id: userId });
+    if (existingReferrals.length > 0) {
+      console.log('User already has a referral record');
+      localStorage.removeItem('affiliate_attribution');
+      return;
+    }
+
+    // Track the click now that user is authenticated
+    try {
+      await base44Instance.entities.AffiliateClick.create({
+        affiliate_code: attribution.code,
+        session_id: Math.random().toString(36).substring(2),
+        landing_page: '/'
+      });
+      
+      // Update click count
+      await base44Instance.entities.AffiliateCode.update(affiliateCode.id, {
+        total_clicks: (affiliateCode.total_clicks || 0) + 1
+      });
+    } catch (e) {
+      console.log('Click tracking skipped:', e);
+    }
+
     // Create referral record
-    await base44.entities.Referral.create({
+    await base44Instance.entities.Referral.create({
       affiliate_user_id: affiliateCode.user_id,
       referred_user_id: userId,
       affiliate_code: attribution.code,
@@ -67,9 +102,11 @@ export async function attachAffiliateToUser(userId, base44) {
     });
 
     // Update signup count
-    await base44.entities.AffiliateCode.update(affiliateCode.id, {
+    await base44Instance.entities.AffiliateCode.update(affiliateCode.id, {
       total_signups: (affiliateCode.total_signups || 0) + 1
     });
+
+    console.log('Affiliate referral created successfully');
 
     // Clear attribution
     localStorage.removeItem('affiliate_attribution');
