@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { Sparkles, Image } from 'lucide-react';
+import { Sparkles, Image, Shield } from 'lucide-react';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PhotoViewer from '@/components/profile/PhotoViewer';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function getRingConfig(rankCode = 'seeker') {
   const map = {
@@ -100,6 +106,7 @@ export default function RankedAvatar({
   leaderTier,
   rpRankCode,
   rpPoints,
+  trustScore,
   userId,
   className = '',
   status,
@@ -127,6 +134,8 @@ export default function RankedAvatar({
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
   const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? (getRPRank(rpPointsFinal || 0)?.code || 'seeker');
+  const trustScoreFinal = trustScore ?? fetchedProfile?.trust_score ?? 0;
+  const rpInfo = getRPRank(rpPointsFinal || 0);
 
   // Presence indicator mapping
   const STATUS_STYLES = {
@@ -149,69 +158,146 @@ export default function RankedAvatar({
   const leaderPx = Math.max(12, Math.round(size * 0.26));
   const leaderIconPx = Math.max(8, Math.round(leaderPx * 0.55));
 
+  // Trust sigil size
+  const trustPx = Math.max(14, Math.round(size * 0.22));
+  const trustIconPx = Math.max(8, Math.round(trustPx * 0.55));
+
   return (
-    <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
-      <div
-        className="rounded-full"
-        style={{ padding: padPx, background: gradient }}
-      >
-        <div className="rounded-full bg-white p-1 relative">
-          {/* Rank symbol top-left */}
-          <div className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow" style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}>
-            <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
-          </div>
-          <div className="w-full h-full rounded-full overflow-hidden">
-            {src ? (
-              <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Status dot (bottom-left) */}
-                  <div
-                    className={`absolute -bottom-1 -left-1 rounded-full ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
-                    style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
-                    title={statusFinal || 'online'}
-                  />
-
-                  {leaderTierFinal === 'verified144k' && (
-                    <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md" style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}>
-                      <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
+    <TooltipProvider delayDuration={200}>
+      <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
+        {/* Rank Ring with Tooltip */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className="rounded-full cursor-help"
+              style={{ padding: padPx, background: gradient }}
+            >
+              <div className="rounded-full bg-white p-1 relative">
+                {/* Rank symbol top-left with Tooltip */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow cursor-help z-20 hover:scale-110 transition-transform" 
+                      style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="bg-slate-900 text-white text-xs px-3 py-2 max-w-[200px]">
+                    <p className="font-semibold capitalize">{rpInfo?.title || rpRankCodeFinal}</p>
+                    <p className="text-slate-300">{rpPointsFinal || 0} Rank Points</p>
+                    {rpInfo?.nextTitle && (
+                      <p className="text-slate-400 text-[10px] mt-1">
+                        {rpInfo.nextMin - (rpPointsFinal || 0)} RP to {rpInfo.nextTitle}
+                      </p>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+                
+                <div className="w-full h-full rounded-full overflow-hidden">
+                  {src ? (
+                    <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                      <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
                     </div>
                   )}
+                </div>
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="bg-slate-900 text-white text-xs px-3 py-2">
+            <p>Rank Ring: <span className="capitalize font-semibold">{rpInfo?.title || rpRankCodeFinal}</span></p>
+          </TooltipContent>
+        </Tooltip>
 
-      {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
-      {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            if (allImages.length > 0) {
-              setViewerOpen(true);
-            }
-          }}
-          className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-10"
-          style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
-          title={`View photos (${allImages.length})`}
-        >
-          <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
-        </button>
-      )}
+        {/* Status dot (bottom-left) with Tooltip */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className={`absolute -bottom-1 -left-1 rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+              style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="bg-slate-900 text-white text-xs px-3 py-2">
+            <p>Status: <span className="capitalize font-semibold">{statusFinal || 'online'}</span></p>
+          </TooltipContent>
+        </Tooltip>
 
-      {/* Photo Viewer Modal */}
-      {showPhotoIcon && (
-        <PhotoViewer
-          open={viewerOpen}
-          images={allImages}
-          startIndex={0}
-          onClose={() => setViewerOpen(false)}
-        />
-      )}
-    </div>
+        {/* 144K Leader Badge with Tooltip */}
+        {leaderTierFinal === 'verified144k' && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div 
+                className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+                style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Sparkles style={{ width: leaderIconPx, height: leaderIconPx }} className="text-white" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-amber-900 text-amber-100 text-xs px-3 py-2 max-w-[200px]">
+              <p className="font-semibold">144K Sovereign Agent</p>
+              <p className="text-amber-200 text-[10px]">Verified community node with leadership privileges</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Trust Sigil (top-right, opposite of rank) - only show if not showing photo icon */}
+        {!showPhotoIcon && trustScoreFinal > 0 && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div 
+                className="absolute -top-1 -right-1 rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+                style={{ width: trustPx, height: trustPx, border: '2px solid white' }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="bg-emerald-900 text-emerald-100 text-xs px-3 py-2 max-w-[220px]">
+              <p className="font-semibold">Trust Score: {trustScoreFinal}%</p>
+              <p className="text-emerald-200 text-[10px]">Verified through community interactions, testimonials, and collaborations</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
+        {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  if (allImages.length > 0) {
+                    setViewerOpen(true);
+                  }
+                }}
+                className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
+                style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
+              >
+                <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="bg-slate-900 text-white text-xs px-3 py-2">
+              <p>View Photos ({allImages.length})</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Photo Viewer Modal */}
+        {showPhotoIcon && (
+          <PhotoViewer
+            open={viewerOpen}
+            images={allImages}
+            startIndex={0}
+            onClose={() => setViewerOpen(false)}
+          />
+        )}
+      </div>
+    </TooltipProvider>
   );
 }
