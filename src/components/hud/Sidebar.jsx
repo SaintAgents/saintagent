@@ -118,6 +118,7 @@ export default function Sidebar({
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [bgEffectOpen, setBgEffectOpen] = useState(true);
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
   });
@@ -597,29 +598,34 @@ export default function Sidebar({
 
         {/* Background Effects - only for Dark/Hacker themes */}
         {(!isCollapsed || inPopup) && (theme === 'dark' || theme === 'hacker') && (
-        <div className="mt-3 space-y-2">
-          <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Background Effect</span>
-          <RadioGroup value={bgEffect} onValueChange={setBgEffect} className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-              <RadioGroupItem value="matrix" id={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="h-3.5 w-3.5" />
-              <Label htmlFor={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-green-500" /> Matrix Rain
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <RadioGroupItem value="starfield" id={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="h-3.5 w-3.5" />
-              <Label htmlFor={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 text-teal-400" /> Star Field
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <RadioGroupItem value="off" id={inPopup ? "bg-off-pop" : "bg-off"} className="h-3.5 w-3.5" />
-              <Label htmlFor={inPopup ? "bg-off-pop" : "bg-off"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
+        <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
+          <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
+            <span className="text-xs font-semibold text-slate-700 dark:text-[#00ff88] uppercase tracking-wide">Background Effect</span>
+            {bgEffectOpen ? <ChevronUp className="w-4 h-4 text-slate-500 dark:text-[#00ff88]" /> : <ChevronDown className="w-4 h-4 text-slate-500 dark:text-[#00ff88]" />}
+          </CollapsibleTrigger>
+          <CollapsibleContent className="pt-2 space-y-2">
+            <RadioGroup value={bgEffect} onValueChange={setBgEffect} className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="matrix" id={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="text-sm text-slate-700 dark:text-[#00ff88] cursor-pointer flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-green-500" /> Matrix Rain
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="starfield" id={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="text-sm text-slate-700 dark:text-[#00d4ff] cursor-pointer flex items-center gap-1.5">
+                  <Star className="w-3.5 h-3.5 text-teal-400" /> Star Field
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="off" id={inPopup ? "bg-off-pop" : "bg-off"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "bg-off-pop" : "bg-off"} className="text-sm text-slate-700 dark:text-slate-400 cursor-pointer flex items-center gap-1.5">
+                  <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
+                </Label>
+              </div>
+            </RadioGroup>
+          </CollapsibleContent>
+        </Collapsible>
         )}
 
         <Link
