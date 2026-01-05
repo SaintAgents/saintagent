@@ -21,17 +21,27 @@ import GovernancePortal from '@/components/leader/GovernancePortal';
 export default function LeaderChannel() {
   const [nominationModalOpen, setNominationModalOpen] = useState(false);
 
-  const { data: profiles } = useQuery({
-    queryKey: ['userProfile'],
+  const { data: profiles, isLoading } = useQuery({
+    queryKey: ['userProfileLeader'],
     queryFn: async () => {
       const user = await base44.auth.me();
       return base44.entities.UserProfile.filter({ user_id: user.email });
-    }
+    },
+    staleTime: 0 // Always fetch fresh data
   });
   const profile = profiles?.[0];
 
   const isLeader = profile?.leader_tier === 'verified144k' || profile?.leader_tier === 'candidate';
   const canAccessChannel = isLeader;
+
+  // Show loading state while checking access
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 p-6 flex items-center justify-center">
+        <div className="text-slate-500">Checking access...</div>
+      </div>
+    );
+  }
 
   if (!canAccessChannel) {
     return (
