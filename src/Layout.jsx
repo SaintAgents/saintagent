@@ -82,11 +82,15 @@ function AuthenticatedLayout({ children, currentPageName }) {
     };
   }, []);
 
-  // Initialize theme
+  // Initialize theme from localStorage
   useEffect(() => {
     try {
       const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light' || saved === 'custom') setTheme(saved);
+      if (saved === 'dark' || saved === 'light' || saved === 'custom' || saved === 'hacker') {
+        setTheme(saved);
+        // Apply immediately to prevent flash
+        document.documentElement.setAttribute('data-theme', saved);
+      }
     } catch {}
   }, []);
 
