@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedDoc from '@/components/collab/SharedDoc';
 import Whiteboard from '@/components/collab/Whiteboard';
 import CoWatch from '@/components/collab/CoWatch';
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming, Image as ImageIcon } from "lucide-react";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
@@ -21,6 +21,10 @@ import NewDirectMessageModal from "@/components/messages/NewDirectMessageModal";
 import EmojiPicker from "@/components/messages/EmojiPicker";
 import MiniProfile from '@/components/profile/MiniProfile';
 import BackButton from '@/components/hud/BackButton';
+import IcebreakerPrompts from '@/components/messages/IcebreakerPrompts';
+import MediaAttachment from '@/components/messages/MediaAttachment';
+import MessageBubble from '@/components/messages/MessageBubble';
+import TypingIndicator from '@/components/messages/TypingIndicator';
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
