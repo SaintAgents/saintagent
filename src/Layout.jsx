@@ -398,6 +398,23 @@ const PUBLIC_PAGES = ['InviteLanding', 'SignUp', 'Welcome', 'Onboarding'];
                                       background-attachment: fixed;
                                     }
 
+        /* Avatar card background - light mode hidden, dark mode visible */
+        [data-theme='light'] [data-avatar-card] [data-avatar-bg] {
+          display: none;
+        }
+        [data-theme='light'] [data-avatar-card] [data-avatar-overlay] {
+          background: rgba(255,255,255,0.75);
+          backdrop-filter: blur(4px);
+        }
+        [data-theme='dark'] [data-avatar-card] [data-avatar-bg] {
+          display: block;
+          opacity: 1;
+        }
+        [data-theme='dark'] [data-avatar-card] [data-avatar-overlay] {
+          background: rgba(0,0,0,0.15);
+          backdrop-filter: blur(1px);
+        }
+
         `}</style>
         <style>{`
           :root { --primary: #7c3aed; --accent: #f59e0b; }
