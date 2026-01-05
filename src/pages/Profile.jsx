@@ -1024,100 +1024,82 @@ export default function Profile() {
           </TabsContent>
 
            <TabsContent value="friends" className="space-y-6">
-            {following.length > 0 &&
+            {/* Followers - People who follow you */}
             <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-violet-500" />
-                    Followed ({following.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-blue-500" />
+                  Followers ({followers.length})
+                  <span className="text-xs font-normal text-slate-500 ml-2">People who follow you</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {followers.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {following.map((follow) =>
-                  <div
-                    key={follow.id}
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
-                    data-user-id={follow.following_id}>
-
-                        <RankedAvatar src={follow.following_avatar} name={follow.following_name} userId={follow.following_id} size={48} />
-                        <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
-                          {follow.following_name}
-                        </p>
-                      </div>
-                  )}
-                  </div>
-                </CardContent>
-              </Card>
-            }
-            {following.length > 0 &&
-            <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Heart className="w-5 h-5 text-rose-500" />
-                    Following ({following.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {following.map((follow) =>
-                  <div
-                    key={follow.id}
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group">
-
-                        <div
-                      className="cursor-pointer"
-                      data-user-id={follow.following_id}>
-
-                          <RankedAvatar src={follow.following_avatar} name={follow.following_name} userId={follow.following_id} size={48} />
-                        </div>
-                        <p
-                      className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
-                      data-user-id={follow.following_id}>
-
-                          {follow.following_name}
-                        </p>
-                        <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
-                      onClick={() => unfollowMutation.mutate(follow.id)}>
-
-                          Unfollow
-                        </Button>
-                      </div>
-                  )}
-                  </div>
-                </CardContent>
-              </Card>
-            }
-
-            {followers.length > 0 &&
-            <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-blue-500" />
-                    Followers ({followers.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {followers.map((follow) =>
-                  <div
-                    key={follow.id}
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
-                    data-user-id={follow.follower_id}>
-
+                    {followers.map((follow) => (
+                      <div
+                        key={follow.id}
+                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
+                        data-user-id={follow.follower_id}
+                      >
                         <RankedAvatar src={follow.follower_avatar} name={follow.follower_name} userId={follow.follower_id} size={48} />
                         <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
                           {follow.follower_name}
                         </p>
                       </div>
-                  )}
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            }
+                ) : (
+                  <p className="text-slate-400 text-sm text-center py-4">No followers yet</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Following - People you follow */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-rose-500" />
+                  Following ({following.length})
+                  <span className="text-xs font-normal text-slate-500 ml-2">People you follow</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {following.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {following.map((follow) => (
+                      <div
+                        key={follow.id}
+                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group"
+                      >
+                        <div
+                          className="cursor-pointer"
+                          data-user-id={follow.following_id}
+                        >
+                          <RankedAvatar src={follow.following_avatar} name={follow.following_name} userId={follow.following_id} size={48} />
+                        </div>
+                        <p
+                          className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
+                          data-user-id={follow.following_id}
+                        >
+                          {follow.following_name}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                          onClick={() => unfollowMutation.mutate(follow.id)}
+                        >
+                          Unfollow
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-400 text-sm text-center py-4">Not following anyone yet</p>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
 
