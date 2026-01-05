@@ -127,12 +127,7 @@ export default function CompatibilityResults({ results, onSave, onDismiss, onUns
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-                        {r.display_name}
-                        {r.isDemo && (
-                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-amber-50 text-amber-700 border-amber-200">
-                            DEMO
-                          </Badge>
-                        )}
+                        {r.display_name}{r.isDemo && ' [demo]'}
                         {isSaved && (
                           <BookmarkCheck className="w-4 h-4 text-violet-500" />
                         )}
