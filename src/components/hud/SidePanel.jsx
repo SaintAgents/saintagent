@@ -582,27 +582,70 @@ export default function SidePanel({
               {recentJoins.length === 0 ? (
                 <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
               ) : (
-                recentJoins.slice(0, 5).map((user) => (
-                  <button
-                    key={user.id}
-                    onClick={() => {
-                      const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
-                      document.dispatchEvent(event);
-                    }}
-                    className="w-full flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
-                  >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={user.avatar_url} />
-                      <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xs">
-                        {user.display_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
-                      <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
-                    </div>
-                  </button>
-                ))
+                recentJoins.slice(0, 5).map((user) => {
+                  const userValues = user.values_tags || [];
+                  const myValues = profile?.values_tags || [];
+                  const sharedValues = userValues.filter(v => myValues.includes(v));
+                  const hasCompatibility = sharedValues.length >= 2;
+                  const isOnline = user.last_seen_at && new Date(user.last_seen_at) > new Date(Date.now() - 5 * 60 * 1000);
+                  
+                  return (
+                    <button
+                      key={user.id}
+                      onClick={() => {
+                        const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
+                        document.dispatchEvent(event);
+                      }}
+                      className="w-full flex flex-col gap-2 p-3 rounded-lg bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <Avatar className="w-9 h-9">
+                            <AvatarImage src={user.avatar_url} />
+                            <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xs">
+                              {user.display_name?.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          {isOnline && (
+                            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
+                            {hasCompatibility && (
+                              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-[10px] font-medium">
+                                <Sparkles className="w-2.5 h-2.5" />
+                                Match
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
+                        </div>
+                      </div>
+                      {userValues.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {userValues.slice(0, 3).map((val, i) => (
+                            <span 
+                              key={i} 
+                              className={cn(
+                                "px-1.5 py-0.5 rounded text-[10px]",
+                                sharedValues.includes(val) 
+                                  ? "bg-violet-100 text-violet-700 font-medium" 
+                                  : "bg-slate-100 text-slate-600"
+                              )}
+                            >
+                              {val}
+                            </span>
+                          ))}
+                          {userValues.length > 3 && (
+                            <span className="text-[10px] text-slate-400">+{userValues.length - 3}</span>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })
               )}
             </div>
           </CollapsibleCard>
@@ -1148,27 +1191,70 @@ export default function SidePanel({
               {recentJoins.length === 0 ? (
                 <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
               ) : (
-                recentJoins.map((user) => (
-                  <button
-                    key={user.id}
-                    onClick={() => {
-                      const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
-                      document.dispatchEvent(event);
-                    }}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
-                  >
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={user.avatar_url} />
-                      <AvatarFallback className="bg-emerald-100 text-emerald-600 text-sm">
-                        {user.display_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
-                      <p className="text-xs text-slate-500">Joined {format(parseISO(user.created_date), 'MMM d, yyyy')}</p>
-                    </div>
-                  </button>
-                ))
+                recentJoins.map((user) => {
+                  const userValues = user.values_tags || [];
+                  const myValues = profile?.values_tags || [];
+                  const sharedValues = userValues.filter(v => myValues.includes(v));
+                  const hasCompatibility = sharedValues.length >= 2;
+                  const isOnline = user.last_seen_at && new Date(user.last_seen_at) > new Date(Date.now() - 5 * 60 * 1000);
+                  
+                  return (
+                    <button
+                      key={user.id}
+                      onClick={() => {
+                        const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
+                        document.dispatchEvent(event);
+                      }}
+                      className="w-full flex flex-col gap-2 p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage src={user.avatar_url} />
+                            <AvatarFallback className="bg-emerald-100 text-emerald-600 text-sm">
+                              {user.display_name?.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          {isOnline && (
+                            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
+                            {hasCompatibility && (
+                              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-[10px] font-medium">
+                                <Sparkles className="w-2.5 h-2.5" />
+                                High Resonance
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-500">Joined {format(parseISO(user.created_date), 'MMM d, yyyy')}</p>
+                        </div>
+                      </div>
+                      {userValues.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {userValues.slice(0, 5).map((val, i) => (
+                            <span 
+                              key={i} 
+                              className={cn(
+                                "px-2 py-0.5 rounded text-xs",
+                                sharedValues.includes(val) 
+                                  ? "bg-violet-100 text-violet-700 font-medium" 
+                                  : "bg-slate-100 text-slate-600"
+                              )}
+                            >
+                              {val}
+                            </span>
+                          ))}
+                          {userValues.length > 5 && (
+                            <span className="text-xs text-slate-400">+{userValues.length - 5}</span>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })
               )}
             </div>
           </FloatingPanel>
