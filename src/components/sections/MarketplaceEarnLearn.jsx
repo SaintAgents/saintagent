@@ -27,7 +27,7 @@ export default function MarketplaceEarnLearn({ listings = [], onAction }) {
             </Button>
           </div>
         ) : (
-          listings.filter(l => l.listing_type === 'offer').slice(0, 2).map((listing) => (
+          listings.filter(l => l.listing_type === 'offer').map((listing) => (
             <ListingCard 
               key={listing.id} 
               listing={listing} 
@@ -43,7 +43,7 @@ export default function MarketplaceEarnLearn({ listings = [], onAction }) {
         </div>
       </TabsContent>
       <TabsContent value="browse" className="space-y-3">
-        {listings.slice(0, 2).map((listing) => (
+        {listings.map((listing) => (
           <ListingCard 
             key={listing.id} 
             listing={listing} 
