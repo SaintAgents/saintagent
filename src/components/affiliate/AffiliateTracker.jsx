@@ -147,9 +147,9 @@ export async function activateReferral(userId, base44Instance) {
 }
 
 // Helper to mark referral as paid after qualifying action
-export async function payoutReferral(userId, qualifyingAction, qualifyingActionId) {
+export async function payoutReferral(userId, qualifyingAction, qualifyingActionId, base44Instance) {
   try {
-    const referrals = await base44.entities.Referral.filter({ 
+    const referrals = await base44Instance.entities.Referral.filter({ 
       referred_user_id: userId, 
       status: 'activated' 
     });
@@ -157,48 +157,48 @@ export async function payoutReferral(userId, qualifyingAction, qualifyingActionI
     if (referrals.length > 0) {
       const referral = referrals[0];
       const gggAmount = 0.25;
-      const unitValue = 145.00;
-      const creditedValue = 36.25;
 
       // Update referral status
-      await base44.entities.Referral.update(referral.id, {
+      await base44Instance.entities.Referral.update(referral.id, {
         status: 'paid',
         paid_timestamp: new Date().toISOString(),
         qualifying_action: qualifyingAction,
-        qualifying_action_id: qualifyingActionId
+        qualifying_action_id: qualifyingActionId,
+        ggg_amount: gggAmount,
+        credited_value_usd: 36.25
       });
 
       // Create GGG transaction
-      await base44.entities.GGGTransaction.create({
+      await base44Instance.entities.GGGTransaction.create({
         user_id: referral.affiliate_user_id,
         source_type: 'referral',
         source_id: referral.id,
         delta: gggAmount,
         reason_code: 'referral_payout',
-        description: `Referral payout for ${userId}`,
-        balance_after: 0 // Would need to calculate actual balance
+        description: `Referral payout for ${userId}`
       });
 
       // Update affiliate code stats
-      const codes = await base44.entities.AffiliateCode.filter({ 
+      const codes = await base44Instance.entities.AffiliateCode.filter({ 
         user_id: referral.affiliate_user_id 
       });
       if (codes.length > 0) {
-        await base44.entities.AffiliateCode.update(codes[0].id, {
+        await base44Instance.entities.AffiliateCode.update(codes[0].id, {
           total_paid: (codes[0].total_paid || 0) + 1,
           total_ggg_earned: (codes[0].total_ggg_earned || 0) + gggAmount
         });
       }
 
       // Update affiliate user's GGG balance
-      const profiles = await base44.entities.UserProfile.filter({ 
+      const profiles = await base44Instance.entities.UserProfile.filter({ 
         user_id: referral.affiliate_user_id 
       });
       if (profiles.length > 0) {
-        await base44.entities.UserProfile.update(profiles[0].id, {
+        await base44Instance.entities.UserProfile.update(profiles[0].id, {
           ggg_balance: (profiles[0].ggg_balance || 0) + gggAmount
         });
       }
+      console.log('Referral payout completed for:', userId);
     }
   } catch (error) {
     console.error('Error paying referral:', error);
