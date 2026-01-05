@@ -13,6 +13,12 @@ import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 
 export default function Layout({ children, currentPageName }) {
+  // CRITICAL: Check public pages FIRST at the very top - before ANY hooks or state
+  const PUBLIC_PAGES_CHECK = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ'];
+  if (PUBLIC_PAGES_CHECK.includes(currentPageName)) {
+    return <>{children}</>;
+  }
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
