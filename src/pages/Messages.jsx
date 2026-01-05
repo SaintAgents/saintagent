@@ -34,6 +34,7 @@ export default function Messages() {
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [videoCallFullscreen, setVideoCallFullscreen] = useState(false);
   const [incomingCall, setIncomingCall] = useState(null);
+  const [imageViewerUrl, setImageViewerUrl] = useState(null);
   const typingRef = React.useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
 
