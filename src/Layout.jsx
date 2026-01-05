@@ -267,6 +267,11 @@ const PUBLIC_PAGES = ['InviteLanding', 'Join', 'SignUp', 'Welcome', 'Onboarding'
               }
             }, [currentUser, currentPageName]);
 
+    // If on public page without auth, just render the page (don't wait for user query)
+    if (PUBLIC_PAGES.includes(currentPageName) && currentUser === undefined) {
+      return <div className="min-h-screen bg-slate-50">{children}</div>;
+    }
+
   // If authenticated and onboarding missing or not complete, force Onboarding
   useEffect(() => {
     const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
