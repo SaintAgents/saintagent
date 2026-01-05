@@ -28,6 +28,7 @@ import Missions from './pages/Missions';
 import Onboarding from './pages/Onboarding';
 import Planner from './pages/Planner';
 import Profile from './pages/Profile';
+import Profiles from './pages/Profiles';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
 import Projects from './pages/Projects';
@@ -36,7 +37,6 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Profiles from './pages/Profiles';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +71,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Planner": Planner,
     "Profile": Profile,
+    "Profiles": Profiles,
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
     "Projects": Projects,
@@ -79,7 +80,6 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Profiles": Profiles,
 }
 
 export const pagesConfig = {
