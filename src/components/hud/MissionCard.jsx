@@ -162,17 +162,20 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
           </div>
         </div>
 
-        {/* Creator */}
+        {/* Creator - simple display without extra API calls */}
         {mission.creator_name && (
           <div className="flex items-center gap-2 mb-4 pt-3 border-t border-slate-100">
-            <MiniProfile
-              userId={mission.creator_id}
-              name={mission.creator_name}
-              size={28}
-              showRankBadge={false}
-              showTrustBadge={false}
-              showReachBadge={false}
-            />
+            <div 
+              className="flex items-center gap-2 cursor-pointer" 
+              data-user-id={mission.creator_id}
+            >
+              <Avatar className="w-7 h-7">
+                <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
+                  {mission.creator_name?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm text-slate-600">{mission.creator_name}</span>
+            </div>
           </div>
         )}
 
