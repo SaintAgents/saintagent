@@ -360,9 +360,9 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
 
           {/* Input */}
           <form onSubmit={handleSubmit} className={cn(
-            "p-3 border-t rounded-b-2xl",
+            "p-3 border-t rounded-b-2xl shrink-0",
             "border-slate-200 bg-white/80 backdrop-blur-sm",
-            "dark:border-[rgba(0,255,136,0.3)] dark:bg-[#050505]/80",
+            "dark:border-[#00ff88]/40 dark:bg-[#050505]/80",
             "[data-theme='hacker']_&:bg-[#050505]/80 [data-theme='hacker']_&:border-[#00ff00]"
           )}>
             <div className="flex gap-2">
