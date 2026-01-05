@@ -77,8 +77,20 @@ export default function SidePanel({
   React.useEffect(() => {
     try {
       localStorage.setItem('sidePanelOpen', String(isOpen));
+      localStorage.setItem('sidePanelDockSide', dockSide);
     } catch {}
-  }, [isOpen]);
+  }, [isOpen, dockSide]);
+
+  // Listen for global toggle events from GlobalSidePanelNudge
+  React.useEffect(() => {
+    const handleToggle = (e) => {
+      if (e.detail?.open && !isOpen && onToggle) {
+        onToggle();
+      }
+    };
+    document.addEventListener('toggleSidePanel', handleToggle);
+    return () => document.removeEventListener('toggleSidePanel', handleToggle);
+  }, [isOpen, onToggle]);
 
   // Popout states for sections
   const [gggPopupOpen, setGggPopupOpen] = useState(false);

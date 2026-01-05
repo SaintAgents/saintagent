@@ -9,6 +9,7 @@ import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 import GlobalChatWidget from '@/components/community/GlobalChatWidget';
+import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
@@ -559,6 +560,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Chat Widget */}
       <GlobalChatWidget />
+
+      {/* Global Side Panel Nudge */}
+      <GlobalSidePanelNudge />
 
 
 
