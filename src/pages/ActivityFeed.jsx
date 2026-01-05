@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import BackButton from '@/components/hud/BackButton';
 
 const TYPE_META = {
   listings: { label: 'Listings', icon: ShoppingBag, color: 'bg-emerald-100 text-emerald-700' },
@@ -52,7 +53,10 @@ export default function ActivityFeed() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Activity Feed</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <BackButton />
+            Activity Feed
+          </h1>
           <Button variant="outline" className="rounded-xl" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
           </Button>
