@@ -85,35 +85,35 @@ export default function DatingSettings({ currentUser }) {
   const fromArray = (a) => (a || []).join(', ');
 
   return (
-    <div className="bg-violet-50 p-4 rounded-xl border space-y-4">
+    <div className="bg-violet-50 dark:bg-slate-800/80 p-4 rounded-xl border border-violet-200 dark:border-slate-700 space-y-4">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} className="bg-purple-100 text-pink-300 rounded-full peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input" />
-          <Label>Opt-in to Dating & Compatibility</Label>
+          <Switch checked={form.opt_in} onCheckedChange={(v) => setForm({ ...form, opt_in: v })} />
+          <Label className="text-slate-900 dark:text-slate-100">Opt-in to Dating & Compatibility</Label>
         </div>
         <div className="flex items-center gap-2">
           <Switch checked={form.visible} onCheckedChange={(v) => setForm({ ...form, visible: v })} />
-          <Label>Visible to compatible users</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Visible to compatible users</Label>
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-3">
-          <Label>Core Values (comma-separated)</Label>
-          <Input value={fromArray(form.core_values_ranked)} onChange={(e) => setForm({ ...form, core_values_ranked: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
-          <Label>Life Priorities (comma-separated)</Label>
-          <Input value={fromArray(form.life_priorities)} onChange={(e) => setForm({ ...form, life_priorities: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
-          <Label>Dealbreakers (comma-separated)</Label>
-          <Input value={fromArray(form.dealbreakers)} onChange={(e) => setForm({ ...form, dealbreakers: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
-          <Label>Ethical Boundaries (comma-separated)</Label>
-          <Input value={fromArray(form.ethical_boundaries)} onChange={(e) => setForm({ ...form, ethical_boundaries: toArray(e.target.value) })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
+          <Label className="text-slate-900 dark:text-slate-100">Core Values (comma-separated)</Label>
+          <Input value={fromArray(form.core_values_ranked)} onChange={(e) => setForm({ ...form, core_values_ranked: toArray(e.target.value) })} className="bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600" />
+          <Label className="text-slate-900 dark:text-slate-100">Life Priorities (comma-separated)</Label>
+          <Input value={fromArray(form.life_priorities)} onChange={(e) => setForm({ ...form, life_priorities: toArray(e.target.value) })} className="bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600" />
+          <Label className="text-slate-900 dark:text-slate-100">Dealbreakers (comma-separated)</Label>
+          <Input value={fromArray(form.dealbreakers)} onChange={(e) => setForm({ ...form, dealbreakers: toArray(e.target.value) })} className="bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600" />
+          <Label className="text-slate-900 dark:text-slate-100">Ethical Boundaries (comma-separated)</Label>
+          <Input value={fromArray(form.ethical_boundaries)} onChange={(e) => setForm({ ...form, ethical_boundaries: toArray(e.target.value) })} className="bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600" />
         </div>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Regulation Style</Label>
+              <Label className="text-slate-900 dark:text-slate-100">Regulation Style</Label>
               <Select value={form.regulation_style} onValueChange={(v) => setForm({ ...form, regulation_style: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="calm_regulator">Calm Regulator</SelectItem>
                   <SelectItem value="expressive_processor">Expressive Processor</SelectItem>
@@ -123,9 +123,9 @@ export default function DatingSettings({ currentUser }) {
               </Select>
             </div>
             <div>
-              <Label>Conflict Response</Label>
+              <Label className="text-slate-900 dark:text-slate-100">Conflict Response</Label>
               <Select value={form.conflict_response} onValueChange={(v) => setForm({ ...form, conflict_response: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="direct_repair">Direct Repair</SelectItem>
                   <SelectItem value="reflective_space">Reflective Space</SelectItem>
@@ -135,9 +135,9 @@ export default function DatingSettings({ currentUser }) {
               </Select>
             </div>
             <div>
-              <Label>Stress Tolerance</Label>
+              <Label className="text-slate-900 dark:text-slate-100">Stress Tolerance</Label>
               <Select value={form.stress_tolerance} onValueChange={(v) => setForm({ ...form, stress_tolerance: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="low">Low</SelectItem>
                   <SelectItem value="medium">Medium</SelectItem>
@@ -146,9 +146,9 @@ export default function DatingSettings({ currentUser }) {
               </Select>
             </div>
             <div>
-              <Label>Feedback Receptivity</Label>
+              <Label className="text-slate-900 dark:text-slate-100">Feedback Receptivity</Label>
               <Select value={form.feedback_receptivity} onValueChange={(v) => setForm({ ...form, feedback_receptivity: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="low">Low</SelectItem>
                   <SelectItem value="medium">Medium</SelectItem>
@@ -159,9 +159,9 @@ export default function DatingSettings({ currentUser }) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Comm. Depth</Label>
+              <Label className="text-slate-900 dark:text-slate-100">Comm. Depth</Label>
               <Select value={form.comm_depth} onValueChange={(v) => setForm({ ...form, comm_depth: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="light">Light</SelectItem>
                   <SelectItem value="balanced">Balanced</SelectItem>
@@ -170,9 +170,9 @@ export default function DatingSettings({ currentUser }) {
               </Select>
             </div>
             <div>
-              <Label>Comm. Frequency</Label>
+              <Label className="text-slate-900 dark:text-slate-100">Comm. Frequency</Label>
               <Select value={form.comm_frequency} onValueChange={(v) => setForm({ ...form, comm_frequency: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="daily">Daily</SelectItem>
                   <SelectItem value="few_times_week">Few times/week</SelectItem>
@@ -181,19 +181,19 @@ export default function DatingSettings({ currentUser }) {
               </Select>
             </div>
           </div>
-          <Label className="inline-flex items-center gap-1">
+          <Label className="inline-flex items-center gap-1 text-slate-900 dark:text-slate-100">
               Responsiveness Boundaries
               <HelpHint content="Share your digital boundaries to ensure conscious and respectful communication with your matches. E.g., 'Within 24 hours' or 'Weekdays only'." />
             </Label>
-          <Input value={form.responsiveness_boundaries} onChange={(e) => setForm({ ...form, responsiveness_boundaries: e.target.value })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
+          <Input value={form.responsiveness_boundaries} onChange={(e) => setForm({ ...form, responsiveness_boundaries: e.target.value })} className="bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600" />
         </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-4">
         <div>
-          <Label>Growth Orientation</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Growth Orientation</Label>
           <Select value={form.growth_orientation} onValueChange={(v) => setForm({ ...form, growth_orientation: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="steady">Steady</SelectItem>
               <SelectItem value="accelerated">Accelerated</SelectItem>
@@ -202,9 +202,9 @@ export default function DatingSettings({ currentUser }) {
           </Select>
         </div>
         <div>
-          <Label>Relationship Intent</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Relationship Intent</Label>
           <Select value={form.relationship_intent} onValueChange={(v) => setForm({ ...form, relationship_intent: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="companionship">Companionship</SelectItem>
               <SelectItem value="partnership">Partnership</SelectItem>
@@ -214,9 +214,9 @@ export default function DatingSettings({ currentUser }) {
           </Select>
         </div>
         <div>
-          <Label>Learning Mindset</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Learning Mindset</Label>
           <Select value={form.learning_mindset} onValueChange={(v) => setForm({ ...form, learning_mindset: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="beginner">Beginner</SelectItem>
               <SelectItem value="intermediate">Intermediate</SelectItem>
@@ -228,9 +228,9 @@ export default function DatingSettings({ currentUser }) {
 
       <div className="grid md:grid-cols-3 gap-4">
         <div>
-          <Label>Location/Mobility</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Location/Mobility</Label>
           <Select value={form.location_mobility} onValueChange={(v) => setForm({ ...form, location_mobility: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="fixed">Fixed</SelectItem>
               <SelectItem value="flexible">Flexible</SelectItem>
@@ -239,9 +239,9 @@ export default function DatingSettings({ currentUser }) {
           </Select>
         </div>
         <div>
-          <Label>Daily Rhythm</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Daily Rhythm</Label>
           <Select value={form.daily_rhythm} onValueChange={(v) => setForm({ ...form, daily_rhythm: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="introvert">Introvert</SelectItem>
               <SelectItem value="ambivert">Ambivert</SelectItem>
@@ -250,9 +250,9 @@ export default function DatingSettings({ currentUser }) {
           </Select>
         </div>
         <div>
-          <Label>Work/Life Balance</Label>
+          <Label className="text-slate-900 dark:text-slate-100">Work/Life Balance</Label>
           <Select value={form.work_life_balance} onValueChange={(v) => setForm({ ...form, work_life_balance: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="work_leaning">Work-leaning</SelectItem>
               <SelectItem value="balanced">Balanced</SelectItem>
@@ -263,13 +263,13 @@ export default function DatingSettings({ currentUser }) {
       </div>
 
       <div>
-        <Label>Health & Lifestyle (optional)</Label>
-        <Textarea rows={2} value={form.health_lifestyle} onChange={(e) => setForm({ ...form, health_lifestyle: e.target.value })} className="bg-zinc-50 px-3 py-2 text-base rounded-md flex min-h-[60px] w-full border border-input shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
+        <Label className="text-slate-900 dark:text-slate-100">Health & Lifestyle (optional)</Label>
+        <Textarea rows={2} value={form.health_lifestyle} onChange={(e) => setForm({ ...form, health_lifestyle: e.target.value })} className="bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600" />
       </div>
 
       <div className="flex items-center gap-2">
         <Switch checked={form.synchronicity_enabled} onCheckedChange={(v) => setForm({ ...form, synchronicity_enabled: v })} />
-        <Label>Enable Synchronicity Signals</Label>
+        <Label className="text-slate-900 dark:text-slate-100">Enable Synchronicity Signals</Label>
       </div>
 
       <div className="flex items-center justify-end gap-3">
