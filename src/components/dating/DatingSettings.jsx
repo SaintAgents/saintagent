@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Check } from 'lucide-react';
+import HelpHint from '@/components/hud/HelpHint';
 
 export default function DatingSettings({ currentUser }) {
   const qc = useQueryClient();
@@ -180,7 +181,10 @@ export default function DatingSettings({ currentUser }) {
               </Select>
             </div>
           </div>
-          <Label>Responsiveness Boundaries</Label>
+          <Label className="inline-flex items-center gap-1">
+              Responsiveness Boundaries
+              <HelpHint content="Share your digital boundaries to ensure conscious and respectful communication with your matches. E.g., 'Within 24 hours' or 'Weekdays only'." />
+            </Label>
           <Input value={form.responsiveness_boundaries} onChange={(e) => setForm({ ...form, responsiveness_boundaries: e.target.value })} className="bg-zinc-50 px-3 py-1 text-base rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
         </div>
       </div>
