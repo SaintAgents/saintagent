@@ -272,7 +272,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {!isMinimized && (
         <>
           {/* Messages */}
-          <ScrollArea className="h-[calc(100%-8rem)] p-4 [data-theme='hacker']_&:bg-[#0a0a0ae6]" ref={scrollRef}>
+          <ScrollArea className="max-h-[50vh] p-4 dark:bg-transparent [data-theme='hacker']_&:bg-transparent" ref={scrollRef}>
             <div className="space-y-4">
               {messages.map((msg, idx) => (
                 <div 
