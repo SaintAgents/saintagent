@@ -269,57 +269,57 @@ export default function AffiliateCenter() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold">{stats.clicks}</p>
-                <p className="text-xs mt-1">Clicks</p>
+                <p className="text-2xl font-bold text-slate-900">{stats.clicks}</p>
+                <p className="text-xs mt-1 text-slate-600">Clicks</p>
               </div>
             </CardContent>
-          </Card>
+            </Card>
 
-          <Card>
+            <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold">{stats.signups}</p>
-                <p className="text-xs mt-1">Signups</p>
+                <p className="text-2xl font-bold text-slate-900">{stats.signups}</p>
+                <p className="text-xs mt-1 text-slate-600">Signups</p>
               </div>
             </CardContent>
-          </Card>
+            </Card>
 
-          <Card>
+            <Card>
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-2xl font-bold text-violet-600">{stats.activated}</p>
-                <p className="text-xs mt-1">Activated</p>
+                <p className="text-xs mt-1 text-slate-600">Activated</p>
               </div>
             </CardContent>
-          </Card>
+            </Card>
 
-          <Card>
+            <Card>
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-2xl font-bold text-emerald-600">{stats.paid}</p>
-                <p className="text-xs mt-1">Paid</p>
+                <p className="text-xs mt-1 text-slate-600">Paid</p>
               </div>
             </CardContent>
-          </Card>
+            </Card>
 
-          <Card>
+            <Card>
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-2xl font-bold text-amber-600">{stats.gggEarned.toFixed(2)}</p>
-                <p className="text-xs mt-1">GGG Earned</p>
+                <p className="text-xs mt-1 text-slate-600">GGG Earned</p>
               </div>
             </CardContent>
-          </Card>
+            </Card>
 
-          <Card>
+            <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold">{conversionRate}%</p>
-                <p className="text-xs mt-1">Conversion</p>
+                <p className="text-2xl font-bold text-slate-900">{conversionRate}%</p>
+                <p className="text-xs mt-1 text-slate-600">Conversion</p>
               </div>
             </CardContent>
-          </Card>
-        </div>
+            </Card>
+            </div>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-3 gap-6">
