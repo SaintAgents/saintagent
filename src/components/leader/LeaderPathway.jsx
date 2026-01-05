@@ -218,15 +218,15 @@ export default function LeaderPathway({ profile }) {
 
           {/* Leadership on SA description */}
           <div className="mt-2">
-            <p className="text-gray-400 text-sm">Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
+            <p className="text-gray-700 text-sm">Leadership on Saint Agent is not a single achievement. It is earned through consistent demonstration of trust, judgment, stability, care, and alignment.
 
             </p>
           </div>
 
           {/* Required Leadership Badges */}
-          <div className="text-zinc-300 mt-3 flex items-center justify-between">
-            <div className="text-sm font-medium text-slate-800">Required Leadership Badges</div>
-            <div className="text-xs text-slate-600">
+          <div className="mt-3 flex items-center justify-between">
+            <div className="text-sm font-medium text-slate-900">Required Leadership Badges</div>
+            <div className="text-xs text-slate-700">
               {userBadgeCodes.filter((b) => REQUIRED_BADGES.includes(b)).length} / {REQUIRED_BADGES.length}
             </div>
           </div>
@@ -245,7 +245,7 @@ export default function LeaderPathway({ profile }) {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-sm font-semibold text-slate-900">{def.title}</div>
-                      <div className="text-xs text-slate-600">{def.dimension}</div>
+                      <div className="text-xs text-slate-700">{def.dimension}</div>
                     </div>
                     {has ?
                     <CheckCircle2 className="w-5 h-5 text-green-600" /> :
@@ -253,12 +253,12 @@ export default function LeaderPathway({ profile }) {
                     <Lock className="w-5 h-5 text-slate-400" />
                     }
                   </div>
-                  <div className="mt-2 text-xs text-slate-700">
+                  <div className="mt-2 text-xs text-slate-800">
                     <span className="font-semibold">Definition:</span> {def.definition}
                   </div>
                   <div className="mt-2">
-                    <div className="text-[11px] font-semibold text-slate-700">Earned Through:</div>
-                    <ul className="list-disc ml-5 mt-1 text-xs text-slate-700 space-y-0.5">
+                    <div className="text-[11px] font-semibold text-slate-800">Earned Through:</div>
+                    <ul className="list-disc ml-5 mt-1 text-xs text-slate-800 space-y-0.5">
                       {def.earnedThrough.map((item, idx) =>
                       <li key={idx}>{item}</li>
                       )}
