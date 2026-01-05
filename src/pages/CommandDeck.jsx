@@ -523,12 +523,13 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden">
+          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden" data-avatar-card>
             <div 
-              className="absolute inset-0 rounded-2xl bg-cover bg-center hidden dark:block pointer-events-none opacity-90"
+              className="absolute inset-0 rounded-2xl bg-cover bg-center pointer-events-none"
               style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ba60509ba_Screenshot2026-01-04183952.png)' }}
+              data-avatar-bg
             />
-            <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.75)] dark:bg-[rgba(0,0,0,0.2)] backdrop-blur-[2px] pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 <RankedAvatar
