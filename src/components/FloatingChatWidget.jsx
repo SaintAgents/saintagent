@@ -16,7 +16,9 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const [minimized, setMinimized] = useState(false);
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [videoFullscreen, setVideoFullscreen] = useState(false);
+  const [showIcebreakers, setShowIcebreakers] = useState(false);
   const scrollRef = useRef(null);
+  const typingRef = useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
