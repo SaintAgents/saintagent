@@ -71,13 +71,14 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
   const missionImage = mission.image_url || MISSION_IMAGES[mission.mission_type] || MISSION_IMAGES.default;
 
   return (
-    <div className="mission-card bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300">
+    <div className="mission-card bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.3)] overflow-hidden hover:shadow-lg transition-all duration-300">
       {/* Always show image */}
       <div className="relative h-40 bg-gradient-to-br from-violet-500 to-purple-600">
         <img
           src={missionImage}
           alt={mission.title}
-          className="w-full h-full object-cover opacity-90" />
+          className="w-full h-full object-cover opacity-90"
+          style={{ filter: 'none' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <Badge className={cn("absolute top-3 left-3 mission-type-badge", typeColors[mission.mission_type])}>
           {mission.mission_type}
@@ -85,8 +86,8 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
       </div>
       
       <div className="p-4">
-        <h4 className="mission-title font-semibold text-slate-900 mb-1 font-mono">{mission.title}</h4>
-        <p className="mission-description text-sm text-slate-500 line-clamp-2 mb-3">{mission.objective}</p>
+        <h4 className="mission-title font-semibold text-slate-900 dark:text-white mb-1">{mission.title}</h4>
+        <p className="mission-description text-sm text-slate-500 dark:text-slate-300 line-clamp-2 mb-3">{mission.objective}</p>
 
         <div className="mission-meta flex items-center gap-4 text-sm text-slate-600 mb-4">
           {timeLeft &&
@@ -103,8 +104,8 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
 
         <div className="space-y-2 mb-4">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-500">Progress</span>
-            <span className="font-medium text-slate-700">{completedTasks}/{totalTasks} tasks</span>
+            <span className="text-slate-500 dark:text-slate-400">Progress</span>
+            <span className="font-medium text-slate-700 dark:text-slate-200">{completedTasks}/{totalTasks} tasks</span>
           </div>
           <Progress value={progressPercent} className="h-2" />
         </div>
