@@ -215,16 +215,19 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {isOpen && (
     <div 
       className={cn(
-        "fixed z-50 rounded-2xl shadow-2xl border transition-all duration-300",
-        "bg-white/95 backdrop-blur-md border-slate-200",
-        "dark:bg-[#050505]/95 dark:backdrop-blur-md dark:border-[rgba(0,255,136,0.4)]",
-        "dark:shadow-[0_0_30px_rgba(0,255,136,0.15),_inset_0_0_60px_rgba(0,255,136,0.03)]",
+        "fixed z-50 rounded-2xl shadow-2xl border transition-all duration-300 flex flex-col",
+        "bg-white/95 backdrop-blur-xl border-slate-200",
+        "dark:bg-[#050505]/95 dark:backdrop-blur-xl dark:border-[#00ff88]",
+        "dark:shadow-[0_0_30px_rgba(0,255,136,0.25),_0_0_60px_rgba(0,255,136,0.1)]",
         "[data-theme='hacker']_&:bg-[#050505]/95 [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hacker-glitch-border",
         isMinimized 
-          ? "bottom-6 right-6 w-72 h-14" 
-          : "bottom-6 right-6 w-[26rem] max-h-[75vh]"
+          ? "bottom-6 right-6 w-72" 
+          : "bottom-6 right-6 w-[26rem]"
       )}
-      style={{ height: isMinimized ? '3.5rem' : 'auto' }}
+      style={{ 
+        height: isMinimized ? '3.5rem' : 'auto',
+        maxHeight: isMinimized ? '3.5rem' : 'calc(100vh - 6rem)'
+      }}
     >
       {/* Header */}
       <div className={cn(
