@@ -801,7 +801,7 @@ export default function CommandDeck() {
 
           {/* Platform Stats Mini Dashboard */}
           <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
-            <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">ACTIVITY CARDS
+            <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">Dashboard
 
 
 
@@ -838,10 +838,10 @@ export default function CommandDeck() {
 
 
             </div>
-          </div>
+            </div>
 
-          {/* Hero Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {/* Hero Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
             <div className="relative overflow-hidden rounded-2xl border border-amber-300/50 backdrop-blur-sm p-4 hover:scale-[1.02] transition-all shadow-lg">
               <div
                 className="absolute inset-0 bg-cover bg-center opacity-[0.875]"
@@ -978,6 +978,11 @@ export default function CommandDeck() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Activity Cards Header */}
+        <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
+          <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">ACTIVITY CARDS</div>
         </div>
 
         {/* Mode Cards Grid */}
