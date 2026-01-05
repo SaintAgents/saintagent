@@ -29,7 +29,11 @@ import {
   List,
   Video,
   Mic,
-  ExternalLink } from
+  ExternalLink,
+  Maximize2,
+  Minimize2,
+  Move,
+  PanelRight } from
   "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -91,6 +95,100 @@ export default function SidePanel({
   const [topOffset, setTopOffset] = useState(80); // px from top
   const dragRef = React.useRef({ startY: 0, startTop: 0 });
 
+  // Pop-off state
+  const [isPoppedOff, setIsPoppedOff] = useState(false);
+  const [popPosition, setPopPosition] = useState({ x: 100, y: 100 });
+  const [popSize, setPopSize] = useState({ width: 380, height: 600 });
+  const popDragRef = React.useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const resizeRef = React.useRef({ startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
+
+  // Load pop-off state from localStorage
+  React.useEffect(() => {
+    try {
+      const savedPop = localStorage.getItem('sidePanelPoppedOff');
+      if (savedPop === 'true') setIsPoppedOff(true);
+      const savedPos = localStorage.getItem('sidePanelPopPosition');
+      if (savedPos) setPopPosition(JSON.parse(savedPos));
+      const savedSize = localStorage.getItem('sidePanelPopSize');
+      if (savedSize) setPopSize(JSON.parse(savedSize));
+    } catch {}
+  }, []);
+
+  // Save pop-off state
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('sidePanelPoppedOff', String(isPoppedOff));
+      localStorage.setItem('sidePanelPopPosition', JSON.stringify(popPosition));
+      localStorage.setItem('sidePanelPopSize', JSON.stringify(popSize));
+    } catch {}
+  }, [isPoppedOff, popPosition, popSize]);
+
+  // Pop-off drag handlers
+  const onPopDragMove = (e) => {
+    const dx = e.clientX - popDragRef.current.startX;
+    const dy = e.clientY - popDragRef.current.startY;
+    setPopPosition({
+      x: Math.max(0, Math.min(window.innerWidth - popSize.width, popDragRef.current.startPosX + dx)),
+      y: Math.max(0, Math.min(window.innerHeight - 50, popDragRef.current.startPosY + dy))
+    });
+  };
+  const onPopDragEnd = () => {
+    document.removeEventListener('mousemove', onPopDragMove);
+    document.removeEventListener('mouseup', onPopDragEnd);
+  };
+  const onPopDragStart = (e) => {
+    e.preventDefault();
+    popDragRef.current = { startX: e.clientX, startY: e.clientY, startPosX: popPosition.x, startPosY: popPosition.y };
+    document.addEventListener('mousemove', onPopDragMove);
+    document.addEventListener('mouseup', onPopDragEnd);
+  };
+
+  // Resize handlers
+  const onResizeMove = (e) => {
+    const dx = e.clientX - resizeRef.current.startX;
+    const dy = e.clientY - resizeRef.current.startY;
+    const edge = resizeRef.current.edge;
+    let newW = resizeRef.current.startW;
+    let newH = resizeRef.current.startH;
+    let newX = popPosition.x;
+    let newY = popPosition.y;
+
+    if (edge.includes('e')) newW = Math.max(280, resizeRef.current.startW + dx);
+    if (edge.includes('w')) {
+      newW = Math.max(280, resizeRef.current.startW - dx);
+      newX = resizeRef.current.startPosX + dx;
+    }
+    if (edge.includes('s')) newH = Math.max(300, resizeRef.current.startH + dy);
+    if (edge.includes('n')) {
+      newH = Math.max(300, resizeRef.current.startH - dy);
+      newY = resizeRef.current.startPosY + dy;
+    }
+
+    setPopSize({ width: newW, height: newH });
+    if (edge.includes('w') || edge.includes('n')) {
+      setPopPosition({ x: newX, y: newY });
+    }
+  };
+  const onResizeEnd = () => {
+    document.removeEventListener('mousemove', onResizeMove);
+    document.removeEventListener('mouseup', onResizeEnd);
+  };
+  const onResizeStart = (e, edge) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizeRef.current = { 
+      startX: e.clientX, 
+      startY: e.clientY, 
+      startW: popSize.width, 
+      startH: popSize.height,
+      startPosX: popPosition.x,
+      startPosY: popPosition.y,
+      edge 
+    };
+    document.addEventListener('mousemove', onResizeMove);
+    document.addEventListener('mouseup', onResizeEnd);
+  };
+
   // Save state when it changes
   React.useEffect(() => {
     try {
@@ -130,6 +228,10 @@ export default function SidePanel({
     return () => {
       document.removeEventListener('mousemove', onDragMove);
       document.removeEventListener('mouseup', onDragEnd);
+      document.removeEventListener('mousemove', onPopDragMove);
+      document.removeEventListener('mouseup', onPopDragEnd);
+      document.removeEventListener('mousemove', onResizeMove);
+      document.removeEventListener('mouseup', onResizeEnd);
     };
   }, []);
 
@@ -419,6 +521,192 @@ export default function SidePanel({
     })();
   }, [profile?.user_id]);
 
+  // Popped-off panel render
+  if (isPoppedOff && isOpen) {
+    return (
+      <>
+        <div
+          className="fixed bg-white rounded-xl shadow-2xl border border-slate-200 flex flex-col z-[60] overflow-hidden"
+          style={{
+            left: popPosition.x,
+            top: popPosition.y,
+            width: popSize.width,
+            height: popSize.height,
+          }}
+        >
+          {/* Header */}
+          <div
+            onMouseDown={onPopDragStart}
+            className="h-10 bg-gradient-to-r from-violet-600 to-violet-700 flex items-center justify-between px-3 cursor-move shrink-0"
+          >
+            <div className="flex items-center gap-2 text-white">
+              <Move className="w-4 h-4 opacity-70" />
+              <span className="text-sm font-medium">Side Panel</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setIsPoppedOff(false)}
+                className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
+                title="Dock panel"
+              >
+                <PanelRight className="w-4 h-4 text-white" />
+              </button>
+              <button
+                onClick={onToggle}
+                className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
+                title="Close panel"
+              >
+                <ChevronRight className="w-4 h-4 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <ScrollArea className="flex-1">
+            <div className="p-4 space-y-6">
+              {/* Control Panel */}
+              <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggAuditOpen(true)}>
+                    <Activity className="w-4 h-4 mr-1" />
+                    Audit
+                  </Button>
+                  <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggPopupOpen(true)}>
+                    <TrendingUp className="w-4 h-4 mr-1" />
+                    Rank
+                  </Button>
+                  <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggTxOpen(true)}>
+                    <List className="w-4 h-4 mr-1" />
+                    Transactions
+                  </Button>
+                  <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
+                    <Calendar className="w-4 h-4 mr-1" />
+                    Daily Ops
+                  </Button>
+                </div>
+                <div className="text-xs text-slate-600">
+                  Next rank in <span className="font-semibold text-violet-700">{Math.max(0, nextRankAt - rankProgress)}</span> pts
+                </div>
+              </div>
+
+              {/* GGG & Rank */}
+              <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
+                      <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
+                        <Coins className="w-5 h-5 text-amber-500" />
+                        {walletAvailable?.toLocaleString?.() || 0}
+                      </p>
+                    </div>
+                    <ProgressRing
+                      value={rankProgress}
+                      max={nextRankAt}
+                      size={64}
+                      strokeWidth={5}
+                      label={profile?.rank_code?.charAt(0).toUpperCase()}
+                      sublabel="Rank"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">To next rank</span>
+                    <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
+                  </div>
+                  <div className="flex justify-between mt-3">
+                    <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
+                      Open Wallet
+                    </Button>
+                    <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
+                      View audit trail
+                    </Button>
+                  </div>
+                </div>
+              </CollapsibleCard>
+
+              <CollapsibleCard title="Online Now" icon={Users} onPopout={() => setOnlinePopupOpen(true)}>
+                <div className="p-4 rounded-xl bg-slate-50 border">
+                  <p className="text-xs text-slate-500 mb-1">Online Now</p>
+                  <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    {onlineUsers}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-1">Updates every 10s</p>
+                </div>
+              </CollapsibleCard>
+
+              <CollapsibleCard title="Recently Joined" icon={Users} badge={recentJoins.length} badgeColor="emerald" onPopout={() => setRecentJoinsPopupOpen(true)}>
+                <div className="space-y-2">
+                  {recentJoins.length === 0 ? (
+                    <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
+                  ) : (
+                    recentJoins.slice(0, 3).map((user) => {
+                      const userValues = user.values_tags || [];
+                      const myValues = profile?.values_tags || [];
+                      const sharedValues = userValues.filter(v => myValues.includes(v));
+                      const hasCompatibility = sharedValues.length >= 2;
+                      const isOnline = user.last_seen_at && new Date(user.last_seen_at) > new Date(Date.now() - 5 * 60 * 1000);
+                      
+                      return (
+                        <button
+                          key={user.id}
+                          onClick={() => {
+                            const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
+                            document.dispatchEvent(event);
+                          }}
+                          className="w-full flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
+                        >
+                          <div className="relative">
+                            <Avatar className="w-8 h-8">
+                              <AvatarImage src={user.avatar_url} />
+                              <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xs">
+                                {user.display_name?.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            {isOnline && (
+                              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1">
+                              <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
+                              {hasCompatibility && (
+                                <Sparkles className="w-3 h-3 text-violet-500" />
+                              )}
+                            </div>
+                            <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
+                          </div>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              </CollapsibleCard>
+            </div>
+          </ScrollArea>
+
+          {/* Resize handles */}
+          <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-10 bottom-0 w-2 cursor-e-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 's')} className="absolute bottom-0 left-0 right-0 h-2 cursor-s-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 'se')} className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 'w')} className="absolute left-0 top-10 bottom-0 w-2 cursor-w-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 'n')} className="absolute top-0 left-0 right-0 h-2 cursor-n-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 'nw')} className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 'ne')} className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize hover:bg-violet-200/50" />
+          <div onMouseDown={(e) => onResizeStart(e, 'sw')} className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize hover:bg-violet-200/50" />
+        </div>
+
+        {/* Floating panels remain available */}
+        {gggPopupOpen && <FloatingPanel title="GGG & Rank" onClose={() => setGggPopupOpen(false)}><div className="p-4">GGG Details</div></FloatingPanel>}
+        {walletPopupOpen && <FloatingPanel title="My Wallet" onClose={() => setWalletPopupOpen(false)}><WalletPanel /></FloatingPanel>}
+        {gggAuditOpen && <FloatingPanel title="Audit Trail" onClose={() => setGggAuditOpen(false)}><div className="p-4">Audit Trail</div></FloatingPanel>}
+        {gggTxOpen && <FloatingPanel title="Transactions" onClose={() => setGggTxOpen(false)}><div className="p-4">Transactions</div></FloatingPanel>}
+        {onlinePopupOpen && <FloatingPanel title="Online Now" onClose={() => setOnlinePopupOpen(false)}><div className="p-4">{onlineUsers} online</div></FloatingPanel>}
+        {recentJoinsPopupOpen && <FloatingPanel title="Recently Joined" onClose={() => setRecentJoinsPopupOpen(false)}><div className="p-4">{recentJoins.length} new members</div></FloatingPanel>}
+      </>
+    );
+  }
+
   return (
     <>
       {/* Always visible nudge handle when collapsed */}
@@ -455,10 +743,16 @@ export default function SidePanel({
       {/* Drag Handle */}
       <div
           onMouseDown={onDragStart}
-          className="h-5 cursor-move bg-slate-100 border-b border-slate-200 flex items-center justify-center text-[10px] text-slate-400"
+          className="h-8 cursor-move bg-slate-100 border-b border-slate-200 flex items-center justify-between px-3"
           title="Drag to move. Drag toward an edge to dock.">
-
-        Drag
+        <span className="text-[10px] text-slate-400">Drag</span>
+        <button
+          onClick={() => setIsPoppedOff(true)}
+          className="p-1 rounded hover:bg-slate-200 transition-colors"
+          title="Pop off panel"
+        >
+          <Maximize2 className="w-3.5 h-3.5 text-slate-500" />
+        </button>
       </div>
 
       {/* Toggle Button */}
