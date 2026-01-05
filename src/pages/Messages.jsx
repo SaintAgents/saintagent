@@ -70,7 +70,7 @@ export default function Messages() {
   });
 
   const markReadMutation = useMutation({
-    mutationFn: (id) => base44.entities.Message.update(id, { is_read: true }),
+    mutationFn: (id) => base44.entities.Message.update(id, { is_read: true, read_at: new Date().toISOString() }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['messages'] })
   });
 
