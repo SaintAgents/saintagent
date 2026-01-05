@@ -125,17 +125,41 @@ export default function MissionDetail() {
   const totalTasks = mission.tasks?.length || 0;
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
+  // Default mission images by type (fallback)
+  const MISSION_IMAGES = {
+    platform: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80',
+    circle: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    region: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80',
+    leader: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80',
+    personal: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80',
+    default: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80'
+  };
+
+  const heroImage = mission.image_url || MISSION_IMAGES[mission.mission_type] || MISSION_IMAGES.default;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      {/* Hero Header with Mission Image */}
+      <div className="relative border-b border-slate-200 overflow-hidden">
+        {/* Background Image at 50% opacity */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: `url(${heroImage})`,
+            opacity: 0.5
+          }}
+        />
+        {/* Gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white" />
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-6 py-6">
           <Breadcrumb items={[
             { label: 'Missions', page: 'Missions' },
             { label: mission?.title || 'Mission Details' }
           ]} />
           
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mt-4">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <Badge className={cn(
@@ -147,14 +171,14 @@ export default function MissionDetail() {
                   {mission.mission_type}
                 </Badge>
                 <Badge variant="outline" className={cn(
-                  mission.status === 'active' && 'border-emerald-300 text-emerald-700',
-                  mission.status === 'completed' && 'border-blue-300 text-blue-700'
+                  mission.status === 'active' && 'border-emerald-300 text-emerald-700 bg-white/80',
+                  mission.status === 'completed' && 'border-blue-300 text-blue-700 bg-white/80'
                 )}>
                   {mission.status}
                 </Badge>
               </div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">{mission.title}</h1>
-              <p className="text-slate-600 max-w-2xl">{mission.objective}</p>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2 drop-shadow-sm">{mission.title}</h1>
+              <p className="text-slate-700 max-w-2xl drop-shadow-sm">{mission.objective}</p>
             </div>
 
             <div className="flex items-center gap-3">
@@ -163,6 +187,7 @@ export default function MissionDetail() {
                   variant="outline" 
                   onClick={() => leaveMissionMutation.mutate()}
                   disabled={leaveMissionMutation.isPending}
+                  className="bg-white/80 backdrop-blur-sm"
                 >
                   Leave Mission
                 </Button>
@@ -170,13 +195,13 @@ export default function MissionDetail() {
                 <Button 
                   onClick={() => joinMissionMutation.mutate()}
                   disabled={joinMissionMutation.isPending}
-                  className="bg-violet-600 hover:bg-violet-700"
+                  className="bg-violet-600 hover:bg-violet-700 shadow-lg"
                 >
                   <Users className="w-4 h-4 mr-2" />
                   Join Mission
                 </Button>
               )}
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" className="bg-white/80 backdrop-blur-sm">
                 <Share2 className="w-4 h-4" />
               </Button>
             </div>
