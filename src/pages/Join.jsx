@@ -31,13 +31,13 @@ const PILLARS = [
 ];
 
 const PHASES = [
-  { phase: 1, title: 'Arrival', description: 'Create your profile and set your intentions', icon: Star },
-  { phase: 2, title: 'Discovery', description: 'Explore the platform and find your first connections', icon: Eye },
-  { phase: 3, title: 'Activation', description: 'Complete your first meeting and earn GGG', icon: Zap },
-  { phase: 4, title: 'Contribution', description: 'Join a mission or create an offer', icon: Target },
-  { phase: 5, title: 'Integration', description: 'Build your reputation and trust score', icon: Shield },
-  { phase: 6, title: 'Expansion', description: 'Grow your network and influence', icon: Heart },
-  { phase: 7, title: 'Ascension', description: 'Unlock leadership tiers and advanced features', icon: Crown },
+  { phase: 1, title: 'Arrival', description: 'Create your profile and set your intentions', icon: Star, gradient: 'from-[#2d1b69] to-[#1a0f3d]', border: '#4a2fb8' },
+  { phase: 2, title: 'Discovery', description: 'Explore the platform and find your first connections', icon: Eye, gradient: 'from-[#1e3a5f] to-[#0f1e30]', border: '#2e5c8a' },
+  { phase: 3, title: 'Activation', description: 'Complete your first meeting and earn GGG', icon: Zap, gradient: 'from-[#0d4d4d] to-[#063333]', border: '#1a7a7a' },
+  { phase: 4, title: 'Contribution', description: 'Join a mission or create an offer', icon: Target, gradient: 'from-[#4d2c1e] to-[#331c14]', border: '#7a4a2e' },
+  { phase: 5, title: 'Integration', description: 'Build your reputation and trust score', icon: Shield, gradient: 'from-[#4d1e4d] to-[#2d0f2d]', border: '#7a2e7a' },
+  { phase: 6, title: 'Expansion', description: 'Grow your network and influence', icon: Heart, gradient: 'from-[#1e4d3a] to-[#0f2d1e]', border: '#2e7a5c' },
+  { phase: 7, title: 'Ascension', description: 'Unlock leadership tiers and advanced features', icon: Crown, gradient: 'from-[#5c4d1e] to-[#3d2d0f]', border: '#8a7a2e' },
 ];
 
 const TRUST_FEATURES = [
