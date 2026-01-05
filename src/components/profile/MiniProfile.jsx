@@ -35,8 +35,9 @@ export default function MiniProfile({
   showReachBadge = true,
   showHelpHint = true
 }) {
+  // Always call hooks unconditionally with stable keys
   const { data: profs = [] } = useQuery({
-    queryKey: ['miniProfile', userId],
+    queryKey: ['miniProfile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: !!userId,
     refetchInterval: 10000
@@ -44,13 +45,13 @@ export default function MiniProfile({
   const profile = profs?.[0];
 
   const { data: roles = [] } = useQuery({
-    queryKey: ['miniProfileRoles', userId],
+    queryKey: ['miniProfileRoles', userId || 'none'],
     queryFn: () => base44.entities.UserRole.filter({ user_id: userId, status: 'active' }),
     enabled: !!userId
   });
 
   const { data: miniBadges = [] } = useQuery({
-    queryKey: ['miniProfileBadges', userId],
+    queryKey: ['miniProfileBadges', userId || 'none'],
     queryFn: () => base44.entities.Badge.filter({ user_id: userId, status: 'active' }),
     enabled: !!userId
   });
