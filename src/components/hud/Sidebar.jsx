@@ -565,10 +565,10 @@ export default function Sidebar({
 
         {/* Theme Toggle - Collapsible */}
         {(!isCollapsed || inPopup) && (
-        <Collapsible>
+        <Collapsible open={themeOpen} onOpenChange={setThemeOpen}>
           <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
             <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
-            <ChevronDown className="w-4 h-4 text-slate-500" />
+            {themeOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
           </CollapsibleTrigger>
           <CollapsibleContent className="pt-2 space-y-2">
             <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
