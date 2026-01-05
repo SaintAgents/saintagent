@@ -113,8 +113,8 @@ export default function Marketplace() {
           <div className="flex items-center bg-white rounded-xl border p-1">
             <Button
               variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
-              size="icon"
-              className="rounded-lg"
+              size="icon" className="bg-secondary text-slate-50 text-sm font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow-sm hover:bg-secondary/80 h-9 w-9"
+
               onClick={() => setViewMode('grid')}>
 
               <Grid3X3 className="w-4 h-4" />
