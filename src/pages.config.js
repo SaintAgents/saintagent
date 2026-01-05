@@ -32,7 +32,6 @@ import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
 import CommandDeck from './pages/CommandDeck';
-import Join from './pages/Join';
 import __Layout from './Layout.jsx';
 
 
@@ -71,7 +70,6 @@ export const PAGES = {
     "Terms": Terms,
     "UserGuide": UserGuide,
     "CommandDeck": CommandDeck,
-    "Join": Join,
 }
 
 export const pagesConfig = {
