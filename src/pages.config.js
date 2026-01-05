@@ -3,7 +3,6 @@ import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
-import CommandDeck from './pages/CommandDeck';
 import DailyOps from './pages/DailyOps';
 import EvaluationDocs from './pages/EvaluationDocs';
 import EvaluationSpec from './pages/EvaluationSpec';
@@ -41,7 +40,6 @@ export const PAGES = {
     "AffiliateCenter": AffiliateCenter,
     "CRM": CRM,
     "Circles": Circles,
-    "CommandDeck": CommandDeck,
     "DailyOps": DailyOps,
     "EvaluationDocs": EvaluationDocs,
     "EvaluationSpec": EvaluationSpec,
@@ -73,7 +71,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "CommandDeck",
+    mainPage: "ActivityFeed",
     Pages: PAGES,
     Layout: __Layout,
 };
