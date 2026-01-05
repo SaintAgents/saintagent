@@ -218,8 +218,8 @@ export default function AffiliateCenter() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Affiliate Center</h1>
-          <p>
+          <h1 className="text-3xl font-bold mb-2 text-slate-900">Affiliate Center</h1>
+          <p className="text-slate-600">
             Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
           </p>
         </div>
