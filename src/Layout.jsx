@@ -401,10 +401,10 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
                                     }
 
         /* Avatar card background - light mode uses gold shield, dark mode uses dark image */
-        [data-theme='light'] [data-avatar-card] [data-avatar-bg] {
-          display: block;
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2b22c4249_Screenshot2026-01-04185408.png') !important;
-        }
+                    [data-theme='light'] [data-avatar-card] [data-avatar-bg] {
+                      display: block;
+                      background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f95689693_Screenshot2026-01-04192526.png') !important;
+                    }
         [data-theme='light'] [data-avatar-card] [data-avatar-overlay] {
           background: transparent;
           backdrop-filter: none;
