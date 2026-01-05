@@ -4,13 +4,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ProgressRing from '@/components/hud/ProgressRing';
-import { Shield } from 'lucide-react';
+import { Shield, Search } from 'lucide-react';
+import TrustHistoryModal from './TrustHistoryModal';
 
 export default function TrustScoreCard({ userId, onUpdated }) {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [score, setScore] = React.useState(0);
   const [breakdown, setBreakdown] = React.useState(null);
+  const [historyOpen, setHistoryOpen] = React.useState(false);
   const qc = useQueryClient();
 
   const recompute = async () => {
@@ -72,20 +74,42 @@ export default function TrustScoreCard({ userId, onUpdated }) {
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-6">
-            <ProgressRing value={score} max={100} size={88} strokeWidth={8} color="emerald" label={`${score}`} sublabel="/100" />
-            {breakdown && (
-              <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                <div className="text-slate-500">Testimonials</div><div className="font-medium text-slate-900">{Math.round(breakdown.testimonials)}</div>
-                <div className="text-slate-500">Collaborations</div><div className="font-medium text-slate-900">{Math.round(breakdown.collaborations)}</div>
-                <div className="text-slate-500">Interactions</div><div className="font-medium text-slate-900">{Math.round(breakdown.interactions)}</div>
-                <div className="text-slate-500">Presence</div><div className="font-medium text-slate-900">{Math.round(breakdown.presence)}</div>
-                <div className="text-slate-500">RP</div><div className="font-medium text-slate-900">{Math.round(breakdown.rp)}</div>
-              </div>
-            )}
+          <div className="space-y-4">
+            <div className="flex items-center gap-6">
+              <ProgressRing value={score} max={100} size={88} strokeWidth={8} color="emerald" label={`${score}`} sublabel="/100" />
+              {breakdown && (
+                <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                  <div className="text-slate-500">Testimonials</div><div className="font-medium text-slate-900">{Math.round(breakdown.testimonials)}</div>
+                  <div className="text-slate-500">Collaborations</div><div className="font-medium text-slate-900">{Math.round(breakdown.collaborations)}</div>
+                  <div className="text-slate-500">Interactions</div><div className="font-medium text-slate-900">{Math.round(breakdown.interactions)}</div>
+                  <div className="text-slate-500">Presence</div><div className="font-medium text-slate-900">{Math.round(breakdown.presence)}</div>
+                  <div className="text-slate-500">RP</div><div className="font-medium text-slate-900">{Math.round(breakdown.rp)}</div>
+                </div>
+              )}
+            </div>
+            
+            {/* Deep Dive Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-2 text-emerald-700 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300"
+              onClick={() => setHistoryOpen(true)}
+            >
+              <Search className="w-4 h-4" />
+              Deep Dive - Full Transparency Report
+            </Button>
           </div>
         )}
       </CardContent>
+      
+      {/* Trust History Modal */}
+      <TrustHistoryModal
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        userId={userId}
+        currentScore={score}
+        breakdown={breakdown}
+      />
     </Card>
   );
 }
