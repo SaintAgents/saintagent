@@ -46,7 +46,10 @@ import {
   Info,
   User,
   Terminal,
-  Share2
+  Share2,
+  Maximize2,
+  Move,
+  PanelLeft
 } from "lucide-react";
 import {
   Tooltip,
@@ -107,6 +110,109 @@ export default function Sidebar({
   const [presenceOpen, setPresenceOpen] = useState(true);
   const isDark = theme === 'dark';
 
+  // Pop-off state
+  const [isPoppedOff, setIsPoppedOff] = useState(false);
+  const [popPosition, setPopPosition] = useState({ x: 50, y: 50 });
+  const [popSize, setPopSize] = useState({ width: 280, height: 600 });
+  const popDragRef = React.useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const resizeRef = React.useRef({ startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
+
+  // Load pop-off state from localStorage
+  React.useEffect(() => {
+    try {
+      const savedPop = localStorage.getItem('sidebarPoppedOff');
+      if (savedPop === 'true') setIsPoppedOff(true);
+      const savedPos = localStorage.getItem('sidebarPopPosition');
+      if (savedPos) setPopPosition(JSON.parse(savedPos));
+      const savedSize = localStorage.getItem('sidebarPopSize');
+      if (savedSize) setPopSize(JSON.parse(savedSize));
+    } catch {}
+  }, []);
+
+  // Save pop-off state
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('sidebarPoppedOff', String(isPoppedOff));
+      localStorage.setItem('sidebarPopPosition', JSON.stringify(popPosition));
+      localStorage.setItem('sidebarPopSize', JSON.stringify(popSize));
+    } catch {}
+  }, [isPoppedOff, popPosition, popSize]);
+
+  // Pop-off drag handlers
+  const onPopDragMove = (e) => {
+    const dx = e.clientX - popDragRef.current.startX;
+    const dy = e.clientY - popDragRef.current.startY;
+    setPopPosition({
+      x: Math.max(0, Math.min(window.innerWidth - popSize.width, popDragRef.current.startPosX + dx)),
+      y: Math.max(0, Math.min(window.innerHeight - 50, popDragRef.current.startPosY + dy))
+    });
+  };
+  const onPopDragEnd = () => {
+    document.removeEventListener('mousemove', onPopDragMove);
+    document.removeEventListener('mouseup', onPopDragEnd);
+  };
+  const onPopDragStart = (e) => {
+    e.preventDefault();
+    popDragRef.current = { startX: e.clientX, startY: e.clientY, startPosX: popPosition.x, startPosY: popPosition.y };
+    document.addEventListener('mousemove', onPopDragMove);
+    document.addEventListener('mouseup', onPopDragEnd);
+  };
+
+  // Resize handlers
+  const onResizeMove = (e) => {
+    const dx = e.clientX - resizeRef.current.startX;
+    const dy = e.clientY - resizeRef.current.startY;
+    const edge = resizeRef.current.edge;
+    let newW = resizeRef.current.startW;
+    let newH = resizeRef.current.startH;
+    let newX = popPosition.x;
+    let newY = popPosition.y;
+
+    if (edge.includes('e')) newW = Math.max(220, resizeRef.current.startW + dx);
+    if (edge.includes('w')) {
+      newW = Math.max(220, resizeRef.current.startW - dx);
+      newX = resizeRef.current.startPosX + dx;
+    }
+    if (edge.includes('s')) newH = Math.max(300, resizeRef.current.startH + dy);
+    if (edge.includes('n')) {
+      newH = Math.max(300, resizeRef.current.startH - dy);
+      newY = resizeRef.current.startPosY + dy;
+    }
+
+    setPopSize({ width: newW, height: newH });
+    if (edge.includes('w') || edge.includes('n')) {
+      setPopPosition({ x: newX, y: newY });
+    }
+  };
+  const onResizeEnd = () => {
+    document.removeEventListener('mousemove', onResizeMove);
+    document.removeEventListener('mouseup', onResizeEnd);
+  };
+  const onResizeStart = (e, edge) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizeRef.current = { 
+      startX: e.clientX, 
+      startY: e.clientY, 
+      startW: popSize.width, 
+      startH: popSize.height,
+      startPosX: popPosition.x,
+      startPosY: popPosition.y,
+      edge 
+    };
+    document.addEventListener('mousemove', onResizeMove);
+    document.addEventListener('mouseup', onResizeEnd);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', onPopDragMove);
+      document.removeEventListener('mouseup', onPopDragEnd);
+      document.removeEventListener('mousemove', onResizeMove);
+      document.removeEventListener('mouseup', onResizeEnd);
+    };
+  }, []);
+
   // Ensure we have an email even if profile hasn't loaded yet
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -151,48 +257,18 @@ export default function Sidebar({
 
   const statusOption = STATUS_OPTIONS.find(s => s.value === status);
 
-  return (
-    <div className={cn(
-      "fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col transition-all duration-300",
-      isCollapsed ? "w-20" : "w-64"
-    )}>
-      {/* Logo */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-100">
-        <div
-          className={cn("flex items-center gap-3 cursor-pointer", isCollapsed && "justify-center w-full")}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          title="Go to top"
-        >
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
-              alt="Saint Agent Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          {!isCollapsed && (
-            <span className="font-bold text-xl text-slate-900">SaintAgent</span>
-          )}
-        </div>
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className={cn("shrink-0", isCollapsed && "hidden")}
-          onClick={onToggle}
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </Button>
-      </div>
-
+  // Render full sidebar content (reused in both docked and popped-off modes)
+  const renderSidebarContent = (inPopup = false) => (
+    <>
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
-        <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && "justify-center")}> 
-          {!isCollapsed && (
+        <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center")}> 
+          {(!isCollapsed || inPopup) && (
             <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Navigation</span>
           )}
           <button
             onClick={() => setNavOpen(!navOpen)}
-            className={cn("p-1 rounded-md hover:bg-slate-50", isCollapsed && "w-full flex items-center justify-center")}
+            className={cn("p-1 rounded-md hover:bg-slate-50", isCollapsed && !inPopup && "w-full flex items-center justify-center")}
             aria-label={navOpen ? 'Collapse navigation' : 'Expand navigation'}
             title={navOpen ? 'Collapse' : 'Expand'}
           >
@@ -208,12 +284,10 @@ export default function Sidebar({
             <TooltipProvider delayDuration={200}>
               {NAV_ITEMS.map((item) => {
                 const isActive = currentPage === item.id;
-                // Only show badge for messages (real unread count), remove hardcoded badges
                 const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
-                
-                // Check if Leader Channel should be locked
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
                 const isLocked = item.locked || isLeaderLocked;
+                const showExpanded = !isCollapsed || inPopup;
                 
                 const navLink = (
                   <Link
@@ -232,7 +306,7 @@ export default function Sidebar({
                       "w-5 h-5 shrink-0",
                       isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
                     )} />
-                    {!isCollapsed && (
+                    {showExpanded && (
                       <>
                         <span className="font-medium text-sm">{item.label}</span>
                         {badgeValue > 0 && !isLocked && (
@@ -250,12 +324,12 @@ export default function Sidebar({
                         )}
                       </>
                     )}
-                    {isCollapsed && badgeValue > 0 && !isLocked && (
+                    {!showExpanded && badgeValue > 0 && !isLocked && (
                       <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                         {badgeValue}
                       </span>
                     )}
-                    {isCollapsed && isLocked && (
+                    {!showExpanded && isLocked && (
                       <span className="absolute -top-1 -right-1 w-4 h-4 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center">
                         <Lock className="w-2.5 h-2.5" />
                       </span>
@@ -263,8 +337,7 @@ export default function Sidebar({
                   </Link>
                 );
                 
-                // Wrap all items with tooltips when collapsed, or items with hints when expanded
-                if ((isCollapsed || item.hint) && !isLocked) {
+                if (((isCollapsed && !inPopup) || item.hint) && !isLocked) {
                   return (
                     <Tooltip key={item.id}>
                       <TooltipTrigger asChild>
@@ -278,7 +351,6 @@ export default function Sidebar({
                   );
                 }
                 
-                // Wrap locked items with tooltip
                 if (isLocked && item.id === 'leader') {
                   return (
                     <Tooltip key={item.id}>
@@ -289,15 +361,8 @@ export default function Sidebar({
                         <div className="space-y-1">
                           <p className="font-medium text-sm">Leader Channel Locked</p>
                           <p className="text-xs text-slate-500">
-                            Become a Verified 144k Leader to unlock. Complete the Leader Pathway quiz and get approved to access exclusive leader tools and broadcasts.
+                            Become a Verified 144k Leader to unlock.
                           </p>
-                          <Link 
-                            to={createPageUrl('LeaderChannel')} 
-                            className="text-xs text-violet-600 hover:underline inline-flex items-center gap-1 mt-1"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Learn how to become a leader <Info className="w-3 h-3" />
-                          </Link>
                         </div>
                       </TooltipContent>
                     </Tooltip>
@@ -312,15 +377,13 @@ export default function Sidebar({
       </div>
 
       {/* Leaderboard */}
-      {!isCollapsed && (
+      {(!isCollapsed || inPopup) && (
         <div className="border-t border-slate-100 p-3">
           <div className="mb-3 px-2">
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setLeaderboardOpen(!leaderboardOpen)}
                 className="flex items-center gap-2 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors"
-                aria-label={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
-                title={leaderboardOpen ? 'Collapse' : 'Expand'}
               >
                 <Trophy className="w-4 h-4 text-amber-500" />
                 <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
@@ -340,7 +403,6 @@ export default function Sidebar({
                   size="icon"
                   className="h-6 w-6"
                   onClick={() => setLeaderboardOpen(!leaderboardOpen)}
-                  title={leaderboardOpen ? 'Collapse' : 'Expand'}
                 >
                   {leaderboardOpen ? (
                     <ChevronUp className="w-4 h-4 text-slate-500" />
@@ -351,8 +413,7 @@ export default function Sidebar({
               </div>
             </div>
           </div>
-          <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}
-          >
+          <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}>
             <ScrollArea className="h-48">
               <TooltipProvider delayDuration={200}>
               <div className="space-y-2">
@@ -389,7 +450,7 @@ export default function Sidebar({
                         </TooltipTrigger>
                         <TooltipContent side="right" className="max-w-[200px]">
                           <p className="text-xs font-medium">Rank Points (RP)</p>
-                          <p className="text-xs text-slate-500">Earned through missions, introductions, meetings, and positive community contributions.</p>
+                          <p className="text-xs text-slate-500">Earned through missions and contributions.</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
@@ -402,71 +463,19 @@ export default function Sidebar({
               </TooltipProvider>
             </ScrollArea>
           </div>
-          {leadersPopupOpen && (
-            <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
-              <TooltipProvider delayDuration={200}>
-              <div className="space-y-2">
-                {resolvedLeaders.map((leader, index) => (
-                  <div
-                    key={leader.id}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="relative">
-                      <Avatar className="w-9 h-9 cursor-pointer" data-user-id={leader.user_id}>
-                        <AvatarImage src={leader.avatar_url} />
-                        <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      {index < 3 && (
-                        <div className={cn(
-                          "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
-                          index === 0 && "bg-amber-400 text-white",
-                          index === 1 && "bg-slate-300 text-slate-700",
-                          index === 2 && "bg-orange-400 text-white"
-                        )}>
-                          {index + 1}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{leader.display_name}</p>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-1 cursor-help">
-                            <TrendingUp className="w-3 h-3 text-violet-500" />
-                            <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="right" className="max-w-[200px]">
-                          <p className="text-xs font-medium">Rank Points (RP)</p>
-                          <p className="text-xs text-slate-500">Earned through missions, introductions, meetings, and positive community contributions.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                    {leader.leader_tier === 'verified144k' && (
-                      <Crown className="w-4 h-4 text-amber-500 shrink-0" />
-                    )}
-                  </div>
-                ))}
-              </div>
-              </TooltipProvider>
-            </FloatingPanel>
-          )}
         </div>
       )}
 
       {/* Footer - Status Controls */}
       <div className={cn(
         "border-t border-slate-100 p-4 space-y-3",
-        isCollapsed && "px-2"
+        (isCollapsed && !inPopup) && "px-2"
       )}>
-        {/* Presence Section */}
         <button
           onClick={() => setPresenceOpen(!presenceOpen)}
-          className={cn("w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50", isCollapsed && "justify-center")}
-          aria-label={presenceOpen ? 'Collapse presence' : 'Expand presence'}
-          title={presenceOpen ? 'Collapse' : 'Expand'}
+          className={cn("w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50", (isCollapsed && !inPopup) && "justify-center")}
         >
-          {!isCollapsed && (
+          {(!isCollapsed || inPopup) && (
             <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
           )}
           {presenceOpen ? (
@@ -478,7 +487,7 @@ export default function Sidebar({
 
         {presenceOpen && (
           <>
-            {!isCollapsed && profile && (
+            {(!isCollapsed || inPopup) && profile && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-slate-500">RP</span>
@@ -488,16 +497,15 @@ export default function Sidebar({
               </div>
             )}
 
-            {/* Status Light */}
             <div className={cn(
               "flex items-center gap-3",
-              isCollapsed && "justify-center"
+              (isCollapsed && !inPopup) && "justify-center"
             )}>
               <div className={cn(
                 "w-3 h-3 rounded-full animate-pulse",
                 statusOption?.color
               )} />
-              {!isCollapsed && (
+              {(!isCollapsed || inPopup) && (
                 <Select value={status} onValueChange={handleStatusChange}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
@@ -516,8 +524,7 @@ export default function Sidebar({
               )}
             </div>
 
-            {/* DM Policy */}
-            {!isCollapsed && (
+            {(!isCollapsed || inPopup) && (
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-4 h-4 text-slate-400" />
                 <Select value={dmPolicy} onValueChange={handleDMChange}>
@@ -535,58 +542,56 @@ export default function Sidebar({
               </div>
             )}
           </>
+        )}
+
+        {/* Theme Toggle */}
+        {(!isCollapsed || inPopup) && (
+        <div className="mt-2 space-y-2">
+          <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
+          <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="light" id={inPopup ? "theme-light-pop" : "theme-light"} className="h-3.5 w-3.5" />
+              <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="dark" id={inPopup ? "theme-dark-pop" : "theme-dark"} className="h-3.5 w-3.5" />
+              <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="hacker" id={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="h-3.5 w-3.5" />
+              <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
+              </Label>
+            </div>
+          </RadioGroup>
+        </div>
+        )}
+
+        <Link
+          to={createPageUrl('Profile')}
+          className={cn(
+            "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mt-2 bg-violet-50 hover:bg-violet-100 text-violet-700 md:hidden",
+            (isCollapsed && !inPopup) && "justify-center px-2"
           )}
-
-          {/* Theme Toggle */}
-          {!isCollapsed && (
-          <div className="mt-2 space-y-2">
-            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
-            <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="light" id="theme-light" className="h-3.5 w-3.5" />
-                <Label htmlFor="theme-light" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                  <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="dark" id="theme-dark" className="h-3.5 w-3.5" />
-                <Label htmlFor="theme-dark" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                  <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="hacker" id="theme-hacker" className="h-3.5 w-3.5" />
-                <Label htmlFor="theme-hacker" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
+        >
+          {profile?.avatar_url ? (
+            <Avatar className="w-6 h-6">
+              <AvatarImage src={profile.avatar_url} />
+              <AvatarFallback className="text-xs">{profile?.display_name?.charAt(0)}</AvatarFallback>
+            </Avatar>
+          ) : (
+            <User className="w-5 h-5" />
           )}
+          {(!isCollapsed || inPopup) && (
+            <span className="font-medium text-sm">My Profile</span>
+          )}
+        </Link>
 
-          {/* My Profile Button - visible on mobile/collapsed view */}
-          <Link
-            to={createPageUrl('Profile')}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mt-2 bg-violet-50 hover:bg-violet-100 text-violet-700 md:hidden",
-              isCollapsed && "justify-center px-2"
-            )}
-          >
-            {profile?.avatar_url ? (
-              <Avatar className="w-6 h-6">
-                <AvatarImage src={profile.avatar_url} />
-                <AvatarFallback className="text-xs">{profile?.display_name?.charAt(0)}</AvatarFallback>
-              </Avatar>
-            ) : (
-              <User className="w-5 h-5" />
-            )}
-            {!isCollapsed && (
-              <span className="font-medium text-sm">My Profile</span>
-            )}
-          </Link>
-
-          {/* Collapse Toggle (when collapsed) */}
-        {isCollapsed && (
+        {(isCollapsed && !inPopup) && (
           <Button 
             variant="ghost" 
             size="icon"
@@ -597,6 +602,186 @@ export default function Sidebar({
           </Button>
         )}
       </div>
+    </>
+  );
+
+  // Popped-off panel render
+  if (isPoppedOff) {
+    return (
+      <div
+        className="fixed bg-white rounded-xl shadow-2xl border border-slate-200 flex flex-col z-[60] overflow-hidden"
+        style={{
+          left: popPosition.x,
+          top: popPosition.y,
+          width: popSize.width,
+          height: popSize.height,
+        }}
+      >
+        {/* Header */}
+        <div
+          onMouseDown={onPopDragStart}
+          className="h-10 bg-gradient-to-r from-violet-600 to-violet-700 flex items-center justify-between px-3 cursor-move shrink-0"
+        >
+          <div className="flex items-center gap-2 text-white">
+            <Move className="w-4 h-4 opacity-70" />
+            <span className="text-sm font-medium">Navigation</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setIsPoppedOff(false)}
+              className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
+              title="Dock panel"
+            >
+              <PanelLeft className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <ScrollArea className="flex-1">
+          {renderSidebarContent(true)}
+        </ScrollArea>
+
+        {/* Resize handles */}
+        <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-10 bottom-0 w-2 cursor-e-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 's')} className="absolute bottom-0 left-0 right-0 h-2 cursor-s-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 'se')} className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 'w')} className="absolute left-0 top-10 bottom-0 w-2 cursor-w-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 'n')} className="absolute top-0 left-0 right-0 h-2 cursor-n-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 'nw')} className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 'ne')} className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize hover:bg-violet-200/50" />
+        <div onMouseDown={(e) => onResizeStart(e, 'sw')} className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize hover:bg-violet-200/50" />
+
+        {/* Leaders popup */}
+        {leadersPopupOpen && (
+          <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
+            <TooltipProvider delayDuration={200}>
+            <div className="space-y-2">
+              {resolvedLeaders.map((leader, index) => (
+                <div key={leader.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                  <div className="relative">
+                    <Avatar className="w-9 h-9 cursor-pointer" data-user-id={leader.user_id}>
+                      <AvatarImage src={leader.avatar_url} />
+                      <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    {index < 3 && (
+                      <div className={cn(
+                        "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
+                        index === 0 && "bg-amber-400 text-white",
+                        index === 1 && "bg-slate-300 text-slate-700",
+                        index === 2 && "bg-orange-400 text-white"
+                      )}>
+                        {index + 1}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-900 truncate">{leader.display_name}</p>
+                    <div className="flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3 text-violet-500" />
+                      <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                    </div>
+                  </div>
+                  {leader.leader_tier === 'verified144k' && (
+                    <Crown className="w-4 h-4 text-amber-500 shrink-0" />
+                  )}
+                </div>
+              ))}
+            </div>
+            </TooltipProvider>
+          </FloatingPanel>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn(
+      "fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col transition-all duration-300",
+      isCollapsed ? "w-20" : "w-64"
+    )}>
+      {/* Logo */}
+      <div className="flex items-center justify-between p-4 border-b border-slate-100">
+        <div
+          className={cn("flex items-center gap-3 cursor-pointer", isCollapsed && "justify-center w-full")}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          title="Go to top"
+        >
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
+              alt="Saint Agent Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          {!isCollapsed && (
+            <span className="font-bold text-xl text-slate-900">SaintAgent</span>
+          )}
+        </div>
+        <div className="flex items-center gap-1">
+          {!isCollapsed && (
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="shrink-0 h-8 w-8"
+              onClick={() => setIsPoppedOff(true)}
+              title="Pop off panel"
+            >
+              <Maximize2 className="w-4 h-4 text-slate-400" />
+            </Button>
+          )}
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className={cn("shrink-0", isCollapsed && "hidden")}
+            onClick={onToggle}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {renderSidebarContent(false)}
+
+      {/* Leaders popup when docked */}
+      {leadersPopupOpen && (
+        <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
+          <TooltipProvider delayDuration={200}>
+          <div className="space-y-2">
+            {resolvedLeaders.map((leader, index) => (
+              <div key={leader.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="relative">
+                  <Avatar className="w-9 h-9 cursor-pointer" data-user-id={leader.user_id}>
+                    <AvatarImage src={leader.avatar_url} />
+                    <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  {index < 3 && (
+                    <div className={cn(
+                      "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
+                      index === 0 && "bg-amber-400 text-white",
+                      index === 1 && "bg-slate-300 text-slate-700",
+                      index === 2 && "bg-orange-400 text-white"
+                    )}>
+                      {index + 1}
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">{leader.display_name}</p>
+                  <div className="flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3 text-violet-500" />
+                    <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
+                  </div>
+                </div>
+                {leader.leader_tier === 'verified144k' && (
+                  <Crown className="w-4 h-4 text-amber-500 shrink-0" />
+                )}
+              </div>
+            ))}
+          </div>
+          </TooltipProvider>
+        </FloatingPanel>
+      )}
     </div>
   );
 }
