@@ -56,13 +56,17 @@ export default function Join() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 text-white">
+    <div className="min-h-screen text-white" style={{
+      backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/48467bf50_universal_upscale_0_1f89ab0b-f95f-44fd-abf7-63c29460b2b1_0.jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
       {/* Track affiliate referrals from ?ref=CODE */}
       <AffiliateTracker />
       {/* Hero Section */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80')] bg-cover bg-center opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-950/50 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-violet-950/60 to-slate-900/90" />
         
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-32 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/20 border border-violet-400/30 mb-8">
