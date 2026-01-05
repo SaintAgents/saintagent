@@ -316,8 +316,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
     return <div className="min-h-screen bg-slate-50" />;
   }
 
+  // Determine if we should show starfield (dark/hacker theme + starfield effect selected)
+  const showStarfield = (theme === 'dark' || theme === 'hacker') && bgEffect === 'starfield';
+  const showMatrixRain = (theme === 'dark' || theme === 'hacker') && bgEffect === 'matrix';
+  const rankCode = profile?.rp_rank_code || 'seeker';
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
+      {/* Starfield Canvas - rank-colored stars */}
+      {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
+
       <style>{`
         :root {
           --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
