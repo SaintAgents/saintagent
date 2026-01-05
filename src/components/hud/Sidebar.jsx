@@ -45,7 +45,8 @@ import {
   Lock,
   Info,
   User,
-  Terminal
+  Terminal,
+  Share2
 } from "lucide-react";
 import {
   Tooltip,
