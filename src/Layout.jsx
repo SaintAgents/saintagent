@@ -430,6 +430,40 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
           [data-theme='custom'] .min-h-screen {
             background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--accent) 12%, white));
           }
+
+          /* Hacker theme - light green on black */
+          [data-theme='hacker'] body, [data-theme='hacker'] .min-h-screen {
+            background-color: #000 !important;
+            background-image: none !important;
+            color: #00ff00 !important;
+          }
+          [data-theme='hacker'] [class*='bg-white'] { background-color: #000 !important; color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='bg-slate-50'] { background-color: #000 !important; color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='bg-slate-100'] { background-color: #0a0a0a !important; color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='border-slate-100'] { border-color: #003300 !important; }
+          [data-theme='hacker'] [class*='border-slate-200'] { border-color: #004400 !important; }
+          [data-theme='hacker'] [class*='text-slate-900'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='text-slate-800'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='text-slate-700'] { color: #00dd00 !important; }
+          [data-theme='hacker'] [class*='text-slate-600'] { color: #00cc00 !important; }
+          [data-theme='hacker'] [class*='text-slate-500'] { color: #00aa00 !important; }
+          [data-theme='hacker'] [class*='text-slate-400'] { color: #009900 !important; }
+          [data-theme='hacker'] [class*='text-violet-'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='text-purple-'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='text-teal-'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='text-cyan-'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='text-fuchsia-'] { color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='bg-violet-'] { background-color: #003300 !important; color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='bg-purple-'] { background-color: #003300 !important; color: #00ff00 !important; }
+          [data-theme='hacker'] [class*='hover\\:bg-slate-50']:hover { background-color: #001100 !important; }
+          [data-theme='hacker'] [class*='hover\\:bg-violet-']:hover { background-color: #004400 !important; }
+          [data-theme='hacker'] main[data-page='CommandDeck'] {
+            background-image: none !important;
+            background-color: #000 !important;
+          }
+          [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
+          [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
+          [data-theme='hacker'] [data-avatar-card] { background-color: #000 !important; border-color: #003300 !important; }
         `}</style>
 
         {/* Sidebar */}

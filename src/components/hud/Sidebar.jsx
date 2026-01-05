@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { 
   LayoutDashboard,
   Users,
@@ -42,7 +44,8 @@ import {
   Folder,
   Lock,
   Info,
-  User
+  User,
+  Terminal
 } from "lucide-react";
 import {
   Tooltip,
@@ -533,16 +536,28 @@ export default function Sidebar({
 
           {/* Theme Toggle */}
           {!isCollapsed && (
-          <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center gap-2">
-              {isDark ? (
-                <Moon className="w-4 h-4 text-slate-400" />
-              ) : (
-                <Sun className="w-4 h-4 text-slate-400" />
-              )}
-              <span className="text-sm text-slate-700">Dark mode</span>
-            </div>
-            <Switch checked={isDark} onCheckedChange={(v) => onThemeToggle?.(v ? 'dark' : 'light')} />
+          <div className="mt-2 space-y-2">
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
+            <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="light" id="theme-light" className="h-3.5 w-3.5" />
+                <Label htmlFor="theme-light" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="dark" id="theme-dark" className="h-3.5 w-3.5" />
+                <Label htmlFor="theme-dark" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="hacker" id="theme-hacker" className="h-3.5 w-3.5" />
+                <Label htmlFor="theme-hacker" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
+                </Label>
+              </div>
+            </RadioGroup>
           </div>
           )}
 
