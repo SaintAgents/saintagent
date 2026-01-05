@@ -102,27 +102,30 @@ export default function AffiliateCenter() {
   const pendingReferrals = referrals.filter(r => r.status === 'pending' || r.status === 'activated');
   const paidReferrals = referrals.filter(r => r.status === 'paid');
 
-  // Show loading state only when actively fetching user or profile
-  if (userLoading || (currentUser && profileLoading)) {
+  // Show loading state - wait for user and profile to load
+  const isLoading = userLoading || (currentUser && profileLoading);
+  
+  // If still loading, show spinner
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
+      <div className="p-6 flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-600">Loading affiliate center...</p>
+          <p className="text-slate-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  // If no profile/handle yet
+  // If no profile/handle yet - show message to complete profile
   if (!profile?.handle) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
-        <Card className="max-w-md">
+      <div className="p-6">
+        <Card className="max-w-md mx-auto dark:bg-slate-800 dark:border-slate-700">
           <CardContent className="pt-6 text-center">
             <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold text-slate-900 mb-2">Profile Required</h2>
-            <p className="text-sm text-slate-600 mb-4">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Profile Required</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
               Complete your profile and set a handle to access your affiliate link.
             </p>
             <Button onClick={() => window.location.href = '/Profile'}>
