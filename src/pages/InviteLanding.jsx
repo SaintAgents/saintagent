@@ -138,8 +138,8 @@ export default function InviteLanding() {
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${pillar.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                 <pillar.icon className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-2">{pillar.title}</h3>
-              <p className="text-sm text-slate-300 leading-relaxed">{pillar.desc}</p>
+              <h3 className="text-xl font-bold mb-2 text-slate-900">{pillar.title}</h3>
+              <p className="text-sm text-slate-700 leading-relaxed">{pillar.desc}</p>
             </motion.div>
           ))}
         </div>
