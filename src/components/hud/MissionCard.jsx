@@ -19,6 +19,7 @@ import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 import MissionDetailModal from '@/components/missions/MissionDetailModal';
+import MiniProfile from '@/components/profile/MiniProfile';
 
 // Futuristic Ultranet-themed mission images by type
 const MISSION_IMAGES = {
@@ -50,25 +51,23 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
 
   if (variant === "compact") {
     return (
-      <>
-        <div
-          className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 hover:border-violet-200 cursor-pointer transition-all"
-          onClick={() => setDetailOpen(true)}>
-          <div className="p-2 rounded-lg bg-violet-100">
-            <Target className="w-4 h-4 text-violet-600" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-slate-900 text-sm font-medium truncate">{mission.title}</p>
-            <div className="flex items-center gap-2 mt-1">
-              <Progress value={progressPercent} className="h-1.5 flex-1" />
-              <span className="text-xs text-slate-500">{completedTasks}/{totalTasks}</span>
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-slate-400" />
+      <div
+        className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 hover:border-violet-200 cursor-pointer transition-all"
+        onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}>
+
+        <div className="p-2 rounded-lg bg-violet-100">
+          <Target className="w-4 h-4 text-violet-600" />
         </div>
-        <MissionDetailModal mission={mission} open={detailOpen} onClose={() => setDetailOpen(false)} />
-      </>
-    );
+        <div className="flex-1 min-w-0">
+          <p className="text-yellow-400 text-sm font-medium truncate">{mission.title}</p>
+          <div className="flex items-center gap-2 mt-1">
+            <Progress value={progressPercent} className="h-1.5 flex-1" />
+            <span className="text-xs text-slate-500">{completedTasks}/{totalTasks}</span>
+          </div>
+        </div>
+        <ChevronRight className="w-4 h-4 text-slate-400" />
+      </div>);
+
   }
 
   // Get mission image - use provided or fallback to type-based image
@@ -161,20 +160,17 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
           </div>
         </div>
 
-        {/* Creator - simple display without extra API calls */}
+        {/* Creator */}
         {mission.creator_name && (
           <div className="flex items-center gap-2 mb-4 pt-3 border-t border-slate-100">
-            <div 
-              className="flex items-center gap-2 cursor-pointer" 
-              data-user-id={mission.creator_id}
-            >
-              <Avatar className="w-7 h-7">
-                <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
-                  {mission.creator_name?.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm text-slate-600">{mission.creator_name}</span>
-            </div>
+            <MiniProfile
+              userId={mission.creator_id}
+              name={mission.creator_name}
+              size={28}
+              showRankBadge={false}
+              showTrustBadge={false}
+              showReachBadge={false}
+            />
           </div>
         )}
 
