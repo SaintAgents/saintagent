@@ -12,6 +12,7 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import MeetingCard from '@/components/hud/MeetingCard';
 import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import HelpHint from '@/components/hud/HelpHint';
+import BackButton from '@/components/hud/BackButton';
 
 export default function Meetings() {
   const [tab, setTab] = useState('upcoming');
@@ -93,12 +94,13 @@ export default function Meetings() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BackButton />
               <Calendar className="w-6 h-6 text-blue-500" />
               Meetings & Connections
               <HelpHint content="Meetings are verified touchpoints that build trust and earn GGG. Request & Accept: Send meeting requests to matches or accept incoming requests. Dual Confirmation: Both parties MUST confirm completion to trigger GGG rewards—this prevents gaming. Meeting Types: Collaboration, Mentorship, Consultation, Casual, or Mission-related—each serves different purposes. Pending meetings await response, Upcoming are scheduled, and Completed have been verified by both parties." />
             </h1>
-            <p className="text-slate-500 mt-1">Schedule, attend, and verify your meetings to earn GGG</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Schedule, attend, and verify your meetings to earn GGG</p>
           </div>
           <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
             <Plus className="w-4 h-4" />

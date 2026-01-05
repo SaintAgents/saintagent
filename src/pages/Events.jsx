@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Plus, Search, MapPin, Video, Sparkles } from "lucide-react";
 import CreateEventModal from '@/components/community/CreateEventModal';
 import EventCard from '@/components/community/EventCard';
+import BackButton from '@/components/hud/BackButton';
 import { isPast, parseISO, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 export default function Events() {
@@ -77,11 +78,12 @@ export default function Events() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BackButton />
               <Calendar className="w-6 h-6 text-violet-500" />
               Events & Meetups
             </h1>
-            <p className="text-slate-500 mt-1">Discover and create gatherings</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Discover and create gatherings</p>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
             <Plus className="w-4 h-4" />

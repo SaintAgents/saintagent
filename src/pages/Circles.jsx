@@ -12,6 +12,7 @@ import CircleManageModal from "@/components/circles/CircleManageModal";
 import CreateCircleModal from "@/components/community/CreateCircleModal";
 import CircleChatPanel from "@/components/community/CircleChatPanel";
 import GroupDetailPage from "@/components/groups/GroupDetailPage";
+import BackButton from '@/components/hud/BackButton';
 
 export default function Circles() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -103,10 +104,11 @@ export default function Circles() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00] flex items-center gap-2">
+              <BackButton />
               <Users className="w-6 h-6 text-blue-500 dark:text-cyan-400 [data-theme='hacker']_&:text-[#00ff00]" />
               Groups & Communities
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00] mt-1">Find your tribe based on shared values and interests</p>
+            <p className="text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00] mt-1 ml-9">Find your tribe based on shared values and interests</p>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-500 [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl gap-2">
             <Plus className="w-4 h-4" />
