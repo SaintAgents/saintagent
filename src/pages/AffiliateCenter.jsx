@@ -75,7 +75,7 @@ export default function AffiliateCenter() {
   });
 
   const affiliateUrl = affiliateCode 
-    ? `${window.location.origin}/invite/${affiliateCode.code}`
+    ? `${window.location.origin}?ref=${affiliateCode.code}`
     : '';
 
   const offerUrl = selectedOffer
