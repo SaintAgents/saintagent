@@ -635,12 +635,41 @@ export default function SidePanel({
                 </div>
               </CollapsibleCard>
 
+              <CollapsibleCard title="Users & Regions" icon={Users} onPopout={() => setUsersPopupOpen(true)}>
+                <div className="p-4 rounded-xl bg-white border border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-slate-500 mb-1">Total Users</p>
+                      <p className="text-2xl font-bold text-slate-900">{totalUsers}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">North America</p>
+                        <p className="text-sm font-semibold text-slate-900">{regionCounts['North America']}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">Europe</p>
+                        <p className="text-sm font-semibold text-slate-900">{regionCounts['Europe']}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">Asia</p>
+                        <p className="text-sm font-semibold text-slate-900">{regionCounts['Asia']}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">Other</p>
+                        <p className="text-sm font-semibold text-slate-900">{regionCounts['Other']}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CollapsibleCard>
+
               <CollapsibleCard title="Recently Joined" icon={Users} badge={recentJoins.length} badgeColor="emerald" onPopout={() => setRecentJoinsPopupOpen(true)}>
                 <div className="space-y-2">
                   {recentJoins.length === 0 ? (
                     <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
                   ) : (
-                    recentJoins.slice(0, 3).map((user) => {
+                    recentJoins.slice(0, 5).map((user) => {
                       const userValues = user.values_tags || [];
                       const myValues = profile?.values_tags || [];
                       const sharedValues = userValues.filter(v => myValues.includes(v));
@@ -654,32 +683,256 @@ export default function SidePanel({
                             const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
                             document.dispatchEvent(event);
                           }}
-                          className="w-full flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
+                          className="w-full flex flex-col gap-2 p-3 rounded-lg bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
                         >
-                          <div className="relative">
-                            <Avatar className="w-8 h-8">
-                              <AvatarImage src={user.avatar_url} />
-                              <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xs">
-                                {user.display_name?.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            {isOnline && (
-                              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1">
-                              <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
-                              {hasCompatibility && (
-                                <Sparkles className="w-3 h-3 text-violet-500" />
+                          <div className="flex items-center gap-3">
+                            <div className="relative">
+                              <Avatar className="w-9 h-9">
+                                <AvatarImage src={user.avatar_url} />
+                                <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xs">
+                                  {user.display_name?.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                              {isOnline && (
+                                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
                               )}
                             </div>
-                            <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
+                                {hasCompatibility && (
+                                  <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-[10px] font-medium">
+                                    <Sparkles className="w-2.5 h-2.5" />
+                                    Match
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
+                            </div>
                           </div>
+                          {userValues.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {userValues.slice(0, 3).map((val, i) => (
+                                <span 
+                                  key={i} 
+                                  className={cn(
+                                    "px-1.5 py-0.5 rounded text-[10px]",
+                                    sharedValues.includes(val) 
+                                      ? "bg-violet-100 text-violet-700 font-medium" 
+                                      : "bg-slate-100 text-slate-600"
+                                  )}
+                                >
+                                  {val}
+                                </span>
+                              ))}
+                              {userValues.length > 3 && (
+                                <span className="text-[10px] text-slate-400">+{userValues.length - 3}</span>
+                              )}
+                            </div>
+                          )}
                         </button>
                       );
                     })
                   )}
+                </div>
+              </CollapsibleCard>
+
+              {/* Today's Schedule */}
+              <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
+                <div className="space-y-2">
+                  {meetings.length === 0 ?
+                    <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
+                    meetings.slice(0, 4).map((meeting, i) =>
+                    <button
+                      key={i}
+                      onClick={() => onMeetingAction?.('view', meeting)}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                        <div className="p-2 rounded-lg bg-blue-100">
+                          <Clock className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                          <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400" />
+                      </button>
+                    )
+                  }
+                </div>
+              </CollapsibleCard>
+
+              {/* Top Matches */}
+              <CollapsibleCard title="Top Matches" icon={Sparkles} badge={matches.length} badgeColor="violet" onPopout={() => setMatchesPopupOpen(true)}>
+                <div className="space-y-2">
+                  {matches.length === 0 ?
+                    <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p> :
+                    matches.slice(0, 5).map((match, i) => {
+                      const handleClick = () => {
+                        if (match.target_type === 'person') {
+                          const event = new CustomEvent('openProfile', { detail: { userId: match.target_id } });
+                          document.dispatchEvent(event);
+                        } else if (match.target_type === 'offer') {
+                          window.location.href = '/Marketplace';
+                        } else if (match.target_type === 'mission') {
+                          window.location.href = '/Missions';
+                        } else if (match.target_type === 'event') {
+                          window.location.href = '/Meetings';
+                        } else {
+                          onMatchAction?.('view', match);
+                        }
+                      };
+
+                      return (
+                        <button
+                          key={i}
+                          onClick={handleClick}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left">
+                          <div className="flex-1 min-w-0">
+                            {match.target_type === 'person' ? (
+                              <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={36} />
+                            ) : (
+                              <>
+                                <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
+                                <p className="text-xs text-slate-500 truncate">{match.target_subtitle}</p>
+                              </>
+                            )}
+                          </div>
+                          <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
+                        </button>
+                      );
+                    })
+                  }
+                </div>
+              </CollapsibleCard>
+
+              {/* Help */}
+              <CollapsibleCard title="Help" icon={HelpCircle} defaultOpen={false} onPopout={() => setHelpPopupOpen(true)}>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-slate-200">
+                      <HelpCircle className="w-4 h-4 text-slate-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-900">Need help?</p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Learn how the Synchronicity Engine finds your perfect matches.
+                      </p>
+                      <Button variant="link" size="sm" className="h-6 px-0 text-xs text-violet-600">
+                        View guide →
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CollapsibleCard>
+
+              {/* Community Feed */}
+              <CollapsibleCard title="Community Feed" icon={MessageCircle} defaultOpen={false} onPopout={() => setFeedPopupOpen(true)}>
+                {/* Create Post */}
+                <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Avatar className="w-9 h-9 cursor-pointer" data-user-id={profile?.user_id}>
+                      <AvatarImage src={profile?.avatar_url} />
+                      <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                        {profile?.display_name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <Textarea
+                      value={newPostText}
+                      onChange={(e) => setNewPostText(e.target.value)}
+                      placeholder="What's on your mind?"
+                      className="flex-1 resize-none text-sm"
+                      rows={3} />
+                  </div>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                      <Video className="w-4 h-4" />
+                      Video
+                      <input type="file" accept="video/*" onChange={onVideoChange} className="hidden" />
+                    </label>
+                    <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                      <Mic className="w-4 h-4" />
+                      Audio
+                      <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
+                    </label>
+                    {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
+                  </div>
+                  {videoPreview && !videoError && <video src={videoPreview} controls className="w-full rounded-lg" />}
+                  {audioPreview && <audio src={audioPreview} controls className="w-full" />}
+                  <div className="flex items-center justify-between">
+                    <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
+                    <Button
+                      onClick={handleCreatePost}
+                      disabled={(!newPostText.trim() && !videoFile && !audioFile) || createPostMutation.isPending}
+                      className="bg-violet-600 hover:bg-violet-700"
+                      size="sm">
+                      <Send className="w-3 h-3 mr-1" />
+                      Post
+                    </Button>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  {posts.length === 0 ?
+                    <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p> :
+                    posts.slice(0, 3).map((post) => {
+                      const postComments = computePostComments(post.id);
+                      const isLiked = isLikedByUser(post.id);
+                      const showComments = expandedComments[post.id];
+                      return (
+                        <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={36} />
+                            <p className="text-xs text-slate-500">{format(parseISO(post.created_date), 'MMM d, h:mm a')}</p>
+                          </div>
+                          <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
+                          {post.video_url ? <video src={post.video_url} controls className="w-full rounded-lg" /> :
+                           post.audio_url ? <audio src={post.audio_url} controls className="w-full" /> :
+                           post.image_urls && post.image_urls.length > 0 ? <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> : null}
+                          <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
+                            <button onClick={() => handleLike(post.id)} className={cn("flex items-center gap-1.5 text-xs transition-colors", isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600")}>
+                              <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
+                              <span className="font-medium">{post.likes_count || 0}</span>
+                            </button>
+                            <button onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })} className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors">
+                              <MessageCircle className="w-4 h-4" />
+                              <span className="font-medium">{post.comments_count || 0}</span>
+                            </button>
+                            <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors">
+                              <Share2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                          {showComments &&
+                            <div className="space-y-3 pt-2">
+                              {postComments.map((comment) =>
+                                <div key={comment.id} className="flex items-start gap-2">
+                                  <Avatar className="w-7 h-7 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={comment.author_id}>
+                                    <AvatarImage src={comment.author_avatar} />
+                                    <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">{comment.author_name?.charAt(0)}</AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 p-2 rounded-lg bg-slate-50">
+                                    <p className="text-xs font-medium text-slate-900">{comment.author_name}</p>
+                                    <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
+                                  </div>
+                                </div>
+                              )}
+                              <div className="flex items-start gap-2">
+                                <Avatar className="w-7 h-7 cursor-pointer" data-user-id={profile?.user_id}>
+                                  <AvatarImage src={profile?.avatar_url} />
+                                  <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">{profile?.display_name?.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1 flex items-end gap-2">
+                                  <Textarea value={commentText[post.id] || ''} onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })} placeholder="Write a comment..." className="text-xs h-8 resize-none" rows={1} />
+                                  <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
+                                  <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
+                                    <Send className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      );
+                    })
+                  }
                 </div>
               </CollapsibleCard>
             </div>
