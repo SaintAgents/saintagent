@@ -347,22 +347,27 @@ export default function Missions() {
             <TabsTrigger value="platform" className="rounded-lg gap-2">
               <Sparkles className="w-4 h-4" />
               Platform
+              {platformCount > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-violet-100 text-violet-700">{platformCount}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="circle" className="rounded-lg gap-2">
               <Users className="w-4 h-4" />
               Circle
+              {circleCount > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-blue-100 text-blue-700">{circleCount}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="region" className="rounded-lg gap-2">
               <MapPin className="w-4 h-4" />
               Region
+              {regionCount > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-emerald-100 text-emerald-700">{regionCount}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="leader" className="rounded-lg gap-2">
               <Crown className="w-4 h-4" />
               Leader
+              {leaderCount > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-amber-100 text-amber-700">{leaderCount}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="all" className="rounded-lg gap-2">
               <Filter className="w-4 h-4" />
               All
+              {missions.length > 0 && <Badge className="ml-1 h-5 px-1.5 text-xs bg-slate-100 text-slate-600">{missions.length}</Badge>}
             </TabsTrigger>
           </TabsList>
         </Tabs>
