@@ -352,11 +352,17 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
 
         /* Command Deck gold accent */
         [data-theme='dark'] main[data-page='CommandDeck'] { --gold: #FFE27A; }
-        [data-theme='dark'] main[data-page='CommandDeck'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-900'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-800'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-700'] {
           color: var(--gold) !important;
+        }
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-950'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-900'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-800'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-700'],
+        [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-600'] {
+          color: #c4b5fd !important;
         }
         /* Ensure Avatar dashboard stats stay dark on dark theme */
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats],
@@ -414,8 +420,8 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
           opacity: 1;
         }
         [data-theme='dark'] [data-avatar-card] [data-avatar-overlay] {
-          background: rgba(0,0,0,0.15);
-          backdrop-filter: blur(1px);
+          background: rgba(255,255,255,0.8);
+          backdrop-filter: blur(4px);
         }
 
         `}</style>
