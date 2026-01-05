@@ -467,7 +467,7 @@ export default function CommandDeck() {
                       <span className="absolute inset-0 blur-lg bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 bg-clip-text opacity-70 animate-pulse"></span>
                       <span className="relative drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" style={{ textShadow: '0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.4), 0 0 60px rgba(251,191,36,0.2)' }}>Command Deck</span>
                     </h1>
-                                  <p className="text-teal-500 mt-1">Your mission control center</p>
+                                  <p className="text-slate-900 mt-1">Your mission control center</p>
                                   <div className="hidden">
                                     {/* Save */}
                                     <button type="button" className="group flex items-center gap-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 border border-slate-200 dark:border-slate-700 hover:bg-white/90 dark:hover:bg-white/15 transition">
