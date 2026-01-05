@@ -186,13 +186,13 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     <div
       id="profile-drawer"
       ref={containerRef}
-      className="fixed bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] pointer-events-auto flex flex-col overflow-hidden"
+      className="fixed bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] rounded-2xl shadow-2xl dark:shadow-[0_0_30px_rgba(0,255,136,0.15)] z-[100] pointer-events-auto flex flex-col overflow-hidden"
       style={{ left: pos.x, top: pos.y, width: size.w, height: size.h }}>
 
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-4 right-4 z-20 text-slate-600 hover:bg-slate-100"
+        className="absolute top-4 right-4 z-20 text-slate-600 dark:text-[#00ff88] hover:bg-slate-100 dark:hover:bg-[rgba(0,255,136,0.1)]"
         onClick={onClose}>
 
         <X className="w-5 h-5" />
@@ -200,7 +200,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
 
       <div
         onMouseDown={startDrag}
-        className="h-9 w-full border-b bg-slate-50/80 backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center px-3 pr-12 text-xs font-medium text-slate-500">
+        className="h-9 w-full border-b border-slate-200 dark:border-[rgba(0,255,136,0.2)] bg-slate-50/80 dark:bg-[#050505] backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center px-3 pr-12 text-xs font-medium text-slate-500 dark:text-[#00ff88]">
 
         Drag to move
       </div>
