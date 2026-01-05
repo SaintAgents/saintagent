@@ -26,7 +26,9 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Activity,
-  List } from
+  List,
+  Video,
+  Mic } from
   "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
