@@ -22,7 +22,8 @@ import {
   Shield,
   LogOut,
   Globe,
-  HelpCircle
+  HelpCircle,
+  BookOpen
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -229,7 +230,14 @@ export default function TopBar({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
+                <Link to={createPageUrl('UserGuide')} className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  User Guide
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link to={createPageUrl('FAQ')} className="flex items-center gap-2">
+                  <HelpCircle className="w-4 h-4" />
                   Help / FAQ
                 </Link>
               </DropdownMenuItem>
