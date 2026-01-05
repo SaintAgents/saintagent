@@ -117,6 +117,7 @@ export default function Sidebar({
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
+  const [themeOpen, setThemeOpen] = useState(false);
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
   });
