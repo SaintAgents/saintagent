@@ -390,7 +390,7 @@ export default function AffiliateCenter() {
 
                     {selectedOffer && (
                       <div className="mt-4 p-4 rounded-lg bg-slate-50 border border-slate-200">
-                        <p className="text-xs font-medium mb-2">
+                        <p className="text-xs font-medium mb-2 text-slate-700">
                           Link for: {selectedOffer.title}
                         </p>
                         <div className="flex gap-2">
