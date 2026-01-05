@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Minimize2 } from "lucide-react";
+import { X, Send, Minimize2, Circle } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function FloatingChatWidget({ recipientId, recipientName, recipientAvatar, onClose }) {
   const [message, setMessage] = useState('');
   const [minimized, setMinimized] = useState(false);
+  const scrollRef = useRef(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -18,10 +20,26 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
     queryFn: () => base44.auth.me()
   });
 
+  // Poll for new messages every 2s for real-time feel
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages'],
-    queryFn: () => base44.entities.Message.list('-created_date', 100)
+    queryFn: () => base44.entities.Message.list('-created_date', 100),
+    refetchInterval: 2000
   });
+
+  // Check if recipient is online
+  const { data: recipientStatus } = useQuery({
+    queryKey: ['recipientStatus', recipientId],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ user_id: recipientId });
+      return profiles?.[0];
+    },
+    enabled: !!recipientId,
+    refetchInterval: 10000
+  });
+
+  const isRecipientOnline = recipientStatus?.last_seen_at && 
+    new Date(recipientStatus.last_seen_at) > new Date(Date.now() - 5 * 60 * 1000);
 
   const sendMutation = useMutation({
     mutationFn: (data) => base44.entities.Message.create(data),
@@ -37,6 +55,13 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
       (m.from_user_id === recipientId && m.to_user_id === user?.email)
     )
     .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+
+  // Auto-scroll to bottom on new messages
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [conversationMessages.length]);
 
   const handleSend = () => {
     if (!message.trim()) return;
@@ -74,11 +99,22 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b bg-violet-600 rounded-t-lg">
         <div className="flex items-center gap-2">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src={recipientAvatar} />
-            <AvatarFallback>{recipientName?.[0]}</AvatarFallback>
-          </Avatar>
-          <span className="font-medium text-white text-sm">{recipientName}</span>
+          <div className="relative">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={recipientAvatar} />
+              <AvatarFallback>{recipientName?.[0]}</AvatarFallback>
+            </Avatar>
+            <span className={cn(
+              "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-violet-600",
+              isRecipientOnline ? "bg-emerald-500" : "bg-slate-400"
+            )} />
+          </div>
+          <div>
+            <span className="font-medium text-white text-sm">{recipientName}</span>
+            <p className="text-xs text-white/70">
+              {isRecipientOnline ? 'Online' : 'Offline'}
+            </p>
+          </div>
         </div>
         <div className="flex gap-1">
           <Button
@@ -101,7 +137,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-3">
+      <ScrollArea className="flex-1 p-3" ref={scrollRef}>
         <div className="space-y-3">
           {conversationMessages.map((msg) => {
             const isOwn = msg.from_user_id === user?.email;
