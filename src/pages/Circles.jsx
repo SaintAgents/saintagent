@@ -97,18 +97,18 @@ export default function Circles() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 [data-theme='hacker']_&:bg-[#000]">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <Users className="w-6 h-6 text-blue-500" />
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00] flex items-center gap-2">
+              <Users className="w-6 h-6 text-blue-500 dark:text-cyan-400 [data-theme='hacker']_&:text-[#00ff00]" />
               Groups & Communities
             </h1>
-            <p className="text-slate-500 mt-1">Find your tribe based on shared values and interests</p>
+            <p className="text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00] mt-1">Find your tribe based on shared values and interests</p>
           </div>
-          <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
+          <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-500 [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl gap-2">
             <Plus className="w-4 h-4" />
             Create Group
           </Button>
@@ -116,36 +116,36 @@ export default function Circles() {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="p-4 rounded-xl bg-white border">
-            <p className="text-xs text-slate-500">Total Groups</p>
-            <p className="text-2xl font-bold text-slate-900">{circles.length}</p>
+          <div className="p-4 rounded-xl bg-white border dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_6px_#00ff00]">
+            <p className="text-xs text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00]">Total Groups</p>
+            <p className="text-2xl font-bold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00]">{circles.length}</p>
           </div>
-          <div className="p-4 rounded-xl bg-white border">
-            <p className="text-xs text-slate-500">My Groups</p>
-            <p className="text-2xl font-bold text-violet-600">{myCirclesCount}</p>
+          <div className="p-4 rounded-xl bg-white border dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_6px_#00ff00]">
+            <p className="text-xs text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00]">My Groups</p>
+            <p className="text-2xl font-bold text-violet-600 dark:text-violet-400 [data-theme='hacker']_&:text-[#00ff00]">{myCirclesCount}</p>
           </div>
-          <div className="p-4 rounded-xl bg-white border">
-            <p className="text-xs text-slate-500">I Created</p>
-            <p className="text-2xl font-bold text-blue-600">{ownedCount}</p>
+          <div className="p-4 rounded-xl bg-white border dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_6px_#00ff00]">
+            <p className="text-xs text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00]">I Created</p>
+            <p className="text-2xl font-bold text-blue-600 dark:text-cyan-400 [data-theme='hacker']_&:text-[#00ff00]">{ownedCount}</p>
           </div>
         </div>
 
         {/* Search & Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-cyan-400 [data-theme='hacker']_&:text-[#00ff00]" />
             <Input
               placeholder="Search by name, values, or interests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 rounded-xl bg-white" />
+              className="pl-12 h-12 rounded-xl bg-white dark:bg-slate-900/90 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-400 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:placeholder:text-[#006600] [data-theme='dark']_&:shadow-[0_0_10px_rgba(139,92,246,0.15)]" />
 
           </div>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-40 h-12 rounded-xl">
+            <SelectTrigger className="w-40 h-12 rounded-xl dark:bg-slate-900/90 dark:border-slate-700 dark:text-white [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-slate-900 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]">
               <SelectItem value="all">All Categories</SelectItem>
               <SelectItem value="spiritual">Spiritual</SelectItem>
               <SelectItem value="creative">Creative</SelectItem>
@@ -160,11 +160,11 @@ export default function Circles() {
 
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="h-12 bg-white rounded-xl border">
-            <TabsTrigger value="all" className="rounded-lg">All Groups</TabsTrigger>
-            <TabsTrigger value="my_circles" className="rounded-lg">My Groups</TabsTrigger>
-            <TabsTrigger value="owned" className="rounded-lg">I Created</TabsTrigger>
-            <TabsTrigger value="featured" className="rounded-lg">Featured</TabsTrigger>
+          <TabsList className="h-12 bg-white rounded-xl border dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]">
+            <TabsTrigger value="all" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">All Groups</TabsTrigger>
+            <TabsTrigger value="my_circles" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">My Groups</TabsTrigger>
+            <TabsTrigger value="owned" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">I Created</TabsTrigger>
+            <TabsTrigger value="featured" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">Featured</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -175,7 +175,7 @@ export default function Circles() {
             const isOwner = circle.owner_id === user?.email;
 
             return (
-              <div key={circle.id} className="bg-white rounded-xl border overflow-hidden hover:shadow-lg transition-all">
+              <div key={circle.id} className="bg-white dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl border overflow-hidden hover:shadow-lg dark:hover:shadow-violet-500/20 transition-all">
                 {/* Header gradient */}
                 <div className={cn(
                   "h-24 relative",
@@ -206,11 +206,11 @@ export default function Circles() {
                     </Badge>
                   </div>
 
-                  <h3 className="font-semibold text-slate-900 mb-1">{circle.name}</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00] mb-1">{circle.name}</h3>
                   {circle.purpose &&
                   <p className="text-xs text-violet-600 mb-2">{circle.purpose}</p>
                   }
-                  <p className="text-sm text-slate-500 mb-3 line-clamp-2">{circle.description}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00cc00] mb-3 line-clamp-2">{circle.description}</p>
                   
                   {/* Values */}
                   {circle.values?.length > 0 &&
@@ -235,7 +235,7 @@ export default function Circles() {
                   }
 
                   {/* Member count */}
-                  <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+                  <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00ff00] mb-4">
                     <span className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
                       {circle.member_count || 0} members
