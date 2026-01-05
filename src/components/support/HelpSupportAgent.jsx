@@ -215,26 +215,22 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {isOpen && (
     <div 
       className={cn(
-        "fixed z-50 rounded-2xl shadow-2xl border transition-all duration-300 flex flex-col",
-        "bg-white/95 backdrop-blur-xl border-slate-200",
-        "dark:bg-[#050505]/95 dark:backdrop-blur-xl dark:border-[#00ff88]",
-        "dark:shadow-[0_0_30px_rgba(0,255,136,0.25),_0_0_60px_rgba(0,255,136,0.1)]",
+        "fixed z-50 rounded-2xl shadow-2xl border transition-all duration-300",
+        "bg-white/95 backdrop-blur-md border-slate-200",
+        "dark:bg-[#050505]/95 dark:backdrop-blur-md dark:border-[rgba(0,255,136,0.4)]",
+        "dark:shadow-[0_0_30px_rgba(0,255,136,0.15),_inset_0_0_60px_rgba(0,255,136,0.03)]",
         "[data-theme='hacker']_&:bg-[#050505]/95 [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hacker-glitch-border",
         isMinimized 
-          ? "bottom-6 right-6 w-72" 
-          : "bottom-6 right-6 w-[26rem]"
+          ? "bottom-6 right-6 w-72 h-14" 
+          : "bottom-6 right-6 w-[26rem] max-h-[75vh]"
       )}
-      style={{ 
-        height: isMinimized ? '3.5rem' : 'auto',
-        maxHeight: isMinimized ? '3.5rem' : 'calc(100vh - 6rem)'
-      }}
+      style={{ height: isMinimized ? '3.5rem' : 'auto' }}
     >
       {/* Header */}
       <div className={cn(
-        "flex items-center justify-between px-4 py-3 border-b rounded-t-2xl shrink-0",
-        "border-slate-200 bg-gradient-to-r from-violet-500 to-purple-600",
-        "dark:from-[#0a0a0a] dark:to-[#050505] dark:border-[#00ff88]/40",
-        "[data-theme='hacker']_&:bg-[#050505] [data-theme='hacker']_&:from-[#050505] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00]"
+        "flex items-center justify-between px-4 py-3 border-b rounded-t-2xl",
+        "border-slate-200 dark:border-slate-700 bg-gradient-to-r from-violet-500 to-purple-600",
+        "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:from-[#0a0a0a] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00]"
       )}>
         <div className="flex items-center gap-2">
           <div className={cn(
@@ -276,7 +272,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {!isMinimized && (
         <>
           {/* Messages */}
-          <ScrollArea className="flex-1 min-h-0 p-4 dark:bg-transparent [data-theme='hacker']_&:bg-transparent" ref={scrollRef}>
+          <ScrollArea className="max-h-[50vh] p-4 dark:bg-transparent [data-theme='hacker']_&:bg-transparent" ref={scrollRef}>
             <div className="space-y-4">
               {messages.map((msg, idx) => (
                 <div 
@@ -360,9 +356,9 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
 
           {/* Input */}
           <form onSubmit={handleSubmit} className={cn(
-            "p-3 border-t rounded-b-2xl shrink-0",
+            "p-3 border-t rounded-b-2xl",
             "border-slate-200 bg-white/80 backdrop-blur-sm",
-            "dark:border-[#00ff88]/40 dark:bg-[#050505]/80",
+            "dark:border-[rgba(0,255,136,0.3)] dark:bg-[#050505]/80",
             "[data-theme='hacker']_&:bg-[#050505]/80 [data-theme='hacker']_&:border-[#00ff00]"
           )}>
             <div className="flex gap-2">
