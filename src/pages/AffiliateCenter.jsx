@@ -84,6 +84,8 @@ function getNextTier(paidReferrals) {
 
 export default function AffiliateCenter() {
   const [selectedOffer, setSelectedOffer] = useState(null);
+  const [createCampaignOpen, setCreateCampaignOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('links');
   const queryClient = useQueryClient();
 
   // Fetch current user first
