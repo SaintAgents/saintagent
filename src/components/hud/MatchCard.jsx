@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,12 +21,16 @@ import {
   Star,
   Ban,
   ThumbsUp,
-  ThumbsDown } from
+  ThumbsDown,
+  CheckCircle,
+  GraduationCap } from
 "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MiniProfile from '@/components/profile/MiniProfile';
+import RankedAvatar from '@/components/reputation/RankedAvatar';
+import { getMaleAvatarByIndex, getFemaleAvatarByIndex } from '@/components/demoAvatars';
 
 export default function MatchCard({ match, onAction }) {
   const [showExplanation, setShowExplanation] = useState(false);
@@ -87,6 +91,30 @@ export default function MatchCard({ match, onAction }) {
   };
 
   const TypeIcon = typeIcons[match.target_type] || Users;
+
+  // Fetch target profile for rank/trust data
+  const { data: targetProfiles = [] } = useQuery({
+    queryKey: ['matchTargetProfile', match.target_id],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: match.target_id }),
+    enabled: !!match.target_id && match.target_type === 'person'
+  });
+  const targetProfile = targetProfiles?.[0];
+
+  // Get demo avatar based on target name for demo users
+  const getDemoAvatar = () => {
+    if (match.target_avatar) return match.target_avatar;
+    const name = (match.target_name || '').toLowerCase();
+    // Map demo names to avatars
+    const maleNames = ['jonah', 'kai', 'ethan', 'rafael', 'theo'];
+    const femaleNames = ['lena', 'isla', 'mara', 'priya', 'sofia', 'aurora', 'maya'];
+    const maleIdx = maleNames.findIndex(n => name.includes(n));
+    const femaleIdx = femaleNames.findIndex(n => name.includes(n));
+    if (maleIdx >= 0) return getMaleAvatarByIndex(maleIdx);
+    if (femaleIdx >= 0) return getFemaleAvatarByIndex(femaleIdx);
+    return null;
+  };
+
+  const resolvedAvatar = getDemoAvatar();
 
   const navigateTo = (type, id) => {
     if (type === 'mission') {
@@ -163,22 +191,46 @@ export default function MatchCard({ match, onAction }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={handleCardClick}
-      className="group relative bg-white rounded-xl border border-slate-200/60 p-4 hover:shadow-lg hover:border-violet-200 transition-all duration-300">
+      className="group relative bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/60 dark:border-slate-700 p-4 hover:shadow-lg hover:border-violet-200 dark:hover:border-violet-600 transition-all duration-300 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]">
 
       <div className="flex items-start gap-4">
         <div className="relative" onClick={handleNavigateTarget}>
           {match.target_type === 'person' ? (
-            <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={48} showName={false} showHandle={false} />
+            <div className="relative">
+              <RankedAvatar
+                src={resolvedAvatar || targetProfile?.avatar_url}
+                name={match.target_name}
+                size={52}
+                userId={match.target_id}
+                rpRankCode={targetProfile?.rp_rank_code}
+                rpPoints={targetProfile?.rp_points}
+                leaderTier={targetProfile?.leader_tier}
+                status={targetProfile?.status}
+                className="cursor-pointer hover:scale-105 transition-transform"
+              />
+              {/* Trust sigil overlay */}
+              {(targetProfile?.trust_score || 0) >= 70 && (
+                <div className="absolute -top-0.5 -right-0.5 p-0.5 bg-emerald-500 rounded-full shadow-sm [data-theme='hacker']_&:shadow-[0_0_6px_#00ff00]" title="High Trust">
+                  <Shield className="w-2.5 h-2.5 text-white" />
+                </div>
+              )}
+              {/* Teacher/Collaborator role sigil */}
+              {match.target_type === 'teacher' && (
+                <div className="absolute -bottom-0.5 -left-0.5 p-0.5 bg-blue-500 rounded-full shadow-sm" title="Teacher">
+                  <GraduationCap className="w-2.5 h-2.5 text-white" />
+                </div>
+              )}
+            </div>
           ) : (
             <>
-              <Avatar className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all">
-                <AvatarImage src={match.target_avatar} />
-                <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium">
+              <Avatar className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all dark:ring-slate-700 [data-theme='hacker']_&:ring-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_8px_#00ff00]">
+                <AvatarImage src={resolvedAvatar} />
+                <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium [data-theme='hacker']_&:from-[#001a00] [data-theme='hacker']_&:to-[#003300] [data-theme='hacker']_&:text-[#00ff00]">
                   {match.target_name?.charAt(0) || "?"}
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-sm">
-                <TypeIcon className="w-3 h-3 text-violet-500" />
+              <div className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-sm dark:bg-slate-800 [data-theme='hacker']_&:bg-black [data-theme='hacker']_&:border [data-theme='hacker']_&:border-[#00ff00]">
+                <TypeIcon className="w-3 h-3 text-violet-500 [data-theme='hacker']_&:text-[#00ff00]" />
               </div>
             </>
           )}
@@ -189,12 +241,16 @@ export default function MatchCard({ match, onAction }) {
             <div className="min-w-0">
               <div className="flex items-center gap-2 min-w-0">
                 <h4
-                  className="font-semibold text-slate-900 truncate cursor-pointer"
+                  className="font-semibold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00] truncate cursor-pointer"
                   onClick={handleNavigateTarget}>
                   {match.target_name}
                 </h4>
+                {/* Verified badge for 144K leaders */}
+                {targetProfile?.leader_tier === 'verified144k' && (
+                  <CheckCircle className="w-4 h-4 text-amber-500 shrink-0" title="Verified 144K Leader" />
+                )}
               </div>
-              <p className="text-sm text-slate-500 truncate">{match.target_subtitle}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00cc00] truncate">{match.target_subtitle}</p>
             </div>
             <div className={cn(
               "shrink-0 px-2.5 py-1 rounded-full text-sm font-bold",
