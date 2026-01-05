@@ -340,7 +340,7 @@ export default function Messages() {
 
         </div>
         <ScrollArea className="flex-1">
-          <div className="pr-12">
+          <div className="pr-2">
           {convList.map((conv) =>
               <div key={conv.id} className="relative group">
               <div
@@ -348,44 +348,27 @@ export default function Messages() {
                   tabIndex={0}
                   onClick={() => setSelectedConversation(conv)}
                   className={cn(
-                    "w-full flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b",
+                    "w-full flex items-start gap-2 p-3 hover:bg-slate-50 transition-colors border-b",
                     selectedConversation?.id === conv.id && "bg-violet-50 hover:bg-violet-50"
                   )}>
 
-              <div className="flex-1 min-w-0 text-left pr-2">
+              <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center justify-between gap-2">
-                  <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} showRankBadge={false} showTrustBadge={false} showReachBadge={false} />
-                  <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] shrink-0 pr-1">
+                  <div className="flex-1 min-w-0">
+                    <MiniProfile userId={conv.otherUser.id} name={conv.otherUser.name} avatar={conv.otherUser.avatar} size={36} showRankBadge={false} showTrustBadge={false} showReachBadge={false} />
+                  </div>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] shrink-0 whitespace-nowrap">
                     {conv.lastMessage?.created_date ? format(parseISO(conv.lastMessage.created_date), 'h:mm a') : ''}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 mt-1">
                   {conv.unreadCount > 0 &&
-                      <span className="inline-block px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full">
+                      <span className="inline-block px-2 py-0.5 text-xs font-bold text-white bg-violet-600 rounded-full shrink-0">
                       {conv.unreadCount}
                     </span>
                       }
                   <p className="text-sm text-slate-500 truncate flex-1">{conv.lastMessage.content}</p>
                 </div>
-              </div>
-              <div className="flex items-center pl-2 shrink-0">
-                <Button
-                      size="icon"
-                      variant="ghost"
-                      className="shrink-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const event = new CustomEvent('openFloatingChat', {
-                          detail: {
-                            recipientId: conv.otherUser.id,
-                            recipientName: conv.otherUser.name,
-                            recipientAvatar: conv.otherUser.avatar
-                          }
-                        });
-                        document.dispatchEvent(event);
-                      }}>
-                  <ExternalLink className="w-4 h-4" />
-                </Button>
               </div>
               </div>
                 </div>
