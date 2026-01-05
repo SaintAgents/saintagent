@@ -53,6 +53,8 @@ export default function SidePanel({
   const [videoPreview, setVideoPreview] = useState(null);
   const [videoDuration, setVideoDuration] = useState(0);
   const [videoError, setVideoError] = useState('');
+  const [audioFile, setAudioFile] = useState(null);
+  const [audioPreview, setAudioPreview] = useState(null);
   const queryClient = useQueryClient();
 
   // Popout states for sections
@@ -197,7 +199,8 @@ export default function SidePanel({
         author_avatar: profile.avatar_url,
         content: payload.content || '',
         video_url: payload.video_url,
-        video_duration_seconds: payload.video_duration_seconds
+        video_duration_seconds: payload.video_duration_seconds,
+        audio_url: payload.audio_url
       });
     },
     onSuccess: () => {
@@ -209,6 +212,9 @@ export default function SidePanel({
       setVideoPreview(null);
       setVideoDuration(0);
       setVideoError('');
+      if (audioPreview) {try {URL.revokeObjectURL(audioPreview);} catch {}}
+      setAudioFile(null);
+      setAudioPreview(null);
     }
   });
 
@@ -225,17 +231,31 @@ export default function SidePanel({
   };
 
   const handleCreatePost = async () => {
-    if (!newPostText.trim() && !videoFile) return;
+    if (!newPostText.trim() && !videoFile && !audioFile) return;
     let video_url;
+    let audio_url;
     if (videoFile) {
       const up = await base44.integrations.Core.UploadFile({ file: videoFile });
       video_url = up.file_url;
     }
+    if (audioFile) {
+      const up = await base44.integrations.Core.UploadFile({ file: audioFile });
+      audio_url = up.file_url;
+    }
     createPostMutation.mutate({
       content: newPostText.trim(),
       video_url,
-      video_duration_seconds: videoFile ? Math.round(videoDuration || 0) : undefined
+      video_duration_seconds: videoFile ? Math.round(videoDuration || 0) : undefined,
+      audio_url
     });
+  };
+
+  const onAudioChange = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) {setAudioFile(null);setAudioPreview(null);return;}
+    const url = URL.createObjectURL(f);
+    setAudioFile(f);
+    setAudioPreview(url);
   };
 
   const isLikedByUser = (postId) => {

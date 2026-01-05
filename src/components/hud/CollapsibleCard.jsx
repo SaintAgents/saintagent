@@ -9,6 +9,12 @@ import {
   DropdownMenuTrigger } from
 "@/components/ui/dropdown-menu";
 
+// Custom icon images
+const ICON_SAVE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/593339f18_save_light_iconcopy.png";
+const ICON_RESET = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a64e30bd5_Screenshot2026-01-04224148.png";
+const ICON_COLLAPSE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8fe1dd4e9_downcopy.png";
+const ICON_EXPAND = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/79872c01d_upcopy.png";
+
 export default function CollapsibleCard({
   title,
   icon: Icon,
@@ -126,10 +132,11 @@ export default function CollapsibleCard({
             </DropdownMenu>
           }
 
-          <ChevronDown className={cn(
-            "w-5 h-5 text-slate-400 transition-transform duration-200",
-            isOpen && "rotate-180"
-          )} />
+          <img 
+            src={isOpen ? ICON_COLLAPSE : ICON_EXPAND} 
+            alt={isOpen ? "Collapse" : "Expand"}
+            className="w-6 h-6 transition-transform duration-200"
+          />
         </div>
       </div>
       <div className={cn(
