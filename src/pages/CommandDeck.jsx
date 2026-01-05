@@ -489,7 +489,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
             <div 
               className="absolute inset-0 rounded-2xl bg-cover bg-center pointer-events-none"
               style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ba60509ba_Screenshot2026-01-04183952.png)' }}
