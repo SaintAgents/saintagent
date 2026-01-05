@@ -362,7 +362,7 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-800'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-700'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-600'] {
-          color: #c4b5fd !important;
+          color: #1e1b4b !important;
         }
         /* Ensure Avatar dashboard stats stay dark on dark theme */
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats],
