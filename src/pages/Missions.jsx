@@ -67,12 +67,13 @@ export default function Missions() {
   const now = new Date();
   const activeMissions = missions.filter((m) => {
     if (m.status === 'completed' || m.status === 'cancelled') return false;
-    if (m.end_time && new Date(m.end_time) < now) return false;
+    // Only filter by end_time if status is explicitly set, otherwise show all active
+    if (m.end_time && new Date(m.end_time) < now && m.status !== 'active') return false;
     return true;
   });
   const pastMissions = missions.filter((m) => {
     if (m.status === 'completed' || m.status === 'cancelled') return true;
-    if (m.end_time && new Date(m.end_time) < now) return true;
+    if (m.end_time && new Date(m.end_time) < now && m.status !== 'active') return true;
     return false;
   });
 
