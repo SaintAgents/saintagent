@@ -282,7 +282,8 @@ const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ']
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
-  // If on public page, render without layout chrome (sidebar/topbar)
+  // CRITICAL: Check public pages FIRST before any auth checks
+  // This ensures public pages render immediately without waiting for auth
   if (PUBLIC_PAGES.includes(currentPageName)) {
     return <>{children}</>;
   }
