@@ -415,17 +415,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
                       background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f95689693_Screenshot2026-01-04192526.png') !important;
                     }
         [data-theme='light'] [data-avatar-card] [data-avatar-overlay] {
-          background: rgba(255,255,255,0.8);
-          backdrop-filter: blur(4px);
-        }
+                    background: rgba(255,255,255,0.1);
+                    backdrop-filter: blur(2px);
+                  }
         [data-theme='dark'] [data-avatar-card] [data-avatar-bg] {
           display: block;
           opacity: 1;
         }
         [data-theme='dark'] [data-avatar-card] [data-avatar-overlay] {
-          background: rgba(255,255,255,0.8);
-          backdrop-filter: blur(4px);
-        }
+                    background: rgba(0,0,0,0.1);
+                    backdrop-filter: blur(2px);
+                  }
 
         `}</style>
         <style>{`
