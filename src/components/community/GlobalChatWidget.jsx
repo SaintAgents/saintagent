@@ -13,7 +13,8 @@ import {
   Minimize2, 
   Maximize2,
   Users,
-  Globe
+  Globe,
+  GripHorizontal
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -22,8 +23,63 @@ export default function GlobalChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [message, setMessage] = useState('');
+  const [position, setPosition] = useState({ x: 16, y: null }); // x from left, y from bottom
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
+
+  // Initialize position from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('globalChatPosition');
+      if (saved) {
+        setPosition(JSON.parse(saved));
+      }
+    } catch {}
+  }, []);
+
+  // Save position to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('globalChatPosition', JSON.stringify(position));
+    } catch {}
+  }, [position]);
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    dragRef.current = {
+      startX: clientX,
+      startY: clientY,
+      startPosX: position.x,
+      startPosY: position.y ?? (window.innerHeight - 60)
+    };
+    document.addEventListener('mousemove', handleDragMove);
+    document.addEventListener('mouseup', handleDragEnd);
+    document.addEventListener('touchmove', handleDragMove);
+    document.addEventListener('touchend', handleDragEnd);
+  };
+
+  const handleDragMove = (e) => {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const dx = clientX - dragRef.current.startX;
+    const dy = clientY - dragRef.current.startY;
+    const newX = Math.max(0, Math.min(window.innerWidth - 200, dragRef.current.startPosX + dx));
+    const newY = Math.max(60, Math.min(window.innerHeight - 60, dragRef.current.startPosY + dy));
+    setPosition({ x: newX, y: newY });
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    document.removeEventListener('mousemove', handleDragMove);
+    document.removeEventListener('mouseup', handleDragEnd);
+    document.removeEventListener('touchmove', handleDragMove);
+    document.removeEventListener('touchend', handleDragEnd);
+  };
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -89,34 +145,59 @@ export default function GlobalChatWidget() {
     new Date(a.created_date) - new Date(b.created_date)
   );
 
+  const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
+
   // Floating button when closed
   if (!isOpen) {
     return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 left-4 z-50 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all hover:scale-105"
+      <div
+        className="fixed z-50"
+        style={{ left: position.x, top: position.y ?? undefined, bottom: position.y ? undefined : 16 }}
       >
-        <Globe className="w-5 h-5" />
-        <span className="text-sm font-medium">Global Chat</span>
-        {onlineUsers.length > 0 && (
-          <Badge className="bg-emerald-500 text-white text-xs px-1.5">
-            {onlineUsers.length}
-          </Badge>
-        )}
-      </button>
+        <div
+          onMouseDown={handleDragStart}
+          onTouchStart={handleDragStart}
+          className={cn(
+            "flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
+            isDragging ? "cursor-grabbing scale-105" : "cursor-grab hover:scale-105"
+          )}
+        >
+          <GripHorizontal className="w-4 h-4 opacity-60" />
+          <button onClick={() => setIsOpen(true)} className="flex items-center gap-2">
+            <Globe className="w-5 h-5" />
+            <span className="text-sm font-medium">Global Chat</span>
+            {onlineUsers.length > 0 && (
+              <Badge className="bg-emerald-500 text-white text-xs px-1.5">
+                {onlineUsers.length}
+              </Badge>
+            )}
+          </button>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className={cn(
-      "fixed z-50 bg-white rounded-lg shadow-2xl border border-slate-200 flex flex-col",
-      isExpanded 
-        ? "bottom-4 left-4 right-4 top-20" 
-        : "bottom-4 left-4 w-80 h-96"
-    )}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-lg">
+    <div 
+      className={cn(
+        "fixed z-50 bg-white rounded-lg shadow-2xl border border-slate-200 flex flex-col",
+        isExpanded 
+          ? "inset-4 top-20" 
+          : "w-80 h-96"
+      )}
+      style={isExpanded ? {} : { left: position.x, top: position.y ?? undefined, bottom: position.y ? undefined : 16 }}
+    >
+      {/* Header - Draggable */}
+      <div 
+        className={cn(
+          "flex items-center justify-between p-3 border-b bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-lg",
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        )}
+        onMouseDown={handleDragStart}
+        onTouchStart={handleDragStart}
+      >
         <div className="flex items-center gap-2">
+          <GripHorizontal className="w-4 h-4 text-white/60" />
           <Globe className="w-5 h-5 text-white" />
           <div>
             <h3 className="font-medium text-white text-sm">Global Chat</h3>
@@ -126,7 +207,7 @@ export default function GlobalChatWidget() {
             </p>
           </div>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1" onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
           <Button
             size="icon"
             variant="ghost"
