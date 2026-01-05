@@ -32,7 +32,7 @@ import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
 import CommandDeck from './pages/CommandDeck';
-import InviteLanding from './pages/InviteLanding';
+import Join from './pages/Join';
 import __Layout from './Layout.jsx';
 
 
@@ -71,7 +71,7 @@ export const PAGES = {
     "Terms": Terms,
     "UserGuide": UserGuide,
     "CommandDeck": CommandDeck,
-    "InviteLanding": InviteLanding,
+    "Join": Join,
 }
 
 export const pagesConfig = {

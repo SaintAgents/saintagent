@@ -46,7 +46,7 @@ const TRUST_FEATURES = [
   { icon: Eye, title: 'Transparent Reputation', description: 'See trust scores and testimonials before connecting' },
 ];
 
-export default function InviteLanding() {
+export default function Join() {
   const handleJoin = () => {
     base44.auth.redirectToLogin(createPageUrl('Onboarding'));
   };
