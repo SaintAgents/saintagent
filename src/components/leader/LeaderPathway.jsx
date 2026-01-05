@@ -264,7 +264,7 @@ export default function LeaderPathway({ profile }) {
                       )}
                     </ul>
                   </div>
-                  <div className="mt-2 text-xs text-slate-700">
+                  <div className="mt-2 text-xs text-slate-900">
                     <span className="font-semibold">Represents:</span> “{def.represents}”
                   </div>
                 </div>);
