@@ -524,7 +524,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         /* Command Deck neon accent */
         [data-theme='dark'] main[data-page='CommandDeck'] { 
           --gold: var(--neon-green);
-          background-color: var(--obsidian) !important;
+          background-color: transparent !important;
         }
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-900'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-800'],
