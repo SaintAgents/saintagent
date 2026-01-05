@@ -335,7 +335,7 @@ export default function AffiliateCenter() {
               <CardContent className="space-y-6">
                 {/* Personal Link */}
                 <div>
-                  <label className="text-sm font-medium mb-2 block">
+                  <label className="text-sm font-medium mb-2 block text-slate-700">
                     Personal Invite Link
                   </label>
                   <div className="flex gap-2">
