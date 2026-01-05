@@ -154,7 +154,7 @@ export default function MatchCard({ match, onAction }) {
   { label: "Intent", value: match.intent_alignment || 0, icon: Target },
   { label: "Skills", value: match.skill_complementarity || 0, icon: Brain },
   { label: "Spiritual", value: match.spiritual_alignment_score || 0, icon: Sparkles },
-  { label: "Trust", value: match.trust_score || 0, icon: Shield },
+  { label: "Proximity", value: match.proximity_score || 0, icon: Users },
   { label: "Timing", value: match.timing_readiness || 0, icon: Clock }];
 
 
@@ -340,22 +340,9 @@ export default function MatchCard({ match, onAction }) {
             <div>
                   <p className="text-xs text-slate-500 mb-1">Shared Values</p>
                   <div className="flex flex-wrap gap-1">
-                    {match.shared_values.slice(0, 5).map((value, i) =>
+                    {match.shared_values.slice(0, 3).map((value, i) =>
                 <Badge key={i} variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
                         {value}
-                      </Badge>
-                )}
-                  </div>
-                </div>
-            }
-
-              {match.complementary_skills?.length > 0 &&
-            <div>
-                  <p className="text-xs text-slate-500 mb-1">Complementary Skills</p>
-                  <div className="flex flex-wrap gap-1">
-                    {match.complementary_skills.slice(0, 5).map((skill, i) =>
-                <Badge key={i} variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
-                        {skill}
                       </Badge>
                 )}
                   </div>
@@ -366,7 +353,7 @@ export default function MatchCard({ match, onAction }) {
             <div>
                   <p className="text-xs text-slate-500 mb-1">Spiritual Synergies</p>
                   <div className="flex flex-wrap gap-1">
-                    {match.spiritual_synergies.slice(0, 5).map((syn, i) =>
+                    {match.spiritual_synergies.slice(0, 3).map((syn, i) =>
                 <Badge key={i} variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
                         ✨ {syn}
                       </Badge>
