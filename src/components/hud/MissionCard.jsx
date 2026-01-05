@@ -19,6 +19,16 @@ import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 
+// Futuristic Ultranet-themed mission images by type
+const MISSION_IMAGES = {
+  platform: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80', // Neural network
+  circle: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', // Sacred geometry
+  region: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80', // Earth from space
+  leader: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80', // AI brain
+  personal: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80', // Cyber grid
+  default: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80' // Holographic
+};
+
 export default function MissionCard({ mission, onAction, variant = "default" }) {
   const completedTasks = mission.tasks?.filter((t) => t.completed)?.length || 0;
   const totalTasks = mission.tasks?.length || 0;
@@ -57,42 +67,37 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
 
   }
 
+  // Get mission image - use provided or fallback to type-based image
+  const missionImage = mission.image_url || MISSION_IMAGES[mission.mission_type] || MISSION_IMAGES.default;
+
   return (
-    <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300">
-      {mission.image_url &&
+    <div className="mission-card bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300">
+      {/* Always show image */}
       <div className="relative h-40 bg-gradient-to-br from-violet-500 to-purple-600">
-          <img
-          src={mission.image_url}
+        <img
+          src={missionImage}
           alt={mission.title}
           className="w-full h-full object-cover opacity-90" />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          <Badge className={cn("absolute top-3 left-3", typeColors[mission.mission_type])}>
-            {mission.mission_type}
-          </Badge>
-        </div>
-      }
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <Badge className={cn("absolute top-3 left-3 mission-type-badge", typeColors[mission.mission_type])}>
+          {mission.mission_type}
+        </Badge>
+      </div>
       
       <div className="p-4">
-        {!mission.image_url &&
-        <Badge className={cn("mb-2", typeColors[mission.mission_type])}>
-            {mission.mission_type}
-          </Badge>
-        }
-        
-        <h4 className="font-semibold text-slate-900 mb-1">{mission.title}</h4>
-        <p className="text-sm text-slate-500 line-clamp-2 mb-3">{mission.objective}</p>
+        <h4 className="mission-title font-semibold text-slate-900 mb-1 font-mono">{mission.title}</h4>
+        <p className="mission-description text-sm text-slate-500 line-clamp-2 mb-3">{mission.objective}</p>
 
-        <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
+        <div className="mission-meta flex items-center gap-4 text-sm text-slate-600 mb-4">
           {timeLeft &&
           <div className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-slate-400" />
-              <span>Ends {timeLeft}</span>
+              <Clock className="w-4 h-4 text-slate-400 mission-icon" />
+              <span className="mission-meta-text">Ends {timeLeft}</span>
             </div>
           }
           <div className="flex items-center gap-1.5">
-            <Users className="w-4 h-4 text-slate-400" />
-            <span>{mission.participant_count || 0} joined</span>
+            <Users className="w-4 h-4 text-slate-400 mission-icon" />
+            <span className="mission-meta-text">{mission.participant_count || 0} joined</span>
           </div>
         </div>
 
@@ -114,13 +119,13 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
           </div>
         }
 
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 mb-4">
-          <Sparkles className="w-5 h-5 text-amber-500" />
+        <div className="mission-rewards flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 mb-4">
+          <Sparkles className="w-5 h-5 text-amber-500 reward-icon" />
           <div className="flex-1">
-            <p className="text-xs text-amber-600 font-medium">Rewards</p>
-            <div className="flex items-center gap-3 mt-0.5">
+            <p className="text-xs text-amber-600 font-medium reward-label">Rewards</p>
+            <div className="flex items-center gap-3 mt-0.5 flex-wrap">
               {mission.reward_ggg > 0 && (
-              <span className="flex items-center gap-1 text-sm font-semibold text-amber-700">
+              <span className="reward-amount flex items-center gap-1 text-sm font-semibold text-amber-700 font-mono">
                   <Coins className="w-3.5 h-3.5" />
                   {(() => {
                     const raw = Number(mission.reward_ggg) || 0;
@@ -132,13 +137,13 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
                 </span>
               )}
               {mission.reward_rank_points > 0 &&
-              <span className="flex items-center gap-1 text-sm font-semibold text-amber-700">
+              <span className="reward-amount flex items-center gap-1 text-sm font-semibold text-amber-700 font-mono">
                   <TrendingUp className="w-3.5 h-3.5" />
                   {mission.reward_rank_points} RP
                 </span>
               }
               {mission.reward_boost > 0 &&
-              <span className="flex items-center gap-1 text-sm font-semibold text-amber-700">
+              <span className="reward-amount flex items-center gap-1 text-sm font-semibold text-amber-700 font-mono">
                   <Zap className="w-3.5 h-3.5" />
                   {mission.reward_boost}x Boost
                 </span>

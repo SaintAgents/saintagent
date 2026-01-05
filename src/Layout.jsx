@@ -758,6 +758,172 @@ function AuthenticatedLayout({ children, currentPageName }) {
           color: rgba(0, 255, 0, 0.7) !important;
           filter: drop-shadow(0 0 4px rgba(0, 255, 0, 0.6));
         }
+
+        /* ============================================
+           MISSION CARD - Dark/Hacker Theme Styling
+           ============================================ */
+
+        /* Mission card container */
+        [data-theme='dark'] .mission-card,
+        [data-theme='hacker'] .mission-card {
+          background-color: #050505 !important;
+          border: 1px solid rgba(0, 255, 136, 0.3) !important;
+          box-shadow: 0 0 20px rgba(0, 255, 136, 0.1) !important;
+        }
+
+        [data-theme='hacker'] .mission-card {
+          border-color: #00ff00 !important;
+          box-shadow: 0 0 20px rgba(0, 255, 0, 0.15) !important;
+        }
+
+        /* Mission title - monospace terminal font */
+        [data-theme='dark'] .mission-title,
+        [data-theme='hacker'] .mission-title {
+          color: #ffffff !important;
+          font-family: 'Courier New', Consolas, monospace !important;
+          text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+          letter-spacing: 0.5px;
+        }
+
+        [data-theme='hacker'] .mission-title {
+          color: #00ff00 !important;
+          text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+
+        /* Mission description - high contrast */
+        [data-theme='dark'] .mission-description,
+        [data-theme='hacker'] .mission-description {
+          color: rgba(0, 212, 255, 0.9) !important;
+          font-family: 'Courier New', Consolas, monospace !important;
+        }
+
+        [data-theme='hacker'] .mission-description {
+          color: rgba(0, 255, 0, 0.8) !important;
+        }
+
+        /* Mission meta text (time, participants) */
+        [data-theme='dark'] .mission-meta-text,
+        [data-theme='hacker'] .mission-meta-text {
+          color: rgba(0, 255, 136, 0.8) !important;
+        }
+
+        [data-theme='hacker'] .mission-meta-text {
+          color: rgba(0, 255, 0, 0.8) !important;
+        }
+
+        [data-theme='dark'] .mission-icon,
+        [data-theme='hacker'] .mission-icon {
+          color: var(--neon-green, #00ff88) !important;
+          filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
+        }
+
+        [data-theme='hacker'] .mission-icon {
+          color: #00ff00 !important;
+          filter: drop-shadow(0 0 4px rgba(0, 255, 0, 0.6));
+        }
+
+        /* Mission type badge */
+        [data-theme='dark'] .mission-type-badge,
+        [data-theme='hacker'] .mission-type-badge {
+          background-color: rgba(0, 255, 136, 0.2) !important;
+          color: var(--neon-green, #00ff88) !important;
+          border: 1px solid var(--neon-green, #00ff88) !important;
+          font-family: 'Courier New', Consolas, monospace !important;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        [data-theme='hacker'] .mission-type-badge {
+          background-color: rgba(0, 255, 0, 0.15) !important;
+          color: #00ff00 !important;
+          border-color: #00ff00 !important;
+        }
+
+        /* Rewards section */
+        [data-theme='dark'] .mission-rewards,
+        [data-theme='hacker'] .mission-rewards {
+          background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.05)) !important;
+          border: 1px solid rgba(0, 255, 136, 0.3) !important;
+        }
+
+        [data-theme='hacker'] .mission-rewards {
+          background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 200, 0, 0.05)) !important;
+          border-color: rgba(0, 255, 0, 0.4) !important;
+        }
+
+        /* Reward label */
+        [data-theme='dark'] .reward-label,
+        [data-theme='hacker'] .reward-label {
+          color: var(--neon-green, #00ff88) !important;
+          font-family: 'Courier New', Consolas, monospace !important;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        [data-theme='hacker'] .reward-label {
+          color: #00ff00 !important;
+        }
+
+        /* Reward amounts with neon glow */
+        [data-theme='dark'] .reward-amount,
+        [data-theme='hacker'] .reward-amount {
+          color: #ffffff !important;
+          font-family: 'Courier New', Consolas, monospace !important;
+          text-shadow: 0 0 10px rgba(0, 255, 136, 0.6), 0 0 20px rgba(0, 255, 136, 0.3);
+          animation: rewardPulse 2s ease-in-out infinite;
+        }
+
+        [data-theme='hacker'] .reward-amount {
+          color: #00ff00 !important;
+          text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.4);
+        }
+
+        @keyframes rewardPulse {
+          0%, 100% { text-shadow: 0 0 10px rgba(0, 255, 136, 0.6), 0 0 20px rgba(0, 255, 136, 0.3); }
+          50% { text-shadow: 0 0 15px rgba(0, 255, 136, 0.9), 0 0 30px rgba(0, 255, 136, 0.5); }
+        }
+
+        [data-theme='hacker'] .reward-amount {
+          animation-name: rewardPulseHacker;
+        }
+
+        @keyframes rewardPulseHacker {
+          0%, 100% { text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.4); }
+          50% { text-shadow: 0 0 15px rgba(0, 255, 0, 1), 0 0 30px rgba(0, 255, 0, 0.6); }
+        }
+
+        /* Reward icon glow */
+        [data-theme='dark'] .reward-icon,
+        [data-theme='hacker'] .reward-icon {
+          color: var(--neon-green, #00ff88) !important;
+          filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.8));
+        }
+
+        [data-theme='hacker'] .reward-icon {
+          color: #00ff00 !important;
+          filter: drop-shadow(0 0 6px rgba(0, 255, 0, 0.9));
+        }
+
+        /* Progress bar in mission cards */
+        [data-theme='dark'] .mission-card [role="progressbar"],
+        [data-theme='hacker'] .mission-card [role="progressbar"] {
+          background-color: rgba(0, 255, 136, 0.2) !important;
+        }
+
+        [data-theme='dark'] .mission-card [role="progressbar"] > div,
+        [data-theme='hacker'] .mission-card [role="progressbar"] > div {
+          background-color: var(--neon-green, #00ff88) !important;
+          box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+        }
+
+        [data-theme='hacker'] .mission-card [role="progressbar"] {
+          background-color: rgba(0, 255, 0, 0.2) !important;
+        }
+
+        [data-theme='hacker'] .mission-card [role="progressbar"] > div {
+          background-color: #00ff00 !important;
+          box-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+        }
         `}</style>
       <style>{`
         /* Light theme background for Command Deck */
