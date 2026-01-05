@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Minimize2, Circle, Video } from "lucide-react";
+import { X, Send, Minimize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip } from "lucide-react";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
+import IcebreakerPrompts from '@/components/messages/IcebreakerPrompts';
 
 export default function FloatingChatWidget({ recipientId, recipientName, recipientAvatar, onClose }) {
   const [message, setMessage] = useState('');
