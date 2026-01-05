@@ -35,21 +35,21 @@ export default function DatingMatchesPopup({ currentUser }) {
   });
   const isDatingOptedIn = myDatingProfile?.[0]?.opt_in === true;
 
-  // Fetch dating profiles
+  // Fetch dating profiles - always call hook but conditionally enable
   const { data: datingProfiles = [] } = useQuery({
     queryKey: ['datingProfilesPopup', currentUser?.email],
     queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }, '-updated_date', 50),
-    enabled: isDatingOptedIn
+    enabled: !!currentUser?.email && isDatingOptedIn
   });
 
-  // Fetch user profiles for additional info
+  // Fetch user profiles for additional info - always call hook but conditionally enable
   const { data: userProfiles = [] } = useQuery({
     queryKey: ['userProfilesForDating'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 200),
-    enabled: isDatingOptedIn && datingProfiles.length > 0
+    enabled: !!currentUser?.email && isDatingOptedIn && datingProfiles.length > 0
   });
 
-  const otherProfiles = datingProfiles.filter(p => p.user_id !== currentUser?.email);
+  const otherProfiles = isDatingOptedIn ? datingProfiles.filter(p => p.user_id !== currentUser?.email) : [];
   
   // Enrich with user profile data
   const enrichedMatches = otherProfiles.map(dp => {
@@ -90,6 +90,7 @@ export default function DatingMatchesPopup({ currentUser }) {
     document.dispatchEvent(event);
   };
 
+  // Return null AFTER all hooks have been called
   if (!isDatingOptedIn) return null;
 
   const currentMatch = enrichedMatches[currentIndex];
