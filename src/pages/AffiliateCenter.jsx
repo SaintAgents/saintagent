@@ -255,11 +255,20 @@ export default function AffiliateCenter() {
     <div className="p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Affiliate Center</h1>
-          <p>
-            Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
-          </p>
+        <div className="flex items-start justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Affiliate Center</h1>
+            <p className="text-slate-600">
+              Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
+            </p>
+          </div>
+          <Button 
+            onClick={() => setCreateCampaignOpen(true)}
+            className="bg-violet-600 hover:bg-violet-700 gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Create Campaign
+          </Button>
         </div>
 
         {/* Tier Status Card */}
