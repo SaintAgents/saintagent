@@ -491,7 +491,7 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/40 dark:bg-black/30 backdrop-blur-sm border border-white/20 dark:border-white/10" data-avatar-card>
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
@@ -615,8 +615,7 @@ export default function CommandDeck() {
                 </div>
 
                 {/* Stats Bar */}
-                {/* Stats Bar */}
-                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
+                <div className="bg-white/30 dark:bg-black/30 backdrop-blur-sm mb-4 p-3 rounded-xl grid grid-cols-4 gap-3 border border-white/20" data-stats-bar>
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable?.toLocaleString?.() || "0"}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
@@ -751,8 +750,8 @@ export default function CommandDeck() {
           </div>
 
           {/* Platform Stats Mini Dashboard */}
-          <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
-            <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">Dashboard</div>
+          <div className="mb-4 p-4">
+            <div className="text-white text-3xl font-bold uppercase tracking-wide drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>Dashboard</div>
           </div>
 
           {/* Hero Metrics */}
@@ -868,8 +867,8 @@ export default function CommandDeck() {
         </div>
 
         {/* Activity Cards Header */}
-        <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
-          <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">ACTIVITY CARDS</div>
+        <div className="mb-4 px-6">
+          <div className="text-white text-3xl font-bold uppercase tracking-wide drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>ACTIVITY CARDS</div>
         </div>
 
         {/* Mode Cards Grid */}
@@ -887,7 +886,7 @@ export default function CommandDeck() {
         {/* Control Area */}
         <div className="px-6 mb-6">
           <div className="relative p-4 rounded-2xl">
-            <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl bg-white/30 dark:bg-black/30 backdrop-blur-sm border border-white/20 pointer-events-none" />
             <div className="relative z-10">
               <div className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Controls Deck</div>
               <div className="grid grid-cols-2 gap-3">
