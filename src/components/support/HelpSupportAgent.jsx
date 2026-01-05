@@ -356,9 +356,10 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
 
           {/* Input */}
           <form onSubmit={handleSubmit} className={cn(
-            "absolute bottom-0 left-0 right-0 p-3 border-t rounded-b-2xl",
-            "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900",
-            "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]"
+            "p-3 border-t rounded-b-2xl",
+            "border-slate-200 bg-white/80 backdrop-blur-sm",
+            "dark:border-[rgba(0,255,136,0.3)] dark:bg-[#050505]/80",
+            "[data-theme='hacker']_&:bg-[#050505]/80 [data-theme='hacker']_&:border-[#00ff00]"
           )}>
             <div className="flex gap-2">
               <Input
