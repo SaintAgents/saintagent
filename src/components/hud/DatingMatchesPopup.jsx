@@ -8,19 +8,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { 
-  Heart, 
-  MessageCircle, 
-  ChevronLeft, 
+  PopoverTrigger } from
+"@/components/ui/popover";
+import {
+  Heart,
+  MessageCircle,
+  ChevronLeft,
   ChevronRight,
   Sparkles,
   MapPin,
   X,
   Images,
-  User
-} from "lucide-react";
+  User } from
+"lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
@@ -56,16 +56,16 @@ export default function DatingMatchesPopup({ currentUser }) {
     enabled: !!currentUser?.email && isDatingOptedIn && datingProfiles.length > 0
   });
 
-  const otherProfiles = isDatingOptedIn ? datingProfiles.filter(p => p.user_id !== currentUser?.email) : [];
-  
+  const otherProfiles = isDatingOptedIn ? datingProfiles.filter((p) => p.user_id !== currentUser?.email) : [];
+
   // Enrich with user profile data and assign unique demo avatars
   const usedMaleIdx = new Set();
   const usedFemaleIdx = new Set();
-  
+
   const enrichedMatches = otherProfiles.map((dp, idx) => {
-    const userProfile = userProfiles.find(up => up.user_id === dp.user_id);
+    const userProfile = userProfiles.find((up) => up.user_id === dp.user_id);
     let avatar = dp.avatar_url || userProfile?.avatar_url;
-    
+
     // Assign unique demo avatar if no real avatar
     if (!avatar) {
       const isMale = idx % 2 === 0;
@@ -87,11 +87,11 @@ export default function DatingMatchesPopup({ currentUser }) {
         }
       }
     }
-    
+
     // Collect all available images for gallery
     const galleryImages = userProfile?.gallery_images || [];
     const allImages = [avatar, ...galleryImages].filter(Boolean);
-    
+
     return {
       ...dp,
       display_name: dp.display_name || userProfile?.display_name || 'Anonymous',
@@ -105,11 +105,11 @@ export default function DatingMatchesPopup({ currentUser }) {
   });
 
   const handlePrev = () => {
-    setCurrentIndex(prev => Math.max(0, prev - 1));
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex(prev => Math.min(enrichedMatches.length - 1, prev + 1));
+    setCurrentIndex((prev) => Math.min(enrichedMatches.length - 1, prev + 1));
   };
 
   const handleOpenChat = (match) => {
@@ -139,12 +139,12 @@ export default function DatingMatchesPopup({ currentUser }) {
     if (!touchStart) return;
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchStart - touchEnd;
-    
+
     if (Math.abs(diff) > 50) {
       if (diff > 0 && photoIndex < images.length - 1) {
-        setPhotoIndex(prev => prev + 1);
+        setPhotoIndex((prev) => prev + 1);
       } else if (diff < 0 && photoIndex > 0) {
-        setPhotoIndex(prev => prev - 1);
+        setPhotoIndex((prev) => prev - 1);
       }
     }
     setTouchStart(null);
@@ -171,24 +171,24 @@ export default function DatingMatchesPopup({ currentUser }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Dating Matches">
-          <div 
+          <div
             className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse"
-            style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}
-          >
+            style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+
             <Heart className="w-3.5 h-3.5 text-white fill-white" />
           </div>
-          {enrichedMatches.length > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
+          {enrichedMatches.length > 0 &&
+          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
               {enrichedMatches.length > 99 ? '99+' : enrichedMatches.length}
             </span>
-          )}
+          }
           <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             Dating
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-0 bg-white dark:bg-[#0a0a0a] border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-[rgba(0,255,136,0.15)] bg-gradient-to-r from-pink-50 to-rose-50 dark:from-[#0a0a0a] dark:to-[#050505]">
+      <PopoverContent align="end" className="w-80 p-0 dark:bg-slate-800 dark:border-slate-700">
+        <div className="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-[rgba(0,255,136,0.15)] from-pink-50 to-rose-50 dark:from-[#0a0a0a] dark:to-[#050505]">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
             Dating Matches
@@ -200,130 +200,125 @@ export default function DatingMatchesPopup({ currentUser }) {
           </Link>
         </div>
 
-        {enrichedMatches.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-[rgba(0,212,255,0.6)] px-4">
+        {enrichedMatches.length === 0 ?
+        <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500 px-4">
             <Heart className="w-10 h-10 mb-3 opacity-50" />
             <p className="text-sm text-center">No matches yet</p>
             <p className="text-xs text-center mt-1">Check back soon for new connections</p>
-          </div>
-        ) : (
-          <div className="relative">
+          </div> :
+
+        <div className="relative">
             {/* Navigation Arrows */}
-            {enrichedMatches.length > 1 && (
-              <>
+            {enrichedMatches.length > 1 &&
+          <>
                 <button
-                  onClick={handlePrev}
-                  disabled={currentIndex === 0}
-                  className={cn(
-                    "absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 dark:bg-[#0a0a0a]/90 dark:border dark:border-[rgba(0,255,136,0.3)] shadow-md flex items-center justify-center transition-all",
-                    currentIndex === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-white dark:hover:bg-[#0a0a0a] hover:scale-110"
-                  )}
-                >
-                  <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-[#00ff88]" />
+              onClick={handlePrev}
+              disabled={currentIndex === 0}
+              className={cn(
+                "absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-all",
+                currentIndex === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-white hover:scale-110"
+              )}>
+
+                  <ChevronLeft className="w-5 h-5 text-slate-600" />
                 </button>
                 <button
-                  onClick={handleNext}
-                  disabled={currentIndex === enrichedMatches.length - 1}
-                  className={cn(
-                    "absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 dark:bg-[#0a0a0a]/90 dark:border dark:border-[rgba(0,255,136,0.3)] shadow-md flex items-center justify-center transition-all",
-                    currentIndex === enrichedMatches.length - 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-white dark:hover:bg-[#0a0a0a] hover:scale-110"
-                  )}
-                >
-                  <ChevronRight className="w-5 h-5 text-slate-600 dark:text-[#00ff88]" />
+              onClick={handleNext}
+              disabled={currentIndex === enrichedMatches.length - 1}
+              className={cn(
+                "absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-all",
+                currentIndex === enrichedMatches.length - 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-white hover:scale-110"
+              )}>
+
+                  <ChevronRight className="w-5 h-5 text-slate-600" />
                 </button>
               </>
-            )}
+          }
 
             {/* Match Card */}
-            {currentMatch && (
-              <div className="p-4">
-                <div 
-                  className={cn(
-                    "rounded-xl border overflow-hidden cursor-pointer hover:shadow-lg transition-shadow",
-                    "bg-gradient-to-br from-white to-pink-50 dark:from-slate-800 dark:to-pink-900/20 border-pink-100 dark:border-pink-800/30",
-                    "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:from-[#0a0a0a] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_8px_rgba(0,255,0,0.3)]"
-                  )}
-                >
+            {currentMatch &&
+          <div className="p-4">
+                <div
+              className={cn(
+                "rounded-xl border overflow-hidden cursor-pointer hover:shadow-lg transition-shadow",
+                "bg-gradient-to-br from-white to-pink-50 dark:from-slate-800 dark:to-pink-900/20 border-pink-100 dark:border-pink-800/30",
+                "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:from-[#0a0a0a] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_8px_rgba(0,255,0,0.3)]"
+              )}>
+
                   {/* Photo Gallery with Swipe */}
-                  <div 
-                    className="relative"
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={(e) => handleTouchEnd(e, currentMatch.all_images)}
-                  >
+                  <div
+                className="relative"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, currentMatch.all_images)}>
+
                     <div className="w-full h-48 overflow-hidden">
-                      <img 
-                        src={currentMatch.all_images[photoIndex] || currentMatch.avatar_url}
-                        alt={currentMatch.display_name}
-                        className="w-full h-full object-cover transition-transform duration-300"
-                      />
+                      <img
+                    src={currentMatch.all_images[photoIndex] || currentMatch.avatar_url}
+                    alt={currentMatch.display_name}
+                    className="w-full h-full object-cover transition-transform duration-300" />
+
                     </div>
                     
                     {/* Photo Gallery Icon */}
-                    {currentMatch.all_images.length > 0 && (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setPhotoViewerOpen(true);
-                        }}
-                        className={cn(
-                          "absolute top-2 right-2 w-10 h-10 rounded-full flex items-center justify-center transition-all z-20 cursor-pointer",
-                          "bg-black/60 hover:bg-black/80 backdrop-blur-sm border-2 border-white/30 hover:border-white/60",
-                          "dark:bg-[#0a0a0a]/80 dark:border-[rgba(0,255,136,0.5)] dark:hover:border-[#00ff88]",
-                          "dark:shadow-[0_0_12px_rgba(0,255,136,0.4)] dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.6)]"
-                        )}
-                        title="View all photos"
-                      >
-                        <Images className="w-5 h-5 text-white dark:text-[#00ff88] dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.8)]" />
-                        {currentMatch.all_images.length > 1 && (
-                          <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-pink-500 dark:bg-[#00ff88] text-white dark:text-black text-[10px] rounded-full flex items-center justify-center font-bold shadow-md">
+                    {currentMatch.all_images.length > 0 &&
+                <button
+                  onClick={(e) => handlePhotoClick(e, currentMatch.all_images)}
+                  className={cn(
+                    "absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                    "bg-black/50 hover:bg-black/70 backdrop-blur-sm",
+                    "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_10px_#00ff00]"
+                  )}
+                  title="View all photos">
+
+                        <Images className="w-4 h-4 text-white [data-theme='hacker']_&:text-[#00ff00]" />
+                        {currentMatch.all_images.length > 1 &&
+                  <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 [data-theme='hacker']_&:bg-[#00ff00] text-white [data-theme='hacker']_&:text-black text-[10px] rounded-full flex items-center justify-center font-bold">
                             {currentMatch.all_images.length}
                           </span>
-                        )}
+                  }
                       </button>
-                    )}
+                }
                     
                     {/* Photo Navigation Dots */}
-                    {currentMatch.all_images.length > 1 && (
-                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-                        {currentMatch.all_images.map((_, i) => (
-                          <button
-                            key={i}
-                            onClick={(e) => { e.stopPropagation(); setPhotoIndex(i); }}
-                            className={cn(
-                              "w-2 h-2 rounded-full transition-all",
-                              i === photoIndex 
-                                ? "bg-white w-4 [data-theme='hacker']_&:bg-[#00ff00]" 
-                                : "bg-white/50 hover:bg-white/80 [data-theme='hacker']_&:bg-[#00ff00]/50"
-                            )}
-                          />
-                        ))}
+                    {currentMatch.all_images.length > 1 &&
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                        {currentMatch.all_images.map((_, i) =>
+                  <button
+                    key={i}
+                    onClick={(e) => {e.stopPropagation();setPhotoIndex(i);}}
+                    className={cn(
+                      "w-2 h-2 rounded-full transition-all",
+                      i === photoIndex ?
+                      "bg-white w-4 [data-theme='hacker']_&:bg-[#00ff00]" :
+                      "bg-white/50 hover:bg-white/80 [data-theme='hacker']_&:bg-[#00ff00]/50"
+                    )} />
+
+                  )}
                       </div>
-                    )}
+                }
                     
                     {/* Inline Photo Nav Arrows */}
-                    {currentMatch.all_images.length > 1 && (
-                      <>
+                    {currentMatch.all_images.length > 1 &&
+                <>
                         <button
-                          onClick={(e) => { e.stopPropagation(); if (photoIndex > 0) setPhotoIndex(prev => prev - 1); }}
-                          className={cn(
-                            "absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center",
-                            photoIndex === 0 && "opacity-30 cursor-not-allowed"
-                          )}
-                        >
+                    onClick={(e) => {e.stopPropagation();if (photoIndex > 0) setPhotoIndex((prev) => prev - 1);}}
+                    className={cn(
+                      "absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center",
+                      photoIndex === 0 && "opacity-30 cursor-not-allowed"
+                    )}>
+
                           <ChevronLeft className="w-4 h-4 text-white" />
                         </button>
                         <button
-                          onClick={(e) => { e.stopPropagation(); if (photoIndex < currentMatch.all_images.length - 1) setPhotoIndex(prev => prev + 1); }}
-                          className={cn(
-                            "absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center",
-                            photoIndex === currentMatch.all_images.length - 1 && "opacity-30 cursor-not-allowed"
-                          )}
-                        >
+                    onClick={(e) => {e.stopPropagation();if (photoIndex < currentMatch.all_images.length - 1) setPhotoIndex((prev) => prev + 1);}}
+                    className={cn(
+                      "absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center",
+                      photoIndex === currentMatch.all_images.length - 1 && "opacity-30 cursor-not-allowed"
+                    )}>
+
                           <ChevronRight className="w-4 h-4 text-white" />
                         </button>
                       </>
-                    )}
+                }
                   </div>
                   
                   {/* Name & Location */}
@@ -331,74 +326,74 @@ export default function DatingMatchesPopup({ currentUser }) {
                     <h4 className="font-semibold text-slate-900 dark:text-slate-100 text-lg [data-theme='hacker']_&:text-[#00ff00]">
                       {currentMatch.display_name}
                     </h4>
-                    {currentMatch.location && (
-                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1 mt-1 [data-theme='hacker']_&:text-[#00cc00]">
+                    {currentMatch.location &&
+                <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1 mt-1 [data-theme='hacker']_&:text-[#00cc00]">
                         <MapPin className="w-3 h-3" />
                         {currentMatch.location}
                       </p>
-                    )}
+                }
                   </div>
 
                   {/* Bio */}
-                  {currentMatch.bio && (
-                    <div className="px-4 pb-3">
+                  {currentMatch.bio &&
+              <div className="px-4 pb-3">
                       <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 text-center">
                         {currentMatch.bio}
                       </p>
                     </div>
-                  )}
+              }
 
                   {/* Values Tags */}
-                  {currentMatch.values_tags?.length > 0 && (
-                    <div className="px-4 pb-3">
+                  {currentMatch.values_tags?.length > 0 &&
+              <div className="px-4 pb-3">
                       <div className="flex flex-wrap justify-center gap-1">
-                        {currentMatch.values_tags.slice(0, 3).map((tag, i) => (
-                          <span 
-                            key={i} 
-                            className="px-2 py-0.5 bg-pink-100 dark:bg-[rgba(0,255,136,0.1)] text-pink-700 dark:text-[#00ff88] text-xs rounded-full dark:border dark:border-[rgba(0,255,136,0.2)]"
-                          >
+                        {currentMatch.values_tags.slice(0, 3).map((tag, i) =>
+                  <span
+                    key={i}
+                    className="px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 text-xs rounded-full">
+
                             {tag}
                           </span>
-                        ))}
-                        {currentMatch.values_tags.length > 3 && (
-                          <span className="text-xs text-slate-400 dark:text-[rgba(0,212,255,0.6)]">+{currentMatch.values_tags.length - 3}</span>
-                        )}
+                  )}
+                        {currentMatch.values_tags.length > 3 &&
+                  <span className="text-xs text-slate-400">+{currentMatch.values_tags.length - 3}</span>
+                  }
                       </div>
                     </div>
-                  )}
+              }
 
                   {/* Seeking */}
-                  {currentMatch.seeking && (
-                    <div className="px-4 pb-3 text-center">
+                  {currentMatch.seeking &&
+              <div className="px-4 pb-3 text-center">
                       <span className="text-xs text-slate-500 dark:text-slate-400">
                         Seeking: {currentMatch.seeking}
                       </span>
                     </div>
-                  )}
+              }
                 </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-2 mt-3">
                   <Button
-                    variant="outline"
-                    className={cn(
-                      "flex-1 rounded-xl gap-2",
-                      "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
-                      "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
-                    )}
-                    onClick={() => handleViewProfile(currentMatch)}
-                  >
+                variant="outline"
+                className={cn(
+                  "flex-1 rounded-xl gap-2",
+                  "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
+                  "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
+                )}
+                onClick={() => handleViewProfile(currentMatch)}>
+
                     <User className="w-4 h-4 text-pink-500 [data-theme='hacker']_&:text-[#00ff00]" />
                     View Profile
                   </Button>
                   <Button
-                    className={cn(
-                      "flex-1 rounded-xl gap-2",
-                      "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600",
-                      "[data-theme='hacker']_&:from-[#00cc00] [data-theme='hacker']_&:to-[#00ff00] [data-theme='hacker']_&:text-black [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]"
-                    )}
-                    onClick={() => handleOpenChat(currentMatch)}
-                  >
+                className={cn(
+                  "flex-1 rounded-xl gap-2",
+                  "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600",
+                  "[data-theme='hacker']_&:from-[#00cc00] [data-theme='hacker']_&:to-[#00ff00] [data-theme='hacker']_&:text-black [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]"
+                )}
+                onClick={() => handleOpenChat(currentMatch)}>
+
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
@@ -406,39 +401,39 @@ export default function DatingMatchesPopup({ currentUser }) {
                 
                 {/* Photo Viewer Modal */}
                 <PhotoViewer
-                  open={photoViewerOpen}
-                  images={currentMatch.all_images}
-                  startIndex={photoIndex}
-                  onClose={() => setPhotoViewerOpen(false)}
-                />
+              open={photoViewerOpen}
+              images={currentMatch.all_images}
+              startIndex={photoIndex}
+              onClose={() => setPhotoViewerOpen(false)} />
+
 
                 {/* Pagination Dots */}
-                {enrichedMatches.length > 1 && (
-                  <div className="flex justify-center gap-1.5 mt-4">
-                    {enrichedMatches.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrentIndex(i)}
-                        className={cn(
-                          "w-2 h-2 rounded-full transition-all",
-                          i === currentIndex 
-                            ? "bg-pink-500 dark:bg-[#00ff88] w-4" 
-                            : "bg-slate-300 dark:bg-[rgba(0,255,136,0.3)] hover:bg-slate-400 dark:hover:bg-[rgba(0,255,136,0.5)]"
-                        )}
-                      />
-                    ))}
+                {enrichedMatches.length > 1 &&
+            <div className="flex justify-center gap-1.5 mt-4">
+                    {enrichedMatches.map((_, i) =>
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={cn(
+                  "w-2 h-2 rounded-full transition-all",
+                  i === currentIndex ?
+                  "bg-pink-500 w-4" :
+                  "bg-slate-300 hover:bg-slate-400"
+                )} />
+
+              )}
                   </div>
-                )}
+            }
 
                 {/* Counter */}
-                <p className="text-center text-xs text-slate-400 dark:text-[rgba(0,212,255,0.6)] mt-2">
+                <p className="text-center text-xs text-slate-400 mt-2">
                   {currentIndex + 1} of {enrichedMatches.length}
                 </p>
               </div>
-            )}
+          }
           </div>
-        )}
+        }
       </PopoverContent>
-    </Popover>
-  );
+    </Popover>);
+
 }
