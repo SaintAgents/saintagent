@@ -116,29 +116,30 @@ export async function attachAffiliateToUser(userId, base44Instance) {
 }
 
 // Helper to mark referral as activated after onboarding
-export async function activateReferral(userId) {
+export async function activateReferral(userId, base44Instance) {
   try {
-    const referrals = await base44.entities.Referral.filter({ 
+    const referrals = await base44Instance.entities.Referral.filter({ 
       referred_user_id: userId, 
       status: 'pending' 
     });
 
     if (referrals.length > 0) {
       const referral = referrals[0];
-      await base44.entities.Referral.update(referral.id, {
+      await base44Instance.entities.Referral.update(referral.id, {
         status: 'activated',
         activated_timestamp: new Date().toISOString()
       });
 
       // Update activated count
-      const codes = await base44.entities.AffiliateCode.filter({ 
+      const codes = await base44Instance.entities.AffiliateCode.filter({ 
         user_id: referral.affiliate_user_id 
       });
       if (codes.length > 0) {
-        await base44.entities.AffiliateCode.update(codes[0].id, {
+        await base44Instance.entities.AffiliateCode.update(codes[0].id, {
           total_activated: (codes[0].total_activated || 0) + 1
         });
       }
+      console.log('Referral activated for user:', userId);
     }
   } catch (error) {
     console.error('Error activating referral:', error);
