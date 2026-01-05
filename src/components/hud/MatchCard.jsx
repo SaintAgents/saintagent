@@ -100,21 +100,33 @@ export default function MatchCard({ match, onAction }) {
   });
   const targetProfile = targetProfiles?.[0];
 
-  // Get demo avatar based on target name for demo users
+  // Get avatar - use match avatar, profile avatar, or demo avatar fallback
   const getDemoAvatar = () => {
+    // First check if match has an avatar
     if (match.target_avatar) return match.target_avatar;
+    // Check profile avatar
+    if (targetProfile?.avatar_url) return targetProfile.avatar_url;
+    // Fallback to demo avatar based on name
     const name = (match.target_name || '').toLowerCase();
-    // Map demo names to avatars
-    const maleNames = ['jonah', 'kai', 'ethan', 'rafael', 'theo'];
-    const femaleNames = ['lena', 'isla', 'mara', 'priya', 'sofia', 'aurora', 'maya'];
-    const maleIdx = maleNames.findIndex(n => name.includes(n));
-    const femaleIdx = femaleNames.findIndex(n => name.includes(n));
+    const id = (match.target_id || '').toLowerCase();
+    // Map demo names/IDs to avatars
+    const maleNames = ['jonah', 'kai', 'ethan', 'rafael', 'theo', 'marcus', 'david'];
+    const femaleNames = ['lena', 'isla', 'mara', 'priya', 'sofia', 'aurora', 'maya', 'sarah', 'elena'];
+    const maleIdx = maleNames.findIndex(n => name.includes(n) || id.includes(n));
+    const femaleIdx = femaleNames.findIndex(n => name.includes(n) || id.includes(n));
     if (maleIdx >= 0) return getMaleAvatarByIndex(maleIdx);
     if (femaleIdx >= 0) return getFemaleAvatarByIndex(femaleIdx);
     return null;
   };
 
   const resolvedAvatar = getDemoAvatar();
+  
+  // For demo profiles without real trust/rp data, assign defaults for visual testing
+  const isDemo = (match.target_id || '').includes('demo_') || (match.target_id || '').includes('@example');
+  const effectiveTrustScore = targetProfile?.trust_score ?? (isDemo ? 75 : 0);
+  const effectiveRpRankCode = targetProfile?.rp_rank_code ?? (isDemo ? 'adept' : 'seeker');
+  const effectiveRpPoints = targetProfile?.rp_points ?? (isDemo ? 350 : 0);
+  const effectiveLeaderTier = targetProfile?.leader_tier ?? (isDemo && Math.random() > 0.5 ? 'verified144k' : 'none');
 
   const navigateTo = (type, id) => {
     if (type === 'mission') {
@@ -198,26 +210,20 @@ export default function MatchCard({ match, onAction }) {
           {match.target_type === 'person' ? (
             <div className="relative">
               <RankedAvatar
-                src={resolvedAvatar || targetProfile?.avatar_url}
+                src={resolvedAvatar}
                 name={match.target_name}
                 size={52}
                 userId={match.target_id}
-                rpRankCode={targetProfile?.rp_rank_code}
-                rpPoints={targetProfile?.rp_points}
-                leaderTier={targetProfile?.leader_tier}
-                status={targetProfile?.status}
-                className="cursor-pointer hover:scale-105 transition-transform"
+                rpRankCode={effectiveRpRankCode}
+                rpPoints={effectiveRpPoints}
+                leaderTier={effectiveLeaderTier}
+                status={targetProfile?.status || 'online'}
+                className="cursor-pointer hover:scale-105 transition-transform [data-theme='hacker']_&:drop-shadow-[0_0_8px_#00ff00]"
               />
               {/* Trust sigil overlay */}
-              {(targetProfile?.trust_score || 0) >= 70 && (
-                <div className="absolute -top-0.5 -right-0.5 p-0.5 bg-emerald-500 rounded-full shadow-sm [data-theme='hacker']_&:shadow-[0_0_6px_#00ff00]" title="High Trust">
-                  <Shield className="w-2.5 h-2.5 text-white" />
-                </div>
-              )}
-              {/* Teacher/Collaborator role sigil */}
-              {match.target_type === 'teacher' && (
-                <div className="absolute -bottom-0.5 -left-0.5 p-0.5 bg-blue-500 rounded-full shadow-sm" title="Teacher">
-                  <GraduationCap className="w-2.5 h-2.5 text-white" />
+              {effectiveTrustScore >= 70 && (
+                <div className="absolute -top-0.5 -right-0.5 p-0.5 bg-emerald-500 rounded-full shadow-sm [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_6px_#00ff00]" title="High Trust">
+                  <Shield className="w-2.5 h-2.5 text-white [data-theme='hacker']_&:text-[#00ff00]" />
                 </div>
               )}
             </div>
@@ -246,8 +252,8 @@ export default function MatchCard({ match, onAction }) {
                   {match.target_name}
                 </h4>
                 {/* Verified badge for 144K leaders */}
-                {targetProfile?.leader_tier === 'verified144k' && (
-                  <CheckCircle className="w-4 h-4 text-amber-500 shrink-0" title="Verified 144K Leader" />
+                {effectiveLeaderTier === 'verified144k' && (
+                  <CheckCircle className="w-4 h-4 text-amber-500 shrink-0 [data-theme='hacker']_&:text-[#00ff00]" title="Verified 144K Leader" />
                 )}
               </div>
               <p className="text-sm text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00cc00] truncate">{match.target_subtitle}</p>
