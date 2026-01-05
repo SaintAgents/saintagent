@@ -41,6 +41,7 @@ import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
+import AIDiscoverMatches from '@/components/ai/AIDiscoverMatches';
 import LeaderPathway from '@/components/leader/LeaderPathway';
 import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import HelpHint from '@/components/hud/HelpHint';
@@ -958,6 +959,10 @@ export default function CommandDeck() {
           </div>
 
           <div className="block space-y-6 mt-6">
+            <CollapsibleCard title="AI Discover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen}>
+              <AIDiscoverMatches profile={profile} />
+            </CollapsibleCard>
+
             <CollapsibleCard title="Synchronicity Engine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
