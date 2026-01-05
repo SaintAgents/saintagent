@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Check, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -30,6 +31,8 @@ export default function DatingSettings({ currentUser }) {
   const [form, setForm] = React.useState(() => ({
     opt_in: existing?.opt_in ?? false,
     visible: existing?.visible ?? true,
+    gender: existing?.gender || '',
+    interested_in: existing?.interested_in || [],
     domains_enabled: existing?.domains_enabled ?? {
       identity_values: true,
       emotional_stability: true,
@@ -137,6 +140,51 @@ export default function DatingSettings({ currentUser }) {
             Match Weights
           </Button>
         </Link>
+      </div>
+
+      {/* Gender & Interested In - Critical for matching */}
+      <div className="grid md:grid-cols-2 gap-6 p-4 bg-pink-50 dark:bg-pink-900/20 rounded-xl border border-pink-200 dark:border-pink-800/30">
+        <div className="space-y-3">
+          <Label className="text-slate-900 dark:text-slate-100 font-medium">I am a...</Label>
+          <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v })}>
+            <SelectTrigger className="dark:bg-slate-900 dark:text-slate-100 dark:border-slate-600"><SelectValue placeholder="Select your gender" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="man">Man</SelectItem>
+              <SelectItem value="woman">Woman</SelectItem>
+              <SelectItem value="non_binary">Non-binary</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-3">
+          <Label className="text-slate-900 dark:text-slate-100 font-medium">I'm interested in...</Label>
+          <div className="flex flex-wrap gap-4">
+            {[
+              { value: 'women', label: 'Women' },
+              { value: 'men', label: 'Men' },
+              { value: 'non_binary', label: 'Non-binary' },
+              { value: 'all', label: 'Everyone' }
+            ].map((opt) => (
+              <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={form.interested_in.includes(opt.value)}
+                  onCheckedChange={(checked) => {
+                    if (opt.value === 'all') {
+                      setForm({ ...form, interested_in: checked ? ['all'] : [] });
+                    } else {
+                      const newInterests = checked
+                        ? [...form.interested_in.filter(v => v !== 'all'), opt.value]
+                        : form.interested_in.filter(v => v !== opt.value);
+                      setForm({ ...form, interested_in: newInterests });
+                    }
+                  }}
+                />
+                <span className="text-sm text-slate-700 dark:text-slate-300">{opt.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
