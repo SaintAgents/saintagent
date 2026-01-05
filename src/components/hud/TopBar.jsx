@@ -97,8 +97,7 @@ export default function TopBar({
                 "px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5",
                 mode === tab.id 
                   ? "bg-white text-violet-700 shadow-sm" 
-                  : "text-slate-600 hover:text-slate-900",
-                tab.locked && "opacity-50 cursor-not-allowed"
+                  : "text-slate-600 hover:text-slate-900"
               )}
             >
               {tab.icon && <tab.icon className="w-4 h-4" />}
