@@ -9,6 +9,7 @@ import DatingSettings from './DatingSettings';
 import CompatibilityResults from './CompatibilityResults';
 import AIMatchAssistant from './AIMatchAssistant';
 import ProfileBoostCard from './ProfileBoostCard';
+import AdvancedMatchFilters, { DEFAULT_FILTERS } from './AdvancedMatchFilters';
 
 // Default weights - can be overridden by user preferences
 const DEFAULT_WEIGHTS = {
@@ -84,6 +85,7 @@ export default function DatingTab({ profile }) {
   const [lastRefresh, setLastRefresh] = useState(null);
   const [savedMatches, setSavedMatches] = useState([]);
   const [dismissedMatches, setDismissedMatches] = useState([]);
+  const [advancedFilters, setAdvancedFilters] = useState(DEFAULT_FILTERS);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -258,7 +260,104 @@ export default function DatingTab({ profile }) {
     setResults(out);
     setLastRefresh(new Date());
     setRunning(false);
-  }, [currentUser?.email, myDP, allProfiles, userProfiles, dismissedMatches, savedMatches]);
+    }, [currentUser?.email, myDP, allProfiles, userProfiles, dismissedMatches, savedMatches]);
+
+    // Apply advanced filters to results
+    const filteredResults = React.useMemo(() => {
+    return results.filter(match => {
+      // Score range
+      if (match.overall < advancedFilters.minScore || match.overall > advancedFilters.maxScore) {
+        return false;
+      }
+
+      // Find the original profile for this match
+      const originalProfile = allProfiles.find(p => p.user_id === match.user_id);
+
+      // Relationship intent filter
+      if (advancedFilters.relationshipIntent?.length > 0) {
+        const matchIntent = originalProfile?.relationship_intent || match.intent;
+        if (!advancedFilters.relationshipIntent.includes(matchIntent)) {
+          return false;
+        }
+      }
+
+      // Growth orientation filter
+      if (advancedFilters.growthOrientation?.length > 0) {
+        const matchGrowth = originalProfile?.growth_orientation;
+        if (!advancedFilters.growthOrientation.includes(matchGrowth)) {
+          return false;
+        }
+      }
+
+      // Communication depth filter
+      if (advancedFilters.commDepth?.length > 0) {
+        const matchComm = originalProfile?.comm_depth;
+        if (!advancedFilters.commDepth.includes(matchComm)) {
+          return false;
+        }
+      }
+
+      // Daily rhythm filter
+      if (advancedFilters.dailyRhythm?.length > 0) {
+        const matchRhythm = originalProfile?.daily_rhythm;
+        if (!advancedFilters.dailyRhythm.includes(matchRhythm)) {
+          return false;
+        }
+      }
+
+      // Required values filter
+      if (advancedFilters.requiredValues?.length > 0) {
+        const matchValues = (originalProfile?.core_values_ranked || []).map(v => v.toLowerCase());
+        const hasAllRequired = advancedFilters.requiredValues.every(rv => 
+          matchValues.some(mv => mv.includes(rv.toLowerCase()))
+        );
+        if (!hasAllRequired) {
+          return false;
+        }
+      }
+
+      // Excluded values filter
+      if (advancedFilters.excludedValues?.length > 0) {
+        const matchValues = (originalProfile?.core_values_ranked || []).map(v => v.toLowerCase());
+        const hasExcluded = advancedFilters.excludedValues.some(ev => 
+          matchValues.some(mv => mv.includes(ev.toLowerCase()))
+        );
+        if (hasExcluded) {
+          return false;
+        }
+      }
+
+      // Boosted only filter
+      if (advancedFilters.showOnlyBoosted && !originalProfile?.is_boosted) {
+        return false;
+      }
+
+      // Hide no photo filter
+      if (advancedFilters.hideNoPhoto && !match.avatar) {
+        return false;
+      }
+
+      return true;
+    }).map(match => {
+      // Apply priority value boost
+      if (advancedFilters.prioritizeValues?.length > 0) {
+        const originalProfile = allProfiles.find(p => p.user_id === match.user_id);
+        const matchValues = (originalProfile?.core_values_ranked || []).map(v => v.toLowerCase());
+        const priorityMatches = advancedFilters.prioritizeValues.filter(pv => 
+          matchValues.some(mv => mv.includes(pv.toLowerCase()))
+        ).length;
+
+        if (priorityMatches > 0) {
+          return {
+            ...match,
+            overall: Math.min(100, match.overall + (priorityMatches * 5)),
+            priorityBoost: priorityMatches * 5
+          };
+        }
+      }
+      return match;
+    }).sort((a, b) => b.overall - a.overall);
+    }, [results, advancedFilters, allProfiles]);
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
@@ -337,9 +436,16 @@ export default function DatingTab({ profile }) {
           </Button>
         </div>
       </div>
+
+      {/* Advanced Filters */}
+      <AdvancedMatchFilters 
+        filters={advancedFilters}
+        onChange={setAdvancedFilters}
+        resultCount={filteredResults.length}
+      />
       
       <CompatibilityResults 
-        results={results} 
+        results={filteredResults} 
         onSave={handleSave}
         onDismiss={handleDismiss}
         onUnsave={handleUnsave}
