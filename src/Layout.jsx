@@ -423,7 +423,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           opacity: 1;
         }
         [data-theme='dark'] [data-avatar-card] [data-avatar-overlay] {
-          background: rgba(255,255,255,0.8);
+          background: rgba(15,23,42,0.85);
           backdrop-filter: blur(4px);
         }
 
