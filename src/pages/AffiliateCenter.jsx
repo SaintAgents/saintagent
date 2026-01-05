@@ -244,7 +244,7 @@ export default function AffiliateCenter() {
               {nextTier && (
                 <div className="flex-1 max-w-xs">
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span>{stats.paid} paid referrals</span>
+                    <span className="text-slate-600">{stats.paid} paid referrals</span>
                     <span className={nextTier.textColor}>{nextTier.name} at {nextTier.minPaid}</span>
                   </div>
                   <Progress value={progressToNext} className="h-2" />
