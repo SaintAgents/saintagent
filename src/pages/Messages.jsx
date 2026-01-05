@@ -35,20 +35,20 @@ export default function Messages() {
 
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages'],
-    queryFn: () => base44.entities.Message.list('-created_date', 500),
-    refetchInterval: 1500
+    queryFn: () => base44.entities.Message.list('-created_date', 200),
+    refetchInterval: 10000
   });
 
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations'],
-    queryFn: () => base44.entities.Conversation.list('-updated_date', 200),
-    refetchInterval: 5000
+    queryFn: () => base44.entities.Conversation.list('-updated_date', 100),
+    refetchInterval: 15000
   });
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['profiles'],
-    queryFn: () => base44.entities.UserProfile.list(),
-    refetchInterval: 10000
+    queryFn: () => base44.entities.UserProfile.list('-updated_date', 100),
+    refetchInterval: 30000
   });
 
   const sendMutation = useMutation({
@@ -146,7 +146,7 @@ export default function Messages() {
     queryKey: ['typing', selectedConversation?.id],
     queryFn: () => base44.entities.TypingStatus.filter({ conversation_id: selectedConversation.id, is_typing: true }),
     enabled: !!selectedConversation?.id,
-    refetchInterval: 1200
+    refetchInterval: 5000
   });
   const typingUsers = React.useMemo(() => {
     const now = Date.now();
