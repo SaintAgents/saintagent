@@ -17,15 +17,21 @@ import {
   ChevronRight,
   Sparkles,
   MapPin,
-  X
+  X,
+  Images,
+  User
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
+import PhotoViewer from '@/components/profile/PhotoViewer';
 
 export default function DatingMatchesPopup({ currentUser }) {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const [photoViewerOpen, setPhotoViewerOpen] = useState(false);
+  const [touchStart, setTouchStart] = useState(null);
   const scrollRef = useRef(null);
 
   // Fetch dating profile opt-in status
@@ -82,6 +88,10 @@ export default function DatingMatchesPopup({ currentUser }) {
       }
     }
     
+    // Collect all available images for gallery
+    const galleryImages = userProfile?.gallery_images || [];
+    const allImages = [avatar, ...galleryImages].filter(Boolean);
+    
     return {
       ...dp,
       display_name: dp.display_name || userProfile?.display_name || 'Anonymous',
@@ -89,7 +99,8 @@ export default function DatingMatchesPopup({ currentUser }) {
       location: dp.location || userProfile?.location,
       bio: dp.bio || userProfile?.bio,
       values_tags: userProfile?.values_tags || [],
-      skills: userProfile?.skills || []
+      skills: userProfile?.skills || [],
+      all_images: allImages
     };
   });
 
@@ -116,7 +127,40 @@ export default function DatingMatchesPopup({ currentUser }) {
   const handleViewProfile = (match) => {
     const event = new CustomEvent('openProfile', { detail: { userId: match.user_id } });
     document.dispatchEvent(event);
+    setOpen(false);
   };
+
+  // Swipe handlers for photo gallery
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e, images) => {
+    if (!touchStart) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+    
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && photoIndex < images.length - 1) {
+        setPhotoIndex(prev => prev + 1);
+      } else if (diff < 0 && photoIndex > 0) {
+        setPhotoIndex(prev => prev - 1);
+      }
+    }
+    setTouchStart(null);
+  };
+
+  const handlePhotoClick = (e, images) => {
+    e.stopPropagation();
+    if (images.length > 0) {
+      setPhotoViewerOpen(true);
+    }
+  };
+
+  // Reset photo index when match changes
+  React.useEffect(() => {
+    setPhotoIndex(0);
+  }, [currentIndex]);
 
   // Return null AFTER all hooks have been called
   if (!isDatingOptedIn) return null;
@@ -194,22 +238,96 @@ export default function DatingMatchesPopup({ currentUser }) {
             {currentMatch && (
               <div className="p-4">
                 <div 
-                  className="bg-gradient-to-br from-white to-pink-50 dark:from-slate-800 dark:to-pink-900/20 rounded-xl border border-pink-100 dark:border-pink-800/30 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => handleViewProfile(currentMatch)}
+                  className={cn(
+                    "rounded-xl border overflow-hidden cursor-pointer hover:shadow-lg transition-shadow",
+                    "bg-gradient-to-br from-white to-pink-50 dark:from-slate-800 dark:to-pink-900/20 border-pink-100 dark:border-pink-800/30",
+                    "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:from-[#0a0a0a] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_8px_rgba(0,255,0,0.3)]"
+                  )}
                 >
-                  {/* Avatar & Name */}
-                  <div className="p-4 text-center">
-                    <Avatar className="w-20 h-20 mx-auto mb-3 ring-4 ring-pink-200 dark:ring-pink-800">
-                      <AvatarImage src={currentMatch.avatar_url} />
-                      <AvatarFallback className="bg-gradient-to-br from-pink-400 to-rose-500 text-white text-2xl">
-                        {currentMatch.display_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 text-lg">
+                  {/* Photo Gallery with Swipe */}
+                  <div 
+                    className="relative"
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={(e) => handleTouchEnd(e, currentMatch.all_images)}
+                  >
+                    <div className="w-full h-48 overflow-hidden">
+                      <img 
+                        src={currentMatch.all_images[photoIndex] || currentMatch.avatar_url}
+                        alt={currentMatch.display_name}
+                        className="w-full h-full object-cover transition-transform duration-300"
+                      />
+                    </div>
+                    
+                    {/* Photo Gallery Icon */}
+                    {currentMatch.all_images.length > 0 && (
+                      <button
+                        onClick={(e) => handlePhotoClick(e, currentMatch.all_images)}
+                        className={cn(
+                          "absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                          "bg-black/50 hover:bg-black/70 backdrop-blur-sm",
+                          "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_10px_#00ff00]"
+                        )}
+                        title="View all photos"
+                      >
+                        <Images className="w-4 h-4 text-white [data-theme='hacker']_&:text-[#00ff00]" />
+                        {currentMatch.all_images.length > 1 && (
+                          <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 [data-theme='hacker']_&:bg-[#00ff00] text-white [data-theme='hacker']_&:text-black text-[10px] rounded-full flex items-center justify-center font-bold">
+                            {currentMatch.all_images.length}
+                          </span>
+                        )}
+                      </button>
+                    )}
+                    
+                    {/* Photo Navigation Dots */}
+                    {currentMatch.all_images.length > 1 && (
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                        {currentMatch.all_images.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={(e) => { e.stopPropagation(); setPhotoIndex(i); }}
+                            className={cn(
+                              "w-2 h-2 rounded-full transition-all",
+                              i === photoIndex 
+                                ? "bg-white w-4 [data-theme='hacker']_&:bg-[#00ff00]" 
+                                : "bg-white/50 hover:bg-white/80 [data-theme='hacker']_&:bg-[#00ff00]/50"
+                            )}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Inline Photo Nav Arrows */}
+                    {currentMatch.all_images.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); if (photoIndex > 0) setPhotoIndex(prev => prev - 1); }}
+                          className={cn(
+                            "absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center",
+                            photoIndex === 0 && "opacity-30 cursor-not-allowed"
+                          )}
+                        >
+                          <ChevronLeft className="w-4 h-4 text-white" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); if (photoIndex < currentMatch.all_images.length - 1) setPhotoIndex(prev => prev + 1); }}
+                          className={cn(
+                            "absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center",
+                            photoIndex === currentMatch.all_images.length - 1 && "opacity-30 cursor-not-allowed"
+                          )}
+                        >
+                          <ChevronRight className="w-4 h-4 text-white" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Name & Location */}
+                  <div className="p-4 text-center" onClick={() => handleViewProfile(currentMatch)}>
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 text-lg [data-theme='hacker']_&:text-[#00ff00]">
                       {currentMatch.display_name}
                     </h4>
                     {currentMatch.location && (
-                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1 mt-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1 mt-1 [data-theme='hacker']_&:text-[#00cc00]">
                         <MapPin className="w-3 h-3" />
                         {currentMatch.location}
                       </p>
@@ -258,20 +376,36 @@ export default function DatingMatchesPopup({ currentUser }) {
                 <div className="flex gap-2 mt-3">
                   <Button
                     variant="outline"
-                    className="flex-1 rounded-xl gap-2 border-pink-200 hover:bg-pink-50 hover:border-pink-300"
+                    className={cn(
+                      "flex-1 rounded-xl gap-2",
+                      "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
+                      "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
+                    )}
                     onClick={() => handleViewProfile(currentMatch)}
                   >
-                    <Sparkles className="w-4 h-4 text-pink-500" />
-                    View
+                    <User className="w-4 h-4 text-pink-500 [data-theme='hacker']_&:text-[#00ff00]" />
+                    View Profile
                   </Button>
                   <Button
-                    className="flex-1 rounded-xl gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
+                    className={cn(
+                      "flex-1 rounded-xl gap-2",
+                      "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600",
+                      "[data-theme='hacker']_&:from-[#00cc00] [data-theme='hacker']_&:to-[#00ff00] [data-theme='hacker']_&:text-black [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]"
+                    )}
                     onClick={() => handleOpenChat(currentMatch)}
                   >
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
                 </div>
+                
+                {/* Photo Viewer Modal */}
+                <PhotoViewer
+                  open={photoViewerOpen}
+                  images={currentMatch.all_images}
+                  startIndex={photoIndex}
+                  onClose={() => setPhotoViewerOpen(false)}
+                />
 
                 {/* Pagination Dots */}
                 {enrichedMatches.length > 1 && (
