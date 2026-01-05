@@ -261,6 +261,18 @@ export default function InviteLanding() {
           </p>
         </div>
       </section>
+
+      {/* Dev Toggle */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => window.location.href = createPageUrl('CommandDeck')}
+          className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 text-xs"
+        >
+          → Skip to App (Dev)
+        </Button>
+      </div>
     </div>
   );
 }
