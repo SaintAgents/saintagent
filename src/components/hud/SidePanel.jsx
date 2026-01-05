@@ -103,26 +103,63 @@ export default function SidePanel({
   const popDragRef = React.useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = React.useRef({ startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
-  // Load pop-off state from localStorage
+  // Load pop-off state from localStorage on mount
   React.useEffect(() => {
     try {
       const savedPop = localStorage.getItem('sidePanelPoppedOff');
-      if (savedPop === 'true') setIsPoppedOff(true);
       const savedPos = localStorage.getItem('sidePanelPopPosition');
-      if (savedPos) setPopPosition(JSON.parse(savedPos));
       const savedSize = localStorage.getItem('sidePanelPopSize');
-      if (savedSize) setPopSize(JSON.parse(savedSize));
-    } catch {}
+      
+      if (savedPos) {
+        const pos = JSON.parse(savedPos);
+        // Validate position is within viewport
+        const maxX = Math.max(0, (window.innerWidth || 1200) - 380);
+        const maxY = Math.max(0, (window.innerHeight || 800) - 100);
+        setPopPosition({
+          x: Math.min(Math.max(0, pos.x || 0), maxX),
+          y: Math.min(Math.max(0, pos.y || 0), maxY)
+        });
+      }
+      if (savedSize) {
+        const size = JSON.parse(savedSize);
+        setPopSize({
+          width: Math.max(280, Math.min(size.width || 380, window.innerWidth - 50)),
+          height: Math.max(300, Math.min(size.height || 600, window.innerHeight - 50))
+        });
+      }
+      // Set popped off state AFTER position/size are restored
+      if (savedPop === 'true') {
+        setIsPoppedOff(true);
+      }
+    } catch (e) {
+      console.warn('Failed to restore side panel state', e);
+    }
   }, []);
 
-  // Save pop-off state
+  // Save pop-off state whenever it changes
   React.useEffect(() => {
     try {
       localStorage.setItem('sidePanelPoppedOff', String(isPoppedOff));
-      localStorage.setItem('sidePanelPopPosition', JSON.stringify(popPosition));
-      localStorage.setItem('sidePanelPopSize', JSON.stringify(popSize));
     } catch {}
-  }, [isPoppedOff, popPosition, popSize]);
+  }, [isPoppedOff]);
+
+  // Save position when it changes (debounced via drag end)
+  React.useEffect(() => {
+    if (isPoppedOff) {
+      try {
+        localStorage.setItem('sidePanelPopPosition', JSON.stringify(popPosition));
+      } catch {}
+    }
+  }, [popPosition, isPoppedOff]);
+
+  // Save size when it changes
+  React.useEffect(() => {
+    if (isPoppedOff) {
+      try {
+        localStorage.setItem('sidePanelPopSize', JSON.stringify(popSize));
+      } catch {}
+    }
+  }, [popSize, isPoppedOff]);
 
   // Pop-off drag handlers
   const onPopDragMove = (e) => {
