@@ -17,7 +17,6 @@ import {
   Play,
   Edit
 } from "lucide-react";
-import MiniProfile from '@/components/profile/MiniProfile';
 import { createPageUrl } from '@/utils';
 import {
   DropdownMenu,
