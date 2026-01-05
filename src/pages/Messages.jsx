@@ -487,7 +487,7 @@ export default function Messages() {
                         <p className="text-sm">{msg.content}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <p className="text-xs text-slate-400 mt-1 px-2">
+                        <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] mt-1 px-2">
                           {format(parseISO(msg.created_date), 'h:mm a')}
                         </p>
                         {isOwn &&
