@@ -139,14 +139,24 @@ export default function LeaderPathway({ profile }) {
 
   const status = getStatus();
 
+  const bgImage = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/67bcc0baf_universal_upscale_0_8f51b376-6f85-4165-bee7-2968e2baf3cc_0.jpg';
+
   return (
     <Card className={cn(
       "relative overflow-hidden border-2 transition-all duration-300",
-      status === 'locked' && "border-slate-200 bg-slate-50",
-      status === 'active' && "border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 shadow-lg",
-      status === 'pending' && "border-blue-300 bg-blue-50",
-      (status === 'quiz_needed' || status === 'approved') && "border-violet-300 bg-violet-50"
-    )}>
+      status === 'locked' && "border-slate-600",
+      status === 'active' && "border-amber-400 shadow-lg",
+      status === 'pending' && "border-blue-400",
+      (status === 'quiz_needed' || status === 'approved') && "border-violet-400"
+    )}
+    style={{
+      backgroundImage: `url(${bgImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-slate-900/80" />
+      
       {/* Glow effect for unlocked */}
       {canUnlock && status === 'locked' &&
       <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 via-yellow-400/20 to-amber-400/20 animate-pulse" />
