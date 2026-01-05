@@ -10,10 +10,10 @@ import { Zap, Clock, Sparkles, TrendingUp, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const BOOST_OPTIONS = [
-  { duration: 1, cost: 50, label: '1 Hour', multiplier: '2x' },
-  { duration: 6, cost: 200, label: '6 Hours', multiplier: '2x' },
-  { duration: 24, cost: 500, label: '24 Hours', multiplier: '3x' },
-  { duration: 72, cost: 1200, label: '3 Days', multiplier: '3x' }
+  { duration: 1, cost: 25, label: '1 Hour', multiplier: '2x' },
+  { duration: 6, cost: 50, label: '6 Hours', multiplier: '2x' },
+  { duration: 24, cost: 75, label: '24 Hours', multiplier: '3x' },
+  { duration: 72, cost: 100, label: '3 Days', multiplier: '3x' }
 ];
 
 export default function ProfileBoostCard({ datingProfile, userProfile, walletBalance = 0 }) {
