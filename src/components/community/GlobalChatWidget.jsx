@@ -14,8 +14,11 @@ import {
   Maximize2,
   Users,
   Globe,
-  GripHorizontal
+  GripHorizontal,
+  Video,
+  Radio
 } from "lucide-react";
+import TownHallCall from "@/components/video/TownHallCall";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +28,8 @@ export default function GlobalChatWidget() {
   const [message, setMessage] = useState('');
   const [position, setPosition] = useState({ x: 16, y: null }); // x from left, y from bottom
   const [isDragging, setIsDragging] = useState(false);
+  const [townHallOpen, setTownHallOpen] = useState(false);
+  const [townHallFullscreen, setTownHallFullscreen] = useState(false);
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
@@ -211,6 +216,15 @@ export default function GlobalChatWidget() {
           <Button
             size="icon"
             variant="ghost"
+            onClick={() => setTownHallOpen(true)}
+            className="h-7 w-7 text-white hover:bg-white/20"
+            title="Join Town Hall Video"
+          >
+            <Video className="w-4 h-4" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
             onClick={() => setIsExpanded(!isExpanded)}
             className="h-7 w-7 text-white hover:bg-white/20"
           >
@@ -295,6 +309,15 @@ export default function GlobalChatWidget() {
       {/* Input */}
       <div className="p-3 border-t">
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTownHallOpen(true)}
+            className="h-9 w-9 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 shrink-0"
+            title="Join Community Call"
+          >
+            <Video className="w-4 h-4 text-emerald-600" />
+          </Button>
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -312,6 +335,21 @@ export default function GlobalChatWidget() {
           </Button>
         </div>
       </div>
+
+      {/* Town Hall Video Call */}
+      {townHallOpen && (
+        <div className={cn(
+          "fixed z-[60]",
+          townHallFullscreen ? "inset-0" : "bottom-4 left-4 w-[800px] h-[600px]"
+        )}>
+          <TownHallCall
+            user={user}
+            onClose={() => setTownHallOpen(false)}
+            isFullscreen={townHallFullscreen}
+            onToggleFullscreen={() => setTownHallFullscreen(!townHallFullscreen)}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -12,7 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedDoc from '@/components/collab/SharedDoc';
 import Whiteboard from '@/components/collab/Whiteboard';
 import CoWatch from '@/components/collab/CoWatch';
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2 } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming } from "lucide-react";
+import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
 import CreateGroupChatModal from "@/components/messages/CreateGroupChatModal";
@@ -25,6 +26,9 @@ export default function Messages() {
   const [messageText, setMessageText] = useState('');
   const [groupOpen, setGroupOpen] = useState(false);
   const [dmOpen, setDMOpen] = useState(false);
+  const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [videoCallFullscreen, setVideoCallFullscreen] = useState(false);
+  const [incomingCall, setIncomingCall] = useState(null);
   const typingRef = React.useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
 
@@ -399,7 +403,29 @@ export default function Messages() {
             {typingUsers.length > 0 &&
             <span className="text-xs text-violet-600 ml-2">{typingUsers.length === 1 ? 'Typing…' : 'Multiple typing…'}</span>
             }
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-2">
+              {/* Video Call Button */}
+              {!selectedConversation.isGroup && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={async () => {
+                    // Create notification for recipient
+                    await base44.entities.Notification.create({
+                      user_id: selectedConversation.otherUser.id,
+                      type: 'meeting',
+                      title: 'Incoming Video Call',
+                      message: `${user.full_name} is calling you`,
+                      action_url: createPageUrl('Messages'),
+                      priority: 'high'
+                    });
+                    setVideoCallOpen(true);
+                  }}
+                  className="h-8 w-8 rounded-full bg-emerald-50 border-emerald-200 hover:bg-emerald-100"
+                >
+                  <Video className="w-4 h-4 text-emerald-600" />
+                </Button>
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
@@ -576,6 +602,24 @@ export default function Messages() {
             unreadCount: 0
           });
         }} />
+
+    {/* Direct Video Call */}
+    {videoCallOpen && selectedConversation && (
+      <div className={cn(
+        "fixed z-50",
+        videoCallFullscreen ? "inset-0" : "bottom-4 right-4 w-[700px] h-[500px]"
+      )}>
+        <DirectVideoCall
+          recipientId={selectedConversation.otherUser.id}
+          recipientName={selectedConversation.otherUser.name}
+          recipientAvatar={selectedConversation.otherUser.avatar}
+          user={user}
+          onClose={() => setVideoCallOpen(false)}
+          isFullscreen={videoCallFullscreen}
+          onToggleFullscreen={() => setVideoCallFullscreen(!videoCallFullscreen)}
+        />
+      </div>
+    )}
 
     </>);
 

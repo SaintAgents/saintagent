@@ -5,13 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Minimize2, Circle } from "lucide-react";
+import { X, Send, Minimize2, Circle, Video } from "lucide-react";
+import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 
 export default function FloatingChatWidget({ recipientId, recipientName, recipientAvatar, onClose }) {
   const [message, setMessage] = useState('');
   const [minimized, setMinimized] = useState(false);
+  const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [videoFullscreen, setVideoFullscreen] = useState(false);
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -120,6 +123,15 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
           <Button
             size="icon"
             variant="ghost"
+            onClick={() => setVideoCallOpen(true)}
+            className="h-7 w-7 text-white hover:bg-violet-700"
+            title="Start video call"
+          >
+            <Video className="w-4 h-4" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
             onClick={() => setMinimized(true)}
             className="h-7 w-7 text-white hover:bg-violet-700"
           >
@@ -185,6 +197,24 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
           </Button>
         </div>
       </div>
+
+      {/* Video Call Overlay */}
+      {videoCallOpen && (
+        <div className={cn(
+          "fixed z-[60]",
+          videoFullscreen ? "inset-0" : "bottom-4 right-4 w-[600px] h-[450px]"
+        )}>
+          <DirectVideoCall
+            recipientId={recipientId}
+            recipientName={recipientName}
+            recipientAvatar={recipientAvatar}
+            user={user}
+            onClose={() => setVideoCallOpen(false)}
+            isFullscreen={videoFullscreen}
+            onToggleFullscreen={() => setVideoFullscreen(!videoFullscreen)}
+          />
+        </div>
+      )}
     </div>
   );
 }
