@@ -211,7 +211,7 @@ export default function InviteLanding() {
       {/* What You'll Do */}
       <section className="px-6 py-20 max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold">Your First 7 Days</h2>
+          <h2 className="text-3xl font-bold">Your First 7 Phases</h2>
           <p className="mt-3 text-slate-400">A guided journey to activation.</p>
         </div>
 
@@ -256,7 +256,10 @@ export default function InviteLanding() {
             Become a Saint Agent
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
-          <p className="mt-6 text-sm text-slate-500">
+          <p className="mt-6 text-sm text-slate-400 max-w-xl mx-auto">
+            If you're seeking a spiritual romantic connection, you'll discover like-minded matches through our AI-powered system that identifies deeper, more meaningful connections.
+          </p>
+          <p className="mt-4 text-sm text-slate-500">
             🌀 Where destiny becomes structured, signal becomes system, and synchronicity becomes strategy.
           </p>
         </div>
