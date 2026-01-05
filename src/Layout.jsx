@@ -351,8 +351,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
           --neon-teal: #00d4ff;
           --neon-purple: #a855f7;
         }
-        
-        /* Matrix digital rain background */
+
+        /* Matrix Rain Canvas Container */
+        [data-theme='dark'] body {
+          position: relative;
+        }
+
         [data-theme='dark'] body::before {
           content: '';
           position: fixed;
@@ -363,151 +367,204 @@ function AuthenticatedLayout({ children, currentPageName }) {
           pointer-events: none;
           z-index: 0;
           background: 
-            radial-gradient(ellipse at 20% 30%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 70%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.02) 0%, transparent 70%);
-          animation: starfield 60s linear infinite;
+            radial-gradient(ellipse at 20% 30%, rgba(0, 255, 136, 0.02) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(0, 212, 255, 0.02) 0%, transparent 50%);
         }
-        
-        @keyframes starfield {
-          0% { background-position: 0% 0%, 100% 100%, 50% 50%; }
-          100% { background-position: 100% 100%, 0% 0%, 50% 50%; }
-        }
-        
-        /* Subtle matrix rain effect via pseudo-element */
+
+        /* Matrix rain columns effect */
         [data-theme='dark'] body::after {
           content: '';
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
-          height: 100%;
+          height: 200%;
           pointer-events: none;
           z-index: 0;
-          opacity: 0.015;
+          opacity: 0.04;
           background-image: 
             repeating-linear-gradient(
+              90deg,
+              transparent 0px,
+              transparent 18px,
+              rgba(0, 255, 136, 0.3) 18px,
+              rgba(0, 255, 136, 0.3) 20px
+            ),
+            repeating-linear-gradient(
               0deg,
-              transparent,
-              transparent 2px,
-              rgba(0, 255, 136, 0.5) 2px,
-              rgba(0, 255, 136, 0.5) 4px
+              rgba(0, 255, 136, 0.8) 0px,
+              rgba(0, 255, 136, 0.4) 4px,
+              transparent 8px,
+              transparent 16px,
+              rgba(0, 255, 136, 0.6) 20px,
+              transparent 24px,
+              transparent 40px
             );
-          background-size: 100% 8px;
-          animation: matrixRain 20s linear infinite;
+          background-size: 20px 100%, 20px 60px;
+          animation: matrixRain 8s linear infinite;
         }
-        
+
         @keyframes matrixRain {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100%); }
+          0% { transform: translateY(-50%); }
+          100% { transform: translateY(0%); }
         }
-        
-        [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
+
+        /* SOLID OBSIDIAN - No transparency anywhere */
+        [data-theme='dark'] body, 
+        [data-theme='dark'] .min-h-screen,
+        [data-theme='dark'] main {
           background-color: var(--obsidian) !important;
-          color: #ffffff;
+          color: #ffffff !important;
         }
-        
+
         /* Allow Command Deck to show its background image */
         [data-theme='dark'] main[data-page='CommandDeck'].min-h-screen,
         [data-theme='dark'] main[data-page='CommandDeck'] {
           background-color: transparent !important;
         }
-        
-        /* SOLID OBSIDIAN backgrounds - no transparency */
-        [data-theme='dark'] [class*='bg-white'] { 
+
+        /* FORCE SOLID OBSIDIAN on all backgrounds - eliminate ALL fading/transparency */
+        [data-theme='dark'] [class*='bg-white'],
+        [data-theme='dark'] [class*='bg-gray-'],
+        [data-theme='dark'] [class*='bg-slate-'] { 
           background-color: var(--obsidian) !important; 
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
         }
-        [data-theme='dark'] [class*='bg-slate-50'] { 
-          background-color: var(--obsidian) !important; 
-          color: #ffffff !important; 
+
+        /* Specific overrides for gradient backgrounds */
+        [data-theme='dark'] [class*='bg-gradient-'] {
+          background: var(--obsidian) !important;
+          background-image: none !important;
         }
-        [data-theme='dark'] [class*='bg-slate-100'] { 
-          background-color: var(--obsidian-light) !important; 
-          color: #ffffff !important; 
+
+        /* Fix any semi-transparent overlays */
+        [data-theme='dark'] [class*='bg-white/'],
+        [data-theme='dark'] [class*='bg-slate-50/'],
+        [data-theme='dark'] [class*='bg-gray-50/'] {
+          background-color: var(--obsidian) !important;
         }
-        [data-theme='dark'] [class*='bg-slate-200'] { 
-          background-color: #0f0f0f !important; 
-          color: #ffffff !important; 
-        }
-        
-        /* Neon borders with glow */
-        [data-theme='dark'] [class*='border-slate-100'] { 
-          border-color: rgba(0, 255, 136, 0.15) !important; 
-        }
-        [data-theme='dark'] [class*='border-slate-200'] { 
-          border-color: rgba(0, 212, 255, 0.2) !important; 
-        }
-        [data-theme='dark'] [class*='border-slate-300'] { 
+
+        /* Neon borders with strong glow */
+        [data-theme='dark'] [class*='border-slate-'],
+        [data-theme='dark'] [class*='border-gray-'] { 
           border-color: rgba(0, 255, 136, 0.25) !important; 
         }
-        
-        /* HIGH CONTRAST text */
-        [data-theme='dark'] [class*='text-slate-900'] { color: #ffffff !important; }
-        [data-theme='dark'] [class*='text-slate-800'] { color: #f0f0f0 !important; }
-        [data-theme='dark'] [class*='text-slate-700'] { color: var(--neon-green) !important; }
-        [data-theme='dark'] [class*='text-slate-600'] { color: var(--neon-teal) !important; }
-        [data-theme='dark'] [class*='text-slate-500'] { color: rgba(0, 212, 255, 0.8) !important; }
-        [data-theme='dark'] [class*='text-slate-400'] { color: rgba(0, 255, 136, 0.6) !important; }
-        
-        /* Cards and containers - solid black with neon glow borders */
+
+        /* HIGH CONTRAST text - white primary, neon secondary */
+        [data-theme='dark'] [class*='text-slate-900'],
+        [data-theme='dark'] [class*='text-gray-900'] { color: #ffffff !important; }
+        [data-theme='dark'] [class*='text-slate-800'],
+        [data-theme='dark'] [class*='text-gray-800'] { color: #f5f5f5 !important; }
+        [data-theme='dark'] [class*='text-slate-700'],
+        [data-theme='dark'] [class*='text-gray-700'] { color: var(--neon-green) !important; }
+        [data-theme='dark'] [class*='text-slate-600'],
+        [data-theme='dark'] [class*='text-gray-600'] { color: var(--neon-teal) !important; }
+        [data-theme='dark'] [class*='text-slate-500'],
+        [data-theme='dark'] [class*='text-gray-500'] { color: rgba(0, 212, 255, 0.9) !important; }
+        [data-theme='dark'] [class*='text-slate-400'],
+        [data-theme='dark'] [class*='text-gray-400'] { color: rgba(0, 255, 136, 0.7) !important; }
+        [data-theme='dark'] [class*='text-slate-300'],
+        [data-theme='dark'] [class*='text-gray-300'] { color: rgba(0, 212, 255, 0.6) !important; }
+
+        /* Cards and containers - solid obsidian with neon glow borders */
         [data-theme='dark'] .rounded-xl, 
         [data-theme='dark'] .rounded-lg,
-        [data-theme='dark'] .rounded-2xl {
+        [data-theme='dark'] .rounded-2xl,
+        [data-theme='dark'] .rounded-md {
           background-color: var(--obsidian) !important;
-          border: 1px solid rgba(0, 255, 136, 0.15) !important;
-          box-shadow: 0 0 20px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.1) !important;
+          border: 1px solid rgba(0, 255, 136, 0.2) !important;
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
         }
-        
-        /* Sidebar solid obsidian */
+
+        /* Sidebar and nav - solid obsidian, no leakage */
         [data-theme='dark'] aside,
-        [data-theme='dark'] nav {
+        [data-theme='dark'] nav,
+        [data-theme='dark'] [class*='sidebar'],
+        [data-theme='dark'] [data-sidebar] {
           background-color: var(--obsidian) !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
         }
-        
+
+        /* Presence and Theme panels - enforce solid */
+        [data-theme='dark'] [class*='panel'],
+        [data-theme='dark'] [class*='dropdown'],
+        [data-theme='dark'] [class*='popover'] {
+          background-color: var(--obsidian) !important;
+          border-color: rgba(0, 255, 136, 0.25) !important;
+        }
+
         /* Search bar and inputs - obsidian with neon border */
         [data-theme='dark'] input,
         [data-theme='dark'] textarea,
         [data-theme='dark'] select {
           background-color: var(--obsidian) !important;
           color: #ffffff !important;
-          border-color: rgba(0, 212, 255, 0.3) !important;
+          border-color: rgba(0, 255, 136, 0.3) !important;
         }
         [data-theme='dark'] input:focus,
         [data-theme='dark'] textarea:focus,
         [data-theme='dark'] select:focus {
-          border-color: var(--neon-teal) !important;
-          box-shadow: 0 0 10px rgba(0, 212, 255, 0.3) !important;
+          border-color: var(--neon-green) !important;
+          box-shadow: 0 0 12px rgba(0, 255, 136, 0.4) !important;
           outline: none !important;
         }
-        [data-theme='dark'] input::placeholder {
+        [data-theme='dark'] input::placeholder,
+        [data-theme='dark'] textarea::placeholder {
           color: rgba(0, 212, 255, 0.5) !important;
         }
-        
-        /* Buttons with neon glow on hover */
+
+        /* Buttons - solid with neon glow on hover */
+        [data-theme='dark'] button,
+        [data-theme='dark'] [role="button"] {
+          background-color: var(--obsidian) !important;
+          border-color: rgba(0, 255, 136, 0.25) !important;
+        }
         [data-theme='dark'] button:hover,
         [data-theme='dark'] [role="button"]:hover {
-          box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important;
+          box-shadow: 0 0 18px rgba(0, 255, 136, 0.5) !important;
+          border-color: var(--neon-green) !important;
         }
-        
-        /* Active/selected states - neon glow */
+
+        /* Active/selected states - vibrant neon glow */
         [data-theme='dark'] [data-state="active"],
         [data-theme='dark'] [aria-selected="true"] {
           background-color: rgba(0, 255, 136, 0.1) !important;
           border-color: var(--neon-green) !important;
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important;
+          color: var(--neon-green) !important;
+        }
+
+        /* Tabs - solid with neon active state */
+        [data-theme='dark'] [role="tablist"] {
+          background-color: var(--obsidian) !important;
+          border-color: rgba(0, 255, 136, 0.2) !important;
+        }
+        [data-theme='dark'] [role="tab"] {
+          background-color: transparent !important;
+          color: rgba(0, 212, 255, 0.8) !important;
+        }
+        [data-theme='dark'] [role="tab"][data-state="active"] {
+          background-color: rgba(0, 255, 136, 0.15) !important;
+          color: var(--neon-green) !important;
+          border-color: var(--neon-green) !important;
           box-shadow: 0 0 12px rgba(0, 255, 136, 0.3) !important;
         }
-        
+
         /* Modals and dialogs - solid obsidian */
         [data-theme='dark'] [role="dialog"],
         [data-theme='dark'] [data-radix-popper-content-wrapper] > * {
           background-color: var(--obsidian) !important;
-          border: 1px solid rgba(0, 255, 136, 0.2) !important;
-          box-shadow: 0 0 30px rgba(0, 255, 136, 0.1), 0 0 60px rgba(0, 212, 255, 0.05) !important;
+          border: 1px solid rgba(0, 255, 136, 0.25) !important;
+          box-shadow: 0 0 40px rgba(0, 255, 136, 0.15), 0 0 80px rgba(0, 212, 255, 0.08) !important;
         }
-        
+
+        /* Empty state containers - solid obsidian */
+        [data-theme='dark'] [class*='empty'],
+        [data-theme='dark'] [class*='placeholder'] {
+          background-color: var(--obsidian) !important;
+        }
+
         /* Scrollbar neon style */
         [data-theme='dark'] ::-webkit-scrollbar {
           background-color: var(--obsidian) !important;
@@ -518,7 +575,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           border-radius: 4px;
         }
         [data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
-          box-shadow: 0 0 10px var(--neon-green) !important;
+          box-shadow: 0 0 12px var(--neon-green) !important;
         }
 
         /* Command Deck neon accent */
@@ -540,7 +597,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           color: var(--neon-purple) !important;
           text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
         }
-        
+
         /* Ensure Avatar dashboard stats stay readable */
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats],
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats] * {
@@ -567,22 +624,30 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: rgba(0, 255, 136, 0.1) !important;
           box-shadow: 0 0 12px rgba(0, 255, 136, 0.3) !important;
         }
-        
+
         /* Badges and pills - neon glow */
         [data-theme='dark'] [class*='badge'],
         [data-theme='dark'] .badge {
-          border: 1px solid rgba(0, 212, 255, 0.3) !important;
-          box-shadow: 0 0 8px rgba(0, 212, 255, 0.2) !important;
+          background-color: var(--obsidian) !important;
+          border: 1px solid rgba(0, 255, 136, 0.3) !important;
+          box-shadow: 0 0 8px rgba(0, 255, 136, 0.2) !important;
         }
-        
-        /* Icons - neon color */
+
+        /* Icons - neon glow */
         [data-theme='dark'] svg {
-          filter: drop-shadow(0 0 2px rgba(0, 255, 136, 0.3));
+          filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.4));
         }
-        
+
         /* Hover effects with neon glow */
         [data-theme='dark'] [class*='hover\\:bg-']:hover {
-          box-shadow: 0 0 15px rgba(0, 255, 136, 0.2) !important;
+          box-shadow: 0 0 18px rgba(0, 255, 136, 0.25) !important;
+        }
+
+        /* Fix violet/purple backgrounds to obsidian */
+        [data-theme='dark'] [class*='bg-violet-'],
+        [data-theme='dark'] [class*='bg-purple-'] {
+          background-color: rgba(0, 255, 136, 0.1) !important;
+          border-color: var(--neon-green) !important;
         }
       `}</style>
       <style>{`
