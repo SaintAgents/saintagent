@@ -57,6 +57,8 @@ export default function Join() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 text-white">
+      {/* Track affiliate referrals from ?ref=CODE */}
+      <AffiliateTracker />
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80')] bg-cover bg-center opacity-10" />
