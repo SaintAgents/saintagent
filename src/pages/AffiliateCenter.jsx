@@ -147,7 +147,7 @@ export default function AffiliateCenter() {
     : '';
 
   const offerUrl = selectedOffer
-    ? `${window.location.origin}/offer/${selectedOffer.id}?ref=${affiliateCode?.code}`
+    ? `${getLiveUrl()}/offer/${selectedOffer.id}?ref=${affiliateCode?.code}`
     : '';
 
   const copyToClipboard = (text) => {
