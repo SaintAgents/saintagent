@@ -66,6 +66,7 @@ export default function Join() {
       <AffiliateTracker />
       {/* Hero Section */}
       <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-slate-900/50" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-violet-950/60 to-slate-900/90" />
         
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-32 text-center">
