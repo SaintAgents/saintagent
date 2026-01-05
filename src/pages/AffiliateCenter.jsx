@@ -359,10 +359,10 @@ export default function AffiliateCenter() {
                 {/* Offer-Specific Links */}
                 {listings.length > 0 && (
                   <div>
-                    <label className="text-sm font-medium mb-2 block">
+                    <label className="text-sm font-medium mb-2 block text-slate-700">
                       Offer-Specific Links
                     </label>
-                    <p className="text-xs mb-3">
+                    <p className="text-xs mb-3 text-slate-600">
                       Create custom links for specific offers to track which promotions work best.
                     </p>
                     <div className="space-y-2">
