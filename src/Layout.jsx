@@ -591,7 +591,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
         /* Dark theme background for Command Deck */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0dc21a68c_universal_upscale_0_a5d23188-7f6b-42cb-bc65-4b64e2ef4707_0.jpg') !important;
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ebbb7d483_universal_upscale_0_d6828612-8b20-4bc7-aefe-008865240cf1_0.jpg') !important;
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
