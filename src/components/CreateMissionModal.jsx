@@ -19,9 +19,31 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
     mission_type: 'personal',
     reward_ggg: '',
     reward_rank_points: '',
+    reward_boost: '',
     max_participants: '',
-    image_url: ''
+    image_url: '',
+    roles_needed: [],
+    tasks: []
   });
+
+  // Handle prefill data from AI generator
+  useEffect(() => {
+    if (prefillData) {
+      setFormData({
+        title: prefillData.title || '',
+        description: prefillData.description || '',
+        objective: prefillData.objective || '',
+        mission_type: prefillData.mission_type || 'personal',
+        reward_ggg: prefillData.reward_ggg || '',
+        reward_rank_points: prefillData.reward_rank_points || '',
+        reward_boost: prefillData.reward_boost || '',
+        max_participants: '',
+        image_url: '',
+        roles_needed: prefillData.roles_needed || [],
+        tasks: prefillData.tasks || []
+      });
+    }
+  }, [prefillData]);
 
   const DEFAULT_MAX_USD = 55;
   const DEFAULT_MAX_GGG = DEFAULT_MAX_USD / GGG_TO_USD;
