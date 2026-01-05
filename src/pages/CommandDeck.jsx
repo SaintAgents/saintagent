@@ -495,7 +495,7 @@ export default function CommandDeck() {
               style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ba60509ba_Screenshot2026-01-04183952.png)' }}
               data-avatar-bg
             />
-            <div className="absolute inset-0 rounded-2xl pointer-events-none bg-white/70 dark:bg-gray-900/60" data-avatar-overlay />
+            <div className="absolute inset-0 rounded-2xl pointer-events-none bg-white/10 dark:bg-gray-900/10" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 <RankedAvatar
