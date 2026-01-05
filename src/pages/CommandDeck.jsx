@@ -93,8 +93,8 @@ export default function CommandDeck() {
   const { data: profiles } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
-              return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
-            },
+      return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+    },
     enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
@@ -473,17 +473,17 @@ export default function CommandDeck() {
             </div>
             <div className="flex items-center gap-3 relative z-10">
               <Button
-                variant="outline" 
-                className="bg-zinc-200 text-slate-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
-                onClick={() => setSidePanelOpen(!sidePanelOpen)}
-              >
+                variant="outline" className="bg-zinc-200 text-slate-50 px-4 py-2 text-sm font-medium rounded-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
+
+                onClick={() => setSidePanelOpen(!sidePanelOpen)}>
+
                 <BarChart3 className="w-4 h-4" />
                 {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
               </Button>
               <Button
                 className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-                onClick={() => setQuickCreateOpen(true)}
-              >
+                onClick={() => setQuickCreateOpen(true)}>
+
                 <Plus className="w-4 h-4" />
                 Quick Create
               </Button>
@@ -504,8 +504,8 @@ export default function CommandDeck() {
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={rpPoints}
                   userId={profile?.user_id}
-                  status={profile?.status || 'offline'} 
-                />
+                  status={profile?.status || 'offline'} />
+
               </div>
 
               <div className="flex-1">
@@ -521,14 +521,14 @@ export default function CommandDeck() {
                       </p>
                       <HelpHint
                         content={
-                          <div>
+                        <div>
                             <div className="text-gray-800 mb-1 font-semibold">Rank progression</div>
                             <div className="text-slate-700">Current: {rpInfo.title} ({rpPoints} RP)</div>
-                            {rpInfo.nextMin ? (
-                              <div className="text-slate-600">Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div>
-                            ) : (
-                              <div>You're at the highest rank.</div>
-                            )}
+                            {rpInfo.nextMin ?
+                          <div className="text-slate-600">Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div> :
+
+                          <div>You're at the highest rank.</div>
+                          }
                             <div className="text-zinc-700 mt-2">
                               <div className="text-xs font-semibold text-slate-800 mb-1">Ranks key</div>
                               <div className="overflow-hidden rounded-lg border border-slate-200">
@@ -542,8 +542,8 @@ export default function CommandDeck() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {RP_LADDER.map((t) => (
-                                      <tr key={t.code} className="border-t border-slate-100 hover:bg-slate-50">
+                                    {RP_LADDER.map((t) =>
+                                  <tr key={t.code} className="border-t border-slate-100 hover:bg-slate-50">
                                         <td className="px-3 py-2 text-slate-900 capitalize">
                                           <HoverCard>
                                             <HoverCardTrigger asChild>
@@ -551,12 +551,12 @@ export default function CommandDeck() {
                                             </HoverCardTrigger>
                                             <HoverCardContent className="w-80">
                                               <div className="text-sm font-semibold text-slate-900 capitalize">{t.title} • {t.min}+</div>
-                                              {RANK_DEFS[t.code]?.full && (
-                                                <div className="mt-2 text-xs text-slate-800">
+                                              {RANK_DEFS[t.code]?.full &&
+                                          <div className="mt-2 text-xs text-slate-800">
                                                   <div className="font-semibold">Definition:</div>
                                                   <div>{RANK_DEFS[t.code].full}</div>
                                                 </div>
-                                              )}
+                                          }
                                             </HoverCardContent>
                                           </HoverCard>
                                         </td>
@@ -564,14 +564,14 @@ export default function CommandDeck() {
                                         <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.short || '-'}</td>
                                         <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.core || '-'}</td>
                                       </tr>
-                                    ))}
+                                  )}
                                   </tbody>
                                 </table>
                               </div>
                               <div className="mt-1 text-[11px] text-slate-500">Hover rank name for full definition</div>
                             </div>
-                            {rpInfo.nextMin && (
-                              <div className="mt-2">
+                            {rpInfo.nextMin &&
+                          <div className="mt-2">
                                 <div className="text-zinc-800 mb-1 text-xs font-semibold">Ramp up goals</div>
                                 <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
                                   <li className="text-zinc-500">Complete quality meetings and request testimonials</li>
@@ -579,10 +579,10 @@ export default function CommandDeck() {
                                   <li>Maintain positive interactions to raise trust</li>
                                 </ul>
                               </div>
-                            )}
+                          }
                           </div>
-                        } 
-                      />
+                        } />
+
                     </div>
                   </div>
                   
@@ -593,12 +593,12 @@ export default function CommandDeck() {
                         Trust Score
                         <HelpHint
                           content={
-                            <div>
+                          <div>
                               <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
                               <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
                             </div>
-                          } 
-                        />
+                          } />
+
                       </p>
                       <p className="text-teal-300 text-2xl font-bold">{profile?.trust_score || 0}</p>
                     </div>
@@ -636,8 +636,8 @@ export default function CommandDeck() {
                 </div>
 
                 {/* Setup Progress (if onboarding not complete) */}
-                {onboarding && onboarding.status !== 'complete' && (
-                  <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                {onboarding && onboarding.status !== 'complete' &&
+                <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200">
                     <div className="flex items-center justify-between gap-3 mb-2">
                       <p className="text-sm font-medium text-amber-800">Profile setup in progress</p>
                       <span className="text-xs font-semibold text-amber-700">{setupPercent}%</span>
@@ -649,7 +649,7 @@ export default function CommandDeck() {
                       </Button>
                     </div>
                   </div>
-                )}
+                }
 
                 {/* Badges */}
                 <div className="mb-4">
@@ -666,8 +666,8 @@ export default function CommandDeck() {
                 <div>
                   <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {profile?.mystical_identifier && (
-                      <div className="flex items-center gap-2">
+                    {profile?.mystical_identifier &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
                           <Sparkles className="w-4 h-4 text-purple-600" />
                         </div>
@@ -676,36 +676,36 @@ export default function CommandDeck() {
                           <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.astrological_sign && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.astrological_sign &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">✨</div>
                         <div>
                           <p className="text-cyan-400 text-xs">Sun Sign</p>
                           <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.rising_sign && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.rising_sign &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center shrink-0">🌅</div>
                         <div>
                           <p className="text-cyan-400 text-xs">Rising</p>
                           <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.moon_sign && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.moon_sign &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">🌙</div>
                         <div>
                           <p className="text-teal-400 text-xs">Moon</p>
                           <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.numerology_life_path && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.numerology_life_path &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
                           <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
                         </div>
@@ -714,9 +714,9 @@ export default function CommandDeck() {
                           <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.numerology_personality && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.numerology_personality &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
                           <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
                         </div>
@@ -725,25 +725,25 @@ export default function CommandDeck() {
                           <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.birth_card && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.birth_card &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">🃏</div>
                         <div>
                           <p className="text-cyan-400 text-xs">Birth Card</p>
                           <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
                         </div>
                       </div>
-                    )}
-                    {profile?.sun_card && (
-                      <div className="flex items-center gap-2">
+                    }
+                    {profile?.sun_card &&
+                    <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center shrink-0">☀️</div>
                         <div>
                           <p className="text-cyan-400 text-xs">Sun Card</p>
                           <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
                         </div>
                       </div>
-                    )}
+                    }
                   </div>
                 </div>
               </div>
@@ -789,17 +789,17 @@ export default function CommandDeck() {
                     {rpInfo.title}
                     <HelpHint
                       content={
-                        <div>
+                      <div>
                           <div className="font-semibold mb-1">Rank progression</div>
                           <div>Current: {rpInfo.title} ({rpPoints} RP)</div>
-                          {rpInfo.nextMin ? (
-                            <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div>
-                          ) : (
-                            <div>You're at the highest rank.</div>
-                          )}
+                          {rpInfo.nextMin ?
+                        <div>Next: {rpInfo.nextTitle} at {rpInfo.nextMin} RP • {Math.max(0, rpInfo.nextMin - rpPoints)} RP to go</div> :
+
+                        <div>You're at the highest rank.</div>
+                        }
                         </div>
-                      } 
-                    />
+                      } />
+
                   </p>
                 </div>
               </div>
@@ -891,14 +891,14 @@ export default function CommandDeck() {
             <div className="relative z-10">
               <div className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Controls Deck</div>
               <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => {try{localStorage.setItem('cmdColCOrder',JSON.stringify(colCOrder));}catch{}alert('Layout saved!');}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                <button type="button" onClick={() => {try {localStorage.setItem('cmdColCOrder', JSON.stringify(colCOrder));} catch {}alert('Layout saved!');}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
                   <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c38b3c63f_save_light_iconcopy.png" alt="Save" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Save</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Save current layout</div>
                   </div>
                 </button>
-                <button type="button" onClick={() => {setColCOrder(['market','influence','leader','dailyops']);setCardsForceOpen(null);try{localStorage.removeItem('cmdColCOrder');}catch{}}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                <button type="button" onClick={() => {setColCOrder(['market', 'influence', 'leader', 'dailyops']);setCardsForceOpen(null);try {localStorage.removeItem('cmdColCOrder');} catch {}}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
                   <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ef349f0a6_Screenshot2026-01-04224148.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
@@ -981,60 +981,60 @@ export default function CommandDeck() {
                   <TabsTrigger value="teachers" className="text-xs">Teachers</TabsTrigger>
                 </TabsList>
                 <div className="space-y-3">
-                  {filteredMatches.length === 0 ? (
-                    <div className="text-center py-8">
+                  {filteredMatches.length === 0 ?
+                  <div className="text-center py-8">
                       <Sparkles className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                       <p className="text-sm text-slate-500">No matches yet</p>
                       <p className="text-xs text-slate-400 mt-1">Complete your profile to find matches</p>
-                    </div>
-                  ) : (
-                    filteredMatches.slice(0, 3).map((match) => (
-                      <MatchCard key={match.id} match={match} onAction={handleMatchAction} />
-                    ))
-                  )}
-                  {filteredMatches.length > 3 && (
-                    <Button variant="ghost" className="w-full text-violet-600" onClick={() => window.location.href = createPageUrl('Matches')}>
+                    </div> :
+
+                  filteredMatches.slice(0, 3).map((match) =>
+                  <MatchCard key={match.id} match={match} onAction={handleMatchAction} />
+                  )
+                  }
+                  {filteredMatches.length > 3 &&
+                  <Button variant="ghost" className="w-full text-violet-600" onClick={() => window.location.href = createPageUrl('Matches')}>
                       View all {filteredMatches.length} matches
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
-                  )}
+                  }
                 </div>
               </Tabs>
             </CollapsibleCard>
 
             <CollapsibleCard title="Meetings & Momentum" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen}>
               <div className="space-y-3">
-                {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ? (
-                  <div className="text-center py-6">
+                {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
+                <div className="text-center py-6">
                     <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No upcoming meetings</p>
                     <Button variant="outline" className="mt-3 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}>
                       Schedule a meeting
                     </Button>
-                  </div>
-                ) : (
-                  [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) => (
-                    <MeetingCard key={meeting.id} meeting={meeting} onAction={handleMeetingAction} />
-                  ))
-                )}
+                  </div> :
+
+                [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) =>
+                <MeetingCard key={meeting.id} meeting={meeting} onAction={handleMeetingAction} />
+                )
+                }
               </div>
             </CollapsibleCard>
 
             <CollapsibleCard title="Missions & Quests" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen}>
               <div className="space-y-3">
-                {missions.length === 0 ? (
-                  <div className="text-center py-6">
+                {missions.length === 0 ?
+                <div className="text-center py-6">
                     <Target className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <p className="text-sm text-slate-500">No active missions</p>
                     <Button variant="outline" className="mt-3 rounded-xl" onClick={() => window.location.href = createPageUrl('Missions')}>
                       Browse missions
                     </Button>
-                  </div>
-                ) : (
-                  missions.slice(0, 2).map((mission) => (
-                    <MissionCard key={mission.id} mission={mission} onAction={handleMissionAction} variant="compact" />
-                  ))
-                )}
+                  </div> :
+
+                missions.slice(0, 2).map((mission) =>
+                <MissionCard key={mission.id} mission={mission} onAction={handleMissionAction} variant="compact" />
+                )
+                }
               </div>
             </CollapsibleCard>
 
@@ -1062,17 +1062,17 @@ export default function CommandDeck() {
                 </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {filteredProjects.length === 0 ? (
-                  <div className="col-span-full text-center py-8 text-slate-500">No projects found</div>
-                ) : (
-                  filteredProjects.slice(0, 4).map((p) => (
-                    <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
-                  ))
-                )}
+                {filteredProjects.length === 0 ?
+                <div className="col-span-full text-center py-8 text-slate-500">No projects found</div> :
+
+                filteredProjects.slice(0, 4).map((p) =>
+                <ProjectMiniCard key={p.id} project={p} onClick={() => setSelectedProject(p)} />
+                )
+                }
               </div>
-              {filteredProjects.length > 4 && (
-                <Button variant="ghost" className="w-full mt-3 text-violet-600" onClick={() => window.location.href = createPageUrl('Projects')}>View more</Button>
-              )}
+              {filteredProjects.length > 4 &&
+              <Button variant="ghost" className="w-full mt-3 text-violet-600" onClick={() => window.location.href = createPageUrl('Projects')}>View more</Button>
+              }
             </CollapsibleCard>
           </div>
 
@@ -1080,14 +1080,14 @@ export default function CommandDeck() {
           <div className="block mt-6">
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="colC">
-                {(provided) => (
-                  <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
-                    {colCOrder.map((id, index) => (
-                      <Draggable draggableId={id} index={index} key={id}>
-                        {(dragProvided) => (
-                          <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                            {id === 'market' && (
-                              <CollapsibleCard title="Marketplace: Earn & Learn" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen}>
+                {(provided) =>
+                <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
+                    {colCOrder.map((id, index) =>
+                  <Draggable draggableId={id} index={index} key={id}>
+                        {(dragProvided) =>
+                    <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
+                            {id === 'market' &&
+                      <CollapsibleCard title="Marketplace: Earn & Learn" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen}>
                                 <Tabs defaultValue="offers" className="w-full">
                                   <TabsList className="w-full grid grid-cols-3 mb-4">
                                     <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
@@ -1095,31 +1095,31 @@ export default function CommandDeck() {
                                     <TabsTrigger value="browse" className="text-xs">Browse</TabsTrigger>
                                   </TabsList>
                                   <TabsContent value="offers" className="space-y-3">
-                                    {listings.filter((l) => l.listing_type === 'offer').length === 0 ? (
-                                      <div className="text-center py-6">
+                                    {listings.filter((l) => l.listing_type === 'offer').length === 0 ?
+                            <div className="text-center py-6">
                                         <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                                         <p className="text-sm text-slate-500">No offers yet</p>
                                         <Button className="mt-3 rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}>Create your first offer</Button>
-                                      </div>
-                                    ) : (
-                                      listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) => (
-                                        <ListingCard key={listing.id} listing={listing} isOwner={true} onAction={handleListingAction} />
-                                      ))
-                                    )}
+                                      </div> :
+
+                            listings.filter((l) => l.listing_type === 'offer').slice(0, 2).map((listing) =>
+                            <ListingCard key={listing.id} listing={listing} isOwner={true} onAction={handleListingAction} />
+                            )
+                            }
                                   </TabsContent>
                                   <TabsContent value="requests" className="space-y-3">
                                     <div className="text-center py-6"><p className="text-sm text-slate-500">No pending requests</p></div>
                                   </TabsContent>
                                   <TabsContent value="browse" className="space-y-3">
-                                    {listings.slice(0, 2).map((listing) => (
-                                      <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
-                                    ))}
+                                    {listings.slice(0, 2).map((listing) =>
+                            <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
+                            )}
                                   </TabsContent>
                                 </Tabs>
                               </CollapsibleCard>
-                            )}
-                            {id === 'influence' && (
-                              <CollapsibleCard title="Influence & Reach" icon={TrendingUp} backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80" onPopout={() => setInfluencePopupOpen(true)} forceOpen={cardsForceOpen}>
+                      }
+                            {id === 'influence' &&
+                      <CollapsibleCard title="Influence & Reach" icon={TrendingUp} backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80" onPopout={() => setInfluencePopupOpen(true)} forceOpen={cardsForceOpen}>
                                 <div className="space-y-4">
                                   <div className="grid grid-cols-3 gap-3">
                                     <div className="text-center p-3 rounded-xl bg-slate-50">
@@ -1147,9 +1147,9 @@ export default function CommandDeck() {
                                   </div>
                                 </div>
                               </CollapsibleCard>
-                            )}
-                            {id === 'leader' && (
-                              <CollapsibleCard title="144K Leader Channel" icon={Radio} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80" onPopout={() => setLeaderChannelPopupOpen(true)} forceOpen={cardsForceOpen}>
+                      }
+                            {id === 'leader' &&
+                      <CollapsibleCard title="144K Leader Channel" icon={Radio} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80" onPopout={() => setLeaderChannelPopupOpen(true)} forceOpen={cardsForceOpen}>
                                 <div className="text-center py-6">
                                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
                                     <Radio className="w-8 h-8 text-amber-600" />
@@ -1161,9 +1161,9 @@ export default function CommandDeck() {
                                   </Button>
                                 </div>
                               </CollapsibleCard>
-                            )}
-                            {id === 'dailyops' && (
-                              <CollapsibleCard title="Daily Ops" icon={Calendar} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => setDailyOpsPopupOpen(true)} forceOpen={cardsForceOpen}>
+                      }
+                            {id === 'dailyops' &&
+                      <CollapsibleCard title="Daily Ops" icon={Calendar} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => setDailyOpsPopupOpen(true)} forceOpen={cardsForceOpen}>
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <div className="text-xs text-slate-500">Today's GGG</div>
@@ -1178,14 +1178,14 @@ export default function CommandDeck() {
                                   <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>Open DO</Button>
                                 </div>
                               </CollapsibleCard>
-                            )}
+                      }
                           </div>
-                        )}
+                    }
                       </Draggable>
-                    ))}
+                  )}
                     {provided.placeholder}
                   </div>
-                )}
+                }
               </Droppable>
             </DragDropContext>
           </div>
@@ -1199,8 +1199,8 @@ export default function CommandDeck() {
           isOpen={sidePanelOpen}
           onToggle={() => setSidePanelOpen(!sidePanelOpen)}
           onMatchAction={handleMatchAction}
-          onMeetingAction={handleMeetingAction}
-        />
+          onMeetingAction={handleMeetingAction} />
+
 
         {/* Popout Panels */}
         {inboxPopupOpen && <FloatingPanel title="Inbox & Signals" onClose={() => setInboxPopupOpen(false)}><InboxSignals notifications={notifications} /></FloatingPanel>}
@@ -1226,6 +1226,6 @@ export default function CommandDeck() {
         <TuneEngineModal open={tuneEngineOpen} onClose={() => setTuneEngineOpen(false)} />
         <OnlineUsersModal open={onlineUsersOpen} onClose={() => setOnlineUsersOpen(false)} />
       </div>
-    </div>
-  );
+    </div>);
+
 }
