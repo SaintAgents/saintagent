@@ -38,12 +38,14 @@ export default function Marketplace() {
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50)
+    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50),
+    staleTime: 2 * 60 * 1000,
   });
   const queryClient = useQueryClient();
 
