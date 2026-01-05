@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
+import HelpHint from '@/components/hud/HelpHint';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
@@ -60,6 +61,7 @@ export default function Projects() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <Folder className="w-6 h-6 text-violet-600" />
               Projects
+              <HelpHint content="Projects are initiatives submitted for evaluation and potential funding. Browse all projects, filter by status, and click any project to see full details including AI evaluation scores. Create your own project after completing onboarding." />
             </h1>
             <p className="text-slate-500 mt-1">Browse, filter, and manage all projects</p>
           </div>
