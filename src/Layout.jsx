@@ -391,8 +391,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
             radial-gradient(ellipse at 80% 70%, rgba(0, 212, 255, 0.02) 0%, transparent 50%);
         }
 
-        /* Matrix rain columns effect */
-        [data-theme='dark'] body::after {
+        /* Matrix rain columns effect - only when matrix effect is selected */
+        [data-theme='dark'] [data-bg-effect='matrix'] body::after,
+        [data-theme='dark'][data-bg-effect='matrix'] body::after {
           content: '';
           position: fixed;
           top: 0;
@@ -422,6 +423,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
             );
           background-size: 20px 100%, 20px 60px;
           animation: matrixRain 8s linear infinite;
+        }
+
+        /* Hide matrix rain when off or starfield selected */
+        [data-theme='dark'] [data-bg-effect='off'] body::after,
+        [data-theme='dark'] [data-bg-effect='starfield'] body::after {
+          display: none !important;
         }
 
         @keyframes matrixRain {
