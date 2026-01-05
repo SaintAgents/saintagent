@@ -125,7 +125,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
             avatar={listing.owner_avatar} 
             size={36} 
             showHelpHint={false}
-            showRankBadge={false}
+            showRankBadge={true}
             showTrustBadge={false}
             showReachBadge={false}
           />
