@@ -368,98 +368,168 @@ export default function AffiliateCenter() {
           </Card>
         </div>
 
-        {/* Main Content */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Column - Links */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Link2 className="w-5 h-5" />
-                  Your Affiliate Links
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Personal Link */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    Personal Invite Link
-                  </label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={affiliateUrl} 
-                      readOnly 
-                      className="font-mono text-sm"
-                    />
-                    <Button 
-                      onClick={() => copyToClipboard(affiliateUrl)}
-                      variant="outline"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <p className="text-xs mt-2">
-                    Share this link anywhere. When someone signs up through it, you'll be credited.
-                  </p>
-                </div>
+        {/* Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="w-full max-w-md">
+            <TabsTrigger value="links" className="flex-1 gap-2">
+              <Link2 className="w-4 h-4" />
+              Links
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex-1 gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="referrals" className="flex-1 gap-2">
+              <Users className="w-4 h-4" />
+              Referrals
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-                {/* Offer-Specific Links */}
-                {listings.length > 0 && (
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      Offer-Specific Links
-                    </label>
-                    <p className="text-xs mb-3">
-                      Create custom links for specific offers to track which promotions work best.
-                    </p>
-                    <div className="space-y-2">
-                      {listings.slice(0, 5).map((listing) => (
-                        <div 
-                          key={listing.id}
-                          className={cn(
-                            "p-3 rounded-lg border cursor-pointer transition-colors",
-                            selectedOffer?.id === listing.id 
-                              ? "border-violet-300 bg-violet-50" 
-                              : "border-slate-200 hover:border-slate-300"
-                          )}
-                          onClick={() => setSelectedOffer(listing)}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left Column - Content based on tab */}
+          <div className="lg:col-span-2 space-y-6">
+            {activeTab === 'links' && (
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Link2 className="w-5 h-5" />
+                      Your Affiliate Links
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Personal Link */}
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">
+                        Personal Invite Link
+                      </label>
+                      <div className="flex gap-2">
+                        <Input 
+                          value={affiliateUrl} 
+                          readOnly 
+                          className="font-mono text-sm"
+                        />
+                        <Button 
+                          onClick={() => copyToClipboard(affiliateUrl)}
+                          variant="outline"
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <p className="font-medium text-sm">{listing.title}</p>
-                              <p className="text-xs">${listing.price_amount}</p>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-slate-400" />
-                          </div>
-                        </div>
-                      ))}
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <p className="text-xs mt-2 text-slate-500">
+                        Share this link anywhere. When someone signs up through it, you'll be credited.
+                      </p>
                     </div>
 
-                    {selectedOffer && (
-                      <div className="mt-4 p-4 rounded-lg bg-slate-50 border border-slate-200">
-                        <p className="text-xs font-medium mb-2">
-                          Link for: {selectedOffer.title}
+                    {/* Offer-Specific Links */}
+                    {listings.length > 0 && (
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">
+                          Quick Offer Links
+                        </label>
+                        <p className="text-xs text-slate-500 mb-3">
+                          Click an offer to generate a trackable link.
                         </p>
-                        <div className="flex gap-2">
-                          <Input 
-                            value={offerUrl} 
-                            readOnly 
-                            className="font-mono text-xs"
-                          />
-                          <Button 
-                            onClick={() => copyToClipboard(offerUrl)}
-                            variant="outline"
-                            size="sm"
-                          >
-                            <Copy className="w-3 h-3" />
-                          </Button>
+                        <div className="space-y-2">
+                          {listings.slice(0, 5).map((listing) => (
+                            <div 
+                              key={listing.id}
+                              className={cn(
+                                "p-3 rounded-lg border cursor-pointer transition-colors",
+                                selectedOffer?.id === listing.id 
+                                  ? "border-violet-300 bg-violet-50" 
+                                  : "border-slate-200 hover:border-slate-300"
+                              )}
+                              onClick={() => setSelectedOffer(listing)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                  <p className="font-medium text-sm">{listing.title}</p>
+                                  <p className="text-xs text-slate-500">${listing.price_amount}</p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-slate-400" />
+                              </div>
+                            </div>
+                          ))}
                         </div>
+
+                        {selectedOffer && (
+                          <div className="mt-4 p-4 rounded-lg bg-slate-50 border border-slate-200">
+                            <p className="text-xs font-medium mb-2">
+                              Link for: {selectedOffer.title}
+                            </p>
+                            <div className="flex gap-2">
+                              <Input 
+                                value={offerUrl} 
+                                readOnly 
+                                className="font-mono text-xs"
+                              />
+                              <Button 
+                                onClick={() => copyToClipboard(offerUrl)}
+                                variant="outline"
+                                size="sm"
+                              >
+                                <Copy className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
-                  </div>
+                  </CardContent>
+                </Card>
+
+                {/* Campaign Links Summary */}
+                {affiliateCodes.filter(c => c.campaign_name).length > 0 && (
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-violet-600" />
+                          Campaign Links
+                        </span>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => setActiveTab('analytics')}
+                          className="text-violet-600"
+                        >
+                          View All
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {affiliateCodes.filter(c => c.campaign_name).slice(0, 3).map(campaign => (
+                          <div key={campaign.id} className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
+                            <div>
+                              <p className="text-sm font-medium">{campaign.campaign_name}</p>
+                              <p className="text-xs text-slate-500">{campaign.target_name || campaign.target_type}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-medium">{campaign.total_clicks || 0} clicks</p>
+                              <p className="text-xs text-emerald-600">{campaign.total_paid || 0} paid</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
                 )}
-              </CardContent>
-            </Card>
+              </>
+            )}
+
+            {activeTab === 'analytics' && (
+              <CampaignAnalytics
+                campaigns={affiliateCodes}
+                clicks={clicks}
+                referrals={referrals}
+                onDelete={(id) => deleteCampaignMutation.mutate(id)}
+                baseUrl={getBaseUrl()}
+              />
+            )}
 
             {/* Referrals List */}
             <Card>
