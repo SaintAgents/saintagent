@@ -404,8 +404,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
         
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
           background-color: var(--obsidian) !important;
-          background-image: none !important;
           color: #ffffff;
+        }
+        
+        /* Allow Command Deck to show its background image */
+        [data-theme='dark'] main[data-page='CommandDeck'].min-h-screen,
+        [data-theme='dark'] main[data-page='CommandDeck'] {
+          background-color: transparent !important;
         }
         
         /* SOLID OBSIDIAN backgrounds - no transparency */
