@@ -76,6 +76,172 @@ function relationshipScore(me, candidate) {
   return factors > 0 ? score / factors : 0;
 }
 
+// Communication style compatibility
+function communicationScore(me, candidate) {
+  let score = 0;
+  let factors = 0;
+  
+  // Communication style compatibility matrix
+  const styleCompatibility = {
+    'direct_honest': { 'direct_honest': 1, 'analytical_precise': 0.8, 'expressive_emotional': 0.5, 'diplomatic_gentle': 0.6, 'intuitive_flowing': 0.5, 'quiet_reflective': 0.4 },
+    'diplomatic_gentle': { 'diplomatic_gentle': 1, 'intuitive_flowing': 0.9, 'quiet_reflective': 0.8, 'expressive_emotional': 0.7, 'direct_honest': 0.6, 'analytical_precise': 0.6 },
+    'intuitive_flowing': { 'intuitive_flowing': 1, 'diplomatic_gentle': 0.9, 'expressive_emotional': 0.8, 'quiet_reflective': 0.7, 'direct_honest': 0.5, 'analytical_precise': 0.4 },
+    'analytical_precise': { 'analytical_precise': 1, 'direct_honest': 0.8, 'quiet_reflective': 0.7, 'diplomatic_gentle': 0.6, 'intuitive_flowing': 0.4, 'expressive_emotional': 0.4 },
+    'expressive_emotional': { 'expressive_emotional': 1, 'intuitive_flowing': 0.8, 'diplomatic_gentle': 0.7, 'direct_honest': 0.5, 'quiet_reflective': 0.5, 'analytical_precise': 0.4 },
+    'quiet_reflective': { 'quiet_reflective': 1, 'diplomatic_gentle': 0.8, 'analytical_precise': 0.7, 'intuitive_flowing': 0.7, 'direct_honest': 0.4, 'expressive_emotional': 0.5 }
+  };
+  
+  if (me.communication_style && candidate.communication_style) {
+    const compat = styleCompatibility[me.communication_style]?.[candidate.communication_style] || 0.5;
+    score += compat;
+    factors++;
+  }
+  
+  // Communication depth preference
+  const depthCompatibility = {
+    'deep_only': { 'deep_only': 1, 'prefer_meaningful': 0.8, 'adaptable': 0.7, 'small_talk_ok': 0.3 },
+    'prefer_meaningful': { 'prefer_meaningful': 1, 'deep_only': 0.8, 'adaptable': 0.9, 'small_talk_ok': 0.5 },
+    'small_talk_ok': { 'small_talk_ok': 1, 'adaptable': 0.9, 'prefer_meaningful': 0.5, 'deep_only': 0.3 },
+    'adaptable': { 'adaptable': 1, 'prefer_meaningful': 0.9, 'small_talk_ok': 0.9, 'deep_only': 0.7 }
+  };
+  
+  if (me.communication_depth_preference && candidate.communication_depth_preference) {
+    const compat = depthCompatibility[me.communication_depth_preference]?.[candidate.communication_depth_preference] || 0.5;
+    score += compat;
+    factors++;
+  }
+  
+  // Feedback style alignment
+  if (me.feedback_style && candidate.feedback_style) {
+    score += me.feedback_style === candidate.feedback_style ? 1 : 0.6;
+    factors++;
+  }
+  
+  // Conflict approach compatibility
+  const conflictCompatibility = {
+    'address_immediately': { 'address_immediately': 1, 'reflect_then_discuss': 0.7, 'seek_mediation': 0.6, 'avoid_when_possible': 0.3 },
+    'reflect_then_discuss': { 'reflect_then_discuss': 1, 'address_immediately': 0.7, 'seek_mediation': 0.8, 'avoid_when_possible': 0.5 },
+    'avoid_when_possible': { 'avoid_when_possible': 1, 'reflect_then_discuss': 0.5, 'seek_mediation': 0.6, 'address_immediately': 0.3 },
+    'seek_mediation': { 'seek_mediation': 1, 'reflect_then_discuss': 0.8, 'address_immediately': 0.6, 'avoid_when_possible': 0.6 }
+  };
+  
+  if (me.conflict_approach && candidate.conflict_approach) {
+    const compat = conflictCompatibility[me.conflict_approach]?.[candidate.conflict_approach] || 0.5;
+    score += compat;
+    factors++;
+  }
+  
+  return factors > 0 ? score / factors : 0;
+}
+
+// Goals and life direction alignment
+function goalsScore(me, candidate) {
+  let score = 0;
+  let factors = 0;
+  
+  // Current focus areas overlap
+  if (me.current_focus_areas?.length && candidate.current_focus_areas?.length) {
+    const overlap = jaccard(me.current_focus_areas, candidate.current_focus_areas);
+    score += overlap;
+    factors++;
+  }
+  
+  // Short term goals alignment
+  if (me.short_term_goals?.length && candidate.short_term_goals?.length) {
+    const overlap = jaccard(me.short_term_goals, candidate.short_term_goals);
+    score += overlap;
+    factors++;
+  }
+  
+  // Support seeking/offering match
+  if (me.seeking_support_in?.length && candidate.can_offer_support_in?.length) {
+    const match = coverage(me.seeking_support_in, candidate.can_offer_support_in);
+    score += match;
+    factors++;
+  }
+  if (me.can_offer_support_in?.length && candidate.seeking_support_in?.length) {
+    const match = coverage(candidate.seeking_support_in, me.can_offer_support_in);
+    score += match;
+    factors++;
+  }
+  
+  return factors > 0 ? score / factors : 0;
+}
+
+// Enhanced spiritual practice compatibility
+function spiritualDepthScore(me, candidate) {
+  let score = 0;
+  let factors = 0;
+  
+  // Practice frequency compatibility (similar frequencies connect better)
+  const freqOrder = ['daily', 'few_times_week', 'weekly', 'monthly', 'occasionally'];
+  if (me.practice_frequency && candidate.practice_frequency) {
+    const myIdx = freqOrder.indexOf(me.practice_frequency);
+    const candIdx = freqOrder.indexOf(candidate.practice_frequency);
+    if (myIdx >= 0 && candIdx >= 0) {
+      const diff = Math.abs(myIdx - candIdx);
+      score += diff <= 1 ? 1 : diff <= 2 ? 0.7 : 0.4;
+      factors++;
+    }
+  }
+  
+  // Practice depth compatibility
+  const depthOrder = ['exploring', 'developing', 'established', 'teaching', 'mastery'];
+  if (me.practice_depth && candidate.practice_depth) {
+    const myIdx = depthOrder.indexOf(me.practice_depth);
+    const candIdx = depthOrder.indexOf(candidate.practice_depth);
+    if (myIdx >= 0 && candIdx >= 0) {
+      // Close depth or mentor/student dynamic is good
+      const diff = Math.abs(myIdx - candIdx);
+      score += diff <= 1 ? 1 : diff === 2 ? 0.8 : 0.5;
+      factors++;
+    }
+  }
+  
+  // Shared teachers or texts
+  if (me.spiritual_teachers?.length && candidate.spiritual_teachers?.length) {
+    const overlap = jaccard(me.spiritual_teachers, candidate.spiritual_teachers);
+    if (overlap > 0) {
+      score += 0.5 + (overlap * 0.5); // Bonus for shared teachers
+      factors++;
+    }
+  }
+  
+  if (me.sacred_texts?.length && candidate.sacred_texts?.length) {
+    const overlap = jaccard(me.sacred_texts, candidate.sacred_texts);
+    if (overlap > 0) {
+      score += 0.5 + (overlap * 0.5);
+      factors++;
+    }
+  }
+  
+  // Lineage/tradition alignment
+  if (me.lineage_tradition && candidate.lineage_tradition) {
+    if (me.lineage_tradition !== 'prefer_not_to_say' && candidate.lineage_tradition !== 'prefer_not_to_say') {
+      score += me.lineage_tradition === candidate.lineage_tradition ? 1 : 
+               (me.lineage_tradition === 'eclectic_personal' || candidate.lineage_tradition === 'eclectic_personal') ? 0.7 : 0.4;
+      factors++;
+    }
+  }
+  
+  // Human design compatibility
+  if (me.human_design_type && candidate.human_design_type) {
+    // Simplified HD compatibility
+    const hdCompat = {
+      'generator': { 'projector': 0.9, 'manifestor': 0.7, 'generator': 0.8, 'manifesting_generator': 0.85, 'reflector': 0.6 },
+      'manifesting_generator': { 'projector': 0.85, 'manifestor': 0.75, 'generator': 0.85, 'manifesting_generator': 0.8, 'reflector': 0.65 },
+      'projector': { 'generator': 0.9, 'manifesting_generator': 0.85, 'manifestor': 0.7, 'projector': 0.6, 'reflector': 0.7 },
+      'manifestor': { 'generator': 0.7, 'projector': 0.7, 'manifesting_generator': 0.75, 'manifestor': 0.5, 'reflector': 0.6 },
+      'reflector': { 'generator': 0.6, 'projector': 0.7, 'manifestor': 0.6, 'manifesting_generator': 0.65, 'reflector': 0.8 }
+    };
+    const compat = hdCompat[me.human_design_type]?.[candidate.human_design_type] || 0.5;
+    score += compat;
+    factors++;
+  }
+  
+  return factors > 0 ? score / factors : 0;
+}
+
 function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 
 function normalizeWeights(w) {
@@ -124,13 +290,16 @@ Deno.serve(async (req) => {
 
     // Base weights and feedback-driven adjustments
     let weights = { 
-      values: 0.20, 
-      practices: 0.15, 
-      skills: 0.20, 
-      intentions: 0.15,
+      values: 0.15, 
+      practices: 0.10, 
+      skills: 0.15, 
+      intentions: 0.12,
       relationship: 0.10,
-      region: 0.10, 
-      reputation: 0.10 
+      communication: 0.12,
+      goals: 0.10,
+      spiritual_depth: 0.08,
+      region: 0.05, 
+      reputation: 0.03 
     };
 
     try {
@@ -185,6 +354,15 @@ Deno.serve(async (req) => {
       // Relationship/connection compatibility
       const relScore = relationshipScore(me, p);
       
+      // NEW: Communication style compatibility
+      const commScore = communicationScore(me, p);
+      
+      // NEW: Goals and life direction alignment  
+      const goalScore = goalsScore(me, p);
+      
+      // NEW: Enhanced spiritual depth score
+      const spiritDepthScore = spiritualDepthScore(me, p);
+      
       // Region proximity
       const region = myRegion && p.region ? (p.region.toLowerCase() === myRegion ? 1 : 0) : 0;
       
@@ -193,10 +371,12 @@ Deno.serve(async (req) => {
 
       // Calculate sub-scores for display
       const intent_alignment = Math.round((v * 0.5 + intentAlign * 0.5) * 100);
-      const spiritual_alignment_score = Math.round(sp * 100);
+      const spiritual_alignment_score = Math.round((sp * 0.6 + spiritDepthScore * 0.4) * 100);
       const skill_complementarity = Math.round(skillScore * 100);
       const proximity_score = Math.round(region * 100);
       const trust_score = Math.round(rep * 100);
+      const communication_compatibility = Math.round(commScore * 100);
+      const goals_alignment = Math.round(goalScore * 100);
 
       // Timing readiness based on activity
       let timing_readiness = 40;
@@ -207,13 +387,16 @@ Deno.serve(async (req) => {
         timing_readiness = hours < 2 ? 85 : hours < 6 ? 75 : hours < 24 ? 55 : hours < 72 ? 40 : 25;
       }
 
-      // Final weighted score
+      // Final weighted score with new factors
       const matchScore01 = clamp01(
         weights.values * v +
         weights.practices * sp +
         weights.skills * skillScore +
         weights.intentions * intentAlign +
         weights.relationship * relScore +
+        weights.communication * commScore +
+        weights.goals * goalScore +
+        weights.spiritual_depth * spiritDepthScore +
         weights.region * region +
         weights.reputation * rep
       );
@@ -224,20 +407,45 @@ Deno.serve(async (req) => {
       const sharedPractices = arr(p.spiritual_practices).filter(x => myPractices.includes(x)).slice(0, 3);
       const sharedIntentions = candidateIntentions.filter(x => myIntentions.includes(x)).slice(0, 2);
       const complementarySkills = candidateSkills.filter(x => mySeeking.includes(x)).slice(0, 2);
+      const sharedFocusAreas = arr(p.current_focus_areas).filter(x => arr(me.current_focus_areas).includes(x)).slice(0, 2);
+      const supportMatch = arr(p.can_offer_support_in).filter(x => arr(me.seeking_support_in).includes(x)).slice(0, 2);
       
       const starters = [];
       if (sharedValues[0]) starters.push(`You both value "${sharedValues[0]}" - what does that mean to you?`);
       if (sharedPractices[0]) starters.push(`I see you practice ${sharedPractices[0]} too! How has your journey been?`);
       if (sharedIntentions[0]) starters.push(`We share the intention to ${sharedIntentions[0].replace(/_/g, ' ')}. Would love to explore collaboration.`);
       if (complementarySkills[0]) starters.push(`Your ${complementarySkills[0]} skill could really help with what I'm working on.`);
+      if (sharedFocusAreas[0]) starters.push(`I see we're both focused on ${sharedFocusAreas[0].replace(/_/g, ' ')} right now. Would love to share experiences.`);
+      if (supportMatch[0]) starters.push(`Your experience in ${supportMatch[0]} is exactly what I'm looking to learn about.`);
+      if (me.communication_style === p.communication_style) starters.push(`We seem to share a similar communication style. I appreciate that!`);
       if (starters.length === 0) starters.push(`Your profile resonates with me. I'd love to connect and learn more about your path.`);
 
       // Build shared arrays for display
       const shared_values = sharedValues;
       const complementary_skills = complementarySkills;
       const spiritual_synergies = sharedPractices;
+      const shared_goals = sharedFocusAreas;
 
-      const ai_reasoning = `Match based on: values (${Math.round(v*100)}%), practices (${Math.round(sp*100)}%), skills (${Math.round(skillScore*100)}%), intentions (${Math.round(intentAlign*100)}%), relationship fit (${Math.round(relScore*100)}%). ${relScore > 0.5 ? 'Strong relationship compatibility.' : ''} ${intentAlign > 0.5 ? 'Aligned life intentions.' : ''}`;
+      // Enhanced AI reasoning with new factors
+      const reasoningParts = [];
+      reasoningParts.push(`Values alignment: ${Math.round(v*100)}%`);
+      reasoningParts.push(`Spiritual practices: ${Math.round(sp*100)}%`);
+      if (spiritDepthScore > 0) reasoningParts.push(`Practice depth compatibility: ${Math.round(spiritDepthScore*100)}%`);
+      reasoningParts.push(`Skills complementarity: ${Math.round(skillScore*100)}%`);
+      reasoningParts.push(`Intentions: ${Math.round(intentAlign*100)}%`);
+      if (commScore > 0) reasoningParts.push(`Communication style: ${Math.round(commScore*100)}%`);
+      if (goalScore > 0) reasoningParts.push(`Goals alignment: ${Math.round(goalScore*100)}%`);
+      if (relScore > 0) reasoningParts.push(`Relationship fit: ${Math.round(relScore*100)}%`);
+      
+      const insights = [];
+      if (commScore > 0.7) insights.push('Excellent communication compatibility.');
+      if (goalScore > 0.6) insights.push('Aligned life direction and goals.');
+      if (spiritDepthScore > 0.7) insights.push('Deep spiritual practice alignment.');
+      if (relScore > 0.5) insights.push('Strong relationship compatibility.');
+      if (intentAlign > 0.5) insights.push('Aligned life intentions.');
+      if (supportMatch.length > 0) insights.push('Good support exchange potential.');
+      
+      const ai_reasoning = `Match based on: ${reasoningParts.join(', ')}. ${insights.join(' ')}`;
 
       return {
         target: p,
@@ -249,10 +457,13 @@ Deno.serve(async (req) => {
           proximity_score,
           timing_readiness,
           trust_score,
+          communication_compatibility,
+          goals_alignment,
           conversation_starters: starters,
           shared_values,
           complementary_skills,
           spiritual_synergies,
+          shared_goals,
           ai_reasoning,
         }
       };
@@ -286,6 +497,7 @@ Deno.serve(async (req) => {
         complementary_skills: item.fields.complementary_skills,
         spiritual_synergies: item.fields.spiritual_synergies,
         ai_reasoning: item.fields.ai_reasoning,
+        explanation: `Communication: ${item.fields.communication_compatibility}% | Goals: ${item.fields.goals_alignment}%`,
         status: 'active'
       };
       if (m) {
