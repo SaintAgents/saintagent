@@ -10,7 +10,6 @@ import EvaluationSpec from './pages/EvaluationSpec';
 import EventDetail from './pages/EventDetail';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
-import Join from './pages/Join';
 import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
@@ -49,7 +48,6 @@ export const PAGES = {
     "EventDetail": EventDetail,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
-    "Join": Join,
     "LeaderChannel": LeaderChannel,
     "Leaderboards": Leaderboards,
     "ListingDetail": ListingDetail,
