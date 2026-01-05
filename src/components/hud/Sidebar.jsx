@@ -357,7 +357,7 @@ export default function Sidebar({
                   <button
                     key={leader.id}
                     className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
-                    data-user-id={leader.user_id}
+                    onClick={() => document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: leader.user_id } }))}
                   >
                     <div className="relative">
                       <Avatar className="w-8 h-8">
