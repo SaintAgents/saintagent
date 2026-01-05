@@ -340,38 +340,38 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           {/* Bio */}
           {profile.bio &&
           <div className="mb-6">
-              <h3 className="font-semibold text-slate-900 mb-2">About</h3>
-              <p className="text-sm text-slate-600">{profile.bio}</p>
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-2">About</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">{profile.bio}</p>
             </div>
           }
 
           {/* Location */}
           {profile.location &&
           <div className="mb-6">
-              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
                 Location
               </h3>
-              <p className="text-sm text-slate-600">{profile.location}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">{profile.location}</p>
             </div>
           }
 
           {/* Relationship Status */}
           {profile.relationship_status && profile.relationship_status !== 'prefer_not_to_say' &&
           <div className="mb-6">
-              <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
                 <Heart className="w-4 h-4" />
                 Connection Preferences
               </h3>
-              <Badge className="bg-rose-100 text-rose-700 capitalize mb-2">
+              <Badge className="bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 capitalize mb-2">
                 {profile.relationship_status.replace('_', ' ')}
               </Badge>
               {profile.relationship_type_seeking?.length > 0 &&
             <div className="mt-2">
-                  <p className="text-xs text-slate-500 mb-1">Open to:</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Open to:</p>
                   <div className="flex flex-wrap gap-1">
                     {profile.relationship_type_seeking.map((type, idx) =>
-                <Badge key={idx} variant="outline" className="bg-purple-100 text-foreground px-2.5 py-0.5 text-xs font-semibold capitalize rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                <Badge key={idx} variant="outline" className="bg-purple-100 dark:bg-[rgba(168,85,247,0.2)] text-foreground dark:text-[#a855f7] px-2.5 py-0.5 text-xs font-semibold capitalize rounded-md inline-flex items-center border dark:border-[#a855f7]/50">
                         {type.replace('_', ' ')}
                       </Badge>
                 )}
