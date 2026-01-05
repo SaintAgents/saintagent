@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
+import WalkthroughModal from './WalkthroughModal';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -63,6 +64,7 @@ export default function TopBar({
   const [searchFocused, setSearchFocused] = useState(false);
   const [helpMode, setHelpMode] = useState(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
 
   const setLanguage = (code) => {
     try {
@@ -242,6 +244,10 @@ export default function TopBar({
                   User Guide
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setWalkthroughOpen(true)} className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                Walkthrough
+              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to={createPageUrl('FAQ')} className="flex items-center gap-2">
                   <HelpCircle className="w-4 h-4" />
@@ -366,6 +372,9 @@ export default function TopBar({
           </ScrollArea>
         </DialogContent>
       </Dialog>
+      
+      {/* Walkthrough Modal */}
+      <WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />
     </header>
   );
 }
