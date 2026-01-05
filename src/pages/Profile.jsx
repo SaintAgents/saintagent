@@ -371,23 +371,25 @@ export default function Profile() {
                 </div>
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
-              <Button
-                variant="outline"
-                className="rounded-xl gap-2"
-                onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
+              {isOwnProfile && (
+                <Button
+                  variant="outline"
+                  className="rounded-xl gap-2"
+                  onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
 
-                {isEditing ?
-                <>
-                    <X className="w-4 h-4" />
-                    Cancel
-                  </> :
+                  {isEditing ?
+                  <>
+                      <X className="w-4 h-4" />
+                      Cancel
+                    </> :
 
-                <>
-                    <Edit className="w-4 h-4" />
-                    Edit Profile
-                  </>
-                }
-              </Button>
+                  <>
+                      <Edit className="w-4 h-4" />
+                      Edit Profile
+                    </>
+                  }
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
