@@ -36,24 +36,30 @@ export default function MiniProfile({
   showHelpHint = true
 }) {
   // Always call hooks unconditionally with stable keys
+  // Use longer stale times to reduce API calls and prevent rate limiting
   const { data: profs = [] } = useQuery({
     queryKey: ['miniProfile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: !!userId,
-    refetchInterval: 10000
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes cache
   });
   const profile = profs?.[0];
 
   const { data: roles = [] } = useQuery({
     queryKey: ['miniProfileRoles', userId || 'none'],
     queryFn: () => base44.entities.UserRole.filter({ user_id: userId, status: 'active' }),
-    enabled: !!userId
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: miniBadges = [] } = useQuery({
     queryKey: ['miniProfileBadges', userId || 'none'],
     queryFn: () => base44.entities.Badge.filter({ user_id: userId, status: 'active' }),
-    enabled: !!userId
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const displayName = name || profile?.display_name || userId || 'User';
