@@ -3,19 +3,19 @@
 // Using high-quality stock photos as placeholders - replace with actual cropped faces
 
 export const DEMO_AVATARS_MALE = [
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face', // Long brown hair guy
-  'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=face', // Asian dark hair
-  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face', // Dreads guy
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face', // Blonde guy
-  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face', // Dark wavy guy
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/126c9910a_Screenshot2026-01-05044632.png', // Long brown hair guy
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/74ffcbd77_Screenshot2026-01-05044648.png', // Asian dark hair
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/00d0f05a9_Screenshot2026-01-05044704.png', // Dreads guy
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0bfc64ea2_Screenshot2026-01-05044728.png', // Blonde guy
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/278596fe2_Screenshot2026-01-05044741.png', // Dark wavy guy
 ];
 
 export const DEMO_AVATARS_FEMALE = [
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face', // Blonde waves
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face', // Dark straight
-  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop&crop=face', // Curly brown
-  'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face', // Brunette
-  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face', // Dark wavy
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/241a3258b_Screenshot2026-01-05044754.png', // Curly brown woman
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/05bc0653e_Screenshot2026-01-05044810.png', // Dark straight woman
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b75f5b0dd_Screenshot2026-01-05044826.png', // Brunette with earrings
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/536ed7042_Screenshot2026-01-05044844.png', // Dark wavy woman
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/67391be16_Screenshot2026-01-05044903.png', // Blonde waves woman
 ];
 
 export const DEMO_AVATARS_ALL = [...DEMO_AVATARS_MALE, ...DEMO_AVATARS_FEMALE];
