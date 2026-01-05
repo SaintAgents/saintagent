@@ -111,7 +111,16 @@ export default function Sidebar({
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
+  const [bgEffect, setBgEffect] = useState(() => {
+    try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
+  });
   const isDark = theme === 'dark';
+
+  // Persist background effect and dispatch event for Layout
+  React.useEffect(() => {
+    try { localStorage.setItem('bgEffect', bgEffect); } catch {}
+    document.dispatchEvent(new CustomEvent('bgEffectChange', { detail: { effect: bgEffect } }));
+  }, [bgEffect]);
 
   // Pop-off state
   const [isPoppedOff, setIsPoppedOff] = useState(false);
