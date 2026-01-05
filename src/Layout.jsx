@@ -342,65 +342,242 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
       `}</style>
       <style>{`
-        /* Dark theme overrides */
+        /* Dark theme overrides - OBSIDIAN BLACK with NEON ACCENTS */
         [data-theme='dark'] {
           color-scheme: dark;
+          --obsidian: #050505;
+          --obsidian-light: #0a0a0a;
+          --neon-green: #00ff88;
+          --neon-teal: #00d4ff;
+          --neon-purple: #a855f7;
         }
+        
+        /* Matrix digital rain background */
+        [data-theme='dark'] body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 0;
+          background: 
+            radial-gradient(ellipse at 20% 30%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.02) 0%, transparent 70%);
+          animation: starfield 60s linear infinite;
+        }
+        
+        @keyframes starfield {
+          0% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+          100% { background-position: 100% 100%, 0% 0%, 50% 50%; }
+        }
+        
+        /* Subtle matrix rain effect via pseudo-element */
+        [data-theme='dark'] body::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 0;
+          opacity: 0.015;
+          background-image: 
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 2px,
+              rgba(0, 255, 136, 0.5) 2px,
+              rgba(0, 255, 136, 0.5) 4px
+            );
+          background-size: 100% 8px;
+          animation: matrixRain 20s linear infinite;
+        }
+        
+        @keyframes matrixRain {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
+        }
+        
         [data-theme='dark'] body, [data-theme='dark'] .min-h-screen {
-                        background-color: #0b1220 !important;
-                        background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2f0df9019_gemini-25-flash-image_make_yes_normal_human_with_blue_iris-0.jpg');
-                        background-size: cover;
-                        background-position: center;
-                        background-attachment: fixed;
-                        color: #e5e7eb;
+          background-color: var(--obsidian) !important;
+          background-image: none !important;
+          color: #ffffff;
         }
-        [data-theme='dark'] [class*='bg-white'] { background-color: #0f172a !important; color: #e5e7eb !important; }
-        [data-theme='dark'] [class*='bg-slate-50'] { background-color: #0b1220 !important; color: #e5e7eb !important; }
-        [data-theme='dark'] [class*='bg-slate-100'] { background-color: #111827 !important; color: #e5e7eb !important; }
-        [data-theme='dark'] [class*='border-slate-100'] { border-color: #1f2937 !important; }
-        [data-theme='dark'] [class*='border-slate-200'] { border-color: #334155 !important; }
-        [data-theme='dark'] [class*='text-slate-900'] { color: #e5e7eb !important; }
-        [data-theme='dark'] [class*='text-slate-700'] { color: #cbd5e1 !important; }
-        [data-theme='dark'] [class*='text-slate-600'] { color: #94a3b8 !important; }
-        [data-theme='dark'] [class*='text-slate-500'] { color: #94a3b8 !important; }
+        
+        /* SOLID OBSIDIAN backgrounds - no transparency */
+        [data-theme='dark'] [class*='bg-white'] { 
+          background-color: var(--obsidian) !important; 
+          color: #ffffff !important;
+          border-color: rgba(0, 255, 136, 0.2) !important;
+        }
+        [data-theme='dark'] [class*='bg-slate-50'] { 
+          background-color: var(--obsidian) !important; 
+          color: #ffffff !important; 
+        }
+        [data-theme='dark'] [class*='bg-slate-100'] { 
+          background-color: var(--obsidian-light) !important; 
+          color: #ffffff !important; 
+        }
+        [data-theme='dark'] [class*='bg-slate-200'] { 
+          background-color: #0f0f0f !important; 
+          color: #ffffff !important; 
+        }
+        
+        /* Neon borders with glow */
+        [data-theme='dark'] [class*='border-slate-100'] { 
+          border-color: rgba(0, 255, 136, 0.15) !important; 
+        }
+        [data-theme='dark'] [class*='border-slate-200'] { 
+          border-color: rgba(0, 212, 255, 0.2) !important; 
+        }
+        [data-theme='dark'] [class*='border-slate-300'] { 
+          border-color: rgba(0, 255, 136, 0.25) !important; 
+        }
+        
+        /* HIGH CONTRAST text */
+        [data-theme='dark'] [class*='text-slate-900'] { color: #ffffff !important; }
+        [data-theme='dark'] [class*='text-slate-800'] { color: #f0f0f0 !important; }
+        [data-theme='dark'] [class*='text-slate-700'] { color: var(--neon-green) !important; }
+        [data-theme='dark'] [class*='text-slate-600'] { color: var(--neon-teal) !important; }
+        [data-theme='dark'] [class*='text-slate-500'] { color: rgba(0, 212, 255, 0.8) !important; }
+        [data-theme='dark'] [class*='text-slate-400'] { color: rgba(0, 255, 136, 0.6) !important; }
+        
+        /* Cards and containers - solid black with neon glow borders */
+        [data-theme='dark'] .rounded-xl, 
+        [data-theme='dark'] .rounded-lg,
+        [data-theme='dark'] .rounded-2xl {
+          background-color: var(--obsidian) !important;
+          border: 1px solid rgba(0, 255, 136, 0.15) !important;
+          box-shadow: 0 0 20px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.1) !important;
+        }
+        
+        /* Sidebar solid obsidian */
+        [data-theme='dark'] aside,
+        [data-theme='dark'] nav {
+          background-color: var(--obsidian) !important;
+          border-color: rgba(0, 255, 136, 0.2) !important;
+        }
+        
+        /* Search bar and inputs - obsidian with neon border */
+        [data-theme='dark'] input,
+        [data-theme='dark'] textarea,
+        [data-theme='dark'] select {
+          background-color: var(--obsidian) !important;
+          color: #ffffff !important;
+          border-color: rgba(0, 212, 255, 0.3) !important;
+        }
+        [data-theme='dark'] input:focus,
+        [data-theme='dark'] textarea:focus,
+        [data-theme='dark'] select:focus {
+          border-color: var(--neon-teal) !important;
+          box-shadow: 0 0 10px rgba(0, 212, 255, 0.3) !important;
+          outline: none !important;
+        }
+        [data-theme='dark'] input::placeholder {
+          color: rgba(0, 212, 255, 0.5) !important;
+        }
+        
+        /* Buttons with neon glow on hover */
+        [data-theme='dark'] button:hover,
+        [data-theme='dark'] [role="button"]:hover {
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important;
+        }
+        
+        /* Active/selected states - neon glow */
+        [data-theme='dark'] [data-state="active"],
+        [data-theme='dark'] [aria-selected="true"] {
+          background-color: rgba(0, 255, 136, 0.1) !important;
+          border-color: var(--neon-green) !important;
+          box-shadow: 0 0 12px rgba(0, 255, 136, 0.3) !important;
+        }
+        
+        /* Modals and dialogs - solid obsidian */
+        [data-theme='dark'] [role="dialog"],
+        [data-theme='dark'] [data-radix-popper-content-wrapper] > * {
+          background-color: var(--obsidian) !important;
+          border: 1px solid rgba(0, 255, 136, 0.2) !important;
+          box-shadow: 0 0 30px rgba(0, 255, 136, 0.1), 0 0 60px rgba(0, 212, 255, 0.05) !important;
+        }
+        
+        /* Scrollbar neon style */
+        [data-theme='dark'] ::-webkit-scrollbar {
+          background-color: var(--obsidian) !important;
+          width: 8px;
+        }
+        [data-theme='dark'] ::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, var(--neon-green), var(--neon-teal)) !important;
+          border-radius: 4px;
+        }
+        [data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+          box-shadow: 0 0 10px var(--neon-green) !important;
+        }
 
-        /* Command Deck gold accent */
-        [data-theme='dark'] main[data-page='CommandDeck'] { --gold: #FFE27A; }
+        /* Command Deck neon accent */
+        [data-theme='dark'] main[data-page='CommandDeck'] { 
+          --gold: var(--neon-green);
+          background-color: var(--obsidian) !important;
+        }
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-900'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-800'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-slate-700'] {
-          color: var(--gold) !important;
+          color: var(--neon-green) !important;
+          text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-950'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-900'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-800'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-700'],
         [data-theme='dark'] main[data-page='CommandDeck'] [class*='text-violet-600'] {
-          color: #1e1b4b !important;
+          color: var(--neon-purple) !important;
+          text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
         }
-        /* Ensure Avatar dashboard stats stay dark on dark theme */
+        
+        /* Ensure Avatar dashboard stats stay readable */
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats],
         [data-theme='dark'] main[data-page='CommandDeck'] [data-cmd-stats] * {
-          color: #0f172a !important;
+          color: var(--obsidian) !important;
         }
 
-        /* Dark mode: Stat numbers deep purple */
+        /* Dark mode: Stat numbers neon */
         [data-theme='dark'] main[data-page='CommandDeck'] [data-stats-bar] .stat-number {
-          color: #5b21b6 !important;
+          color: var(--neon-teal) !important;
+          text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
         }
 
-        /* SidePanel control buttons */
+        /* SidePanel control buttons - neon style */
         [data-theme='dark'] [data-ggg-controls] {
-          background-color: #0f172a !important;
-          border-color: #1f2937 !important;
+          background-color: var(--obsidian) !important;
+          border-color: rgba(0, 255, 136, 0.2) !important;
         }
         [data-theme='dark'] [data-ggg-controls] .btn-ctrl {
-          background-color: #111827 !important;
-          color: #e5e7eb !important;
-          border-color: #374151 !important;
+          background-color: var(--obsidian) !important;
+          color: var(--neon-green) !important;
+          border-color: rgba(0, 255, 136, 0.3) !important;
         }
         [data-theme='dark'] [data-ggg-controls] .btn-ctrl:hover {
-          background-color: #1f2937 !important;
+          background-color: rgba(0, 255, 136, 0.1) !important;
+          box-shadow: 0 0 12px rgba(0, 255, 136, 0.3) !important;
+        }
+        
+        /* Badges and pills - neon glow */
+        [data-theme='dark'] [class*='badge'],
+        [data-theme='dark'] .badge {
+          border: 1px solid rgba(0, 212, 255, 0.3) !important;
+          box-shadow: 0 0 8px rgba(0, 212, 255, 0.2) !important;
+        }
+        
+        /* Icons - neon color */
+        [data-theme='dark'] svg {
+          filter: drop-shadow(0 0 2px rgba(0, 255, 136, 0.3));
+        }
+        
+        /* Hover effects with neon glow */
+        [data-theme='dark'] [class*='hover\\:bg-']:hover {
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.2) !important;
         }
       `}</style>
       <style>{`
