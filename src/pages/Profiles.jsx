@@ -3,6 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -17,7 +19,11 @@ import {
   Users,
   Sparkles,
   X,
-  Filter
+  Filter,
+  Grid3X3,
+  Network,
+  Heart,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -27,8 +33,11 @@ import {
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import ProfileDataSlate from '@/components/profiles/ProfileDataSlate';
+import NetworkMapView from '@/components/profiles/NetworkMapView';
+import MiniDatingCard from '@/components/profiles/MiniDatingCard';
 
 const RANK_ORDER = ['guardian', 'ascended', 'oracle', 'sage', 'master', 'practitioner', 'adept', 'initiate', 'seeker'];
+const QUICK_RANKS = ['seeker', 'adept', 'master', 'sage', 'guardian'];
 
 export default function Profiles() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,6 +45,9 @@ export default function Profiles() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [rankFilter, setRankFilter] = useState('all');
   const [regionFilter, setRegionFilter] = useState('all');
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'network' | 'dating'
+  const [rpRange, setRpRange] = useState([0, 10000]);
+  const [skillFilter, setSkillFilter] = useState('');
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ['allProfiles'],
@@ -48,6 +60,76 @@ export default function Profiles() {
     queryFn: () => base44.entities.Region.list(),
     staleTime: 5 * 60 * 1000,
   });
+
+  // Current user for synergy calculation
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: currentProfile } = useQuery({
+    queryKey: ['currentUserProfile', currentUser?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
+      return profiles[0];
+    },
+    enabled: !!currentUser?.email
+  });
+
+  // Fetch dating profiles for dating view
+  const { data: datingProfiles = [] } = useQuery({
+    queryKey: ['datingProfiles'],
+    queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }),
+    enabled: viewMode === 'dating'
+  });
+
+  // Fetch recent missions for expanded cards
+  const { data: missions = [] } = useQuery({
+    queryKey: ['recentMissions'],
+    queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', 50),
+    staleTime: 5 * 60 * 1000
+  });
+
+  // Map missions to participants
+  const missionsByUser = useMemo(() => {
+    const map = {};
+    missions.forEach(m => {
+      (m.participant_ids || []).forEach(uid => {
+        if (!map[uid]) map[uid] = [];
+        map[uid].push(m);
+      });
+    });
+    return map;
+  }, [missions]);
+
+  // Calculate synergy score between current user and another profile
+  const calculateSynergy = (profile) => {
+    if (!currentProfile) return 0;
+    let score = 0;
+    
+    // Shared skills
+    const mySkills = currentProfile.skills || [];
+    const theirSkills = profile.skills || [];
+    const sharedSkills = mySkills.filter(s => theirSkills.includes(s)).length;
+    score += sharedSkills * 10;
+    
+    // Same region
+    if (currentProfile.region && currentProfile.region === profile.region) score += 15;
+    
+    // Complementary intentions
+    const myIntentions = currentProfile.intentions || [];
+    const theirIntentions = profile.intentions || [];
+    const sharedIntentions = myIntentions.filter(i => theirIntentions.includes(i)).length;
+    score += sharedIntentions * 8;
+    
+    // Values alignment
+    const myValues = currentProfile.values_tags || [];
+    const theirValues = profile.values_tags || [];
+    const sharedValues = myValues.filter(v => theirValues.includes(v)).length;
+    score += sharedValues * 5;
+    
+    return Math.min(score, 100);
+  };
 
   // Filter and sort profiles
   const filteredProfiles = useMemo(() => {
@@ -75,6 +157,20 @@ export default function Profiles() {
       result = result.filter((p) => p.region === regionFilter);
     }
 
+    // RP range filter
+    result = result.filter((p) => {
+      const rp = p.rp_points || 0;
+      return rp >= rpRange[0] && rp <= rpRange[1];
+    });
+
+    // Skill filter
+    if (skillFilter.trim()) {
+      const skill = skillFilter.toLowerCase();
+      result = result.filter((p) => 
+        (p.skills || []).some(s => s.toLowerCase().includes(skill))
+      );
+    }
+
     // Sorting
     result.sort((a, b) => {
       switch (sortBy) {
@@ -91,23 +187,56 @@ export default function Profiles() {
           return (b.ggg_balance || 0) - (a.ggg_balance || 0);
         case 'name':
           return (a.display_name || '').localeCompare(b.display_name || '');
+        case 'synergy':
+          return calculateSynergy(b) - calculateSynergy(a);
         default:
           return 0;
       }
     });
 
     return result;
-  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter]);
+  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, currentProfile]);
 
   const activeFilterCount = [
     rankFilter !== 'all' ? 1 : 0,
     regionFilter !== 'all' ? 1 : 0,
+    rpRange[0] > 0 || rpRange[1] < 10000 ? 1 : 0,
+    skillFilter.trim() ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
   const clearFilters = () => {
     setRankFilter('all');
     setRegionFilter('all');
     setSearchQuery('');
+    setRpRange([0, 10000]);
+    setSkillFilter('');
+  };
+
+  const handleTagClick = (tag) => {
+    setSkillFilter(tag);
+    setFiltersOpen(true);
+  };
+
+  const handleNodeClick = (profile) => {
+    document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: profile.user_id } }));
+  };
+
+  const handleDatingLike = (profile) => {
+    console.log('Like:', profile.user_id);
+  };
+
+  const handleDatingPass = (profile) => {
+    console.log('Pass:', profile.user_id);
+  };
+
+  const handleDatingMessage = (profile) => {
+    document.dispatchEvent(new CustomEvent('openFloatingChat', {
+      detail: {
+        recipientId: profile.user_id,
+        recipientName: profile.display_name,
+        recipientAvatar: profile.avatar_url
+      }
+    }));
   };
 
   return (
@@ -151,6 +280,24 @@ export default function Profiles() {
               )}
             </div>
 
+            {/* Quick Rank Toggles */}
+            <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
+              {QUICK_RANKS.map((rank) => (
+                <button
+                  key={rank}
+                  onClick={() => setRankFilter(rankFilter === rank ? 'all' : rank)}
+                  className={cn(
+                    "px-2 py-1 text-[10px] font-medium rounded capitalize transition-colors",
+                    rankFilter === rank 
+                      ? "bg-violet-600 text-white" 
+                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
+                  )}
+                >
+                  {rank}
+                </button>
+              ))}
+            </div>
+
             {/* Sort Dropdown */}
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-44 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
@@ -158,12 +305,49 @@ export default function Profiles() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="rank">Rank (RP)</SelectItem>
+                <SelectItem value="synergy">
+                  <span className="flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-amber-500" />
+                    Synergy
+                  </span>
+                </SelectItem>
                 <SelectItem value="influence">Influence</SelectItem>
                 <SelectItem value="ggg">GGG Balance</SelectItem>
                 <SelectItem value="recent">Recent Activity</SelectItem>
                 <SelectItem value="name">Name A-Z</SelectItem>
               </SelectContent>
             </Select>
+
+            {/* View Mode Toggle */}
+            <div className="flex items-center rounded-xl border border-slate-200 dark:border-[rgba(0,255,136,0.2)] overflow-hidden">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={cn(
+                  "p-2 transition-colors",
+                  viewMode === 'grid' ? "bg-violet-600 text-white" : "bg-slate-50 dark:bg-[#0a0a0a] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                )}
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('network')}
+                className={cn(
+                  "p-2 transition-colors border-x border-slate-200 dark:border-[rgba(0,255,136,0.2)]",
+                  viewMode === 'network' ? "bg-violet-600 text-white" : "bg-slate-50 dark:bg-[#0a0a0a] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                )}
+              >
+                <Network className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('dating')}
+                className={cn(
+                  "p-2 transition-colors",
+                  viewMode === 'dating' ? "bg-rose-500 text-white" : "bg-slate-50 dark:bg-[#0a0a0a] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                )}
+              >
+                <Heart className="w-4 h-4" />
+              </button>
+            </div>
 
             {/* Filter Toggle */}
             <Button
@@ -225,6 +409,35 @@ export default function Profiles() {
                   </Select>
                 </div>
 
+                {/* RP Range Slider */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">RP:</span>
+                  <div className="w-40">
+                    <Slider
+                      value={rpRange}
+                      onValueChange={setRpRange}
+                      min={0}
+                      max={10000}
+                      step={100}
+                      className="w-full"
+                    />
+                  </div>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 min-w-[80px]">
+                    {rpRange[0]}-{rpRange[1]}
+                  </span>
+                </div>
+
+                {/* Skill Filter */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Skill:</span>
+                  <Input
+                    placeholder="e.g. React"
+                    value={skillFilter}
+                    onChange={(e) => setSkillFilter(e.target.value)}
+                    className="w-32 h-9 text-sm"
+                  />
+                </div>
+
                 {activeFilterCount > 0 && (
                   <Button
                     variant="ghost"
@@ -249,7 +462,7 @@ export default function Profiles() {
           </p>
         )}
 
-        {/* Profiles Grid */}
+        {/* Content based on view mode */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -269,10 +482,48 @@ export default function Profiles() {
               Clear All Filters
             </Button>
           </div>
+        ) : viewMode === 'network' ? (
+          <NetworkMapView 
+            profiles={filteredProfiles} 
+            currentUserId={currentUser?.email}
+            onNodeClick={handleNodeClick}
+          />
+        ) : viewMode === 'dating' ? (
+          <div>
+            <div className="flex items-center gap-2 mb-4 p-3 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-950/20 dark:to-pink-950/20 border border-rose-200 dark:border-rose-800/50">
+              <Heart className="w-5 h-5 text-rose-500" />
+              <p className="text-sm text-rose-700 dark:text-rose-300">
+                Showing members who have opted into dating. Connect with intention.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredProfiles
+                .filter(p => datingProfiles.some(dp => dp.user_id === p.user_id))
+                .map((profile) => {
+                  const dp = datingProfiles.find(d => d.user_id === profile.user_id);
+                  return (
+                    <MiniDatingCard
+                      key={profile.id}
+                      profile={profile}
+                      datingProfile={dp}
+                      onLike={handleDatingLike}
+                      onPass={handleDatingPass}
+                      onMessage={handleDatingMessage}
+                      onViewProfile={handleNodeClick}
+                    />
+                  );
+                })}
+            </div>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredProfiles.map((profile) => (
-              <ProfileDataSlate key={profile.id} profile={profile} />
+              <ProfileDataSlate 
+                key={profile.id} 
+                profile={profile} 
+                recentMissions={missionsByUser[profile.user_id]}
+                onTagClick={handleTagClick}
+              />
             ))}
           </div>
         )}
