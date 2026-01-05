@@ -231,9 +231,9 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
     >
       {/* Header */}
       <div className={cn(
-        "flex items-center justify-between px-4 py-3 border-b rounded-t-2xl",
+        "flex items-center justify-between px-4 py-3 border-b rounded-t-2xl shrink-0",
         "border-slate-200 bg-gradient-to-r from-violet-500 to-purple-600",
-        "dark:from-[#0a0a0a] dark:to-[#050505] dark:border-[rgba(0,255,136,0.3)]",
+        "dark:from-[#0a0a0a] dark:to-[#050505] dark:border-[#00ff88]/40",
         "[data-theme='hacker']_&:bg-[#050505] [data-theme='hacker']_&:from-[#050505] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00]"
       )}>
         <div className="flex items-center gap-2">
