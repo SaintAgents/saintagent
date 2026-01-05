@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 
 export default function DatingMatchesPopup({ currentUser }) {
   const [open, setOpen] = useState(false);
@@ -51,13 +52,40 @@ export default function DatingMatchesPopup({ currentUser }) {
 
   const otherProfiles = isDatingOptedIn ? datingProfiles.filter(p => p.user_id !== currentUser?.email) : [];
   
-  // Enrich with user profile data
-  const enrichedMatches = otherProfiles.map(dp => {
+  // Enrich with user profile data and assign unique demo avatars
+  const usedMaleIdx = new Set();
+  const usedFemaleIdx = new Set();
+  
+  const enrichedMatches = otherProfiles.map((dp, idx) => {
     const userProfile = userProfiles.find(up => up.user_id === dp.user_id);
+    let avatar = dp.avatar_url || userProfile?.avatar_url;
+    
+    // Assign unique demo avatar if no real avatar
+    if (!avatar) {
+      const isMale = idx % 2 === 0;
+      if (isMale) {
+        for (let i = 0; i < DEMO_AVATARS_MALE.length; i++) {
+          if (!usedMaleIdx.has(i)) {
+            usedMaleIdx.add(i);
+            avatar = DEMO_AVATARS_MALE[i];
+            break;
+          }
+        }
+      } else {
+        for (let i = 0; i < DEMO_AVATARS_FEMALE.length; i++) {
+          if (!usedFemaleIdx.has(i)) {
+            usedFemaleIdx.add(i);
+            avatar = DEMO_AVATARS_FEMALE[i];
+            break;
+          }
+        }
+      }
+    }
+    
     return {
       ...dp,
       display_name: dp.display_name || userProfile?.display_name || 'Anonymous',
-      avatar_url: dp.avatar_url || userProfile?.avatar_url,
+      avatar_url: avatar,
       location: dp.location || userProfile?.location,
       bio: dp.bio || userProfile?.bio,
       values_tags: userProfile?.values_tags || [],
