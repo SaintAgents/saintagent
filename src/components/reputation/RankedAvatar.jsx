@@ -108,7 +108,8 @@ export default function RankedAvatar({
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
-  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || (showPhotoIcon && galleryImages.length === 0));
+  // Always fetch profile when showPhotoIcon is true to get gallery images
+  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon);
   const { data: fetched = [] } = useQuery({
     queryKey: ['rankedAvatarProfile', userId],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
@@ -116,8 +117,12 @@ export default function RankedAvatar({
   });
   const fetchedProfile = fetched?.[0];
   
-  // Combine gallery images from props or fetched profile
-  const allImages = [src, ...(galleryImages.length > 0 ? galleryImages : (fetchedProfile?.gallery_images || []))].filter(Boolean).slice(0, 5);
+  // Combine gallery images - use fetched profile gallery if available
+  const fetchedGallery = fetchedProfile?.gallery_images || [];
+  const propsGallery = galleryImages || [];
+  const combinedGallery = fetchedGallery.length > 0 ? fetchedGallery : propsGallery;
+  const avatarUrl = src || fetchedProfile?.avatar_url;
+  const allImages = [avatarUrl, ...combinedGallery].filter(Boolean).slice(0, 6);
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
@@ -180,16 +185,19 @@ export default function RankedAvatar({
                     </div>
                   )}
 
-      {/* Photo gallery icon (top-right) */}
-      {showPhotoIcon && allImages.length > 0 && (
+      {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
+      {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setViewerOpen(true);
+            e.preventDefault();
+            if (allImages.length > 0) {
+              setViewerOpen(true);
+            }
           }}
-          className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-md transition-colors"
+          className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-10"
           style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
-          title="View photos"
+          title={`View photos (${allImages.length})`}
         >
           <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
         </button>
