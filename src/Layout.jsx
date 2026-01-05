@@ -267,11 +267,6 @@ const PUBLIC_PAGES = ['InviteLanding', 'Join', 'SignUp', 'Welcome', 'Onboarding'
               }
             }, [currentUser, currentPageName]);
 
-    // If on public page without auth, just render the page (don't wait for user query)
-    if (PUBLIC_PAGES.includes(currentPageName) && currentUser === undefined) {
-      return <div className="min-h-screen bg-slate-50">{children}</div>;
-    }
-
   // If authenticated and onboarding missing or not complete, force Onboarding
   useEffect(() => {
     const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
@@ -285,10 +280,12 @@ const PUBLIC_PAGES = ['InviteLanding', 'Join', 'SignUp', 'Welcome', 'Onboarding'
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
-  // If no user, show minimal shell while redirecting to login
-  if (currentUser === null && PUBLIC_PAGES.includes(currentPageName)) {
+  // If on public page, render without layout chrome (sidebar/topbar)
+  if (PUBLIC_PAGES.includes(currentPageName)) {
     return <div className="min-h-screen bg-slate-50">{children}</div>;
   }
+  
+  // If no user and not public page, show blank while redirecting to login
   if (currentUser === null) {
     return <div className="min-h-screen bg-slate-50" />;
   }
