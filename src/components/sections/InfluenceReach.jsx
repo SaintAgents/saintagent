@@ -7,7 +7,7 @@ export default function InfluenceReach({ profile, onBoost }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end -mt-2 mb-2">
-        <HelpHint content="Influence & Reach tracks your social impact on the platform. Followers are members who follow you, Following is who you follow, and Reach is a calculated score based on your activity and engagement. Boost your reach by spending GGG to amplify your content." />
+        <HelpHint content="Influence & Reach: Your social impact metrics. Followers: Agents tracking your activity. Following: Agents you track. Reach Score: Calculated from engagement, completed missions, meetings, testimonials, and verified actions. Boost: Spend GGG to amplify your content and attract collaborators. Higher reach = more visibility in the Synchronicity Engine and Leader pathways." />
       </div>
       <div className="grid grid-cols-3 gap-3">
         <div className="text-center p-3 rounded-xl bg-slate-50">

@@ -11,7 +11,7 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
     <div>
       <div className="flex items-center justify-between mb-4">
         <AIMatchGenerator profile={profile} />
-        <HelpHint content="The Synchronicity Engine uses AI to find meaningful connections based on your profile, skills, intentions, and spiritual alignment. Matches are refreshed regularly and scored on multiple dimensions including intent alignment, skill complementarity, and timing." />
+        <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment (0-100). Match Types: People, Offers, Missions, Events, Teachers. Complete both 'Skills' and 'Mystical Identity' for optimal matching. AI-generated Conversation Starters help break the ice." />
       </div>
       <Tabs value={matchTab} onValueChange={setMatchTab} className="w-full">
         <TabsList className="w-full grid grid-cols-5 mb-4">

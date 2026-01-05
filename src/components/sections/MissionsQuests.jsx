@@ -8,7 +8,7 @@ export default function MissionsQuests({ missions = [], profile, onAction }) {
   return (
     <div className="space-y-3">
       <div className="flex justify-end -mt-2 mb-2">
-        <HelpHint content="Missions & Quests are collaborative tasks you can join to earn GGG, rank points, and boosts. Platform missions are created by the system, while Circle, Region, and Leader missions come from community members. Mission rewards are capped at $55." />
+        <HelpHint content="Missions: Structured units of work driving real-world impact. Browse & Join: Find by Lane (Food Security, Regenerative Ag, etc.) or Region. Execute Tasks: Complete assigned tasks, submit Evidence (files, links, photos). Verification & Payout: Once Leader verifies evidence, GGG releases from escrow to your wallet. Mission Types: Platform, Circle, Region, Leader. Rewards: GGG, Rank Points, Boost multipliers." />
       </div>
       {missions.length === 0 ? (
         <div className="text-center py-6">

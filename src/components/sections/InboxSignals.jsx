@@ -7,7 +7,7 @@ export default function InboxSignals({ notifications = [] }) {
   return (
     <div className="space-y-3">
       <div className="flex justify-end -mt-2 mb-2">
-        <HelpHint content="Inbox & Signals shows your notifications including match alerts, meeting requests, mission updates, messages, follows, GGG transactions, and rank changes. Click any notification to take action." />
+        <HelpHint content="Inbox & Signals: Your notification center. Types: Match alerts (new synchronicity matches), Meeting requests & confirmations, Mission updates & task completions, Direct messages, New followers, GGG transactions (earnings/spending), Rank progression. Priority levels: Low, Normal, High, Urgent. Click any notification to navigate directly to the relevant action." />
       </div>
       {notifications.length === 0 ? (
         <div className="text-center py-6">

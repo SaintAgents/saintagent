@@ -9,7 +9,7 @@ export default function MarketplaceEarnLearn({ listings = [], onAction }) {
   return (
     <div>
       <div className="flex justify-end mb-2">
-        <HelpHint content="The Marketplace lets you offer your skills and services, request help from others, or browse available offerings. Create listings for mentorship, sessions, courses, or collaboration. Earn GGG by completing bookings." />
+        <HelpHint content="Marketplace: Value Exchange. Offerings: List your skills (Mentorship, Healing, Consulting) for a GGG price. Bookings: Users spend GGG to book your time—the system automatically handles scheduling and payment. Mutual Aid: Listings can be set to 'Free' to support the community without GGG exchange. Create offers to earn GGG, or browse to find services from other agents." />
       </div>
     <Tabs defaultValue="offers" className="w-full">
       <TabsList className="w-full grid grid-cols-3 mb-4">

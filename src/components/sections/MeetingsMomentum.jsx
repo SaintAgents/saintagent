@@ -8,7 +8,7 @@ export default function MeetingsMomentum({ pendingMeetings = [], scheduledMeetin
   return (
     <div className="space-y-3">
       <div className="flex justify-end -mt-2 mb-2">
-        <HelpHint content="Meetings & Connections shows your upcoming and pending meetings. Accept meeting requests, confirm scheduled sessions, and earn GGG for completing meetings. Both parties must confirm completion to receive rewards." />
+        <HelpHint content="Meetings are verified touchpoints that build trust and earn GGG. Request & Accept: Send meeting requests to matches or accept incoming requests. Dual Confirmation: BOTH parties must confirm completion to trigger GGG rewards—this prevents gaming. Meeting Types: Collaboration, Mentorship, Consultation, Casual, Mission-related. Pending = awaiting response, Upcoming = scheduled, Completed = verified by both parties." />
       </div>
       {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ? (
         <div className="text-center py-6">

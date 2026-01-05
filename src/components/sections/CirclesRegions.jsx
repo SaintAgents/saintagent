@@ -7,7 +7,7 @@ export default function CirclesRegions() {
   return (
     <div className="space-y-3">
       <div className="flex justify-end -mt-2 mb-2">
-        <HelpHint content="Circles are interest-based communities you can join to connect with like-minded members. Regions help you find local events, needs, and collaborators in your geographic area. Join circles and explore your region to expand your network." />
+        <HelpHint content="Circles: Interest-based communities for connecting with like-minded agents around shared values, practices, or goals. Regions: Geographic nodes (city, bioregion, country) helping you find local events, needs, and collaborators. Leaders can create Circle or Region-specific missions. Join circles to find your tribe, explore regions to connect locally and access geographically relevant opportunities." />
       </div>
       <Button variant="outline" className="w-full justify-start gap-3 h-12 rounded-xl">
         <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
