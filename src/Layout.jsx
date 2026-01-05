@@ -14,7 +14,18 @@ import { createPageUrl } from '@/utils';
 
 const PUBLIC_PAGES = ['Join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ'];
 
-// Main layout with all the hooks - only used for authenticated pages
+// Main Layout component - check public pages BEFORE any hooks
+function Layout({ children, currentPageName }) {
+  // CRITICAL: Public pages bypass ALL hooks and render immediately
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <>{children}</>;
+  }
+  
+  // Non-public pages use the authenticated layout with hooks
+  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
+}
+
+// Authenticated layout with all the hooks - only used for protected pages
 function AuthenticatedLayout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');

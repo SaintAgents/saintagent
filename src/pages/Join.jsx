@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
 import { 
   Sparkles, 
   DollarSign, 
@@ -46,11 +47,11 @@ const TRUST_FEATURES = [
 
 export default function Join() {
   const handleJoin = () => {
-    window.location.href = createPageUrl('Onboarding');
+    base44.auth.redirectToLogin(createPageUrl('Onboarding'));
   };
 
   const handleSignIn = () => {
-    window.location.href = createPageUrl('Onboarding');
+    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
   };
 
   return (
