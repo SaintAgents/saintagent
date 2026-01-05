@@ -473,59 +473,28 @@ export default function Messages() {
               {currentMessages.map((msg) => {
                 const isOwn = msg.from_user_id === user?.email;
                 return (
-                  <div key={msg.id} className={cn("flex gap-3", isOwn && "flex-row-reverse")}>
-                    <Avatar className="w-8 h-8 cursor-pointer" data-user-id={msg.from_user_id}>
-                      <AvatarImage src={isOwn ? msg.from_avatar : msg.from_avatar} />
-                      <AvatarFallback>{msg.from_name?.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className={cn("max-w-md", isOwn && "flex flex-col items-end")}>
-                      <div className={cn(
-                        "px-4 py-2 rounded-2xl",
-                        isOwn ?
-                        "bg-violet-600 text-white rounded-br-sm" :
-                        "bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] rounded-bl-sm"
-                      )}>
-                        <p className="text-sm dark:text-white">{msg.content}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs text-slate-400 dark:text-slate-500 [data-theme='hacker']_&:text-[#00cc00] mt-1 px-1">
-                          {format(parseISO(msg.created_date), 'MMM d, h:mm a')}
-                        </p>
-                        {isOwn &&
-                        <span className="mt-1 text-xs">
-                            {msg.is_read ?
-                          <CheckCheck className="w-4 h-4 text-emerald-600" /> :
-                          Array.isArray(msg.delivered_for_user_ids) && msg.delivered_for_user_ids.length > 0 ?
-                          <CheckCheck className="w-4 h-4 text-slate-400" /> :
-
-                          <Check className="w-4 h-4 text-slate-400" />
-                          }
-                          </span>
-                        }
-                        {isOwn &&
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 mt-0.5 text-slate-400 hover:text-rose-600"
-                          onClick={() => {
-                            const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
-                            if (!list.includes(user.email)) {
-                              base44.entities.Message.update(msg.id, { deleted_for_user_ids: [...list, user.email] }).then(() => {
-                                queryClient.invalidateQueries({ queryKey: ['messages'] });
-                              });
-                            }
-                          }}
-                          title="Delete for me">
-
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        }
-                      </div>
-                    </div>
-                  </div>);
-
+                  <MessageBubble
+                    key={msg.id}
+                    msg={msg}
+                    isOwn={isOwn}
+                    onDelete={() => {
+                      const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
+                      if (!list.includes(user.email)) {
+                        base44.entities.Message.update(msg.id, { deleted_for_user_ids: [...list, user.email] }).then(() => {
+                          queryClient.invalidateQueries({ queryKey: ['messages'] });
+                        });
+                      }
+                    }}
+                    onImageClick={(url) => setImageViewerUrl(url)}
+                  />
+                );
               })}
             </div>
+
+            {/* Typing Indicator at bottom of messages */}
+            {typingUsers.length > 0 && (
+              <TypingIndicator users={typingUsers} profiles={profiles} />
+            )}
           </ScrollArea>
 
           {/* Input */}
