@@ -66,7 +66,7 @@ export default function JoinPage() {
   };
 
   return (
-    <div className="min-h-screen text-white overflow-hidden relative" style={{ background: `linear-gradient(to bottom, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.9), rgba(46, 16, 101, 0.95)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/dbcd7bf6d_gemini-25-flash-image_make_yes_normal_human_with_blue_iris-0.jpg') center/cover fixed` }}>
+    <div className="min-h-screen text-white overflow-hidden relative" style={{ background: `linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.75), rgba(46, 16, 101, 0.85)), url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/712e7baf8_flux-pro-20_merge_in_cool_way-0.jpg') center/cover fixed` }}>
       {/* Hero Section */}
       <section className="relative px-6 pt-20 pb-24 max-w-6xl mx-auto">
         {/* Background glow */}
