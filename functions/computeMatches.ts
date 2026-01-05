@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 function arr(a) {
   if (!a) return [];
-  if (Array.isArray(a)) return a.filter(Boolean).map(String.toLowerCase);
+  if (Array.isArray(a)) return a.filter(Boolean).map(x => String(x).toLowerCase());
   return [];
 }
 
@@ -14,6 +14,66 @@ function jaccard(a, b) {
   for (const v of A) if (B.has(v)) inter++;
   const uni = new Set([...A, ...B]).size || 1;
   return inter / uni;
+}
+
+// Weighted overlap: how much of A is covered by B
+function coverage(a, b) {
+  const A = new Set(arr(a));
+  const B = new Set(arr(b));
+  if (A.size === 0) return 0;
+  let hits = 0;
+  for (const v of A) if (B.has(v)) hits++;
+  return hits / A.size;
+}
+
+// Skill complementarity: user seeks skills the candidate offers
+function skillMatch(userSeeking, userOffering, candidateSkills, candidateIntentions) {
+  const seekCoverage = coverage(userSeeking, candidateSkills);
+  const offerRelevance = coverage(userOffering, candidateIntentions);
+  return (seekCoverage * 0.7 + offerRelevance * 0.3);
+}
+
+// Intention alignment scoring
+function intentionScore(userIntentions, candidateIntentions) {
+  return jaccard(userIntentions, candidateIntentions);
+}
+
+// Relationship compatibility for dating/connection
+function relationshipScore(me, candidate) {
+  let score = 0;
+  let factors = 0;
+  
+  // Relationship type seeking alignment
+  if (me.relationship_type_seeking?.length && candidate.relationship_type_seeking?.length) {
+    const overlap = jaccard(me.relationship_type_seeking, candidate.relationship_type_seeking);
+    score += overlap;
+    factors++;
+  }
+  
+  // Qualities seeking vs providing match
+  if (me.qualities_seeking?.length && candidate.qualities_providing?.length) {
+    const match = coverage(me.qualities_seeking, candidate.qualities_providing);
+    score += match;
+    factors++;
+  }
+  if (me.qualities_providing?.length && candidate.qualities_seeking?.length) {
+    const match = coverage(candidate.qualities_seeking, me.qualities_providing);
+    score += match;
+    factors++;
+  }
+  
+  // Dating preferences alignment (if both have them)
+  if (me.dating_preferences && candidate.dating_preferences) {
+    const meInterested = arr(me.dating_preferences.interested_in || []);
+    const candInterested = arr(candidate.dating_preferences.interested_in || []);
+    if (meInterested.length && candInterested.length) {
+      // Check mutual interest compatibility (simplified)
+      score += 0.5;
+      factors++;
+    }
+  }
+  
+  return factors > 0 ? score / factors : 0;
 }
 
 function clamp01(x) { return Math.max(0, Math.min(1, x)); }
@@ -49,8 +109,29 @@ Deno.serve(async (req) => {
       .filter(p => (p.profile_visibility || 'public') !== 'private')
       .filter(p => !blocked.includes(p.user_id));
 
+    // Fetch user intentions and desires for enhanced matching
+    let userIntentions = [];
+    let userDesires = [];
+    let userHopes = [];
+    try {
+      const intents = await base44.entities.UserIntention.filter({ user_id: user.email });
+      userIntentions = intents.map(i => i.intention_code);
+      const desires = await base44.entities.UserDesire.filter({ user_id: user.email });
+      userDesires = desires.map(d => d.desire_code);
+      const hopes = await base44.entities.UserHope.filter({ user_id: user.email });
+      userHopes = hopes.map(h => h.hope_code);
+    } catch (_) {}
+
     // Base weights and feedback-driven adjustments
-    let weights = { values: 0.35, practices: 0.25, skills: 0.25, region: 0.1, reputation: 0.05 };
+    let weights = { 
+      values: 0.20, 
+      practices: 0.15, 
+      skills: 0.20, 
+      intentions: 0.15,
+      relationship: 0.10,
+      region: 0.10, 
+      reputation: 0.10 
+    };
 
     try {
       const history = (await base44.entities.Match.filter({ user_id: user.email }, '-updated_date', 300))
@@ -79,48 +160,84 @@ Deno.serve(async (req) => {
     const myValues = arr(me.values_tags);
     const myPractices = arr(me.spiritual_practices);
     const mySkills = arr(me.skills);
+    const myIntentions = arr(me.intentions || userIntentions);
+    const mySeeking = arr(me.qualities_seeking);
+    const myProviding = arr(me.qualities_providing);
     const myRegion = (me.region || '').toLowerCase();
 
     const now = Date.now();
 
     const scored = candidates.map((p) => {
+      // Core alignment scores
       const v = jaccard(myValues, p.values_tags);
       const sp = jaccard(myPractices, p.spiritual_practices);
-      const sk = jaccard(mySkills, p.skills);
+      
+      // Enhanced skill matching - seeking vs offering
+      const candidateSkills = arr(p.skills);
+      const candidateIntentions = arr(p.intentions);
+      const sk = skillMatch(mySeeking, myProviding, candidateSkills, candidateIntentions);
+      const basicSkillOverlap = jaccard(mySkills, candidateSkills);
+      const skillScore = (sk * 0.6 + basicSkillOverlap * 0.4);
+      
+      // Intention alignment
+      const intentAlign = intentionScore(myIntentions, candidateIntentions);
+      
+      // Relationship/connection compatibility
+      const relScore = relationshipScore(me, p);
+      
+      // Region proximity
       const region = myRegion && p.region ? (p.region.toLowerCase() === myRegion ? 1 : 0) : 0;
+      
+      // Reputation/trust
       const rep = clamp01((p.trust_score || 0) / 100);
 
-      const intent_alignment = Math.round(v * 100);
+      // Calculate sub-scores for display
+      const intent_alignment = Math.round((v * 0.5 + intentAlign * 0.5) * 100);
       const spiritual_alignment_score = Math.round(sp * 100);
-      const skill_complementarity = Math.round(sk * 100);
+      const skill_complementarity = Math.round(skillScore * 100);
       const proximity_score = Math.round(region * 100);
+      const trust_score = Math.round(rep * 100);
 
-      let timing_readiness = 40; // default baseline
+      // Timing readiness based on activity
+      let timing_readiness = 40;
       const last = p.last_seen_at ? Date.parse(p.last_seen_at) : 0;
-      if (p.status === 'online') timing_readiness = 85;
+      if (p.status === 'online') timing_readiness = 90;
       else if (last) {
         const hours = (now - last) / 36e5;
-        timing_readiness = hours < 6 ? 80 : hours < 24 ? 60 : 40;
+        timing_readiness = hours < 2 ? 85 : hours < 6 ? 75 : hours < 24 ? 55 : hours < 72 ? 40 : 25;
       }
 
+      // Final weighted score
       const matchScore01 = clamp01(
         weights.values * v +
         weights.practices * sp +
-        weights.skills * sk +
+        weights.skills * skillScore +
+        weights.intentions * intentAlign +
+        weights.relationship * relScore +
         weights.region * region +
         weights.reputation * rep
       );
       const match_score = Math.round(matchScore01 * 100);
 
-      // Conversation starters from overlaps
-      const sharedValues = (arr(p.values_tags).filter(x => myValues.includes(x))).slice(0, 3);
-      const sharedPractices = (arr(p.spiritual_practices).filter(x => myPractices.includes(x))).slice(0, 3);
+      // Generate meaningful conversation starters
+      const sharedValues = arr(p.values_tags).filter(x => myValues.includes(x)).slice(0, 3);
+      const sharedPractices = arr(p.spiritual_practices).filter(x => myPractices.includes(x)).slice(0, 3);
+      const sharedIntentions = candidateIntentions.filter(x => myIntentions.includes(x)).slice(0, 2);
+      const complementarySkills = candidateSkills.filter(x => mySeeking.includes(x)).slice(0, 2);
+      
       const starters = [];
-      if (sharedValues[0]) starters.push(`Shared value: ${sharedValues[0]}`);
-      if (sharedPractices[0]) starters.push(`Both practice: ${sharedPractices[0]}`);
-      if (mySkills[0] && arr(p.skills).includes(mySkills[0])) starters.push(`Similar skill: ${mySkills[0]}`);
+      if (sharedValues[0]) starters.push(`You both value "${sharedValues[0]}" - what does that mean to you?`);
+      if (sharedPractices[0]) starters.push(`I see you practice ${sharedPractices[0]} too! How has your journey been?`);
+      if (sharedIntentions[0]) starters.push(`We share the intention to ${sharedIntentions[0].replace(/_/g, ' ')}. Would love to explore collaboration.`);
+      if (complementarySkills[0]) starters.push(`Your ${complementarySkills[0]} skill could really help with what I'm working on.`);
+      if (starters.length === 0) starters.push(`Your profile resonates with me. I'd love to connect and learn more about your path.`);
 
-      const ai_reasoning = `Weighted blend (values ${Math.round(weights.values*100)}%, practices ${Math.round(weights.practices*100)}%, skills ${Math.round(weights.skills*100)}%, region ${Math.round(weights.region*100)}%, reputation ${Math.round(weights.reputation*100)}%).`;
+      // Build shared arrays for display
+      const shared_values = sharedValues;
+      const complementary_skills = complementarySkills;
+      const spiritual_synergies = sharedPractices;
+
+      const ai_reasoning = `Match based on: values (${Math.round(v*100)}%), practices (${Math.round(sp*100)}%), skills (${Math.round(skillScore*100)}%), intentions (${Math.round(intentAlign*100)}%), relationship fit (${Math.round(relScore*100)}%). ${relScore > 0.5 ? 'Strong relationship compatibility.' : ''} ${intentAlign > 0.5 ? 'Aligned life intentions.' : ''}`;
 
       return {
         target: p,
@@ -131,7 +248,11 @@ Deno.serve(async (req) => {
           skill_complementarity,
           proximity_score,
           timing_readiness,
+          trust_score,
           conversation_starters: starters,
+          shared_values,
+          complementary_skills,
+          spiritual_synergies,
           ai_reasoning,
         }
       };
@@ -159,7 +280,11 @@ Deno.serve(async (req) => {
         skill_complementarity: item.fields.skill_complementarity,
         proximity_score: item.fields.proximity_score,
         timing_readiness: item.fields.timing_readiness,
+        trust_score: item.fields.trust_score,
         conversation_starters: item.fields.conversation_starters,
+        shared_values: item.fields.shared_values,
+        complementary_skills: item.fields.complementary_skills,
+        spiritual_synergies: item.fields.spiritual_synergies,
         ai_reasoning: item.fields.ai_reasoning,
         status: 'active'
       };
