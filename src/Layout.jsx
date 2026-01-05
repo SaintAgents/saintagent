@@ -11,6 +11,7 @@ import FloatingChatWidget from '@/components/FloatingChatWidget';
 import GlobalChatWidget from '@/components/community/GlobalChatWidget';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
 import HelpSupportAgent from '@/components/support/HelpSupportAgent';
+import GlobalPhotoViewer from '@/components/profile/GlobalPhotoViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
@@ -1138,6 +1139,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Help Support Agent */}
       <HelpSupportAgent />
+
+      {/* Global Photo Viewer */}
+      <GlobalPhotoViewer />
 
 
 
