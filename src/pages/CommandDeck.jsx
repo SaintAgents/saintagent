@@ -101,11 +101,16 @@ export default function CommandDeck() {
   const { data: walletRes } = useQuery({
     queryKey: ['wallet', profile?.user_id],
     queryFn: async () => {
-      const { data } = await base44.functions.invoke('walletEngine', {
-        action: 'getWallet',
-        payload: { user_id: profile.user_id }
-      });
-      return data;
+      try {
+        const { data } = await base44.functions.invoke('walletEngine', {
+          action: 'getWallet',
+          payload: { user_id: profile.user_id }
+        });
+        return data;
+      } catch (e) {
+        console.error('Wallet fetch failed:', e);
+        return { wallet: { available_balance: profile?.ggg_balance || 0 } };
+      }
     },
     enabled: !!profile?.user_id,
     refetchInterval: 5000
