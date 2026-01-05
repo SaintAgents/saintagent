@@ -49,7 +49,10 @@ import {
   Share2,
   Maximize2,
   Move,
-  PanelLeft
+  PanelLeft,
+  Zap,
+  Star,
+  Ban
 } from "lucide-react";
 import {
   Tooltip,
