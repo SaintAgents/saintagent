@@ -489,13 +489,13 @@ export default function CommandDeck() {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-slate-900/70 backdrop-blur-sm border border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
             <div 
               className="absolute inset-0 rounded-2xl bg-cover bg-center pointer-events-none"
               style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ba60509ba_Screenshot2026-01-04183952.png)' }}
               data-avatar-bg
             />
-            <div className="absolute inset-0 rounded-2xl pointer-events-none bg-slate-900/60" data-avatar-overlay />
+            <div className="absolute inset-0 rounded-2xl pointer-events-none bg-white/70 dark:bg-gray-900/60" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 <RankedAvatar
@@ -514,7 +514,7 @@ export default function CommandDeck() {
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-white">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                       {profile?.display_name || currentUser?.full_name || 'User'}
                     </h2>
                     <div className="flex items-center gap-1">
@@ -617,22 +617,23 @@ export default function CommandDeck() {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-slate-800/80 text-white mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
+                {/* Stats Bar */}
+                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-amber-400">{walletAvailable?.toLocaleString?.() || "0"}</p>
-                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
+                    <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable?.toLocaleString?.() || "0"}</p>
+                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-violet-400">{rpPoints}</p>
-                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{rpPoints}</p>
+                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-blue-400 mt-0.5">{profile?.follower_count || 0}</p>
-                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-blue-400 mt-0.5">{profile?.follower_count || 0}</p>
+                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-emerald-400 mt-0.5">{profile?.meetings_completed || 0}</p>
-                    <p className="text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-emerald-400 mt-0.5">{profile?.meetings_completed || 0}</p>
+                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
                   </div>
                 </div>
 
