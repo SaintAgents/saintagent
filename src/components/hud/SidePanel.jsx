@@ -71,6 +71,7 @@ export default function SidePanel({
   const [feedPopupOpen, setFeedPopupOpen] = useState(false);
   const [onlinePopupOpen, setOnlinePopupOpen] = useState(false);
   const [usersPopupOpen, setUsersPopupOpen] = useState(false);
+  const [recentJoinsPopupOpen, setRecentJoinsPopupOpen] = useState(false);
 
   // Docking & Dragging
   const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
@@ -359,6 +360,14 @@ export default function SidePanel({
     return counts;
   }, [allUserProfiles]);
 
+  // Recently joined users (last 7 days)
+  const recentJoins = React.useMemo(() => {
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    return allUserProfiles
+      .filter(u => new Date(u.created_date) > sevenDaysAgo)
+      .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+  }, [allUserProfiles]);
+
   // Seed demo data once for Mathues
   React.useEffect(() => {
     (async () => {
@@ -519,6 +528,36 @@ export default function SidePanel({
                   </div>
                 </div>
               </div>
+            </div>
+          </CollapsibleCard>
+
+          <CollapsibleCard title="Recently Joined" icon={Users} badge={recentJoins.length} badgeColor="emerald" onPopout={() => setRecentJoinsPopupOpen(true)}>
+            <div className="space-y-2">
+              {recentJoins.length === 0 ? (
+                <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
+              ) : (
+                recentJoins.slice(0, 5).map((user) => (
+                  <button
+                    key={user.id}
+                    onClick={() => {
+                      const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
+                      document.dispatchEvent(event);
+                    }}
+                    className="w-full flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={user.avatar_url} />
+                      <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xs">
+                        {user.display_name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
+                      <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
+                    </div>
+                  </button>
+                ))
+              )}
             </div>
           </CollapsibleCard>
 
@@ -1052,6 +1091,39 @@ export default function SidePanel({
                   <p className="text-xl font-semibold text-slate-900">{regionCounts['Other']}</p>
                 </div>
               </div>
+            </div>
+          </FloatingPanel>
+          }
+
+      {recentJoinsPopupOpen &&
+          <FloatingPanel title="Recently Joined" onClose={() => setRecentJoinsPopupOpen(false)}>
+            <div className="space-y-2">
+              <p className="text-xs text-slate-500 mb-3">{recentJoins.length} new members in the last 7 days</p>
+              {recentJoins.length === 0 ? (
+                <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
+              ) : (
+                recentJoins.map((user) => (
+                  <button
+                    key={user.id}
+                    onClick={() => {
+                      const event = new CustomEvent('openProfile', { detail: { userId: user.user_id } });
+                      document.dispatchEvent(event);
+                    }}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 transition-colors text-left"
+                  >
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src={user.avatar_url} />
+                      <AvatarFallback className="bg-emerald-100 text-emerald-600 text-sm">
+                        {user.display_name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-900 truncate">{user.display_name}</p>
+                      <p className="text-xs text-slate-500">Joined {format(parseISO(user.created_date), 'MMM d, yyyy')}</p>
+                    </div>
+                  </button>
+                ))
+              )}
             </div>
           </FloatingPanel>
           }
