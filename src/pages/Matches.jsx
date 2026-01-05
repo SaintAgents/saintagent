@@ -27,6 +27,7 @@ import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
 import HelpHint from '@/components/hud/HelpHint';
+import BackButton from '@/components/hud/BackButton';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -129,6 +130,7 @@ export default function Matches() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BackButton />
               <Sparkles className="w-6 h-6 text-emerald-500 dark:text-[#00ff88]" />
               Synchronicity Engine
               {isDatingOptedIn && (

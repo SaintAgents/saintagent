@@ -25,6 +25,7 @@ import {
 import ListingCard from '@/components/hud/ListingCard';
 import CreateListingModal from '@/components/marketplace/CreateListingModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
+import BackButton from '@/components/hud/BackButton';
 
 export default function Marketplace() {
   const [tab, setTab] = useState('browse');
@@ -80,11 +81,12 @@ export default function Marketplace() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BackButton />
               <ShoppingBag className="w-6 h-6 text-emerald-500" />
               Marketplace
             </h1>
-            <p className="text-slate-500 mt-1">Offer your skills, find mentors, and grow together</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Offer your skills, find mentors, and grow together</p>
           </div>
           <div className="flex items-center gap-2">
             <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
