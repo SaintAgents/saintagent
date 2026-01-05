@@ -169,15 +169,15 @@ export default function AffiliateCenter() {
     : 100;
 
   // Show loading state - wait for user and profile to load
-  const isLoading = userLoading || (currentUser && profileLoading);
+  const isLoading = userLoading || (currentUser && profileLoading) || (profile?.handle && codeLoading);
   
   // If still loading, show spinner
   if (isLoading) {
     return (
-      <div className="p-6 flex items-center justify-center">
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-600">Loading...</p>
+          <p className="text-slate-600">Loading affiliate data...</p>
         </div>
       </div>
     );
