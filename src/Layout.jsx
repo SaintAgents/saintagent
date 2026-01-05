@@ -10,6 +10,7 @@ import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 import GlobalChatWidget from '@/components/community/GlobalChatWidget';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
+import HelpSupportAgent from '@/components/support/HelpSupportAgent';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
@@ -567,6 +568,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Side Panel Nudge */}
       <GlobalSidePanelNudge />
+
+      {/* Help Support Agent */}
+      <HelpSupportAgent />
 
 
 
