@@ -27,7 +27,19 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [floatingChat, setFloatingChat] = useState(null);
   const [theme, setTheme] = useState('light');
+  const [bgEffect, setBgEffect] = useState(() => {
+    try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
+  });
   const queryClient = useQueryClient();
+
+  // Listen for background effect changes from Sidebar
+  useEffect(() => {
+    const handleBgEffectChange = (e) => {
+      if (e.detail?.effect) setBgEffect(e.detail.effect);
+    };
+    document.addEventListener('bgEffectChange', handleBgEffectChange);
+    return () => document.removeEventListener('bgEffectChange', handleBgEffectChange);
+  }, []);
 
 
         // Open/close multiple profile drawers (max 6)
