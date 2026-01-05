@@ -10,6 +10,7 @@ import CompatibilityResults from './CompatibilityResults';
 import AIMatchAssistant from './AIMatchAssistant';
 import ProfileBoostCard from './ProfileBoostCard';
 import AdvancedMatchFilters, { DEFAULT_FILTERS } from './AdvancedMatchFilters';
+import AIDiscoverMatches from '@/components/ai/AIDiscoverMatches';
 
 // Default weights - can be overridden by user preferences
 const DEFAULT_WEIGHTS = {
@@ -390,6 +391,9 @@ export default function DatingTab({ profile }) {
     <div className="space-y-6">
       <DatingSettings currentUser={currentUser} />
       
+      {/* AI Discover Section */}
+      <AIDiscoverMatches profile={profile} />
+
       {/* AI Match Assistant & Profile Boost */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
