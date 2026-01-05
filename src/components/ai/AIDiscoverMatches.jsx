@@ -163,9 +163,12 @@ For each, explain the UNIQUE insight that makes them special - something the use
       const enriched = (response.discoveries || []).map(d => {
         const dp = allDatingProfiles.find(p => p.user_id === d.user_id);
         const up = userProfiles.find(u => u.user_id === d.user_id);
+        // Use display_name from UserProfile, fallback to a clean name with "-Demo" suffix
+        const rawName = up?.display_name || d.user_id?.split('@')[0]?.replace(/_/g, ' ') || 'User';
+        const displayName = up?.display_name ? `${up.display_name}-Demo` : rawName;
         return {
           ...d,
-          display_name: up?.display_name || d.user_id?.split('@')[0],
+          display_name: displayName,
           avatar: up?.avatar_url,
           values: dp?.core_values_ranked || [],
           intent: dp?.relationship_intent
@@ -275,10 +278,10 @@ For each, explain the UNIQUE insight that makes them special - something the use
   }
 
   return (
-    <Card className="border-violet-200 bg-gradient-to-br from-violet-50/50 to-purple-50/50">
+    <Card className="border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-slate-800/80 dark:to-slate-900/80">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
             <Lightbulb className="w-5 h-5 text-violet-500" />
             AI Discover
             <Badge variant="outline" className="ml-2 text-xs">Beta</Badge>
@@ -303,7 +306,7 @@ For each, explain the UNIQUE insight that makes them special - something the use
             )}
           </Button>
         </div>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           AI finds hidden compatibilities you might overlook
         </p>
       </CardHeader>
@@ -317,18 +320,18 @@ For each, explain the UNIQUE insight that makes them special - something the use
                 return (
                   <Card 
                     key={idx}
-                    className="w-72 shrink-0 border-slate-200 hover:border-violet-300 transition-all hover:shadow-md cursor-pointer"
+                    className="w-72 shrink-0 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-violet-300 dark:hover:border-violet-500 transition-all hover:shadow-md cursor-pointer"
                   >
                     <CardContent className="p-4 space-y-3">
                       <div className="flex items-start gap-3">
-                        <Avatar className="w-12 h-12 border-2 border-white shadow">
+                        <Avatar className="w-12 h-12 border-2 border-white dark:border-slate-700 shadow">
                           <AvatarImage src={d.avatar} />
-                          <AvatarFallback className="bg-violet-100 text-violet-700">
+                          <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300">
                             {d.display_name?.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 truncate">{d.display_name}</p>
+                          <p className="font-semibold text-slate-900 dark:text-slate-100 truncate">{d.display_name}</p>
                           <Badge className={cn("text-xs", config.bg, config.color, "border-0")}>
                             <Icon className="w-3 h-3 mr-1" />
                             {config.label}
@@ -336,15 +339,15 @@ For each, explain the UNIQUE insight that makes them special - something the use
                         </div>
                       </div>
 
-                      <div className="p-2 rounded-lg bg-slate-50 border">
-                        <p className="text-sm font-medium text-slate-800">{d.headline}</p>
-                        <p className="text-xs text-slate-600 mt-1">{d.insight}</p>
+                      <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-700 border dark:border-slate-600">
+                        <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{d.headline}</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{d.insight}</p>
                       </div>
 
                       {d.conversation_starter && (
-                        <div className="p-2 rounded-lg bg-violet-50 border border-violet-100">
-                          <p className="text-xs text-slate-500 mb-1">💬 Try asking:</p>
-                          <p className="text-sm text-violet-700 italic">"{d.conversation_starter}"</p>
+                        <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-900/30 border border-violet-100 dark:border-violet-800">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">💬 Try asking:</p>
+                          <p className="text-sm text-violet-700 dark:text-violet-300 italic">"{d.conversation_starter}"</p>
                         </div>
                       )}
 
