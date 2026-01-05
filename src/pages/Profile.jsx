@@ -325,7 +325,7 @@ export default function Profile() {
                   status={profile?.status}
                 />
               </div>
-              <div className="flex-1 pb-2">
+              <div className="flex-1 pb-2 mt-8">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{(['mathues','adam','peaceday'].includes((profile?.handle || '').toLowerCase()) ? (profile?.display_name || '') : `${profile?.display_name || ''} (demo)`)}</h1>
                   {profile?.leader_tier === 'verified144k' && (
