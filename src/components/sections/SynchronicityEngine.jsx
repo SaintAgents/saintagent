@@ -14,11 +14,11 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <AIMatchGenerator profile={profile} />
-          <Link to={createPageUrl('Matches')}>
+          <a href={createPageUrl('Matches')}>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50" title="View All Matches">
               <Heart className="w-5 h-5 text-pink-500" />
             </Button>
-          </Link>
+          </a>
         </div>
         <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment (0-100). Match Types: People, Offers, Missions, Events, Teachers. Complete both 'Skills' and 'Mystical Identity' for optimal matching. AI-generated Conversation Starters help break the ice." />
       </div>
@@ -47,12 +47,12 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
             ))
           )}
           {filteredMatches.length > 3 && (
-            <Link to={createPageUrl('Matches')}>
+            <a href={createPageUrl('Matches')}>
               <Button variant="ghost" className="w-full text-violet-600">
                 View all {filteredMatches.length} matches
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
-            </Link>
+            </a>
           )}
         </div>
       </Tabs>

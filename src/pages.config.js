@@ -18,7 +18,6 @@ import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
 import Marketplace from './pages/Marketplace';
 import MatchSettings from './pages/MatchSettings';
-import Matches from './pages/Matches';
 import Meetings from './pages/Meetings';
 import Mentorship from './pages/Mentorship';
 import Messages from './pages/Messages';
@@ -61,7 +60,6 @@ export const PAGES = {
     "ListingDetail": ListingDetail,
     "Marketplace": Marketplace,
     "MatchSettings": MatchSettings,
-    "Matches": Matches,
     "Meetings": Meetings,
     "Mentorship": Mentorship,
     "Messages": Messages,
