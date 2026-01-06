@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,12 @@ import {
   HelpCircle,
   BookOpen,
   Lock,
-  Heart
+  Heart,
+  Users,
+  ShoppingBag,
+  Target,
+  CircleDot,
+  X
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -64,10 +69,12 @@ export default function TopBar({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [helpMode, setHelpMode] = useState(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
   const [isBoostActive, setIsBoostActive] = useState(false);
+  const searchRef = useRef(null);
   
   // Listen for boost activation event
   useEffect(() => {
@@ -100,11 +107,77 @@ export default function TopBar({
     refetchInterval: 5000
   });
 
+  // Search data
+  const { data: searchProfiles = [] } = useQuery({
+    queryKey: ['topbarSearchProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 200),
+    enabled: showResults
+  });
 
+  const { data: searchListings = [] } = useQuery({
+    queryKey: ['topbarSearchListings'],
+    queryFn: () => base44.entities.Listing.list('-created_date', 50),
+    enabled: showResults
+  });
+
+  const { data: searchMissions = [] } = useQuery({
+    queryKey: ['topbarSearchMissions'],
+    queryFn: () => base44.entities.Mission.list('-created_date', 50),
+    enabled: showResults
+  });
+
+  const { data: searchCircles = [] } = useQuery({
+    queryKey: ['topbarSearchCircles'],
+    queryFn: () => base44.entities.Circle.list('-created_date', 50),
+    enabled: showResults
+  });
+
+  // Filter results based on query
+  const filterResults = (items, fields) => {
+    if (!searchQuery.trim()) return [];
+    const term = searchQuery.toLowerCase().trim().replace(/^@/, '');
+    return items.filter(item => 
+      fields.some(f => item[f] && String(item[f]).toLowerCase().includes(term))
+    ).slice(0, 5);
+  };
+
+  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name', 'bio']);
+  const filteredListings = filterResults(searchListings, ['title', 'description']);
+  const filteredMissions = filterResults(searchMissions, ['title', 'objective']);
+  const filteredCircles = filterResults(searchCircles, ['name', 'description']);
+
+  const totalResults = filteredProfiles.length + filteredListings.length + filteredMissions.length + filteredCircles.length;
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleResultClick = (type, item) => {
+    setShowResults(false);
+    setSearchQuery('');
+    if (type === 'profile') {
+      window.location.href = createPageUrl('Profile') + `?id=${item.user_id}`;
+    } else if (type === 'listing') {
+      window.location.href = createPageUrl('ListingDetail') + `?id=${item.id}`;
+    } else if (type === 'mission') {
+      window.location.href = createPageUrl('MissionDetail') + `?id=${item.id}`;
+    } else if (type === 'circle') {
+      window.location.href = createPageUrl('Circles') + `?id=${item.id}`;
+    }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    onSearch?.(searchQuery);
+    if (searchQuery.trim()) {
+      setShowResults(true);
+    }
   };
 
   return (
@@ -157,22 +230,133 @@ export default function TopBar({
       />
 
       {/* Search */}
-      <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto" data-no-top>
-        <div className={cn(
-          "relative transition-all duration-300",
-          searchFocused && "scale-[1.02]"
-        )}>
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input
-            placeholder="Search people, offers, missions, events..."
-            className="w-full pl-10 h-10 bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-          />
-        </div>
-      </form>
+      <div ref={searchRef} className="flex-1 max-w-xl mx-auto relative" data-no-top>
+        <form onSubmit={handleSearch}>
+          <div className={cn(
+            "relative transition-all duration-300",
+            searchFocused && "scale-[1.02]"
+          )}>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              placeholder="Search people, offers, missions..."
+              className="w-full pl-10 pr-10 h-10 bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (e.target.value.trim()) setShowResults(true);
+              }}
+              onFocus={() => {
+                setSearchFocused(true);
+                if (searchQuery.trim()) setShowResults(true);
+              }}
+              onBlur={() => setSearchFocused(false)}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => { setSearchQuery(''); setShowResults(false); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </form>
+
+        {/* Inline Results Dropdown */}
+        {showResults && searchQuery.trim() && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 z-50 max-h-96 overflow-y-auto">
+            {totalResults === 0 ? (
+              <div className="p-6 text-center text-slate-500">
+                <Search className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                <p>No results found for "{searchQuery}"</p>
+              </div>
+            ) : (
+              <div className="py-2">
+                {filteredProfiles.length > 0 && (
+                  <div>
+                    <p className="px-3 py-1 text-xs font-semibold text-slate-500 uppercase">People</p>
+                    {filteredProfiles.map(p => (
+                      <button
+                        key={p.id}
+                        onClick={() => handleResultClick('profile', p)}
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 text-left"
+                      >
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={p.avatar_url} />
+                          <AvatarFallback>{p.display_name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 truncate">{p.display_name}</p>
+                          <p className="text-xs text-slate-500 truncate">@{p.handle}</p>
+                        </div>
+                        <Users className="w-4 h-4 text-slate-400" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {filteredListings.length > 0 && (
+                  <div>
+                    <p className="px-3 py-1 text-xs font-semibold text-slate-500 uppercase mt-2">Offers</p>
+                    {filteredListings.map(l => (
+                      <button
+                        key={l.id}
+                        onClick={() => handleResultClick('listing', l)}
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 text-left"
+                      >
+                        <ShoppingBag className="w-8 h-8 p-1.5 rounded-lg bg-emerald-100 text-emerald-600" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 truncate">{l.title}</p>
+                          <p className="text-xs text-slate-500">{l.is_free ? 'Free' : `$${l.price_amount}`}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {filteredMissions.length > 0 && (
+                  <div>
+                    <p className="px-3 py-1 text-xs font-semibold text-slate-500 uppercase mt-2">Missions</p>
+                    {filteredMissions.map(m => (
+                      <button
+                        key={m.id}
+                        onClick={() => handleResultClick('mission', m)}
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 text-left"
+                      >
+                        <Target className="w-8 h-8 p-1.5 rounded-lg bg-amber-100 text-amber-600" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 truncate">{m.title}</p>
+                          <p className="text-xs text-slate-500">{m.participant_count || 0} joined</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {filteredCircles.length > 0 && (
+                  <div>
+                    <p className="px-3 py-1 text-xs font-semibold text-slate-500 uppercase mt-2">Circles</p>
+                    {filteredCircles.map(c => (
+                      <button
+                        key={c.id}
+                        onClick={() => handleResultClick('circle', c)}
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 text-left"
+                      >
+                        <CircleDot className="w-8 h-8 p-1.5 rounded-lg bg-blue-100 text-blue-600" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 truncate">{c.name}</p>
+                          <p className="text-xs text-slate-500">{c.member_count || 0} members</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Actions */}
       <div className="flex items-center gap-2" data-no-top>
