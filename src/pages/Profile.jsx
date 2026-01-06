@@ -598,37 +598,34 @@ export default function Profile() {
               <CardHeader className="dark:bg-[#050505]">
                 <CardTitle className="flex items-center justify-between dark:!text-white">
                   <span>Intentions</span>
-                  {!editingIntentions && isOwnProfile ?
+                  {isOwnProfile && (
+                    !editingIntentions ?
                       <Button
                         variant="ghost"
                         size="sm"
                         className="text-violet-600"
                         onClick={handleIntentionsEdit}>
-
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
-                    </Button> : isOwnProfile ?
-
-                      <div className="flex gap-2">
-                      <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setEditingIntentions(false)}>
-
-                        <X className="w-4 h-4 mr-1" />
-                        Cancel
-                      </Button>
-                      <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-violet-600"
-                          onClick={handleIntentionsSave}>
-
-                        <Save className="w-4 h-4 mr-1" />
-                        Save
-                      </Button>
-                    </div>
-                      }
+                    </Button> :
+                        <div className="flex gap-2">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditingIntentions(false)}>
+                          <X className="w-4 h-4 mr-1" />
+                          Cancel
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-violet-600"
+                            onClick={handleIntentionsSave}>
+                          <Save className="w-4 h-4 mr-1" />
+                          Save
+                        </Button>
+                      </div>
+                  )}
                 </CardTitle>
               </CardHeader>
 <CardContent className="dark:bg-[#050505]">
