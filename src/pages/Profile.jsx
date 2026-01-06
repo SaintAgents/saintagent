@@ -63,6 +63,8 @@ import Step7Dating from '@/components/onboarding/Step7Dating';
 import ProfileMetrics from '@/components/profile/ProfileMetrics';
 import QuickBoostButton from '@/components/boost/QuickBoostButton';
 import BoostStatusBadge from '@/components/boost/BoostStatusBadge';
+import CreatorMonetizationTab from '@/components/creator/CreatorMonetizationTab';
+import TipButton from '@/components/creator/TipButton';
 import { createPageUrl } from '@/utils';
 
 export default function Profile() {
@@ -397,29 +399,38 @@ export default function Profile() {
                 </div>
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
-              {isOwnProfile && (
-                                    <div className="flex items-center gap-2">
-                                      <BoostStatusBadge userId={profile?.user_id} />
-                                      <QuickBoostButton size="sm" variant="outline" />
-                                      <Button
-                                        variant="outline"
-                                        className="rounded-xl gap-2"
-                                        onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
+              {isOwnProfile ? (
+                                        <div className="flex items-center gap-2">
+                                          <BoostStatusBadge userId={profile?.user_id} />
+                                          <QuickBoostButton size="sm" variant="outline" />
+                                          <Button
+                                            variant="outline"
+                                            className="rounded-xl gap-2"
+                                            onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
 
-                                        {isEditing ?
-                                        <>
-                                            <X className="w-4 h-4" />
-                                            Cancel
-                                          </> :
+                                            {isEditing ?
+                                            <>
+                                                <X className="w-4 h-4" />
+                                                Cancel
+                                              </> :
 
-                                        <>
-                                            <Edit className="w-4 h-4" />
-                                            Edit Profile
-                                          </>
-                                        }
-                                      </Button>
-                                    </div>
-                                  )}
+                                            <>
+                                                <Edit className="w-4 h-4" />
+                                                Edit Profile
+                                              </>
+                                            }
+                                          </Button>
+                                        </div>
+                                      ) : (
+                                        <div className="flex items-center gap-2">
+                                          <TipButton 
+                                            toUserId={profile?.user_id} 
+                                            toUserName={profile?.display_name}
+                                            contextType="profile"
+                                            contextId={profile?.id}
+                                          />
+                                        </div>
+                                      )}
             </div>
           </CardContent>
         </Card>
@@ -459,13 +470,19 @@ export default function Profile() {
                 <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
               )}
             </TabsTrigger>
+            {isOwnProfile && (
+              <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Monetization</span>
+                <Coins className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            )}
             {showDatingTab && (
               <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Dating</span>
                 <Heart className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             )}
-          </TabsList>
+            </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1077,7 +1094,14 @@ export default function Profile() {
             </Card>
           </TabsContent>
 
-           <TabsContent value="friends" className="space-y-6">
+           {/* Monetization Tab */}
+           {isOwnProfile && (
+             <TabsContent value="monetization" className="space-y-6">
+               <CreatorMonetizationTab profile={profile} />
+             </TabsContent>
+           )}
+
+            <TabsContent value="friends" className="space-y-6">
             {/* Followers - People who follow you */}
             <Card>
               <CardHeader>
