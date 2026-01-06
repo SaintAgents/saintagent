@@ -23,7 +23,7 @@ import {
   Home,
   GripHorizontal } from
 "lucide-react";
-import { Link } from 'react-router-dom';
+
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 import PhotoViewer from '@/components/profile/PhotoViewer';
@@ -201,7 +201,7 @@ export default function DatingMatchesPopup({ currentUser }) {
     let avatar = dp.avatar_url || userProfile?.avatar_url;
 
     // Assign unique demo avatar based on their ACTUAL gender, not arbitrary alternation
-    if (!avatar) {
+    if (!avatar || avatar.includes('undefined') || avatar.includes('null')) {
       const isMale = dp.gender === 'man';
       const isFemale = dp.gender === 'woman';
       if (isMale) {
@@ -212,6 +212,7 @@ export default function DatingMatchesPopup({ currentUser }) {
             break;
           }
         }
+        if (!avatar) avatar = DEMO_AVATARS_MALE[idx % DEMO_AVATARS_MALE.length];
       } else if (isFemale) {
         for (let i = 0; i < DEMO_AVATARS_FEMALE.length; i++) {
           if (!usedFemaleIdx.has(i)) {
@@ -220,6 +221,7 @@ export default function DatingMatchesPopup({ currentUser }) {
             break;
           }
         }
+        if (!avatar) avatar = DEMO_AVATARS_FEMALE[idx % DEMO_AVATARS_FEMALE.length];
       } else {
         // Non-binary or other - pick from either pool
         avatar = idx % 2 === 0 ? DEMO_AVATARS_MALE[idx % DEMO_AVATARS_MALE.length] : DEMO_AVATARS_FEMALE[idx % DEMO_AVATARS_FEMALE.length];
@@ -372,11 +374,11 @@ export default function DatingMatchesPopup({ currentUser }) {
               <h3 className="text-slate-50 font-semibold dark:text-slate-100">Dating Matches</h3>
             </div>
             <div className="flex items-center gap-1">
-              <Link to={createPageUrl('Matches') + '?tab=dating'} onClick={() => setOpen(false)}>
+              <a href={createPageUrl('DatingMatches')} onClick={() => setOpen(false)}>
                 <Button variant="ghost" size="sm" className="text-xs h-7 text-pink-400 hover:text-pink-300">
                   View All
                 </Button>
-              </Link>
+              </a>
               <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => setOpen(false)}>
                 <X className="w-4 h-4" />
               </Button>
