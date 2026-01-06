@@ -536,7 +536,7 @@ export default function Profile() {
                   </> :
 
                     <>
-                    <p className="text-slate-800 dark:!text-[#e8e8e8] font-medium">{profile?.bio || 'No bio yet'}</p>
+                          <p className="text-slate-700 font-medium">{profile?.bio || 'No bio yet'}</p>
                     <div className="flex flex-wrap gap-4 text-sm text-slate-500 dark:!text-[#b8b8b8]">
                       {profile?.region &&
                         <span className="flex items-center gap-1">
