@@ -10,7 +10,6 @@ import {
   Sparkles,
   Loader2,
   RefreshCw,
-  Heart,
   MessageCircle,
   Star,
   Lightbulb,
@@ -18,10 +17,10 @@ import {
   ChevronRight,
   Zap,
   X,
-  GripHorizontal } from
+  GripHorizontal,
+  Heart } from
 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 
