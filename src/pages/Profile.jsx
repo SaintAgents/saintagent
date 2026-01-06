@@ -759,15 +759,16 @@ export default function Profile() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Skills</span>
-                  <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-violet-600"
-                        onClick={() => setSkillsPickerOpen(true)}>
-
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Skills
-                  </Button>
+                  {isOwnProfile && (
+                    <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-violet-600"
+                          onClick={() => setSkillsPickerOpen(true)}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add Skills
+                    </Button>
+                  )}
                   </CardTitle>
                   </CardHeader>
                   <CardContent>
