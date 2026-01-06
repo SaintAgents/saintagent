@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function PhotoViewer({ open, images = [], startIndex = 0, onClose }) {
   const [idx, setIdx] = useState(startIndex || 0);
 
+  const safeLen = Math.max(1, images?.length || 1);
+  const next = useCallback(() => setIdx((i) => (i + 1) % safeLen), [safeLen]);
+  const prev = useCallback(() => setIdx((i) => (i - 1 + safeLen) % safeLen), [safeLen]);
+
   useEffect(() => { setIdx(startIndex || 0); }, [startIndex, open]);
 
   useEffect(() => {
+    if (!open) return;
     const onKey = (e) => {
-      if (!open) return;
       if (e.key === 'Escape') onClose?.();
       if (e.key === 'ArrowRight') next();
       if (e.key === 'ArrowLeft') prev();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, idx, images.length]);
+  }, [open, next, prev, onClose]);
 
   if (!open) return null;
   const has = images && images.length > 0;
-  const src = has ? images[idx % images.length] : null;
-
-  const next = () => setIdx((i) => (i + 1) % Math.max(1, images.length));
-  const prev = () => setIdx((i) => (i - 1 + Math.max(1, images.length)) % Math.max(1, images.length));
+  const src = has ? images[idx % safeLen] : null;
 
   return (
     <div className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center">
