@@ -106,9 +106,6 @@ export default function Matches() {
     } else if (action === 'decline') {
       await base44.entities.Match.update(match.id, { status: 'declined' });
       refetch();
-    } else if (action === 'analyze') {
-      setSelectedMatchForAI(match);
-      setAiAssistantOpen(true);
     }
   };
 
@@ -154,6 +151,14 @@ export default function Matches() {
             <p className="text-slate-500 dark:text-emerald-400/70 mt-1">AI-powered matches based on values, skills, and intentions</p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              className="bg-violet-50 text-violet-700 border-violet-300 hover:bg-violet-100 dark:bg-violet-900/20 dark:text-violet-400 dark:border-violet-500/50 dark:hover:bg-violet-900/40 px-4 py-2 text-sm font-medium rounded-xl transition-all h-9 gap-2"
+              onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
+            >
+              <Sparkles className="w-4 h-4" />
+              AI Assistant
+            </Button>
             <AIMatchGenerator profile={profile} />
             <Button
               variant="outline"
@@ -302,22 +307,14 @@ export default function Matches() {
           <MatchCard
             key={match.id}
             match={match}
-            onAction={handleAction} />
-
+            onAction={handleAction}
+            onAskAI={(m) => { setSelectedMatchForAI(m); setAiAssistantOpen(true); }}
+          />
           )}
           </div>
           }
           </>
           )}
-
-          {/* Floating AI Assistant Button */}
-          <button
-            onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
-            className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-rose-500 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center z-40"
-            title="AI Match Assistant"
-          >
-            <Sparkles className="w-6 h-6" />
-          </button>
 
           {/* AI Match Assistant Modal */}
           <AIMatchAssistant
