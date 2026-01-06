@@ -15,9 +15,11 @@ import {
   ChevronUp,
   TrendingUp,
   AlertTriangle,
-  MessageCircle
+  MessageCircle,
+  User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { createPageUrl } from '@/utils';
 
 function PredictionGauge({ prediction }) {
   const circumference = 2 * Math.PI * 40;
@@ -279,6 +281,17 @@ export default function CompatibilityResults({ results, onSave, onDismiss, onUns
                 </Button>
                 
                 <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      window.location.href = createPageUrl('Profile') + `?id=${r.user_id}`;
+                    }}
+                  >
+                    <User className="w-4 h-4 mr-1" />
+                    View Profile
+                  </Button>
+                  
                   <Button
                     variant="outline"
                     size="sm"
