@@ -107,7 +107,26 @@ export default function Profile() {
     },
     enabled: !!targetUserId
   });
-  const profile = profiles?.[0];
+  
+  // Also fetch dating profile for the target user (for demo profiles that may not have UserProfile)
+  const { data: datingProfiles } = useQuery({
+    queryKey: ['datingProfile', targetUserId],
+    queryFn: () => base44.entities.DatingProfile.filter({ user_id: targetUserId }, '-updated_date', 1),
+    enabled: !!targetUserId && !!viewingUserId
+  });
+  const datingProfile = datingProfiles?.[0];
+  
+  // Build profile from UserProfile, or fall back to DatingProfile for demo profiles
+  const rawProfile = profiles?.[0];
+  const profile = rawProfile || (datingProfile ? {
+    user_id: datingProfile.user_id,
+    display_name: datingProfile.display_name,
+    avatar_url: datingProfile.avatar_url,
+    bio: datingProfile.bio,
+    location: datingProfile.location,
+    region: datingProfile.location,
+    is_demo_dating_profile: true
+  } : null);
 
   const [datingData, setDatingData] = useState(null);
   const showDatingTab = !!(profile && (
