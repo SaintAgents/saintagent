@@ -167,7 +167,8 @@ export default function DatingMatches() {
   };
 
   const openProfile = (userId) => {
-    document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
+    // Navigate to profile page with user id
+    window.location.href = createPageUrl('Profile') + '?id=' + userId;
   };
 
   return (
