@@ -46,13 +46,13 @@ export default function Messages() {
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages'],
     queryFn: () => base44.entities.Message.list('-created_date', 200),
-    refetchInterval: 10000
+    refetchInterval: 3000 // Poll every 3s for near real-time updates
   });
 
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations'],
     queryFn: () => base44.entities.Conversation.list('-updated_date', 100),
-    refetchInterval: 15000
+    refetchInterval: 5000 // Poll every 5s for conversation updates
   });
 
   const { data: profiles = [] } = useQuery({
@@ -156,7 +156,7 @@ export default function Messages() {
     queryKey: ['typing', selectedConversation?.id],
     queryFn: () => base44.entities.TypingStatus.filter({ conversation_id: selectedConversation.id, is_typing: true }),
     enabled: !!selectedConversation?.id,
-    refetchInterval: 5000
+    refetchInterval: 2000 // Poll every 2s for typing indicators
   });
   const typingUsers = React.useMemo(() => {
     const now = Date.now();
