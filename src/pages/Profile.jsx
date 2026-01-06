@@ -739,14 +739,15 @@ export default function Profile() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Badges</span>
-                  <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-violet-600"
-                        onClick={() => setBadgeGlossaryOpen(true)}>
-
-                    View Glossary
-                  </Button>
+                  {isOwnProfile && (
+                    <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-violet-600"
+                          onClick={() => setBadgeGlossaryOpen(true)}>
+                      View Glossary
+                    </Button>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
