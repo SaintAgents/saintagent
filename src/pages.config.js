@@ -5,6 +5,7 @@ import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import DailyOps from './pages/DailyOps';
+import DatingMatches from './pages/DatingMatches';
 import EvaluationDocs from './pages/EvaluationDocs';
 import EvaluationSpec from './pages/EvaluationSpec';
 import EventDetail from './pages/EventDetail';
@@ -36,7 +37,7 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import DatingMatches from './pages/DatingMatches';
+import Matches from './pages/Matches';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +49,7 @@ export const PAGES = {
     "Circles": Circles,
     "CommandDeck": CommandDeck,
     "DailyOps": DailyOps,
+    "DatingMatches": DatingMatches,
     "EvaluationDocs": EvaluationDocs,
     "EvaluationSpec": EvaluationSpec,
     "EventDetail": EventDetail,
@@ -79,7 +81,7 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "DatingMatches": DatingMatches,
+    "Matches": Matches,
 }
 
 export const pagesConfig = {
