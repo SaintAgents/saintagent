@@ -298,7 +298,7 @@ export default function CompatibilityResults({ results, onSave, onDismiss, onUns
                     size="sm"
                     className="bg-violet-600 hover:bg-violet-700 text-white"
                     onClick={() => {
-                      window.dispatchEvent(new CustomEvent('openFloatingChat', {
+                      document.dispatchEvent(new CustomEvent('openFloatingChat', {
                         detail: {
                           recipientId: r.user_id,
                           recipientName: r.display_name,

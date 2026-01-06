@@ -83,15 +83,18 @@ export default function MiniProfile({
   };
 
   // Determine if we should show the hero layout (larger sizes)
-  const showHeroLayout = size >= 48;
-  const heroHeight = Math.max(40, Math.round(size * 0.8));
+  const showHeroLayout = size >= 64;
+  const heroHeight = Math.max(32, Math.round(size * 0.5));
   const heroImage = profile?.hero_image_url;
+  
+  // Make avatar bigger - minimum 56px for activity feed items
+  const actualSize = Math.max(56, size);
 
   return (
     <div className={cn('min-w-0', className)} data-user-id={userId}>
       {showHeroLayout ? (
         <div className="relative">
-          {/* Mini Hero Banner */}
+          {/* Mini Hero Banner - smaller */}
           <div 
             className="w-full rounded-t-lg overflow-hidden bg-gradient-to-r from-violet-500 to-purple-600"
             style={{ height: heroHeight }}
@@ -105,13 +108,13 @@ export default function MiniProfile({
             )}
           </div>
           
-          {/* Avatar overlapping hero */}
-          <div className="flex items-end gap-3 px-2" style={{ marginTop: -size / 2 }}>
+          {/* Avatar and info side by side, avatar at top where data starts */}
+          <div className="flex items-start gap-4 px-3 pt-3">
             <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
               <RankedAvatar
                 src={avatar || profile?.avatar_url}
                 name={displayName}
-                size={size}
+                size={actualSize}
                 userId={userId}
                 status={profile?.status}
                 leaderTier={profile?.leader_tier}
@@ -123,14 +126,33 @@ export default function MiniProfile({
             </div>
             
             {(showName || showHandle) && (
-              <div className="min-w-0 pb-1">
+              <div className="min-w-0 flex-1 pt-1">
                 {showName && (
                   <div className="flex items-center gap-1 min-w-0">
-                    <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{displayName}</div>
+                    <div className="text-base font-semibold text-slate-900 dark:text-white truncate">{displayName}</div>
+                    {showHelpHint && (
+                      <HelpHint
+                        side="right"
+                        align="start"
+                        className="ml-0.5"
+                        size={16}
+                        content={
+                          <div className="max-w-xs">
+                            <div className="text-sm font-semibold text-slate-800 mb-1">Avatar Indicators</div>
+                            <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
+                              <li><strong>Rank Ring</strong>: outer ring showing rank</li>
+                              <li><strong>Rank Sigil</strong>: symbol at top-left</li>
+                              <li><strong>Status Dot</strong>: online/focus/dnd</li>
+                              <li><strong>Leader Badge</strong>: verified 144k sparkle</li>
+                            </ul>
+                          </div>
+                        }
+                      />
+                    )}
                   </div>
                 )}
                 {showHandle && (handle || sa) && (
-                  <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
                     {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
                   </div>
                 )}
@@ -139,12 +161,12 @@ export default function MiniProfile({
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-2">
-          <div className="relative cursor-pointer" onClick={handleAvatarClick}>
+        <div className="flex items-start gap-3">
+          <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
             <RankedAvatar
               src={avatar || profile?.avatar_url}
               name={displayName}
-              size={size}
+              size={actualSize}
               userId={userId}
               status={profile?.status}
               leaderTier={profile?.leader_tier}
