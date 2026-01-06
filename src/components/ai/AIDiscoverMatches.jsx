@@ -369,11 +369,11 @@ For each, explain the UNIQUE insight that makes them special - something the use
                   </div>);
 
             })}
-              <Link to={createPageUrl('Matches') + '?tab=dating'}>
+              <a href={createPageUrl('Matches') + '?tab=dating'}>
                 <Button variant="ghost" size="sm" className="w-full text-xs gap-1">
                   View all <ChevronRight className="w-3 h-3" />
                 </Button>
-              </Link>
+              </a>
             </div> :
 
           <Button
