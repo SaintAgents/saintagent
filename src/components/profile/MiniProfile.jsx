@@ -82,24 +82,80 @@ export default function MiniProfile({
     }
   };
 
+  // Determine if we should show the hero layout (larger sizes)
+  const showHeroLayout = size >= 48;
+  const heroHeight = Math.max(40, Math.round(size * 0.8));
+  const heroImage = profile?.hero_image_url;
+
   return (
-    <div className={cn('flex items-center gap-2 min-w-0', className)} data-user-id={userId}>
-      <div className="relative cursor-pointer" onClick={handleAvatarClick}>
-        <RankedAvatar
-          src={avatar || profile?.avatar_url}
-          name={displayName}
-          size={size}
-          userId={userId}
-          status={profile?.status}
-          leaderTier={profile?.leader_tier}
-          rpRankCode={profile?.rp_rank_code}
-          rpPoints={profile?.rp_points}
-          showPhotoIcon={true}
-          galleryImages={profile?.gallery_images || []}
-        />
-      </div>
-      {(showName || showHandle) &&
-      <div className="min-w-0">
+    <div className={cn('min-w-0', className)} data-user-id={userId}>
+      {showHeroLayout ? (
+        <div className="relative">
+          {/* Mini Hero Banner */}
+          <div 
+            className="w-full rounded-t-lg overflow-hidden bg-gradient-to-r from-violet-500 to-purple-600"
+            style={{ height: heroHeight }}
+          >
+            {heroImage && (
+              <img 
+                src={heroImage} 
+                alt="" 
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
+          
+          {/* Avatar overlapping hero */}
+          <div className="flex items-end gap-3 px-2" style={{ marginTop: -size / 2 }}>
+            <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
+              <RankedAvatar
+                src={avatar || profile?.avatar_url}
+                name={displayName}
+                size={size}
+                userId={userId}
+                status={profile?.status}
+                leaderTier={profile?.leader_tier}
+                rpRankCode={profile?.rp_rank_code}
+                rpPoints={profile?.rp_points}
+                showPhotoIcon={true}
+                galleryImages={profile?.gallery_images || []}
+              />
+            </div>
+            
+            {(showName || showHandle) && (
+              <div className="min-w-0 pb-1">
+                {showName && (
+                  <div className="flex items-center gap-1 min-w-0">
+                    <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{displayName}</div>
+                  </div>
+                )}
+                {showHandle && (handle || sa) && (
+                  <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <div className="relative cursor-pointer" onClick={handleAvatarClick}>
+            <RankedAvatar
+              src={avatar || profile?.avatar_url}
+              name={displayName}
+              size={size}
+              userId={userId}
+              status={profile?.status}
+              leaderTier={profile?.leader_tier}
+              rpRankCode={profile?.rp_rank_code}
+              rpPoints={profile?.rp_points}
+              showPhotoIcon={true}
+              galleryImages={profile?.gallery_images || []}
+            />
+          </div>
+          {(showName || showHandle) && (
+            <div className="min-w-0">
           {showName &&
           <div className="flex items-center gap-1 min-w-0">
               <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
