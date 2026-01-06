@@ -45,8 +45,8 @@ import {
   Heart,
   Compass,
   BadgeCheck,
-  MessageSquare } from
-  "lucide-react";
+  MessageSquare
+} from "lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
