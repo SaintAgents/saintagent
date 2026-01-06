@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import VideoMeetingModal from '@/components/VideoMeetingModal';
 import BoostModal from '@/components/BoostModal';
+import ProfileBoostModal from '@/components/boost/ProfileBoostModal';
+import QuickBoostButton from '@/components/boost/QuickBoostButton';
 import TuneEngineModal from '@/components/TuneEngineModal';
 import OnlineUsersModal from '@/components/OnlineUsersModal';
 import { cn } from "@/lib/utils";
@@ -1140,10 +1142,8 @@ export default function CommandDeck() {
                                       <Flame className="w-5 h-5 text-amber-500" />
                                       <span className="text-yellow-400 font-medium">Boost Your Reach</span>
                                     </div>
-                                    <p className="text-sm text-slate-600 mb-3">Spend GGG to amplify your content and attract more followers.</p>
-                                    <Button className="w-full rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => setBoostTarget({ type: 'profile', id: profile?.user_id })}>
-                                      <Zap className="w-4 h-4 mr-2" />Boost Now
-                                    </Button>
+                                    <p className="text-sm text-slate-600 mb-3">Spend GGG to amplify your profile and attract more matches.</p>
+                                    <QuickBoostButton className="w-full" />
                                   </div>
                                 </div>
                               </CollapsibleCard>
