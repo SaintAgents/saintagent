@@ -28,6 +28,7 @@ import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
+import AIMatchAssistant from '@/components/dating/AIMatchAssistant';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -37,6 +38,8 @@ export default function Matches() {
   const [scoreRange, setScoreRange] = useState([0, 100]);
   const [proximity, setProximity] = useState('any'); // 'any' | 'nearby' | 'far'
   const [sortBy, setSortBy] = useState('match'); // 'match' | 'proximity' | 'lastActive'
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+  const [selectedMatchForAI, setSelectedMatchForAI] = useState(null);
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -103,6 +106,9 @@ export default function Matches() {
     } else if (action === 'decline') {
       await base44.entities.Match.update(match.id, { status: 'declined' });
       refetch();
+    } else if (action === 'analyze') {
+      setSelectedMatchForAI(match);
+      setAiAssistantOpen(true);
     }
   };
 
@@ -303,6 +309,22 @@ export default function Matches() {
           }
           </>
           )}
+
+          {/* Floating AI Assistant Button */}
+          <button
+            onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
+            className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-rose-500 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center z-40"
+            title="AI Match Assistant"
+          >
+            <Sparkles className="w-6 h-6" />
+          </button>
+
+          {/* AI Match Assistant Modal */}
+          <AIMatchAssistant
+            isOpen={aiAssistantOpen}
+            onClose={() => { setAiAssistantOpen(false); setSelectedMatchForAI(null); }}
+            selectedMatch={selectedMatchForAI}
+          />
           </div>
           </div>);
 
