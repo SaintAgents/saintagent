@@ -167,8 +167,8 @@ export default function DatingMatches() {
   };
 
   const openProfile = (userId) => {
-    // Navigate to profile page with user id
-    window.location.href = createPageUrl('Profile') + '?id=' + userId;
+    // Navigate to profile page with the match's user id
+    window.location.href = createPageUrl('Profile') + '?id=' + encodeURIComponent(userId);
   };
 
   return (
