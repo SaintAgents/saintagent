@@ -305,30 +305,64 @@ export default function Settings() {
                     <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
+                      <SelectItem value="dark">Dark (Neon)</SelectItem>
+                      <SelectItem value="hacker">Hacker (Matrix)</SelectItem>
+                      <SelectItem value="custom">Custom Colors</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-slate-500 mt-2">
+                    {settings.theme_preference === 'dark' && "Obsidian black with neon green/teal accents"}
+                    {settings.theme_preference === 'hacker' && "Pure green on black terminal style"}
+                    {settings.theme_preference === 'custom' && "Choose your own primary and accent colors"}
+                  </p>
                 </div>
                 {settings.theme_preference === 'custom' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <Label>Primary color</Label>
-                      <Input
-                        type="color"
-                        className="mt-2 h-10 p-1"
-                        value={settings.custom_theme_colors?.primary || '#7c3aed'}
-                        onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
-                      />
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Primary color</Label>
+                        <div className="flex items-center gap-3 mt-2">
+                          <Input
+                            type="color"
+                            className="h-10 w-16 p-1 cursor-pointer"
+                            value={settings.custom_theme_colors?.primary || '#7c3aed'}
+                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
+                          />
+                          <Input
+                            type="text"
+                            className="flex-1 font-mono text-sm"
+                            value={settings.custom_theme_colors?.primary || '#7c3aed'}
+                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
+                            placeholder="#7c3aed"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label>Accent color</Label>
+                        <div className="flex items-center gap-3 mt-2">
+                          <Input
+                            type="color"
+                            className="h-10 w-16 p-1 cursor-pointer"
+                            value={settings.custom_theme_colors?.accent || '#f59e0b'}
+                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
+                          />
+                          <Input
+                            type="text"
+                            className="flex-1 font-mono text-sm"
+                            value={settings.custom_theme_colors?.accent || '#f59e0b'}
+                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
+                            placeholder="#f59e0b"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <Label>Accent color</Label>
-                      <Input
-                        type="color"
-                        className="mt-2 h-10 p-1"
-                        value={settings.custom_theme_colors?.accent || '#f59e0b'}
-                        onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
-                      />
+                    {/* Color Preview */}
+                    <div className="p-4 rounded-lg border" style={{ 
+                      background: `linear-gradient(135deg, ${settings.custom_theme_colors?.primary || '#7c3aed'}20, ${settings.custom_theme_colors?.accent || '#f59e0b'}20)`,
+                      borderColor: settings.custom_theme_colors?.primary || '#7c3aed'
+                    }}>
+                      <p className="font-medium" style={{ color: settings.custom_theme_colors?.primary || '#7c3aed' }}>Preview of your theme</p>
+                      <p className="text-sm" style={{ color: settings.custom_theme_colors?.accent || '#f59e0b' }}>Accent text color</p>
                     </div>
                   </div>
                 )}

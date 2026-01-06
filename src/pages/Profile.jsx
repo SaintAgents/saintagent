@@ -551,6 +551,82 @@ export default function Profile() {
               </Card>
             )}
 
+            {/* Theme Customization (own profile only) */}
+            {isOwnProfile && (
+              <Card>
+                <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
+                  <CardTitle className="text-sm">Theme Customization</CardTitle>
+                </CardHeader>
+                <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4 space-y-4">
+                  <div>
+                    <Label className="text-xs text-slate-500 dark:text-slate-400">Theme</Label>
+                    <Select
+                      value={profile?.theme_preference || 'light'}
+                      onValueChange={async (v) => {
+                        try {
+                          localStorage.setItem('theme', v);
+                          document.documentElement.setAttribute('data-theme', v);
+                        } catch {}
+                        await updateMutation.mutateAsync({ theme_preference: v });
+                      }}
+                    >
+                      <SelectTrigger className="mt-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark (Neon)</SelectItem>
+                        <SelectItem value="hacker">Hacker (Matrix)</SelectItem>
+                        <SelectItem value="custom">Custom Colors</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {profile?.theme_preference === 'custom' && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs text-slate-500 dark:text-slate-400">Primary</Label>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Input
+                            type="color"
+                            className="h-8 w-12 p-0.5 cursor-pointer"
+                            value={profile?.custom_theme_colors?.primary || '#7c3aed'}
+                            onChange={async (e) => {
+                              const colors = { ...(profile?.custom_theme_colors || {}), primary: e.target.value };
+                              try {
+                                localStorage.setItem('custom_primary', e.target.value);
+                                document.documentElement.style.setProperty('--primary', e.target.value);
+                              } catch {}
+                              await updateMutation.mutateAsync({ custom_theme_colors: colors });
+                            }}
+                          />
+                          <span className="text-xs font-mono text-slate-500">{profile?.custom_theme_colors?.primary || '#7c3aed'}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-slate-500 dark:text-slate-400">Accent</Label>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Input
+                            type="color"
+                            className="h-8 w-12 p-0.5 cursor-pointer"
+                            value={profile?.custom_theme_colors?.accent || '#f59e0b'}
+                            onChange={async (e) => {
+                              const colors = { ...(profile?.custom_theme_colors || {}), accent: e.target.value };
+                              try {
+                                localStorage.setItem('custom_accent', e.target.value);
+                                document.documentElement.style.setProperty('--accent', e.target.value);
+                              } catch {}
+                              await updateMutation.mutateAsync({ custom_theme_colors: colors });
+                            }}
+                          />
+                          <span className="text-xs font-mono text-slate-500">{profile?.custom_theme_colors?.accent || '#f59e0b'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Show status message for other profiles */}
             {!isOwnProfile && profile?.status_message && (
               <Card>
