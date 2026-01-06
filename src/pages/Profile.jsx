@@ -319,7 +319,7 @@ export default function Profile() {
   // Profile not found check moved to render section below
 
   // If viewing another user's profile that doesn't exist, show not found
-  if (viewingUserId && profiles !== undefined && !profile) {
+  if (viewingUserId && profiles !== undefined && datingProfiles !== undefined && !profile) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
         <Card className="max-w-md w-full">
