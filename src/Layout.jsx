@@ -371,6 +371,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           --neon-green: #00ff88;
           --neon-teal: #00d4ff;
           --neon-purple: #a855f7;
+          --text-primary: #ffffff;
+          --text-secondary: #e0e0e0;
         }
 
         /* Matrix Rain Canvas Container */
@@ -486,19 +488,46 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
         /* HIGH CONTRAST text - white primary, neon secondary */
         [data-theme='dark'] [class*='text-slate-900'],
-        [data-theme='dark'] [class*='text-gray-900'] { color: #ffffff !important; }
+        [data-theme='dark'] [class*='text-gray-900'],
+        [data-theme='dark'] [class*='text-blue-950'] { color: #ffffff !important; }
         [data-theme='dark'] [class*='text-slate-800'],
         [data-theme='dark'] [class*='text-gray-800'] { color: #f5f5f5 !important; }
         [data-theme='dark'] [class*='text-slate-700'],
-        [data-theme='dark'] [class*='text-gray-700'] { color: var(--neon-green) !important; }
+        [data-theme='dark'] [class*='text-gray-700'] { color: #e8e8e8 !important; }
         [data-theme='dark'] [class*='text-slate-600'],
-        [data-theme='dark'] [class*='text-gray-600'] { color: var(--neon-teal) !important; }
+        [data-theme='dark'] [class*='text-gray-600'] { color: #d0d0d0 !important; }
         [data-theme='dark'] [class*='text-slate-500'],
-        [data-theme='dark'] [class*='text-gray-500'] { color: rgba(0, 212, 255, 0.9) !important; }
+        [data-theme='dark'] [class*='text-gray-500'],
+        [data-theme='dark'] [class*='text-zinc-500'] { color: #b8b8b8 !important; }
         [data-theme='dark'] [class*='text-slate-400'],
-        [data-theme='dark'] [class*='text-gray-400'] { color: rgba(0, 255, 136, 0.7) !important; }
+        [data-theme='dark'] [class*='text-gray-400'] { color: #a0a0a0 !important; }
         [data-theme='dark'] [class*='text-slate-300'],
-        [data-theme='dark'] [class*='text-gray-300'] { color: rgba(0, 212, 255, 0.6) !important; }
+        [data-theme='dark'] [class*='text-gray-300'] { color: #8a8a8a !important; }
+
+        /* Profile page specific - ensure high contrast on card content */
+        [data-theme='dark'] main[data-page='Profile'] [class*='text-slate-'],
+        [data-theme='dark'] main[data-page='Profile'] [class*='text-zinc-'],
+        [data-theme='dark'] main[data-page='Profile'] p,
+        [data-theme='dark'] main[data-page='Profile'] span,
+        [data-theme='dark'] main[data-page='Profile'] div {
+          color: #e8e8e8 !important;
+        }
+
+        /* CardTitle and headings always white */
+        [data-theme='dark'] main[data-page='Profile'] h1,
+        [data-theme='dark'] main[data-page='Profile'] h2,
+        [data-theme='dark'] main[data-page='Profile'] h3,
+        [data-theme='dark'] main[data-page='Profile'] h4,
+        [data-theme='dark'] main[data-page='Profile'] [class*='CardTitle'],
+        [data-theme='dark'] main[data-page='Profile'] [class*='font-bold'] {
+          color: #ffffff !important;
+        }
+
+        /* Labels remain lighter */
+        [data-theme='dark'] main[data-page='Profile'] label,
+        [data-theme='dark'] main[data-page='Profile'] [class*='Label'] {
+          color: #b8b8b8 !important;
+        }
 
         /* Cards and containers - solid obsidian with neon glow borders */
         [data-theme='dark'] .rounded-xl, 
@@ -508,6 +537,19 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: var(--obsidian) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
+        }
+
+        /* Profile page - ensure all card backgrounds and text are readable */
+        [data-theme='dark'] main[data-page='Profile'] .bg-purple-100,
+        [data-theme='dark'] main[data-page='Profile'] [class*='bg-purple-100'] {
+          background-color: var(--obsidian) !important;
+        }
+
+        /* Intentions card - force high contrast */
+        [data-theme='dark'] main[data-page='Profile'] [class*='CardContent'] p,
+        [data-theme='dark'] main[data-page='Profile'] [class*='CardContent'] span {
+          color: #e8e8e8 !important;
+          font-weight: 500 !important;
         }
 
         /* Sidebar and nav - solid obsidian, no leakage */

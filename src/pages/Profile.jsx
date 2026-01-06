@@ -488,40 +488,40 @@ export default function Profile() {
                   About
                 </CardTitle>
               </CardHeader>
-              <CardContent className="bg-purple-100 pt-0 p-6 space-y-4">
+<CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-6 space-y-4">
                 {isEditing ?
                     <>
                     <div>
-                      <Label>Display Name</Label>
+                      <Label className="dark:text-slate-300">Display Name</Label>
                       <Input
                           value={editData.display_name}
                           onChange={(e) => setEditData({ ...editData, display_name: e.target.value })}
-                          className="mt-2" />
+                          className="mt-2 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                     </div>
                     <div>
-                      <Label>Bio</Label>
+                      <Label className="dark:text-slate-300">Bio</Label>
                       <Textarea
                           value={editData.bio}
                           onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-                          className="mt-2 min-h-24" />
+                          className="mt-2 min-h-24 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label>Region</Label>
+                        <Label className="dark:text-slate-300">Region</Label>
                         <Input
                             value={editData.region}
                             onChange={(e) => setEditData({ ...editData, region: e.target.value })}
-                            className="mt-2" />
+                            className="mt-2 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                       </div>
                       <div>
-                        <Label>Timezone</Label>
+                        <Label className="dark:text-slate-300">Timezone</Label>
                         <Input
                             value={editData.timezone}
                             onChange={(e) => setEditData({ ...editData, timezone: e.target.value })}
-                            className="mt-2" />
+                            className="mt-2 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                       </div>
                     </div>
@@ -536,8 +536,8 @@ export default function Profile() {
                   </> :
 
                     <>
-                    <p className="bg-purple-100 text-slate-800">{profile?.bio || 'No bio yet'}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+                    <p className="text-slate-800 dark:!text-[#e8e8e8] font-medium">{profile?.bio || 'No bio yet'}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-slate-500 dark:!text-[#b8b8b8]">
                       {profile?.region &&
                         <span className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />
@@ -558,8 +558,8 @@ export default function Profile() {
 
             {/* Intentions */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+              <CardHeader className="dark:bg-[#050505]">
+                <CardTitle className="flex items-center justify-between dark:!text-white">
                   <span>Intentions</span>
                   {!editingIntentions ?
                       <Button
@@ -594,7 +594,7 @@ export default function Profile() {
                       }
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+<CardContent className="dark:bg-[#050505]">
                 {editingIntentions ?
                     <div className="space-y-3">
                     <div className="flex gap-2">
@@ -606,15 +606,16 @@ export default function Profile() {
                             if (e.key === 'Enter') {
                               addIntention();
                             }
-                          }} />
+                          }}
+                          className="dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                       <Button onClick={addIntention} variant="outline">Add</Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {intentionsData.map((intention, i) =>
-                        <Badge key={i} className="bg-violet-100 text-violet-700 gap-2 pr-1 capitalize">
+                        <Badge key={i} className="bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300 gap-2 pr-1 capitalize">
                           {intention}
-                          <button onClick={() => removeIntention(intention)} className="hover:bg-violet-200 rounded-full p-0.5">
+                          <button onClick={() => removeIntention(intention)} className="hover:bg-violet-200 dark:hover:bg-violet-800 rounded-full p-0.5">
                             <X className="w-3 h-3" />
                           </button>
                         </Badge>
@@ -624,12 +625,12 @@ export default function Profile() {
 
                     <div className="flex flex-wrap gap-2">
                     {profile?.intentions?.map((intention, i) =>
-                      <Badge key={i} className="bg-violet-100 text-violet-700 capitalize">
+                      <Badge key={i} className="bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-500/50 capitalize font-medium">
                         {intention}
                       </Badge>
                       )}
                     {(!profile?.intentions || profile.intentions.length === 0) &&
-                      <p className="text-slate-400">No intentions set</p>
+                      <p className="text-slate-400 dark:!text-[#a0a0a0]">No intentions set</p>
                       }
                   </div>
                     }
