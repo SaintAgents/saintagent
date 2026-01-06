@@ -558,23 +558,17 @@ export default function DatingMatchesPopup({ currentUser }) {
 
                 {/* Action Buttons */}
                 <div className="flex gap-2 mt-3">
-                  {!currentMatch.is_demo ? (
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "flex-1 rounded-xl gap-2",
-                        "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
-                        "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
-                      )}
-                      onClick={() => handleViewProfile(currentMatch)}>
-                      <User className="w-4 h-4 text-pink-500 [data-theme='hacker']_&:text-[#00ff00]" />
-                      View Profile
-                    </Button>
-                  ) : (
-                    <div className="flex-1 text-center text-xs text-slate-400 py-2">
-                      Demo profile
-                    </div>
-                  )}
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "flex-1 rounded-xl gap-2",
+                      "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
+                      "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
+                    )}
+                    onClick={() => handleViewProfile(currentMatch)}>
+                    <User className="w-4 h-4 text-pink-500 [data-theme='hacker']_&:text-[#00ff00]" />
+                    View Profile
+                  </Button>
                   <Button
                     className={cn(
                       "flex-1 rounded-xl gap-2",
