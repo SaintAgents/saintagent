@@ -172,12 +172,8 @@ export default function AffiliateCenter() {
 
   // Get the proper base URL for affiliate links
   const getBaseUrl = () => {
-    const origin = window.location.origin;
-    // Replace sandbox prefix with live domain
-    if (origin.includes('sandbox.base44.app')) {
-      return origin.replace('sandbox.base44.app', 'base44.app');
-    }
-    return origin;
+    // Always use current origin - works for both sandbox and production
+    return window.location.origin;
   };
 
   const affiliateUrl = affiliateCode 
