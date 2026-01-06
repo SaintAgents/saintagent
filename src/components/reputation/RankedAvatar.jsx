@@ -4,6 +4,7 @@ import { getRPRank } from '@/components/reputation/rpUtils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PhotoViewer from '@/components/profile/PhotoViewer';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function getRingConfig(rankCode = 'seeker') {
   const map = {
@@ -104,6 +105,7 @@ export default function RankedAvatar({
   userId,
   className = '',
   status,
+  statusMessage,
   showPhotoIcon = false,
   galleryImages = [],
 }) {
@@ -131,6 +133,7 @@ export default function RankedAvatar({
   const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? (getRPRank(rpPointsFinal || 0)?.code || 'seeker');
   const trustScoreFinal = trustScore ?? fetchedProfile?.trust_score ?? 0;
   const rpInfo = getRPRank(rpPointsFinal || 0);
+  const statusMessageFinal = statusMessage ?? fetchedProfile?.status_message;
 
   // Presence indicator mapping
   const STATUS_STYLES = {
@@ -138,6 +141,12 @@ export default function RankedAvatar({
     focus: 'bg-amber-500',
     dnd: 'bg-rose-500',
     offline: 'bg-slate-400',
+  };
+  const STATUS_LABELS = {
+    online: 'Online',
+    focus: 'Focus Mode',
+    dnd: 'Do Not Disturb',
+    offline: 'Offline',
   };
   const statusFinal = status ?? fetchedProfile?.status ?? 'online';
 
@@ -187,13 +196,24 @@ export default function RankedAvatar({
         <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
       </div>
 
-      {/* Status dot (bottom-left) */}
-      <div
-        className={`absolute -bottom-1 -left-1 rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
-        style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
-        onClick={(e) => e.stopPropagation()}
-        title={`Status: ${statusFinal || 'online'}`}
-      />
+      {/* Status dot (bottom-left) with tooltip */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className={`absolute -bottom-1 -left-1 rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+              style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="max-w-[200px]">
+            <p className="font-medium text-sm">{STATUS_LABELS[statusFinal] || 'Online'}</p>
+            {statusMessageFinal && (
+              <p className="text-xs text-slate-500 mt-0.5">{statusMessageFinal}</p>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* 144K Leader Badge */}
       {leaderTierFinal === 'verified144k' && (
