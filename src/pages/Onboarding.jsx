@@ -17,6 +17,12 @@ import Step4Desires from '@/components/onboarding/Step4Desires';
 import Step5Hopes from '@/components/onboarding/Step5Hopes';
 import Step6Actions from '@/components/onboarding/Step6Actions';
 import Step7Dating from '@/components/onboarding/Step7Dating';
+import StepDatingIntro from '@/components/onboarding/StepDatingIntro';
+import StepAttachmentStyle from '@/components/onboarding/StepAttachmentStyle';
+import StepConflictStyle from '@/components/onboarding/StepConflictStyle';
+import StepRelationshipValues from '@/components/onboarding/StepRelationshipValues';
+import StepCompatibilityTutorial from '@/components/onboarding/StepCompatibilityTutorial';
+import StepPartnerPreferences from '@/components/onboarding/StepPartnerPreferences';
 import { attachAffiliateToUser, activateReferral } from '@/components/affiliate/AffiliateTracker';
 
 const STEPS = [
@@ -28,8 +34,15 @@ const STEPS = [
   { id: 5, title: "Skills", component: Step3Skills, skippable: false },
   { id: 6, title: "Desires", component: Step4Desires, skippable: false },
   { id: 7, title: "Hopes", component: Step5Hopes, skippable: true },
-  { id: 8, title: "Connection", component: Step7Dating, skippable: true },
-  { id: 9, title: "Actions", component: Step6Actions, skippable: false }
+  // Dating onboarding flow with explanations
+  { id: 8, title: "Dating Intro", component: StepDatingIntro, skippable: true },
+  { id: 9, title: "Attachment", component: StepAttachmentStyle, skippable: true },
+  { id: 10, title: "Conflict Style", component: StepConflictStyle, skippable: true },
+  { id: 11, title: "Relationship Values", component: StepRelationshipValues, skippable: true },
+  { id: 12, title: "Connection", component: Step7Dating, skippable: true },
+  { id: 13, title: "Partner Preferences", component: StepPartnerPreferences, skippable: true },
+  { id: 14, title: "Match Tutorial", component: StepCompatibilityTutorial, skippable: true },
+  { id: 15, title: "Actions", component: Step6Actions, skippable: false }
 ];
 
 export default function Onboarding() {
