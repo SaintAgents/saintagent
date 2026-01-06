@@ -671,6 +671,7 @@ export default function AIMatchAssistant({
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState(selectedMatch ? 'compatibility' : 'chat');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -690,6 +691,30 @@ export default function AIMatchAssistant({
     enabled: !!user?.email
   });
   const myDatingProfile = myDatingProfiles?.[0];
+
+  // Fetch match's profile data if a match is selected
+  const { data: matchProfiles = [] } = useQuery({
+    queryKey: ['matchProfile', selectedMatch?.target_id],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: selectedMatch?.target_id }),
+    enabled: !!selectedMatch?.target_id
+  });
+  const matchProfile = matchProfiles?.[0];
+
+  const { data: matchDatingProfiles = [] } = useQuery({
+    queryKey: ['matchDatingProfile', selectedMatch?.target_id],
+    queryFn: () => base44.entities.DatingProfile.filter({ user_id: selectedMatch?.target_id }),
+    enabled: !!selectedMatch?.target_id
+  });
+  const matchDatingProfile = matchDatingProfiles?.[0];
+
+  // Reset tab when match changes
+  React.useEffect(() => {
+    if (selectedMatch) {
+      setActiveTab('compatibility');
+    } else {
+      setActiveTab('chat');
+    }
+  }, [selectedMatch?.id]);
 
   const buildContext = () => {
     let context = `You are an AI dating assistant helping users understand their compatibility scores and improve their matches on a spiritual/conscious dating platform.
