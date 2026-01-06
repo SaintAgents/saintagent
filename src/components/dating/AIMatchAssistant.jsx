@@ -833,8 +833,8 @@ Provide a helpful, warm response:`,
       "fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4",
       className
     )}>
-      <Card className="w-full max-w-2xl h-[600px] flex flex-col shadow-2xl">
-        <CardHeader className="border-b bg-gradient-to-r from-violet-50 to-rose-50 rounded-t-lg">
+      <Card className="w-full max-w-2xl h-[700px] flex flex-col shadow-2xl">
+        <CardHeader className="border-b bg-gradient-to-r from-violet-50 to-rose-50 rounded-t-lg pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-rose-500 flex items-center justify-center">
@@ -865,9 +865,62 @@ Provide a helpful, warm response:`,
               <Badge className="bg-violet-100 text-violet-700">{selectedMatch.match_score}% match</Badge>
             </div>
           )}
+
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
+            <TabsList className="w-full grid grid-cols-4 h-9">
+              <TabsTrigger value="chat" className="text-xs gap-1">
+                <MessageCircle className="w-3.5 h-3.5" />
+                Chat
+              </TabsTrigger>
+              {selectedMatch && (
+                <TabsTrigger value="compatibility" className="text-xs gap-1">
+                  <Heart className="w-3.5 h-3.5" />
+                  Compatibility
+                </TabsTrigger>
+              )}
+              {selectedMatch && (
+                <TabsTrigger value="icebreakers" className="text-xs gap-1">
+                  <Lightbulb className="w-3.5 h-3.5" />
+                  Icebreakers
+                </TabsTrigger>
+              )}
+              <TabsTrigger value="profile" className="text-xs gap-1">
+                <UserPlus className="w-3.5 h-3.5" />
+                My Profile
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </CardHeader>
 
         <ScrollArea className="flex-1 p-4">
+          {activeTab === 'compatibility' && selectedMatch && (
+            <CompatibilityBreakdown
+              myProfile={myProfile}
+              myDatingProfile={myDatingProfile}
+              matchProfile={matchProfile}
+              matchDatingProfile={matchDatingProfile}
+              match={selectedMatch}
+            />
+          )}
+
+          {activeTab === 'icebreakers' && selectedMatch && (
+            <IcebreakerGenerator
+              myProfile={myProfile}
+              myDatingProfile={myDatingProfile}
+              matchProfile={matchProfile}
+              matchDatingProfile={matchDatingProfile}
+            />
+          )}
+
+          {activeTab === 'profile' && (
+            <ProfileImprovements
+              myProfile={myProfile}
+              myDatingProfile={myDatingProfile}
+            />
+          )}
+
+          {activeTab === 'chat' && (
           {messages.length === 0 ? (
             <div className="space-y-4">
               <div className="text-center py-6">
