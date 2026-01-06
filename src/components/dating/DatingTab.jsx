@@ -255,18 +255,37 @@ export default function DatingTab({ profile }) {
       const prediction = calculatePrediction(domainScores, strengths, frictions);
 
       // Build display info with unique demo avatars
-      const displayName = otherUserProfile?.display_name || other.user_id?.split('@')[0] || 'User';
-      let avatar = otherUserProfile?.avatar_url;
       const isDemo = other.is_demo === true;
       const isSaved = savedMatches.includes(other.user_id);
       
-      // Assign unique demo avatar if no real avatar exists
-      if (!avatar && isDemo) {
-        // Use candidate index to pick unique avatar, alternate M/F
+      // Generate demo name if no real name exists
+      let displayName = otherUserProfile?.display_name || other.display_name;
+      if (!displayName || displayName === 'Anonymous' || displayName === 'User') {
+        const femaleNames = ['Sophia', 'Luna', 'Maya', 'Aria', 'Elena', 'Nova', 'Zara', 'Ivy', 'Jade', 'Willow'];
+        const maleNames = ['Ethan', 'Kai', 'Leo', 'Finn', 'Jasper', 'River', 'Ash', 'Theo', 'Noah', 'Ezra'];
         const candidateIdx = candidates.indexOf(other);
-        const isMale = candidateIdx % 2 === 0;
-        const avatarIdx = Math.floor(candidateIdx / 2) % 5;
-        avatar = isMale ? DEMO_AVATARS_MALE[avatarIdx] : DEMO_AVATARS_FEMALE[avatarIdx];
+        if (other.gender === 'woman') {
+          displayName = femaleNames[candidateIdx % femaleNames.length];
+        } else if (other.gender === 'man') {
+          displayName = maleNames[candidateIdx % maleNames.length];
+        } else {
+          displayName = [...femaleNames, ...maleNames][candidateIdx % 20];
+        }
+      }
+      
+      let avatar = otherUserProfile?.avatar_url;
+      
+      // Assign unique demo avatar based on ACTUAL gender
+      if (!avatar && isDemo) {
+        const candidateIdx = candidates.indexOf(other);
+        if (other.gender === 'woman') {
+          avatar = DEMO_AVATARS_FEMALE[candidateIdx % DEMO_AVATARS_FEMALE.length];
+        } else if (other.gender === 'man') {
+          avatar = DEMO_AVATARS_MALE[candidateIdx % DEMO_AVATARS_MALE.length];
+        } else {
+          // Non-binary - alternate
+          avatar = candidateIdx % 2 === 0 ? DEMO_AVATARS_MALE[candidateIdx % 5] : DEMO_AVATARS_FEMALE[candidateIdx % 5];
+        }
       }
 
       out.push({
