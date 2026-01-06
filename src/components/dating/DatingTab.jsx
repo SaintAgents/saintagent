@@ -142,12 +142,35 @@ export default function DatingTab({ profile }) {
     // Get user's custom weights or use defaults
     const weights = myDP?.domain_weights || DEFAULT_WEIGHTS;
     
-    // Filter candidates: exclude self and dismissed matches
-    const candidates = allProfiles.filter(p => 
-      p.user_id !== currentUser.email && 
-      !dismissedMatches.includes(p.user_id) &&
-      (p.is_active !== false) // Include demo profiles
-    );
+    // Filter candidates: exclude self, dismissed matches, and apply gender preferences
+    const myInterestedIn = myDP?.interested_in || [];
+    const candidates = allProfiles.filter(p => {
+      // Skip self
+      if (p.user_id === currentUser.email) return false;
+      // Skip dismissed
+      if (dismissedMatches.includes(p.user_id)) return false;
+      // Skip inactive
+      if (p.is_active === false) return false;
+      
+      // Apply gender filter - only show candidates whose gender matches what user is interested in
+      if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
+        const candidateGender = p.gender;
+        if (!candidateGender) return false; // Skip profiles without gender set
+        
+        // Map gender to interest preference
+        const genderToInterest = {
+          'man': 'men',
+          'woman': 'women',
+          'non_binary': 'non_binary'
+        };
+        const candidateInterestKey = genderToInterest[candidateGender];
+        if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
 
     const out = [];
     

@@ -9,7 +9,6 @@ export default function Step1Identity({ data, onComplete, user }) {
   const [formData, setFormData] = useState({
     display_name: data.display_name || user?.full_name || '',
     handle: data.handle || '',
-    pronouns: data.pronouns || '',
     timezone: data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
     public_profile: data.public_profile !== false
   });
@@ -87,16 +86,6 @@ export default function Step1Identity({ data, onComplete, user }) {
           {checkingHandle && <p className="text-xs text-slate-500 mt-1">Checking availability...</p>}
           {handleAvailable === false && <p className="text-xs text-rose-500 mt-1">Handle already taken</p>}
           {handleAvailable && <p className="text-xs text-emerald-500 mt-1">Handle available!</p>}
-        </div>
-
-        <div>
-          <Label htmlFor="pronouns">Pronouns (optional)</Label>
-          <Input
-            id="pronouns"
-            value={formData.pronouns}
-            onChange={(e) => setFormData({ ...formData, pronouns: e.target.value })}
-            placeholder="e.g. they/them, she/her, he/him"
-          />
         </div>
 
         <div>

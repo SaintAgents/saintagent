@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -16,16 +16,67 @@ import {
   Lightbulb,
   Eye,
   ChevronRight,
-  Zap } from
+  Zap,
+  X,
+  GripHorizontal } from
 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
 
+// Demo names for candidates without real names
+const DEMO_NAMES_FEMALE = ['Sophia', 'Maya', 'Luna', 'Aurora', 'Elena', 'Aria', 'Serena', 'Willow', 'Iris', 'Nova'];
+const DEMO_NAMES_MALE = ['Marcus', 'Ethan', 'Leo', 'Kai', 'Julian', 'Adrian', 'Ezra', 'Felix', 'Orion', 'Silas'];
+
 export default function AIDiscoverMatches({ profile, compact = false }) {
   const queryClient = useQueryClient();
   const [discoveries, setDiscoveries] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Draggable state for expanded view
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef(null);
+  const draggingRef = useRef(false);
+  const dragOffsetRef = useRef({ x: 0, y: 0 });
+  
+  // Initialize position when expanded
+  useEffect(() => {
+    if (isExpanded) {
+      const width = 400;
+      const height = 500;
+      setPosition({
+        x: Math.max(8, (window.innerWidth - width) / 2),
+        y: Math.max(8, (window.innerHeight - height) / 2)
+      });
+    }
+  }, [isExpanded]);
+  
+  // Handle drag
+  useEffect(() => {
+    const onMouseMove = (e) => {
+      if (!draggingRef.current) return;
+      const width = containerRef.current?.offsetWidth || 400;
+      const height = containerRef.current?.offsetHeight || 500;
+      let newX = e.clientX - dragOffsetRef.current.x;
+      let newY = e.clientY - dragOffsetRef.current.y;
+      newX = Math.min(Math.max(8, newX), window.innerWidth - width - 8);
+      newY = Math.min(Math.max(8, newY), window.innerHeight - height - 8);
+      setPosition({ x: newX, y: newY });
+    };
+    const onMouseUp = () => { draggingRef.current = false; };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+  
+  const startDrag = (e) => {
+    draggingRef.current = true;
+    dragOffsetRef.current = { x: e.clientX - position.x, y: e.clientY - position.y };
+  };
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -73,9 +124,25 @@ export default function AIDiscoverMatches({ profile, compact = false }) {
 
   const discoverMutation = useMutation({
     mutationFn: async () => {
-      const candidates = allDatingProfiles.
-      filter((p) => p.user_id !== currentUser?.email).
-      slice(0, 15);
+      // Apply gender preference filter
+      const myInterestedIn = myDP?.interested_in || [];
+      const genderToInterest = { 'man': 'men', 'woman': 'women', 'non_binary': 'non_binary' };
+      
+      const candidates = allDatingProfiles
+        .filter((p) => {
+          if (p.user_id === currentUser?.email) return false;
+          // Apply gender filter
+          if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
+            const candidateGender = p.gender;
+            if (!candidateGender) return false;
+            const candidateInterestKey = genderToInterest[candidateGender];
+            if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
+              return false;
+            }
+          }
+          return true;
+        })
+        .slice(0, 15);
 
       if (candidates.length === 0) {
         return { discoveries: [] };
@@ -160,34 +227,63 @@ For each, explain the UNIQUE insight that makes them special - something the use
         }
       });
 
-      // Enrich with profile data and assign unique demo avatars
+      // Enrich with profile data and assign unique demo avatars and names
       const usedMaleIdx = new Set();
       const usedFemaleIdx = new Set();
+      const usedMaleNameIdx = new Set();
+      const usedFemaleNameIdx = new Set();
 
       const enriched = (response.discoveries || []).map((d, idx) => {
         const dp = allDatingProfiles.find((p) => p.user_id === d.user_id);
         const up = userProfiles.find((u) => u.user_id === d.user_id);
-        const rawName = up?.display_name || d.user_id?.split('@')[0]?.replace(/_/g, ' ') || 'User';
-        const displayName = up?.display_name ? `${up.display_name}-Demo` : rawName;
+        const isDemo = dp?.is_demo === true;
+        
+        // Determine gender for avatar/name assignment
+        const candidateGender = dp?.gender;
+        const isFemale = candidateGender === 'woman';
+        const isMale = candidateGender === 'man';
+        // Default to alternating if gender not set
+        const defaultFemale = idx % 2 === 1;
 
-        // Assign unique demo avatar if no real avatar
-        let avatar = up?.avatar_url;
-        if (!avatar) {
-          // Alternate male/female and ensure no duplicates
-          const isMale = idx % 2 === 0;
-          if (isMale) {
-            for (let i = 0; i < DEMO_AVATARS_MALE.length; i++) {
-              if (!usedMaleIdx.has(i)) {
-                usedMaleIdx.add(i);
-                avatar = DEMO_AVATARS_MALE[i];
+        // Get display name - use real name or assign a demo name
+        let displayName = up?.display_name;
+        if (!displayName || displayName.includes('anonymous') || displayName.includes('demo')) {
+          if (isFemale || (!isMale && defaultFemale)) {
+            for (let i = 0; i < DEMO_NAMES_FEMALE.length; i++) {
+              if (!usedFemaleNameIdx.has(i)) {
+                usedFemaleNameIdx.add(i);
+                displayName = DEMO_NAMES_FEMALE[i];
                 break;
               }
             }
           } else {
+            for (let i = 0; i < DEMO_NAMES_MALE.length; i++) {
+              if (!usedMaleNameIdx.has(i)) {
+                usedMaleNameIdx.add(i);
+                displayName = DEMO_NAMES_MALE[i];
+                break;
+              }
+            }
+          }
+          displayName = displayName || 'User';
+        }
+
+        // Assign unique demo avatar if no real avatar
+        let avatar = up?.avatar_url;
+        if (!avatar) {
+          if (isFemale || (!isMale && defaultFemale)) {
             for (let i = 0; i < DEMO_AVATARS_FEMALE.length; i++) {
               if (!usedFemaleIdx.has(i)) {
                 usedFemaleIdx.add(i);
                 avatar = DEMO_AVATARS_FEMALE[i];
+                break;
+              }
+            }
+          } else {
+            for (let i = 0; i < DEMO_AVATARS_MALE.length; i++) {
+              if (!usedMaleIdx.has(i)) {
+                usedMaleIdx.add(i);
+                avatar = DEMO_AVATARS_MALE[i];
                 break;
               }
             }
@@ -199,7 +295,8 @@ For each, explain the UNIQUE insight that makes them special - something the use
           display_name: displayName,
           avatar,
           values: dp?.core_values_ranked || [],
-          intent: dp?.relationship_intent
+          intent: dp?.relationship_intent,
+          isDemo
         };
       });
 
@@ -305,6 +402,104 @@ For each, explain the UNIQUE insight that makes them special - something the use
 
   }
 
+  // Floating expanded view
+  if (isExpanded && discoveries?.length > 0) {
+    return (
+      <>
+        {/* Collapsed card trigger */}
+        <Card className="border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-slate-800/80 dark:to-slate-900/80">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
+                <Lightbulb className="w-5 h-5 text-violet-500" />
+                AI Discover
+                <Badge variant="outline" className="ml-2 text-xs">Beta</Badge>
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => setIsExpanded(false)}>
+                  Show Inline
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => discoverMutation.mutate()}
+                  disabled={discoverMutation.isPending}
+                  className="bg-lime-400 text-slate-50 gap-2"
+                >
+                  {discoverMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  Refresh
+                </Button>
+              </div>
+            </div>
+            <p className="text-sm text-slate-500">{discoveries.length} discoveries found - viewing in floating panel</p>
+          </CardHeader>
+        </Card>
+        
+        {/* Floating draggable panel */}
+        <div
+          ref={containerRef}
+          className="fixed bg-white dark:bg-slate-900 border border-violet-300 dark:border-violet-700 rounded-2xl shadow-2xl z-[100] w-[400px] max-h-[80vh] overflow-hidden flex flex-col"
+          style={{ left: position.x, top: position.y }}
+        >
+          {/* Drag handle */}
+          <div
+            onMouseDown={startDrag}
+            className="h-10 bg-gradient-to-r from-violet-500 to-purple-600 flex items-center justify-between px-4 cursor-grab active:cursor-grabbing"
+          >
+            <div className="flex items-center gap-2 text-white">
+              <GripHorizontal className="w-4 h-4" />
+              <span className="text-sm font-medium">AI Discoveries</span>
+            </div>
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-white hover:bg-white/20" onClick={() => setIsExpanded(false)}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+          
+          {/* Content */}
+          <ScrollArea className="flex-1 p-4">
+            <div className="space-y-3">
+              {discoveries.map((d, idx) => {
+                const config = discoveryTypeConfig[d.discovery_type] || discoveryTypeConfig.shared_depth;
+                const Icon = config.icon;
+                return (
+                  <Card key={idx} className="border-slate-200 dark:border-slate-700">
+                    <CardContent className="p-3 space-y-2">
+                      <div className="flex items-start gap-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarImage src={d.avatar} />
+                          <AvatarFallback>{d.display_name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 dark:text-slate-100 truncate">{d.display_name}</p>
+                          <Badge className={cn("text-xs", config.bg, config.color, "border-0")}>
+                            <Icon className="w-3 h-3 mr-1" />
+                            {config.label}
+                          </Badge>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-700 dark:text-slate-300">{d.headline}</p>
+                      {d.conversation_starter && (
+                        <p className="text-xs text-violet-600 dark:text-violet-400 italic">💬 "{d.conversation_starter}"</p>
+                      )}
+                      <div className="flex gap-2">
+                        <Button size="sm" className="flex-1 gap-1 bg-violet-600 hover:bg-violet-700" onClick={() => openChat(d.user_id, d.display_name, d.avatar)}>
+                          <MessageCircle className="w-3 h-3" /> Connect
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: d.user_id } }))}>
+                          <Eye className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </ScrollArea>
+        </div>
+      </>
+    );
+  }
+
   return (
     <Card className="border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-slate-800/80 dark:to-slate-900/80">
       <CardHeader>
@@ -314,25 +509,29 @@ For each, explain the UNIQUE insight that makes them special - something the use
             AI Discover
             <Badge variant="outline" className="ml-2 text-xs">Beta</Badge>
           </CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => discoverMutation.mutate()}
-            disabled={discoverMutation.isPending} className="bg-lime-400 text-slate-50 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-2">
-
-
-            {discoverMutation.isPending ?
-            <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Analyzing...
-              </> :
-
-            <>
-                <Sparkles className="w-4 h-4" />
-                Discover Matches
-              </>
-            }
-          </Button>
+          <div className="flex items-center gap-2">
+            {discoveries?.length > 0 && (
+              <Button variant="outline" size="sm" onClick={() => setIsExpanded(true)}>
+                Float
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => discoverMutation.mutate()}
+              disabled={discoverMutation.isPending} className="bg-lime-400 text-slate-50 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-2">
+              {discoverMutation.isPending ?
+              <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Analyzing...
+                </> :
+              <>
+                  <Sparkles className="w-4 h-4" />
+                  Discover Matches
+                </>
+              }
+            </Button>
+          </div>
         </div>
         <p className="text-sm text-slate-500 dark:text-slate-400">
           AI finds hidden compatibilities you might overlook
