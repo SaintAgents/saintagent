@@ -20,18 +20,25 @@ export default function TrustScoreCard({ userId, onUpdated }) {
     setError(null);
     try {
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('timeout')), 10000)
+        setTimeout(() => reject(new Error('timeout')), 20000)
       );
       const fetchPromise = base44.functions.invoke('computeTrustScore', { target_user_id: userId });
       const { data } = await Promise.race([fetchPromise, timeoutPromise]);
-      if (data?.score != null) {
+      if (data?.error) {
+        setError(data.error);
+      } else if (data?.score != null) {
         setScore(data.score);
         setBreakdown(data.breakdown || null);
         qc.invalidateQueries({ queryKey: ['userProfile'] });
         onUpdated?.(data.score);
+      } else {
+        // No score returned, set defaults
+        setScore(0);
+        setBreakdown(null);
       }
     } catch (err) {
-      setError(err.message === 'timeout' ? 'Request timed out' : 'Unable to load stats');
+      console.error('Trust score error:', err);
+      setError(err.message === 'timeout' ? 'Request timed out - try again' : 'Unable to load');
     } finally {
       setLoading(false);
     }
