@@ -353,24 +353,25 @@ export default function Profile() {
               className="w-full h-full object-cover" />
 
             }
-            <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                    await updateMutation.mutateAsync({ hero_image_url: file_url });
-                  }
-                }} />
-
-              <div className="text-white text-center">
-                <Edit className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-sm font-medium">Change Hero Image</p>
-              </div>
-            </label>
+            {isOwnProfile && (
+              <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      await updateMutation.mutateAsync({ hero_image_url: file_url });
+                    }
+                  }} />
+                <div className="text-white text-center">
+                  <Edit className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-sm font-medium">Change Hero Image</p>
+                </div>
+              </label>
+            )}
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-0 p-6 relative">
             <div className="flex items-end gap-6 -mt-12">
