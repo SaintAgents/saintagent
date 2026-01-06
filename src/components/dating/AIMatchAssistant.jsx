@@ -1026,27 +1026,30 @@ Provide a helpful, warm response:`,
               )}
             </div>
           )}
+          )}
         </ScrollArea>
 
-        <div className="p-4 border-t bg-white rounded-b-lg">
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-              placeholder="Ask about your matches or compatibility..."
-              className="flex-1"
-              disabled={isLoading}
-            />
-            <Button 
-              onClick={() => handleSend()}
-              disabled={!input.trim() || isLoading}
-              className="bg-violet-600 hover:bg-violet-700"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+        {activeTab === 'chat' && (
+          <div className="p-4 border-t bg-white rounded-b-lg">
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+                placeholder="Ask about your matches or compatibility..."
+                className="flex-1"
+                disabled={isLoading}
+              />
+              <Button 
+                onClick={() => handleSend()}
+                disabled={!input.trim() || isLoading}
+                className="bg-violet-600 hover:bg-violet-700"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </Card>
     </div>
   );
