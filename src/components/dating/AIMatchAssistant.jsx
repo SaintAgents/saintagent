@@ -921,6 +921,7 @@ Provide a helpful, warm response:`,
           )}
 
           {activeTab === 'chat' && (
+            <>
           {messages.length === 0 ? (
             <div className="space-y-4">
               <div className="text-center py-6">
@@ -1026,6 +1027,7 @@ Provide a helpful, warm response:`,
               )}
             </div>
           )}
+            </>
           )}
         </ScrollArea>
 
