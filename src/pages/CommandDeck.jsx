@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List } from "lucide-react";
+import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy } from "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
@@ -50,6 +50,7 @@ import HelpHint from '@/components/hud/HelpHint';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
+import GamificationWidget from '@/components/gamification/GamificationWidget';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -223,6 +224,13 @@ export default function CommandDeck() {
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications'],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20)
+  });
+
+  // Fetch challenges
+  const { data: challenges = [] } = useQuery({
+    queryKey: ['challenges', profile?.user_id],
+    queryFn: () => base44.entities.Challenge.filter({ user_id: profile.user_id, status: 'active' }, '-created_date', 10),
+    enabled: !!profile?.user_id
   });
 
   // Daily Ops data (today)
@@ -946,6 +954,10 @@ export default function CommandDeck() {
 
             <CollapsibleCard title="Quick Start Checklist" icon={CheckCircle} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => setQuickStartPopupOpen(true)} forceOpen={cardsForceOpen}>
               <QuickStartChecklist />
+            </CollapsibleCard>
+
+            <CollapsibleCard title="Challenges & Rewards" icon={Trophy} badge={challenges.filter(c => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" forceOpen={cardsForceOpen}>
+              <GamificationWidget profile={profile} />
             </CollapsibleCard>
 
             <CollapsibleCard title="Inbox & Signals" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen}>
