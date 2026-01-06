@@ -598,7 +598,7 @@ export default function Profile() {
               <CardHeader className="dark:bg-[#050505]">
                 <CardTitle className="flex items-center justify-between dark:!text-white">
                   <span>Intentions</span>
-                  {!editingIntentions ?
+                  {!editingIntentions && isOwnProfile ?
                       <Button
                         variant="ghost"
                         size="sm"
@@ -607,7 +607,7 @@ export default function Profile() {
 
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
-                    </Button> :
+                    </Button> : isOwnProfile ?
 
                       <div className="flex gap-2">
                       <Button
