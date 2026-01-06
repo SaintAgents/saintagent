@@ -61,6 +61,8 @@ import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import Step7Dating from '@/components/onboarding/Step7Dating';
 import ProfileMetrics from '@/components/profile/ProfileMetrics';
+import QuickBoostButton from '@/components/boost/QuickBoostButton';
+import BoostStatusBadge from '@/components/boost/BoostStatusBadge';
 import { createPageUrl } from '@/utils';
 
 export default function Profile() {
@@ -396,24 +398,28 @@ export default function Profile() {
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
               </div>
               {isOwnProfile && (
-                <Button
-                  variant="outline"
-                  className="rounded-xl gap-2"
-                  onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
+                                    <div className="flex items-center gap-2">
+                                      <BoostStatusBadge userId={profile?.user_id} />
+                                      <QuickBoostButton size="sm" variant="outline" />
+                                      <Button
+                                        variant="outline"
+                                        className="rounded-xl gap-2"
+                                        onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
 
-                  {isEditing ?
-                  <>
-                      <X className="w-4 h-4" />
-                      Cancel
-                    </> :
+                                        {isEditing ?
+                                        <>
+                                            <X className="w-4 h-4" />
+                                            Cancel
+                                          </> :
 
-                  <>
-                      <Edit className="w-4 h-4" />
-                      Edit Profile
-                    </>
-                  }
-                </Button>
-              )}
+                                        <>
+                                            <Edit className="w-4 h-4" />
+                                            Edit Profile
+                                          </>
+                                        }
+                                      </Button>
+                                    </div>
+                                  )}
             </div>
           </CardContent>
         </Card>
