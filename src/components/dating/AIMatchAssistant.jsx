@@ -921,8 +921,7 @@ Provide a helpful, warm response:`,
           )}
 
           {activeTab === 'chat' && (
-            <>
-          {messages.length === 0 ? (
+            messages.length === 0 ? (
             <div className="space-y-4">
               <div className="text-center py-6">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-100 to-rose-100 flex items-center justify-center mx-auto mb-3">
@@ -1026,8 +1025,7 @@ Provide a helpful, warm response:`,
                 </div>
               )}
             </div>
-          )}
-            </>
+          )
           )}
         </ScrollArea>
 
