@@ -281,11 +281,7 @@ export default function DatingMatchesPopup({ currentUser }) {
   };
 
   const handleViewProfile = (match) => {
-    // Don't navigate for demo profiles that have no real UserProfile
-    if (match.is_demo) {
-      // Just show more info in the popup or do nothing
-      return;
-    }
+    // Navigate to profile page for all profiles
     window.location.href = createPageUrl('Profile') + `?id=${encodeURIComponent(match.user_id)}`;
     setOpen(false);
   };
