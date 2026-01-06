@@ -1,15 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger } from
-"@/components/ui/popover";
 import {
   Heart,
   MessageCircle,
@@ -25,7 +20,8 @@ import {
   Shield,
   MessageSquare,
   TrendingUp,
-  Home } from
+  Home,
+  GripHorizontal } from
 "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -96,6 +92,57 @@ export default function DatingMatchesPopup({ currentUser }) {
   const [photoViewerOpen, setPhotoViewerOpen] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const scrollRef = useRef(null);
+  
+  // Draggable state
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef(null);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  
+  // Reset position when popup closes
+  useEffect(() => {
+    if (!open) {
+      setPosition({ x: 0, y: 0 });
+    }
+  }, [open]);
+  
+  const handleDragStart = (e) => {
+    if (e.target.closest('button') || e.target.closest('a')) return;
+    setIsDragging(true);
+    const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    dragStartPos.current = { x: clientX - position.x, y: clientY - position.y };
+  };
+  
+  const handleDrag = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    setPosition({
+      x: clientX - dragStartPos.current.x,
+      y: clientY - dragStartPos.current.y
+    });
+  };
+  
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+  
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleDrag);
+      document.addEventListener('mouseup', handleDragEnd);
+      document.addEventListener('touchmove', handleDrag);
+      document.addEventListener('touchend', handleDragEnd);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleDrag);
+      document.removeEventListener('mouseup', handleDragEnd);
+      document.removeEventListener('touchmove', handleDrag);
+      document.removeEventListener('touchend', handleDragEnd);
+    };
+  }, [isDragging]);
 
   // Fetch dating profile opt-in status
   const { data: myDatingProfile } = useQuery({
@@ -279,37 +326,62 @@ export default function DatingMatchesPopup({ currentUser }) {
   const currentMatch = enrichedMatches[currentIndex];
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Dating Matches">
-          <div
-            className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse"
-            style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
-
-            <Heart className="w-3.5 h-3.5 text-white fill-white" />
-          </div>
-          {enrichedMatches.length > 0 &&
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
-              {enrichedMatches.length > 99 ? '99+' : enrichedMatches.length}
-            </span>
-          }
-          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            Dating
-          </span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-0 dark:bg-slate-800 dark:border-slate-700">
-        <div className="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-[rgba(0,255,136,0.15)] from-pink-50 to-rose-50 dark:from-[#0a0a0a] dark:to-[#050505]">
-          <h3 className="text-slate-50 font-semibold dark:text-slate-100 flex items-center gap-2">Dating Matches
-
-
-          </h3>
-          <Link to={createPageUrl('Matches') + '?tab=dating'}>
-            <Button variant="ghost" size="sm" className="text-xs h-7 text-pink-600 hover:text-pink-700">
-              View All
-            </Button>
-          </Link>
+    <>
+      {/* Trigger Button */}
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="rounded-xl relative group" 
+        title="Dating Matches"
+        onClick={() => setOpen(!open)}
+      >
+        <div
+          className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse"
+          style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+          <Heart className="w-3.5 h-3.5 text-white fill-white" />
         </div>
+        {enrichedMatches.length > 0 &&
+          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
+            {enrichedMatches.length > 99 ? '99+' : enrichedMatches.length}
+          </span>
+        }
+        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          Dating
+        </span>
+      </Button>
+      
+      {/* Draggable Popup */}
+      {open && (
+        <div 
+          ref={dragRef}
+          className="fixed z-50 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+          style={{ 
+            top: `calc(60px + ${position.y}px)`,
+            right: `calc(100px - ${position.x}px)`,
+            cursor: isDragging ? 'grabbing' : 'auto'
+          }}
+        >
+          {/* Draggable Header */}
+          <div 
+            className="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-[rgba(0,255,136,0.15)] cursor-grab active:cursor-grabbing"
+            onMouseDown={handleDragStart}
+            onTouchStart={handleDragStart}
+          >
+            <div className="flex items-center gap-2">
+              <GripHorizontal className="w-4 h-4 text-slate-400" />
+              <h3 className="text-slate-50 font-semibold dark:text-slate-100">Dating Matches</h3>
+            </div>
+            <div className="flex items-center gap-1">
+              <Link to={createPageUrl('Matches') + '?tab=dating'} onClick={() => setOpen(false)}>
+                <Button variant="ghost" size="sm" className="text-xs h-7 text-pink-400 hover:text-pink-300">
+                  View All
+                </Button>
+              </Link>
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => setOpen(false)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
 
         {enrichedMatches.length === 0 ?
         <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500 px-4">
@@ -551,7 +623,8 @@ export default function DatingMatchesPopup({ currentUser }) {
           }
           </div>
         }
-      </PopoverContent>
-    </Popover>);
+        </div>
+      )}
+    </>);
 
 }
