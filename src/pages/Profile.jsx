@@ -505,14 +505,15 @@ export default function Profile() {
 
           <TabsContent value="basic" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Avatar Uploader */}
-              <div>
-                <AvatarUploader
-                  currentAvatar={profile?.avatar_url}
-                  displayName={profile?.display_name}
-                  onAvatarUpdate={handleAvatarUpdate} />
-
-              </div>
+              {/* Avatar Uploader - only show for own profile */}
+              {isOwnProfile && (
+                <div>
+                  <AvatarUploader
+                    currentAvatar={profile?.avatar_url}
+                    displayName={profile?.display_name}
+                    onAvatarUpdate={handleAvatarUpdate} />
+                </div>
+              )}
 
               {/* Left Column - Profile Info */}
               <div className="lg:col-span-2 space-y-6">
