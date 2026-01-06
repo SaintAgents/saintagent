@@ -518,6 +518,58 @@ export default function Profile() {
 
               {/* Left Column - Profile Info */}
               <div className="lg:col-span-2 space-y-6">
+            {/* Status Message (own profile only) */}
+            {isOwnProfile && (
+              <Card>
+                <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <div className={cn(
+                      "w-3 h-3 rounded-full",
+                      profile?.status === 'online' && "bg-emerald-500",
+                      profile?.status === 'focus' && "bg-amber-500",
+                      profile?.status === 'dnd' && "bg-rose-500",
+                      profile?.status === 'offline' && "bg-slate-400",
+                      !profile?.status && "bg-emerald-500"
+                    )} />
+                    Status Message
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="What's on your mind?"
+                      value={profile?.status_message || ''}
+                      maxLength={100}
+                      onChange={async (e) => {
+                        await updateMutation.mutateAsync({ status_message: e.target.value });
+                      }}
+                      className="flex-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]"
+                    />
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2">This message shows when others hover over your avatar</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Show status message for other profiles */}
+            {!isOwnProfile && profile?.status_message && (
+              <Card>
+                <CardContent className="bg-purple-100 dark:bg-[#050505] p-4">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "w-3 h-3 rounded-full shrink-0",
+                      profile?.status === 'online' && "bg-emerald-500",
+                      profile?.status === 'focus' && "bg-amber-500",
+                      profile?.status === 'dnd' && "bg-rose-500",
+                      profile?.status === 'offline' && "bg-slate-400",
+                      !profile?.status && "bg-emerald-500"
+                    )} />
+                    <p className="text-slate-700 dark:text-slate-300 italic">"{profile.status_message}"</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Bio & Details */}
             <Card>
               <CardHeader className="bg-purple-100 p-6 flex flex-col space-y-1.5">
