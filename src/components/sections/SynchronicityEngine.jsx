@@ -13,8 +13,8 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <AIMatchGenerator profile={profile} />
-          <a href={createPageUrl('Matches')}>
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50" title="View All Matches">
+          <a href={createPageUrl('DatingMatches')}>
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50" title="View Dating Matches">
               <Heart className="w-5 h-5 text-pink-500" />
             </Button>
           </a>
@@ -46,7 +46,7 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
             ))
           )}
           {filteredMatches.length > 3 && (
-            <a href={createPageUrl('Matches')}>
+            <a href={createPageUrl('DatingMatches')}>
               <Button variant="ghost" className="w-full text-violet-600">
                 View all {filteredMatches.length} matches
                 <ArrowRight className="w-4 h-4 ml-2" />
