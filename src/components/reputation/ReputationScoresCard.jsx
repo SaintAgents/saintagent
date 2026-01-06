@@ -70,32 +70,35 @@ export default function ReputationScoresCard({ userId, onUpdated }) {
         ) : error ? (
           <div className="flex items-center justify-center py-6 text-red-500 text-sm">{error}</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="flex items-center gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {/* Influence Ring */}
+            <div className="flex flex-col items-center">
               <ProgressRing value={influence} max={100} size={88} strokeWidth={8} color="violet" label={`${influence}`} sublabel="/100" />
-              <div>
-                <div className="flex items-center gap-2 font-semibold text-slate-900"><TrendingUp className="w-5 h-5 text-violet-600" /> Influence</div>
-                {ib && (
-                  <div className="mt-1 text-sm grid grid-cols-2 gap-x-4 gap-y-0.5 text-slate-600">
-                    <div>Engagement</div><div className="text-slate-900 font-medium">{ib.engagement}</div>
-                    <div>Content</div><div className="text-slate-900 font-medium">{ib.content}</div>
-                    <div>Mentorship</div><div className="text-slate-900 font-medium">{ib.mentorship}</div>
-                  </div>
-                )}
+              <div className="mt-3 flex items-center gap-2 font-semibold text-slate-900 dark:text-white">
+                <TrendingUp className="w-4 h-4 text-violet-600" /> Influence
               </div>
+              {ib && (
+                <div className="mt-2 text-xs space-y-1 text-center">
+                  <div className="text-slate-500 dark:text-slate-400">Engagement <span className="text-slate-900 dark:text-white font-medium">{ib.engagement}</span></div>
+                  <div className="text-slate-500 dark:text-slate-400">Content <span className="text-slate-900 dark:text-white font-medium">{ib.content}</span></div>
+                  <div className="text-slate-500 dark:text-slate-400">Mentorship <span className="text-slate-900 dark:text-white font-medium">{ib.mentorship}</span></div>
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-6">
+            
+            {/* Expertise Ring */}
+            <div className="flex flex-col items-center">
               <ProgressRing value={expertise} max={100} size={88} strokeWidth={8} color="emerald" label={`${expertise}`} sublabel="/100" />
-              <div>
-                <div className="flex items-center gap-2 font-semibold text-slate-900"><BadgeCheck className="w-5 h-5 text-emerald-600" /> Expertise</div>
-                {eb && (
-                  <div className="mt-1 text-sm grid grid-cols-2 gap-x-4 gap-y-0.5 text-slate-600">
-                    <div>Skills</div><div className="text-slate-900 font-medium">{eb.skills}</div>
-                    <div>Projects</div><div className="text-slate-900 font-medium">{eb.projects}</div>
-                    <div>Peer Reviews</div><div className="text-slate-900 font-medium">{eb.peer}</div>
-                  </div>
-                )}
+              <div className="mt-3 flex items-center gap-2 font-semibold text-slate-900 dark:text-white">
+                <BadgeCheck className="w-4 h-4 text-emerald-600" /> Expertise
               </div>
+              {eb && (
+                <div className="mt-2 text-xs space-y-1 text-center">
+                  <div className="text-slate-500 dark:text-slate-400">Skills <span className="text-slate-900 dark:text-white font-medium">{eb.skills}</span></div>
+                  <div className="text-slate-500 dark:text-slate-400">Projects <span className="text-slate-900 dark:text-white font-medium">{eb.projects}</span></div>
+                  <div className="text-slate-500 dark:text-slate-400">Peer Reviews <span className="text-slate-900 dark:text-white font-medium">{eb.peer}</span></div>
+                </div>
+              )}
             </div>
           </div>
         )}
