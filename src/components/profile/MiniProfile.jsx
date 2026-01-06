@@ -156,122 +156,122 @@ export default function MiniProfile({
           </div>
           {(showName || showHandle) && (
             <div className="min-w-0">
-          {showName &&
-          <div className="flex items-center gap-1 min-w-0">
-              <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
-              {showHelpHint && (
-                <HelpHint
-                  side="right"
-                  align="start"
-                  className="ml-0.5"
-                  size={16}
-                  content={
-                    <div className="max-w-xs">
-                      <div className="text-sm font-semibold text-slate-800 mb-1">Avatar Indicators</div>
-                      <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
-                        <li><strong>Rank Ring</strong>: outer ring showing rank</li>
-                        <li><strong>Rank Sigil</strong>: symbol at top-left</li>
-                        <li><strong>Status Dot</strong>: online/focus/dnd</li>
-                        <li><strong>Leader Badge</strong>: verified 144k sparkle</li>
-                      </ul>
-                    </div>
-                  }
-                />
+              {showName && (
+                <div className="flex items-center gap-1 min-w-0">
+                  <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
+                  {showHelpHint && (
+                    <HelpHint
+                      side="right"
+                      align="start"
+                      className="ml-0.5"
+                      size={16}
+                      content={
+                        <div className="max-w-xs">
+                          <div className="text-sm font-semibold text-slate-800 mb-1">Avatar Indicators</div>
+                          <ul className="list-disc ml-4 text-xs text-slate-600 space-y-0.5">
+                            <li><strong>Rank Ring</strong>: outer ring showing rank</li>
+                            <li><strong>Rank Sigil</strong>: symbol at top-left</li>
+                            <li><strong>Status Dot</strong>: online/focus/dnd</li>
+                            <li><strong>Leader Badge</strong>: verified 144k sparkle</li>
+                          </ul>
+                        </div>
+                      }
+                    />
+                  )}
+                </div>
               )}
-            </div>
-          }
-          {showHandle && (handle || sa) &&
-        <div className="text-xs text-slate-500 truncate">
-              {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
-            </div>
-        }
-          <TooltipProvider delayDuration={200}>
-          <div className="flex flex-wrap items-center gap-1 mt-0.5">
-            {showRankBadge && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700 cursor-help">
-                    Rank: {rankTitle}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[200px]">
-                  <p className="text-xs">Your spiritual rank based on Reputation Points (RP). Progress through Seeker → Initiate → Adept → Master → Sage → Oracle → Guardian.</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {roles?.map((r) =>
-          <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
-                {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
-              </Badge>
-          )}
-            {showTrustBadge && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1 cursor-help">
-                    <Shield className="w-3 h-3" />
-                    Trust: {Math.round(profile?.trust_score ?? 0)}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[200px]">
-                  <p className="text-xs"><strong>Trust Score</strong> measures reliability based on completed meetings, testimonials, and verified actions.</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {typeof profile?.influence_score === 'number' &&
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700 flex items-center gap-1 cursor-help">
-                    <TrendingUp className="w-3 h-3" />
-                    Influence: {Math.round(profile.influence_score)}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[200px]">
-                  <p className="text-xs"><strong>Influence Score</strong> reflects your impact through engagement, content creation, and mentorship.</p>
-                </TooltipContent>
-              </Tooltip>
-          }
-            {showReachBadge && typeof profile?.reach_score === 'number' && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1 cursor-help">
-                    <Users className="w-3 h-3" />
-                    Reach: {Math.round(profile.reach_score)}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[200px]">
-                  <p className="text-xs"><strong>Reach Score</strong> shows your network size based on followers and connections.</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {typeof profile?.expertise_score === 'number' &&
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1 cursor-help">
-                    <BadgeCheck className="w-3 h-3" />
-                    Expertise: {Math.round(profile.expertise_score)}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[200px]">
-                  <p className="text-xs"><strong>Expertise Score</strong> represents skill depth from endorsements, projects, and peer reviews.</p>
-                </TooltipContent>
-              </Tooltip>
-          }
-            {typeof profile?.ggg_balance === 'number' && profile.ggg_balance > 0 && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className="h-5 text-[10px] bg-amber-100 text-amber-700 flex items-center gap-1 cursor-help">
-                    <Coins className="w-3 h-3" />
-                    {Math.round(profile.ggg_balance)} GGG
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[220px]">
-                  <p className="text-xs"><strong>GGG (Give, Grow, Glow)</strong> is the platform's gratitude currency. Earn it by helping others, completing missions, and contributing to the community.</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
-          </TooltipProvider>
-                {miniBadges?.length > 0 && (
+              {showHandle && (handle || sa) && (
+                <div className="text-xs text-slate-500 truncate">
+                  {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
+                </div>
+              )}
+              <TooltipProvider delayDuration={200}>
+                <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                  {showRankBadge && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700 cursor-help">
+                          Rank: {rankTitle}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[200px]">
+                        <p className="text-xs">Your spiritual rank based on Reputation Points (RP). Progress through Seeker → Initiate → Adept → Master → Sage → Oracle → Guardian.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {roles?.map((r) => (
+                    <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
+                      {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
+                    </Badge>
+                  ))}
+                  {showTrustBadge && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1 cursor-help">
+                          <Shield className="w-3 h-3" />
+                          Trust: {Math.round(profile?.trust_score ?? 0)}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[200px]">
+                        <p className="text-xs"><strong>Trust Score</strong> measures reliability based on completed meetings, testimonials, and verified actions.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {typeof profile?.influence_score === 'number' && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="h-5 text-[10px] bg-violet-100 text-violet-700 flex items-center gap-1 cursor-help">
+                          <TrendingUp className="w-3 h-3" />
+                          Influence: {Math.round(profile.influence_score)}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[200px]">
+                        <p className="text-xs"><strong>Influence Score</strong> reflects your impact through engagement, content creation, and mentorship.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {showReachBadge && typeof profile?.reach_score === 'number' && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1 cursor-help">
+                          <Users className="w-3 h-3" />
+                          Reach: {Math.round(profile.reach_score)}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[200px]">
+                        <p className="text-xs"><strong>Reach Score</strong> shows your network size based on followers and connections.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {typeof profile?.expertise_score === 'number' && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="h-5 text-[10px] bg-blue-100 text-blue-700 flex items-center gap-1 cursor-help">
+                          <BadgeCheck className="w-3 h-3" />
+                          Expertise: {Math.round(profile.expertise_score)}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[200px]">
+                        <p className="text-xs"><strong>Expertise Score</strong> represents skill depth from endorsements, projects, and peer reviews.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {typeof profile?.ggg_balance === 'number' && profile.ggg_balance > 0 && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="h-5 text-[10px] bg-amber-100 text-amber-700 flex items-center gap-1 cursor-help">
+                          <Coins className="w-3 h-3" />
+                          {Math.round(profile.ggg_balance)} GGG
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[220px]">
+                        <p className="text-xs"><strong>GGG (Give, Grow, Glow)</strong> is the platform's gratitude currency. Earn it by helping others, completing missions, and contributing to the community.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
+              </TooltipProvider>
+              {miniBadges?.length > 0 && (
                 <div className="mt-1">
                   <BadgesBar badges={miniBadges} defaultIfEmpty={false} />
                 </div>
