@@ -1,7 +1,9 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Heart } from "lucide-react";
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import MatchCard from '@/components/hud/MatchCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import HelpHint from '@/components/hud/HelpHint';
@@ -10,7 +12,14 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <AIMatchGenerator profile={profile} />
+        <div className="flex items-center gap-2">
+          <AIMatchGenerator profile={profile} />
+          <Link to={createPageUrl('Matches')}>
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50" title="View All Matches">
+              <Heart className="w-5 h-5 text-pink-500" />
+            </Button>
+          </Link>
+        </div>
         <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment (0-100). Match Types: People, Offers, Missions, Events, Teachers. Complete both 'Skills' and 'Mystical Identity' for optimal matching. AI-generated Conversation Starters help break the ice." />
       </div>
       <Tabs value={matchTab} onValueChange={setMatchTab} className="w-full">
@@ -38,10 +47,12 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
             ))
           )}
           {filteredMatches.length > 3 && (
-            <Button variant="ghost" className="w-full text-violet-600">
-              View all {filteredMatches.length} matches
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <Link to={createPageUrl('Matches')}>
+              <Button variant="ghost" className="w-full text-violet-600">
+                View all {filteredMatches.length} matches
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
           )}
         </div>
       </Tabs>
