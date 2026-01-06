@@ -369,7 +369,7 @@ export default function Profile() {
               </div>
               <div className="flex-1 pb-2 mt-8">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{(['mathues','adam','peaceday'].includes((profile?.handle || '').toLowerCase()) ? (profile?.display_name || '') : `${profile?.display_name || ''} (demo)`)}</h1>
+                  <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || 'User'}</h1>
                   {profile?.leader_tier === 'verified144k' && (
                     <Badge className="bg-amber-100 text-amber-700">
                       <Crown className="w-3 h-3 mr-1" />
