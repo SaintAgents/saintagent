@@ -153,9 +153,10 @@ export default function DatingMatchesPopup({ currentUser }) {
     const userProfile = userProfiles.find((up) => up.user_id === dp.user_id);
     let avatar = dp.avatar_url || userProfile?.avatar_url;
 
-    // Assign unique demo avatar if no real avatar
+    // Assign unique demo avatar based on their ACTUAL gender, not arbitrary alternation
     if (!avatar) {
-      const isMale = idx % 2 === 0;
+      const isMale = dp.gender === 'man';
+      const isFemale = dp.gender === 'woman';
       if (isMale) {
         for (let i = 0; i < DEMO_AVATARS_MALE.length; i++) {
           if (!usedMaleIdx.has(i)) {
@@ -164,7 +165,7 @@ export default function DatingMatchesPopup({ currentUser }) {
             break;
           }
         }
-      } else {
+      } else if (isFemale) {
         for (let i = 0; i < DEMO_AVATARS_FEMALE.length; i++) {
           if (!usedFemaleIdx.has(i)) {
             usedFemaleIdx.add(i);
@@ -172,6 +173,9 @@ export default function DatingMatchesPopup({ currentUser }) {
             break;
           }
         }
+      } else {
+        // Non-binary or other - pick from either pool
+        avatar = idx % 2 === 0 ? DEMO_AVATARS_MALE[idx % DEMO_AVATARS_MALE.length] : DEMO_AVATARS_FEMALE[idx % DEMO_AVATARS_FEMALE.length];
       }
     }
 
@@ -179,15 +183,31 @@ export default function DatingMatchesPopup({ currentUser }) {
     const galleryImages = userProfile?.gallery_images || [];
     const allImages = [avatar, ...galleryImages].filter(Boolean);
 
+    // Generate demo name if no real name exists
+    let displayName = dp.display_name || userProfile?.display_name;
+    if (!displayName || displayName === 'Anonymous') {
+      // Use demo names based on gender
+      const femaleNames = ['Sophia', 'Luna', 'Maya', 'Aria', 'Elena', 'Nova', 'Zara', 'Ivy', 'Jade', 'Willow'];
+      const maleNames = ['Ethan', 'Kai', 'Leo', 'Finn', 'Jasper', 'River', 'Ash', 'Theo', 'Noah', 'Ezra'];
+      if (dp.gender === 'woman') {
+        displayName = femaleNames[idx % femaleNames.length];
+      } else if (dp.gender === 'man') {
+        displayName = maleNames[idx % maleNames.length];
+      } else {
+        displayName = [...femaleNames, ...maleNames][idx % 20];
+      }
+    }
+    
     return {
       ...dp,
-      display_name: dp.display_name || userProfile?.display_name || 'Anonymous',
+      display_name: displayName,
       avatar_url: avatar,
       location: dp.location || userProfile?.location,
       bio: dp.bio || userProfile?.bio,
       values_tags: userProfile?.values_tags || [],
       skills: userProfile?.skills || [],
-      all_images: allImages
+      all_images: allImages,
+      is_demo: dp.is_demo === true || !userProfile
     };
   });
 
@@ -212,6 +232,11 @@ export default function DatingMatchesPopup({ currentUser }) {
   };
 
   const handleViewProfile = (match) => {
+    // Don't navigate for demo profiles that have no real UserProfile
+    if (match.is_demo) {
+      // Just show more info in the popup or do nothing
+      return;
+    }
     window.location.href = createPageUrl('Profile') + `?id=${encodeURIComponent(match.user_id)}`;
     setOpen(false);
   };
@@ -463,26 +488,30 @@ export default function DatingMatchesPopup({ currentUser }) {
 
                 {/* Action Buttons */}
                 <div className="flex gap-2 mt-3">
+                  {!currentMatch.is_demo ? (
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "flex-1 rounded-xl gap-2",
+                        "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
+                        "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
+                      )}
+                      onClick={() => handleViewProfile(currentMatch)}>
+                      <User className="w-4 h-4 text-pink-500 [data-theme='hacker']_&:text-[#00ff00]" />
+                      View Profile
+                    </Button>
+                  ) : (
+                    <div className="flex-1 text-center text-xs text-slate-400 py-2">
+                      Demo profile
+                    </div>
+                  )}
                   <Button
-                variant="outline"
-                className={cn(
-                  "flex-1 rounded-xl gap-2",
-                  "border-pink-200 hover:bg-pink-50 hover:border-pink-300",
-                  "[data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:bg-[#002200] [data-theme='hacker']_&:hover:shadow-[0_0_8px_#00ff00]"
-                )}
-                onClick={() => handleViewProfile(currentMatch)}>
-
-                    <User className="w-4 h-4 text-pink-500 [data-theme='hacker']_&:text-[#00ff00]" />
-                    View Profile
-                  </Button>
-                  <Button
-                className={cn(
-                  "flex-1 rounded-xl gap-2",
-                  "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600",
-                  "[data-theme='hacker']_&:from-[#00cc00] [data-theme='hacker']_&:to-[#00ff00] [data-theme='hacker']_&:text-black [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]"
-                )}
-                onClick={() => handleOpenChat(currentMatch)}>
-
+                    className={cn(
+                      "flex-1 rounded-xl gap-2",
+                      "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600",
+                      "[data-theme='hacker']_&:from-[#00cc00] [data-theme='hacker']_&:to-[#00ff00] [data-theme='hacker']_&:text-black [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]"
+                    )}
+                    onClick={() => handleOpenChat(currentMatch)}>
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
