@@ -33,7 +33,7 @@ import MiniProfile from '@/components/profile/MiniProfile';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { getMaleAvatarByIndex, getFemaleAvatarByIndex } from '@/components/demoAvatars';
 
-export default function MatchCard({ match, onAction }) {
+export default function MatchCard({ match, onAction, onAskAI }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const [showChoice, setShowChoice] = useState(false);
@@ -457,15 +457,16 @@ export default function MatchCard({ match, onAction }) {
                   <ThumbsDown className="w-3 h-3 mr-1" />
                   Less like this
                 </Button>
-                <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs h-7 flex-1 text-violet-600 hover:text-violet-700 hover:bg-violet-50"
-                onClick={(e) => { e.stopPropagation(); onAction?.('analyze', match); }}>
-
-                  <HelpCircle className="w-3 h-3 mr-1" />
-                  Ask AI
-                </Button>
+                {onAskAI && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs h-7 flex-1 text-violet-600"
+                    onClick={(e) => { e.stopPropagation(); onAskAI(match); }}>
+                    <HelpCircle className="w-3 h-3 mr-1" />
+                    Ask AI
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>
