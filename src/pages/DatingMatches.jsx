@@ -428,10 +428,11 @@ function DatingMatchCard({ profile, onMessage, onViewProfile }) {
           </Button>
           <Button
             variant="outline"
-            className="border-pink-200 hover:bg-pink-50"
+            className="flex-1 gap-1 border-pink-200 hover:bg-pink-50"
             onClick={onViewProfile}
           >
             <Eye className="w-4 h-4" />
+            Profile
           </Button>
         </div>
       </CardContent>

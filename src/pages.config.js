@@ -19,6 +19,7 @@ import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
 import Marketplace from './pages/Marketplace';
 import MatchSettings from './pages/MatchSettings';
+import Matches from './pages/Matches';
 import Meetings from './pages/Meetings';
 import Mentorship from './pages/Mentorship';
 import Messages from './pages/Messages';
@@ -37,7 +38,6 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Matches from './pages/Matches';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +63,7 @@ export const PAGES = {
     "ListingDetail": ListingDetail,
     "Marketplace": Marketplace,
     "MatchSettings": MatchSettings,
+    "Matches": Matches,
     "Meetings": Meetings,
     "Mentorship": Mentorship,
     "Messages": Messages,
@@ -81,7 +82,6 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Matches": Matches,
 }
 
 export const pagesConfig = {
