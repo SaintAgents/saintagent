@@ -123,7 +123,7 @@ export default function CommandDeck() {
   });
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
-  const walletAvailable = (walletBalance != null && walletBalance > 0) ? walletBalance : (profile?.ggg_balance ?? 0);
+  const walletAvailable = walletBalance != null && walletBalance > 0 ? walletBalance : profile?.ggg_balance ?? 0;
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
 
@@ -488,7 +488,7 @@ export default function CommandDeck() {
             </div>
             <div className="flex items-center gap-3 relative z-10">
               <Button
-                variant="outline" className="bg-zinc-200 text-slate-50 px-4 py-2 text-sm font-medium rounded-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
+                variant="outline" className="bg-purple-200 text-fuchsia-950 px-4 py-2 text-sm font-medium rounded-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
 
                 onClick={() => setSidePanelOpen(!sidePanelOpen)}>
 
@@ -514,18 +514,18 @@ export default function CommandDeck() {
                 <RankedAvatar
                   src={profile?.avatar_url}
                   name={profile?.display_name}
-                  size={120}
+                  size={96}
                   leaderTier={profile?.leader_tier}
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={rpPoints}
                   userId={profile?.user_id}
                   status={profile?.status || 'offline'} />
-                <img 
+                <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                   alt="Command Deck"
                   className="w-24 h-24 object-contain drop-shadow-lg"
-                  data-no-filter="true"
-                />
+                  data-no-filter="true" />
+
               </div>
 
               <div className="flex-1">
@@ -968,7 +968,7 @@ export default function CommandDeck() {
               <QuickStartChecklist />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Challenges & Rewards" icon={Trophy} badge={challenges.filter(c => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" forceOpen={cardsForceOpen}>
+            <CollapsibleCard title="Challenges & Rewards" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" forceOpen={cardsForceOpen}>
               <GamificationWidget profile={profile} />
             </CollapsibleCard>
 
