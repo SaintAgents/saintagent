@@ -64,7 +64,19 @@ export default function ActivityFeed() {
           </Button>
         </div>
 
-        {/* Filters */}
+        {/* Scope Toggle */}
+        <Tabs value={scope} onValueChange={setScope} className="mb-4">
+          <TabsList className="grid w-full max-w-xs grid-cols-2">
+            <TabsTrigger value="friends" className="gap-2">
+              <Heart className="w-4 h-4" /> Friends
+            </TabsTrigger>
+            <TabsTrigger value="everyone" className="gap-2">
+              <Globe className="w-4 h-4" /> Everyone
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* Type Filters */}
         <Card className="mb-6">
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center gap-4">
