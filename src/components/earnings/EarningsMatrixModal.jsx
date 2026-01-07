@@ -149,11 +149,11 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
               </div>
             </div>
           </TabsContent>
+          
+          <div className="mt-4">
+            <Button onClick={() => onOpenChange?.(false)} className="w-full rounded-xl">Close</Button>
+          </div>
         </Tabs>
-
-        <div className="px-6 pb-4">
-          <Button onClick={() => onOpenChange?.(false)} className="w-full rounded-xl">Close</Button>
-        </div>
       </DialogContent>
     </Dialog>
   );
