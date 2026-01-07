@@ -69,6 +69,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Link } from 'react-router-dom';
+import { Trophy } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
