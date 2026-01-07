@@ -622,9 +622,6 @@ export default function SidePanel({
                     Daily Ops
                   </Button>
                 </div>
-                <div className="text-xs text-slate-600">
-                  Next rank in <span className="font-semibold text-violet-700">{Math.max(0, nextRankAt - rankProgress)}</span> pts
-                </div>
               </div>
 
               {/* GGG & Rank */}
