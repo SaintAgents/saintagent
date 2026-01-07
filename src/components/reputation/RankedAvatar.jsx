@@ -42,9 +42,8 @@ function RankBadge({ code = 'seeker', size = 24 }) {
     <img 
       src={imgUrl} 
       alt={code} 
-      className="object-contain dark:hue-rotate-[70deg] dark:saturate-150 [data-theme='hacker']_&:hue-rotate-[70deg] [data-theme='hacker']_&:saturate-200"
+      className="object-contain rank-badge-img"
       style={{ width: size, height: size }}
-      data-no-filter="true"
     />
   );
 }
