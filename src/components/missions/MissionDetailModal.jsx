@@ -24,8 +24,11 @@ import {
   CheckCircle2,
   Calendar,
   ExternalLink,
-  Share2
+  Share2,
+  MessageSquare
 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MissionCollaborationBoard from './MissionCollaborationBoard';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
@@ -283,6 +286,17 @@ export default function MissionDetailModal({ mission, open, onClose }) {
                   size={36}
                   showRankBadge={false}
                 />
+              </div>
+            )}
+
+            {/* Collaboration Board */}
+            {isParticipant && (
+              <div className="pt-4 border-t border-slate-100">
+                <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-violet-500" />
+                  Collaboration Board
+                </h3>
+                <MissionCollaborationBoard missionId={mission.id} mission={mission} />
               </div>
             )}
           </div>
