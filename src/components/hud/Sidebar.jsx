@@ -60,7 +60,8 @@ import {
   Star,
   Ban,
   Waves,
-  Cloud
+  Cloud,
+  Shield
 } from "lucide-react";
 import {
   Tooltip,
