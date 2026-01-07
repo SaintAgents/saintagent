@@ -27,15 +27,15 @@ import {
 
 const getCategoryImage = (category) => {
   const images = {
-    mentorship: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80',
-    course: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=600&q=80',
-    session: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80',
-    consulting: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&q=80',
-    healing: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80',
-    mutual_aid: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80',
-    collaboration: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
+    mentorship: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c9e152cd0_Screenshot2026-01-07113234.png', // 1:1 Spiritual Counseling
+    course: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c94d717d0_Screenshot2026-01-07114020.png', // Golden Stairway
+    session: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f6edf3f1b_Screenshot2026-01-07113226.png', // Quantum Energy Healing
+    consulting: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f493f18a9_Screenshot2026-01-07113306.png', // Conscious Business Architecture
+    healing: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/de12002a0_Screenshot2026-01-07113248.png', // 1:1 Spiritual Group Session
+    mutual_aid: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f5aee40a5_Screenshot2026-01-07113253.png', // Dreamscape Analysis Faces
+    collaboration: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fc40a031d_Screenshot2026-01-07113312.png', // Community Architecture & Circle Design
   };
-  return images[category] || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80';
+  return images[category] || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7971eb7ff_Screenshot2026-01-07113242.png'; // Dreamscape Analysis default
 };
 
 export default function ListingCard({ listing, onAction, isOwner = false }) {
