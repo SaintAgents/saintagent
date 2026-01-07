@@ -65,6 +65,21 @@ html[data-theme='dark'] .listing-image {
   mix-blend-mode: normal !important;
 }
 
+/* HACKER THEME: Listing images get green monochrome filter */
+[data-theme='hacker'] .rounded-xl img.listing-image,
+[data-theme='hacker'] .rounded-lg img.listing-image,
+[data-theme='hacker'] div img.listing-image,
+[data-theme='hacker'] img.listing-image,
+html[data-theme='hacker'] img.listing-image,
+html[data-theme='hacker'] .listing-image {
+  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  mix-blend-mode: normal !important;
+}
+
 /* Avatar images - preserve natural colors in DARK theme only */
 [data-theme='dark'] [class*='Avatar'] img,
 [data-theme='dark'] .avatar-image,
