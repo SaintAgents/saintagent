@@ -208,6 +208,13 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       <ScrollArea className="flex-1">
         {/* Hero Background */}
         <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
+          {/* SA Shield Badge */}
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
+            alt="Saint Agent"
+            className="absolute top-2 right-3 w-20 h-20 object-contain z-10 drop-shadow-lg"
+            data-no-filter="true"
+          />
           {profile.hero_image_url && (
             <img 
               src={profile.hero_image_url} 
