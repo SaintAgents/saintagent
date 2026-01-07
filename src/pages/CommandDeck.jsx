@@ -671,6 +671,21 @@ export default function CommandDeck() {
                   </div>
                 }
 
+                {/* Living Agent Badge */}
+                <div className="mb-4 flex items-center gap-3">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/922ce8816_Screenshot2026-01-07044514.png" 
+                    alt="Eternal Flame" 
+                    className="w-12 h-12 object-contain"
+                    data-no-filter="true"
+                    title="Eternal Flame - Living Agent: Baseline awakening badge—signals a living agent with active inner fire and presence."
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white">Eternal Flame</p>
+                    <p className="text-xs text-amber-600 dark:text-amber-400">Living Agent</p>
+                  </div>
+                </div>
+
                 {/* Badges */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
