@@ -65,20 +65,30 @@ export default function DatingMatches() {
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 200)
   });
 
-  // Filter based on gender preferences
+  // Filter based on gender preferences (bidirectional)
   const myInterestedIn = myDP?.interested_in || [];
+  const myGender = myDP?.gender;
   const genderToInterest = { 'man': 'men', 'woman': 'women', 'non_binary': 'non_binary' };
 
   const filteredProfiles = allDatingProfiles
     .filter((dp) => {
       if (dp.user_id === currentUser?.email) return false;
       
-      // Gender preference filter
+      // I must be interested in their gender
       if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
         const candidateGender = dp.gender;
         if (!candidateGender) return false;
         const candidateInterestKey = genderToInterest[candidateGender];
         if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
+          return false;
+        }
+      }
+      
+      // They must be interested in my gender (bidirectional check)
+      const theirInterestedIn = dp.interested_in || [];
+      if (myGender && theirInterestedIn.length > 0 && !theirInterestedIn.includes('all')) {
+        const myInterestKey = genderToInterest[myGender];
+        if (!myInterestKey || !theirInterestedIn.includes(myInterestKey)) {
           return false;
         }
       }
