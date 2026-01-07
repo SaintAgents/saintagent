@@ -95,18 +95,30 @@ export default function ActivityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] p-6 relative z-10">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <BackButton />
-            <span className="dark:text-white dark:drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]" style={{ opacity: 1 }}>Activity Feed</span>
-          </h1>
-          <Button variant="outline" className="rounded-xl" onClick={() => refetch()} disabled={isFetching}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] relative z-10">
+      {/* Hero Section */}
+      <div className="relative h-48 md:h-56 overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/24f4dfba3_Screenshot2026-01-06215401.png"
+          alt="Activity Feed"
+          className="w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
+        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+          <div className="flex items-center gap-3">
+            <BackButton className="text-white hover:bg-white/20" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+              Activity Feed
+            </h1>
+          </div>
+          <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
           </Button>
         </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto p-6">
 
         {/* Scope Toggle */}
         <Tabs value={scope} onValueChange={setScope} className="mb-4">
