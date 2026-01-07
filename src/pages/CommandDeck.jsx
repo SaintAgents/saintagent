@@ -525,7 +525,7 @@ export default function CommandDeck() {
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                   alt="Command Deck"
-                  className="w-[96px] h-[96px] object-contain drop-shadow-lg"
+                  className="w-24 h-24 object-contain drop-shadow-lg"
                   data-no-filter="true" />
 
               </div>
@@ -672,21 +672,6 @@ export default function CommandDeck() {
                   </div>
                 }
 
-                {/* Living Agent Badge */}
-                <div className="mb-4 flex items-center gap-3">
-                  <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png" 
-                    alt="Eternal Flame" 
-                    className="w-12 h-12 object-contain"
-                    data-no-filter="true"
-                    title="Eternal Flame - Living Agent: Baseline awakening badge—signals a living agent with active inner fire and presence."
-                  />
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">Eternal Flame</p>
-                    <p className="text-xs text-amber-600 dark:text-amber-400">Living Agent</p>
-                  </div>
-                </div>
-
                 {/* Badges */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
@@ -695,7 +680,17 @@ export default function CommandDeck() {
                       View Glossary
                     </button>
                   </div>
-                  <BadgesBar badges={badges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
+                  <BadgesBar 
+                    badges={badges} 
+                    defaultIfEmpty={true} 
+                    onMore={() => setBadgeGlossaryOpen(true)}
+                    eternalFlameBadge={{
+                      code: 'eternal_flame',
+                      badge_name: 'Eternal Flame',
+                      description: 'Living Agent',
+                      icon_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png'
+                    }}
+                  />
                 </div>
 
                 {/* Mystical Profile */}
