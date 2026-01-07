@@ -228,16 +228,8 @@ export default function SidePanel({
     document.dispatchEvent(new CustomEvent('sidePanelStateChange', { detail: { isOpen } }));
   }, [isOpen, dockSide]);
 
-  // Listen for global toggle events from GlobalSidePanelNudge
-  React.useEffect(() => {
-    const handleToggle = (e) => {
-      if (e.detail?.open && !isOpen && onToggle) {
-        onToggle();
-      }
-    };
-    document.addEventListener('toggleSidePanel', handleToggle);
-    return () => document.removeEventListener('toggleSidePanel', handleToggle);
-  }, [isOpen, onToggle]);
+  // Note: Global toggle events are now handled by CommandDeck directly
+  // SidePanel just receives isOpen as a prop from parent
 
   const onDragMove = (e) => {
     const dy = e.clientY - dragRef.current.startY;
