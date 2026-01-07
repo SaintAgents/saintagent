@@ -11,30 +11,26 @@ export default function GlobalSidePanelNudge() {
   const [isOpen, setIsOpen] = useState(false);
   const [dockSide, setDockSide] = useState('right');
 
-  // Sync with localStorage on mount and listen for changes
+  // Listen for sidePanelOpen changes via custom event from SidePanel
   useEffect(() => {
-    const checkState = () => {
-      try {
-        const saved = localStorage.getItem('sidePanelOpen');
-        setIsOpen(saved === 'true');
-        const savedSide = localStorage.getItem('sidePanelDockSide');
-        if (savedSide === 'left' || savedSide === 'right') {
-          setDockSide(savedSide);
-        }
-      } catch {}
+    const handlePanelChange = (e) => {
+      if (e.detail?.isOpen !== undefined) {
+        setIsOpen(e.detail.isOpen);
+      }
     };
     
-    checkState();
+    // Check localStorage once on mount for dock side only
+    try {
+      const savedSide = localStorage.getItem('sidePanelDockSide');
+      if (savedSide === 'left' || savedSide === 'right') {
+        setDockSide(savedSide);
+      }
+    } catch {}
     
-    // Listen for storage changes (from other tabs or SidePanel updates)
-    window.addEventListener('storage', checkState);
-    
-    // Also poll occasionally in case local component updates
-    const interval = setInterval(checkState, 500);
+    document.addEventListener('sidePanelStateChange', handlePanelChange);
     
     return () => {
-      window.removeEventListener('storage', checkState);
-      clearInterval(interval);
+      document.removeEventListener('sidePanelStateChange', handlePanelChange);
     };
   }, []);
 
