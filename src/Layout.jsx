@@ -1019,6 +1019,23 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
+          background-color: #050505 !important;
+        }
+
+        /* Hacker theme background for Command Deck - ensure no white flash */
+        [data-theme='hacker'] main[data-page='CommandDeck'] {
+          background-color: #000 !important;
+          background-image: none !important;
+        }
+
+        /* Prevent white flash during theme transitions */
+        [data-theme='dark'] main,
+        [data-theme='hacker'] main {
+          background-color: #050505 !important;
+          transition: none !important;
+        }
+        [data-theme='hacker'] main {
+          background-color: #000 !important;
         }
 
         /* Avatar card background - light mode uses gold shield, dark mode solid obsidian */
