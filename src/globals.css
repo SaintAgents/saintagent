@@ -12,12 +12,24 @@
 /* Prevent white flash on page load */
 [data-theme='dark'] body,
 [data-theme='dark'] .min-h-screen,
+[data-theme='dark'] main,
 [data-theme='hacker'] body,
-[data-theme='hacker'] .min-h-screen {
+[data-theme='hacker'] .min-h-screen,
+[data-theme='hacker'] main {
   background-color: #050505 !important;
 }
 [data-theme='hacker'] body,
-[data-theme='hacker'] .min-h-screen {
+[data-theme='hacker'] .min-h-screen,
+[data-theme='hacker'] main {
+  background-color: #000 !important;
+}
+
+/* Force dark backgrounds on gradient containers */
+[data-theme='dark'] [class*='bg-gradient-'],
+[data-theme='hacker'] [class*='bg-gradient-'] {
+  background-color: #050505 !important;
+}
+[data-theme='hacker'] [class*='bg-gradient-'] {
   background-color: #000 !important;
 }
 
