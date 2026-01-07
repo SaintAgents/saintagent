@@ -26,7 +26,7 @@ export default function ActivityFeed() {
 
   const activeTypes = useMemo(() => Object.entries(filters).filter(([,v]) => v).map(([k]) => k), [filters]);
 
-  const { data, refetch, isFetching } = useQuery({
+  const { data, refetch, isFetching, isError, error } = useQuery({
     queryKey: ['activityFeed', activeTypes.sort().join(','), scope],
     queryFn: async () => {
       const { data: res } = await base44.functions.invoke('getActivityFeed', { types: activeTypes, limit: 60, scope });
@@ -36,6 +36,7 @@ export default function ActivityFeed() {
   });
 
   const items = data || [];
+  const isRateLimited = isError && error?.message?.toLowerCase().includes('rate limit');
 
   const handleOpen = (ev) => {
     if (ev.type === 'listings') {
