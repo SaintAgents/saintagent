@@ -52,13 +52,13 @@ export default function ActivityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] p-6 relative z-10">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
             <BackButton />
-            <span className="dark:text-[#00ff88] dark:drop-shadow-[0_0_8px_rgba(0,255,136,0.5)]">Activity Feed</span>
+            <span className="dark:text-[#00ff88] dark:drop-shadow-[0_0_12px_rgba(0,255,136,0.7)] text-shadow-lg">Activity Feed</span>
           </h1>
           <Button variant="outline" className="rounded-xl" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
@@ -147,34 +147,34 @@ export default function ActivityFeed() {
               return (
                 <div
                   key={ev.id}
-                  className="bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] rounded-xl p-4 hover:shadow-md transition-colors cursor-pointer"
+                  className="bg-white dark:bg-[#050505] border border-slate-200 dark:border-[#00ff88]/40 rounded-xl p-4 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all cursor-pointer relative z-10"
                   onClick={() => handleOpen(ev)}
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg ${meta.color}`}><Icon className="w-4 h-4" /></div>
+                    <div className={`p-2 rounded-lg ${meta.color} dark:bg-[#00ff88]/20`}><Icon className="w-4 h-4 dark:text-[#00ff88]" /></div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <div className="font-medium text-slate-900 dark:text-[#00ff88] dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.4)] truncate">{ev.title}</div>
-                        <div className="text-xs text-slate-500 dark:text-[#00d4ff]">{new Date(ev.created_date).toLocaleString()}</div>
+                        <div className="font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.5)] truncate">{ev.title}</div>
+                        <div className="text-xs text-slate-500 dark:text-[#00d4ff] dark:font-medium">{new Date(ev.created_date).toLocaleString()}</div>
                       </div>
                       {ev.description && (
-                        <div className="text-sm text-slate-600 dark:text-white mt-0.5 line-clamp-2">{ev.description}</div>
+                        <div className="text-sm text-slate-600 dark:text-slate-200 mt-0.5 line-clamp-2">{ev.description}</div>
                       )}
-                      <Separator className="my-3 dark:bg-[rgba(0,255,136,0.3)]" />
+                      <Separator className="my-3 dark:bg-[#00ff88]/30" />
                       {/* Actor / Target context */}
                       <div className="flex items-center gap-3">
                         {ev.actor_id && <MiniProfile userId={ev.actor_id} size={40} showHandle={false} />}
                         {ev.type === 'listings' && (
-                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Marketplace</div>
+                          <div className="text-xs font-medium text-slate-500 dark:text-[#00ff88]">Marketplace</div>
                         )}
                         {ev.type === 'missions' && (
-                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Mission update</div>
+                          <div className="text-xs font-medium text-slate-500 dark:text-[#00ff88]">Mission update</div>
                         )}
                         {ev.type === 'testimonials' && (
-                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Feedback</div>
+                          <div className="text-xs font-medium text-slate-500 dark:text-[#00ff88]">Feedback</div>
                         )}
                         {ev.type === 'reputation' && (
-                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Reputation</div>
+                          <div className="text-xs font-medium text-slate-500 dark:text-[#00ff88]">Reputation</div>
                         )}
                       </div>
                     </div>
