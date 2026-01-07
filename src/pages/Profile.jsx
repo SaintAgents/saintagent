@@ -358,11 +358,18 @@ export default function Profile() {
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
           <div className="relative h-48 bg-gradient-to-r from-violet-500 to-purple-600 group">
-            {profile?.hero_image_url &&
-            <img
-              src={profile.hero_image_url}
-              alt="Profile hero"
-              className="w-full h-full object-cover" />
+                          {/* SA Shield Badge */}
+                          <img 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
+                            alt="Saint Agent"
+                            className="absolute top-2 right-4 w-28 h-28 object-contain z-10 drop-shadow-lg"
+                            data-no-filter="true"
+                          />
+                          {profile?.hero_image_url &&
+                          <img
+                            src={profile.hero_image_url}
+                            alt="Profile hero"
+                            className="w-full h-full object-cover" />
 
             }
             {isOwnProfile && (
