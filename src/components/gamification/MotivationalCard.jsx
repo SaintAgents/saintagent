@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Flame, RefreshCw, Sparkles, Quote } from 'lucide-react';
+import { Flame, RefreshCw, Sparkles, Quote, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const SAINT_GERMAIN_MESSAGES = [
   // Original 20
@@ -55,6 +57,8 @@ export default function MotivationalCard({ className = "" }) {
     Math.floor(Math.random() * SAINT_GERMAIN_MESSAGES.length)
   );
   const [isAnimating, setIsAnimating] = useState(false);
+  const [likeAnimation, setLikeAnimation] = useState(false);
+  const queryClient = useQueryClient();
 
   // Auto-rotate daily based on date
   useEffect(() => {
@@ -62,6 +66,44 @@ export default function MotivationalCard({ className = "" }) {
     const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
     setCurrentIndex(dayOfYear % SAINT_GERMAIN_MESSAGES.length);
   }, []);
+
+  // Fetch current user
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  // Fetch likes for this message
+  const { data: likes = [] } = useQuery({
+    queryKey: ['messageLikes', currentIndex],
+    queryFn: () => base44.entities.PostLike.filter({ post_id: `flame_message_${currentIndex}` }),
+    enabled: currentIndex !== undefined
+  });
+
+  const likeCount = likes.length;
+  const userLiked = likes.some(like => like.user_id === currentUser?.email);
+
+  // Like mutation
+  const likeMutation = useMutation({
+    mutationFn: async () => {
+      if (userLiked) {
+        const userLike = likes.find(l => l.user_id === currentUser?.email);
+        if (userLike) await base44.entities.PostLike.delete(userLike.id);
+      } else {
+        await base44.entities.PostLike.create({
+          post_id: `flame_message_${currentIndex}`,
+          user_id: currentUser?.email
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['messageLikes', currentIndex] });
+      if (!userLiked) {
+        setLikeAnimation(true);
+        setTimeout(() => setLikeAnimation(false), 600);
+      }
+    }
+  });
 
   const getNewMessage = () => {
     setIsAnimating(true);
@@ -135,12 +177,32 @@ export default function MotivationalCard({ className = "" }) {
           </motion.div>
         </AnimatePresence>
 
-        {/* Attribution */}
-        <div className="mt-6 flex items-center justify-end gap-2">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
-          <span className="text-xs text-violet-300/60 font-medium tracking-wider uppercase">
-            — Saint Germain
-          </span>
+        {/* Attribution & Likes */}
+        <div className="mt-6 flex items-center justify-between">
+          <button
+            onClick={() => likeMutation.mutate()}
+            disabled={likeMutation.isPending || !currentUser}
+            className="flex items-center gap-2 group transition-all"
+          >
+            <div className={`relative ${likeAnimation ? 'animate-ping' : ''}`}>
+              <Heart 
+                className={`w-5 h-5 transition-all ${
+                  userLiked 
+                    ? 'fill-rose-500 text-rose-500' 
+                    : 'text-violet-300/60 group-hover:text-rose-400'
+                }`} 
+              />
+            </div>
+            <span className={`text-sm font-medium ${userLiked ? 'text-rose-400' : 'text-violet-300/60 group-hover:text-violet-200'}`}>
+              {likeCount > 0 ? likeCount : ''}
+            </span>
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
+            <span className="text-xs text-violet-300/60 font-medium tracking-wider uppercase">
+              — Saint Germain
+            </span>
+          </div>
         </div>
       </CardContent>
     </Card>
