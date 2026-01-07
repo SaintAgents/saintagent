@@ -70,7 +70,7 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
         {leaderboardData.slice(0, 5).map((entry, idx) => (
           <LeaderboardRow key={entry.id} entry={entry} rank={idx + 1} isCurrentUser={entry.user_id === currentUser?.email} compact />
         ))}
-        {currentUserRank > 5 && (
+        {currentUserRank > 5 && leaderboardData.find(p => p.user_id === currentUser?.email) && (
           <div className="pt-2 border-t border-dashed border-slate-200">
             <LeaderboardRow 
               entry={leaderboardData.find(p => p.user_id === currentUser?.email)} 
