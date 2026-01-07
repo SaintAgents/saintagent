@@ -553,7 +553,8 @@ export default function CommandDeck() {
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                   alt="Command Deck"
-                  className="w-24 h-24 object-contain drop-shadow-lg"
+                  className="object-contain drop-shadow-lg"
+                  style={{ width: '96px', height: '96px' }}
                   data-no-filter="true" />
 
               </div>
