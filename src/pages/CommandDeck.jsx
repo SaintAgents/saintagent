@@ -677,6 +677,16 @@ export default function CommandDeck() {
                   <BadgesBar badges={badges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
                 </div>
 
+                {/* Deck Logo */}
+                <div className="mb-4">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
+                    alt="Command Deck"
+                    className="w-28 h-28 object-contain drop-shadow-lg"
+                    data-no-filter="true"
+                  />
+                </div>
+
                 {/* Mystical Profile */}
                 <div>
                   <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
