@@ -169,14 +169,14 @@ export default function Missions() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
       {/* Hero Image */}
-      <div className="relative h-72 md:h-96 w-full overflow-hidden">
+      <div className="relative h-72 md:h-96 w-full overflow-hidden hero-gradient">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/51f6a87ab_universal_upscale_0_d674b71e-39fb-41e7-8b32-cfaec92f89e7_0.jpg"
           alt="Missions Hero"
           data-no-filter="true"
-          className="w-full h-full object-cover object-center hero-image"
+          className="w-full h-full object-cover object-center mission-image"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent dark:from-[#050505] [data-theme='hacker']_&:from-black" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent dark:from-[#050505] [data-theme='hacker']_&:from-black hero-gradient" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">

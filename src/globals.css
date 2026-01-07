@@ -9,24 +9,53 @@
   color: #ffffff !important;
 }
 
-/* Prevent white flash on page load */
+/* Prevent white flash on page load - SOLID backgrounds */
 [data-theme='dark'] body,
 [data-theme='dark'] .min-h-screen,
-[data-theme='hacker'] body,
-[data-theme='hacker'] .min-h-screen {
+[data-theme='dark'] main {
   background-color: #050505 !important;
 }
 [data-theme='hacker'] body,
-[data-theme='hacker'] .min-h-screen {
+[data-theme='hacker'] .min-h-screen,
+[data-theme='hacker'] main {
   background-color: #000 !important;
 }
 
-/* Force dark backgrounds on gradient containers - but NOT on CommandDeck which uses bg-transparent */
-[data-theme='dark'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *),
-[data-theme='hacker'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *) {
+/* Force solid backgrounds on gradient containers - NO fading/opacity */
+[data-theme='dark'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *):not(.hero-gradient) {
+  background-color: #050505 !important;
+  background-image: none !important;
+}
+[data-theme='hacker'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *):not(.hero-gradient) {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+
+/* Override any semi-transparent white backgrounds */
+[data-theme='dark'] [class*='bg-white/'],
+[data-theme='dark'] [class*='bg-slate-50/'],
+[data-theme='dark'] [class*='bg-gray-50/'] {
   background-color: #050505 !important;
 }
-[data-theme='hacker'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *) {
+[data-theme='hacker'] [class*='bg-white/'],
+[data-theme='hacker'] [class*='bg-slate-50/'],
+[data-theme='hacker'] [class*='bg-gray-50/'] {
+  background-color: #000 !important;
+}
+
+/* Force solid slate/gray backgrounds to dark */
+[data-theme='dark'] [class*='bg-slate-50'],
+[data-theme='dark'] [class*='bg-slate-100'],
+[data-theme='dark'] [class*='bg-gray-50'],
+[data-theme='dark'] [class*='bg-gray-100'],
+[data-theme='dark'] [class*='bg-white'] {
+  background-color: #050505 !important;
+}
+[data-theme='hacker'] [class*='bg-slate-50'],
+[data-theme='hacker'] [class*='bg-slate-100'],
+[data-theme='hacker'] [class*='bg-gray-50'],
+[data-theme='hacker'] [class*='bg-gray-100'],
+[data-theme='hacker'] [class*='bg-white'] {
   background-color: #000 !important;
 }
 

@@ -318,14 +318,17 @@ export default function DatingMatchesPopup({ currentUser }) {
     setPhotoIndex(0);
   }, [currentIndex]);
 
-  // Return null AFTER all hooks have been called
-  if (!isDatingOptedIn) return null;
+  // Always render the heart button, but only show matches popup content if opted in
+  // This ensures the heart icon is always visible for opted-in users
 
   const currentMatch = enrichedMatches[currentIndex];
 
+  // Don't render anything if user hasn't opted into dating
+  if (!isDatingOptedIn) return null;
+
   return (
     <>
-      {/* Trigger Button */}
+      {/* Trigger Button - only shows when opted in */}
       <Button 
         variant="ghost" 
         size="icon" 
