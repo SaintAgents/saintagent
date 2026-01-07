@@ -207,9 +207,25 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   }
 
   return (
-    <div className="fixed bottom-4 right-[400px] w-80 bg-white rounded-lg shadow-2xl border border-slate-200 z-[150] flex flex-col h-96">
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b bg-violet-600 rounded-t-lg">
+    <div 
+      className="fixed bg-white rounded-lg shadow-2xl border border-slate-200 z-[150] flex flex-col overflow-hidden"
+      style={{ left: position.x, top: position.y, width: size.width, height: size.height }}
+    >
+      {/* Resize handles */}
+      <div onMouseDown={(e) => onResizeStart(e, 'n')} className="absolute top-0 left-2 right-2 h-1 cursor-n-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 's')} className="absolute bottom-0 left-2 right-2 h-1 cursor-s-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-2 bottom-2 w-1 cursor-e-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 'w')} className="absolute left-0 top-2 bottom-2 w-1 cursor-w-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 'nw')} className="absolute top-0 left-0 w-3 h-3 cursor-nw-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 'ne')} className="absolute top-0 right-0 w-3 h-3 cursor-ne-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 'sw')} className="absolute bottom-0 left-0 w-3 h-3 cursor-sw-resize" />
+      <div onMouseDown={(e) => onResizeStart(e, 'se')} className="absolute bottom-0 right-0 w-3 h-3 cursor-se-resize" />
+
+      {/* Header - Draggable */}
+      <div 
+        className="flex items-center justify-between p-3 border-b bg-violet-600 rounded-t-lg cursor-move shrink-0"
+        onMouseDown={onDragStart}
+      >
         <div className="flex items-center gap-2">
           <div className="relative">
             <Avatar className="w-8 h-8">
