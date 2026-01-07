@@ -445,7 +445,8 @@ export default function Missions() {
       />
 
       <EarningsMatrixModal open={matrixOpen} onOpenChange={setMatrixOpen} />
+      </div>
     </div>
-    </div>);
+  );
 
 }
