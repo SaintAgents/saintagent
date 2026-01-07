@@ -154,7 +154,7 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
       </div>
 
       {/* Current user position if not in top 10 */}
-      {currentUserRank > 10 && (
+      {currentUserRank > 10 && profiles.find(p => p.user_id === currentUser?.email) && (
         <div className="mt-4 pt-4 border-t border-dashed border-slate-200">
           <p className="text-xs text-slate-500 mb-2">Your Position</p>
           <LeaderboardRow 
