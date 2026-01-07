@@ -256,9 +256,9 @@ export default function Marketplace() {
             });
             queryClient.invalidateQueries({ queryKey: ['listings'] });
             setCreateOpen(false);
-          }} />
-
-      </div>
-      </div>);
+            }} />
+            </div>
+            </div>
+            );
 
 }
