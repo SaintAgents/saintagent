@@ -151,17 +151,27 @@ export default function BadgesPanel({ badges = [] }) {
               All Badges
             </DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-80 mt-4">
+          <ScrollArea className="h-96 mt-4">
             <div className="grid grid-cols-3 gap-4">
               {allBadgeKeys.map(code => {
-                const def = BADGE_DEFINITIONS[code];
+                const def = BADGE_INDEX[code] || {};
                 const earned = earnedBadgeCodes.includes(code);
                 return (
-                  <div key={code} className="flex flex-col items-center gap-2">
-                    <BadgeIcon badge={{ code }} locked={!earned} />
-                    <p className={`text-xs text-center ${earned ? 'text-amber-200' : 'text-amber-400/40'}`}>
-                      {def.name}
+                  <div key={code} className="flex flex-col items-center gap-2 p-2">
+                    <BadgeIcon badge={{ code }} size="lg" locked={!earned} />
+                    <p className={`text-xs text-center font-medium ${earned ? 'text-amber-200' : 'text-amber-400/40'}`}>
+                      {def.label || code}
                     </p>
+                    {def.rarity && (
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${
+                        def.rarity === 'legendary' ? 'bg-amber-500/20 text-amber-300' :
+                        def.rarity === 'epic' ? 'bg-violet-500/20 text-violet-300' :
+                        def.rarity === 'rare' ? 'bg-blue-500/20 text-blue-300' :
+                        'bg-slate-500/20 text-slate-300'
+                      }`}>
+                        {def.rarity}
+                      </span>
+                    )}
                   </div>
                 );
               })}
