@@ -54,7 +54,35 @@ import GamificationWidget from '@/components/gamification/GamificationWidget';
 import GoldPriceTicker from '@/components/hud/GoldPriceTicker';
 
 export default function CommandDeck() {
-  const [sidePanelOpen, setSidePanelOpen] = useState(true);
+  const [sidePanelOpen, setSidePanelOpen] = useState(() => {
+    // Initialize from localStorage if available
+    try {
+      const saved = localStorage.getItem('sidePanelOpen');
+      return saved !== 'false'; // Default to true if not set
+    } catch {
+      return true;
+    }
+  });
+
+  // Listen for global toggle events from GlobalSidePanelNudge
+  useEffect(() => {
+    const handleToggle = (e) => {
+      if (e.detail?.open) {
+        setSidePanelOpen(true);
+      }
+    };
+    document.addEventListener('toggleSidePanel', handleToggle);
+    return () => document.removeEventListener('toggleSidePanel', handleToggle);
+  }, []);
+
+  // Persist sidePanelOpen state and notify GlobalSidePanelNudge
+  useEffect(() => {
+    try {
+      localStorage.setItem('sidePanelOpen', String(sidePanelOpen));
+    } catch {}
+    // Dispatch event for GlobalSidePanelNudge to sync
+    document.dispatchEvent(new CustomEvent('sidePanelStateChange', { detail: { isOpen: sidePanelOpen } }));
+  }, [sidePanelOpen]);
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [quickCreateType, setQuickCreateType] = useState(null);
   const [matchTab, setMatchTab] = useState('people');
