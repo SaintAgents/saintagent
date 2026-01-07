@@ -999,7 +999,7 @@ export default function SidePanel({
 
           {/* GGG & Rank */}
           <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-100 dark:border-violet-700/50">
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a0a0a] dark:to-[#0a0a0a] border border-violet-100 dark:border-[rgba(0,255,136,0.3)]">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-xs font-medium text-violet-600 dark:text-violet-400 uppercase tracking-wider">GGG Balance</p>
