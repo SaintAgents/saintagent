@@ -93,67 +93,66 @@ export function calculatePayout(actionKey, lifts, tierMode = null) {
   };
 }
 
-// Matrix sections with new tier scale (0.0004828 to 1.0 GGG)
+// Matrix sections with full tier scale (0.0004828 to 1.0 GGG)
+// All 11 tiers from $0.07 to $145.00
 // Values shown are BONUS period values; LIVE = 50% of these
 // First tier = $0.07, +$0.07 interaction bonus
 export const MATRIX_SECTIONS = [
-  { tier: 0.0004828, title: 'Micro Posts', items: [
+  { tier: 0.0004828, title: 'Tier 1: Micro Posts', items: [
     'Posting (30+ chars) = $0.07',
     '+$0.07 bonus when 5+ interactions (likes, comments, shares)',
   ] },
-  { tier: 0.002, title: 'Basic Engagement', items: [
+  { tier: 0.001, title: 'Tier 2: Quick Reactions', items: [
+    'Simple helpful reaction',
+    'Quick supportive comment',
+  ] },
+  { tier: 0.002, title: 'Tier 3: Basic Engagement', items: [
     'Reaction or simple helpful response',
     'Share with brief context',
   ] },
-  { tier: 0.005, title: 'Entry Actions', items: [
+  { tier: 0.005, title: 'Tier 4: Entry Actions', items: [
     'Daily field update using template',
     'Useful comment that improves a thread',
     'Submit resource link with short summary',
     'Mission onboarding micro-task'
   ] },
-  { tier: 0.01, title: 'Verified Micro-Contributions', items: [
+  { tier: 0.01, title: 'Tier 5: Verified Micro-Contributions', items: [
     'Accepted answer / moderator-marked helpful',
     'Short guide confirmed to work',
     'Task completion confirmed by owner',
     'Module complete + assessment'
   ] },
-  { tier: 0.02, title: 'Structured Deliverables', items: [
+  { tier: 0.02, title: 'Tier 6: Structured Deliverables', items: [
     'How-To with steps + expected outcome',
     'Template / SOP / checklist',
     'Weekly team recap',
     'Defined work item delivered'
   ] },
-  { tier: 0.05, title: 'Completion Milestones', items: [
+  { tier: 0.05, title: 'Tier 7: Completion Milestones', items: [
     'Mini-playbook with edge cases',
     'Community help session w/ notes',
     'Milestone deliverable accepted',
     'Security Trained / role unlock'
   ] },
-  { tier: 0.1, title: 'Impact Contributions', items: [
+  { tier: 0.1, title: 'Tier 8: Impact Contributions', items: [
     'Reference page adopted by others',
     'Toolkit adopted by a mission',
     'Resolve mid-complexity blocker',
     'Agent passes safety + usage threshold'
   ] },
-  { tier: 0.2, title: 'Leadership Contributions', items: [
+  { tier: 0.2, title: 'Tier 9: Leadership Contributions', items: [
     'Run recurring office hours + notes',
     'Curated monthly digest as reference',
     'Lead sprint segment (plan → deliver)',
     'TA / mentor for cohort'
   ] },
-  { tier: 0.3, title: 'High-Trust Ops', items: [
-    'Structured security review + report',
-    'Solve high-priority multi-team blocker',
-    'Manage dispute resolution to completion',
-    'Maintain node/network health with logs'
-  ] },
-  { tier: 0.5, title: 'Cross-Team Authority', items: [
+  { tier: 0.5, title: 'Tier 10: Cross-Team Authority', items: [
     'Coordinate across missions to a combined milestone',
     'Incident response owner with postmortem',
     'Reviewer/moderator for high-value submissions',
     'Flagship agent release'
   ] },
-  { tier: 1.0, title: 'Top-Tier Outcomes', items: [
+  { tier: 1.0, title: 'Tier 11: Top-Tier Outcomes', items: [
     'Lead mission e2e (brief → closeout)',
     'Platform-standard outcome (SOP/policy)',
     'Launch full class track',
