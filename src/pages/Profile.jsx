@@ -450,7 +450,9 @@ export default function Profile() {
                   )}
                 </div>
                 <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
-              </div>
+                {/* Social Links */}
+                <SocialLinksDisplay socialLinks={profile?.social_links} className="mt-2" />
+                </div>
               {isOwnProfile ? (
                                         <div className="flex items-center gap-2">
                                           <BoostStatusBadge userId={profile?.user_id} />
