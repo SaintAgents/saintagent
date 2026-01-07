@@ -1166,24 +1166,23 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
           [data-theme='hacker'] [class*='shadow'] { box-shadow: 0 0 8px #00ff00 !important; }
 
-          /* Hacker theme - square edges on all cards - HIGH SPECIFICITY */
-          html[data-theme='hacker'] .rounded-xl,
-          html[data-theme='hacker'] .rounded-lg,
-          html[data-theme='hacker'] .rounded-2xl,
-          html[data-theme='hacker'] .rounded-md,
-          html[data-theme='hacker'] .rounded-3xl,
-          html[data-theme='hacker'] .rounded,
-          html[data-theme='hacker'] .rounded-full,
-          html[data-theme='hacker'] [class*='rounded-'],
-          [data-theme='hacker'] .rounded-xl,
-          [data-theme='hacker'] .rounded-lg,
-          [data-theme='hacker'] .rounded-2xl,
-          [data-theme='hacker'] .rounded-md,
-          [data-theme='hacker'] .rounded-3xl,
-          [data-theme='hacker'] .rounded,
-          [data-theme='hacker'] .rounded-full,
-          [data-theme='hacker'] [class*='rounded-'] {
+          /* Hacker theme - square edges on cards but preserve circular elements */
+          html[data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]),
+          html[data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]),
+          html[data-theme='hacker'] .rounded-2xl:not(img):not([data-keep-round]),
+          html[data-theme='hacker'] .rounded-md:not(img):not([data-keep-round]),
+          html[data-theme='hacker'] .rounded-3xl:not(img):not([data-keep-round]),
+          [data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]),
+          [data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]),
+          [data-theme='hacker'] .rounded-2xl:not(img):not([data-keep-round]),
+          [data-theme='hacker'] .rounded-md:not(img):not([data-keep-round]),
+          [data-theme='hacker'] .rounded-3xl:not(img):not([data-keep-round]) {
             border-radius: 0 !important;
+          }
+          /* Keep circular images round in hacker mode */
+          [data-theme='hacker'] img.object-contain,
+          [data-theme='hacker'] [data-keep-round] {
+            border-radius: inherit !important;
           }
 
           /* Hacker theme - Force ALL buttons to be green on black, no exceptions */
