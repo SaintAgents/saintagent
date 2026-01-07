@@ -6,18 +6,19 @@ import { base44 } from '@/api/base44Client';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
+import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 
-// Rank badge image URLs - transparent versions
-const RANK_BADGE_IMAGES = {
-  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/65d0338f8_seeker_inPixio.png',
-  initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/10d51342d_intiate_inPixio.png',
-  adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fac9c0a99_adept.png',
-  practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/192e1da75_practioner.png',
-  master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/14c3808be_master.png',
-  sage: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/86aed6de0_sage.png',
-  oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e671b30c3_oracle.png',
-  ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c216c4ac_ascended_inPixio.png',
-  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d32b31d8e_guardian_inPixio.png',
+// Rank titles for tooltips
+const RANK_TITLES = {
+  seeker: 'Seeker',
+  initiate: 'Initiate',
+  adept: 'Adept',
+  practitioner: 'Practitioner',
+  master: 'Master',
+  sage: 'Sage',
+  oracle: 'Oracle',
+  ascended: 'Ascended',
+  guardian: 'Guardian',
 };
 
 function getRingConfig(rankCode = 'seeker') {
@@ -33,20 +34,6 @@ function getRingConfig(rankCode = 'seeker') {
     guardian: { grad: ['#111827', '#d1d5db'], pad: 6 }, // obsidian-platinum
   };
   return map[rankCode] || map.seeker;
-}
-
-// Rank Badge component using images - preserve original colors
-function RankBadge({ code = 'seeker', size = 24 }) {
-  const imgUrl = RANK_BADGE_IMAGES[code] || RANK_BADGE_IMAGES.seeker;
-  return (
-    <img 
-      src={imgUrl} 
-      alt={code} 
-      className="object-contain"
-      style={{ width: size, height: size, filter: 'none' }}
-      data-no-filter="true"
-    />
-  );
 }
 
 export default function RankedAvatar({
@@ -132,6 +119,8 @@ export default function RankedAvatar({
   const trustPx = Math.max(14, Math.round(size * 0.22));
   const trustIconPx = Math.max(8, Math.round(trustPx * 0.55));
 
+  const rankTitle = RANK_TITLES[rpRankCodeFinal] || 'Seeker';
+
   return (
     <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
       {/* Main Avatar with Rank Ring */}
@@ -139,8 +128,9 @@ export default function RankedAvatar({
         className="rounded-full"
         style={{ padding: padPx, background: gradient }}
       >
-        <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
-          <div className="w-full h-full rounded-full overflow-hidden">
+        {/* Inner ring: black then purple gradient */}
+        <div className="rounded-full p-1 relative" style={{ background: 'linear-gradient(135deg, #000000, #7c3aed)' }}>
+          <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
             <img 
                   src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png'} 
                   alt={name || 'Avatar'} 
@@ -152,15 +142,33 @@ export default function RankedAvatar({
         </div>
       </div>
 
-      {/* Rank badge top-left - doubled size */}
-      <div 
-        className="absolute -top-2 -left-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
-        style={{ width: symbolPx * 2, height: symbolPx * 2 }}
-        onClick={(e) => e.stopPropagation()}
-        title={`${rpInfo?.title || rpRankCodeFinal} • ${rpPointsFinal || 0} RP${rpInfo?.nextTitle ? ` • ${rpInfo.nextMin - (rpPointsFinal || 0)} to ${rpInfo.nextTitle}` : ''}`}
-      >
-        <RankBadge code={rpRankCodeFinal} size={symbolPx * 2} />
-      </div>
+      {/* Rank badge top-left with tooltip */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div 
+              className="absolute -top-2 -left-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+              style={{ width: symbolPx * 2, height: symbolPx * 2 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img 
+                src={RANK_BADGE_IMAGES[rpRankCodeFinal] || RANK_BADGE_IMAGES.seeker} 
+                alt={rankTitle} 
+                className="object-contain"
+                style={{ width: symbolPx * 2, height: symbolPx * 2, filter: 'none' }}
+                data-no-filter="true"
+              />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-[200px]">
+            <p className="font-semibold text-sm capitalize">{rankTitle}</p>
+            <p className="text-xs text-slate-500">{rpPointsFinal || 0} RP</p>
+            {rpInfo?.nextTitle && (
+              <p className="text-xs text-violet-500">{rpInfo.nextMin - (rpPointsFinal || 0)} to {rpInfo.nextTitle}</p>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* Status dot (bottom-left) with tooltip */}
       <TooltipProvider>
