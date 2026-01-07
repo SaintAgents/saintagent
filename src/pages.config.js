@@ -12,6 +12,7 @@ import EventDetail from './pages/EventDetail';
 import Events from './pages/Events';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
+import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Join from './pages/Join';
 import Landing from './pages/Landing';
@@ -39,7 +40,7 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Gamification from './pages/Gamification';
+import SynchronicityEngine from './pages/SynchronicityEngine';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "Events": Events,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
+    "Gamification": Gamification,
     "Home": Home,
     "Join": Join,
     "Landing": Landing,
@@ -85,7 +87,7 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Gamification": Gamification,
+    "SynchronicityEngine": SynchronicityEngine,
 }
 
 export const pagesConfig = {
