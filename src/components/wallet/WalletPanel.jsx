@@ -136,6 +136,9 @@ export default function WalletPanel() {
         <Stat label="Rewards" value={wallet?.total_rewards} color="amber" />
       </div>
 
+      {/* Connected Wallets Section */}
+      <ConnectedWalletsSection userId={user?.email} />
+
       <div>
         <div className="flex items-center justify-between mb-2">
           <p className="text-sm font-medium text-slate-700">Recent Transactions</p>
