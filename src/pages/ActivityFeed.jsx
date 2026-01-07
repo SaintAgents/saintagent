@@ -73,9 +73,10 @@ export default function ActivityFeed() {
         return [];
       }
     },
-    refetchInterval: 30000,
+    refetchInterval: 120000, // 2 minutes instead of 30 seconds
     retry: 1,
-    staleTime: 60000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   const items = data || [];
