@@ -557,7 +557,8 @@ export default function CommandDeck() {
                   alt="Command Deck"
                   className="object-contain drop-shadow-lg"
                   style={{ width: '160px', height: '160px' }}
-                  data-no-filter="true" />
+                  data-no-filter="true"
+                  data-keep-round="true" />
 
               </div>
 
