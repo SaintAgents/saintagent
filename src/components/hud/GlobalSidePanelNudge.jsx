@@ -35,13 +35,9 @@ export default function GlobalSidePanelNudge() {
   }, []);
 
   const handleClick = () => {
-    // Toggle the panel state
-    try {
-      localStorage.setItem('sidePanelOpen', 'true');
-    } catch {}
     // Dispatch custom event for any listeners (like CommandDeck's SidePanel)
+    // Don't set local state here - let the parent component manage it via the event
     document.dispatchEvent(new CustomEvent('toggleSidePanel', { detail: { open: true } }));
-    setIsOpen(true);
   };
 
   // Don't show if panel is already open
