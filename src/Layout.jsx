@@ -316,14 +316,31 @@ function AuthenticatedLayout({ children, currentPageName }) {
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
-  // If auth state is still loading (undefined), show loading
+  // If auth state is still loading (undefined), show loading spinner
   if (currentUser === undefined) {
-    return <div className="min-h-screen bg-slate-50" />;
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
+      </div>
+    );
   }
 
   // If no user and not public page, show blank while redirecting to login
   if (currentUser === null) {
-    return <div className="min-h-screen bg-slate-50" />;
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
+      </div>
+    );
+  }
+
+  // If onboarding data is still loading, show loading spinner
+  if (onboardingLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
+      </div>
+    );
   }
 
   // Determine if we should show starfield (dark/hacker theme + starfield effect selected)
