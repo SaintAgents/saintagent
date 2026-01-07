@@ -1593,7 +1593,7 @@ function CircuitCanvas() {
     const ctx = canvas.getContext('2d');
     const nodes = [];
     const traces = [];
-    const numNodes = 40;
+    const gridLines = [];
     
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -1602,82 +1602,162 @@ function CircuitCanvas() {
     resize();
     window.addEventListener('resize', resize);
     
-    // Initialize circuit nodes
-    for (let i = 0; i < numNodes; i++) {
-      nodes.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        pulse: Math.random() * Math.PI * 2,
-        size: Math.random() * 4 + 2
-      });
+    // Create geometric grid
+    const gridSpacing = 80;
+    const cols = Math.ceil(canvas.width / gridSpacing) + 1;
+    const rows = Math.ceil(canvas.height / gridSpacing) + 1;
+    
+    // Grid intersection nodes
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = col * gridSpacing;
+        const y = row * gridSpacing;
+        // Add slight offset for organic feel
+        const offsetX = (Math.random() - 0.5) * 10;
+        const offsetY = (Math.random() - 0.5) * 10;
+        nodes.push({
+          x: x + offsetX,
+          y: y + offsetY,
+          gridX: col,
+          gridY: row,
+          pulse: Math.random() * Math.PI * 2,
+          size: Math.random() * 3 + 2,
+          isJunction: Math.random() > 0.7 // Some nodes are brighter junctions
+        });
+      }
     }
     
-    // Create connections between nearby nodes
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-        if (dist < 200 && Math.random() > 0.7) {
-          traces.push({ from: i, to: j, progress: 0, active: false, delay: Math.random() * 100 });
+    // Create grid lines (horizontal and vertical)
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols - 1; col++) {
+        const idx = row * cols + col;
+        gridLines.push({ from: idx, to: idx + 1, type: 'horizontal' });
+      }
+    }
+    for (let row = 0; row < rows - 1; row++) {
+      for (let col = 0; col < cols; col++) {
+        const idx = row * cols + col;
+        gridLines.push({ from: idx, to: idx + cols, type: 'vertical' });
+      }
+    }
+    
+    // Add diagonal connections for geometric patterns
+    for (let row = 0; row < rows - 1; row++) {
+      for (let col = 0; col < cols - 1; col++) {
+        const idx = row * cols + col;
+        if (Math.random() > 0.6) {
+          gridLines.push({ from: idx, to: idx + cols + 1, type: 'diagonal' });
+        }
+        if (Math.random() > 0.6) {
+          gridLines.push({ from: idx + 1, to: idx + cols, type: 'diagonal' });
         }
       }
     }
+    
+    // Create animated traces along grid lines
+    gridLines.forEach((line, i) => {
+      if (Math.random() > 0.85) {
+        traces.push({ 
+          lineIdx: i, 
+          progress: 0, 
+          active: false, 
+          delay: Math.random() * 200,
+          speed: Math.random() * 0.02 + 0.01
+        });
+      }
+    });
     
     let frame = 0;
     const animate = () => {
       const { speed, brightness } = settingsRef.current;
       frame++;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.03)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       const greenVal = Math.floor(255 * brightness);
-      const colorStr = `rgb(0, ${greenVal}, 136)`;
+      const tealVal = Math.floor(200 * brightness);
       
-      // Draw traces
-      traces.forEach(trace => {
-        const from = nodes[trace.from];
-        const to = nodes[trace.to];
+      // Draw grid lines
+      gridLines.forEach((line, idx) => {
+        const from = nodes[line.from];
+        const to = nodes[line.to];
         
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
-        ctx.strokeStyle = `rgba(0, ${greenVal}, 136, ${0.1 * brightness})`;
-        ctx.lineWidth = 1;
+        const lineOpacity = line.type === 'diagonal' ? 0.08 : 0.12;
+        ctx.strokeStyle = `rgba(0, ${greenVal}, 136, ${lineOpacity * brightness})`;
+        ctx.lineWidth = line.type === 'diagonal' ? 0.5 : 1;
         ctx.stroke();
+      });
+      
+      // Animate pulses along traces
+      traces.forEach(trace => {
+        const line = gridLines[trace.lineIdx];
+        const from = nodes[line.from];
+        const to = nodes[line.to];
         
-        // Animate pulse along trace (speed affects trigger frequency)
-        const triggerFrame = Math.floor(120 / speed);
-        if (frame % triggerFrame === Math.floor(trace.delay / speed)) {
+        const triggerFrame = Math.floor(80 / speed);
+        if (frame % triggerFrame === Math.floor(trace.delay / speed) % triggerFrame) {
           trace.active = true;
           trace.progress = 0;
         }
         
         if (trace.active) {
-          trace.progress += 0.02 * speed;
-          if (trace.progress >= 1) trace.active = false;
+          trace.progress += trace.speed * speed;
+          if (trace.progress >= 1) {
+            trace.active = false;
+            // Chain reaction - activate connected traces
+            const endNode = line.to;
+            traces.forEach(t => {
+              const tLine = gridLines[t.lineIdx];
+              if ((tLine.from === endNode || tLine.to === endNode) && Math.random() > 0.7) {
+                t.active = true;
+                t.progress = 0;
+              }
+            });
+          }
           
           const px = from.x + (to.x - from.x) * trace.progress;
           const py = from.y + (to.y - from.y) * trace.progress;
           
+          // Glowing pulse
           ctx.beginPath();
-          ctx.arc(px, py, 3, 0, Math.PI * 2);
-          ctx.fillStyle = colorStr;
-          ctx.shadowColor = colorStr;
-          ctx.shadowBlur = 10 * brightness;
+          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.fillStyle = `rgb(0, ${greenVal}, 136)`;
+          ctx.shadowColor = `rgb(0, ${greenVal}, 136)`;
+          ctx.shadowBlur = 15 * brightness;
           ctx.fill();
+          
+          // Trail effect
+          for (let t = 1; t <= 5; t++) {
+            const trailProgress = trace.progress - t * 0.05;
+            if (trailProgress > 0) {
+              const tx = from.x + (to.x - from.x) * trailProgress;
+              const ty = from.y + (to.y - from.y) * trailProgress;
+              ctx.beginPath();
+              ctx.arc(tx, ty, 2, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(0, ${tealVal}, 255, ${(1 - t/5) * 0.5 * brightness})`;
+              ctx.fill();
+            }
+          }
           ctx.shadowBlur = 0;
         }
       });
       
       // Draw nodes
       nodes.forEach(node => {
-        node.pulse += 0.02 * speed;
-        const glow = (0.5 + Math.sin(node.pulse) * 0.3) * brightness;
+        node.pulse += 0.015 * speed;
+        const baseBrightness = node.isJunction ? 0.7 : 0.4;
+        const glow = (baseBrightness + Math.sin(node.pulse) * 0.2) * brightness;
         
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, node.isJunction ? node.size * 1.5 : node.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(0, ${greenVal}, 136, ${glow})`;
-        ctx.shadowColor = colorStr;
-        ctx.shadowBlur = 8 * brightness;
+        if (node.isJunction) {
+          ctx.shadowColor = `rgb(0, ${greenVal}, 136)`;
+          ctx.shadowBlur = 6 * brightness;
+        }
         ctx.fill();
         ctx.shadowBlur = 0;
       });
