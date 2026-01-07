@@ -56,9 +56,9 @@ export default function ActivityFeed() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-[#00ff88] [data-theme='hacker']_&:text-[#00ff00] flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <BackButton />
-            Activity Feed
+            <span className="dark:text-[#00ff88] dark:drop-shadow-[0_0_8px_rgba(0,255,136,0.5)]">Activity Feed</span>
           </h1>
           <Button variant="outline" className="rounded-xl" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
@@ -154,27 +154,27 @@ export default function ActivityFeed() {
                     <div className={`p-2 rounded-lg ${meta.color}`}><Icon className="w-4 h-4" /></div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <div className="font-medium text-slate-900 dark:text-white truncate">{ev.title}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-300">{new Date(ev.created_date).toLocaleString()}</div>
+                        <div className="font-medium text-slate-900 dark:text-[#00ff88] dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.4)] truncate">{ev.title}</div>
+                        <div className="text-xs text-slate-500 dark:text-[#00d4ff]">{new Date(ev.created_date).toLocaleString()}</div>
                       </div>
                       {ev.description && (
-                        <div className="text-sm text-slate-600 dark:text-slate-200 mt-0.5 line-clamp-2">{ev.description}</div>
+                        <div className="text-sm text-slate-600 dark:text-white mt-0.5 line-clamp-2">{ev.description}</div>
                       )}
-                      <Separator className="my-3 dark:bg-[rgba(0,255,136,0.2)]" />
+                      <Separator className="my-3 dark:bg-[rgba(0,255,136,0.3)]" />
                       {/* Actor / Target context */}
                       <div className="flex items-center gap-3">
                         {ev.actor_id && <MiniProfile userId={ev.actor_id} size={40} showHandle={false} />}
                         {ev.type === 'listings' && (
-                          <div className="text-xs text-slate-500 dark:text-slate-300">Marketplace</div>
+                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Marketplace</div>
                         )}
                         {ev.type === 'missions' && (
-                          <div className="text-xs text-slate-500 dark:text-slate-300">Mission update</div>
+                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Mission update</div>
                         )}
                         {ev.type === 'testimonials' && (
-                          <div className="text-xs text-slate-500 dark:text-slate-300">Feedback</div>
+                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Feedback</div>
                         )}
                         {ev.type === 'reputation' && (
-                          <div className="text-xs text-slate-500 dark:text-slate-300">Reputation</div>
+                          <div className="text-xs text-slate-500 dark:text-[#00ff88]">Reputation</div>
                         )}
                       </div>
                     </div>
