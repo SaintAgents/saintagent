@@ -31,6 +31,7 @@ import SubscriptionCard from '@/components/creator/SubscriptionCard';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { formatDistanceToNow } from 'date-fns';
+import CommunityStatsCard from '@/components/profile/CommunityStatsCard';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
@@ -603,26 +604,31 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             </div>
           }
 
+          {/* Community Stats & Achievements */}
+          <div className="mb-6">
+            <CommunityStatsCard userId={userId} compact={false} />
+          </div>
+
           {/* Testimonials */}
           {testimonials.length > 0 &&
           <div>
-              <h3 className="font-semibold text-slate-900 mb-2">Testimonials</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Testimonials</h3>
               <div className="space-y-3">
                 {testimonials.slice(0, 2).map((t) =>
-              <div key={t.id} className="p-3 rounded-lg bg-slate-50">
+              <div key={t.id} className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
                     <div className="flex items-center gap-2 mb-2">
                       <Avatar className="w-6 h-6">
                         <AvatarImage src={t.from_avatar} />
                         <AvatarFallback className="text-xs">{t.from_name?.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <p className="text-sm font-medium">{t.from_name}</p>
+                      <p className="text-sm font-medium dark:text-white">{t.from_name}</p>
                       <div className="ml-auto flex">
                         {[...Array(t.rating)].map((_, i) =>
                     <span key={i} className="text-amber-400">★</span>
                     )}
                       </div>
                     </div>
-                    <p className="text-sm text-slate-600">{t.text}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">{t.text}</p>
                   </div>
               )}
               </div>
