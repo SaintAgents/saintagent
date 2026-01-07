@@ -1,8 +1,8 @@
 // Affiliate tier badge image URLs
 export const AFFILIATE_BADGE_IMAGES = {
-  bronze: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/9619602d5_bronzecopy.png',
+  bronze: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ddebad7ea_sa-bronze_inPixio.png',
   silver: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5b5001bc3_silver.png',
-  gold: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/66b865998_goldcopy.png',
+  gold: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cde6dea5a_goldcopy-Picsart-BackgroundRemover_inPixio.png',
 };
 
 // Get affiliate tier from paid referrals count
