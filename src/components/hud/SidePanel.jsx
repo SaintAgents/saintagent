@@ -991,8 +991,8 @@ export default function SidePanel({
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
           {/* Control Panel */}
-          <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggAuditOpen(true)}>
                 <Activity className="w-4 h-4 mr-1" />
                 Audit
@@ -1009,9 +1009,6 @@ export default function SidePanel({
                 <Calendar className="w-4 h-4 mr-1" />
                 Daily Ops
               </Button>
-            </div>
-            <div className="text-xs text-slate-600">
-              Next rank in <span className="font-semibold text-violet-700">{Math.max(0, nextRankAt - rankProgress)}</span> pts
             </div>
           </div>
 
