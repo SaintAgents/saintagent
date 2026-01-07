@@ -58,6 +58,7 @@ export default function Settings() {
   const [settings, setSettings] = useState({
     dm_policy: profile?.dm_policy || 'everyone',
     status: profile?.status || 'online',
+    status_message: profile?.status_message || '',
     profile_visibility: profile?.profile_visibility || 'public',
     visibility_settings: profile?.visibility_settings || { show_email: false, show_location: true, show_earnings: false },
     notification_prefs: profile?.notification_prefs || { email: true, in_app: true, push: false },
