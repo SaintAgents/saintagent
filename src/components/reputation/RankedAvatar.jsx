@@ -7,17 +7,17 @@ import PhotoViewer from '@/components/profile/PhotoViewer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
 
-// Rank badge image URLs
+// Rank badge image URLs - transparent versions
 const RANK_BADGE_IMAGES = {
   seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/65d0338f8_seeker_inPixio.png',
-  initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/649c5d173_intiate.png',
+  initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/10d51342d_intiate_inPixio.png',
   adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fac9c0a99_adept.png',
   practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/192e1da75_practioner.png',
   master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/14c3808be_master.png',
   sage: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/86aed6de0_sage.png',
   oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e671b30c3_oracle.png',
   ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c216c4ac_ascended_inPixio.png',
-  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7cb4f6659_guardian.png',
+  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d32b31d8e_guardian_inPixio.png',
 };
 
 function getRingConfig(rankCode = 'seeker') {

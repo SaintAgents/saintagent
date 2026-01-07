@@ -14,6 +14,7 @@ import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
 import Home from './pages/Home';
 import Join from './pages/Join';
+import Landing from './pages/Landing';
 import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
@@ -38,7 +39,6 @@ import Settings from './pages/Settings';
 import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Landing from './pages/Landing';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +59,7 @@ export const PAGES = {
     "FindCollaborators": FindCollaborators,
     "Home": Home,
     "Join": Join,
+    "Landing": Landing,
     "LeaderChannel": LeaderChannel,
     "Leaderboards": Leaderboards,
     "ListingDetail": ListingDetail,
@@ -83,7 +84,6 @@ export const PAGES = {
     "Studio": Studio,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Landing": Landing,
 }
 
 export const pagesConfig = {
