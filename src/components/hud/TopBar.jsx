@@ -177,6 +177,10 @@ export default function TopBar({
     e.preventDefault();
     if (searchQuery.trim()) {
       setShowResults(true);
+      // Also trigger the search modal callback if provided
+      if (onSearch) {
+        onSearch(searchQuery);
+      }
     }
   };
 
