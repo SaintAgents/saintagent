@@ -181,6 +181,66 @@ html[data-theme='hacker'] img[data-no-filter="true"],
   background: transparent;
 }
 
+/* Samsung Z Fold Optimization */
+[data-zfold="true"] {
+  /* Increase touch targets */
+  --touch-target-min: 48px;
+}
+
+[data-zfold="true"] button,
+[data-zfold="true"] [role="button"],
+[data-zfold="true"] a {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+[data-zfold="true"] input,
+[data-zfold="true"] textarea,
+[data-zfold="true"] select {
+  min-height: 48px;
+  font-size: 16px;
+}
+
+/* Larger text for readability */
+[data-zfold="true"] body {
+  font-size: 17px;
+}
+
+[data-zfold="true"] .text-sm {
+  font-size: 0.9375rem !important;
+}
+
+[data-zfold="true"] .text-xs {
+  font-size: 0.8125rem !important;
+}
+
+/* Better spacing for foldable screens */
+[data-zfold="true"] .p-6 {
+  padding: 1.75rem;
+}
+
+[data-zfold="true"] .gap-4 {
+  gap: 1.25rem;
+}
+
+/* Wider sidebar on unfolded screen */
+@media (min-width: 600px) and (max-width: 900px) {
+  [data-zfold="true"] aside {
+    width: 280px !important;
+  }
+  
+  [data-zfold="true"] main {
+    padding-left: 296px !important;
+  }
+}
+
+/* Two-column grid optimization for fold screen */
+@media (min-width: 600px) and (max-width: 900px) {
+  [data-zfold="true"] .grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
 /* Profile Drawer specific dark/hacker fixes */
 [data-theme='dark'] [id*='profile-drawer'] p,
 [data-theme='dark'] [id*='profile-drawer'] span,
