@@ -5,8 +5,10 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Coins, Calculator, Info } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Coins, Calculator, Info, List } from 'lucide-react';
 import { ACTIONS, MATRIX_SECTIONS, TIERS, GGG_TO_USD, INTERACTION_BONUS_GGG, calculatePayout } from '@/components/earnings/gggMatrix';
+import ActionsEarningsTable from '@/components/earnings/ActionsEarningsTable';
 
 // Helper to format GGG with proper decimals
 const formatGGG = (val) => val.toFixed(7);
