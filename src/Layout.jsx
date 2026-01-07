@@ -1083,7 +1083,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
                   }
                   [data-theme='dark'] .page-hero,
                   [data-theme='hacker'] .page-hero {
-                    height: 120px !important;
+                    height: 80px !important;
+                    min-height: 80px !important;
+                    max-height: 80px !important;
+                    padding-top: 0 !important;
+                  }
+                  [data-theme='dark'] .page-hero h1,
+                  [data-theme='hacker'] .page-hero h1,
+                  [data-theme='dark'] .page-hero .hero-content,
+                  [data-theme='hacker'] .page-hero .hero-content {
+                    padding-top: 0.5rem !important;
+                    margin-top: 0 !important;
                   }
 
         /* Command Deck keeps its background image in dark mode */
