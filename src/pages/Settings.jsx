@@ -237,6 +237,8 @@ export default function Settings() {
                   <Input
                     value={settings.status_message || ''}
                     onChange={(e) => setSettings({ ...settings, status_message: e.target.value })}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
                     placeholder="What's on your mind?"
                     maxLength={100}
                     className="w-full"
