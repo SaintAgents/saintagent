@@ -10,8 +10,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sparkles, Trophy, Target, Users, Coins, Star, Crown,
-  Zap, Gift, ChevronRight, Heart, Shield, Eye, Lock
-} from 'lucide-react';
+  Zap, Gift, ChevronRight, Heart, Shield, Eye, Lock } from
+'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuestTracker from '@/components/synchronicity/QuestTracker';
 import LeaderboardPanel from '@/components/synchronicity/LeaderboardPanel';
@@ -57,13 +57,13 @@ export default function Quests() {
     enabled: !!currentUser?.email
   });
 
-  const activeMatch = synchronicityMatches.find(m => m.status === 'revealed' || m.status === 'pending');
+  const activeMatch = synchronicityMatches.find((m) => m.status === 'revealed' || m.status === 'pending');
 
   const claimRewardsMutation = useMutation({
     mutationFn: async () => {
-      const completedQuests = quests.filter(q => q.status === 'completed');
+      const completedQuests = quests.filter((q) => q.status === 'completed');
       for (const quest of completedQuests) {
-        await base44.entities.Quest.update(quest.id, { 
+        await base44.entities.Quest.update(quest.id, {
           status: 'claimed',
           claimed_at: new Date().toISOString()
         });
@@ -81,26 +81,29 @@ export default function Quests() {
     }
   });
 
-  const completedQuests = quests.filter(q => q.status === 'completed');
+  const completedQuests = quests.filter((q) => q.status === 'completed');
   const hasClaimable = completedQuests.length > 0;
 
   return (
     <div className="min-h-screen bg-[#0a1a0a]">
       {/* Hero Section */}
       <div className="relative h-64 md:h-80 overflow-hidden">
-        <img 
+        <img
           src={HERO_IMAGE}
           alt="Quests"
           className="w-full h-full object-cover object-top hero-image"
-          data-no-filter="true"
-        />
+          data-no-filter="true" />
+
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a1a0a]" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-amber-100 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
-                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+            style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Quests & Rewards
             </h1>
+            <p className="text-amber-200/80 mt-2 text-lg tracking-wider">
+
+            </p>
           </div>
         </div>
         <div className="absolute top-4 left-4">
@@ -114,12 +117,12 @@ export default function Quests() {
           
           {/* Left Column - Quest Tracker */}
           <div className="lg:col-span-3">
-            <QuestTracker 
-              quests={quests} 
+            <QuestTracker
+              quests={quests}
               onClaimRewards={() => claimRewardsMutation.mutate()}
               hasClaimable={hasClaimable}
-              isClaimPending={claimRewardsMutation.isPending}
-            />
+              isClaimPending={claimRewardsMutation.isPending} />
+
           </div>
 
           {/* Center Column - Leaderboards & Active Synchronicity */}
@@ -135,6 +138,6 @@ export default function Quests() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
