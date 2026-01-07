@@ -99,7 +99,9 @@ export default function CommandDeck() {
     queryFn: async () => {
       return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
     },
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000 // 10 minutes
   });
   const profile = profiles?.[0];
 
