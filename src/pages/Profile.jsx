@@ -375,11 +375,12 @@ export default function Profile() {
                             className="absolute top-2 right-4 w-28 h-28 object-contain z-10 drop-shadow-lg"
                             data-no-filter="true"
                           />
-                          {profile?.hero_image_url &&
                           <img
-                            src={profile.hero_image_url}
+                            src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/90c26e23f_Screenshot2026-01-07063819.png'}
                             alt="Profile hero"
-                            className="w-full h-full object-cover" />
+                            className="w-full h-full object-cover"
+                            data-no-filter="true"
+                          />
 
             }
             {isOwnProfile && (
