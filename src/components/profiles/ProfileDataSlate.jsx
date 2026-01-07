@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import {
   Coins,
@@ -116,14 +117,12 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
 
           {/* Name and handle */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors">
-              <span className="dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.6)] dark:group-hover:text-[#00ff88]">
-                {profile.display_name || 'Anonymous'}
-              </span>
-              <span className="text-violet-600 dark:text-[#00ff88]/80 ml-1 text-xs font-semibold">
-                - {profile.sa_number ? `SA#${profile.sa_number}` : 'SA-DEMO1'}
-              </span>
+            <h3 className="font-semibold truncate group-hover:text-violet-600 transition-colors bg-gradient-to-r from-black to-purple-600 bg-clip-text text-transparent dark:from-white dark:to-violet-400">
+              {profile.display_name || 'Anonymous'}
             </h3>
+            <p className="text-xs font-semibold text-violet-600 dark:text-[#00ff88]/80">
+              {profile.sa_number ? `SA#${profile.sa_number}` : 'SA-DEMO1'}
+            </p>
             {(profile.handle || profile.user_id) && (
               <p className="text-xs text-slate-600 truncate">
                 <span className="dark:text-slate-300">
@@ -177,42 +176,70 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
           </div>
         </div>
 
-        {/* Badges Row - always show */}
+        {/* Badges Row - always show with tooltips */}
         <div className="flex items-center gap-1.5 mb-3">
-          {badges.length > 0 ? (
-            <>
-              {badges.map((badge, idx) => {
-                const Icon = badge.icon;
-                return (
-                  <div
-                    key={idx}
-                    className={cn(
-                      "w-6 h-6 rounded-full flex items-center justify-center",
-                      badge.bg,
-                      "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
-                    )}
-                    title={badge.label}
-                  >
-                    <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
-                  </div>
-                );
-              })}
-              {profile.achievements?.length > 3 && (
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-600 dark:text-slate-300">
-                  +{profile.achievements.length - 3}
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800" title="Seeker">
-                <Star className="w-3 h-3 text-slate-400" />
-              </div>
-              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800" title="New Member">
-                <Zap className="w-3 h-3 text-slate-400" />
-              </div>
-            </>
-          )}
+          <TooltipProvider>
+            {badges.length > 0 ? (
+              <>
+                {badges.map((badge, idx) => {
+                  const Icon = badge.icon;
+                  return (
+                    <Tooltip key={idx}>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={cn(
+                            "w-6 h-6 rounded-full flex items-center justify-center cursor-help",
+                            badge.bg,
+                            "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
+                          )}
+                        >
+                          <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
+                        <p className="font-medium text-sm">{badge.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+                {profile.achievements?.length > 3 && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-600 dark:text-slate-300 cursor-help">
+                        +{profile.achievements.length - 3}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      <p className="text-xs">{profile.achievements.slice(3).join(', ')}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </>
+            ) : (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 cursor-help">
+                      <Star className="w-3 h-3 text-slate-400" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p className="font-medium text-sm">Seeker</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 cursor-help">
+                      <Zap className="w-3 h-3 text-slate-400" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p className="font-medium text-sm">New Member</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            )}
+          </TooltipProvider>
         </div>
 
         {/* Skills preview - clickable tags */}
