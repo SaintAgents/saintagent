@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Minimize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip } from "lucide-react";
+import { X, Send, Minimize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip, Move } from "lucide-react";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,83 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const scrollRef = useRef(null);
   const typingRef = useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
+
+  // Draggable & Resizable state
+  const [position, setPosition] = useState({ x: window.innerWidth - 720, y: window.innerHeight - 420 });
+  const [size, setSize] = useState({ width: 320, height: 384 });
+  const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
+
+  // Drag handlers
+  const onDragStart = (e) => {
+    e.preventDefault();
+    dragRef.current = { isDragging: true, startX: e.clientX, startY: e.clientY, startPosX: position.x, startPosY: position.y };
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+  };
+  const onDragMove = (e) => {
+    if (!dragRef.current.isDragging) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    setPosition({
+      x: Math.max(0, Math.min(window.innerWidth - size.width, dragRef.current.startPosX + dx)),
+      y: Math.max(0, Math.min(window.innerHeight - 50, dragRef.current.startPosY + dy))
+    });
+  };
+  const onDragEnd = () => {
+    dragRef.current.isDragging = false;
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+  };
+
+  // Resize handlers
+  const onResizeStart = (e, edge) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizeRef.current = { isResizing: true, startX: e.clientX, startY: e.clientY, startW: size.width, startH: size.height, startPosX: position.x, startPosY: position.y, edge };
+    document.addEventListener('mousemove', onResizeMove);
+    document.addEventListener('mouseup', onResizeEnd);
+  };
+  const onResizeMove = (e) => {
+    if (!resizeRef.current.isResizing) return;
+    const dx = e.clientX - resizeRef.current.startX;
+    const dy = e.clientY - resizeRef.current.startY;
+    const edge = resizeRef.current.edge;
+    let newW = resizeRef.current.startW;
+    let newH = resizeRef.current.startH;
+    let newX = position.x;
+    let newY = position.y;
+
+    if (edge.includes('e')) newW = Math.max(280, resizeRef.current.startW + dx);
+    if (edge.includes('w')) {
+      newW = Math.max(280, resizeRef.current.startW - dx);
+      newX = resizeRef.current.startPosX + dx;
+    }
+    if (edge.includes('s')) newH = Math.max(300, resizeRef.current.startH + dy);
+    if (edge.includes('n')) {
+      newH = Math.max(300, resizeRef.current.startH - dy);
+      newY = resizeRef.current.startPosY + dy;
+    }
+
+    setSize({ width: newW, height: newH });
+    if (edge.includes('w') || edge.includes('n')) {
+      setPosition({ x: newX, y: newY });
+    }
+  };
+  const onResizeEnd = () => {
+    resizeRef.current.isResizing = false;
+    document.removeEventListener('mousemove', onResizeMove);
+    document.removeEventListener('mouseup', onResizeEnd);
+  };
+
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+      document.removeEventListener('mousemove', onResizeMove);
+      document.removeEventListener('mouseup', onResizeEnd);
+    };
+  }, []);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
