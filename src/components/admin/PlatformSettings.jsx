@@ -194,6 +194,18 @@ export default function PlatformSettings() {
             <ToggleRow label="Maintenance Mode" value={form.maintenance_mode} onChange={(v) => handleChange('maintenance_mode', v)} />
           </CardContent>
         </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Coins className="w-5 h-5 text-amber-500" />
+              Gold Price
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GoldPriceFetcher />
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex justify-end">
