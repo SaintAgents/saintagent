@@ -12,6 +12,7 @@ import EventDetail from './pages/EventDetail';
 import Events from './pages/Events';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
+import Forum from './pages/Forum';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Join from './pages/Join';
@@ -43,7 +44,6 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Forum from './pages/Forum';
 import __Layout from './Layout.jsx';
 
 
@@ -62,6 +62,7 @@ export const PAGES = {
     "Events": Events,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
+    "Forum": Forum,
     "Gamification": Gamification,
     "Home": Home,
     "Join": Join,
@@ -93,7 +94,6 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Forum": Forum,
 }
 
 export const pagesConfig = {

@@ -187,7 +187,7 @@ export default function DailyOps() {
         {/* Date & Overview */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2 dark:text-slate-100"><CalendarDays className="w-5 h-5" /> Daily Ops & Progress Tracker</CardTitle>
+            <CardTitle className="flex items-center gap-2 text-violet-700 dark:text-slate-100"><CalendarDays className="w-5 h-5" /> Daily Ops & Progress Tracker</CardTitle>
             <div className="flex items-center gap-3">
               <Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-40 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
               <Button onClick={() => updateLog({ overview })} className="gap-2"><Save className="w-4 h-4" /> Save Overview</Button>
@@ -203,7 +203,7 @@ export default function DailyOps() {
 
         {/* Schedule / To-Do */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="dark:text-slate-100">Schedule / To-Do</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-violet-700 dark:text-slate-100">Schedule / To-Do</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-2 mb-3">
               <Select value={schedDraft.priority} onValueChange={(v) => setSchedDraft({ ...schedDraft, priority: v })}>
@@ -246,7 +246,7 @@ export default function DailyOps() {
 
         {/* In Progress */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="dark:text-slate-100">In Progress</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-emerald-700 dark:text-slate-100">In Progress</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
               <Input placeholder="Work item" value={inProgDraft.title} onChange={(e) => setInProgDraft({ ...inProgDraft, title: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
@@ -274,7 +274,7 @@ export default function DailyOps() {
 
         {/* Completed Today */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="dark:text-slate-100">Completed Today (What Was Done)</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-emerald-700 dark:text-slate-100">Completed Today (What Was Done)</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-3">
               <Input placeholder="Action name" value={completedDraft.action} onChange={(e) => setCompletedDraft({ ...completedDraft, action: e.target.value })} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder:text-slate-400" />
@@ -303,7 +303,7 @@ export default function DailyOps() {
 
         {/* Daily Transactions */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="dark:text-slate-100">Daily Transactions (GGG, rank, trust)</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-amber-700 dark:text-slate-100">Daily Transactions (GGG, rank, trust)</CardTitle></CardHeader>
           <CardContent>
             <div className="space-y-2">
               {txToday.length === 0 && <div className="text-sm text-slate-500 dark:text-slate-400">No GGG transactions for this date.</div>}
@@ -328,7 +328,7 @@ export default function DailyOps() {
 
         {/* Daily Field Update */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="dark:text-slate-100">Daily Field Update</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-blue-700 dark:text-slate-100">Daily Field Update</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Focus</div>
@@ -390,7 +390,7 @@ export default function DailyOps() {
 
         {/* Events Calendar (Week) */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="dark:text-slate-100">Events Calendar (Week of {format(weekStart, 'yyyy-MM-dd')} to {format(weekEnd, 'yyyy-MM-dd')})</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-indigo-700 dark:text-slate-100">Events Calendar (Week of {format(weekStart, 'yyyy-MM-dd')} to {format(weekEnd, 'yyyy-MM-dd')})</CardTitle></CardHeader>
           <CardContent>
             {eventsWeek.length === 0 ? (
               <div className="text-sm text-slate-500 dark:text-slate-400">No events posted for this week.</div>
