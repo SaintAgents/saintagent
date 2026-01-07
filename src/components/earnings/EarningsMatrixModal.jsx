@@ -22,7 +22,7 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden max-h-[90vh]">
+      <DialogContent className="max-w-5xl p-0 overflow-hidden max-h-[90vh]">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle className="flex items-center gap-2">
             <Coins className="w-5 h-5 text-amber-500" />
@@ -50,23 +50,49 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
           </div>
         </div>
 
-        <div className="px-6 pb-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Matrix overview */}
-          <ScrollArea className="h-[400px] border rounded-xl bg-white/50">
-            <div className="p-4 space-y-3">
-              {MATRIX_SECTIONS.map(sec => (
-                <div key={sec.tier} className="p-3 rounded-lg border bg-white">
-                  <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-                    <div className="font-semibold text-slate-900">{sec.title}</div>
-                    <Badge className="bg-violet-600 font-mono">{formatGGG(sec.tier)} GGG ≈ ${formatUSD(sec.tier * GGG_TO_USD)}</Badge>
+        <Tabs defaultValue="tiers" className="px-6 pb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-4">
+            <TabsTrigger value="tiers" className="gap-2">
+              <Coins className="w-4 h-4" />
+              Tiers
+            </TabsTrigger>
+            <TabsTrigger value="actions" className="gap-2">
+              <List className="w-4 h-4" />
+              Actions
+            </TabsTrigger>
+            <TabsTrigger value="calculator" className="gap-2">
+              <Calculator className="w-4 h-4" />
+              Calculator
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Tiers Overview Tab */}
+          <TabsContent value="tiers">
+            <ScrollArea className="h-[400px] border rounded-xl bg-white/50">
+              <div className="p-4 space-y-3">
+                {MATRIX_SECTIONS.map(sec => (
+                  <div key={sec.tier} className="p-3 rounded-lg border bg-white">
+                    <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                      <div className="font-semibold text-slate-900">{sec.title}</div>
+                      <Badge className="bg-violet-600 font-mono">{formatGGG(sec.tier)} GGG ≈ ${formatUSD(sec.tier * GGG_TO_USD)}</Badge>
+                    </div>
+                    <ul className="list-disc pl-5 text-sm text-slate-600 space-y-1">
+                      {sec.items.map((it, i) => (<li key={i}>{it}</li>))}
+                    </ul>
                   </div>
-                  <ul className="list-disc pl-5 text-sm text-slate-600 space-y-1">
-                    {sec.items.map((it, i) => (<li key={i}>{it}</li>))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+                ))}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+
+          {/* Actions Tab */}
+          <TabsContent value="actions">
+            <ScrollArea className="h-[400px] border rounded-xl bg-white/50">
+              <div className="p-4">
+                <ActionsEarningsTable />
+              </div>
+            </ScrollArea>
+          </TabsContent>
 
           {/* Calculator */}
           <div className="p-4 rounded-xl border bg-white/50">
