@@ -1096,7 +1096,7 @@ export default function CommandDeck() {
               </div>
             </CollapsibleCard>
 
-            <CollapsibleCard title="Missions & Quests" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen}>
+            <CollapsibleCard title="Missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen}>
               <div className="space-y-3">
                 {missions.length === 0 ?
                 <div className="text-center py-6">
@@ -1281,7 +1281,7 @@ export default function CommandDeck() {
         {circlesPopupOpen && <FloatingPanel title="Circles & Regions" onClose={() => setCirclesPopupOpen(false)}><CirclesRegions /></FloatingPanel>}
         {syncPopupOpen && <FloatingPanel title="Synchronicity Engine" onClose={() => setSyncPopupOpen(false)}><SynchronicityEngine profile={profile} matchTab={matchTab} setMatchTab={setMatchTab} filteredMatches={filteredMatches} matches={matches} onMatchAction={handleMatchAction} /></FloatingPanel>}
         {meetingsPopupOpen && <FloatingPanel title="Meetings & Momentum" onClose={() => setMeetingsPopupOpen(false)}><MeetingsMomentum pendingMeetings={pendingMeetings} scheduledMeetings={scheduledMeetings} onAction={handleMeetingAction} /></FloatingPanel>}
-        {missionsPopupOpen && <FloatingPanel title="Missions & Quests" onClose={() => setMissionsPopupOpen(false)}><MissionsQuests missions={missions} profile={profile} onAction={handleMissionAction} /></FloatingPanel>}
+        {missionsPopupOpen && <FloatingPanel title="Missions" onClose={() => setMissionsPopupOpen(false)}><MissionsQuests missions={missions} profile={profile} onAction={handleMissionAction} /></FloatingPanel>}
         {selectedProject && <FloatingPanel title={selectedProject.title || 'Project Details'} onClose={() => setSelectedProject(null)}><ProjectDetailCard project={selectedProject} /></FloatingPanel>}
         {marketPopupOpen && <FloatingPanel title="Marketplace: Earn & Learn" onClose={() => setMarketPopupOpen(false)}><MarketplaceEarnLearn listings={listings} onAction={handleListingAction} /></FloatingPanel>}
         {influencePopupOpen && <FloatingPanel title="Influence & Reach" onClose={() => setInfluencePopupOpen(false)}><InfluenceReach profile={profile} onBoost={() => setBoostTarget({ type: 'profile', id: profile?.user_id })} /></FloatingPanel>}
