@@ -46,6 +46,7 @@ export default function Settings() {
       ...prev,
       dm_policy: profile.dm_policy || 'everyone',
       status: profile.status || 'online',
+      status_message: profile.status_message || '',
       profile_visibility: profile.profile_visibility || 'public',
       visibility_settings: profile.visibility_settings || prev.visibility_settings,
       notification_prefs: profile.notification_prefs || prev.notification_prefs,
