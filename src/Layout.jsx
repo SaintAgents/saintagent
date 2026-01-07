@@ -1028,21 +1028,25 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-image: none !important;
         }
 
-        /* Prevent white flash during theme transitions - apply to all pages */
-        [data-theme='dark'] main {
+        /* Prevent white flash during theme transitions - apply to NON-CommandDeck pages */
+        [data-theme='dark'] main:not([data-page='CommandDeck']) {
           background-color: #050505 !important;
           background-image: none !important;
           transition: none !important;
         }
-        [data-theme='hacker'] main {
+        [data-theme='hacker'] main:not([data-page='CommandDeck']) {
           background-color: #000 !important;
           background-image: none !important;
           transition: none !important;
         }
 
-        /* Override Command Deck specifically to allow its background */
+        /* Command Deck keeps its background image in dark mode */
         [data-theme='dark'] main[data-page='CommandDeck'] {
+          background-color: #050505 !important;
           background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ebbb7d483_universal_upscale_0_d6828612-8b20-4bc7-aefe-008865240cf1_0.jpg') !important;
+          background-size: cover !important;
+          background-position: center !important;
+          background-attachment: fixed !important;
         }
 
         /* Avatar card background - light mode uses gold shield, dark mode solid obsidian */
