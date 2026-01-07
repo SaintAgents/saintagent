@@ -29,6 +29,8 @@ import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import CreateCampaignModal from '@/components/affiliate/CreateCampaignModal';
 import CampaignAnalytics from '@/components/affiliate/CampaignAnalytics';
+import BackButton from '@/components/hud/BackButton';
+import { AFFILIATE_BADGE_IMAGES } from '@/components/reputation/affiliateBadges';
 
 // Affiliate Tier System with badge-style icons
 const AFFILIATE_TIERS = [
@@ -254,16 +256,36 @@ export default function AffiliateCenter() {
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Affiliate Center</h1>
-            <p className="text-slate-600">
-              Invite people who would genuinely benefit. Earn 0.25 GGG ($36.25) when they complete their first paid action.
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
+      {/* Hero Section */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f660ad96b_gemini-25-flash-image_The_Ascension_Blueprint_Lab_Theme_Divine_architecture_plus_futuristic_creation_V-61.jpg"
+          alt="Affiliate Center"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              <Link2 className="w-10 h-10 text-amber-300 drop-shadow-lg" />
+              Affiliate Center
+            </h1>
+            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              Invite people who would genuinely benefit
             </p>
           </div>
+        </div>
+        <div className="absolute top-4 left-4">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Header */}
+        <div className="flex items-center justify-end mb-8">
           <Button 
             onClick={() => setCreateCampaignOpen(true)}
             className="bg-violet-600 hover:bg-violet-700 gap-2"
@@ -278,8 +300,13 @@ export default function AffiliateCenter() {
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className={cn("w-16 h-16 rounded-xl bg-gradient-to-br flex items-center justify-center", currentTier.color)}>
-                  <currentTier.icon className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 flex items-center justify-center">
+                  <img 
+                    src={AFFILIATE_BADGE_IMAGES[currentTier.id]} 
+                    alt={`${currentTier.name} badge`}
+                    className="w-16 h-16 object-contain drop-shadow-lg"
+                    data-no-filter="true"
+                  />
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-wide text-slate-500">Your Affiliate Tier</p>
@@ -727,17 +754,19 @@ export default function AffiliateCenter() {
                       )}
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        {/* Badge-style icon */}
-                        <div className={cn(
-                          "relative w-12 h-12 rounded-full flex items-center justify-center shadow-lg",
-                          isLocked 
-                            ? "bg-slate-200" 
-                            : `bg-gradient-to-br ${tier.badgeGradient} ${tier.glowColor}`
-                        )}>
+                        {/* Badge-style icon - using color badge images */}
+                        <div className="relative w-14 h-14 flex items-center justify-center">
                           {isLocked ? (
-                            <Lock className="w-5 h-5 text-slate-400" />
+                            <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
+                              <Lock className="w-5 h-5 text-slate-400" />
+                            </div>
                           ) : (
-                            <TierIcon className="w-6 h-6 text-white drop-shadow-lg" />
+                            <img 
+                              src={AFFILIATE_BADGE_IMAGES[tier.id]} 
+                              alt={`${tier.name} badge`}
+                              className="w-14 h-14 object-contain drop-shadow-lg"
+                              data-no-filter="true"
+                            />
                           )}
                           {isCurrentTier && (
                             <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
@@ -804,6 +833,7 @@ export default function AffiliateCenter() {
         events={events}
         missions={missions}
       />
+      </div>
     </div>
   );
 }
