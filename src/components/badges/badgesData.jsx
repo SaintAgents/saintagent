@@ -1,3 +1,4 @@
+
 // Badge definitions grouped by section
 // Badges can be earned via Quest completion, Challenge milestones, or both (Hybrid)
 
@@ -300,6 +301,21 @@ export const BADGE_INDEX = Object.fromEntries(
   BADGE_SECTIONS.flatMap(s => s.items.map(it => [it.code, { ...it, section: s.id }]))
 );
 
+// Quest/Achievement badge images
+export const QUEST_BADGE_IMAGES = {
+  first_meeting: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2a0b1a50c_Screenshot2026-01-07044449-Picsart-BackgroundRemover.png',
+  audit_expert: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/211bccd26_audit-Picsart-BackgroundRemover.png',
+  streak_7: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png',
+  top_mentor: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cb85d913_Screenshot2026-01-07044531-Picsart-BackgroundRemover.png',
+  ascended_tier: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7bf4fe9e_Achievementbadgescollectiononblackbackground.png',
+  social_butterfly: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/531434409_Sacredgeometryandcosmicresonancesymbols.png',
+  mission_master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/acd48db09_Goldentrustanchoremblem-Picsart-BackgroundRemover.png',
+  synchronicity_weaver: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/531434409_Sacredgeometryandcosmicresonancesymbols.png',
+  eternal_flame: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png',
+  trust_anchor: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/acd48db09_Goldentrustanchoremblem-Picsart-BackgroundRemover.png',
+};
+
+// Badge trigger rules - plain text format (no JSON conditions)
 export const BADGE_RULES = {
   verified: {
     badge_id: 'identity_verified',
@@ -307,7 +323,6 @@ export const BADGE_RULES = {
     icon: 'Gold shield with a checkmark',
     when: 'After successful completion of the platform’s verification process.',
     how: 'User passes identity/account verification and has no major flags in the last 90 days.',
-    conditions: { verification_status: 'verified', no_major_flags_last_days: 90 },
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -317,7 +332,6 @@ export const BADGE_RULES = {
     icon: '“SA” crest with wings',
     when: 'Granted to accounts that joined during the genesis window or hold a genesis credential.',
     how: 'Account in genesis interval, holds a genesis token, or admin-marked as genesis.',
-    conditions: { account_created_in_genesis_window: true, has_genesis_token: true, manually_marked_genesis: true },
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -327,7 +341,6 @@ export const BADGE_RULES = {
     icon: 'Gold padlock on a braided cord',
     when: 'Assigned for major, permanent status recognitions that should never be sold or transferred.',
     how: 'User completes a key initiation or oath and is granted a permanent soulbound credential.',
-    conditions: { has_completed_soulbound_initiation: true },
     non_transferable: true,
     requires_manual_approval: true
   },
@@ -336,8 +349,7 @@ export const BADGE_RULES = {
     name: 'Calibrator',
     icon: 'Winged crest with a central diamond',
     when: 'Given to high-trust users selected as reviewers/curators who help calibrate quality and alignment.',
-    how: 'High rep and trust; completes calibration tasks with accuracy; final manual approval.',
-    conditions: { min_rep_score: 400, min_trust_percent: 75, min_calibration_events_completed: 20, min_calibration_accuracy: 0.8 },
+    how: 'High rep (400+) and trust (75%+); completes 20+ calibration tasks with 80%+ accuracy; final manual approval.',
     non_transferable: true,
     requires_manual_approval: true
   },
@@ -346,8 +358,7 @@ export const BADGE_RULES = {
     name: 'Freuwäne',
     icon: 'Winged badge with a blue crystal and a star',
     when: 'Reserved for exceptional members recognized for deep mastery, lineage, or unique contribution.',
-    how: 'Long-term service, high integrity, deep alignment; council-only grant.',
-    conditions: { min_rep_score: 700, min_trust_percent: 90, min_active_days_total: 365 },
+    how: 'Long-term service (365+ days), high integrity (rep 700+, trust 90%+); council-only grant.',
     non_transferable: true,
     requires_manual_approval: true
   },
@@ -356,8 +367,7 @@ export const BADGE_RULES = {
     name: 'Flamewheel',
     icon: 'Flame inside a gold ring with wings',
     when: 'Earned once a threshold of sustained, high-energy activity is reached.',
-    how: 'Active streak + mission completions within a 60-day window with no major violations.',
-    conditions: { min_active_days_last_60d: 30, min_missions_completed_last_60d: 10, no_major_flags_last_days: 60 },
+    how: '30+ active days and 10+ missions completed within 60 days with no major violations.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -366,8 +376,7 @@ export const BADGE_RULES = {
     name: 'Market Maker',
     icon: 'Storefront/market stall',
     when: 'Once user contributes multiple listings and executes sales.',
-    how: 'Activates several listings and completes at least a few sales.',
-    conditions: { min_active_listings_count: 5, min_total_sales_count: 3 },
+    how: '5+ active listings and 3+ completed sales.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -377,7 +386,6 @@ export const BADGE_RULES = {
     icon: 'Stacks of gold coins',
     when: 'First time user receives GGG from recognized activity.',
     how: 'Paid mission, sale, or platform reward (not self-transfer).',
-    conditions: { min_total_ggg_earned_from_activity: 1 },
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -386,8 +394,7 @@ export const BADGE_RULES = {
     name: 'Top Seller',
     icon: 'Trophy cup',
     when: 'Top-tier performance over a recent timeframe.',
-    how: 'Top percentile sales over 30 days with high ratings and low disputes.',
-    conditions: { time_window_days: 30, min_sales_volume_window: 1000, max_sales_volume_percentile_window: 0.1, min_avg_buyer_rating_window: 4.5, max_dispute_rate_window: 0.05 },
+    how: 'Top 10% sales volume over 30 days with 4.5+ avg rating and under 5% dispute rate.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -396,8 +403,7 @@ export const BADGE_RULES = {
     name: 'Vault Trader',
     icon: 'Shield with keys and a central lock',
     when: 'Whitelisted/approved for vault-tier operations.',
-    how: 'Passes compliance, holds high rep/trust, manually authorized.',
-    conditions: { min_rep_score: 500, min_trust_percent: 85, passed_vault_compliance: true },
+    how: 'Rep 500+, trust 85%+, passes vault compliance check, manually authorized.',
     non_transferable: true,
     requires_manual_approval: true
   },
@@ -406,8 +412,7 @@ export const BADGE_RULES = {
     name: 'Mentor of Light',
     icon: 'Mountain peak with a red flag',
     when: 'After successfully mentoring others through defined missions.',
-    how: 'Completes mentorship missions with high feedback; strong rep/trust.',
-    conditions: { min_mentorship_missions_completed: 5, min_avg_mentorship_feedback_rating: 4.5, min_rep_score: 300, min_trust_percent: 70 },
+    how: '5+ mentorship missions completed with 4.5+ avg feedback; rep 300+, trust 70%+.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -416,8 +421,7 @@ export const BADGE_RULES = {
     name: 'Diplomat',
     icon: 'Two figures, one raising a trophy',
     when: 'After multiple successful conflict-resolution actions.',
-    how: 'Mediates disputes with good success and stable reputation.',
-    conditions: { min_mediation_sessions_completed: 5, min_conflict_resolution_success_rate: 0.7, min_rep_score: 250, min_trust_percent: 65 },
+    how: '5+ mediation sessions with 70%+ success rate; rep 250+, trust 65%+.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -426,8 +430,7 @@ export const BADGE_RULES = {
     name: 'Steward',
     icon: 'Handshake holding a globe',
     when: 'For ongoing responsibility for a community or project.',
-    how: 'Assigned to steward roles for sustained period with high rep/trust.',
-    conditions: { min_steward_roles_assigned: 1, min_days_in_steward_roles: 90, min_rep_score: 350, min_trust_percent: 75 },
+    how: '1+ steward role assigned for 90+ days; rep 350+, trust 75%+.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -436,8 +439,7 @@ export const BADGE_RULES = {
     name: 'Healer / Support',
     icon: 'Two figures with a medical cross symbol',
     when: 'Strong pattern of providing healing or support.',
-    how: 'Completes support missions with excellent feedback and no exploitation.',
-    conditions: { min_support_missions_completed: 5, min_avg_support_feedback_rating: 4.5, no_exploitative_flags: true },
+    how: '5+ support missions completed with 4.5+ avg feedback and no exploitative flags.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -446,8 +448,7 @@ export const BADGE_RULES = {
     name: 'Cultivator / Growthkeeper',
     icon: 'Tree growing from open hands with laurel framing',
     when: 'Users who grow and sustain communities or projects over time.',
-    how: 'Contributes to community growth, retention, and ongoing activity.',
-    conditions: { min_community_growth_missions_completed: 5, min_community_retention_rate: 0.6, min_community_active_days: 90 },
+    how: '5+ community growth missions, 60%+ retention rate, 90+ active days in community.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -456,8 +457,7 @@ export const BADGE_RULES = {
     name: 'Light Verified',
     icon: 'Radiant gold star with wing-like rays',
     when: 'After alignment-focused review of behavior and contributions.',
-    how: 'High rep/trust with no alignment flags for 180 days.',
-    conditions: { min_rep_score: 400, min_trust_percent: 80, no_major_alignment_flags_last_days: 180 },
+    how: 'Rep 400+, trust 80%+, no alignment flags for 180 days.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -466,8 +466,7 @@ export const BADGE_RULES = {
     name: 'Grid Aligned',
     icon: 'Multicolor heart with a central diamond',
     when: 'Consistent participation in grid/mission work with heart coherence.',
-    how: 'Completes grid missions and logs heart-coherence practices with good trust.',
-    conditions: { min_grid_missions_completed: 8, min_heart_coherence_sessions_logged: 10, min_trust_percent: 75 },
+    how: '8+ grid missions completed, 10+ heart-coherence sessions logged, trust 75%+.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -476,8 +475,7 @@ export const BADGE_RULES = {
     name: '144 Pathwalker',
     icon: 'Star-shaped sigil with a bright center',
     when: 'Reserved for advanced initiates on the 144-path.',
-    how: 'Completes 144-path milestones with high rep/trust and sustained activity.',
-    conditions: { min_path_144_milestones_completed: 12, min_rep_score: 500, min_trust_percent: 85, min_active_days_total: 270 },
+    how: '12+ path milestones completed; rep 500+, trust 85%+, 270+ active days.',
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -487,7 +485,6 @@ export const BADGE_RULES = {
     icon: 'Pink 8-point star with a gold circular center',
     when: 'After a specific activation or attunement.',
     how: 'Participates in at least one attunement event and passes its check.',
-    conditions: { min_attunement_events_completed: 1, attunement_status_required: 'passed' },
     non_transferable: true,
     requires_manual_approval: false
   },
@@ -496,8 +493,7 @@ export const BADGE_RULES = {
     name: 'Sacred Flame',
     icon: 'Golden flame in a circular base',
     when: 'Long-standing pattern of committed transformation and service.',
-    how: 'Completes transformative missions over time with sustained high reputation and trust.',
-    conditions: { min_transformative_missions_completed: 12, min_transformative_period_days: 180, min_rep_score: 550, min_trust_percent: 88 },
+    how: '12+ transformative missions over 180+ days; rep 550+, trust 88%+.',
     non_transferable: true,
     requires_manual_approval: false
   }
