@@ -171,7 +171,7 @@ export default function Missions() {
       {/* Hero Image */}
       <div className="relative h-72 md:h-96 w-full overflow-hidden">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/51f6a87ab_universal_upscale_0_d674b71e-39fb-41e7-8b32-cfaec92f89e7_0.jpg"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6dd5f74cd_3c612731-f612-4049-a0fa-c37c6a682477.jpg"
           alt="Missions Hero"
           className="w-full h-full object-cover object-center"
           data-no-filter="true"
