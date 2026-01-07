@@ -24,19 +24,20 @@ Deno.serve(async (req) => {
     try { body = await req.json(); } catch {}
     const types = Array.isArray(body?.types) && body.types.length ? body.types : ['listings','missions','testimonials','reputation'];
     const limit = Math.min(Number(body?.limit || 50), 200);
+    const scope = body?.scope || 'everyone'; // 'friends' or 'everyone'
 
     // Build relevant user set: followings + me
     const followings = await base44.entities.Follow.filter({ follower_id: me.email }).catch(() => []);
     const followingIds = new Set([me.email, ...(followings || []).map(f => f.following_id).filter(Boolean)]);
-    const hasFollowings = followingIds.size > 1; // More than just self
+    const filterByFriends = scope === 'friends';
 
     const results = [];
 
-    // Listings - show all recent if no followings, otherwise prioritize followed users
+    // Listings
     if (types.includes('listings')) {
       const recentListings = await base44.entities.Listing.list('-created_date', 60).catch(() => []);
       for (const l of recentListings) {
-        // Show all listings (community feed) - not just from followed users
+        if (filterByFriends && !followingIds.has(l.owner_id)) continue;
         results.push(toEvent({
           type: 'listings',
           source: l,
@@ -48,10 +49,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Missions - show all active missions
+    // Missions
     if (types.includes('missions')) {
       const recentMissions = await base44.entities.Mission.list('-updated_date', 60).catch(() => []);
       for (const m of recentMissions) {
+        if (filterByFriends && !followingIds.has(m.creator_id)) continue;
         const desc = m.status === 'completed' ? 'Mission completed' : (m.status === 'active' ? 'Mission active' : `Status: ${m.status}`);
         results.push(toEvent({
           type: 'missions',
@@ -64,10 +66,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Testimonials - show all recent testimonials
+    // Testimonials
     if (types.includes('testimonials')) {
       const recentTestimonials = await base44.entities.Testimonial.list('-created_date', 60).catch(() => []);
       for (const t of recentTestimonials) {
+        if (filterByFriends && !followingIds.has(t.from_user_id) && !followingIds.has(t.to_user_id)) continue;
         results.push(toEvent({
           type: 'testimonials',
           source: t,
@@ -84,7 +87,7 @@ Deno.serve(async (req) => {
     if (types.includes('reputation')) {
       const trustEvents = await base44.entities.TrustEvent.list('-created_date', 60).catch(() => []);
       for (const ev of trustEvents) {
-        // Show significant trust changes
+        if (filterByFriends && !followingIds.has(ev.user_id)) continue;
         if (Math.abs(Number(ev.delta || 0)) < 3) continue;
         results.push(toEvent({
           type: 'reputation',
@@ -96,10 +99,10 @@ Deno.serve(async (req) => {
           targetId: ev.user_id,
         }));
       }
-      // RP/other reputation events if available
       try {
         const repEvents = await base44.entities.ReputationEvent.list('-created_date', 60);
         for (const ev of repEvents) {
+          if (filterByFriends && !followingIds.has(ev.user_id)) continue;
           results.push(toEvent({
             type: 'reputation',
             source: ev,
