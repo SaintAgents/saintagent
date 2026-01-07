@@ -59,7 +59,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+      className="bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.2)] overflow-hidden hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all duration-300 cursor-pointer"
       onClick={() => window.location.href = createPageUrl('ListingDetail') + '?id=' + listing.id}
     >
       <div className="relative h-36">
@@ -67,6 +67,8 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
           src={listing.image_url || getCategoryImage(listing.category)} 
           alt={listing.title}
           className="w-full h-full object-cover"
+          style={{ filter: 'none' }}
+          data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         <Badge className={cn("absolute top-3 left-3", categoryColors[listing.category])}>
@@ -82,7 +84,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
       <div className="p-4">
 
         <div className="flex items-start justify-between gap-2">
-          <h4 className="font-semibold text-slate-900 line-clamp-2">{listing.title}</h4>
+          <h4 className="font-semibold text-slate-900 dark:text-white line-clamp-2">{listing.title}</h4>
           {isOwner && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -117,7 +119,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
           )}
         </div>
 
-        <p className="text-sm text-slate-500 line-clamp-2 mt-2">{listing.description}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-2">{listing.description}</p>
 
         <div className="flex items-center gap-3 mt-3">
           <div 
@@ -130,17 +132,17 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
                 {listing.owner_name?.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm font-medium text-slate-700">{listing.owner_name}</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{listing.owner_name}</span>
           </div>
           {listing.rating && (
             <div className="flex items-center gap-1 ml-auto">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              <span className="text-sm font-medium text-slate-700">{listing.rating}</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{listing.rating}</span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-4 mt-3 text-sm text-slate-500">
+        <div className="flex items-center gap-4 mt-3 text-sm text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
             {listing.duration_minutes}min
@@ -170,7 +172,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
 
         <div className="flex items-center gap-3 mt-4">
           {!listing.is_free && (
-            <div className="text-lg font-bold text-slate-900">
+            <div className="text-lg font-bold text-slate-900 dark:text-white">
               ${listing.price_amount}
             </div>
           )}
