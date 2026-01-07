@@ -8,6 +8,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { HelpCircle, Wallet, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import WithdrawModal from './WithdrawModal';
+import ConnectedWalletsSection from './ConnectedWalletsSection';
 
 const GGG_TO_USD = 145.00;
 const MIN_WITHDRAWAL_USD = 350.00;
