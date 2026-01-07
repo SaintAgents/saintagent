@@ -57,7 +57,9 @@ import {
   PanelLeft,
   Zap,
   Star,
-  Ban
+  Ban,
+  Waves,
+  Cloud
 } from "lucide-react";
 import {
   Tooltip,
