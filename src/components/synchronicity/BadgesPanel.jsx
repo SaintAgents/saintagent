@@ -45,22 +45,30 @@ const QUEST_BADGE_KEYS = [
 ];
 
 function BadgeIcon({ badge, size = 'md', locked = false }) {
-  const def = BADGE_DEFINITIONS[badge?.badge_code] || BADGE_DEFINITIONS[badge?.code] || {
-    name: badge?.badge_name || 'Badge',
-    icon: Award,
-    color: 'from-slate-500 to-slate-400',
-    rarity: 'common'
-  };
-  const Icon = def.icon;
-  const sizeClasses = size === 'sm' ? 'w-10 h-10' : size === 'lg' ? 'w-16 h-16' : 'w-12 h-12';
-  const iconSize = size === 'sm' ? 'w-5 h-5' : size === 'lg' ? 'w-8 h-8' : 'w-6 h-6';
+  const code = badge?.badge_code || badge?.code;
+  const def = BADGE_INDEX[code] || {};
+  const rarity = def.rarity || 'common';
+  const imageUrl = QUEST_BADGE_IMAGES[code];
+  
+  const sizeClasses = size === 'sm' ? 'w-12 h-12' : size === 'lg' ? 'w-20 h-20' : 'w-14 h-14';
 
   return (
     <motion.div
       whileHover={{ scale: locked ? 1 : 1.1 }}
-      className={`relative ${sizeClasses} rounded-full bg-gradient-to-br ${def.color} flex items-center justify-center shadow-lg ${RARITY_GLOW[def.rarity]} ${locked ? 'opacity-30 grayscale' : ''}`}
+      className={`relative ${sizeClasses} rounded-full flex items-center justify-center shadow-lg ${RARITY_GLOW[rarity]} ${locked ? 'opacity-30 grayscale' : ''}`}
     >
-      <Icon className={`${iconSize} text-white drop-shadow-lg`} />
+      {imageUrl ? (
+        <img 
+          src={imageUrl} 
+          alt={def.label || code}
+          className="w-full h-full object-contain drop-shadow-lg"
+          data-no-filter="true"
+        />
+      ) : (
+        <div className={`w-full h-full rounded-full bg-gradient-to-br ${RARITY_COLORS[rarity]} flex items-center justify-center`}>
+          <Award className="w-6 h-6 text-white drop-shadow-lg" />
+        </div>
+      )}
       {locked && (
         <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center">
           <Lock className="w-4 h-4 text-white/70" />
