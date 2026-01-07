@@ -12,10 +12,10 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  SelectValue } from
+"@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
+import {
   Settings as SettingsIcon,
   User,
   Bell,
@@ -23,8 +23,8 @@ import {
   MessageCircle,
   Eye,
   Save,
-  Check
-} from "lucide-react";
+  Check } from
+"lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import BackButton from '@/components/hud/BackButton';
 
@@ -51,7 +51,7 @@ export default function Settings() {
       notification_prefs: profile.notification_prefs || prev.notification_prefs,
       theme_preference: profile.theme_preference || prev.theme_preference,
       custom_theme_colors: profile.custom_theme_colors || prev.custom_theme_colors,
-      command_deck_layout: profile.command_deck_layout || prev.command_deck_layout,
+      command_deck_layout: profile.command_deck_layout || prev.command_deck_layout
     }));
   }, [profile?.id]);
 
@@ -61,12 +61,12 @@ export default function Settings() {
     profile_visibility: profile?.profile_visibility || 'public',
     visibility_settings: profile?.visibility_settings || { show_email: false, show_location: true, show_earnings: false },
     notification_prefs: profile?.notification_prefs || { email: true, in_app: true, push: false },
-    theme_preference: profile?.theme_preference || (typeof window !== 'undefined' ? (localStorage.getItem('theme') || 'light') : 'light'),
+    theme_preference: profile?.theme_preference || (typeof window !== 'undefined' ? localStorage.getItem('theme') || 'light' : 'light'),
     custom_theme_colors: profile?.custom_theme_colors || {
-      primary: (typeof window !== 'undefined' ? (localStorage.getItem('custom_primary') || '#7c3aed') : '#7c3aed'),
-      accent: (typeof window !== 'undefined' ? (localStorage.getItem('custom_accent') || '#f59e0b') : '#f59e0b'),
+      primary: typeof window !== 'undefined' ? localStorage.getItem('custom_primary') || '#7c3aed' : '#7c3aed',
+      accent: typeof window !== 'undefined' ? localStorage.getItem('custom_accent') || '#f59e0b' : '#f59e0b'
     },
-    command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true },
+    command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true }
   });
 
   const updateMutation = useMutation({
@@ -101,7 +101,7 @@ export default function Settings() {
       notification_prefs: settings.notification_prefs,
       theme_preference: settings.theme_preference,
       custom_theme_colors: settings.custom_theme_colors,
-      command_deck_layout: settings.command_deck_layout,
+      command_deck_layout: settings.command_deck_layout
     });
   };
 
@@ -163,10 +163,10 @@ export default function Settings() {
                 <CardDescription>Set your current availability status</CardDescription>
               </CardHeader>
               <CardContent>
-                <Select 
-                  value={settings.status} 
-                  onValueChange={(v) => setSettings({ ...settings, status: v })}
-                >
+                <Select
+                  value={settings.status}
+                  onValueChange={(v) => setSettings({ ...settings, status: v })}>
+
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -209,10 +209,10 @@ export default function Settings() {
                 <CardDescription>Control who can send you direct messages</CardDescription>
               </CardHeader>
               <CardContent>
-                <Select 
-                  value={settings.dm_policy} 
-                  onValueChange={(v) => setSettings({ ...settings, dm_policy: v })}
-                >
+                <Select
+                  value={settings.dm_policy}
+                  onValueChange={(v) => setSettings({ ...settings, dm_policy: v })}>
+
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -236,8 +236,8 @@ export default function Settings() {
                   <Label>Overall visibility</Label>
                   <Select
                     value={settings.profile_visibility}
-                    onValueChange={(v) => setSettings({ ...settings, profile_visibility: v })}
-                  >
+                    onValueChange={(v) => setSettings({ ...settings, profile_visibility: v })}>
+
                     <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="public">Public</SelectItem>
@@ -251,30 +251,30 @@ export default function Settings() {
                     <p className="font-medium">Show email</p>
                     <p className="text-sm text-slate-500">Allow others to see your email address</p>
                   </div>
-                  <Switch 
+                  <Switch
                     checked={!!settings.visibility_settings?.show_email}
-                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_email: !!checked } })}
-                  />
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_email: !!checked } })} />
+
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Show location</p>
                     <p className="text-sm text-slate-500">Display your region on your profile</p>
                   </div>
-                  <Switch 
+                  <Switch
                     checked={!!settings.visibility_settings?.show_location}
-                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_location: !!checked } })}
-                  />
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_location: !!checked } })} />
+
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Show earnings</p>
                     <p className="text-sm text-slate-500">Display your total earnings publicly</p>
                   </div>
-                  <Switch 
+                  <Switch
                     checked={!!settings.visibility_settings?.show_earnings}
-                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_earnings: !!checked } })}
-                  />
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_earnings: !!checked } })} />
+
                 </div>
               </CardContent>
             </Card>
@@ -282,10 +282,10 @@ export default function Settings() {
 
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
-            <NotificationSettings 
+            <NotificationSettings
               settings={settings.notification_prefs}
-              onChange={(newPrefs) => setSettings({ ...settings, notification_prefs: newPrefs })}
-            />
+              onChange={(newPrefs) => setSettings({ ...settings, notification_prefs: newPrefs })} />
+
           </TabsContent>
 
           {/* Preferences */}
@@ -300,8 +300,8 @@ export default function Settings() {
                   <Label>Theme</Label>
                   <Select
                     value={settings.theme_preference}
-                    onValueChange={(v) => setSettings({ ...settings, theme_preference: v })}
-                  >
+                    onValueChange={(v) => setSettings({ ...settings, theme_preference: v })}>
+
                     <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="light">Light</SelectItem>
@@ -316,56 +316,56 @@ export default function Settings() {
                     {settings.theme_preference === 'custom' && "Choose your own primary and accent colors"}
                   </p>
                 </div>
-                {settings.theme_preference === 'custom' && (
-                  <div className="space-y-4">
+                {settings.theme_preference === 'custom' &&
+                <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label>Primary color</Label>
                         <div className="flex items-center gap-3 mt-2">
                           <Input
-                            type="color"
-                            className="h-10 w-16 p-1 cursor-pointer"
-                            value={settings.custom_theme_colors?.primary || '#7c3aed'}
-                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
-                          />
+                          type="color"
+                          className="h-10 w-16 p-1 cursor-pointer"
+                          value={settings.custom_theme_colors?.primary || '#7c3aed'}
+                          onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })} />
+
                           <Input
-                            type="text"
-                            className="flex-1 font-mono text-sm"
-                            value={settings.custom_theme_colors?.primary || '#7c3aed'}
-                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
-                            placeholder="#7c3aed"
-                          />
+                          type="text"
+                          className="flex-1 font-mono text-sm"
+                          value={settings.custom_theme_colors?.primary || '#7c3aed'}
+                          onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, primary: e.target.value } })}
+                          placeholder="#7c3aed" />
+
                         </div>
                       </div>
                       <div>
                         <Label>Accent color</Label>
                         <div className="flex items-center gap-3 mt-2">
                           <Input
-                            type="color"
-                            className="h-10 w-16 p-1 cursor-pointer"
-                            value={settings.custom_theme_colors?.accent || '#f59e0b'}
-                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
-                          />
+                          type="color"
+                          className="h-10 w-16 p-1 cursor-pointer"
+                          value={settings.custom_theme_colors?.accent || '#f59e0b'}
+                          onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })} />
+
                           <Input
-                            type="text"
-                            className="flex-1 font-mono text-sm"
-                            value={settings.custom_theme_colors?.accent || '#f59e0b'}
-                            onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
-                            placeholder="#f59e0b"
-                          />
+                          type="text"
+                          className="flex-1 font-mono text-sm"
+                          value={settings.custom_theme_colors?.accent || '#f59e0b'}
+                          onChange={(e) => setSettings({ ...settings, custom_theme_colors: { ...settings.custom_theme_colors, accent: e.target.value } })}
+                          placeholder="#f59e0b" />
+
                         </div>
                       </div>
                     </div>
                     {/* Color Preview */}
-                    <div className="p-4 rounded-lg border" style={{ 
-                      background: `linear-gradient(135deg, ${settings.custom_theme_colors?.primary || '#7c3aed'}20, ${settings.custom_theme_colors?.accent || '#f59e0b'}20)`,
-                      borderColor: settings.custom_theme_colors?.primary || '#7c3aed'
-                    }}>
+                    <div className="p-4 rounded-lg border" style={{
+                    background: `linear-gradient(135deg, ${settings.custom_theme_colors?.primary || '#7c3aed'}20, ${settings.custom_theme_colors?.accent || '#f59e0b'}20)`,
+                    borderColor: settings.custom_theme_colors?.primary || '#7c3aed'
+                  }}>
                       <p className="font-medium" style={{ color: settings.custom_theme_colors?.primary || '#7c3aed' }}>Preview of your theme</p>
                       <p className="text-sm" style={{ color: settings.custom_theme_colors?.accent || '#f59e0b' }}>Accent text color</p>
                     </div>
                   </div>
-                )}
+                }
               </CardContent>
             </Card>
 
@@ -379,8 +379,8 @@ export default function Settings() {
                   <Label>View mode</Label>
                   <Select
                     value={settings.command_deck_layout?.view_mode}
-                    onValueChange={(v) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, view_mode: v } })}
-                  >
+                    onValueChange={(v) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, view_mode: v } })}>
+
                     <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="standard">Standard</SelectItem>
@@ -396,8 +396,8 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={!!settings.command_deck_layout?.show_side_panel}
-                    onCheckedChange={(checked) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, show_side_panel: !!checked } })}
-                  />
+                    onCheckedChange={(checked) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, show_side_panel: !!checked } })} className="bg-violet-100 text-stone-950 rounded-full peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input" />
+
                 </div>
               </CardContent>
             </Card>
@@ -436,16 +436,16 @@ export default function Settings() {
 
         {/* Save Button */}
         <div className="flex justify-end mt-6">
-          <Button 
+          <Button
             onClick={handleSave}
             className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-            disabled={updateMutation.isPending}
-          >
+            disabled={updateMutation.isPending}>
+
             <Save className="w-4 h-4" />
             Save Changes
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
