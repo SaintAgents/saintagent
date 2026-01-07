@@ -164,6 +164,10 @@ export default function MessageBubble({
         </Avatar>
       )}
       <div className={cn("max-w-md", isOwn && "flex flex-col items-end")}>
+        {/* Timestamp above message */}
+        <p className="text-xs text-slate-400 dark:text-slate-300 mb-1 px-1">
+          {format(parseISO(msg.created_date), 'MMM d, h:mm a')}
+        </p>
         <div className={cn(
           "px-4 py-2 rounded-2xl",
           isOwn
@@ -173,11 +177,8 @@ export default function MessageBubble({
           {renderContent()}
         </div>
         <div className="flex items-center gap-2">
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 px-1">
-            {format(parseISO(msg.created_date), 'MMM d, h:mm a')}
-          </p>
           {isOwn && (
-            <span className="mt-1 text-xs">
+            <span className="mt-0.5 text-xs">
               {msg.is_read ? (
                 <span className="flex items-center gap-0.5">
                   <CheckCheck className="w-4 h-4 text-emerald-600" />
