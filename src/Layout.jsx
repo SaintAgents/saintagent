@@ -434,10 +434,25 @@ function AuthenticatedLayout({ children, currentPageName }) {
           border-color: rgba(0, 255, 136, 0.2) !important;
         }
 
-        /* Specific overrides for gradient backgrounds - exclude mission card image containers */
-        [data-theme='dark'] [class*='bg-gradient-']:not(.mission-card *) {
+        /* Specific overrides for gradient backgrounds - exclude hero and mission card image containers */
+        [data-theme='dark'] [class*='bg-gradient-']:not(.mission-card *):not(.hero-gradient):not(main[data-page='CommandDeck'] *) {
           background: var(--obsidian) !important;
           background-image: none !important;
+        }
+
+        /* Hero section visibility */
+        [data-theme='dark'] .hero-gradient {
+          background: transparent !important;
+        }
+        [data-theme='dark'] .hero-gradient > img {
+          opacity: 0.7 !important;
+        }
+        [data-theme='dark'] .hero-gradient::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, #050505 0%, transparent 70%);
+          pointer-events: none;
         }
 
         /* Mission card image container should keep its gradient fallback */
