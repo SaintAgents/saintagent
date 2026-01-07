@@ -114,7 +114,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
 
   if (minimized) {
     return (
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-4 right-[400px] z-[150]">
         <button
           onClick={() => setMinimized(false)}
           className="flex items-center gap-2 px-4 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-full shadow-lg"
@@ -130,7 +130,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   }
 
   return (
-    <div className="fixed bottom-4 right-4 w-80 bg-white rounded-lg shadow-2xl border border-slate-200 z-50 flex flex-col h-96">
+    <div className="fixed bottom-4 right-[400px] w-80 bg-white rounded-lg shadow-2xl border border-slate-200 z-[150] flex flex-col h-96">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b bg-violet-600 rounded-t-lg">
         <div className="flex items-center gap-2">
