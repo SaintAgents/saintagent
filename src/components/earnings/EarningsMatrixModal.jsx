@@ -81,7 +81,7 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
                   </SelectTrigger>
                   <SelectContent>
                     {ACTIONS.map(a => (
-                      <SelectItem key={a.key} value={a.key}>{a.title} ({a.base.toFixed(7)} GGG)</SelectItem>
+                      <SelectItem key={a.key} value={a.key}>{a.title} ({formatGGG(a.base)} GGG)</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -109,18 +109,18 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
                 </label>
               </div>
 
-              <div className="mt-2 p-3 rounded-lg bg-slate-50 border text-sm">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-slate-600">Base</span>
-                  <span className="font-medium">{payout.base.toFixed(7)} GGG • ${(payout.base * GGG_TO_USD).toFixed(3)}</span>
+              <div className="mt-2 p-3 rounded-lg bg-gradient-to-r from-violet-50 to-amber-50 border text-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-600">Base Tier</span>
+                  <span className="font-mono font-medium">{formatGGG(payout.base)} GGG ≈ ${formatUSD(payout.base * GGG_TO_USD)}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-600">Payout</span>
-                  <span className="font-semibold text-slate-900">{payout.tier.toFixed(7)} GGG • ${payout.usd.toFixed(3)}</span>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                  <span className="text-slate-700 font-semibold">Final Payout</span>
+                  <span className="font-mono font-bold text-violet-700">{formatGGG(payout.tier)} GGG ≈ ${formatUSD(payout.usd)}</span>
                 </div>
               </div>
 
-              <div className="text-xs text-slate-500">Lifts apply as gates and upgrades; payouts capped at 0.50 GGG.</div>
+              <div className="text-xs text-slate-500">Lifts apply as gates and upgrades; max payout = 1.0000000 GGG ($145.00).</div>
               <Button onClick={() => onOpenChange?.(false)} className="w-full rounded-xl">Close</Button>
             </div>
           </div>
