@@ -251,6 +251,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
             onClick={() => setVideoCallOpen(true)}
             className="h-7 w-7 text-white hover:bg-violet-700"
             title="Start video call"
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <Video className="w-4 h-4" />
           </Button>
@@ -259,6 +260,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
             variant="ghost"
             onClick={() => setMinimized(true)}
             className="h-7 w-7 text-white hover:bg-violet-700"
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <Minimize2 className="w-4 h-4" />
           </Button>
@@ -267,6 +269,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
             variant="ghost"
             onClick={onClose}
             className="h-7 w-7 text-white hover:bg-violet-700"
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <X className="w-4 h-4" />
           </Button>
