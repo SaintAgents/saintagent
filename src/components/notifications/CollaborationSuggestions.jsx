@@ -35,6 +35,11 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
     enabled: !!profile?.user_id
   });
 
+  // Early return if no profile - MUST be after all hooks
+  if (!profile?.user_id) {
+    return null;
+  }
+
   // Calculate collaboration suggestions
   const suggestions = React.useMemo(() => {
     if (!profile?.user_id || !allProfiles.length) return [];
