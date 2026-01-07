@@ -35,89 +35,108 @@ export const ACTIONS = [
 function applyLifts(base, { verified, securityTrained, impactAdopted, leadership } = {}) {
   let tier = base;
 
-  // Caps (gates)
-  if (!verified) tier = Math.min(tier, 0.20);
-  if (!securityTrained) tier = Math.min(tier, 0.25);
+  // Caps (gates) - adjusted for new scale
+  if (!verified) tier = Math.min(tier, 0.02);
+  if (!securityTrained) tier = Math.min(tier, 0.05);
 
   // Impact lift (adoption/usage)
   if (impactAdopted) {
-    if (tier === 0.20) tier = 0.25;
-    else if (tier === 0.25) tier = 0.30;
-    else if (tier === 0.30) tier = 0.35;
+    if (tier <= 0.02) tier = tier * 1.5;
+    else if (tier <= 0.05) tier = tier * 1.25;
+    else if (tier <= 0.1) tier = tier * 1.2;
   }
 
   // Leadership lift (ownership/coordination)
   if (leadership) {
-    if (tier < 0.35 && tier >= 0.20) tier = 0.35; // contributor -> lead baseline
-    else if (tier >= 0.35) tier = Math.min(0.50, +(tier + 0.05).toFixed(2));
+    if (tier < 0.2 && tier >= 0.02) tier = 0.2; // contributor -> lead baseline
+    else if (tier >= 0.2) tier = Math.min(1.0, +(tier * 1.25).toFixed(4));
   }
 
-  return Math.min(0.50, tier);
+  return Math.min(1.0, tier);
 }
 
-export function calculatePayout(actionKey, lifts) {
+export function calculatePayout(actionKey, lifts, tierMode = null) {
+  const mode = tierMode || currentTierMode;
+  const multiplier = TIER_MODES[mode]?.multiplier || 1.0;
+  
   const act = ACTIONS.find(a => a.key === actionKey);
-  const base = act?.base ?? 0.10;
+  const base = act?.base ?? 0.005;
   const tier = applyLifts(base, lifts);
-  return { base, tier, ggg: tier, usd: +(tier * GGG_TO_USD).toFixed(2) };
+  const adjustedGgg = +(tier * multiplier).toFixed(4);
+  
+  return { 
+    base, 
+    tier, 
+    ggg: adjustedGgg, 
+    usd: +(adjustedGgg * GGG_TO_USD).toFixed(2),
+    mode,
+    modeLabel: TIER_MODES[mode]?.label
+  };
 }
 
+// Matrix sections with new tier scale (0.001 to 1.0 GGG)
+// Values shown are BONUS period values; LIVE = 50% of these
 export const MATRIX_SECTIONS = [
-  { tier: 0.02, title: 'Micro Posts', items: [
+  { tier: 0.001, title: 'Micro Posts', items: [
     'Posting that meets minimum quality standards',
     'Quick on-topic update with value',
   ] },
-  { tier: 0.10, title: 'Entry Actions', items: [
+  { tier: 0.002, title: 'Basic Engagement', items: [
+    'Reaction or simple helpful response',
+    'Share with brief context',
+  ] },
+  { tier: 0.005, title: 'Entry Actions', items: [
     'Daily field update using template',
     'Useful comment that improves a thread',
     'Submit resource link with short summary',
     'Mission onboarding micro-task'
   ] },
-  { tier: 0.15, title: 'Verified Micro-Contributions', items: [
+  { tier: 0.01, title: 'Verified Micro-Contributions', items: [
     'Accepted answer / moderator-marked helpful',
     'Short guide confirmed to work',
     'Task completion confirmed by owner',
     'Module complete + assessment'
   ] },
-  { tier: 0.20, title: 'Structured Deliverables', items: [
+  { tier: 0.02, title: 'Structured Deliverables', items: [
     'How-To with steps + expected outcome',
     'Template / SOP / checklist',
     'Weekly team recap',
     'Defined work item delivered'
   ] },
-  { tier: 0.25, title: 'Completion Milestones', items: [
+  { tier: 0.05, title: 'Completion Milestones', items: [
     'Mini-playbook with edge cases',
     'Community help session w/ notes',
     'Milestone deliverable accepted',
     'Security Trained / role unlock'
   ] },
-  { tier: 0.30, title: 'Impact Contributions', items: [
+  { tier: 0.1, title: 'Impact Contributions', items: [
     'Reference page adopted by others',
     'Toolkit adopted by a mission',
     'Resolve mid-complexity blocker',
     'Agent passes safety + usage threshold'
   ] },
-  { tier: 0.35, title: 'Leadership Contributions', items: [
+  { tier: 0.2, title: 'Leadership Contributions', items: [
     'Run recurring office hours + notes',
     'Curated monthly digest as reference',
     'Lead sprint segment (plan → deliver)',
     'TA / mentor for cohort'
   ] },
-  { tier: 0.40, title: 'High-Trust Ops', items: [
+  { tier: 0.3, title: 'High-Trust Ops', items: [
     'Structured security review + report',
     'Solve high-priority multi-team blocker',
     'Manage dispute resolution to completion',
     'Maintain node/network health with logs'
   ] },
-  { tier: 0.45, title: 'Cross-Team Authority', items: [
+  { tier: 0.5, title: 'Cross-Team Authority', items: [
     'Coordinate across missions to a combined milestone',
     'Incident response owner with postmortem',
-    'Reviewer/moderator for high-value submissions'
+    'Reviewer/moderator for high-value submissions',
+    'Flagship agent release'
   ] },
-  { tier: 0.50, title: 'Top-Tier Outcomes', items: [
+  { tier: 1.0, title: 'Top-Tier Outcomes', items: [
     'Lead mission e2e (brief → closeout)',
     'Platform-standard outcome (SOP/policy)',
     'Launch full class track',
-    'Flagship agent / critical incident resolved'
+    'Critical incident resolved'
   ] },
 ];
