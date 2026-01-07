@@ -754,19 +754,21 @@ export default function AffiliateCenter() {
                       )}
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        {/* Badge-style icon - using color badge images */}
+                        {/* Badge-style icon - using color badge images for all tiers */}
                         <div className="relative w-14 h-14 flex items-center justify-center">
-                          {isLocked ? (
-                            <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
-                              <Lock className="w-5 h-5 text-slate-400" />
+                          <img 
+                            src={AFFILIATE_BADGE_IMAGES[tier.id]} 
+                            alt={`${tier.name} badge`}
+                            className={cn(
+                              "w-14 h-14 object-contain drop-shadow-lg",
+                              isLocked && "opacity-40 grayscale"
+                            )}
+                            data-no-filter="true"
+                          />
+                          {isLocked && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Lock className="w-5 h-5 text-slate-500" />
                             </div>
-                          ) : (
-                            <img 
-                              src={AFFILIATE_BADGE_IMAGES[tier.id]} 
-                              alt={`${tier.name} badge`}
-                              className="w-14 h-14 object-contain drop-shadow-lg"
-                              data-no-filter="true"
-                            />
                           )}
                           {isCurrentTier && (
                             <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
