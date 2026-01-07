@@ -29,6 +29,7 @@ import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
