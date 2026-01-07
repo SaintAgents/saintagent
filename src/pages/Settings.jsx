@@ -109,6 +109,7 @@ export default function Settings() {
     updateMutation.mutate({
       dm_policy: settings.dm_policy,
       status: settings.status,
+      status_message: settings.status_message,
       profile_visibility: settings.profile_visibility,
       visibility_settings: settings.visibility_settings,
       notification_prefs: settings.notification_prefs,
