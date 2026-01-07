@@ -66,8 +66,8 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
         <img 
           src={listing.image_url || getCategoryImage(listing.category)} 
           alt={listing.title}
-          className="w-full h-full object-cover"
-          style={{ filter: 'none' }}
+          className="w-full h-full object-cover listing-image"
+          style={{ filter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />

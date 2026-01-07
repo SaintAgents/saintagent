@@ -32,11 +32,13 @@ html[data-theme='hacker'] img[data-no-filter="true"],
   visibility: visible !important;
 }
 
-/* Dark theme - Mission images preserve original colors */
+/* Dark theme - Mission images and listing images preserve original colors */
 [data-theme='dark'] .mission-image,
 [data-theme='dark'] img.mission-image,
 [data-theme='dark'] img[data-no-filter],
-[data-theme='dark'] img[data-no-filter="true"] {
+[data-theme='dark'] img[data-no-filter="true"],
+[data-theme='dark'] .listing-image,
+[data-theme='dark'] img.listing-image {
   filter: none !important;
   opacity: 1 !important;
   display: block !important;
