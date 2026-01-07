@@ -138,7 +138,7 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
           {/* Name and handle */}
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors" style={{ color: 'var(--profile-name-color, #0f172a)' }}>
-              <span className="bg-lime-900 text-emerald-300 from-green-400 to-emerald-500 dark:bg-none dark:text-[#00ff88]">
+              <span className="bg-transparent text-emerald-300 from-green-400 to-emerald-500 dark:bg-none dark:text-[#00ff88]">
                 {profile.display_name || 'Anonymous'}
               </span>
             </h3>
