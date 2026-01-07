@@ -65,6 +65,11 @@
   color: #90ee90 !important;
 }
 
+/* Command Deck background - transparent to show main background image */
+.cmd-deck-bg {
+  background: transparent;
+}
+
 /* Profile Drawer specific dark/hacker fixes */
 [data-theme='dark'] [id*='profile-drawer'] p,
 [data-theme='dark'] [id*='profile-drawer'] span,
