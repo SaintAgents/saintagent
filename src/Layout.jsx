@@ -10,6 +10,7 @@ import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 import GlobalChatWidget from '@/components/community/GlobalChatWidget';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
+import SidePanel from '@/components/hud/SidePanel';
 import HelpSupportAgent from '@/components/support/HelpSupportAgent';
 import GlobalPhotoViewer from '@/components/profile/GlobalPhotoViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
@@ -31,6 +32,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
   });
+  const [floatingSidePanelOpen, setFloatingSidePanelOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Listen for background effect changes from Sidebar
@@ -86,15 +88,20 @@ function AuthenticatedLayout({ children, currentPageName }) {
         console.log('Floating chat state set:', e.detail);
       }
     };
+    const handleOpenFloatingSidePanel = () => {
+      setFloatingSidePanelOpen(true);
+    };
     document.addEventListener('click', handleProfileClick);
     document.addEventListener('openProfile', handleOpenProfile);
     document.addEventListener('openFloatingChat', handleOpenChat);
+    document.addEventListener('openFloatingSidePanel', handleOpenFloatingSidePanel);
     return () => {
       document.removeEventListener('click', handleProfileClick);
       document.removeEventListener('openProfile', handleOpenProfile);
       document.removeEventListener('openFloatingChat', handleOpenChat);
+      document.removeEventListener('openFloatingSidePanel', handleOpenFloatingSidePanel);
     };
-  }, []);
+    }, []);
 
   // Initialize theme from localStorage
   useEffect(() => {
@@ -1378,6 +1385,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Side Panel Nudge */}
       <GlobalSidePanelNudge />
+
+      {/* Floating Side Panel for non-CommandDeck pages */}
+      {floatingSidePanelOpen && currentPageName !== 'CommandDeck' && (
+        <SidePanel
+          matches={[]}
+          meetings={[]}
+          profile={profile}
+          isOpen={true}
+          onToggle={() => setFloatingSidePanelOpen(false)}
+        />
+      )}
 
       {/* Help Support Agent */}
       <HelpSupportAgent />
