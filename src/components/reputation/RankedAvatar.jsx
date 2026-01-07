@@ -9,7 +9,7 @@ import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affili
 
 // Rank badge image URLs - transparent versions
 const RANK_BADGE_IMAGES = {
-  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ca144ec05_Screenshot2026-01-07063246.png',
+  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/65d0338f8_seeker_inPixio.png',
   initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/10d51342d_intiate_inPixio.png',
   adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fac9c0a99_adept.png',
   practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/192e1da75_practioner.png',
