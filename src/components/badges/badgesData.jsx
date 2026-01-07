@@ -1,4 +1,3 @@
-
 // Badge definitions grouped by section
 // Badges can be earned via Quest completion, Challenge milestones, or both (Hybrid)
 
@@ -307,9 +306,9 @@ export const QUEST_BADGE_IMAGES = {
   audit_expert: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/211bccd26_audit-Picsart-BackgroundRemover.png',
   streak_7: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png',
   top_mentor: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cb85d913_Screenshot2026-01-07044531-Picsart-BackgroundRemover.png',
-  ascended_tier: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7bf4fe9e_Achievementbadgescollectiononblackbackground.png',
-  social_butterfly: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/531434409_Sacredgeometryandcosmicresonancesymbols.png',
-  mission_master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/acd48db09_Goldentrustanchoremblem-Picsart-BackgroundRemover.png',
+  ascended_tier: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/db91764c2_Screenshot2026-01-07044338.png',
+  social_butterfly: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/bae1fbe49_Screenshot2026-01-07044414.png',
+  mission_master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7d1aaa58e_Screenshot2026-01-07044449.png',
   synchronicity_weaver: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/531434409_Sacredgeometryandcosmicresonancesymbols.png',
   eternal_flame: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png',
   trust_anchor: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/acd48db09_Goldentrustanchoremblem-Picsart-BackgroundRemover.png',
