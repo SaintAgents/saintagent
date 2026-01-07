@@ -141,13 +141,11 @@ export default function RankedAvatar({
       >
         <div className="rounded-full bg-white p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden">
-            {src ? (
-              <img src={src} alt={name || 'Avatar'} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                <span className="text-2xl font-bold text-violet-600">{(name || 'U').slice(0, 1)}</span>
-              </div>
-            )}
+            <img 
+                  src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png'} 
+                  alt={name || 'Avatar'} 
+                  className="w-full h-full object-cover" 
+                />
           </div>
         </div>
       </div>
