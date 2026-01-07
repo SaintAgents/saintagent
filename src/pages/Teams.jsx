@@ -69,7 +69,7 @@ export default function Teams() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
       {/* Hero */}
-      <div className="relative h-64 md:h-72 overflow-hidden">
+      <div className="page-hero relative overflow-hidden">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a7560a6fc_Screenshot2026-01-07022705.png"
           alt="Teams & Guilds"

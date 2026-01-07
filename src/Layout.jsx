@@ -1048,15 +1048,43 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
         /* Prevent white flash during theme transitions - apply to NON-CommandDeck pages */
         [data-theme='dark'] main:not([data-page='CommandDeck']) {
-          background-color: #050505 !important;
-          background-image: none !important;
-          transition: none !important;
-        }
-        [data-theme='hacker'] main:not([data-page='CommandDeck']) {
-          background-color: #000 !important;
-          background-image: none !important;
-          transition: none !important;
-        }
+                    background-color: #050505 !important;
+                    background-image: none !important;
+                    transition: none !important;
+                  }
+                  /* Override for pages with hero images */
+                  [data-theme='dark'] main[data-page='Teams'],
+                  [data-theme='dark'] main[data-page='Matches'],
+                  [data-theme='dark'] main[data-page='Meetings'],
+                  [data-theme='dark'] main[data-page='Gamification'] {
+                    background-color: transparent !important;
+                  }
+                  [data-theme='hacker'] main:not([data-page='CommandDeck']) {
+                    background-color: #000 !important;
+                    background-image: none !important;
+                    transition: none !important;
+                  }
+                  /* Override for pages with hero images */
+                  [data-theme='hacker'] main[data-page='Teams'],
+                  [data-theme='hacker'] main[data-page='Matches'],
+                  [data-theme='hacker'] main[data-page='Meetings'],
+                  [data-theme='hacker'] main[data-page='Gamification'] {
+                    background-color: transparent !important;
+                  }
+
+                  /* Hero section sizing */
+                  .page-hero {
+                    height: 256px;
+                  }
+                  @media (min-width: 768px) {
+                    .page-hero {
+                      height: 288px;
+                    }
+                  }
+                  [data-theme='dark'] .page-hero,
+                  [data-theme='hacker'] .page-hero {
+                    height: 120px !important;
+                  }
 
         /* Command Deck keeps its background image in dark mode */
         [data-theme='dark'] main[data-page='CommandDeck'] {
