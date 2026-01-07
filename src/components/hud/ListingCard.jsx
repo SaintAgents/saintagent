@@ -62,12 +62,12 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
       className="bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.2)] overflow-hidden hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all duration-300 cursor-pointer"
       onClick={() => window.location.href = createPageUrl('ListingDetail') + '?id=' + listing.id}
     >
-      <div className="relative h-36">
+      <div className="relative h-36 overflow-hidden">
         <img 
           src={listing.image_url || getCategoryImage(listing.category)} 
           alt={listing.title}
-          className="w-full h-full object-cover listing-image"
-          style={{ filter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
+          className="w-full h-full object-cover listing-image mission-image"
+          style={{ filter: 'none !important', WebkitFilter: 'none !important', opacity: 1, display: 'block', visibility: 'visible', mixBlendMode: 'normal' }}
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
