@@ -398,49 +398,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
             radial-gradient(ellipse at 80% 70%, rgba(0, 212, 255, 0.02) 0%, transparent 50%);
         }
 
-        /* Matrix rain columns effect - only when matrix effect is selected */
+        /* Hide CSS matrix rain - using canvas instead */
         [data-theme='dark'] [data-bg-effect='matrix'] body::after,
         [data-theme='dark'][data-bg-effect='matrix'] body::after {
-          content: '';
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 200%;
-          pointer-events: none;
-          z-index: 0;
-          opacity: 0.04;
-          background-image: 
-            repeating-linear-gradient(
-              90deg,
-              transparent 0px,
-              transparent 18px,
-              rgba(0, 255, 136, 0.3) 18px,
-              rgba(0, 255, 136, 0.3) 20px
-            ),
-            repeating-linear-gradient(
-              0deg,
-              rgba(0, 255, 136, 0.8) 0px,
-              rgba(0, 255, 136, 0.4) 4px,
-              transparent 8px,
-              transparent 16px,
-              rgba(0, 255, 136, 0.6) 20px,
-              transparent 24px,
-              transparent 40px
-            );
-          background-size: 20px 100%, 20px 60px;
-          animation: matrixRain 8s linear infinite;
+          display: none !important;
         }
 
         /* Hide matrix rain when off or starfield selected */
         [data-theme='dark'] [data-bg-effect='off'] body::after,
         [data-theme='dark'] [data-bg-effect='starfield'] body::after {
           display: none !important;
-        }
-
-        @keyframes matrixRain {
-          0% { transform: translateY(-50%); }
-          100% { transform: translateY(0%); }
         }
 
         /* SOLID OBSIDIAN - No transparency anywhere */
