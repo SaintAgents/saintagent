@@ -1,6 +1,6 @@
 // Rank badge image URLs - centralized for reuse across components (black & white transparent PNGs)
 export const RANK_BADGE_IMAGES = {
-  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/141552c0f_Screenshot2026-01-07044314-Picsart-BackgroundRemover.png',
+  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ca144ec05_Screenshot2026-01-07063246.png',
   initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/827a58594_intiate-Picsart-BackgroundRemover.png',
   adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7625a41f0_adept-Picsart-BackgroundRemover.png',
   practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/48ccb9301_practioner-Picsart-BackgroundRemover.png',
