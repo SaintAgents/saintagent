@@ -69,22 +69,28 @@ export default function Teams() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
       {/* Hero */}
-      <div className="relative h-48 md:h-56 overflow-hidden bg-gradient-to-br from-violet-600 to-purple-700">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6">
-          <div className="flex items-center gap-3">
-            <BackButton className="text-white hover:bg-white/20" />
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-3">
-                <Shield className="w-8 h-8 text-amber-300" />
-                Teams & Guilds
-              </h1>
-              <p className="text-violet-100 mt-1">
-                Form teams to tackle missions together and earn collective rewards
-              </p>
-            </div>
+      <div className="relative h-64 md:h-72 overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a7560a6fc_Screenshot2026-01-07022705.png"
+          alt="Teams & Guilds"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              <Shield className="w-10 h-10 text-amber-300 drop-shadow-lg" />
+              Teams & Guilds
+            </h1>
+            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              Form Teams to Tackle Missions Together & Earn Collective Rewards
+            </p>
           </div>
+        </div>
+        <div className="absolute top-4 left-4">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 
