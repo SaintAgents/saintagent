@@ -99,13 +99,11 @@ export default function MiniProfile({
             className="w-full rounded-t-lg overflow-hidden bg-gradient-to-r from-violet-500 to-purple-600"
             style={{ height: heroHeight }}
           >
-            {heroImage && (
-              <img 
-                src={heroImage} 
-                alt="" 
-                className="w-full h-full object-cover"
-              />
-            )}
+            <img 
+              src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e7cf97dec_universal_upscale_0_b59b75fe-3454-4d9a-b730-37fb127823f2_0.jpg'} 
+              alt="" 
+              className="w-full h-full object-cover"
+            />
           </div>
           
           {/* Avatar and info side by side, avatar at top where data starts */}
@@ -129,7 +127,7 @@ export default function MiniProfile({
               <div className="min-w-0 flex-1 pt-1">
                 {showName && (
                   <div className="flex items-center gap-1 min-w-0">
-                    <div className="text-base font-semibold text-slate-900 dark:text-white truncate">
+                    <div className="text-base font-semibold truncate bg-gradient-to-r from-black to-purple-600 bg-clip-text text-transparent dark:from-white dark:to-violet-400">
                       {displayName}
                     </div>
                     {showHelpHint && (
@@ -187,7 +185,7 @@ export default function MiniProfile({
             <div className="min-w-0">
               {showName && (
                 <div className="flex items-center gap-1 min-w-0">
-                  <div className="text-sm font-medium text-slate-900 truncate">
+                  <div className="text-sm font-medium truncate bg-gradient-to-r from-black to-purple-600 bg-clip-text text-transparent dark:from-white dark:to-violet-400">
                     {displayName}
                   </div>
                   {showHelpHint && (
