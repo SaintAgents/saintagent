@@ -671,7 +671,7 @@ export default function CommandDeck() {
                 {/* Stats Bar */}
                 <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable != null ? walletAvailable.toLocaleString() : (profile?.ggg_balance?.toLocaleString?.() || "0")}</p>
+                    <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable != null ? walletAvailable.toLocaleString() : profile?.ggg_balance?.toLocaleString?.() || "0"}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
@@ -714,22 +714,22 @@ export default function CommandDeck() {
                   </div>
                   {/* Eternal Flame Feature Badge */}
                   <div className="flex items-center gap-3 mb-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-                    <img 
+                    <img
                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
                       alt="Eternal Flame"
                       className="w-12 h-12 object-contain"
-                      data-no-filter="true"
-                    />
+                      data-no-filter="true" />
+
                     <div>
                       <p className="font-semibold text-amber-900">Eternal Flame</p>
                       <p className="text-xs text-amber-700">Living Agent</p>
                     </div>
                   </div>
-                  <BadgesBar 
-                    badges={badges} 
-                    defaultIfEmpty={false} 
-                    onMore={() => setBadgeGlossaryOpen(true)}
-                  />
+                  <BadgesBar
+                    badges={badges}
+                    defaultIfEmpty={false}
+                    onMore={() => setBadgeGlossaryOpen(true)} />
+
                 </div>
 
                 {/* Mystical Profile */}
@@ -1002,7 +1002,7 @@ export default function CommandDeck() {
             <CollapsibleCard title="Quick Actions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen}>
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
-                  <Button variant="outline" className="bg-zinc-200 text-slate-950 rounded-xl gap-2" onClick={() => setSidePanelOpen(!sidePanelOpen)}>
+                  <Button variant="outline" className="bg-zinc-200 text-green-800 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2" onClick={() => setSidePanelOpen(!sidePanelOpen)}>
                     <BarChart3 className="w-4 h-4" />
                     {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
                   </Button>
