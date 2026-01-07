@@ -637,14 +637,13 @@ export default function CommandDeck() {
                 </div>
 
                 {/* Stats Bar */}
-                {/* Stats Bar */}
                 <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable?.toLocaleString?.() || "0"}</p>
+                    <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable != null ? walletAvailable.toLocaleString() : (profile?.ggg_balance?.toLocaleString?.() || "0")}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{rpPoints}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{profile?.rp_points || rpPoints || 0}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
