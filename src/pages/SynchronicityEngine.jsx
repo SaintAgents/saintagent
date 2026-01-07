@@ -288,19 +288,30 @@ export default function SynchronicityEngine() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950">
+      {/* Hero Image */}
+      <div className="relative h-56 md:h-72 overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f85d966a0_universal_upscale_0_cbc4a0c3-4660-41ce-a23e-15c32f65e75f_0.jpg"
+          alt="Synchronicity Engine"
+          className="w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+        <div className="absolute bottom-6 left-6 right-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-white flex items-center gap-3 drop-shadow-lg">
+            <Sparkles className="w-8 h-8 text-violet-400" />
+            Synchronicity Engine
+          </h1>
+          <p className="text-violet-200/80 mt-2 text-lg">Share and discover meaningful coincidences across the field</p>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="border-b border-violet-500/20 bg-slate-900/50 backdrop-blur-sm sticky top-16 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <BackButton />
-              <div>
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <Sparkles className="w-6 h-6 text-violet-400" />
-                  Synchronicity Engine
-                </h1>
-                <p className="text-slate-400 text-sm">Share and discover meaningful coincidences</p>
-              </div>
             </div>
             <Button 
               onClick={() => setSubmitOpen(true)}
