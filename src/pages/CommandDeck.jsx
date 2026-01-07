@@ -144,14 +144,14 @@ export default function CommandDeck() {
         });
         return data;
       } catch (e) {
-        console.error('Wallet fetch failed:', e);
+        // Silently fail and use profile balance as fallback
         return { wallet: { available_balance: profile?.ggg_balance || 0 } };
       }
     },
     enabled: !!profile?.user_id,
-    refetchInterval: 30000,
-    retry: 1,
-    staleTime: 10000
+    refetchInterval: 60000, // Reduced frequency to avoid excessive API calls
+    retry: 0, // Don't retry on failure
+    staleTime: 30000
   });
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
