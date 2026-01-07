@@ -313,7 +313,7 @@ export default function MiniProfile({
               </TooltipProvider>
               {miniBadges?.length > 0 && (
                 <div className="mt-1">
-                  <BadgesBar badges={miniBadges} defaultIfEmpty={false} />
+                  <BadgesBar badges={miniBadges} max={4} defaultIfEmpty={false} />
                 </div>
               )}
             </div>
