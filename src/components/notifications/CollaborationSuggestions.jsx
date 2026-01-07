@@ -35,11 +35,6 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
     enabled: !!profile?.user_id
   });
 
-  // Early return if no profile - MUST be after all hooks
-  if (!profile?.user_id) {
-    return null;
-  }
-
   // Calculate collaboration suggestions
   const suggestions = React.useMemo(() => {
     if (!profile?.user_id || !allProfiles.length) return [];
@@ -78,7 +73,7 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
         if (isNew) score += 10;
         
         // Bonus for similar intentions
-        const myIntentions = profile.intentions || [];
+        const myIntentions = profile?.intentions || [];
         const otherIntentions = other.intentions || [];
         const sharedIntentions = myIntentions.filter(i => 
           otherIntentions.some(oi => oi.toLowerCase() === i.toLowerCase())
@@ -98,7 +93,7 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
       .filter(p => p.score >= 20) // Minimum threshold
       .sort((a, b) => b.score - a.score)
       .slice(0, compact ? 3 : 10);
-  }, [allProfiles, profile, mySkills]);
+  }, [allProfiles, profile, mySkills, compact]);
 
   // Create notification for collaboration suggestion
   const createNotification = useMutation({
