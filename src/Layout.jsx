@@ -1213,6 +1213,198 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
+// Nebula canvas effect
+function NebulaCanvas() {
+  const canvasRef = React.useRef(null);
+  const animationRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const numParticles = 60;
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Initialize nebula particles
+    for (let i = 0; i < numParticles; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 150 + 50,
+        color: ['#00ff88', '#00d4ff', '#8b5cf6', '#f59e0b'][Math.floor(Math.random() * 4)],
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        opacity: Math.random() * 0.15 + 0.05
+      });
+    }
+    
+    const animate = () => {
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.02)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        if (p.x < -p.size) p.x = canvas.width + p.size;
+        if (p.x > canvas.width + p.size) p.x = -p.size;
+        if (p.y < -p.size) p.y = canvas.height + p.size;
+        if (p.y > canvas.height + p.size) p.y = -p.size;
+        
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+        gradient.addColorStop(0, p.color + Math.floor(p.opacity * 255).toString(16).padStart(2, '0'));
+        gradient.addColorStop(1, 'transparent');
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0"
+      style={{ opacity: 0.8 }}
+    />
+  );
+}
+
+// Circuit board effect
+function CircuitCanvas() {
+  const canvasRef = React.useRef(null);
+  const animationRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const nodes = [];
+    const traces = [];
+    const numNodes = 40;
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Initialize circuit nodes
+    for (let i = 0; i < numNodes; i++) {
+      nodes.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        pulse: Math.random() * Math.PI * 2,
+        size: Math.random() * 4 + 2
+      });
+    }
+    
+    // Create connections between nearby nodes
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+        if (dist < 200 && Math.random() > 0.7) {
+          traces.push({ from: i, to: j, progress: 0, active: false, delay: Math.random() * 100 });
+        }
+      }
+    }
+    
+    let frame = 0;
+    const animate = () => {
+      frame++;
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw traces
+      traces.forEach(trace => {
+        const from = nodes[trace.from];
+        const to = nodes[trace.to];
+        
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Animate pulse along trace
+        if (frame % 120 === Math.floor(trace.delay)) {
+          trace.active = true;
+          trace.progress = 0;
+        }
+        
+        if (trace.active) {
+          trace.progress += 0.02;
+          if (trace.progress >= 1) trace.active = false;
+          
+          const px = from.x + (to.x - from.x) * trace.progress;
+          const py = from.y + (to.y - from.y) * trace.progress;
+          
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.fillStyle = '#00ff88';
+          ctx.shadowColor = '#00ff88';
+          ctx.shadowBlur = 10;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      });
+      
+      // Draw nodes
+      nodes.forEach(node => {
+        node.pulse += 0.02;
+        const glow = 0.5 + Math.sin(node.pulse) * 0.3;
+        
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 255, 136, ${glow})`;
+        ctx.shadowColor = '#00ff88';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0"
+      style={{ opacity: 0.7 }}
+    />
+  );
+}
+
 // Main Layout component - check public pages BEFORE any hooks
 // Starfield canvas component for cosmic background effect
 function StarfieldCanvas({ rankCode = 'seeker' }) {
