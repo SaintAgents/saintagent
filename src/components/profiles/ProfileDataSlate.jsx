@@ -124,16 +124,15 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
               {profile.sa_number ? `SA#${profile.sa_number}` : ''}
             </p>
             {profile.handle && (
-              <p className="text-xs text-slate-600 truncate">
-                <span className="dark:text-slate-300">@{profile.handle}</span>
+              <p className="text-xs text-gray-500 dark:text-slate-300 truncate">
+                @{profile.handle}
               </p>
             )}
             <Badge 
-              variant="outline" 
               className={cn(
-                "mt-1 text-[10px] px-2 py-0.5 font-semibold border",
-                `bg-gradient-to-r ${rankConfig.color} text-white border-transparent`,
-                "dark:border-[#00ff88]/50 dark:shadow-[0_0_6px_rgba(0,255,136,0.3)]"
+                "mt-1 text-[10px] px-2 py-0.5 font-semibold border-0 text-white shadow-sm",
+                `bg-gradient-to-r ${rankConfig.color}`,
+                rankConfig.glow
               )}
             >
               {rankConfig.label}
@@ -261,25 +260,30 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
 
         {/* Expanded content on hover - Bio snippet and recent missions */}
         <div className={cn(
-          "overflow-hidden transition-all duration-300",
-          isExpanded ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
+          "overflow-hidden transition-all duration-500 ease-in-out",
+          isExpanded ? "max-h-40 opacity-100 mt-2" : "max-h-0 opacity-0"
         )}>
-          {profile.bio &&
-          <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 mb-2">
+          {profile.bio && (
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 mb-2">
               {profile.bio}
             </p>
-          }
-          {recentMissions?.length > 0 &&
-          <div className="space-y-1">
+          )}
+          {!profile.bio && (
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 italic mb-2">
+              No bio available
+            </p>
+          )}
+          {recentMissions?.length > 0 && (
+            <div className="space-y-1">
               <p className="text-[9px] text-slate-500 dark:text-slate-500 uppercase font-medium">Recent Missions</p>
-              {recentMissions.slice(0, 2).map((m, i) =>
-            <div key={i} className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-400">
+              {recentMissions.slice(0, 2).map((m, i) => (
+                <div key={i} className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-400">
                   <Target className="w-2.5 h-2.5 text-violet-500" />
                   <span className="truncate">{m.title}</span>
                 </div>
-            )}
+              ))}
             </div>
-          }
+          )}
         </div>
 
         {/* Quick action buttons on hover */}
