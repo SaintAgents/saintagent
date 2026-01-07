@@ -1090,7 +1090,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] [data-avatar-card], [data-theme='hacker'] [data-avatar-card] * { background-color: #000 !important; color: #00ff00 !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
-          [data-theme='hacker'] img:not([data-no-filter]):not(.mission-image):not(.mission-card img) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
+          [data-theme='hacker'] img:not([data-no-filter]):not(.mission-image):not(.mission-card img):not(.hero-image) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
+          [data-theme='hacker'] .hero-image { filter: grayscale(100%) brightness(0.6) sepia(100%) hue-rotate(70deg) saturate(400%) !important; }
           [data-theme='hacker'] .mission-card img,
           [data-theme='hacker'] .mission-image,
           [data-theme='hacker'] img[data-no-filter],
@@ -1099,6 +1100,21 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='dark'] .mission-image,
           [data-theme='dark'] img[data-no-filter],
           [data-theme='dark'] [data-no-filter="true"] { filter: none !important; }
+
+          /* Hacker theme - brighter text, no fading */
+          [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4,
+          [data-theme='hacker'] [class*='font-semibold'], [data-theme='hacker'] [class*='font-bold'] {
+            color: #00ff00 !important;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+          }
+          [data-theme='hacker'] p, [data-theme='hacker'] span:not(.dot-glow):not(.icon-glow),
+          [data-theme='hacker'] div:not([class*='bg-']) {
+            color: #00ff00 !important;
+          }
+          [data-theme='hacker'] [class*='text-slate-500'], [data-theme='hacker'] [class*='text-slate-400'],
+          [data-theme='hacker'] [class*='text-slate-600'], [data-theme='hacker'] [class*='text-gray-500'] {
+            color: #88ff88 !important;
+          }
         `}</style>
 
         {/* Sidebar */}
