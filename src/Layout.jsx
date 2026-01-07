@@ -301,18 +301,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
       if (!currentUser || currentPageName === 'Onboarding') return;
       if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
 
-      // If justCompleted flag is set and onboarding is complete, clear the flag and redirect to Command Deck
-      if (justCompleted && onboarding?.status === 'complete') {
+      // If justCompleted flag is set, clear flag and allow page to render (no redirect loop)
+      if (justCompleted) {
         try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
-        // Redirect to Command Deck after completing onboarding
-        if (currentPageName !== 'CommandDeck') {
-          window.location.href = createPageUrl('CommandDeck');
-        }
-        return;
+        return; // Let the page render normally
       }
-
-      // If justCompleted flag is set, don't redirect even if record doesn't exist yet (race condition)
-      if (justCompleted) return;
 
       // Only redirect to onboarding if record exists but status is NOT complete
       // Don't redirect if no record exists (new user might be in process of creating it)
