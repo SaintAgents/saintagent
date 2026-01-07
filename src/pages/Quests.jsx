@@ -101,9 +101,7 @@ export default function Quests() {
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Quests & Rewards
             </h1>
-            <p className="text-amber-200/80 mt-2 text-lg tracking-wider">
-              Unlock Your Destiny, Earn Your Rewards
-            </p>
+            <p className="text-amber-200/80 mt-2 text-lg tracking-wider"></p>
           </div>
         </div>
         <div className="absolute top-4 left-4">
