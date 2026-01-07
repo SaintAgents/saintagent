@@ -175,9 +175,9 @@ export default function Missions() {
           alt="Missions Hero"
           data-no-filter="true"
           className="w-full h-full object-cover object-center hero-image"
-          style={{ opacity: 1, filter: 'none', display: 'block', visibility: 'visible' }}
+          style={{ opacity: 1, filter: 'none !important', WebkitFilter: 'none !important', display: 'block', visibility: 'visible' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/30 to-transparent dark:from-[#050505] dark:via-transparent dark:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/30 to-transparent dark:from-[#050505] dark:via-transparent dark:to-transparent pointer-events-none" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
