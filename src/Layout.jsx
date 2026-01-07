@@ -1171,15 +1171,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
           
-          /* HERO IMAGES - NEVER FILTER - Highest specificity override */
-          [data-theme='hacker'] img.hero-image,
-          [data-theme='hacker'] .hero-image,
-          html[data-theme='hacker'] img.hero-image,
-          html[data-theme='hacker'] .hero-image,
-          [data-theme='hacker'] img[data-no-filter="true"],
-          [data-theme='hacker'] img[data-no-filter],
-          html[data-theme='hacker'] img[data-no-filter="true"],
-          html[data-theme='hacker'] img[data-no-filter],
+          /* HERO IMAGES - NEVER FILTER for dark theme only */
           [data-theme='dark'] img.hero-image,
           [data-theme='dark'] .hero-image,
           [data-theme='dark'] img[data-no-filter="true"],
@@ -1194,27 +1186,38 @@ function AuthenticatedLayout({ children, currentPageName }) {
             mix-blend-mode: normal !important;
           }
 
-          /* Hacker theme image filter - exclude hero images, avatars, badges - apply AFTER hero override */
-          [data-theme='hacker'] img:not(.hero-image):not([data-no-filter]):not([data-no-filter="true"]):not(.mission-image):not(.mission-card img):not(.rank-badge-img) { 
-            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; 
-          }
-          [data-theme='hacker'] .mission-card img,
-          [data-theme='hacker'] .mission-image,
+          /* HACKER THEME - ALL images get green monochrome filter */
+          [data-theme='hacker'] img,
+          [data-theme='hacker'] img.hero-image,
+          [data-theme='hacker'] .hero-image,
+          [data-theme='hacker'] img[data-no-filter="true"],
           [data-theme='hacker'] img[data-no-filter],
-          [data-theme='hacker'] [data-no-filter="true"] { filter: none !important; }
+          html[data-theme='hacker'] img,
+          html[data-theme='hacker'] img.hero-image,
+          html[data-theme='hacker'] .hero-image { 
+            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; 
+            -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+          }
+
+          /* Dark theme - preserve original colors for specific images */
           [data-theme='dark'] .mission-card img,
           [data-theme='dark'] .mission-image,
           [data-theme='dark'] img[data-no-filter],
-          [data-theme='dark'] [data-no-filter="true"] { filter: none !important; }
-
-          /* Rank badge and avatar images - preserve original colors in all themes */
+          [data-theme='dark'] [data-no-filter="true"],
           [data-theme='dark'] .rank-badge-img,
+          [data-theme='dark'] img[data-no-filter="true"] { 
+            filter: none !important; 
+          }
+
+          /* HACKER THEME - Force green filter on ALL images including avatars, badges, everything */
+          [data-theme='hacker'] .mission-card img,
+          [data-theme='hacker'] .mission-image,
           [data-theme='hacker'] .rank-badge-img,
-          [data-theme='dark'] img[data-no-filter],
-          [data-theme='hacker'] img[data-no-filter],
-          [data-theme='dark'] img[data-no-filter="true"],
-          [data-theme='hacker'] img[data-no-filter="true"] {
-            filter: none !important;
+          [data-theme='hacker'] [class*='Avatar'] img,
+          [data-theme='hacker'] .avatar-image,
+          [data-theme='hacker'] [data-slot='avatar'] img,
+          [data-theme='hacker'] svg {
+            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
           }
 
           /* Hacker theme - brighter text, no fading */
