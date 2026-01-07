@@ -30,10 +30,13 @@ import {
   Folder } from
 "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 
 const CREATE_OPTIONS = [
 { id: 'project', label: 'Project', icon: Folder, color: 'bg-indigo-600', description: 'Create a new project' },
 { id: 'post', label: 'Post', icon: FileText, color: 'bg-blue-500', description: 'Share an insight or update' },
+{ id: 'forum', label: 'Forum Post', icon: MessageCircle, color: 'bg-violet-500', description: 'Start a discussion' },
 { id: 'offer', label: 'Offer', icon: ShoppingBag, color: 'bg-emerald-500', description: 'Sell your skills or services' },
 { id: 'event', label: 'Event', icon: Calendar, color: 'bg-violet-500', description: 'Host a gathering or workshop' },
 { id: 'mission', label: 'Mission', icon: Target, color: 'bg-amber-500', description: 'Launch a collaborative mission' },
@@ -58,11 +61,31 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
     setFormData({});
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e?.preventDefault();
     if (!selectedType) return;
-    onCreate?.(selectedType, formData);
-    handleClose();
+    
+    if (selectedType === 'forum') {
+      // Handle forum post creation directly
+      const user = await base44.auth.me();
+      const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
+      const profile = profiles?.[0];
+      
+      await base44.entities.ForumPost.create({
+        author_id: user.email,
+        author_name: profile?.display_name || user.full_name,
+        author_avatar: profile?.avatar_url,
+        title: formData.title,
+        content: formData.content,
+        category: formData.category || 'general'
+      });
+      
+      handleClose();
+      window.location.href = createPageUrl('Forum');
+    } else {
+      onCreate?.(selectedType, formData);
+      handleClose();
+    }
   };
 
   const handleClose = () => {
@@ -73,6 +96,47 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
 
   const renderForm = () => {
     switch (selectedType) {
+      case 'forum':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>Title</Label>
+              <Input
+                placeholder="Discussion topic..."
+                className="mt-2"
+                value={formData.title || ''}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Content</Label>
+              <Textarea
+                placeholder="Share your thoughts, ask questions, or start a discussion..."
+                className="mt-2 min-h-32"
+                value={formData.content || ''}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Category</Label>
+              <Select
+                value={formData.category || 'general'}
+                onValueChange={(v) => setFormData({ ...formData, category: v })}
+              >
+                <SelectTrigger className="mt-2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="general">General Discussion</SelectItem>
+                  <SelectItem value="questions">Questions & Help</SelectItem>
+                  <SelectItem value="showcase">Showcase</SelectItem>
+                  <SelectItem value="collaboration">Collaboration</SelectItem>
+                  <SelectItem value="affiliate_tips">Affiliate Tips</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
       case 'post':
         return (
           <div className="space-y-4">
