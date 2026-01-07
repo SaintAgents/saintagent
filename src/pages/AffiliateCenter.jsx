@@ -833,7 +833,6 @@ export default function AffiliateCenter() {
         events={events}
         missions={missions}
       />
-      </div>
     </div>
   );
 }
