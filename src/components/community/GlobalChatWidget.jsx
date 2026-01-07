@@ -27,10 +27,12 @@ export default function GlobalChatWidget() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [message, setMessage] = useState('');
   const [position, setPosition] = useState({ x: 16, y: null }); // x from left, y from bottom
+  const [size, setSize] = useState({ width: 320, height: 384 });
   const [isDragging, setIsDragging] = useState(false);
   const [townHallOpen, setTownHallOpen] = useState(false);
   const [townHallFullscreen, setTownHallFullscreen] = useState(false);
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -84,6 +86,57 @@ export default function GlobalChatWidget() {
     document.removeEventListener('mouseup', handleDragEnd);
     document.removeEventListener('touchmove', handleDragMove);
     document.removeEventListener('touchend', handleDragEnd);
+  };
+
+  // Resize handlers
+  const onResizeStart = (e, edge) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizeRef.current = { 
+      isResizing: true, 
+      startX: e.clientX, 
+      startY: e.clientY, 
+      startW: size.width, 
+      startH: size.height,
+      startPosX: position.x,
+      startPosY: position.y,
+      edge 
+    };
+    document.addEventListener('mousemove', onResizeMove);
+    document.addEventListener('mouseup', onResizeEnd);
+  };
+
+  const onResizeMove = (e) => {
+    if (!resizeRef.current.isResizing) return;
+    const dx = e.clientX - resizeRef.current.startX;
+    const dy = e.clientY - resizeRef.current.startY;
+    const edge = resizeRef.current.edge;
+    let newW = resizeRef.current.startW;
+    let newH = resizeRef.current.startH;
+    let newX = position.x;
+    let newY = position.y;
+
+    if (edge.includes('e')) newW = Math.max(280, resizeRef.current.startW + dx);
+    if (edge.includes('w')) {
+      newW = Math.max(280, resizeRef.current.startW - dx);
+      newX = resizeRef.current.startPosX + dx;
+    }
+    if (edge.includes('s')) newH = Math.max(300, resizeRef.current.startH + dy);
+    if (edge.includes('n')) {
+      newH = Math.max(300, resizeRef.current.startH - dy);
+      newY = (resizeRef.current.startPosY ?? (window.innerHeight - 16 - resizeRef.current.startH)) + dy;
+    }
+
+    setSize({ width: newW, height: newH });
+    if (edge.includes('w') || edge.includes('n')) {
+      setPosition({ x: newX, y: newY });
+    }
+  };
+
+  const onResizeEnd = () => {
+    resizeRef.current.isResizing = false;
+    document.removeEventListener('mousemove', onResizeMove);
+    document.removeEventListener('mouseup', onResizeEnd);
   };
 
   const { data: user } = useQuery({
@@ -183,13 +236,30 @@ export default function GlobalChatWidget() {
   return (
     <div 
       className={cn(
-        "fixed z-50 bg-white rounded-lg shadow-2xl border border-slate-200 flex flex-col",
-        isExpanded 
-          ? "inset-4 top-20" 
-          : "w-80 h-96"
+        "fixed z-50 bg-white rounded-lg shadow-2xl border border-slate-200 flex flex-col overflow-hidden",
+        isExpanded && "inset-4 top-20"
       )}
-      style={isExpanded ? {} : { left: position.x, top: position.y ?? undefined, bottom: position.y ? undefined : 16 }}
+      style={isExpanded ? {} : { 
+        left: position.x, 
+        top: position.y ?? undefined, 
+        bottom: position.y ? undefined : 16,
+        width: size.width,
+        height: size.height
+      }}
     >
+      {/* Resize handles - only show when not expanded */}
+      {!isExpanded && (
+        <>
+          <div onMouseDown={(e) => onResizeStart(e, 'n')} className="absolute top-0 left-2 right-2 h-1 cursor-n-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 's')} className="absolute bottom-0 left-2 right-2 h-1 cursor-s-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-2 bottom-2 w-1 cursor-e-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 'w')} className="absolute left-0 top-2 bottom-2 w-1 cursor-w-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 'nw')} className="absolute top-0 left-0 w-3 h-3 cursor-nw-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 'ne')} className="absolute top-0 right-0 w-3 h-3 cursor-ne-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 'sw')} className="absolute bottom-0 left-0 w-3 h-3 cursor-sw-resize z-10" />
+          <div onMouseDown={(e) => onResizeStart(e, 'se')} className="absolute bottom-0 right-0 w-3 h-3 cursor-se-resize z-10" />
+        </>
+      )}
       {/* Header - Draggable */}
       <div 
         className={cn(

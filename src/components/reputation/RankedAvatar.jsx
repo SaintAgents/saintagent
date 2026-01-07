@@ -128,8 +128,8 @@ export default function RankedAvatar({
         className="rounded-full"
         style={{ padding: padPx, background: gradient }}
       >
-        {/* Inner ring: black then purple gradient */}
-        <div className="rounded-full p-1 relative" style={{ background: 'linear-gradient(135deg, #000000, #7c3aed)' }}>
+        {/* Inner ring: white bg */}
+        <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
             <img 
                   src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png'} 
