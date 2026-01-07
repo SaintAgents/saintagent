@@ -20,6 +20,11 @@ export default function Meetings() {
   const [rescheduleMeeting, setRescheduleMeeting] = useState(null);
   const queryClient = useQueryClient();
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const { data: meetings = [], isLoading } = useQuery({
     queryKey: ['meetings'],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', 50)
@@ -31,20 +36,20 @@ export default function Meetings() {
     queryFn: () => base44.entities.Event.list('-start_time', 100)
   });
 
-  // Filter upcoming circle events the user is attending or hosting
-  const myCircleEvents = circleEvents.filter(e => 
-    isAfter(parseISO(e.start_time), new Date()) &&
-    (e.host_id === currentUser?.email || e.attendee_ids?.includes(currentUser?.email))
-  );
-
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Meeting.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['meetings'] })
   });
 
-  const { data: currentUser } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+  // Filter upcoming circle events the user is attending or hosting
+  const myCircleEvents = (circleEvents || []).filter(e => {
+    if (!e.start_time) return false;
+    try {
+      return isAfter(parseISO(e.start_time), new Date()) &&
+        (e.host_id === currentUser?.email || e.attendee_ids?.includes(currentUser?.email));
+    } catch {
+      return false;
+    }
   });
 
   const pending = meetings.filter(m => m.status === 'pending');
