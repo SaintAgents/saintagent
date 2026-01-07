@@ -269,22 +269,22 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Half-circle button on right side when closed */}
+      {/* Help button on right side when closed */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
           className={cn(
-            "fixed right-0 z-50 h-16 w-8 transition-all duration-300 group",
-            "rounded-l-full shadow-lg hover:shadow-xl hover:w-10",
+            "fixed right-6 z-50 w-12 h-12 transition-all duration-300 group",
+            "rounded-full shadow-lg hover:shadow-xl hover:scale-110",
             "bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700",
             "flex items-center justify-center",
             "hacker-help-btn"
           )}
-          style={{ top: 'calc(50% + 4rem)' }}
+          style={{ bottom: '6rem' }}
           title="Help & Support"
         >
           <HelpCircle className={cn(
-            "w-5 h-5 text-white transition-all",
+            "w-6 h-6 text-white transition-all",
             "group-hover:scale-110",
             "hacker-help-icon"
           )} />
