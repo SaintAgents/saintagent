@@ -10,6 +10,10 @@ import ConnectionPreferencesEditor from '@/components/profile/ConnectionPreferen
 import AscensionLadderPopover from '@/components/profile/AscensionLadderPopover';
 import PortfolioSection from '@/components/profile/PortfolioSection';
 import EndorsementsSection from '@/components/profile/EndorsementsSection';
+import SocialLinksEditor from '@/components/profile/SocialLinksEditor';
+import SocialLinksDisplay from '@/components/profile/SocialLinksDisplay';
+import DetailedBioEditor from '@/components/profile/DetailedBioEditor';
+import FeaturedShowcase from '@/components/profile/FeaturedShowcase';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
