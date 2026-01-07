@@ -225,3 +225,61 @@ function ToggleRow({ label, value, onChange }) {
     </div>
   );
 }
+
+function GoldPriceFetcher() {
+  const [loading, setLoading] = React.useState(false);
+  const [result, setResult] = React.useState(null);
+  const qc = useQueryClient();
+
+  const { data: goldSettings } = useQuery({
+    queryKey: ['goldPriceSetting'],
+    queryFn: () => base44.entities.PlatformSetting.filter({ key: 'gold_price_per_gram' })
+  });
+
+  const storedPrice = goldSettings?.[0]?.value ? JSON.parse(goldSettings[0].value) : null;
+
+  const fetchGoldPrice = async () => {
+    setLoading(true);
+    setResult(null);
+    try {
+      const { data } = await base44.functions.invoke('fetchGoldPrice', {});
+      setResult({ success: true, price: data.gold_price_per_gram });
+      qc.invalidateQueries({ queryKey: ['goldPriceSetting'] });
+    } catch (err) {
+      setResult({ success: false, error: err.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between p-4 rounded-lg border bg-amber-50">
+        <div>
+          <p className="text-sm font-medium text-slate-700">Current Gold Price (per gram)</p>
+          <p className="text-2xl font-bold text-amber-600">
+            {storedPrice?.price ? `$${storedPrice.price.toFixed(2)}` : 'Not fetched'}
+          </p>
+          {storedPrice?.updated_at && (
+            <p className="text-xs text-slate-500 mt-1">
+              Last updated: {new Date(storedPrice.updated_at).toLocaleString()}
+            </p>
+          )}
+        </div>
+        <Button 
+          onClick={fetchGoldPrice} 
+          disabled={loading}
+          className="bg-amber-600 hover:bg-amber-700 gap-2"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          {loading ? 'Fetching...' : 'Fetch Gold Price'}
+        </Button>
+      </div>
+      {result && (
+        <div className={`p-3 rounded-lg text-sm ${result.success ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+          {result.success ? `Successfully fetched: $${result.price?.toFixed(2)}/gram` : `Error: ${result.error}`}
+        </div>
+      )}
+    </div>
+  );
+}
