@@ -461,11 +461,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: transparent !important;
         }
 
-        /* FORCE SOLID OBSIDIAN on all backgrounds - eliminate ALL fading/transparency */
+        /* Semi-transparent dark backgrounds to show effects through */
         [data-theme='dark'] [class*='bg-white'],
         [data-theme='dark'] [class*='bg-gray-'],
         [data-theme='dark'] [class*='bg-slate-'] { 
-          background-color: var(--obsidian) !important; 
+          background-color: rgba(5, 5, 5, 0.85) !important; 
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
         }
@@ -549,12 +549,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
           color: #b8b8b8 !important;
         }
 
-        /* Cards and containers - solid obsidian with neon glow borders */
+        /* Cards and containers - semi-transparent obsidian with neon glow borders */
         [data-theme='dark'] .rounded-xl, 
         [data-theme='dark'] .rounded-lg,
         [data-theme='dark'] .rounded-2xl,
         [data-theme='dark'] .rounded-md {
-          background-color: var(--obsidian) !important;
+          background-color: rgba(5, 5, 5, 0.85) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
         }
