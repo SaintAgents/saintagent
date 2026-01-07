@@ -93,25 +93,42 @@ export default function Meetings() {
     setQuickCreateOpen(false);
   };
 
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e53f7af9e_meetings.jpg";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <BackButton />
-              <Calendar className="w-6 h-6 text-blue-500" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505]">
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 overflow-hidden">
+        <img 
+          src={HERO_IMAGE}
+          alt="Meetings & Connections"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Meetings & Connections
-              <HelpHint content="Meetings are verified touchpoints that build trust and earn GGG. Request & Accept: Send meeting requests to matches or accept incoming requests. Dual Confirmation: Both parties MUST confirm completion to trigger GGG rewards—this prevents gaming. Meeting Types: Collaboration, Mentorship, Consultation, Casual, or Mission-related—each serves different purposes. Pending meetings await response, Upcoming are scheduled, and Completed have been verified by both parties." />
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Schedule, attend, and verify your meetings to earn GGG</p>
+            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              Schedule, Attend & Verify Meetings to Earn GGG
+            </p>
           </div>
+        </div>
+        <div className="absolute top-4 left-4">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+        <div className="absolute top-4 right-4">
           <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
             <Plus className="w-4 h-4" />
             Request Meeting
           </Button>
         </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto p-6 -mt-8 relative z-10">
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
