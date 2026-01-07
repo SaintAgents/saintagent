@@ -2,7 +2,7 @@
 // 1 GGG ≈ $145 (1 gram gold). Tiers scale from 0.001 to 1.0 GGG.
 // Two-tier system: BONUS (60-day beta) and LIVE (post-beta at 50% value)
 
-export const GGG_TO_USD = 145; // 1.00 GGG ≈ $145 (1 gram gold)
+export const GGG_TO_USD = 145; // 1.0000000 GGG ≈ $145 (1 gram gold)
 
 // Tier mode: 'bonus' = 60-day beta incentive, 'live' = post-beta (50% of bonus)
 export const TIER_MODES = {
@@ -15,11 +15,15 @@ export let currentTierMode = 'bonus';
 export const setTierMode = (mode) => { currentTierMode = mode; };
 export const getTierMode = () => currentTierMode;
 
-// Tiers now scale from 0.001 to 1.0 GGG (bonus period values)
-export const TIERS = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0];
+// Tiers now scale from 0.0004828 to 1.0 GGG (bonus period values)
+// First tier = $0.07 USD ($0.07 / $145 = 0.0004828 GGG)
+// Interaction bonus = additional $0.07 when 5+ interactions occur
+export const TIERS = [0.0004828, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0];
+export const INTERACTION_BONUS_GGG = 0.0004828; // +$0.07 for 5+ interactions
+export const INTERACTION_THRESHOLD = 5; // likes, comments, shares needed for bonus
 
 export const ACTIONS = [
-  { key: 'posting', title: 'Posting', base: 0.001, definition: 'A post with at least 30 characters that receives at least 5 interactions (likes, comments, shares).' },
+  { key: 'posting', title: 'Posting', base: 0.0004828, definition: 'A post with at least 30 characters earns $0.07. Earn an additional $0.07 when the post receives at least 5 interactions (likes, comments, shares).' },
   { key: 'post_update', title: 'Daily Field Update', base: 0.005, definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
   { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.01, definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
   { key: 'thread_summary', title: 'Thread Summary', base: 0.01, definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
@@ -89,12 +93,13 @@ export function calculatePayout(actionKey, lifts, tierMode = null) {
   };
 }
 
-// Matrix sections with new tier scale (0.001 to 1.0 GGG)
+// Matrix sections with new tier scale (0.0004828 to 1.0 GGG)
 // Values shown are BONUS period values; LIVE = 50% of these
+// First tier = $0.07, +$0.07 interaction bonus
 export const MATRIX_SECTIONS = [
-  { tier: 0.001, title: 'Micro Posts', items: [
-    'Posting that meets minimum quality standards',
-    'Quick on-topic update with value',
+  { tier: 0.0004828, title: 'Micro Posts', items: [
+    'Posting (30+ chars) = $0.07',
+    '+$0.07 bonus when 5+ interactions (likes, comments, shares)',
   ] },
   { tier: 0.002, title: 'Basic Engagement', items: [
     'Reaction or simple helpful response',
