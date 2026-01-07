@@ -208,7 +208,8 @@ export default function Onboarding() {
 
           // Gamification: award points and badge for profile completion
           try {
-            const profileToUpdate = (existingProfiles || [])[0];
+            const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
+            const profileToUpdate = profiles?.[0];
             if (profileToUpdate) {
               await base44.entities.UserProfile.update(profileToUpdate.id, {
                 engagement_points: (profileToUpdate.engagement_points || 0) + 100
