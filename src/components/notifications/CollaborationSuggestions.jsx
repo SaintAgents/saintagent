@@ -138,7 +138,12 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
     document.dispatchEvent(event);
   };
 
-  if (!profile?.user_id || suggestions.length === 0) return null;
+  // Early return if no profile - MUST be after all hooks
+  if (!profile?.user_id) {
+    return null;
+  }
+
+  if (suggestions.length === 0) return null;
 
   if (compact) {
     return (
