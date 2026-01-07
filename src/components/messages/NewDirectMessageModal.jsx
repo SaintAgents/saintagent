@@ -16,7 +16,8 @@ export default function NewDirectMessageModal({ open, onClose, onCreated }) {
   });
 
   const filtered = useMemo(() => {
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().replace(/^@/, ''); // Strip leading @ for handle search
+    if (!q) return profiles.filter(p => p.user_id !== me?.email);
     return profiles.filter(p => p.user_id !== me?.email && (
       p.display_name?.toLowerCase().includes(q) ||
       p.handle?.toLowerCase().includes(q) ||
