@@ -1135,14 +1135,23 @@ function AuthenticatedLayout({ children, currentPageName }) {
           html[data-theme='hacker'] img.hero-image,
           html[data-theme='hacker'] .hero-image,
           [data-theme='hacker'] img[data-no-filter="true"],
-          html[data-theme='hacker'] img[data-no-filter="true"] { 
+          [data-theme='hacker'] img[data-no-filter],
+          html[data-theme='hacker'] img[data-no-filter="true"],
+          html[data-theme='hacker'] img[data-no-filter],
+          [data-theme='dark'] img.hero-image,
+          [data-theme='dark'] .hero-image,
+          [data-theme='dark'] img[data-no-filter="true"],
+          [data-theme='dark'] img[data-no-filter],
+          html[data-theme='dark'] img.hero-image,
+          html[data-theme='dark'] img[data-no-filter="true"] { 
             filter: none !important; 
             -webkit-filter: none !important;
             opacity: 1 !important; 
             display: block !important;
             visibility: visible !important;
+            mix-blend-mode: normal !important;
           }
-          
+
           /* Hacker theme image filter - exclude hero images, avatars, badges - apply AFTER hero override */
           [data-theme='hacker'] img:not(.hero-image):not([data-no-filter]):not([data-no-filter="true"]):not(.mission-image):not(.mission-card img):not(.rank-badge-img) { 
             filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; 
