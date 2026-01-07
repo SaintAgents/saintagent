@@ -300,6 +300,16 @@ export default function Profile() {
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
 
+  // Fetch affiliate code for the target user
+  const { data: affiliateCodes = [] } = useQuery({
+    queryKey: ['affiliateCodes', targetUserId],
+    queryFn: () => base44.entities.AffiliateCode.filter({ user_id: targetUserId }),
+    enabled: !!targetUserId
+  });
+  const affiliateCode = affiliateCodes?.[0];
+  const affiliatePaidCount = affiliateCode?.total_paid || 0;
+  const affiliateTier = getAffiliateTier(affiliatePaidCount);
+
   // Wallet query - only run if profile exists
   const { data: walletRes } = useQuery({
     queryKey: ['wallet', profile?.user_id],
@@ -1169,6 +1179,25 @@ export default function Profile() {
                 <p className="text-sm text-slate-500 mt-1">
                   {rpInfo.nextMin ? `${rpInfo.nextMin - rpPoints} RP to next rank (${rpInfo.nextTitle})` : 'Max rank'}
                 </p>
+              </CardContent>
+            </Card>
+
+            {/* Affiliate Tier Badge */}
+            <Card>
+              <CardContent className="pt-6 text-center">
+                <div className="flex flex-col items-center mb-4">
+                  <AffiliateBadge tier={affiliateTier} size={80} className="mb-2 drop-shadow-lg" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 capitalize">{affiliateTier} Affiliate</h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  {affiliatePaidCount} paid referrals
+                </p>
+                {affiliateTier === 'bronze' && affiliatePaidCount < 5 && (
+                  <p className="text-xs text-amber-600 mt-2">{5 - affiliatePaidCount} more to Silver</p>
+                )}
+                {affiliateTier === 'silver' && affiliatePaidCount < 20 && (
+                  <p className="text-xs text-amber-600 mt-2">{20 - affiliatePaidCount} more to Gold</p>
+                )}
               </CardContent>
             </Card>
 
