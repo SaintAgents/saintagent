@@ -65,18 +65,9 @@ export default function SidePanel({
   const [audioPreview, setAudioPreview] = useState(null);
   const queryClient = useQueryClient();
 
-  // Persist collapsed state in localStorage
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem('sidePanelOpen');
-      if (saved !== null && onToggle) {
-        const shouldBeOpen = saved === 'true';
-        if (shouldBeOpen !== isOpen) {
-          onToggle();
-        }
-      }
-    } catch {}
-  }, []);
+  // Note: We no longer auto-restore sidePanelOpen from localStorage on mount
+  // This was causing issues where clicking the handle would toggle incorrectly
+  // The parent component (CommandDeck) manages the isOpen state
 
   // Popout states for sections
   const [gggPopupOpen, setGggPopupOpen] = useState(false);
