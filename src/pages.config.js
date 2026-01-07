@@ -41,6 +41,7 @@ import Studio from './pages/Studio';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
 import SynchronicityEngine from './pages/SynchronicityEngine';
+import Quests from './pages/Quests';
 import __Layout from './Layout.jsx';
 
 
@@ -88,6 +89,7 @@ export const PAGES = {
     "Terms": Terms,
     "UserGuide": UserGuide,
     "SynchronicityEngine": SynchronicityEngine,
+    "Quests": Quests,
 }
 
 export const pagesConfig = {
