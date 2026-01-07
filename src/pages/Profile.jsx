@@ -497,6 +497,10 @@ export default function Profile() {
               <span className="hidden sm:inline">Basic Info</span>
               <User className="sm:hidden w-4 h-4" />
             </TabsTrigger>
+            <TabsTrigger value="showcase" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Showcase</span>
+              <Star className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
             <TabsTrigger value="onboarding" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Details</span>
               <Compass className="sm:hidden w-4 h-4" />
