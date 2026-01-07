@@ -149,7 +149,9 @@ export default function CommandDeck() {
       }
     },
     enabled: !!profile?.user_id,
-    refetchInterval: 5000
+    refetchInterval: 30000,
+    retry: 1,
+    staleTime: 10000
   });
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
