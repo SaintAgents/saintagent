@@ -152,7 +152,7 @@ export default function GlobalChatWidget() {
 
   const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
 
-  // Floating button when closed
+  // Floating button when closed - vertical orientation
   if (!isOpen) {
     return (
       <div
@@ -163,14 +163,14 @@ export default function GlobalChatWidget() {
           onMouseDown={handleDragStart}
           onTouchStart={handleDragStart}
           className={cn(
-            "flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
+            "flex flex-col items-center gap-2 px-3 py-4 bg-gradient-to-b from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
             isDragging ? "cursor-grabbing scale-105" : "cursor-grab hover:scale-105"
           )}
         >
-          <GripHorizontal className="w-4 h-4 opacity-60" />
-          <button onClick={() => setIsOpen(true)} className="flex items-center gap-2">
+          <GripHorizontal className="w-4 h-4 opacity-60 rotate-90" />
+          <button onClick={() => setIsOpen(true)} className="flex flex-col items-center gap-2">
             <Globe className="w-5 h-5" />
-            <span className="text-sm font-medium">Global Chat</span>
+            <span className="text-xs font-medium writing-mode-vertical" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>Global Chat</span>
             {onlineUsers.length > 0 && (
               <Badge className="bg-emerald-500 text-white text-xs px-1.5">
                 {onlineUsers.length}
