@@ -39,50 +39,50 @@ export const TIER_MULTIPLIERS = [1.0, 2.0, 4.0, 8.0, 16.0];
 
 export const ACTIONS = [
   // Micro-Engagement Actions
-  { key: 'profile_view', title: 'Profile View', base: 0.0002069, category: 'engagement', definition: 'Viewing another user\'s profile earns a micro-reward for engagement.' },
-  { key: 'post_view', title: 'Post View', base: 0.0004828, category: 'engagement', definition: 'Viewing a post contributes to content reach and earns a small reward.' },
-  { key: 'like_react', title: 'Like/React', base: 0.0002069, category: 'engagement', definition: 'Liking or reacting to content shows appreciation and earns a micro-reward.' },
-  { key: 'comment', title: 'Comment', base: 0.0009656, category: 'engagement', definition: 'Adding a comment to a post or discussion contributes to engagement.' },
-  { key: 'share', title: 'Share', base: 0.0019312, category: 'engagement', definition: 'Sharing content to spread valuable information within the network.' },
-  { key: 'follow', title: 'Follow', base: 0.0038624, category: 'engagement', definition: 'Following another user to build your network connections.' },
-  { key: 'profile_update', title: 'Profile Update', base: 0.0009656, category: 'engagement', definition: 'Updating your profile keeps your information current and earns a small reward.' },
-  { key: 'daily_checkin', title: 'Daily Check-in', base: 0.0019312, category: 'engagement', definition: 'Checking in daily maintains your streak and earns consistent rewards.' },
+  { key: 'profile_view', title: 'Profile View', base: 0.0002069, usd: 0.03, category: 'engagement', definition: 'Viewing another user\'s profile earns a micro-reward for engagement.' },
+  { key: 'post_view', title: 'Post View', base: 0.0004828, usd: 0.07, category: 'engagement', definition: 'Viewing a post contributes to content reach and earns a small reward.' },
+  { key: 'like_react', title: 'Like/React', base: 0.0002069, usd: 0.03, category: 'engagement', definition: 'Liking or reacting to content shows appreciation and earns a micro-reward.' },
+  { key: 'comment', title: 'Comment', base: 0.0009656, usd: 0.14, category: 'engagement', definition: 'Adding a comment to a post or discussion contributes to engagement.' },
+  { key: 'share', title: 'Share', base: 0.0019312, usd: 0.28, category: 'engagement', definition: 'Sharing content to spread valuable information within the network.' },
+  { key: 'follow', title: 'Follow', base: 0.0038624, usd: 0.56, category: 'engagement', definition: 'Following another user to build your network connections.' },
+  { key: 'profile_update', title: 'Profile Update', base: 0.0009656, usd: 0.14, category: 'engagement', definition: 'Updating your profile keeps your information current and earns a small reward.' },
+  { key: 'daily_checkin', title: 'Daily Check-in', base: 0.0019312, usd: 0.28, category: 'engagement', definition: 'Checking in daily maintains your streak and earns consistent rewards.' },
 
   // Content Creation
-  { key: 'post_update', title: 'Daily Field Update', base: 0.0038624, category: 'content', definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
-  { key: 'posting', title: 'Posting', base: 0.0038624, category: 'content', definition: 'A post with at least 30 characters earns base reward. Earn an additional bonus when the post receives at least 5 interactions (likes, comments, shares).' },
-  { key: 'forum_post', title: 'Forum Post', base: 0.0077248, category: 'content', definition: 'Creating a structured forum post for community discussion and knowledge sharing.' },
-  { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.0100000, category: 'content', definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
-  { key: 'thread_summary', title: 'Thread Summary', base: 0.0100000, category: 'content', definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
-  { key: 'how_to', title: 'Structured How-To', base: 0.0154496, category: 'content', definition: 'A step-by-step guide with clear structure (title, steps, checks, tips) that helps others repeat a process reliably.' },
-  { key: 'template', title: 'Template / SOP Snippet', base: 0.0154496, category: 'content', definition: 'A reusable template or SOP segment that others can plug into their own work (e.g., checklists, email templates, doc skeletons).' },
-  { key: 'weekly_recap', title: 'Weekly Team Recap', base: 0.0154496, category: 'content', definition: 'A weekly overview of what the team accomplished, current status, blockers, and upcoming priorities in one clean recap.' },
+  { key: 'post_update', title: 'Daily Field Update', base: 0.0038624, usd: 0.56, category: 'content', definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
+  { key: 'posting', title: 'Posting', base: 0.0038624, usd: 0.56, category: 'content', definition: 'A post with at least 30 characters earns base reward. Earn an additional bonus when the post receives at least 5 interactions (likes, comments, shares).' },
+  { key: 'forum_post', title: 'Forum Post', base: 0.0077248, usd: 1.12, category: 'content', definition: 'Creating a structured forum post for community discussion and knowledge sharing.' },
+  { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.0100000, usd: 1.45, category: 'content', definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
+  { key: 'thread_summary', title: 'Thread Summary', base: 0.0100000, usd: 1.45, category: 'content', definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
+  { key: 'how_to', title: 'Structured How-To', base: 0.0154496, usd: 2.24, category: 'content', definition: 'A step-by-step guide with clear structure (title, steps, checks, tips) that helps others repeat a process reliably.' },
+  { key: 'template', title: 'Template / SOP Snippet', base: 0.0154496, usd: 2.24, category: 'content', definition: 'A reusable template or SOP segment that others can plug into their own work (e.g., checklists, email templates, doc skeletons).' },
+  { key: 'weekly_recap', title: 'Weekly Team Recap', base: 0.0154496, usd: 2.24, category: 'content', definition: 'A weekly overview of what the team accomplished, current status, blockers, and upcoming priorities in one clean recap.' },
 
   // Quest & Team Activities
-  { key: 'quest_completion', title: 'Quest Completion', base: 0.0077248, category: 'mission', definition: 'Completing a defined quest or challenge within the platform.' },
-  { key: 'team_collaboration', title: 'Team Collaboration', base: 0.0077248, category: 'mission', definition: 'Active participation in team activities and collaborative work.' },
+  { key: 'quest_completion', title: 'Quest Completion', base: 0.0077248, usd: 1.12, category: 'mission', definition: 'Completing a defined quest or challenge within the platform.' },
+  { key: 'team_collaboration', title: 'Team Collaboration', base: 0.0077248, usd: 1.12, category: 'mission', definition: 'Active participation in team activities and collaborative work.' },
 
   // Mission Activities
-  { key: 'mission_participation', title: 'Mission Participation', base: 0.0154496, category: 'mission', definition: 'Actively participating in a mission and contributing to its objectives.' },
-  { key: 'mission_onboarding', title: 'Mission Onboarding', base: 0.0050000, category: 'mission', definition: 'Setting up a new agent or member on a mission—sharing context, links, expectations, and making sure they are ready to operate.' },
-  { key: 'task_confirmed', title: 'Mission Task Confirmed', base: 0.0100000, category: 'mission', definition: 'Confirming a specific task is fully actionable (requirements clarified, dependencies identified, acceptance criteria defined).' },
-  { key: 'milestone', title: 'Milestone Deliverable', base: 0.0308992, category: 'mission', definition: 'Delivering a major piece of work tied to a defined milestone (e.g., draft complete, feature built, report finished).' },
-  { key: 'impact_unlock', title: 'Impact Contribution (Adopted)', base: 0.0500000, category: 'mission', definition: 'A contribution (idea, doc, flow, pattern) that gets adopted into live use—actually implemented, not just proposed.' },
-  { key: 'lead_sprint', title: 'Lead Sprint Segment', base: 0.1000000, category: 'leadership', definition: 'Owning planning and execution for a defined chunk of work/time (e.g., a one-week sprint), including coordination and follow-through.' },
-  { key: 'security_review', title: 'Security Review', base: 0.2000000, category: 'leadership', definition: 'A focused review of flows, data handling, and permissions with documented risks and recommendations.' },
-  { key: 'cross_mission', title: 'Cross-Mission Coordination', base: 0.3000000, category: 'leadership', definition: 'Aligning multiple missions or teams—resolving conflicts, syncing dependencies, and making sure efforts do not collide.' },
-  { key: 'mission_lead', title: 'Mission Lead (End-to-End)', base: 0.5000000, category: 'leadership', definition: 'Owning the full mission lifecycle—from scoping and setup through execution, handoffs, and final wrap-up.' },
+  { key: 'mission_participation', title: 'Mission Participation', base: 0.0154496, usd: 2.24, category: 'mission', definition: 'Actively participating in a mission and contributing to its objectives.' },
+  { key: 'mission_onboarding', title: 'Mission Onboarding', base: 0.0050000, usd: 0.73, category: 'mission', definition: 'Setting up a new agent or member on a mission—sharing context, links, expectations, and making sure they are ready to operate.' },
+  { key: 'task_confirmed', title: 'Mission Task Confirmed', base: 0.0100000, usd: 1.45, category: 'mission', definition: 'Confirming a specific task is fully actionable (requirements clarified, dependencies identified, acceptance criteria defined).' },
+  { key: 'milestone', title: 'Milestone Deliverable', base: 0.0308992, usd: 4.48, category: 'mission', definition: 'Delivering a major piece of work tied to a defined milestone (e.g., draft complete, feature built, report finished).' },
+  { key: 'impact_unlock', title: 'Impact Contribution (Adopted)', base: 0.0500000, usd: 7.25, category: 'mission', definition: 'A contribution (idea, doc, flow, pattern) that gets adopted into live use—actually implemented, not just proposed.' },
+  { key: 'lead_sprint', title: 'Lead Sprint Segment', base: 0.1000000, usd: 14.50, category: 'leadership', definition: 'Owning planning and execution for a defined chunk of work/time (e.g., a one-week sprint), including coordination and follow-through.' },
+  { key: 'security_review', title: 'Security Review', base: 0.2000000, usd: 29.00, category: 'leadership', definition: 'A focused review of flows, data handling, and permissions with documented risks and recommendations.' },
+  { key: 'cross_mission', title: 'Cross-Mission Coordination', base: 0.3000000, usd: 43.50, category: 'leadership', definition: 'Aligning multiple missions or teams—resolving conflicts, syncing dependencies, and making sure efforts do not collide.' },
+  { key: 'mission_lead', title: 'Mission Lead (End-to-End)', base: 0.5000000, usd: 72.50, category: 'leadership', definition: 'Owning the full mission lifecycle—from scoping and setup through execution, handoffs, and final wrap-up.' },
 
   // Agent Development
-  { key: 'agent_publish', title: 'Agent Published (Usage Threshold)', base: 0.0500000, category: 'agent', definition: 'Creating an agent that goes live and reaches a predefined usage bar (e.g., minimum number of runs or active users).' },
-  { key: 'agent_flagship', title: 'Flagship Agent Release', base: 0.3000000, category: 'agent', definition: 'Launching a mission-critical or featured agent that is approved as a flagship tool for the network.' },
+  { key: 'agent_publish', title: 'Agent Published (Usage Threshold)', base: 0.0500000, usd: 7.25, category: 'agent', definition: 'Creating an agent that goes live and reaches a predefined usage bar (e.g., minimum number of runs or active users).' },
+  { key: 'agent_flagship', title: 'Flagship Agent Release', base: 0.3000000, usd: 43.50, category: 'agent', definition: 'Launching a mission-critical or featured agent that is approved as a flagship tool for the network.' },
 
   // Learning & Teaching
-  { key: 'lesson_micro', title: 'Micro-Lesson + Quiz', base: 0.0050000, category: 'learning', definition: 'A short training piece plus a quiz to validate understanding (bite-sized learning unit).' },
-  { key: 'module_complete', title: 'Module Complete + Assessment', base: 0.0100000, category: 'learning', definition: 'Completing an entire learning module and passing the associated assessment.' },
-  { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.0154496, category: 'learning', definition: 'Finishing an intermediate-level course with the required final project or exam.' },
-  { key: 'security_trained', title: 'Security Trained Certification', base: 0.0308992, category: 'learning', definition: 'Completing the full security training path and passing the certification requirements.' },
-  { key: 'mentor_ta', title: 'TA / Mentor for Cohort', base: 0.1000000, category: 'learning', definition: 'Serving as a teaching assistant or mentor for a cohort over a defined period—supporting learners, answering questions, and keeping them on track.' },
+  { key: 'lesson_micro', title: 'Micro-Lesson + Quiz', base: 0.0050000, usd: 0.73, category: 'learning', definition: 'A short training piece plus a quiz to validate understanding (bite-sized learning unit).' },
+  { key: 'module_complete', title: 'Module Complete + Assessment', base: 0.0100000, usd: 1.45, category: 'learning', definition: 'Completing an entire learning module and passing the associated assessment.' },
+  { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.0154496, usd: 2.24, category: 'learning', definition: 'Finishing an intermediate-level course with the required final project or exam.' },
+  { key: 'security_trained', title: 'Security Trained Certification', base: 0.0308992, usd: 4.48, category: 'learning', definition: 'Completing the full security training path and passing the certification requirements.' },
+  { key: 'mentor_ta', title: 'TA / Mentor for Cohort', base: 0.1000000, usd: 14.50, category: 'learning', definition: 'Serving as a teaching assistant or mentor for a cohort over a defined period—supporting learners, answering questions, and keeping them on track.' },
 ];
 
 // Smart GGG formatting: 7 decimals for values < 0.01, otherwise appropriate precision

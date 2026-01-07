@@ -28,7 +28,8 @@ export default function ActionsEarningsTable() {
           <h3 className="text-sm font-semibold text-slate-700 mb-3 border-b pb-2">{group.label}</h3>
           <div className="space-y-2">
             {group.actions.map((action) => {
-              const usdVal = action.base * GGG_TO_USD;
+              // Use explicit USD value from action if available, otherwise calculate
+              const usdVal = action.usd ?? (action.base * GGG_TO_USD);
               return (
                 <div 
                   key={action.key} 
@@ -41,7 +42,7 @@ export default function ActionsEarningsTable() {
                         {formatGGGSmart(action.base)} GGG
                       </Badge>
                       <span className="text-xs text-emerald-600 font-medium">
-                        (USD {usdVal < 1 ? usdVal.toFixed(2) : usdVal.toFixed(2)})
+                        (USD {usdVal.toFixed(2)})
                       </span>
                     </div>
                   </div>

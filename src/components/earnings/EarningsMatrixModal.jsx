@@ -36,9 +36,9 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
         <div className="px-6 py-3 bg-gradient-to-r from-violet-50 to-amber-50 border-y">
           <div className="flex items-center gap-2 mb-2">
             <Info className="w-4 h-4 text-violet-600" />
-            <span className="text-sm font-semibold text-slate-700">All 11 Tiers (GGG → USD)</span>
+            <span className="text-sm font-semibold text-slate-700">All 13 Tiers (GGG → USD)</span>
           </div>
-          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-11 gap-1 text-xs">
+          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-13 gap-1 text-xs">
             {TIERS.map((tier, idx) => (
               <div key={tier} className="p-1.5 bg-white rounded border text-center">
                 <div className="font-mono font-semibold text-violet-700">{formatGGG(tier)}</div>
