@@ -404,7 +404,7 @@ export default function Profile() {
             )}
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-0 p-6 relative">
-            <div className="flex items-end gap-6 -mt-12">
+            <div className="flex items-end gap-6 -mt-16">
               <div className="cursor-pointer" onClick={() => setViewerOpen(true)} title="View photos">
                 <RankedAvatar
                   src={profile?.avatar_url}
@@ -417,7 +417,7 @@ export default function Profile() {
                   status={profile?.status}
                 />
               </div>
-              <div className="flex-1 pb-2 mt-8">
+              <div className="flex-1 pb-2 mt-4">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline && (
