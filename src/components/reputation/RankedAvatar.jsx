@@ -69,13 +69,23 @@ export default function RankedAvatar({
   
   // Always call useQuery unconditionally to avoid hook order issues
   // The enabled flag controls whether it actually fetches
-  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon);
+  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null);
   const { data: fetched = [] } = useQuery({
     queryKey: ['rankedAvatarProfile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: needsFetch,
   });
   const fetchedProfile = fetched?.[0];
+  
+  // Fetch affiliate stats for affiliate badge
+  const { data: affiliateCodes = [] } = useQuery({
+    queryKey: ['affiliateCodeForAvatar', userId || 'none'],
+    queryFn: () => base44.entities.AffiliateCode.filter({ user_id: userId }),
+    enabled: !!userId && affiliatePaidCount == null,
+  });
+  const affiliateCode = affiliateCodes?.[0];
+  const affiliatePaidFinal = affiliatePaidCount ?? affiliateCode?.total_paid ?? 0;
+  const affiliateTier = getAffiliateTier(affiliatePaidFinal);
   
   // Combine gallery images - use fetched profile gallery if available
   const fetchedGallery = fetchedProfile?.gallery_images || [];
@@ -192,6 +202,18 @@ export default function RankedAvatar({
           title={`Trust Score: ${trustScoreFinal}% - Verified through community interactions`}
         >
           <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
+        </div>
+      )}
+
+      {/* Affiliate Badge (top-right) - show SA shield badge */}
+      {affiliatePaidFinal >= 0 && !showPhotoIcon && (
+        <div 
+          className="absolute -top-2 -right-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+          style={{ width: symbolPx * 2, height: symbolPx * 2 }}
+          onClick={(e) => e.stopPropagation()}
+          title={`${affiliateTier.charAt(0).toUpperCase() + affiliateTier.slice(1)} Affiliate • ${affiliatePaidFinal} paid referrals`}
+        >
+          <AffiliateBadge tier={affiliateTier} size={symbolPx * 2} />
         </div>
       )}
 
