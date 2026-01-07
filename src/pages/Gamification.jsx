@@ -144,7 +144,7 @@ export default function Gamification() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505]">
       {/* Hero Section */}
-      <div className="relative h-64 md:h-80 overflow-hidden">
+      <div className="relative h-48 md:h-56 overflow-hidden">
         <img 
           src={HERO_IMAGE}
           alt="Gamification Hub"
@@ -154,22 +154,23 @@ export default function Gamification() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(168,85,247,0.5)] tracking-wide"
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(168,85,247,0.5)] tracking-wide"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(168,85,247,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Gamification Hub
             </h1>
-            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+            <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
               Complete Challenges, Earn Badges, Ascend the Leaderboard
             </p>
           </div>
         </div>
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-3 left-3">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-3 right-3">
           <Button
             onClick={() => generateChallengesMutation.mutate()}
             disabled={isGenerating}
+            size="sm"
             className="bg-violet-600/90 hover:bg-violet-700 gap-2 backdrop-blur-sm"
           >
             {isGenerating ? (
@@ -182,7 +183,7 @@ export default function Gamification() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6 -mt-8 relative z-10">
+      <div className="max-w-6xl mx-auto p-6 -mt-6 relative z-10">
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

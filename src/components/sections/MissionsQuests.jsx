@@ -4,7 +4,7 @@ import { Target } from "lucide-react";
 import MissionCard from '@/components/hud/MissionCard';
 import HelpHint from '@/components/hud/HelpHint';
 
-export default function MissionsQuests({ missions = [], profile, onAction }) {
+export default function Missions({ missions = [], profile, onAction }) {
   return (
     <div className="space-y-3">
       <div className="flex justify-end -mt-2 mb-2">
