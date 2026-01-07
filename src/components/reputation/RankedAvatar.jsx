@@ -35,14 +35,14 @@ function getRingConfig(rankCode = 'seeker') {
   return map[rankCode] || map.seeker;
 }
 
-// Rank Badge component using images
+// Rank Badge component using images - green filter for dark/hacker themes
 function RankBadge({ code = 'seeker', size = 24 }) {
   const imgUrl = RANK_BADGE_IMAGES[code] || RANK_BADGE_IMAGES.seeker;
   return (
     <img 
       src={imgUrl} 
       alt={code} 
-      className="object-contain"
+      className="object-contain dark:hue-rotate-[70deg] dark:saturate-150 [data-theme='hacker']_&:hue-rotate-[70deg] [data-theme='hacker']_&:saturate-200"
       style={{ width: size, height: size }}
       data-no-filter="true"
     />
@@ -204,7 +204,7 @@ export default function RankedAvatar({
       )}
 
       {/* Affiliate Badge (top-right) - show SA shield badge */}
-      {affiliatePaidFinal >= 0 && !showPhotoIcon && (
+      {affiliatePaidFinal >= 0 && (
         <div 
           className="absolute -top-2 -right-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
           style={{ width: symbolPx * 2, height: symbolPx * 2 }}
@@ -215,7 +215,7 @@ export default function RankedAvatar({
         </div>
       )}
 
-      {/* Photo gallery icon (top-right) - show if we have images or are still loading */}
+      {/* Photo gallery icon (bottom-center) - show if we have images or are still loading */}
       {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
         <button
           onClick={(e) => {
@@ -225,7 +225,7 @@ export default function RankedAvatar({
               setViewerOpen(true);
             }
           }}
-          className="absolute -top-1 -right-1 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
           style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
           title={`View Photos (${allImages.length})`}
         >
