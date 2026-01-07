@@ -270,3 +270,30 @@ html[data-theme='hacker'] img[data-no-filter="true"],
 [data-theme='hacker'] [class*='bg-rose-'] span {
   color: inherit !important;
 }
+
+/* Missions page dark mode text fixes */
+[data-theme='dark'] main[data-page='Missions'] h1,
+[data-theme='dark'] main[data-page='Missions'] h2,
+[data-theme='dark'] main[data-page='Missions'] h3,
+[data-theme='dark'] main[data-page='Missions'] h4 {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] main[data-page='Missions'] p,
+[data-theme='dark'] main[data-page='Missions'] span:not([class*='bg-']),
+[data-theme='dark'] main[data-page='Missions'] .text-slate-500,
+[data-theme='dark'] main[data-page='Missions'] .text-slate-600,
+[data-theme='dark'] main[data-page='Missions'] .text-gray-500,
+[data-theme='dark'] main[data-page='Missions'] .text-gray-600 {
+  color: #e0e0e0 !important;
+}
+
+/* Hacker theme Missions page */
+[data-theme='hacker'] main[data-page='Missions'] h1,
+[data-theme='hacker'] main[data-page='Missions'] h2,
+[data-theme='hacker'] main[data-page='Missions'] h3,
+[data-theme='hacker'] main[data-page='Missions'] h4,
+[data-theme='hacker'] main[data-page='Missions'] p,
+[data-theme='hacker'] main[data-page='Missions'] span:not([class*='bg-']) {
+  color: #00ff00 !important;
+}
