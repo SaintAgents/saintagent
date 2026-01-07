@@ -756,6 +756,7 @@ export default function Profiles() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
