@@ -19,7 +19,7 @@ export const getTierMode = () => currentTierMode;
 export const TIERS = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0];
 
 export const ACTIONS = [
-  { key: 'posting', title: 'Posting', base: 0.001, definition: 'A basic post or update that meets minimum quality standards (on-topic, useful, and not spam).' },
+  { key: 'posting', title: 'Posting', base: 0.001, definition: 'A post with at least 30 characters that receives at least 5 interactions (likes, comments, shares).' },
   { key: 'post_update', title: 'Daily Field Update', base: 0.005, definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
   { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.01, definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
   { key: 'thread_summary', title: 'Thread Summary', base: 0.01, definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
