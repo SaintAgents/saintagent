@@ -54,18 +54,43 @@ export default function Projects() {
   const drafts = projects.filter((p) => p.status === 'draft').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
+      {/* Hero */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e61c7afac_universal_upscale_0_9d714c8a-311f-436e-a407-485dfe85801f_01.jpg"
+          alt="Projects"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              <Folder className="w-10 h-10 text-amber-300 drop-shadow-lg" />
+              Projects
+            </h1>
+            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              You Are Steering the Shift of the World
+            </p>
+          </div>
+        </div>
+        <div className="absolute top-4 left-4">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <BackButton />
-              <Folder className="w-6 h-6 text-violet-600" />
-              Projects
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Folder className="w-5 h-5 text-violet-600" />
+              Browse Projects
               <HelpHint content="Every project undergoes a 4-phase AI audit designed to be hard to game and anti-grift. Phase 1 (Ethical Firewall): Screens for fraud, coercion, and 'Anti-Cult' indicators. Phase 2 (Quantitative Scoring): 0-100 score based on Planetary Well-being (20%), Human Well-being (20%), and Feasibility. Phase 3 (Risk Model): Calculates Execution Multiplier (0.6x-1.0x) and checks Harm Gates. Phase 4 (Decision Tiers): Routes to Approve, Incubate, Review, or Decline. Click any project to see full evaluation details." />
-            </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Browse, filter, and manage all projects</p>
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-7">Filter and manage all projects</p>
           </div>
           <div className="flex items-center gap-2">
             <TooltipProvider>

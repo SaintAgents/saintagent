@@ -1054,11 +1054,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
                   }
                   /* Override for pages with hero images */
                   [data-theme='dark'] main[data-page='Teams'],
-                  [data-theme='dark'] main[data-page='Matches'],
-                  [data-theme='dark'] main[data-page='Meetings'],
-                  [data-theme='dark'] main[data-page='Gamification'] {
-                    background-color: transparent !important;
-                  }
+                    [data-theme='dark'] main[data-page='Matches'],
+                    [data-theme='dark'] main[data-page='Meetings'],
+                    [data-theme='dark'] main[data-page='Gamification'],
+                    [data-theme='dark'] main[data-page='Projects'] {
+                      background-color: transparent !important;
+                    }
                   [data-theme='hacker'] main:not([data-page='CommandDeck']) {
                     background-color: #000 !important;
                     background-image: none !important;
@@ -1066,11 +1067,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
                   }
                   /* Override for pages with hero images */
                   [data-theme='hacker'] main[data-page='Teams'],
-                  [data-theme='hacker'] main[data-page='Matches'],
-                  [data-theme='hacker'] main[data-page='Meetings'],
-                  [data-theme='hacker'] main[data-page='Gamification'] {
-                    background-color: transparent !important;
-                  }
+                    [data-theme='hacker'] main[data-page='Matches'],
+                    [data-theme='hacker'] main[data-page='Meetings'],
+                    [data-theme='hacker'] main[data-page='Gamification'],
+                    [data-theme='hacker'] main[data-page='Projects'] {
+                      background-color: transparent !important;
+                    }
 
                   /* Hero section sizing */
                   .page-hero {
