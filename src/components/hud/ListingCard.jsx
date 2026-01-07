@@ -80,16 +80,6 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
       </div>
 
       <div className="p-4">
-        {!listing.image_url && (
-          <div className="flex items-center gap-2 mb-3">
-            <Badge className={categoryColors[listing.category]}>
-              {listing.category}
-            </Badge>
-            {listing.is_free && (
-              <Badge className="bg-emerald-100 text-emerald-700">Free</Badge>
-            )}
-          </div>
-        )}
 
         <div className="flex items-start justify-between gap-2">
           <h4 className="font-semibold text-slate-900 line-clamp-2">{listing.title}</h4>
