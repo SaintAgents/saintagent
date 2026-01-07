@@ -45,9 +45,8 @@ export default function GlobalSidePanelNudge() {
     document.dispatchEvent(new CustomEvent('toggleSidePanel', { detail: { open: true } }));
   };
 
-  // Always show - don't hide when panel is open (user can close it from main panel)
-  // Actually - show if panel is closed. On pages without SidePanel, always show for navigation
-  // Note: We show it even when open is true on non-CommandDeck pages since they don't have SidePanel
+  // Show the nudge when panel is closed
+  if (isOpen) return null;
 
   return (
     <div

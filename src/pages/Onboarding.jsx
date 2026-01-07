@@ -222,16 +222,20 @@ export default function Onboarding() {
                 await base44.entities.Badge.create({ user_id: user.email, code: 'profile_complete', status: 'active' });
               }
               
-              // Award GGG tokens for completing onboarding (0.25 GGG welcome bonus)
+              // Award GGG tokens for completing onboarding (100 GGG welcome bonus)
               try {
                 await base44.functions.invoke('walletEngine', {
                   action: 'credit',
                   payload: {
                     user_id: user.email,
-                    amount: 0.25,
+                    amount: 100,
                     reason_code: 'onboarding_complete',
                     description: 'Welcome bonus for completing profile setup'
                   }
+                });
+                // Also update ggg_balance on profile directly for immediate display
+                await base44.entities.UserProfile.update(profileToUpdate.id, {
+                  ggg_balance: (profileToUpdate.ggg_balance || 0) + 100
                 });
               } catch (walletErr) {
                 console.error('GGG token award failed:', walletErr);
