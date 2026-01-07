@@ -57,8 +57,9 @@ export default function GlobalSidePanelNudge() {
     }
   };
 
-  // Always show the nudge handle - it's the entry point to the side panel
-  // Only hide if explicitly open on CommandDeck
+  // Hide handle when side panel is open on CommandDeck
+  const isCommandDeck = typeof document !== 'undefined' && document.querySelector('main[data-page="CommandDeck"]');
+  if (isOpen && isCommandDeck) return null;
 
   return (
     <div
