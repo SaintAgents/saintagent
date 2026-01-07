@@ -302,24 +302,36 @@ export default function Profiles() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#0a0a0a] dark:to-[#050505] p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6 relative z-10">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <BackButton />
-              <Users className="w-6 h-6 text-violet-500 dark:text-[#00ff88]" />
-              <span className="dark:text-white" style={{ opacity: 1, textShadow: '0 0 10px rgba(0, 255, 136, 0.5)' }}>Community Profiles</span>
-            </h1>
-            <p className="text-slate-500 mt-1 ml-9" style={{ color: 'inherit' }}>
-              <span className="dark:text-slate-300">Discover members by rank, expertise, and influence</span>
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#0a0a0a] dark:to-[#050505]">
+      {/* Hero Section */}
+      <div className="relative h-48 md:h-56 overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ac34fe2b1_AroomfilledwithpeoplevisualelementssuggestglobalreachethicalcoordinationandstrategicalignmentSoftlyglowinggridscircularinterfaceslayeredtransparencyandstructuredgeometrycreate4.jpg"
+          alt="Community Profiles"
+          className="w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
+        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+          <div className="flex items-center gap-3">
+            <BackButton className="text-white hover:bg-white/20" />
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-3">
+                <Users className="w-8 h-8 text-violet-300" />
+                Community Profiles
+              </h1>
+              <p className="text-violet-100 mt-1 text-sm md:text-base">
+                Discover members by rank, expertise, and influence
+              </p>
+            </div>
           </div>
-          <Badge variant="outline" className="text-sm px-3 py-1">
+          <Badge variant="outline" className="text-sm px-3 py-1 bg-white/10 border-white/30 text-white">
             {filteredProfiles.length} members
           </Badge>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto p-6">
 
         {/* Search & Sort Bar - Sticky */}
         <div className="sticky top-16 z-30 bg-white/80 dark:bg-[#050505]/80 backdrop-blur-xl rounded-xl border border-slate-200 dark:border-[rgba(0,255,136,0.2)] p-4 mb-4 shadow-sm">
