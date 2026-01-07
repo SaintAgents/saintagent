@@ -8,23 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Award, ChevronDown, Lock, Star, Shield, Zap, Heart, Target, Crown, Flame } from 'lucide-react';
+import { Award, ChevronDown, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { BADGE_INDEX, QUEST_BADGE_IMAGES } from '@/components/badges/badgesData';
 
-// Badge definitions with icons and colors
-const BADGE_DEFINITIONS = {
-  first_meeting: { name: 'First Meeting', icon: Heart, color: 'from-rose-500 to-pink-400', rarity: 'common' },
-  audit_expert: { name: 'Audit Expert', icon: Shield, color: 'from-blue-500 to-cyan-400', rarity: 'uncommon' },
-  seven_day_streak: { name: '7-Day Streak', icon: Flame, color: 'from-orange-500 to-amber-400', rarity: 'uncommon' },
-  top_mentor: { name: 'Top Mentor', icon: Star, color: 'from-violet-500 to-purple-400', rarity: 'rare' },
-  ascended_tier: { name: 'Ascended Tier', icon: Crown, color: 'from-amber-400 to-yellow-300', rarity: 'epic' },
-  social_butterfly: { name: 'Social Butterfly', icon: Heart, color: 'from-pink-500 to-rose-400', rarity: 'uncommon' },
-  mission_master: { name: 'Mission Master', icon: Target, color: 'from-emerald-500 to-green-400', rarity: 'rare' },
-  synchronicity_weaver: { name: 'Synchronicity Weaver', icon: Zap, color: 'from-violet-600 to-indigo-400', rarity: 'legendary' },
-  eternal_flame: { name: 'Eternal Flame', icon: Flame, color: 'from-amber-500 to-orange-400', rarity: 'common' },
-  trust_anchor: { name: 'Trust Anchor', icon: Shield, color: 'from-teal-500 to-cyan-400', rarity: 'rare' },
-};
-
+// Rarity glow effects
 const RARITY_GLOW = {
   common: 'shadow-slate-400/30',
   uncommon: 'shadow-emerald-400/40',
@@ -32,6 +20,29 @@ const RARITY_GLOW = {
   epic: 'shadow-violet-400/60',
   legendary: 'shadow-amber-400/70',
 };
+
+// Rarity color gradients for fallback
+const RARITY_COLORS = {
+  common: 'from-slate-500 to-slate-400',
+  uncommon: 'from-emerald-500 to-green-400',
+  rare: 'from-blue-500 to-cyan-400',
+  epic: 'from-violet-500 to-purple-400',
+  legendary: 'from-amber-400 to-yellow-300',
+};
+
+// All quest badges we want to display
+const QUEST_BADGE_KEYS = [
+  'first_meeting',
+  'audit_expert',
+  'streak_7',
+  'top_mentor',
+  'ascended_tier',
+  'social_butterfly',
+  'mission_master',
+  'trust_anchor',
+  'synchronicity_weaver',
+  'eternal_flame',
+];
 
 function BadgeIcon({ badge, size = 'md', locked = false }) {
   const def = BADGE_DEFINITIONS[badge?.badge_code] || BADGE_DEFINITIONS[badge?.code] || {
