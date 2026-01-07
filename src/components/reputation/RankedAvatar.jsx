@@ -23,15 +23,15 @@ const RANK_TITLES = {
 
 function getRingConfig(rankCode = 'seeker') {
   const map = {
-    seeker: { grad: ['#6b7280', '#b45309'], pad: 2 }, // graphite → soft bronze
-    initiate: { grad: ['#64748b', '#60a5fa'], pad: 2.5 }, // steel blue
-    adept: { grad: ['#60a5fa', '#cbd5e1'], pad: 3 }, // blue-silver
-    practitioner: { grad: ['#10b981', '#e5e7eb'], pad: 3.5 }, // emerald-platinum
-    master: { grad: ['#f59e0b', '#fafaf9'], pad: 4 }, // deep gold-ivory
-    sage: { grad: ['#7c3aed', '#f59e0b'], pad: 4.5 }, // violet-antique gold
-    oracle: { grad: ['#4338ca', '#fde68a'], pad: 5 }, // indigo-gold accent
-    ascended: { grad: ['#fafaf9', '#fde68a'], pad: 5.5 }, // white-gold
-    guardian: { grad: ['#111827', '#d1d5db'], pad: 6 }, // obsidian-platinum
+    seeker: { grad: ['#6b7280', '#9ca3af'], pad: 2 }, // slate gray
+    initiate: { grad: ['#60a5fa', '#93c5fd'], pad: 2.5 }, // blue
+    adept: { grad: ['#34d399', '#6ee7b7'], pad: 3 }, // green-emerald
+    practitioner: { grad: ['#10b981', '#34d399'], pad: 3.5 }, // emerald-teal
+    master: { grad: ['#f59e0b', '#fbbf24'], pad: 4 }, // amber-gold
+    sage: { grad: ['#8b5cf6', '#a78bfa'], pad: 4.5 }, // violet-purple
+    oracle: { grad: ['#6366f1', '#818cf8'], pad: 5 }, // indigo-purple
+    ascended: { grad: ['#fde68a', '#fef3c7'], pad: 5.5 }, // gold-ivory
+    guardian: { grad: ['#f59e0b', '#fcd34d'], pad: 6 }, // amber-yellow (matches Guardian badge)
   };
   return map[rankCode] || map.seeker;
 }
@@ -132,7 +132,7 @@ export default function RankedAvatar({
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
             <img 
-                  src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png'} 
+                  src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/4c20175bc_men.jpg'} 
                   alt={name || 'Avatar'} 
                   className="w-full h-full object-cover"
                   style={{ filter: 'none' }}
