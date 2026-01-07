@@ -38,6 +38,7 @@ import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import StreakTracker from '@/components/gamification/StreakTracker';
 import BackButton from '@/components/hud/BackButton';
+import AvailableQuestsPanel from '@/components/quests/AvailableQuestsPanel';
 
 const ACHIEVEMENT_BADGES = [
   { code: 'first_meeting', title: 'First Meeting', description: 'Complete your first meeting', icon: Calendar, points: 50 },
@@ -87,6 +88,14 @@ export default function Gamification() {
     queryFn: () => base44.entities.Meeting.filter({ guest_id: profile.user_id, status: 'completed' }),
     enabled: !!profile?.user_id
   });
+
+  const { data: quests = [] } = useQuery({
+    queryKey: ['userQuests', profile?.user_id],
+    queryFn: () => base44.entities.Quest.filter({ user_id: profile.user_id }, '-created_date', 50),
+    enabled: !!profile?.user_id
+  });
+
+  const activeQuests = quests.filter(q => q.status === 'active');
 
   const activeChallenges = challenges.filter(c => c.status === 'active');
   const dailyChallenges = activeChallenges.filter(c => c.challenge_type === 'daily');
@@ -249,10 +258,17 @@ export default function Gamification() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-4 mb-6">
+          <TabsList className="w-full grid grid-cols-5 mb-6">
             <TabsTrigger value="overview" className="gap-2">
               <Zap className="w-4 h-4" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="quests" className="gap-2">
+              <Sparkles className="w-4 h-4" />
+              Quests
+              {activeQuests.length > 0 && (
+                <Badge className="ml-1 bg-violet-600 text-white h-5 px-1.5 text-xs">{activeQuests.length}</Badge>
+              )}
             </TabsTrigger>
             <TabsTrigger value="challenges" className="gap-2">
               <Target className="w-4 h-4" />
@@ -366,6 +382,11 @@ export default function Gamification() {
                 <Leaderboard compact />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Quests Tab */}
+          <TabsContent value="quests" className="space-y-6">
+            <AvailableQuestsPanel profile={profile} activeQuests={activeQuests} />
           </TabsContent>
 
           {/* Challenges Tab */}
