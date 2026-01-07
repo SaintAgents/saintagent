@@ -510,7 +510,7 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
-              <div className="relative shrink-0" data-user-id={profile?.user_id}>
+              <div className="relative shrink-0 flex flex-col items-center gap-3" data-user-id={profile?.user_id}>
                 <RankedAvatar
                   src={profile?.avatar_url}
                   name={profile?.display_name}
@@ -520,7 +520,12 @@ export default function CommandDeck() {
                   rpPoints={rpPoints}
                   userId={profile?.user_id}
                   status={profile?.status || 'offline'} />
-
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
+                  alt="Command Deck"
+                  className="w-24 h-24 object-contain drop-shadow-lg"
+                  data-no-filter="true"
+                />
               </div>
 
               <div className="flex-1">
@@ -675,16 +680,6 @@ export default function CommandDeck() {
                     </button>
                   </div>
                   <BadgesBar badges={badges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
-                </div>
-
-                {/* Deck Logo */}
-                <div className="mb-4">
-                  <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
-                    alt="Command Deck"
-                    className="w-28 h-28 object-contain drop-shadow-lg"
-                    data-no-filter="true"
-                  />
                 </div>
 
                 {/* Mystical Profile */}
