@@ -195,18 +195,15 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
             "rounded-l-full shadow-lg hover:shadow-xl hover:w-10",
             "bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700",
             "flex items-center justify-center",
-            "dark:bg-[#0a0a0a] dark:from-[#0a0a0a] dark:to-[#050505]",
-            "dark:border-l dark:border-t dark:border-b dark:border-[rgba(0,255,136,0.5)]",
-            "dark:shadow-[0_0_12px_rgba(0,255,136,0.3)]",
-            "dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.5)]"
+            "hacker-help-btn"
           )}
           style={{ top: 'calc(50% + 4rem)' }}
           title="Help & Support"
         >
           <HelpCircle className={cn(
             "w-5 h-5 text-white transition-all",
-            "dark:text-[#00ff88] dark:drop-shadow-[0_0_8px_rgba(0,255,136,0.8)]",
-            "group-hover:scale-110"
+            "group-hover:scale-110",
+            "hacker-help-icon"
           )} />
         </button>
       )}
