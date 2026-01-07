@@ -9,6 +9,7 @@ import { Trophy, Target, Star, Gift, ChevronRight, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChallengeCard from './ChallengeCard';
 import Leaderboard from './Leaderboard';
+import MotivationalCard from './MotivationalCard';
 import {
   Dialog,
   DialogContent,
@@ -131,6 +132,9 @@ export default function GamificationWidget({ profile, compact = false }) {
 
       {/* Mini Leaderboard */}
       <Leaderboard compact />
+
+      {/* Daily Flame Directive */}
+      <MotivationalCard className="mt-4" />
 
       <Dialog open={hubOpen} onOpenChange={setHubOpen}>
         <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
