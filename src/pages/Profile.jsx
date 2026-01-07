@@ -358,7 +358,11 @@ export default function Profile() {
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
           <div className="relative h-48 bg-gradient-to-r from-violet-500 to-purple-600 group">
-                          {/* SA Shield Badge */}
+                          {/* Rank Badge - Top Left */}
+                          <div className="absolute top-2 left-4 z-10">
+                            <RankBadge code={profile?.rp_rank_code || 'seeker'} size={112} className="drop-shadow-lg" />
+                          </div>
+                          {/* SA Shield Badge - Top Right */}
                           <img 
                             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
                             alt="Saint Agent"
