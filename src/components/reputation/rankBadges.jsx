@@ -1,14 +1,14 @@
-// Rank badge image URLs - centralized for reuse across components (transparent PNGs)
+// Rank badge image URLs - centralized for reuse across components (black & white transparent PNGs)
 export const RANK_BADGE_IMAGES = {
-  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/65d0338f8_seeker_inPixio.png',
-  initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/649c5d173_intiate.png',
-  adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fac9c0a99_adept.png',
-  practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/192e1da75_practioner.png',
-  master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/14c3808be_master.png',
-  sage: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/86aed6de0_sage.png',
-  oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e671b30c3_oracle.png',
-  ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c216c4ac_ascended_inPixio.png',
-  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7cb4f6659_guardian.png',
+  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/141552c0f_Screenshot2026-01-07044314-Picsart-BackgroundRemover.png',
+  initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/827a58594_intiate-Picsart-BackgroundRemover.png',
+  adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7625a41f0_adept-Picsart-BackgroundRemover.png',
+  practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/48ccb9301_practioner-Picsart-BackgroundRemover.png',
+  master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/55437ee3d_master-Picsart-BackgroundRemover.png',
+  sage: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0f68882e2_sage-Picsart-BackgroundRemover.png',
+  oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d3f6ba23f_oracle-Picsart-BackgroundRemover.png',
+  ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c3caf20f6_Screenshot2026-01-07044338-Picsart-BackgroundRemover.png',
+  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f37bf041e_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png',
 };
 
 // Rank Badge component
