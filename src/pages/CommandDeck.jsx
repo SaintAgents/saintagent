@@ -971,7 +971,7 @@ export default function CommandDeck() {
                   </div>
                 </button>
                 <button type="button" onClick={() => {setColCOrder(['market', 'influence', 'leader', 'dailyops']);setCardsForceOpen(null);try {localStorage.removeItem('cmdColCOrder');} catch {}}} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-white/15 border border-slate-200 dark:border-slate-700 hover:bg-white hover:dark:bg-white/25 hover:border-violet-300 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/32e9b4c68_reset_inPixio.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/356f3698e_reset-Picsart-BackgroundRemover.png" alt="Reset" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Reset</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Restore defaults</div>
