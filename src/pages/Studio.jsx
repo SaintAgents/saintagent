@@ -263,3 +263,5 @@ export default function Studio() {
     </div>
   );
 }
+
+// Note: Hero image preserves across themes via data-no-filter attribute
