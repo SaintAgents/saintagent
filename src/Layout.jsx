@@ -1285,6 +1285,98 @@ function NebulaCanvas() {
   );
 }
 
+// Matrix Rain Canvas - authentic green falling characters
+function MatrixRainCanvas() {
+  const canvasRef = React.useRef(null);
+  const animationRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Matrix characters (katakana + numbers + symbols)
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
+    const charArray = chars.split('');
+    
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    
+    // Array to track y position of each column
+    const drops = Array(columns).fill(1);
+    
+    // Varying speeds for each column
+    const speeds = Array(columns).fill(0).map(() => Math.random() * 0.5 + 0.5);
+    
+    const draw = () => {
+      // Semi-transparent black to create fade trail effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        // Random character
+        const char = charArray[Math.floor(Math.random() * charArray.length)];
+        
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        // Bright green for the leading character
+        ctx.fillStyle = '#00ff00';
+        ctx.shadowColor = '#00ff00';
+        ctx.shadowBlur = 10;
+        ctx.fillText(char, x, y);
+        
+        // Dimmer trail characters
+        ctx.shadowBlur = 0;
+        const trailLength = 15;
+        for (let j = 1; j < trailLength; j++) {
+          const trailY = y - (j * fontSize);
+          if (trailY > 0) {
+            const opacity = 1 - (j / trailLength);
+            ctx.fillStyle = `rgba(0, 255, 0, ${opacity * 0.5})`;
+            const trailChar = charArray[Math.floor(Math.random() * charArray.length)];
+            ctx.fillText(trailChar, x, trailY);
+          }
+        }
+        
+        // Reset drop to top when it reaches bottom (with randomness)
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i] += speeds[i];
+      }
+      
+      animationRef.current = requestAnimationFrame(draw);
+    };
+    
+    draw();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0"
+      style={{ opacity: 0.8 }}
+    />
+  );
+}
+
 // Circuit board effect
 function CircuitCanvas() {
   const canvasRef = React.useRef(null);
