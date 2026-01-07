@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Coins, TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
-// Default gold price (approximate current value)
+// Default gold price (fallback)
 const DEFAULT_GOLD = {
   price_per_ounce: 2650,
   price_per_gram: 85.20,
@@ -13,14 +13,19 @@ const DEFAULT_GOLD = {
 };
 
 export default function GoldPriceTicker({ className }) {
-  // Use static default for now - can be enhanced with real API later
-  const goldData = DEFAULT_GOLD;
-  const isLoading = false;
+  // Fetch gold price from PlatformSetting (set by scheduled task)
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ['goldPriceSetting'],
+    queryFn: () => base44.entities.PlatformSetting.filter({ key: 'gold_price_per_gram' }),
+    staleTime: 300000, // 5 min cache
+    refetchInterval: 300000
+  });
 
-  const pricePerGram = goldData?.price_per_gram || 85.20;
-  const pricePerOunce = goldData?.price_per_ounce || 2650;
-  const changePercent = goldData?.change_percent || 0;
-  const direction = goldData?.direction || 'flat';
+  const storedPrice = settings?.[0]?.value ? JSON.parse(settings[0].value) : null;
+  const pricePerGram = storedPrice?.price || DEFAULT_GOLD.price_per_gram;
+  const pricePerOunce = pricePerGram * 31.1035; // grams per troy ounce
+  const changePercent = DEFAULT_GOLD.change_percent;
+  const direction = DEFAULT_GOLD.direction;
 
   return (
     <div className={cn(
