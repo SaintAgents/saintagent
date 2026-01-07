@@ -97,7 +97,7 @@ export default function MiniProfile({
           {/* Mini Hero Banner - smaller */}
           <div 
             className="w-full rounded-t-lg overflow-hidden bg-gradient-to-r from-violet-500 to-purple-600"
-            style={{ height: heroHeight }}
+            style={{ height: `${heroHeight}px` }}
           >
             <img 
               src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e7cf97dec_universal_upscale_0_b59b75fe-3454-4d9a-b730-37fb127823f2_0.jpg'} 
