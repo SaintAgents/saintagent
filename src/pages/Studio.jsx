@@ -49,8 +49,19 @@ export default function Studio() {
   const conversionRate = totalViews > 0 ? ((totalBookings / totalViews) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
+      {/* Hero Image */}
+      <div className="relative h-72 md:h-96 w-full overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6dd5f74cd_3c612731-f612-4049-a0fa-c37c6a682477.jpg"
+          alt="Creator Studio Hero"
+          className="w-full h-full object-cover object-center"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent" />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <BarChart3 className="w-6 h-6 text-violet-500" />
