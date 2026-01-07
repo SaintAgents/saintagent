@@ -235,7 +235,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
     } else if (action === 'clearAll') {
       const all = notifications || [];
-      await Promise.all(all.map(n => base44.entities.Notification.delete(n.id)));
+      if (all.length === 0) return;
+      try {
+        await Promise.all(all.map(n => base44.entities.Notification.delete(n.id)));
+      } catch (e) {
+        console.error('Failed to clear notifications:', e);
+      }
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
     } else if (action === 'click' && notif?.action_url) {
       window.location.href = notif.action_url;
