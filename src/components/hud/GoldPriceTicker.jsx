@@ -4,40 +4,18 @@ import { base44 } from '@/api/base44Client';
 import { Coins, TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
+// Default gold price (approximate current value)
+const DEFAULT_GOLD = {
+  price_per_ounce: 2650,
+  price_per_gram: 85.20,
+  change_percent: 0.12,
+  direction: 'up'
+};
+
 export default function GoldPriceTicker({ className }) {
-  // Fetch gold price from LLM with internet context
-  const { data: goldData, isLoading } = useQuery({
-    queryKey: ['goldPrice'],
-    queryFn: async () => {
-      try {
-        const result = await base44.integrations.Core.InvokeLLM({
-          prompt: "What is the current spot price of gold per troy ounce in USD? Also provide the price per gram. Return only the data.",
-          add_context_from_internet: true,
-          response_json_schema: {
-            type: "object",
-            properties: {
-              price_per_ounce: { type: "number", description: "Gold price per troy ounce in USD" },
-              price_per_gram: { type: "number", description: "Gold price per gram in USD" },
-              change_percent: { type: "number", description: "Daily change percentage" },
-              direction: { type: "string", enum: ["up", "down", "flat"] }
-            }
-          }
-        });
-        return result;
-      } catch (e) {
-        console.error('Gold price fetch failed:', e);
-        // Fallback to approximate values
-        return {
-          price_per_ounce: 2650,
-          price_per_gram: 85.20,
-          change_percent: 0,
-          direction: 'flat'
-        };
-      }
-    },
-    staleTime: 5 * 60 * 1000, // Refresh every 5 minutes
-    refetchInterval: 5 * 60 * 1000,
-  });
+  // Use static default for now - can be enhanced with real API later
+  const goldData = DEFAULT_GOLD;
+  const isLoading = false;
 
   const pricePerGram = goldData?.price_per_gram || 85.20;
   const pricePerOunce = goldData?.price_per_ounce || 2650;
