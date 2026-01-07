@@ -94,64 +94,65 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
             </ScrollArea>
           </TabsContent>
 
-          {/* Calculator */}
-          <div className="p-4 rounded-xl border bg-white/50">
-            <div className="flex items-center gap-2 mb-3">
-              <Calculator className="w-4 h-4 text-slate-500" />
-              <div className="font-semibold text-slate-900">Payout Calculator</div>
+          {/* Calculator Tab */}
+          <TabsContent value="calculator">
+            <div className="p-4 rounded-xl border bg-white/50">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs text-slate-500">Action</label>
+                  <Select value={actionKey} onValueChange={setActionKey}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ACTIONS.map(a => (
+                        <SelectItem key={a.key} value={a.key}>{a.title} ({formatGGG(a.base)} GGG)</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="mt-2 text-xs text-slate-500 min-h-10">
+                    {ACTIONS.find(a => a.key === actionKey)?.definition}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox checked={lifts.verified} onCheckedChange={(v) => setLifts({ ...lifts, verified: !!v })} />
+                    Verified
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox checked={lifts.securityTrained} onCheckedChange={(v) => setLifts({ ...lifts, securityTrained: !!v })} />
+                    Security Trained
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox checked={lifts.impactAdopted} onCheckedChange={(v) => setLifts({ ...lifts, impactAdopted: !!v })} />
+                    Impact Adopted
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox checked={lifts.leadership} onCheckedChange={(v) => setLifts({ ...lifts, leadership: !!v })} />
+                    Leadership
+                  </label>
+                </div>
+
+                <div className="mt-2 p-3 rounded-lg bg-gradient-to-r from-violet-50 to-amber-50 border text-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-slate-600">Base Tier</span>
+                    <span className="font-mono font-medium">{formatGGG(payout.base)} GGG ≈ ${formatUSD(payout.base * GGG_TO_USD)}</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                    <span className="text-slate-700 font-semibold">Final Payout</span>
+                    <span className="font-mono font-bold text-violet-700">{formatGGG(payout.tier)} GGG ≈ ${formatUSD(payout.usd)}</span>
+                  </div>
+                </div>
+
+                <div className="text-xs text-slate-500">Lifts apply as gates and upgrades; max payout = 1.0000000 GGG ($145.00).</div>
+              </div>
             </div>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-slate-500">Action</label>
-                <Select value={actionKey} onValueChange={setActionKey}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ACTIONS.map(a => (
-                      <SelectItem key={a.key} value={a.key}>{a.title} ({formatGGG(a.base)} GGG)</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="mt-2 text-xs text-slate-500 min-h-10">
-                  {ACTIONS.find(a => a.key === actionKey)?.definition}
-                </div>
-              </div>
+          </TabsContent>
+        </Tabs>
 
-              <div className="grid grid-cols-2 gap-3">
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox checked={lifts.verified} onCheckedChange={(v) => setLifts({ ...lifts, verified: !!v })} />
-                  Verified
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox checked={lifts.securityTrained} onCheckedChange={(v) => setLifts({ ...lifts, securityTrained: !!v })} />
-                  Security Trained
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox checked={lifts.impactAdopted} onCheckedChange={(v) => setLifts({ ...lifts, impactAdopted: !!v })} />
-                  Impact Adopted
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox checked={lifts.leadership} onCheckedChange={(v) => setLifts({ ...lifts, leadership: !!v })} />
-                  Leadership
-                </label>
-              </div>
-
-              <div className="mt-2 p-3 rounded-lg bg-gradient-to-r from-violet-50 to-amber-50 border text-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-slate-600">Base Tier</span>
-                  <span className="font-mono font-medium">{formatGGG(payout.base)} GGG ≈ ${formatUSD(payout.base * GGG_TO_USD)}</span>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200">
-                  <span className="text-slate-700 font-semibold">Final Payout</span>
-                  <span className="font-mono font-bold text-violet-700">{formatGGG(payout.tier)} GGG ≈ ${formatUSD(payout.usd)}</span>
-                </div>
-              </div>
-
-              <div className="text-xs text-slate-500">Lifts apply as gates and upgrades; max payout = 1.0000000 GGG ($145.00).</div>
-              <Button onClick={() => onOpenChange?.(false)} className="w-full rounded-xl">Close</Button>
-            </div>
-          </div>
+        <div className="px-6 pb-4">
+          <Button onClick={() => onOpenChange?.(false)} className="w-full rounded-xl">Close</Button>
         </div>
       </DialogContent>
     </Dialog>
