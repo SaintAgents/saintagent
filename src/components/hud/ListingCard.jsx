@@ -49,23 +49,22 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
       className="bg-white rounded-xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
       onClick={() => window.location.href = createPageUrl('ListingDetail') + '?id=' + listing.id}
     >
-      {listing.image_url && (
-        <div className="relative h-36">
-          <img 
-            src={listing.image_url} 
-            alt={listing.title}
-            className="w-full h-full object-cover"
-          />
-          <Badge className={cn("absolute top-3 left-3", categoryColors[listing.category])}>
-            {listing.category}
+      <div className="relative h-36">
+        <img 
+          src={listing.image_url || getCategoryImage(listing.category)} 
+          alt={listing.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <Badge className={cn("absolute top-3 left-3", categoryColors[listing.category])}>
+          {listing.category}
+        </Badge>
+        {listing.is_free && (
+          <Badge className="absolute top-3 right-3 bg-emerald-500 text-white">
+            Free
           </Badge>
-          {listing.is_free && (
-            <Badge className="absolute top-3 right-3 bg-emerald-500 text-white">
-              Free
-            </Badge>
-          )}
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="p-4">
         {!listing.image_url && (
