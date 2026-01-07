@@ -53,19 +53,14 @@ const SAINT_GERMAIN_MESSAGES = [
 ];
 
 export default function MotivationalCard({ className = "" }) {
-  const [currentIndex, setCurrentIndex] = useState(() => 
-    Math.floor(Math.random() * SAINT_GERMAIN_MESSAGES.length)
-  );
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [likeAnimation, setLikeAnimation] = useState(false);
   const queryClient = useQueryClient();
-
-  // Auto-rotate daily based on date
-  useEffect(() => {
+  const [currentIndex, setCurrentIndex] = useState(() => {
     const today = new Date();
     const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-    setCurrentIndex(dayOfYear % SAINT_GERMAIN_MESSAGES.length);
-  }, []);
+    return dayOfYear % SAINT_GERMAIN_MESSAGES.length;
+  });
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [likeAnimation, setLikeAnimation] = useState(false);
 
   // Fetch current user
   const { data: currentUser } = useQuery({
@@ -76,8 +71,7 @@ export default function MotivationalCard({ className = "" }) {
   // Fetch likes for this message
   const { data: likes = [] } = useQuery({
     queryKey: ['messageLikes', currentIndex],
-    queryFn: () => base44.entities.PostLike.filter({ post_id: `flame_message_${currentIndex}` }),
-    enabled: currentIndex !== undefined
+    queryFn: () => base44.entities.PostLike.filter({ post_id: `flame_message_${currentIndex}` })
   });
 
   const likeCount = likes.length;
