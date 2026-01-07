@@ -132,16 +132,14 @@ export default function Matches() {
               <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
                 <Sparkles className="w-6 h-6 text-emerald-500" />
                 Synchronicity Engine
-                {isDatingOptedIn && (
-                  <a
-                    href={createPageUrl('DatingMatches')}
-                    className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg animate-pulse cursor-pointer"
-                    style={{ boxShadow: '0 0 12px rgba(236, 72, 153, 0.6)' }}
-                    title="View Dating Matches"
-                  >
-                    <Heart className="w-4 h-4 text-white fill-white" />
-                  </a>
-                )}
+                <a
+                  href={createPageUrl('DatingMatches')}
+                  className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg animate-pulse cursor-pointer"
+                  style={{ boxShadow: '0 0 12px rgba(236, 72, 153, 0.6)' }}
+                  title="View Dating Matches"
+                >
+                  <Heart className="w-4 h-4 text-white fill-white" />
+                </a>
                 <HelpHint content="The Synchronicity Engine uses your profile data to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment into a 0-100 score." />
               </h1>
               <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
