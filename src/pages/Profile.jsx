@@ -449,7 +449,7 @@ export default function Profile() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-blue-950">@{profile?.handle} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
+                <p className="text-blue-950">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
                 {/* Social Links */}
                 <SocialLinksDisplay socialLinks={profile?.social_links} className="mt-2" />
                 </div>
