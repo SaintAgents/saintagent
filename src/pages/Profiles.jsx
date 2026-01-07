@@ -305,15 +305,15 @@ export default function Profiles() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#0a0a0a] dark:to-[#050505] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 relative z-10">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <BackButton />
-              <Users className="w-6 h-6 text-violet-500" />
-              Community Profiles
+              <Users className="w-6 h-6 text-violet-500 dark:text-[#00ff88]" />
+              <span className="dark:text-white" style={{ opacity: 1, textShadow: '0 0 10px rgba(0, 255, 136, 0.5)' }}>Community Profiles</span>
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">
-              Discover members by rank, expertise, and influence
+            <p className="text-slate-500 mt-1 ml-9" style={{ color: 'inherit' }}>
+              <span className="dark:text-slate-300">Discover members by rank, expertise, and influence</span>
             </p>
           </div>
           <Badge variant="outline" className="text-sm px-3 py-1">

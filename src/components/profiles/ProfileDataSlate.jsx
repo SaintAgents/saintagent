@@ -103,16 +103,17 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
         {/* Top Row: Avatar + Name + Rank */}
         <div className="flex items-start gap-3 mb-3">
           {/* Avatar with rank ring and online indicator */}
-          <div className={cn("relative", rankConfig.glow)}>
+          <div className={cn("relative", rankConfig.glow, "dark:shadow-[0_0_15px_rgba(0,255,136,0.4)]")}>
             <div className={cn(
               "absolute inset-0 rounded-full bg-gradient-to-br p-0.5",
-              rankConfig.color
+              rankConfig.color,
+              "dark:from-[#00ff88] dark:to-[#00d4ff]"
             )}>
-              <div className="w-full h-full rounded-full bg-white dark:bg-[#0a0a0a]" />
+              <div className="w-full h-full rounded-full bg-white dark:bg-[#050505]" />
             </div>
             <Avatar className="w-14 h-14 relative border-2 border-transparent">
-              <AvatarImage src={profile.avatar_url} />
-              <AvatarFallback className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900 dark:to-purple-900 text-violet-700 dark:text-violet-300 font-semibold">
+              <AvatarImage src={profile.avatar_url} className="dark:brightness-100 dark:contrast-100" style={{ filter: 'none' }} />
+              <AvatarFallback className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-[#00ff88]/20 dark:to-[#00d4ff]/20 text-violet-700 dark:text-[#00ff88] font-semibold">
                 {profile.display_name?.charAt(0) || '?'}
               </AvatarFallback>
             </Avatar>
@@ -135,52 +136,59 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
 
           {/* Name and handle */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-slate-900 dark:text-white truncate group-hover:text-violet-600 dark:group-hover:text-[#00ff88] transition-colors">
-              {profile.display_name || 'Anonymous'}
+            <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors" style={{ color: 'var(--profile-name-color, #0f172a)' }}>
+              <span className="dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.6)] dark:group-hover:text-[#00ff88]">
+                {profile.display_name || 'Anonymous'}
+              </span>
             </h3>
             {profile.handle && (
-              <p className="text-sm text-slate-500 dark:text-slate-400 truncate">@{profile.handle}</p>
+              <p className="text-sm text-slate-500 truncate">
+                <span className="dark:text-[#00ff88]/80">@{profile.handle}</span>
+              </p>
             )}
             <Badge 
               variant="outline" 
               className={cn(
-                "mt-1 text-[10px] px-1.5 py-0 border-0",
-                `bg-gradient-to-r ${rankConfig.color} bg-clip-text text-transparent font-semibold`
+                "mt-1 text-[10px] px-1.5 py-0 border-0 font-semibold",
+                "dark:text-[#00ff88] dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]"
               )}
+              style={{ background: `linear-gradient(to right, var(--tw-gradient-stops))` }}
             >
-              {rankConfig.label}
+              <span className={cn(`bg-gradient-to-r ${rankConfig.color} bg-clip-text text-transparent`, "dark:bg-none dark:text-[#00ff88]")}>
+                {rankConfig.label}
+              </span>
             </Badge>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 mb-3">
-          <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center justify-center gap-1 text-amber-500 mb-0.5">
+          <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
+            <div className="flex items-center justify-center gap-1 text-amber-500 dark:text-[#00ff88] mb-0.5">
               <Coins className="w-3 h-3" />
             </div>
-            <p className="text-xs font-semibold text-slate-900 dark:text-white">
+            <p className="text-xs font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
               {(profile.ggg_balance || 0).toLocaleString()}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">GGG</p>
+            <p className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">GGG</p>
           </div>
-          <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center justify-center gap-1 text-violet-500 mb-0.5">
+          <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
+            <div className="flex items-center justify-center gap-1 text-violet-500 dark:text-[#00ff88] mb-0.5">
               <TrendingUp className="w-3 h-3" />
             </div>
-            <p className="text-xs font-semibold text-slate-900 dark:text-white">
+            <p className="text-xs font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
               {profile.influence_score || 0}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">Influence</p>
+            <p className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">Influence</p>
           </div>
-          <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center justify-center gap-1 text-emerald-500 mb-0.5">
+          <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
+            <div className="flex items-center justify-center gap-1 text-emerald-500 dark:text-[#00ff88] mb-0.5">
               <Star className="w-3 h-3" />
             </div>
-            <p className="text-xs font-semibold text-slate-900 dark:text-white">
+            <p className="text-xs font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
               {profile.expertise_score || 0}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">Expertise</p>
+            <p className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">Expertise</p>
           </div>
         </div>
 
