@@ -74,6 +74,7 @@ import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
+  { id: 'forum', label: 'Community Forum', icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
   { id: 'quests', label: 'Quests', icon: Target, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
   { id: 'synchronicity', label: 'Synchronicity Engine', icon: Sparkles, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
   { id: 'gamification', label: 'Gamification', icon: Trophy, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
