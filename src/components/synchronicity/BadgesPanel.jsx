@@ -82,9 +82,9 @@ export default function BadgesPanel({ badges = [] }) {
   const [viewAllOpen, setViewAllOpen] = useState(false);
   
   const earnedBadgeCodes = badges.map(b => b.badge_code || b.code);
-  const allBadgeKeys = Object.keys(BADGE_DEFINITIONS);
+  const allBadgeKeys = QUEST_BADGE_KEYS;
   const displayBadges = badges.slice(0, 5);
-  const totalEarned = badges.length;
+  const totalEarned = earnedBadgeCodes.filter(c => allBadgeKeys.includes(c)).length;
   const totalPossible = allBadgeKeys.length;
 
   return (
