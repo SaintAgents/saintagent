@@ -6,6 +6,19 @@ import { base44 } from '@/api/base44Client';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+// Rank badge image URLs
+const RANK_BADGE_IMAGES = {
+  seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/331f33ed1_seeker.png',
+  initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/649c5d173_intiate.png',
+  adept: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fac9c0a99_adept.png',
+  practitioner: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/192e1da75_practioner.png',
+  master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/14c3808be_master.png',
+  sage: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/86aed6de0_sage.png',
+  oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e671b30c3_oracle.png',
+  ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/9b2234640_ascended.png',
+  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7cb4f6659_guardian.png',
+};
+
 function getRingConfig(rankCode = 'seeker') {
   const map = {
     seeker: { grad: ['#6b7280', '#b45309'], pad: 2 }, // graphite → soft bronze
@@ -21,77 +34,18 @@ function getRingConfig(rankCode = 'seeker') {
   return map[rankCode] || map.seeker;
 }
 
-function RankSymbol({ code = 'seeker', size = 12, color = '#ffffff' }) {
-  const s = Math.max(10, size);
-  const cx = 8, cy = 8;
-  switch (code) {
-    case 'seeker':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx={cx} cy={cy} r="3" fill={color} />
-        </svg>
-      );
-    case 'initiate':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 8h12a6 6 0 0 0-12 0Z" fill={color} />
-        </svg>
-      );
-    case 'adept':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="8,2 14,14 2,14" fill={color} />
-        </svg>
-      );
-    case 'practitioner':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="8,2 14,8 8,14 2,8" fill={color} />
-        </svg>
-      );
-    case 'master':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="8,2 13.5,5 13.5,11 8,14 2.5,11 2.5,5" fill={color} />
-        </svg>
-      );
-    case 'sage':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g stroke={color} strokeWidth="1.6" strokeLinecap="round">
-            <line x1="8" y1="2.5" x2="8" y2="13.5" />
-            <line x1="3.2" y1="6" x2="12.8" y2="10" />
-            <line x1="12.8" y1="6" x2="3.2" y2="10" />
-          </g>
-        </svg>
-      );
-    case 'oracle':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx={cx} cy={cy} r="5.5" stroke={color} strokeWidth="1.6" />
-          <circle cx={cx} cy={cy} r="2.2" fill={color} />
-        </svg>
-      );
-    case 'ascended':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx={cx} cy={cy} r="5.5" stroke={color} strokeWidth="1.2" />
-          <circle cx={cx} cy={cy} r="2.2" fill={color} />
-        </svg>
-      );
-    case 'guardian':
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 2c2 .9 4 1.4 6 2v4c0 3-3 5.5-6 6-3-.5-6-3-6-6V4c2-.6 4-1.1 6-2Z" fill={color} />
-        </svg>
-      );
-    default:
-      return (
-        <svg width={s} height={s} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx={cx} cy={cy} r="3" fill={color} />
-        </svg>
-      );
-  }
+// Rank Badge component using images
+function RankBadge({ code = 'seeker', size = 24 }) {
+  const imgUrl = RANK_BADGE_IMAGES[code] || RANK_BADGE_IMAGES.seeker;
+  return (
+    <img 
+      src={imgUrl} 
+      alt={code} 
+      className="object-contain"
+      style={{ width: size, height: size }}
+      data-no-filter="true"
+    />
+  );
 }
 
 export default function RankedAvatar({
@@ -186,14 +140,14 @@ export default function RankedAvatar({
         </div>
       </div>
 
-      {/* Rank symbol top-left */}
+      {/* Rank badge top-left - doubled size */}
       <div 
-        className="absolute -top-1 -left-1 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center shadow cursor-help z-20 hover:scale-110 transition-transform" 
-        style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(255,255,255,0.6)' }}
+        className="absolute -top-2 -left-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+        style={{ width: symbolPx * 2, height: symbolPx * 2 }}
         onClick={(e) => e.stopPropagation()}
         title={`${rpInfo?.title || rpRankCodeFinal} • ${rpPointsFinal || 0} RP${rpInfo?.nextTitle ? ` • ${rpInfo.nextMin - (rpPointsFinal || 0)} to ${rpInfo.nextTitle}` : ''}`}
       >
-        <RankSymbol code={rpRankCodeFinal} size={rankIconSize} color="#ffffff" />
+        <RankBadge code={rpRankCodeFinal} size={symbolPx * 2} />
       </div>
 
       {/* Status dot (bottom-left) with tooltip */}
