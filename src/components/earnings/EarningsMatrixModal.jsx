@@ -5,8 +5,12 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Coins, Calculator } from 'lucide-react';
-import { ACTIONS, MATRIX_SECTIONS, TIERS, GGG_TO_USD, calculatePayout } from '@/components/earnings/gggMatrix';
+import { Coins, Calculator, Info } from 'lucide-react';
+import { ACTIONS, MATRIX_SECTIONS, TIERS, GGG_TO_USD, INTERACTION_BONUS_GGG, calculatePayout } from '@/components/earnings/gggMatrix';
+
+// Helper to format GGG with proper decimals
+const formatGGG = (val) => val.toFixed(7);
+const formatUSD = (val) => val.toFixed(2);
 
 export default function EarningsMatrixModal({ open, onOpenChange }) {
   const [actionKey, setActionKey] = useState('post_update');
@@ -16,23 +20,43 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 overflow-hidden">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden max-h-[90vh]">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle className="flex items-center gap-2">
             <Coins className="w-5 h-5 text-amber-500" />
             GGG Earnings Matrix
           </DialogTitle>
-          <DialogDescription>Contribution-based payouts with relational lifts. 1.00 GGG = ${GGG_TO_USD.toFixed(2)}</DialogDescription>
+          <DialogDescription>Contribution-based payouts. 1.0000000 GGG = ${GGG_TO_USD.toFixed(2)} (1 gram gold)</DialogDescription>
         </DialogHeader>
+        
+        {/* Tier Reference Table */}
+        <div className="px-6 py-3 bg-gradient-to-r from-violet-50 to-amber-50 border-y">
+          <div className="flex items-center gap-2 mb-2">
+            <Info className="w-4 h-4 text-violet-600" />
+            <span className="text-sm font-semibold text-slate-700">All 11 Tiers (GGG → USD)</span>
+          </div>
+          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-11 gap-1 text-xs">
+            {TIERS.map((tier, idx) => (
+              <div key={tier} className="p-1.5 bg-white rounded border text-center">
+                <div className="font-mono font-semibold text-violet-700">{formatGGG(tier)}</div>
+                <div className="text-slate-500">≈ ${formatUSD(tier * GGG_TO_USD)}</div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 text-xs text-amber-700 flex items-center gap-1">
+            <span className="font-semibold">Posting Bonus:</span> +{formatGGG(INTERACTION_BONUS_GGG)} GGG (${formatUSD(INTERACTION_BONUS_GGG * GGG_TO_USD)}) for 5+ interactions
+          </div>
+        </div>
+
         <div className="px-6 pb-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Matrix overview */}
-          <ScrollArea className="h-80 border rounded-xl bg-white/50">
+          <ScrollArea className="h-[400px] border rounded-xl bg-white/50">
             <div className="p-4 space-y-3">
               {MATRIX_SECTIONS.map(sec => (
                 <div key={sec.tier} className="p-3 rounded-lg border bg-white">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
                     <div className="font-semibold text-slate-900">{sec.title}</div>
-                    <Badge className="bg-violet-600">{sec.tier.toFixed(7)} GGG • ${(sec.tier * GGG_TO_USD).toFixed(3)}</Badge>
+                    <Badge className="bg-violet-600 font-mono">{formatGGG(sec.tier)} GGG ≈ ${formatUSD(sec.tier * GGG_TO_USD)}</Badge>
                   </div>
                   <ul className="list-disc pl-5 text-sm text-slate-600 space-y-1">
                     {sec.items.map((it, i) => (<li key={i}>{it}</li>))}
