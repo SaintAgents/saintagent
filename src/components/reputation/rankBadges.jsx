@@ -1,4 +1,4 @@
-// Rank badge image URLs - centralized for reuse across components (black & white transparent PNGs)
+// Rank badge image URLs - centralized for reuse across components (transparent PNGs)
 export const RANK_BADGE_IMAGES = {
   seeker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/65d0338f8_seeker_inPixio.png',
   initiate: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/827a58594_intiate-Picsart-BackgroundRemover.png',
@@ -9,6 +9,19 @@ export const RANK_BADGE_IMAGES = {
   oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d3f6ba23f_oracle-Picsart-BackgroundRemover.png',
   ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c3caf20f6_Screenshot2026-01-07044338-Picsart-BackgroundRemover.png',
   guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f37bf041e_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png',
+};
+
+// Rank titles for display
+export const RANK_TITLES = {
+  seeker: 'Seeker',
+  initiate: 'Initiate',
+  adept: 'Adept',
+  practitioner: 'Practitioner',
+  master: 'Master',
+  sage: 'Sage',
+  oracle: 'Oracle',
+  ascended: 'Ascended',
+  guardian: 'Guardian',
 };
 
 // Rank Badge component
