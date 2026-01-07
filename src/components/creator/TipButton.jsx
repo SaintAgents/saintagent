@@ -17,7 +17,7 @@ import { Heart, Coins, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-const TIP_PRESETS = [1, 5, 10, 25, 50, 100];
+const TIP_PRESETS = [0.01, 0.05, 0.10, 0.25, 0.50, 1.00];
 
 export default function TipButton({ 
   toUserId, 
@@ -28,7 +28,7 @@ export default function TipButton({
   className 
 }) {
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState(5);
+  const [amount, setAmount] = useState(0.05);
   const [customAmount, setCustomAmount] = useState('');
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -115,7 +115,7 @@ export default function TipButton({
       toast.success(`Tip sent to ${toUserName}!`);
       setOpen(false);
       setMessage('');
-      setAmount(5);
+      setAmount(0.05);
       setCustomAmount('');
     },
     onError: (err) => {
