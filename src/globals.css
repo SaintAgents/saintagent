@@ -7,18 +7,27 @@ img.hero-image,
 [data-theme='hacker'] img.hero-image,
 html[data-theme='dark'] .hero-image,
 html[data-theme='hacker'] .hero-image,
-html[data-theme='hacker'] img.hero-image {
+html[data-theme='hacker'] img.hero-image,
+[data-theme='dark'] img[data-no-filter="true"],
+[data-theme='hacker'] img[data-no-filter="true"],
+html[data-theme='dark'] img[data-no-filter="true"],
+html[data-theme='hacker'] img[data-no-filter="true"] {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
   filter: none !important;
   -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
 }
 
 /* Override any inherited filters on hero images */
-[data-theme='hacker'] .hero-image {
+[data-theme='hacker'] .hero-image,
+[data-theme='hacker'] img[data-no-filter="true"],
+[data-theme='dark'] .hero-image,
+[data-theme='dark'] img[data-no-filter="true"] {
   filter: none !important;
   -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
 }
 
 /* Mission images and data-no-filter should also remain visible */
