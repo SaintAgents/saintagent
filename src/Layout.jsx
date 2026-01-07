@@ -1355,21 +1355,26 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
-// Nebula canvas effect with speed/brightness controls
+// Nebula canvas effect with speed/brightness/variance controls
 function NebulaCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
   
   React.useEffect(() => {
     try {
       settingsRef.current = {
         speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
-        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8,
+        variance: parseFloat(localStorage.getItem('matrixVariance')) || 0.5
       };
     } catch {}
     const handleSettingsChange = (e) => {
-      if (e.detail) settingsRef.current = { speed: e.detail.speed ?? 1, brightness: e.detail.brightness ?? 0.8 };
+      if (e.detail) settingsRef.current = { 
+        speed: e.detail.speed ?? 1, 
+        brightness: e.detail.brightness ?? 0.8,
+        variance: e.detail.variance ?? 0.5
+      };
     };
     document.addEventListener('matrixSettingsChange', handleSettingsChange);
     return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
@@ -1381,6 +1386,7 @@ function NebulaCanvas() {
     
     const ctx = canvas.getContext('2d');
     const particles = [];
+    const baseColors = ['#00ff88', '#00d4ff', '#8b5cf6', '#f59e0b', '#ec4899', '#14b8a6'];
     const numParticles = 60;
     
     const resize = () => {
@@ -1395,35 +1401,65 @@ function NebulaCanvas() {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: Math.random() * 150 + 50,
-        color: ['#00ff88', '#00d4ff', '#8b5cf6', '#f59e0b'][Math.floor(Math.random() * 4)],
+        baseSize: Math.random() * 150 + 50,
+        colorIdx: Math.floor(Math.random() * baseColors.length),
         baseVx: (Math.random() - 0.5) * 0.3,
         baseVy: (Math.random() - 0.5) * 0.3,
-        opacity: Math.random() * 0.15 + 0.05
+        baseOpacity: Math.random() * 0.15 + 0.05,
+        pulsePhase: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.02 + 0.01,
+        orbitPhase: Math.random() * Math.PI * 2,
+        orbitRadius: Math.random() * 50 + 20
       });
     }
     
     const animate = () => {
-      const { speed, brightness } = settingsRef.current;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.02)';
+      const { speed, brightness, variance } = settingsRef.current;
+      ctx.fillStyle = `rgba(5, 5, 5, ${0.02 + variance * 0.02})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      particles.forEach(p => {
-        p.x += p.baseVx * speed;
-        p.y += p.baseVy * speed;
+      particles.forEach((p, i) => {
+        // Variance affects movement patterns
+        p.pulsePhase += p.pulseSpeed * speed;
+        p.orbitPhase += 0.005 * speed * (1 + variance);
         
-        if (p.x < -p.size) p.x = canvas.width + p.size;
-        if (p.x > canvas.width + p.size) p.x = -p.size;
-        if (p.y < -p.size) p.y = canvas.height + p.size;
-        if (p.y > canvas.height + p.size) p.y = -p.size;
+        // Base movement plus orbital motion at high variance
+        const orbitX = variance > 0.3 ? Math.cos(p.orbitPhase) * p.orbitRadius * variance : 0;
+        const orbitY = variance > 0.3 ? Math.sin(p.orbitPhase) * p.orbitRadius * variance : 0;
         
-        const adjustedOpacity = p.opacity * brightness;
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-        gradient.addColorStop(0, p.color + Math.floor(adjustedOpacity * 255).toString(16).padStart(2, '0'));
+        p.x += p.baseVx * speed * (1 + variance * Math.sin(p.pulsePhase));
+        p.y += p.baseVy * speed * (1 + variance * Math.cos(p.pulsePhase));
+        
+        if (p.x < -p.baseSize) p.x = canvas.width + p.baseSize;
+        if (p.x > canvas.width + p.baseSize) p.x = -p.baseSize;
+        if (p.y < -p.baseSize) p.y = canvas.height + p.baseSize;
+        if (p.y > canvas.height + p.baseSize) p.y = -p.baseSize;
+        
+        // Variance affects size pulsing
+        const sizePulse = 1 + Math.sin(p.pulsePhase) * variance * 0.4;
+        const size = p.baseSize * sizePulse;
+        
+        // Variance affects opacity pulsing
+        const opacityPulse = 1 + Math.sin(p.pulsePhase * 1.5) * variance * 0.5;
+        const adjustedOpacity = p.baseOpacity * brightness * opacityPulse;
+        
+        // Color cycling at high variance
+        let color = baseColors[p.colorIdx];
+        if (variance > 0.5) {
+          const cycleIdx = Math.floor((p.colorIdx + Date.now() * 0.0001 * variance) % baseColors.length);
+          color = baseColors[cycleIdx];
+        }
+        
+        const drawX = p.x + orbitX;
+        const drawY = p.y + orbitY;
+        
+        const gradient = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, size);
+        gradient.addColorStop(0, color + Math.floor(Math.min(1, adjustedOpacity) * 255).toString(16).padStart(2, '0'));
+        gradient.addColorStop(0.5 + variance * 0.3, color + Math.floor(adjustedOpacity * 0.3 * 255).toString(16).padStart(2, '0'));
         gradient.addColorStop(1, 'transparent');
         
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, size, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
         ctx.fill();
       });
@@ -1448,18 +1484,19 @@ function NebulaCanvas() {
   );
 }
 
-// Matrix Rain Canvas - authentic green falling characters with speed/brightness controls
+// Matrix Rain Canvas - authentic green falling characters with speed/brightness/variance controls
 function MatrixRainCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
   
   // Load initial settings from localStorage
   React.useEffect(() => {
     try {
       const savedSpeed = parseFloat(localStorage.getItem('matrixSpeed')) || 1;
       const savedBrightness = parseFloat(localStorage.getItem('matrixBrightness')) || 0.8;
-      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness };
+      const savedVariance = parseFloat(localStorage.getItem('matrixVariance')) || 0.5;
+      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness, variance: savedVariance };
     } catch {}
     
     // Listen for settings changes
@@ -1467,7 +1504,8 @@ function MatrixRainCanvas() {
       if (e.detail) {
         settingsRef.current = { 
           speed: e.detail.speed ?? settingsRef.current.speed, 
-          brightness: e.detail.brightness ?? settingsRef.current.brightness 
+          brightness: e.detail.brightness ?? settingsRef.current.brightness,
+          variance: e.detail.variance ?? settingsRef.current.variance
         };
       }
     };
@@ -1492,58 +1530,76 @@ function MatrixRainCanvas() {
     const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
     const charArray = chars.split('');
     
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
+    // Variance affects font size range
+    const baseFontSize = 14;
+    const columns = Math.floor(canvas.width / baseFontSize);
     
     // Array to track y position of each column
     const drops = Array(columns).fill(1);
     
-    // Varying base speeds for each column
-    const baseSpeeds = Array(columns).fill(0).map(() => Math.random() * 0.2 + 0.15);
+    // Column properties that vary based on variance setting
+    const columnProps = Array(columns).fill(0).map(() => ({
+      baseSpeed: Math.random() * 0.2 + 0.15,
+      fontSize: baseFontSize,
+      hueShift: 0, // For color variance
+      trailLength: 15
+    }));
     
     const draw = () => {
-      const { speed, brightness } = settingsRef.current;
+      const { speed, brightness, variance } = settingsRef.current;
       
-      // Semi-transparent black to create fade trail effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      // Update column properties based on variance
+      columnProps.forEach((prop, i) => {
+        prop.fontSize = baseFontSize + (Math.sin(Date.now() * 0.001 + i) * variance * 6);
+        prop.hueShift = variance * 30 * Math.sin(Date.now() * 0.0005 + i * 0.5); // -30 to +30 hue shift
+        prop.trailLength = Math.floor(10 + variance * 20 + Math.sin(Date.now() * 0.002 + i) * variance * 10);
+      });
+      
+      // Semi-transparent black to create fade trail effect - variance affects fade speed
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.03 + (1 - variance) * 0.04})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      ctx.font = `${fontSize}px monospace`;
-      
       for (let i = 0; i < drops.length; i++) {
+        const prop = columnProps[i];
+        ctx.font = `${Math.floor(prop.fontSize)}px monospace`;
+        
         // Random character
         const char = charArray[Math.floor(Math.random() * charArray.length)];
         
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
+        const x = i * baseFontSize;
+        const y = drops[i] * baseFontSize;
         
-        // Bright green for the leading character (adjusted by brightness)
+        // Color with optional hue shift based on variance
         const greenVal = Math.floor(255 * brightness);
-        ctx.fillStyle = `rgb(0, ${greenVal}, 0)`;
-        ctx.shadowColor = `rgb(0, ${greenVal}, 0)`;
-        ctx.shadowBlur = 10 * brightness;
+        const redVal = Math.floor(Math.max(0, prop.hueShift) * brightness);
+        const blueVal = Math.floor(Math.max(0, -prop.hueShift + 50 * variance) * brightness);
+        
+        ctx.fillStyle = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
+        ctx.shadowColor = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
+        ctx.shadowBlur = (10 + variance * 10) * brightness;
         ctx.fillText(char, x, y);
         
         // Dimmer trail characters
         ctx.shadowBlur = 0;
-        const trailLength = 15;
-        for (let j = 1; j < trailLength; j++) {
-          const trailY = y - (j * fontSize);
+        for (let j = 1; j < prop.trailLength; j++) {
+          const trailY = y - (j * baseFontSize);
           if (trailY > 0) {
-            const opacity = (1 - (j / trailLength)) * brightness;
-            ctx.fillStyle = `rgba(0, ${greenVal}, 0, ${opacity * 0.5})`;
+            const opacity = (1 - (j / prop.trailLength)) * brightness;
+            ctx.fillStyle = `rgba(${redVal}, ${greenVal}, ${blueVal}, ${opacity * 0.5})`;
             const trailChar = charArray[Math.floor(Math.random() * charArray.length)];
             ctx.fillText(trailChar, x, trailY);
           }
         }
         
-        // Reset drop to top when it reaches bottom (with randomness)
-        if (y > canvas.height && Math.random() > 0.975) {
+        // Reset drop to top when it reaches bottom (variance affects reset randomness)
+        const resetThreshold = 0.97 - variance * 0.03;
+        if (y > canvas.height && Math.random() > resetThreshold) {
           drops[i] = 0;
         }
         
-        // Apply speed multiplier
-        drops[i] += baseSpeeds[i] * speed;
+        // Apply speed multiplier with variance-based variation
+        const speedVariation = 1 + (Math.sin(Date.now() * 0.003 + i * 2) * variance * 0.5);
+        drops[i] += prop.baseSpeed * speed * speedVariation;
       }
       
       animationRef.current = requestAnimationFrame(draw);
@@ -1846,17 +1902,22 @@ function CircuitCanvas() {
 function StarfieldCanvas({ rankCode = 'seeker' }) {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
   
   React.useEffect(() => {
     try {
       settingsRef.current = {
         speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
-        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8,
+        variance: parseFloat(localStorage.getItem('matrixVariance')) || 0.5
       };
     } catch {}
     const handleSettingsChange = (e) => {
-      if (e.detail) settingsRef.current = { speed: e.detail.speed ?? 1, brightness: e.detail.brightness ?? 0.8 };
+      if (e.detail) settingsRef.current = { 
+        speed: e.detail.speed ?? 1, 
+        brightness: e.detail.brightness ?? 0.8,
+        variance: e.detail.variance ?? 0.5
+      };
     };
     document.addEventListener('matrixSettingsChange', handleSettingsChange);
     return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
@@ -1897,22 +1958,33 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         z: Math.random() * 3 + 0.5, // depth/parallax
-        size: Math.random() * 2 + 0.5,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        baseSize: Math.random() * 2 + 0.5,
+        colorIdx: Math.floor(Math.random() * colors.length),
         twinkle: Math.random() * Math.PI * 2,
-        twinkleSpeed: Math.random() * 0.02 + 0.01
+        baseTwinkleSpeed: Math.random() * 0.02 + 0.01,
+        // Variance-affected properties
+        wobblePhase: Math.random() * Math.PI * 2,
+        wobbleSpeed: Math.random() * 0.01 + 0.005,
+        wobbleAmplitude: Math.random() * 20 + 10
       });
     }
     
     const animate = () => {
-      const { speed, brightness } = settingsRef.current;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.1)';
+      const { speed, brightness, variance } = settingsRef.current;
+      ctx.fillStyle = `rgba(5, 5, 5, ${0.08 + variance * 0.04})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      stars.forEach(star => {
+      stars.forEach((star, i) => {
+        // Variance affects twinkle speed variation
+        const twinkleSpeed = star.baseTwinkleSpeed * (1 + variance * Math.sin(Date.now() * 0.001 + i));
+        star.twinkle += twinkleSpeed * speed;
+        star.wobblePhase += star.wobbleSpeed * speed;
+        
         // Parallax movement with speed multiplier
         star.x -= star.z * 0.15 * speed;
-        star.twinkle += star.twinkleSpeed * speed;
+        
+        // Variance adds vertical wobble
+        const wobbleY = variance > 0.3 ? Math.sin(star.wobblePhase) * star.wobbleAmplitude * variance : 0;
         
         // Wrap around
         if (star.x < 0) {
@@ -1920,26 +1992,41 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
           star.y = Math.random() * canvas.height;
         }
         
-        // Twinkle effect with brightness
-        const alpha = (0.5 + Math.sin(star.twinkle) * 0.4) * brightness;
-        const glowSize = star.size * (1 + Math.sin(star.twinkle) * 0.3);
+        // Variance affects size variation
+        const sizeVariation = 1 + Math.sin(star.twinkle * 2) * variance * 0.5;
+        const size = star.baseSize * sizeVariation;
         
-        // Draw glow
-        const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowSize * 3);
-        gradient.addColorStop(0, star.color);
-        gradient.addColorStop(0.5, star.color + '40');
+        // Twinkle effect with brightness and variance
+        const twinkleIntensity = 0.4 + variance * 0.3;
+        const alpha = (0.5 + Math.sin(star.twinkle) * twinkleIntensity) * brightness;
+        const glowSize = size * (1 + Math.sin(star.twinkle) * (0.3 + variance * 0.4));
+        
+        // Color cycling at high variance
+        let color = colors[star.colorIdx];
+        if (variance > 0.6) {
+          const cycleIdx = Math.floor((star.colorIdx + star.twinkle * 0.1) % colors.length);
+          color = colors[cycleIdx];
+        }
+        
+        const drawY = star.y + wobbleY;
+        
+        // Draw glow - larger at high variance
+        const glowMultiplier = 3 + variance * 2;
+        const gradient = ctx.createRadialGradient(star.x, drawY, 0, star.x, drawY, glowSize * glowMultiplier);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(0.3 + variance * 0.2, color + '60');
         gradient.addColorStop(1, 'transparent');
         
         ctx.beginPath();
-        ctx.arc(star.x, star.y, glowSize * 3, 0, Math.PI * 2);
+        ctx.arc(star.x, drawY, glowSize * glowMultiplier, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
-        ctx.globalAlpha = alpha * 0.3;
+        ctx.globalAlpha = alpha * (0.3 + variance * 0.2);
         ctx.fill();
         
         // Draw star core
         ctx.beginPath();
-        ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
+        ctx.arc(star.x, drawY, glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = color;
         ctx.globalAlpha = alpha;
         ctx.fill();
         ctx.globalAlpha = 1;
