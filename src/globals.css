@@ -9,6 +9,18 @@
   color: #ffffff !important;
 }
 
+/* Prevent white flash on page load */
+[data-theme='dark'] body,
+[data-theme='dark'] .min-h-screen,
+[data-theme='hacker'] body,
+[data-theme='hacker'] .min-h-screen {
+  background-color: #050505 !important;
+}
+[data-theme='hacker'] body,
+[data-theme='hacker'] .min-h-screen {
+  background-color: #000 !important;
+}
+
 [data-theme='dark'] p,
 [data-theme='dark'] span:not(.dot-glow):not(.icon-glow),
 [data-theme='dark'] div:not([class*='bg-']) {
