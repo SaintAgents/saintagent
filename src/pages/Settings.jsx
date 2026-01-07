@@ -106,20 +106,37 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <BackButton />
-            <SettingsIcon className="w-6 h-6 text-slate-500" />
-            Settings
-          </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Manage your account preferences and privacy</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
+      {/* Hero Section */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39d5258fa_settings.jpg"
+          alt="Settings"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              <SettingsIcon className="w-10 h-10 text-amber-300 drop-shadow-lg" />
+              Settings
+            </h1>
+            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              Manage your account preferences and privacy
+            </p>
+          </div>
         </div>
+        <div className="absolute top-4 left-4">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto p-6">
 
         <Tabs defaultValue="account" className="space-y-6">
-          <TabsList className="w-full grid grid-cols-4 h-11 bg-white rounded-xl border">
+          <TabsList className="w-full grid grid-cols-4 h-11 bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
             <TabsTrigger value="account" className="rounded-lg gap-2">
               <User className="w-4 h-4" />
               Account
@@ -438,9 +455,9 @@ export default function Settings() {
         <div className="flex justify-end mt-6">
           <Button
             onClick={handleSave}
-            className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-            disabled={updateMutation.isPending}>
-
+            className="bg-violet-600 hover:bg-violet-700 dark:bg-[#00ff88] dark:hover:bg-[#00dd77] dark:text-black rounded-xl gap-2"
+            disabled={updateMutation.isPending}
+          >
             <Save className="w-4 h-4" />
             Save Changes
           </Button>
