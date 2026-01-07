@@ -1255,10 +1255,25 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
-// Nebula canvas effect
+// Nebula canvas effect with speed/brightness controls
 function NebulaCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  
+  React.useEffect(() => {
+    try {
+      settingsRef.current = {
+        speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8
+      };
+    } catch {}
+    const handleSettingsChange = (e) => {
+      if (e.detail) settingsRef.current = { speed: e.detail.speed ?? 1, brightness: e.detail.brightness ?? 0.8 };
+    };
+    document.addEventListener('matrixSettingsChange', handleSettingsChange);
+    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+  }, []);
   
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -1282,27 +1297,29 @@ function NebulaCanvas() {
         y: Math.random() * canvas.height,
         size: Math.random() * 150 + 50,
         color: ['#00ff88', '#00d4ff', '#8b5cf6', '#f59e0b'][Math.floor(Math.random() * 4)],
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
+        baseVx: (Math.random() - 0.5) * 0.3,
+        baseVy: (Math.random() - 0.5) * 0.3,
         opacity: Math.random() * 0.15 + 0.05
       });
     }
     
     const animate = () => {
+      const { speed, brightness } = settingsRef.current;
       ctx.fillStyle = 'rgba(5, 5, 5, 0.02)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.baseVx * speed;
+        p.y += p.baseVy * speed;
         
         if (p.x < -p.size) p.x = canvas.width + p.size;
         if (p.x > canvas.width + p.size) p.x = -p.size;
         if (p.y < -p.size) p.y = canvas.height + p.size;
         if (p.y > canvas.height + p.size) p.y = -p.size;
         
+        const adjustedOpacity = p.opacity * brightness;
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-        gradient.addColorStop(0, p.color + Math.floor(p.opacity * 255).toString(16).padStart(2, '0'));
+        gradient.addColorStop(0, p.color + Math.floor(adjustedOpacity * 255).toString(16).padStart(2, '0'));
         gradient.addColorStop(1, 'transparent');
         
         ctx.beginPath();
@@ -1331,10 +1348,32 @@ function NebulaCanvas() {
   );
 }
 
-// Matrix Rain Canvas - authentic green falling characters
+// Matrix Rain Canvas - authentic green falling characters with speed/brightness controls
 function MatrixRainCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  
+  // Load initial settings from localStorage
+  React.useEffect(() => {
+    try {
+      const savedSpeed = parseFloat(localStorage.getItem('matrixSpeed')) || 1;
+      const savedBrightness = parseFloat(localStorage.getItem('matrixBrightness')) || 0.8;
+      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness };
+    } catch {}
+    
+    // Listen for settings changes
+    const handleSettingsChange = (e) => {
+      if (e.detail) {
+        settingsRef.current = { 
+          speed: e.detail.speed ?? settingsRef.current.speed, 
+          brightness: e.detail.brightness ?? settingsRef.current.brightness 
+        };
+      }
+    };
+    document.addEventListener('matrixSettingsChange', handleSettingsChange);
+    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+  }, []);
   
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -1359,10 +1398,12 @@ function MatrixRainCanvas() {
     // Array to track y position of each column
     const drops = Array(columns).fill(1);
     
-    // Varying speeds for each column (slower)
-    const speeds = Array(columns).fill(0).map(() => Math.random() * 0.2 + 0.15);
+    // Varying base speeds for each column
+    const baseSpeeds = Array(columns).fill(0).map(() => Math.random() * 0.2 + 0.15);
     
     const draw = () => {
+      const { speed, brightness } = settingsRef.current;
+      
       // Semi-transparent black to create fade trail effect
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1376,10 +1417,11 @@ function MatrixRainCanvas() {
         const x = i * fontSize;
         const y = drops[i] * fontSize;
         
-        // Bright green for the leading character
-        ctx.fillStyle = '#00ff00';
-        ctx.shadowColor = '#00ff00';
-        ctx.shadowBlur = 10;
+        // Bright green for the leading character (adjusted by brightness)
+        const greenVal = Math.floor(255 * brightness);
+        ctx.fillStyle = `rgb(0, ${greenVal}, 0)`;
+        ctx.shadowColor = `rgb(0, ${greenVal}, 0)`;
+        ctx.shadowBlur = 10 * brightness;
         ctx.fillText(char, x, y);
         
         // Dimmer trail characters
@@ -1388,8 +1430,8 @@ function MatrixRainCanvas() {
         for (let j = 1; j < trailLength; j++) {
           const trailY = y - (j * fontSize);
           if (trailY > 0) {
-            const opacity = 1 - (j / trailLength);
-            ctx.fillStyle = `rgba(0, 255, 0, ${opacity * 0.5})`;
+            const opacity = (1 - (j / trailLength)) * brightness;
+            ctx.fillStyle = `rgba(0, ${greenVal}, 0, ${opacity * 0.5})`;
             const trailChar = charArray[Math.floor(Math.random() * charArray.length)];
             ctx.fillText(trailChar, x, trailY);
           }
@@ -1400,7 +1442,8 @@ function MatrixRainCanvas() {
           drops[i] = 0;
         }
         
-        drops[i] += speeds[i];
+        // Apply speed multiplier
+        drops[i] += baseSpeeds[i] * speed;
       }
       
       animationRef.current = requestAnimationFrame(draw);
@@ -1418,15 +1461,30 @@ function MatrixRainCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.8 }}
+      style={{ opacity: settingsRef.current?.brightness || 0.8 }}
     />
   );
 }
 
-// Circuit board effect
+// Circuit board effect with speed/brightness controls
 function CircuitCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  
+  React.useEffect(() => {
+    try {
+      settingsRef.current = {
+        speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8
+      };
+    } catch {}
+    const handleSettingsChange = (e) => {
+      if (e.detail) settingsRef.current = { speed: e.detail.speed ?? 1, brightness: e.detail.brightness ?? 0.8 };
+    };
+    document.addEventListener('matrixSettingsChange', handleSettingsChange);
+    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+  }, []);
   
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -1466,9 +1524,13 @@ function CircuitCanvas() {
     
     let frame = 0;
     const animate = () => {
+      const { speed, brightness } = settingsRef.current;
       frame++;
       ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      const greenVal = Math.floor(255 * brightness);
+      const colorStr = `rgb(0, ${greenVal}, 136)`;
       
       // Draw traces
       traces.forEach(trace => {
@@ -1478,18 +1540,19 @@ function CircuitCanvas() {
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
-        ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+        ctx.strokeStyle = `rgba(0, ${greenVal}, 136, ${0.1 * brightness})`;
         ctx.lineWidth = 1;
         ctx.stroke();
         
-        // Animate pulse along trace
-        if (frame % 120 === Math.floor(trace.delay)) {
+        // Animate pulse along trace (speed affects trigger frequency)
+        const triggerFrame = Math.floor(120 / speed);
+        if (frame % triggerFrame === Math.floor(trace.delay / speed)) {
           trace.active = true;
           trace.progress = 0;
         }
         
         if (trace.active) {
-          trace.progress += 0.02;
+          trace.progress += 0.02 * speed;
           if (trace.progress >= 1) trace.active = false;
           
           const px = from.x + (to.x - from.x) * trace.progress;
@@ -1497,9 +1560,9 @@ function CircuitCanvas() {
           
           ctx.beginPath();
           ctx.arc(px, py, 3, 0, Math.PI * 2);
-          ctx.fillStyle = '#00ff88';
-          ctx.shadowColor = '#00ff88';
-          ctx.shadowBlur = 10;
+          ctx.fillStyle = colorStr;
+          ctx.shadowColor = colorStr;
+          ctx.shadowBlur = 10 * brightness;
           ctx.fill();
           ctx.shadowBlur = 0;
         }
@@ -1507,14 +1570,14 @@ function CircuitCanvas() {
       
       // Draw nodes
       nodes.forEach(node => {
-        node.pulse += 0.02;
-        const glow = 0.5 + Math.sin(node.pulse) * 0.3;
+        node.pulse += 0.02 * speed;
+        const glow = (0.5 + Math.sin(node.pulse) * 0.3) * brightness;
         
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 255, 136, ${glow})`;
-        ctx.shadowColor = '#00ff88';
-        ctx.shadowBlur = 8;
+        ctx.fillStyle = `rgba(0, ${greenVal}, 136, ${glow})`;
+        ctx.shadowColor = colorStr;
+        ctx.shadowBlur = 8 * brightness;
         ctx.fill();
         ctx.shadowBlur = 0;
       });
@@ -1544,6 +1607,21 @@ function CircuitCanvas() {
 function StarfieldCanvas({ rankCode = 'seeker' }) {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  
+  React.useEffect(() => {
+    try {
+      settingsRef.current = {
+        speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8
+      };
+    } catch {}
+    const handleSettingsChange = (e) => {
+      if (e.detail) settingsRef.current = { speed: e.detail.speed ?? 1, brightness: e.detail.brightness ?? 0.8 };
+    };
+    document.addEventListener('matrixSettingsChange', handleSettingsChange);
+    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+  }, []);
   
   // Rank-based star colors
   const rankColors = {
@@ -1588,13 +1666,14 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
     }
     
     const animate = () => {
+      const { speed, brightness } = settingsRef.current;
       ctx.fillStyle = 'rgba(5, 5, 5, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       stars.forEach(star => {
-        // Parallax movement
-        star.x -= star.z * 0.15;
-        star.twinkle += star.twinkleSpeed;
+        // Parallax movement with speed multiplier
+        star.x -= star.z * 0.15 * speed;
+        star.twinkle += star.twinkleSpeed * speed;
         
         // Wrap around
         if (star.x < 0) {
@@ -1602,8 +1681,8 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
           star.y = Math.random() * canvas.height;
         }
         
-        // Twinkle effect
-        const alpha = 0.5 + Math.sin(star.twinkle) * 0.4;
+        // Twinkle effect with brightness
+        const alpha = (0.5 + Math.sin(star.twinkle) * 0.4) * brightness;
         const glowSize = star.size * (1 + Math.sin(star.twinkle) * 0.3);
         
         // Draw glow
