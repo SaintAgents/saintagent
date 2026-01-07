@@ -140,6 +140,72 @@ export default function HelpSupportAgent() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  
+  // Dragging state
+  const [position, setPosition] = useState({ x: null, y: null });
+  const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const isDraggingRef = useRef(false);
+  
+  // Initialize position from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('helpSupportPosition');
+      if (saved) {
+        const pos = JSON.parse(saved);
+        setPosition({ x: pos.x, y: pos.y });
+      }
+    } catch {}
+  }, []);
+  
+  // Save position when it changes
+  useEffect(() => {
+    if (position.x !== null && position.y !== null) {
+      try {
+        localStorage.setItem('helpSupportPosition', JSON.stringify(position));
+      } catch {}
+    }
+  }, [position]);
+  
+  const onDragMove = (e) => {
+    if (!isDraggingRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    const newX = Math.max(0, Math.min(window.innerWidth - 420, dragRef.current.startPosX + dx));
+    const newY = Math.max(0, Math.min(window.innerHeight - 100, dragRef.current.startPosY + dy));
+    setPosition({ x: newX, y: newY });
+  };
+  
+  const onDragEnd = () => {
+    isDraggingRef.current = false;
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+  };
+  
+  const onDragStart = (e) => {
+    e.preventDefault();
+    isDraggingRef.current = true;
+    const rect = e.currentTarget.closest('[data-help-panel]')?.getBoundingClientRect();
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX: position.x ?? (rect?.left ?? window.innerWidth - 440),
+      startPosY: position.y ?? (rect?.top ?? window.innerHeight - 500)
+    };
+    // If position not set, initialize it from current element position
+    if (position.x === null) {
+      setPosition({ x: rect?.left ?? window.innerWidth - 440, y: rect?.top ?? window.innerHeight - 500 });
+    }
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+  };
+  
+  // Cleanup listeners
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+    };
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -228,6 +294,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Chat panel when open */}
       {isOpen && (
     <div 
+      data-help-panel
       className={cn(
         "fixed z-50 rounded-2xl shadow-2xl border transition-all duration-300",
         "bg-white/95 backdrop-blur-md border-slate-200",
@@ -235,14 +302,22 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
         "dark:shadow-[0_0_30px_rgba(0,255,136,0.15),_inset_0_0_60px_rgba(0,255,136,0.03)]",
         "[data-theme='hacker']_&:bg-[#050505]/95 [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hacker-glitch-border",
         isMinimized 
-          ? "bottom-6 right-6 w-72 h-14" 
-          : "bottom-6 right-6 w-[26rem] max-h-[75vh]"
+          ? "w-72 h-14" 
+          : "w-[26rem] max-h-[75vh]"
       )}
-      style={{ height: isMinimized ? '3.5rem' : 'auto' }}
+      style={{ 
+        height: isMinimized ? '3.5rem' : 'auto',
+        ...(position.x !== null && position.y !== null 
+          ? { left: position.x, top: position.y, right: 'auto', bottom: 'auto' }
+          : { bottom: 24, right: 24 }
+        )
+      }}
     >
-      {/* Header */}
-      <div className={cn(
-        "flex items-center justify-between px-4 py-3 border-b rounded-t-2xl",
+      {/* Header - draggable */}
+      <div 
+        onMouseDown={onDragStart}
+        className={cn(
+        "flex items-center justify-between px-4 py-3 border-b rounded-t-2xl cursor-move select-none",
         "border-slate-200 dark:border-slate-700 bg-gradient-to-r from-violet-500 to-purple-600",
         "[data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:from-[#0a0a0a] [data-theme='hacker']_&:to-[#001a00] [data-theme='hacker']_&:border-[#00ff00]"
       )}>
