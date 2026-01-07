@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8, onMore, className = '' }) {
+export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8, onMore, className = '', eternalFlameBadge }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   
   const derived = React.useMemo(() => {
@@ -23,11 +23,24 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
     const items = codes
       .map(code => BADGE_INDEX[code])
       .filter(Boolean);
-    if (items.length === 0 && defaultIfEmpty) {
+    
+    // Always add Eternal Flame badge at the beginning if provided
+    if (eternalFlameBadge) {
+      const eternalFlameItem = {
+        code: 'eternal_flame',
+        label: eternalFlameBadge.badge_name || 'Eternal Flame',
+        subtitle: eternalFlameBadge.description || 'Living Agent',
+        definition: 'Baseline awakening badge—signals a living agent with active inner fire and presence.',
+        iconKey: 'flame',
+        section: 'identity',
+        customIcon: eternalFlameBadge.icon_url
+      };
+      items.unshift(eternalFlameItem);
+    } else if (items.length === 0 && defaultIfEmpty) {
       items.push({ ...BADGE_INDEX['eternal_flame'], section: 'identity' });
     }
     return items;
-  }, [badges, defaultIfEmpty]);
+  }, [badges, defaultIfEmpty, eternalFlameBadge]);
 
   const visible = derived.slice(0, max);
   const hiddenItems = derived.slice(max);
@@ -51,7 +64,14 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
               <div
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm cursor-default"
               >
-                {QUEST_BADGE_IMAGES[item.code] ? (
+                {item.customIcon ? (
+                  <img 
+                    src={item.customIcon} 
+                    alt={item.label}
+                    className="w-5 h-5 object-contain"
+                    data-no-filter="true"
+                  />
+                ) : QUEST_BADGE_IMAGES[item.code] ? (
                   <img 
                     src={QUEST_BADGE_IMAGES[item.code]} 
                     alt={item.label}
@@ -93,7 +113,14 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
                       <div
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm cursor-default"
                       >
-                        {QUEST_BADGE_IMAGES[item.code] ? (
+                        {item.customIcon ? (
+                          <img 
+                            src={item.customIcon} 
+                            alt={item.label}
+                            className="w-5 h-5 object-contain"
+                            data-no-filter="true"
+                          />
+                        ) : QUEST_BADGE_IMAGES[item.code] ? (
                           <img 
                             src={QUEST_BADGE_IMAGES[item.code]} 
                             alt={item.label}
