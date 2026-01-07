@@ -198,32 +198,43 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
           </div>
         </div>
 
-        {/* Badges Row */}
-        {badges.length > 0 && (
-          <div className="flex items-center gap-1.5 mb-3">
-            {badges.map((badge, idx) => {
-              const Icon = badge.icon;
-              return (
-                <div
-                  key={idx}
-                  className={cn(
-                    "w-6 h-6 rounded-full flex items-center justify-center",
-                    badge.bg,
-                    "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
-                  )}
-                  title={badge.label}
-                >
-                  <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
+        {/* Badges Row - always show */}
+        <div className="flex items-center gap-1.5 mb-3">
+          {badges.length > 0 ? (
+            <>
+              {badges.map((badge, idx) => {
+                const Icon = badge.icon;
+                return (
+                  <div
+                    key={idx}
+                    className={cn(
+                      "w-6 h-6 rounded-full flex items-center justify-center",
+                      badge.bg,
+                      "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
+                    )}
+                    title={badge.label}
+                  >
+                    <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
+                  </div>
+                );
+              })}
+              {profile.achievements?.length > 3 && (
+                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-600 dark:text-slate-300">
+                  +{profile.achievements.length - 3}
                 </div>
-              );
-            })}
-            {profile.achievements?.length > 3 && (
-              <span className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">
-                +{profile.achievements.length - 3}
-              </span>
-            )}
-          </div>
-        )}
+              )}
+            </>
+          ) : (
+            <>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800" title="Seeker">
+                <Star className="w-3 h-3 text-slate-400" />
+              </div>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800" title="New Member">
+                <Zap className="w-3 h-3 text-slate-400" />
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Skills preview - clickable tags */}
         {profile.skills?.length > 0 && (
