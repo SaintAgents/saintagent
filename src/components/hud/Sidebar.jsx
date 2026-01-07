@@ -620,6 +620,18 @@ export default function Sidebar({
                 </Label>
               </div>
               <div className="flex items-center gap-2">
+                <RadioGroupItem value="nebula" id={inPopup ? "bg-nebula-pop" : "bg-nebula"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "bg-nebula-pop" : "bg-nebula"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Cloud className="w-3.5 h-3.5 text-purple-500" /> Nebula
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="circuit" id={inPopup ? "bg-circuit-pop" : "bg-circuit"} className="h-3.5 w-3.5" />
+                <Label htmlFor={inPopup ? "bg-circuit-pop" : "bg-circuit"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                  <Waves className="w-3.5 h-3.5 text-cyan-500" /> Circuit
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
                 <RadioGroupItem value="off" id={inPopup ? "bg-off-pop" : "bg-off"} className="h-3.5 w-3.5" />
                 <Label htmlFor={inPopup ? "bg-off-pop" : "bg-off"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
                   <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
