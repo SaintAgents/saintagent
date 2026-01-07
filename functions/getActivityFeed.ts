@@ -28,14 +28,15 @@ Deno.serve(async (req) => {
     // Build relevant user set: followings + me
     const followings = await base44.entities.Follow.filter({ follower_id: me.email }).catch(() => []);
     const followingIds = new Set([me.email, ...(followings || []).map(f => f.following_id).filter(Boolean)]);
+    const hasFollowings = followingIds.size > 1; // More than just self
 
     const results = [];
 
-    // Listings (new from followed users)
+    // Listings - show all recent if no followings, otherwise prioritize followed users
     if (types.includes('listings')) {
-      const recentListings = await base44.entities.Listing.list('-created_date', 120).catch(() => []);
+      const recentListings = await base44.entities.Listing.list('-created_date', 60).catch(() => []);
       for (const l of recentListings) {
-        if (!followingIds.has(l.owner_id)) continue;
+        // Show all listings (community feed) - not just from followed users
         results.push(toEvent({
           type: 'listings',
           source: l,
@@ -47,29 +48,26 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Missions (updated/created by followed users or involving them)
+    // Missions - show all active missions
     if (types.includes('missions')) {
-      const recentMissions = await base44.entities.Mission.list('-updated_date', 120).catch(() => []);
+      const recentMissions = await base44.entities.Mission.list('-updated_date', 60).catch(() => []);
       for (const m of recentMissions) {
-        if (followingIds.has(m.creator_id) || (m.participant_ids || []).some(id => followingIds.has(id))) {
-          const desc = m.status === 'completed' ? 'Mission completed' : (m.status === 'active' ? 'Mission updated' : `Status: ${m.status}`);
-          results.push(toEvent({
-            type: 'missions',
-            source: m,
-            createdAt: m.updated_date || m.created_date,
-            actorId: m.creator_id,
-            title: m.title,
-            description: `${desc} • ${m.participant_count || 0} participants`,
-          }));
-        }
+        const desc = m.status === 'completed' ? 'Mission completed' : (m.status === 'active' ? 'Mission active' : `Status: ${m.status}`);
+        results.push(toEvent({
+          type: 'missions',
+          source: m,
+          createdAt: m.updated_date || m.created_date,
+          actorId: m.creator_id,
+          title: m.title,
+          description: `${desc} • ${m.participant_count || 0} participants`,
+        }));
       }
     }
 
-    // Testimonials (to followed users)
+    // Testimonials - show all recent testimonials
     if (types.includes('testimonials')) {
-      const recentTestimonials = await base44.entities.Testimonial.list('-created_date', 120).catch(() => []);
+      const recentTestimonials = await base44.entities.Testimonial.list('-created_date', 60).catch(() => []);
       for (const t of recentTestimonials) {
-        if (!followingIds.has(t.to_user_id)) continue;
         results.push(toEvent({
           type: 'testimonials',
           source: t,
@@ -82,12 +80,12 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Reputation changes (TrustEvent and ReputationEvent) for followed users, only significant deltas
+    // Reputation changes (TrustEvent and ReputationEvent)
     if (types.includes('reputation')) {
-      const trustEvents = await base44.entities.TrustEvent.list('-created_date', 120).catch(() => []);
+      const trustEvents = await base44.entities.TrustEvent.list('-created_date', 60).catch(() => []);
       for (const ev of trustEvents) {
-        if (!followingIds.has(ev.user_id)) continue;
-        if (Math.abs(Number(ev.delta || 0)) < 5) continue;
+        // Show significant trust changes
+        if (Math.abs(Number(ev.delta || 0)) < 3) continue;
         results.push(toEvent({
           type: 'reputation',
           source: ev,
@@ -100,9 +98,8 @@ Deno.serve(async (req) => {
       }
       // RP/other reputation events if available
       try {
-        const repEvents = await base44.entities.ReputationEvent.list('-created_date', 120);
+        const repEvents = await base44.entities.ReputationEvent.list('-created_date', 60);
         for (const ev of repEvents) {
-          if (!followingIds.has(ev.user_id)) continue;
           results.push(toEvent({
             type: 'reputation',
             source: ev,
