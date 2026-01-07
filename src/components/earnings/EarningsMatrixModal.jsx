@@ -32,7 +32,7 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
                 <div key={sec.tier} className="p-3 rounded-lg border bg-white">
                   <div className="flex items-center justify-between mb-2">
                     <div className="font-semibold text-slate-900">{sec.title}</div>
-                    <Badge className="bg-violet-600">{sec.tier.toFixed(2)} GGG • ${(sec.tier * GGG_TO_USD).toFixed(2)}</Badge>
+                    <Badge className="bg-violet-600">{sec.tier.toFixed(3)} GGG • ${(sec.tier * GGG_TO_USD).toFixed(2)}</Badge>
                   </div>
                   <ul className="list-disc pl-5 text-sm text-slate-600 space-y-1">
                     {sec.items.map((it, i) => (<li key={i}>{it}</li>))}
@@ -57,7 +57,7 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
                   </SelectTrigger>
                   <SelectContent>
                     {ACTIONS.map(a => (
-                      <SelectItem key={a.key} value={a.key}>{a.title} ({a.base.toFixed(2)} GGG)</SelectItem>
+                      <SelectItem key={a.key} value={a.key}>{a.title} ({a.base.toFixed(3)} GGG)</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -88,11 +88,11 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
               <div className="mt-2 p-3 rounded-lg bg-slate-50 border text-sm">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-slate-600">Base</span>
-                  <span className="font-medium">{payout.base.toFixed(2)} GGG • ${(payout.base * GGG_TO_USD).toFixed(2)}</span>
+                  <span className="font-medium">{payout.base.toFixed(3)} GGG • ${(payout.base * GGG_TO_USD).toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Payout</span>
-                  <span className="font-semibold text-slate-900">{payout.tier.toFixed(2)} GGG • ${payout.usd.toFixed(2)}</span>
+                  <span className="font-semibold text-slate-900">{payout.tier.toFixed(3)} GGG • ${payout.usd.toFixed(2)}</span>
                 </div>
               </div>
 
