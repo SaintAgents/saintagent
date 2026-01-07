@@ -221,11 +221,29 @@ export default function MiniProfile({
                       </TooltipContent>
                     </Tooltip>
                   )}
-                  {roles?.map((r) => (
+                  {roles?.slice(0, 4).map((r) => (
                     <Badge key={r.id} variant="secondary" className="h-5 text-[10px] capitalize">
                       {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
                     </Badge>
                   ))}
+                  {roles?.length > 4 && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="outline" className="h-5 text-[10px] cursor-help">
+                          +{roles.length - 4} more
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[200px]">
+                        <div className="flex flex-wrap gap-1">
+                          {roles.slice(4).map((r) => (
+                            <span key={r.id} className="text-xs capitalize">
+                              {ROLE_LABELS[r.role_code] || r.role_code?.replace(/_/g, ' ')}
+                            </span>
+                          ))}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                   {showTrustBadge && (
                     <Tooltip>
                       <TooltipTrigger asChild>
