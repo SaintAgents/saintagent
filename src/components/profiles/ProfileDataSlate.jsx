@@ -137,20 +137,18 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
 
           {/* Name and handle */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors" style={{ color: 'var(--profile-name-color, #0f172a)' }}>
+            <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors">
               <span className="dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.6)] dark:group-hover:text-[#00ff88]">
                 {profile.display_name || 'Anonymous'}
-                {profile.sa_number && (
-                  <span className="text-violet-600 dark:text-[#00ff88]/80 ml-1 text-xs font-medium">
-                    - SA#{profile.sa_number}
-                  </span>
-                )}
+              </span>
+              <span className="text-violet-600 dark:text-[#00ff88]/80 ml-1 text-xs font-semibold">
+                - {profile.sa_number ? `SA#${profile.sa_number}` : 'SA-DEMO1'}
               </span>
             </h3>
             {(profile.handle || profile.user_id) && (
-              <p className="text-xs text-slate-500 truncate">
-                <span className="dark:text-[#00ff88]/70">
-                  {profile.handle ? `@${profile.handle}` : ''}{profile.handle && profile.user_id ? ' • ' : ''}{profile.user_id}
+              <p className="text-xs text-slate-600 truncate">
+                <span className="dark:text-slate-300">
+                  {profile.handle ? `@${profile.handle}` : ''}{profile.handle && profile.user_id ? ' • ' : ''}<span className="text-slate-500 dark:text-slate-400">{profile.user_id}</span>
                 </span>
               </p>
             )}
@@ -175,28 +173,28 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
             <div className="flex items-center justify-center gap-1 text-amber-500 dark:text-[#00ff88] mb-0.5">
               <Coins className="w-3 h-3" />
             </div>
-            <p className="text-xs font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
+            <p className="text-sm font-bold text-slate-800 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
               {(profile.ggg_balance || 0).toLocaleString()}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">GGG</p>
+            <p className="text-[10px] font-medium text-slate-600 dark:text-[#00ff88]/70">GGG</p>
           </div>
           <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
             <div className="flex items-center justify-center gap-1 text-violet-500 dark:text-[#00ff88] mb-0.5">
               <TrendingUp className="w-3 h-3" />
             </div>
-            <p className="text-xs font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
+            <p className="text-sm font-bold text-slate-800 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
               {profile.influence_score || 0}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">Influence</p>
+            <p className="text-[10px] font-medium text-slate-600 dark:text-[#00ff88]/70">Influence</p>
           </div>
           <div className="text-center p-2 rounded-lg bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
             <div className="flex items-center justify-center gap-1 text-emerald-500 dark:text-[#00ff88] mb-0.5">
               <Star className="w-3 h-3" />
             </div>
-            <p className="text-xs font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
+            <p className="text-sm font-bold text-slate-800 dark:text-white dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]">
               {profile.expertise_score || 0}
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">Expertise</p>
+            <p className="text-[10px] font-medium text-slate-600 dark:text-[#00ff88]/70">Expertise</p>
           </div>
         </div>
 
