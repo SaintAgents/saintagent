@@ -54,6 +54,23 @@ const glitchStyles = `
 .hacker-pulse {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* Hacker theme help button styling */
+[data-theme='hacker'] .hacker-help-btn {
+  background: #000 !important;
+  background-image: none !important;
+  border-left: 2px solid #00ff00 !important;
+  border-top: 2px solid #00ff00 !important;
+  border-bottom: 2px solid #00ff00 !important;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), inset 0 0 10px rgba(0, 255, 0, 0.1) !important;
+}
+[data-theme='hacker'] .hacker-help-btn:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 0, 0.8), inset 0 0 15px rgba(0, 255, 0, 0.2) !important;
+}
+[data-theme='hacker'] .hacker-help-icon {
+  color: #00ff00 !important;
+  filter: drop-shadow(0 0 8px #00ff00);
+}
 `;
 
 const QUICK_QUESTIONS = [
