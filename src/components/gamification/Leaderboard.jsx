@@ -169,7 +169,7 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
 }
 
 function LeaderboardRow({ entry, rank, isCurrentUser, compact }) {
-  if (!entry) return null;
+  if (!entry) return <div key={`empty-row-${rank}`} className="hidden" />;
 
   return (
     <motion.div
