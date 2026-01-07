@@ -218,12 +218,14 @@ export default function SidePanel({
     document.addEventListener('mouseup', onResizeEnd);
   };
 
-  // Save state when it changes
+  // Save state when it changes and notify GlobalSidePanelNudge
   React.useEffect(() => {
     try {
       localStorage.setItem('sidePanelOpen', String(isOpen));
       localStorage.setItem('sidePanelDockSide', dockSide);
     } catch {}
+    // Dispatch event for GlobalSidePanelNudge to sync
+    document.dispatchEvent(new CustomEvent('sidePanelStateChange', { detail: { isOpen } }));
   }, [isOpen, dockSide]);
 
   // Listen for global toggle events from GlobalSidePanelNudge
