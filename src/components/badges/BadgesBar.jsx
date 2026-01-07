@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { BADGE_INDEX } from './badgesData';
+import { BADGE_INDEX, QUEST_BADGE_IMAGES } from './badgesData';
 import BadgeIcon from './BadgeIcon';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8, onMore, className = '' }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -39,17 +45,33 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {visible.map((item) => (
-        <div
-          key={item.code}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm"
-          title={item.definition}
-        >
-          <BadgeIcon iconKey={item.iconKey} section={item.section} size={14} />
-          <span className="capitalize">{item.label}</span>
-          {item.subtitle && (
-            <span className="text-[10px] text-slate-500">• {item.subtitle}</span>
-          )}
-        </div>
+        <TooltipProvider key={item.code}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm cursor-default"
+              >
+                {QUEST_BADGE_IMAGES[item.code] ? (
+                  <img 
+                    src={QUEST_BADGE_IMAGES[item.code]} 
+                    alt={item.label}
+                    className="w-5 h-5 object-contain"
+                  />
+                ) : (
+                  <BadgeIcon iconKey={item.iconKey} section={item.section} size={14} />
+                )}
+                <span className="capitalize">{item.label}</span>
+                {item.subtitle && (
+                  <span className="text-[10px] text-slate-500">• {item.subtitle}</span>
+                )}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs">
+              <p className="text-sm font-medium">{item.label}</p>
+              <p className="text-xs text-slate-500">{item.definition}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       ))}
       {remaining > 0 && (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
