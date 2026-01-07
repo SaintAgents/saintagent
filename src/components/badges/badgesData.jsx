@@ -309,9 +309,9 @@ export const QUEST_BADGE_IMAGES = {
   ascended_tier: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1df65c199_Screenshot2026-01-07044338-Picsart-BackgroundRemover.png',
   social_butterfly: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png',
   mission_master: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/459c82828_Screenshot2026-01-07044449-Picsart-BackgroundRemover.png',
-  synchronicity_weaver: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/21c437387_Screenshot2026-01-07044531-Picsart-BackgroundRemover.png',
   synchronicity_weaver: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/531434409_Sacredgeometryandcosmicresonancesymbols.png',
-  eternal_flame: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/fef6aca78_Screenshot2026-01-07054919.png',
+  eternal_flame: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/922ce8816_Screenshot2026-01-07044514.png',
+  living_agent: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/922ce8816_Screenshot2026-01-07044514.png',
   trust_anchor: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/acd48db09_Goldentrustanchoremblem-Picsart-BackgroundRemover.png',
 };
 
