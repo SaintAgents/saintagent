@@ -190,7 +190,7 @@ export default function Settings() {
                 <CardTitle>Status</CardTitle>
                 <CardDescription>Set your current availability status</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <Select
                   value={settings.status}
                   onValueChange={(v) => setSettings({ ...settings, status: v })}>
@@ -225,6 +225,21 @@ export default function Settings() {
                     </SelectItem>
                   </SelectContent>
                 </Select>
+                
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <Label>Status Message</Label>
+                  </div>
+                  <Input
+                    value={settings.status_message || ''}
+                    onChange={(e) => setSettings({ ...settings, status_message: e.target.value })}
+                    placeholder="What's on your mind?"
+                    maxLength={100}
+                    className="w-full"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">This message shows when others hover over your avatar</p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
