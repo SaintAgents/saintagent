@@ -34,8 +34,20 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
+      {/* Hero Image */}
+      <div className="page-hero relative w-full overflow-hidden bg-slate-900">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c5e67d97a_universal_upscale_0_8b871d44-8964-4f37-bc81-87b7b516b155_01.jpg"
+          alt="Admin Dashboard Hero"
+          data-no-filter="true"
+          className="w-full h-full object-cover object-center hero-image"
+          style={{ opacity: 1, filter: 'none', display: 'block', visibility: 'visible' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/30 to-transparent dark:from-[#050505] dark:via-transparent dark:to-transparent" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 -mt-8 relative z-10">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
