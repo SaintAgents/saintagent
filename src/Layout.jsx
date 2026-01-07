@@ -290,31 +290,43 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // Redirect unauthenticated users to login
     useEffect(() => {
               if (currentUser === null) {
-                base44.auth.redirectToLogin(createPageUrl('Onboarding'));
+                base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
               }
             }, [currentUser]);
 
   // If authenticated and onboarding missing or not complete, force Onboarding
-  useEffect(() => {
-    const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
-    if (!currentUser || currentPageName === 'Onboarding') return;
-    if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
+    // Otherwise, redirect to Command Deck if on a generic/home page
+    useEffect(() => {
+      const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
+      if (!currentUser || currentPageName === 'Onboarding') return;
+      if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
 
-    // If justCompleted flag is set and onboarding is complete, clear the flag and stay
-    if (justCompleted && onboarding?.status === 'complete') {
-      try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
-      return;
-    }
+      // If justCompleted flag is set and onboarding is complete, clear the flag and redirect to Command Deck
+      if (justCompleted && onboarding?.status === 'complete') {
+        try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
+        // Redirect to Command Deck after completing onboarding
+        if (currentPageName !== 'CommandDeck') {
+          window.location.href = createPageUrl('CommandDeck');
+        }
+        return;
+      }
 
-    // If justCompleted flag is set, don't redirect even if record doesn't exist yet (race condition)
-    if (justCompleted) return;
+      // If justCompleted flag is set, don't redirect even if record doesn't exist yet (race condition)
+      if (justCompleted) return;
 
-    // Only redirect to onboarding if record exists but status is NOT complete
-    // Don't redirect if no record exists (new user might be in process of creating it)
-    if (onboarding && onboarding.status !== 'complete') {
-      window.location.href = createPageUrl('Onboarding');
-    }
-  }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
+      // Only redirect to onboarding if record exists but status is NOT complete
+      // Don't redirect if no record exists (new user might be in process of creating it)
+      if (onboarding && onboarding.status !== 'complete') {
+        window.location.href = createPageUrl('Onboarding');
+        return;
+      }
+
+      // For returning users with complete onboarding, redirect to Command Deck if on generic pages
+      const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
+      if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
+        window.location.href = createPageUrl('CommandDeck');
+      }
+    }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
   // If auth state is still loading (undefined), show loading spinner
   if (currentUser === undefined) {
