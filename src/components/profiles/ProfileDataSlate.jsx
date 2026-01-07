@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import RankedAvatar from '@/components/reputation/RankedAvatar';
 import {
   Coins,
   TrendingUp,
@@ -102,38 +102,17 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
       <div className="relative p-4">
         {/* Top Row: Avatar + Name + Rank */}
         <div className="flex items-start gap-3 mb-3">
-          {/* Avatar with rank ring and online indicator */}
-          <div className={cn("relative", rankConfig.glow, "dark:shadow-[0_0_15px_rgba(0,255,136,0.4)]")}>
-            <div className={cn(
-              "absolute inset-0 rounded-full bg-gradient-to-br p-0.5",
-              rankConfig.color,
-              "dark:from-[#00ff88] dark:to-[#00d4ff]"
-            )}>
-              <div className="w-full h-full rounded-full bg-white dark:bg-[#050505]" />
-            </div>
-            <Avatar className="w-14 h-14 relative border-2 border-transparent">
-              <AvatarImage src={profile.avatar_url} className="dark:brightness-100 dark:contrast-100" style={{ filter: 'none' }} />
-              <AvatarFallback className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-[#00ff88]/20 dark:to-[#00d4ff]/20 text-violet-700 dark:text-[#00ff88] font-semibold">
-                {profile.display_name?.charAt(0) || '?'}
-              </AvatarFallback>
-            </Avatar>
-            {/* Online status indicator */}
-            <div className={cn(
-              "absolute top-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#0a0a0a]",
-              isOnline 
-                ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse" 
-                : "bg-slate-400 dark:bg-slate-600"
-            )} />
-            {/* Rank badge overlay */}
-            <div className={cn(
-              "absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
-              `bg-gradient-to-br ${rankConfig.color} text-white`,
-              "border-2 border-white dark:border-[#050505]",
-              "dark:bg-gradient-to-br dark:from-[#00ff88] dark:to-[#00d4ff] dark:text-black dark:shadow-[0_0_8px_rgba(0,255,136,0.6)]"
-            )}>
-              {rankConfig.label.charAt(0)}
-            </div>
-          </div>
+          {/* Avatar with RankedAvatar component for consistent sigils */}
+          <RankedAvatar
+            src={profile.avatar_url}
+            name={profile.display_name}
+            size={56}
+            userId={profile.user_id}
+            status={profile.status}
+            leaderTier={profile.leader_tier}
+            rpRankCode={profile.rp_rank_code}
+            rpPoints={profile.rp_points}
+          />
 
           {/* Name and handle */}
           <div className="flex-1 min-w-0">
