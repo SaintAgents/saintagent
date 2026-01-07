@@ -98,7 +98,7 @@ export default function Meetings() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505]">
       {/* Hero Section */}
-      <div className="relative h-64 md:h-72 overflow-hidden">
+      <div className="relative h-48 md:h-56 overflow-hidden">
         <img 
           src={HERO_IMAGE}
           alt="Meetings & Connections"
@@ -108,27 +108,27 @@ export default function Meetings() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Meetings & Connections
             </h1>
-            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+            <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
               Schedule, Attend & Verify Meetings to Earn GGG
             </p>
           </div>
         </div>
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-3 left-3">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
-        <div className="absolute top-4 right-4">
-          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
+        <div className="absolute top-3 right-3">
+          <Button size="sm" className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
             <Plus className="w-4 h-4" />
             Request Meeting
           </Button>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 -mt-8 relative z-10">
+      <div className="max-w-4xl mx-auto p-6 -mt-6 relative z-10">
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">

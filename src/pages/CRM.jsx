@@ -116,7 +116,7 @@ export default function CRM() {
       `}</style>
 
       {/* Hero Section */}
-      <div className="relative h-48 md:h-56 overflow-hidden">
+      <div className="relative h-40 md:h-48 overflow-hidden">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f192709b6_Screenshot2026-01-06215230.png"
           alt="Contact Network"
@@ -124,19 +124,19 @@ export default function CRM() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-3">
-            <Users className="w-8 h-8 text-violet-300" />
+        <div className="absolute bottom-4 left-4 right-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg flex items-center gap-2">
+            <Users className="w-6 h-6 text-violet-300" />
             Contact Network
             <button 
               onClick={() => setHelpOpen(true)}
-              className="p-1.5 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
               title="Learn how it works"
             >
-              <HelpCircle className="w-5 h-5 text-white" />
+              <HelpCircle className="w-4 h-4 text-white" />
             </button>
           </h1>
-          <p className="text-violet-100 mt-2 text-sm md:text-base">
+          <p className="text-violet-100 mt-0.5 text-xs md:text-sm">
             Your private CRM with optional federated sharing
           </p>
         </div>
