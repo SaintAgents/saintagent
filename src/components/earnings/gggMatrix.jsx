@@ -1,35 +1,50 @@
 // GGG Earnings Matrix helpers
+// 1 GGG ≈ $145 (1 gram gold). Tiers scale from 0.001 to 1.0 GGG.
+// Two-tier system: BONUS (60-day beta) and LIVE (post-beta at 50% value)
 
-export const GGG_TO_USD = 25; // 1.00 GGG = $25.00
-export const TIERS = [0.02, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50];
+export const GGG_TO_USD = 145; // 1.00 GGG ≈ $145 (1 gram gold)
+
+// Tier mode: 'bonus' = 60-day beta incentive, 'live' = post-beta (50% of bonus)
+export const TIER_MODES = {
+  bonus: { label: 'Bonus Period (60-Day Beta)', multiplier: 1.0 },
+  live: { label: 'Live Tier', multiplier: 0.5 }
+};
+
+// Default tier mode - can be toggled in UI
+export let currentTierMode = 'bonus';
+export const setTierMode = (mode) => { currentTierMode = mode; };
+export const getTierMode = () => currentTierMode;
+
+// Tiers now scale from 0.001 to 1.0 GGG (bonus period values)
+export const TIERS = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0];
 
 export const ACTIONS = [
-  { key: 'posting', title: 'Posting', base: 0.02, definition: 'A basic post or update that meets minimum quality standards (on-topic, useful, and not spam).' },
-  { key: 'post_update', title: 'Daily Field Update', base: 0.10, definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
-  { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.15, definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as “accepted” or “helpful” by the mission owner/mod.' },
-  { key: 'thread_summary', title: 'Thread Summary', base: 0.15, definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others don’t have to read the entire thread.' },
-  { key: 'how_to', title: 'Structured How-To', base: 0.20, definition: 'A step-by-step guide with clear structure (title, steps, checks, tips) that helps others repeat a process reliably.' },
-  { key: 'template', title: 'Template / SOP Snippet', base: 0.20, definition: 'A reusable template or SOP segment that others can plug into their own work (e.g., checklists, email templates, doc skeletons).' },
-  { key: 'weekly_recap', title: 'Weekly Team Recap', base: 0.20, definition: 'A weekly overview of what the team accomplished, current status, blockers, and upcoming priorities in one clean recap.' },
+  { key: 'posting', title: 'Posting', base: 0.001, definition: 'A basic post or update that meets minimum quality standards (on-topic, useful, and not spam).' },
+  { key: 'post_update', title: 'Daily Field Update', base: 0.005, definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
+  { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.01, definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
+  { key: 'thread_summary', title: 'Thread Summary', base: 0.01, definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others don't have to read the entire thread.' },
+  { key: 'how_to', title: 'Structured How-To', base: 0.02, definition: 'A step-by-step guide with clear structure (title, steps, checks, tips) that helps others repeat a process reliably.' },
+  { key: 'template', title: 'Template / SOP Snippet', base: 0.02, definition: 'A reusable template or SOP segment that others can plug into their own work (e.g., checklists, email templates, doc skeletons).' },
+  { key: 'weekly_recap', title: 'Weekly Team Recap', base: 0.02, definition: 'A weekly overview of what the team accomplished, current status, blockers, and upcoming priorities in one clean recap.' },
 
-  { key: 'mission_onboarding', title: 'Mission Onboarding', base: 0.10, definition: 'Setting up a new agent or member on a mission—sharing context, links, expectations, and making sure they’re ready to operate.' },
-  { key: 'task_confirmed', title: 'Mission Task Confirmed', base: 0.15, definition: 'Confirming a specific task is fully actionable (requirements clarified, dependencies identified, acceptance criteria defined).' },
-  { key: 'milestone', title: 'Milestone Deliverable', base: 0.25, definition: 'Delivering a major piece of work tied to a defined milestone (e.g., draft complete, feature built, report finished).' },
-  { key: 'impact_unlock', title: 'Impact Contribution (Adopted)', base: 0.30, definition: 'A contribution (idea, doc, flow, pattern) that gets adopted into live use—actually implemented, not just proposed.' },
-  { key: 'lead_sprint', title: 'Lead Sprint Segment', base: 0.35, definition: 'Owning planning and execution for a defined chunk of work/time (e.g., a one-week sprint), including coordination and follow-through.' },
+  { key: 'mission_onboarding', title: 'Mission Onboarding', base: 0.005, definition: 'Setting up a new agent or member on a mission—sharing context, links, expectations, and making sure they're ready to operate.' },
+  { key: 'task_confirmed', title: 'Mission Task Confirmed', base: 0.01, definition: 'Confirming a specific task is fully actionable (requirements clarified, dependencies identified, acceptance criteria defined).' },
+  { key: 'milestone', title: 'Milestone Deliverable', base: 0.05, definition: 'Delivering a major piece of work tied to a defined milestone (e.g., draft complete, feature built, report finished).' },
+  { key: 'impact_unlock', title: 'Impact Contribution (Adopted)', base: 0.1, definition: 'A contribution (idea, doc, flow, pattern) that gets adopted into live use—actually implemented, not just proposed.' },
+  { key: 'lead_sprint', title: 'Lead Sprint Segment', base: 0.2, definition: 'Owning planning and execution for a defined chunk of work/time (e.g., a one-week sprint), including coordination and follow-through.' },
 
-  { key: 'security_review', title: 'Security Review', base: 0.40, definition: 'A focused review of flows, data handling, and permissions with documented risks and recommendations.' },
-  { key: 'cross_mission', title: 'Cross-Mission Coordination', base: 0.45, definition: 'Aligning multiple missions or teams—resolving conflicts, syncing dependencies, and making sure efforts don’t collide.' },
-  { key: 'mission_lead', title: 'Mission Lead (End-to-End)', base: 0.50, definition: 'Owning the full mission lifecycle—from scoping and setup through execution, handoffs, and final wrap-up.' },
+  { key: 'security_review', title: 'Security Review', base: 0.3, definition: 'A focused review of flows, data handling, and permissions with documented risks and recommendations.' },
+  { key: 'cross_mission', title: 'Cross-Mission Coordination', base: 0.5, definition: 'Aligning multiple missions or teams—resolving conflicts, syncing dependencies, and making sure efforts don't collide.' },
+  { key: 'mission_lead', title: 'Mission Lead (End-to-End)', base: 1.0, definition: 'Owning the full mission lifecycle—from scoping and setup through execution, handoffs, and final wrap-up.' },
 
-  { key: 'agent_publish', title: 'Agent Published (Usage Threshold)', base: 0.30, definition: 'Creating an agent that goes live and reaches a predefined usage bar (e.g., minimum number of runs or active users).' },
-  { key: 'agent_flagship', title: 'Flagship Agent Release', base: 0.50, definition: 'Launching a mission-critical or featured agent that’s approved as a “flagship” tool for the network.' },
+  { key: 'agent_publish', title: 'Agent Published (Usage Threshold)', base: 0.1, definition: 'Creating an agent that goes live and reaches a predefined usage bar (e.g., minimum number of runs or active users).' },
+  { key: 'agent_flagship', title: 'Flagship Agent Release', base: 0.5, definition: 'Launching a mission-critical or featured agent that's approved as a "flagship" tool for the network.' },
 
-  { key: 'lesson_micro', title: 'Micro-Lesson + Quiz', base: 0.10, definition: 'A short training piece plus a quiz to validate understanding (bite-sized learning unit).' },
-  { key: 'module_complete', title: 'Module Complete + Assessment', base: 0.15, definition: 'Completing an entire learning module and passing the associated assessment.' },
-  { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.20, definition: 'Finishing an intermediate-level course with the required final project or exam.' },
-  { key: 'security_trained', title: 'Security Trained Certification', base: 0.25, definition: 'Completing the full security training path and passing the certification requirements.' },
-  { key: 'mentor_ta', title: 'TA / Mentor for Cohort', base: 0.35, definition: 'Serving as a teaching assistant or mentor for a cohort over a defined period—supporting learners, answering questions, and keeping them on track.' },
+  { key: 'lesson_micro', title: 'Micro-Lesson + Quiz', base: 0.005, definition: 'A short training piece plus a quiz to validate understanding (bite-sized learning unit).' },
+  { key: 'module_complete', title: 'Module Complete + Assessment', base: 0.01, definition: 'Completing an entire learning module and passing the associated assessment.' },
+  { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.02, definition: 'Finishing an intermediate-level course with the required final project or exam.' },
+  { key: 'security_trained', title: 'Security Trained Certification', base: 0.05, definition: 'Completing the full security training path and passing the certification requirements.' },
+  { key: 'mentor_ta', title: 'TA / Mentor for Cohort', base: 0.2, definition: 'Serving as a teaching assistant or mentor for a cohort over a defined period—supporting learners, answering questions, and keeping them on track.' },
 ];
 
 function applyLifts(base, { verified, securityTrained, impactAdopted, leadership } = {}) {
