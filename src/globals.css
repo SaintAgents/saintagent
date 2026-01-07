@@ -32,6 +32,20 @@ img[data-no-filter="true"],
   visibility: visible !important;
 }
 
+/* Avatar images - preserve natural colors in all themes */
+[data-theme='dark'] [class*='Avatar'] img,
+[data-theme='hacker'] [class*='Avatar'] img,
+[data-theme='dark'] .avatar-image,
+[data-theme='hacker'] .avatar-image,
+[data-theme='dark'] [data-slot='avatar'] img,
+[data-theme='hacker'] [data-slot='avatar'] img,
+[data-theme='hacker'] img[src*='avatar'],
+[data-theme='hacker'] img[src*='profile'],
+[data-theme='hacker'] img[src*='user'] {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
 /* Dark theme text fixes for improved readability */
 [data-theme='dark'] h1, 
 [data-theme='dark'] h2, 
