@@ -42,6 +42,7 @@ import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
 import SynchronicityEngine from './pages/SynchronicityEngine';
 import Quests from './pages/Quests';
+import Teams from './pages/Teams';
 import __Layout from './Layout.jsx';
 
 
@@ -90,6 +91,7 @@ export const PAGES = {
     "UserGuide": UserGuide,
     "SynchronicityEngine": SynchronicityEngine,
     "Quests": Quests,
+    "Teams": Teams,
 }
 
 export const pagesConfig = {
