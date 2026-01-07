@@ -169,7 +169,7 @@ export default function Missions() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
       {/* Hero Image */}
-      <div className="relative h-72 md:h-96 w-full overflow-hidden bg-slate-900">
+      <div className="page-hero relative w-full overflow-hidden bg-slate-900">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/51f6a87ab_universal_upscale_0_d674b71e-39fb-41e7-8b32-cfaec92f89e7_0.jpg"
           alt="Missions Hero"
@@ -186,7 +186,7 @@ export default function Missions() {
           <div className="flex items-center gap-2 mb-4">
             <BackButton />
             <Target className="w-6 h-6 text-amber-500" />
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
               Missions & Quests
             </h1>
             <HelpHint content="Missions: Structured units of work driving real-world impact. Browse & Join: Find missions by Lane (Food Security, Regenerative Ag, etc.) or Region. Execute Tasks: Complete assigned tasks and submit Evidence (files, links, photos). Verification & Payout: Once the Leader verifies your evidence, GGG is released from mission escrow to your wallet. Mission Types: Platform (system), Circle, Region, Leader. Rewards: GGG, Rank Points, Boost multipliers. Leaders design missions with milestone-based bounties (capped at $55)." />
