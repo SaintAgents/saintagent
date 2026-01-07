@@ -83,7 +83,22 @@ export default function LeaderboardPanel() {
 
   const { data: topGGG = [] } = useQuery({
     queryKey: ['leaderboard', 'ggg'],
-    queryFn: () => base44.entities.UserProfile.list('-ggg_balance', 5)
+    queryFn: async () => {
+      // Fetch from Wallet entity for accurate GGG balances
+      const wallets = await base44.entities.Wallet.list('-available_balance', 10);
+      // Map wallet data to profile-like structure
+      const profiles = await base44.entities.UserProfile.list('-created_date', 100);
+      return wallets.map(wallet => {
+        const profile = profiles.find(p => p.user_id === wallet.user_id);
+        return {
+          ...profile,
+          user_id: wallet.user_id,
+          display_name: profile?.display_name || wallet.user_id?.split('@')[0] || 'User',
+          avatar_url: profile?.avatar_url,
+          ggg_balance: wallet.available_balance || 0
+        };
+      }).filter(p => p.ggg_balance > 0).slice(0, 5);
+    }
   });
 
   const getLeaderboardData = () => {
