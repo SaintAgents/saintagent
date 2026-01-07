@@ -22,34 +22,67 @@ export const TIERS = [0.0004828, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2
 export const INTERACTION_BONUS_GGG = 0.0004828; // +$0.07 for 5+ interactions
 export const INTERACTION_THRESHOLD = 5; // likes, comments, shares needed for bonus
 
-export const ACTIONS = [
-  { key: 'posting', title: 'Posting', base: 0.0004828, definition: 'A post with at least 30 characters earns $0.07. Earn an additional $0.07 when the post receives at least 5 interactions (likes, comments, shares).' },
-  { key: 'post_update', title: 'Daily Field Update', base: 0.005, definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
-  { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.01, definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
-  { key: 'thread_summary', title: 'Thread Summary', base: 0.01, definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
-  { key: 'how_to', title: 'Structured How-To', base: 0.02, definition: 'A step-by-step guide with clear structure (title, steps, checks, tips) that helps others repeat a process reliably.' },
-  { key: 'template', title: 'Template / SOP Snippet', base: 0.02, definition: 'A reusable template or SOP segment that others can plug into their own work (e.g., checklists, email templates, doc skeletons).' },
-  { key: 'weekly_recap', title: 'Weekly Team Recap', base: 0.02, definition: 'A weekly overview of what the team accomplished, current status, blockers, and upcoming priorities in one clean recap.' },
+// Base action values with 7-decimal precision
+// Tier multipliers: T1=1.0x, T2=2.0x, T3=4.0x, T4=8.0x, T5=16.0x
+export const TIER_MULTIPLIERS = [1.0, 2.0, 4.0, 8.0, 16.0];
 
-  { key: 'mission_onboarding', title: 'Mission Onboarding', base: 0.005, definition: 'Setting up a new agent or member on a mission—sharing context, links, expectations, and making sure they are ready to operate.' },
-  { key: 'task_confirmed', title: 'Mission Task Confirmed', base: 0.01, definition: 'Confirming a specific task is fully actionable (requirements clarified, dependencies identified, acceptance criteria defined).' },
+export const ACTIONS = [
+  // Core Engagement Actions
+  { key: 'profile_view', title: 'Profile View', base: 0.0004828, definition: 'Viewing another user\'s profile earns a micro-reward for engagement.' },
+  { key: 'post_view', title: 'Post View', base: 0.0009656, definition: 'Viewing a post contributes to content reach and earns a small reward.' },
+  { key: 'like_react', title: 'Like/React', base: 0.0004828, definition: 'Liking or reacting to content shows appreciation and earns a micro-reward.' },
+  { key: 'comment', title: 'Comment', base: 0.0019312, definition: 'Adding a comment to a post or discussion contributes to engagement.' },
+  { key: 'share', title: 'Share', base: 0.0038624, definition: 'Sharing content to spread valuable information within the network.' },
+  { key: 'follow', title: 'Follow', base: 0.0077248, definition: 'Following another user to build your network connections.' },
+  { key: 'profile_update', title: 'Profile Update', base: 0.0019312, definition: 'Updating your profile keeps your information current and earns a small reward.' },
+  
+  // Daily & Recurring Actions
+  { key: 'daily_checkin', title: 'Daily Check-in', base: 0.0038624, definition: 'Checking in daily maintains your streak and earns consistent rewards.' },
+  { key: 'post_update', title: 'Daily Field Update', base: 0.0077248, definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
+  
+  // Content Creation
+  { key: 'posting', title: 'Posting', base: 0.0004828, definition: 'A post with at least 30 characters earns base reward. Earn an additional bonus when the post receives at least 5 interactions (likes, comments, shares).' },
+  { key: 'forum_post', title: 'Forum Post', base: 0.0077248, definition: 'Creating a structured forum post for community discussion and knowledge sharing.' },
+  { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.0154496, definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
+  { key: 'thread_summary', title: 'Thread Summary', base: 0.0154496, definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
+  { key: 'how_to', title: 'Structured How-To', base: 0.0308992, definition: 'A step-by-step guide with clear structure (title, steps, checks, tips) that helps others repeat a process reliably.' },
+  { key: 'template', title: 'Template / SOP Snippet', base: 0.0308992, definition: 'A reusable template or SOP segment that others can plug into their own work (e.g., checklists, email templates, doc skeletons).' },
+  { key: 'weekly_recap', title: 'Weekly Team Recap', base: 0.0308992, definition: 'A weekly overview of what the team accomplished, current status, blockers, and upcoming priorities in one clean recap.' },
+
+  // Mission & Team Actions
+  { key: 'quest_completion', title: 'Quest Completion', base: 0.0154496, definition: 'Completing a defined quest or challenge within the platform.' },
+  { key: 'team_collaboration', title: 'Team Collaboration', base: 0.0154496, definition: 'Active participation in team activities and collaborative work.' },
+  { key: 'mission_participation', title: 'Mission Participation', base: 0.0308992, definition: 'Actively participating in a mission and contributing to its objectives.' },
+  { key: 'mission_onboarding', title: 'Mission Onboarding', base: 0.0077248, definition: 'Setting up a new agent or member on a mission—sharing context, links, expectations, and making sure they are ready to operate.' },
+  { key: 'task_confirmed', title: 'Mission Task Confirmed', base: 0.0154496, definition: 'Confirming a specific task is fully actionable (requirements clarified, dependencies identified, acceptance criteria defined).' },
   { key: 'milestone', title: 'Milestone Deliverable', base: 0.05, definition: 'Delivering a major piece of work tied to a defined milestone (e.g., draft complete, feature built, report finished).' },
   { key: 'impact_unlock', title: 'Impact Contribution (Adopted)', base: 0.1, definition: 'A contribution (idea, doc, flow, pattern) that gets adopted into live use—actually implemented, not just proposed.' },
   { key: 'lead_sprint', title: 'Lead Sprint Segment', base: 0.2, definition: 'Owning planning and execution for a defined chunk of work/time (e.g., a one-week sprint), including coordination and follow-through.' },
 
+  // Leadership & Governance
   { key: 'security_review', title: 'Security Review', base: 0.3, definition: 'A focused review of flows, data handling, and permissions with documented risks and recommendations.' },
   { key: 'cross_mission', title: 'Cross-Mission Coordination', base: 0.5, definition: 'Aligning multiple missions or teams—resolving conflicts, syncing dependencies, and making sure efforts do not collide.' },
   { key: 'mission_lead', title: 'Mission Lead (End-to-End)', base: 1.0, definition: 'Owning the full mission lifecycle—from scoping and setup through execution, handoffs, and final wrap-up.' },
 
+  // Agent Development
   { key: 'agent_publish', title: 'Agent Published (Usage Threshold)', base: 0.1, definition: 'Creating an agent that goes live and reaches a predefined usage bar (e.g., minimum number of runs or active users).' },
   { key: 'agent_flagship', title: 'Flagship Agent Release', base: 0.5, definition: 'Launching a mission-critical or featured agent that is approved as a flagship tool for the network.' },
 
-  { key: 'lesson_micro', title: 'Micro-Lesson + Quiz', base: 0.005, definition: 'A short training piece plus a quiz to validate understanding (bite-sized learning unit).' },
-  { key: 'module_complete', title: 'Module Complete + Assessment', base: 0.01, definition: 'Completing an entire learning module and passing the associated assessment.' },
-  { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.02, definition: 'Finishing an intermediate-level course with the required final project or exam.' },
+  // Learning & Training
+  { key: 'lesson_micro', title: 'Micro-Lesson + Quiz', base: 0.0077248, definition: 'A short training piece plus a quiz to validate understanding (bite-sized learning unit).' },
+  { key: 'module_complete', title: 'Module Complete + Assessment', base: 0.0154496, definition: 'Completing an entire learning module and passing the associated assessment.' },
+  { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.0308992, definition: 'Finishing an intermediate-level course with the required final project or exam.' },
   { key: 'security_trained', title: 'Security Trained Certification', base: 0.05, definition: 'Completing the full security training path and passing the certification requirements.' },
   { key: 'mentor_ta', title: 'TA / Mentor for Cohort', base: 0.2, definition: 'Serving as a teaching assistant or mentor for a cohort over a defined period—supporting learners, answering questions, and keeping them on track.' },
 ];
+
+// Smart GGG formatting: 7 decimals for values < 0.01, 2 decimals otherwise
+export const formatGGGSmart = (val) => {
+  if (val < 0.01) {
+    return val.toFixed(7);
+  }
+  return val.toFixed(2);
+};
 
 function applyLifts(base, { verified, securityTrained, impactAdopted, leadership } = {}) {
   let tier = base;

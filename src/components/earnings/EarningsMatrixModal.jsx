@@ -7,12 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Coins, Calculator, Info, List } from 'lucide-react';
-import { ACTIONS, MATRIX_SECTIONS, TIERS, GGG_TO_USD, INTERACTION_BONUS_GGG, calculatePayout } from '@/components/earnings/gggMatrix';
+import { ACTIONS, MATRIX_SECTIONS, TIERS, GGG_TO_USD, INTERACTION_BONUS_GGG, calculatePayout, formatGGGSmart } from '@/components/earnings/gggMatrix';
 import ActionsEarningsTable from '@/components/earnings/ActionsEarningsTable';
 
-// Helper to format GGG with proper decimals
-const formatGGG = (val) => val.toFixed(7);
-const formatUSD = (val) => val.toFixed(2);
+// Helper to format GGG with proper decimals - 7 for small values, 2 for larger
+const formatGGG = (val) => formatGGGSmart(val);
+// Smart USD formatting: 3 decimals for values < $1, 2 decimals otherwise
+const formatUSD = (val) => val < 1 ? val.toFixed(3) : val.toFixed(2);
 
 export default function EarningsMatrixModal({ open, onOpenChange }) {
   const [actionKey, setActionKey] = useState('post_update');
