@@ -65,13 +65,13 @@ export default function WalletPanel() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
-          <p className="text-xs text-violet-600 font-medium">Available</p>
-          <p className="text-xl font-bold text-violet-900">{(available ?? 0).toLocaleString?.()} GGG</p>
+        <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-100 dark:border-violet-700/50">
+          <p className="text-xs text-violet-600 dark:text-violet-400 font-medium">Available</p>
+          <p className="text-xl font-bold text-violet-900 dark:text-violet-100">{(available ?? 0).toLocaleString?.()} GGG</p>
         </div>
-        <div className="p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200">
+        <div className="p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50 border border-slate-200 dark:border-slate-700">
           <div className="flex items-center gap-1">
-            <p className="text-xs text-slate-600 font-medium">Locked</p>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Locked</p>
             <HoverCard>
               <HoverCardTrigger asChild>
                 <button className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300">
@@ -93,23 +93,23 @@ export default function WalletPanel() {
               </HoverCardContent>
             </HoverCard>
           </div>
-          <p className="text-gray-500 text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
+          <p className="text-gray-500 dark:text-slate-300 text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
         </div>
       </div>
 
       <div className="mt-2">
         <Stat label="Total GGG" value={total} color="violet" />
-        <div className="text-xs text-slate-500 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
+        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
       </div>
 
       {/* Withdraw Section */}
-      <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200">
+      <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 border border-emerald-200 dark:border-emerald-700/50">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Wallet className="w-4 h-4 text-emerald-600" />
-            <span className="text-sm font-medium text-emerald-800">Withdraw to USDT</span>
+            <Wallet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-sm font-medium text-emerald-800 dark:text-emerald-300">Withdraw to USDT</span>
           </div>
-          <Badge className="bg-emerald-100 text-emerald-700 text-xs">
+          <Badge className="bg-emerald-100 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300 text-xs">
             1 GGG = ${GGG_TO_USD}
           </Badge>
         </div>
@@ -123,9 +123,9 @@ export default function WalletPanel() {
             Withdraw (${availableUSD.toFixed(2)} available)
           </Button>
         ) : (
-          <div className="text-xs text-emerald-700">
+          <div className="text-xs text-emerald-700 dark:text-emerald-400">
             <p className="font-medium">Min. withdrawal: ${MIN_WITHDRAWAL_USD}</p>
-            <p className="text-emerald-600">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
+            <p className="text-emerald-600 dark:text-emerald-500">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
           </div>
         )}
       </div>
@@ -141,7 +141,7 @@ export default function WalletPanel() {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-slate-700">Recent Transactions</p>
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Recent Transactions</p>
           <Badge variant="outline" className="text-xs">{txs.length}</Badge>
         </div>
         <ScrollArea className="h-64 pr-2">
@@ -169,11 +169,11 @@ export default function WalletPanel() {
 
 function Stat({ label, value, color = 'slate' }) {
   const colors = {
-    emerald: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-    rose: 'bg-rose-50 border-rose-200 text-rose-900',
-    amber: 'bg-amber-50 border-amber-200 text-amber-900',
-    violet: 'bg-violet-50 border-violet-200 text-violet-900',
-    slate: 'bg-slate-50 border-slate-200 text-slate-900'
+    emerald: 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700/50 text-emerald-900 dark:text-emerald-100',
+    rose: 'bg-rose-50 dark:bg-rose-900/30 border-rose-200 dark:border-rose-700/50 text-rose-900 dark:text-rose-100',
+    amber: 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700/50 text-amber-900 dark:text-amber-100',
+    violet: 'bg-violet-50 dark:bg-violet-900/30 border-violet-200 dark:border-violet-700/50 text-violet-900 dark:text-violet-100',
+    slate: 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100'
   };
   return (
     <div className={cn('p-3 rounded-xl border', colors[color] || colors.slate)}>
@@ -187,16 +187,16 @@ function TxRow({ tx }) {
   const isCredit = tx.direction === 'CREDIT';
   const sign = isCredit ? '+' : '-';
   const amount = `${sign}${tx.amount_ggg} GGG`;
-  const color = isCredit ? 'text-emerald-600' : 'text-rose-600';
+  const color = isCredit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
   const date = tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '';
 
   return (
-    <div className="p-3 rounded-lg bg-white border border-slate-200">
+    <div className="p-3 rounded-lg bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-slate-900 truncate">{tx.tx_type}</p>
-          {tx.memo && <p className="text-xs text-slate-500 truncate">{tx.memo}</p>}
-          <p className="text-[11px] text-slate-400 mt-0.5">{date}</p>
+          <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">{tx.tx_type}</p>
+          {tx.memo && <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{tx.memo}</p>}
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">{date}</p>
         </div>
         <div className={cn('text-sm font-semibold whitespace-nowrap', color)}>{amount}</div>
       </div>
