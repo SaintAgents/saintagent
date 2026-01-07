@@ -542,7 +542,7 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
-              <div className="relative shrink-0 flex flex-col items-center gap-3 -mt-12" data-user-id={profile?.user_id}>
+              <div className="relative shrink-0 flex flex-col items-center gap-3" data-user-id={profile?.user_id}>
                 <RankedAvatar
                   src={profile?.avatar_url}
                   name={profile?.display_name}
