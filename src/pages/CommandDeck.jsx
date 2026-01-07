@@ -469,7 +469,7 @@ export default function CommandDeck() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent bg-cover bg-center bg-fixed">
+    <div className="min-h-screen cmd-deck-bg">
       <div className={cn(
         "transition-all duration-300 pb-8",
         sidePanelOpen ? "pr-80" : "pr-0"
