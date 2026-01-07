@@ -827,7 +827,7 @@ export default function Sidebar({
   return (
     <div className={cn(
       "fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col transition-all duration-300",
-      isCollapsed ? "w-20" : "w-64"
+      isCollapsed ? "w-16" : "w-64"
     )}>
       {/* Logo */}
       <div className="flex items-center justify-between p-4 border-b border-slate-100">
