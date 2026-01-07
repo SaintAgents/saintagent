@@ -11,7 +11,7 @@ export default function GlobalSidePanelNudge() {
   const [isOpen, setIsOpen] = useState(false);
   const [dockSide, setDockSide] = useState('right');
 
-  // Listen for sidePanelOpen changes via custom event from SidePanel
+  // Listen for sidePanelOpen changes via custom event from CommandDeck
   useEffect(() => {
     const handlePanelChange = (e) => {
       if (e.detail?.isOpen !== undefined) {
@@ -19,11 +19,16 @@ export default function GlobalSidePanelNudge() {
       }
     };
     
-    // Check localStorage once on mount for dock side only
+    // Check localStorage on mount for initial state and dock side
     try {
       const savedSide = localStorage.getItem('sidePanelDockSide');
       if (savedSide === 'left' || savedSide === 'right') {
         setDockSide(savedSide);
+      }
+      // Also check initial open state from localStorage
+      const savedOpen = localStorage.getItem('sidePanelOpen');
+      if (savedOpen !== null) {
+        setIsOpen(savedOpen !== 'false');
       }
     } catch {}
     
