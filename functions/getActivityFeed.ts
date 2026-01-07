@@ -27,15 +27,21 @@ Deno.serve(async (req) => {
     const scope = body?.scope || 'everyone'; // 'friends' or 'everyone'
 
     // Build relevant user set: followings + me
-    const followings = await base44.entities.Follow.filter({ follower_id: me.email }).catch(() => []);
-    const followingIds = new Set([me.email, ...(followings || []).map(f => f.following_id).filter(Boolean)]);
+    let followings = [];
+    try {
+      followings = await base44.entities.Follow.filter({ follower_id: me.email }) || [];
+    } catch (_) {}
+    const followingIds = new Set([me.email, ...followings.map(f => f.following_id).filter(Boolean)]);
     const filterByFriends = scope === 'friends';
 
     const results = [];
 
     // Listings
     if (types.includes('listings')) {
-      const recentListings = await base44.entities.Listing.list('-created_date', 60).catch(() => []);
+      let recentListings = [];
+      try {
+        recentListings = await base44.entities.Listing.list('-created_date', 60) || [];
+      } catch (_) {}
       for (const l of recentListings) {
         if (filterByFriends && !followingIds.has(l.owner_id)) continue;
         results.push(toEvent({
@@ -44,23 +50,26 @@ Deno.serve(async (req) => {
           createdAt: l.created_date,
           actorId: l.owner_id,
           title: `New listing: ${l.title}`,
-          description: l.description || `${l.category} • ${l.delivery_mode}`,
+          description: l.description || `${l.category || ''} • ${l.delivery_mode || ''}`,
         }));
       }
     }
 
     // Missions
     if (types.includes('missions')) {
-      const recentMissions = await base44.entities.Mission.list('-updated_date', 60).catch(() => []);
+      let recentMissions = [];
+      try {
+        recentMissions = await base44.entities.Mission.list('-updated_date', 60) || [];
+      } catch (_) {}
       for (const m of recentMissions) {
         if (filterByFriends && !followingIds.has(m.creator_id)) continue;
-        const desc = m.status === 'completed' ? 'Mission completed' : (m.status === 'active' ? 'Mission active' : `Status: ${m.status}`);
+        const desc = m.status === 'completed' ? 'Mission completed' : (m.status === 'active' ? 'Mission active' : `Status: ${m.status || 'unknown'}`);
         results.push(toEvent({
           type: 'missions',
           source: m,
           createdAt: m.updated_date || m.created_date,
           actorId: m.creator_id,
-          title: m.title,
+          title: m.title || 'Untitled Mission',
           description: `${desc} • ${m.participant_count || 0} participants`,
         }));
       }
@@ -68,7 +77,10 @@ Deno.serve(async (req) => {
 
     // Testimonials
     if (types.includes('testimonials')) {
-      const recentTestimonials = await base44.entities.Testimonial.list('-created_date', 60).catch(() => []);
+      let recentTestimonials = [];
+      try {
+        recentTestimonials = await base44.entities.Testimonial.list('-created_date', 60) || [];
+      } catch (_) {}
       for (const t of recentTestimonials) {
         if (filterByFriends && !followingIds.has(t.from_user_id) && !followingIds.has(t.to_user_id)) continue;
         results.push(toEvent({
@@ -76,7 +88,7 @@ Deno.serve(async (req) => {
           source: t,
           createdAt: t.created_date,
           actorId: t.from_user_id,
-          title: `New testimonial for ${t.to_user_id}`,
+          title: `New testimonial for ${t.to_user_id || 'user'}`,
           description: `Rating ${t.rating || 5}★${t.text ? ' • ' + t.text : ''}`,
           targetId: t.to_user_id,
         }));
@@ -85,7 +97,10 @@ Deno.serve(async (req) => {
 
     // Reputation changes (TrustEvent and ReputationEvent)
     if (types.includes('reputation')) {
-      const trustEvents = await base44.entities.TrustEvent.list('-created_date', 60).catch(() => []);
+      let trustEvents = [];
+      try {
+        trustEvents = await base44.entities.TrustEvent.list('-created_date', 60) || [];
+      } catch (_) {}
       for (const ev of trustEvents) {
         if (filterByFriends && !followingIds.has(ev.user_id)) continue;
         if (Math.abs(Number(ev.delta || 0)) < 3) continue;
@@ -94,26 +109,27 @@ Deno.serve(async (req) => {
           source: ev,
           createdAt: ev.created_date,
           actorId: ev.user_id,
-          title: `Trust score ${ev.delta >= 0 ? 'increased' : 'decreased'} to ${ev.score_after}`,
+          title: `Trust score ${ev.delta >= 0 ? 'increased' : 'decreased'} to ${ev.score_after || 0}`,
           description: ev.reason_code || 'trust update',
           targetId: ev.user_id,
         }));
       }
+      let repEvents = [];
       try {
-        const repEvents = await base44.entities.ReputationEvent.list('-created_date', 60);
-        for (const ev of repEvents) {
-          if (filterByFriends && !followingIds.has(ev.user_id)) continue;
-          results.push(toEvent({
-            type: 'reputation',
-            source: ev,
-            createdAt: ev.created_date,
-            actorId: ev.user_id,
-            title: ev.reason_code || 'Reputation update',
-            description: ev.description || '',
-            targetId: ev.user_id,
-          }));
-        }
+        repEvents = await base44.entities.ReputationEvent.list('-created_date', 60) || [];
       } catch (_) {}
+      for (const ev of repEvents) {
+        if (filterByFriends && !followingIds.has(ev.user_id)) continue;
+        results.push(toEvent({
+          type: 'reputation',
+          source: ev,
+          createdAt: ev.created_date,
+          actorId: ev.user_id,
+          title: ev.reason_code || 'Reputation update',
+          description: ev.description || '',
+          targetId: ev.user_id,
+        }));
+      }
     }
 
     // Sort desc by created_date and trim
