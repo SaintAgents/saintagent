@@ -52,7 +52,7 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
-import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
+import { RANK_BADGE_IMAGES, RankBadge } from '@/components/reputation/rankBadges';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import TrustScoreCard from '@/components/trust/TrustScoreCard';
 import ReputationScoresCard from '@/components/reputation/ReputationScoresCard';
@@ -1154,10 +1154,13 @@ export default function Profile() {
               <div className="space-y-6">
                 <TrustScoreCard userId={profile?.user_id} />
                 <ReputationScoresCard userId={profile?.user_id} />
-            {/* Rank Progress */}
+            {/* Rank Progress with Badge */}
             <Card>
               <CardContent className="pt-6 text-center">
-                <RPRing rpPoints={rpPoints} className="mx-auto mb-4" />
+                <div className="flex flex-col items-center mb-4">
+                  <RankBadge code={rpInfo?.code || 'seeker'} size={80} className="mb-2 drop-shadow-lg" />
+                  <RPRing rpPoints={rpPoints} className="mx-auto" />
+                </div>
                 <div className="flex items-center justify-center gap-2">
                   <h3 className="text-xl font-bold text-slate-900 capitalize">{rpInfo.title}</h3>
                   <AscensionLadderPopover />
