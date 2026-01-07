@@ -132,7 +132,7 @@ export default function RankedAvatar({
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
             <img 
-                  src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cde6dea5a_goldcopy-Picsart-BackgroundRemover_inPixio.png'} 
+                  src={avatarUrl || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cde6dea5a_goldcopy-Picsart-BackgroundRemover_inPixio.png'} 
                   alt={name || 'Avatar'} 
                   className="w-full h-full object-cover"
                   style={{ filter: 'none' }}

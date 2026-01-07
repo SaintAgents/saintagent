@@ -104,7 +104,7 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
         <div className="flex items-start gap-3 mb-3">
           {/* Avatar with RankedAvatar component for consistent sigils */}
           <RankedAvatar
-            src={profile.avatar_url}
+            src={profile.avatar_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cde6dea5a_goldcopy-Picsart-BackgroundRemover_inPixio.png'}
             name={profile.display_name}
             size={56}
             userId={profile.user_id}
