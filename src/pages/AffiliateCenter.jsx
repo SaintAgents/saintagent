@@ -30,7 +30,7 @@ import { Progress } from "@/components/ui/progress";
 import CreateCampaignModal from '@/components/affiliate/CreateCampaignModal';
 import CampaignAnalytics from '@/components/affiliate/CampaignAnalytics';
 
-// Affiliate Tier System
+// Affiliate Tier System with badge-style icons
 const AFFILIATE_TIERS = [
   { 
     id: 'bronze', 
@@ -42,6 +42,8 @@ const AFFILIATE_TIERS = [
     textColor: 'text-amber-700',
     borderColor: 'border-amber-300',
     icon: Award,
+    badgeGradient: 'from-amber-500 to-orange-400',
+    glowColor: 'shadow-amber-400/40',
     benefits: ['Base 0.25 GGG per referral', 'Personal invite link', 'Basic analytics']
   },
   { 
@@ -54,6 +56,8 @@ const AFFILIATE_TIERS = [
     textColor: 'text-slate-600',
     borderColor: 'border-slate-300',
     icon: Star,
+    badgeGradient: 'from-slate-300 to-slate-400',
+    glowColor: 'shadow-slate-400/50',
     benefits: ['0.35 GGG per referral (+40%)', 'Offer-specific links', 'Priority support', 'Early feature access']
   },
   { 
@@ -66,6 +70,8 @@ const AFFILIATE_TIERS = [
     textColor: 'text-yellow-700',
     borderColor: 'border-yellow-400',
     icon: Crown,
+    badgeGradient: 'from-amber-400 to-yellow-300',
+    glowColor: 'shadow-amber-400/60',
     benefits: ['0.50 GGG per referral (+100%)', 'Custom promo materials', 'Exclusive leader channel', 'Co-marketing opportunities', 'VIP badge on profile']
   }
 ];
@@ -715,29 +721,37 @@ export default function AffiliateCenter() {
                     <div 
                       key={tier.id}
                       className={cn(
-                        "p-3 rounded-lg border-2 transition-all",
+                        "p-4 rounded-xl border-2 transition-all",
                         isCurrentTier ? cn(tier.borderColor, tier.bgColor) : "border-slate-200",
-                        isLocked && "opacity-60"
+                        isLocked && "opacity-70"
                       )}
                     >
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-3 mb-3">
+                        {/* Badge-style icon */}
                         <div className={cn(
-                          "w-8 h-8 rounded-lg flex items-center justify-center",
-                          isLocked ? "bg-slate-200" : `bg-gradient-to-br ${tier.color}`
+                          "relative w-12 h-12 rounded-full flex items-center justify-center shadow-lg",
+                          isLocked 
+                            ? "bg-slate-200" 
+                            : `bg-gradient-to-br ${tier.badgeGradient} ${tier.glowColor}`
                         )}>
                           {isLocked ? (
-                            <Lock className="w-4 h-4 text-slate-400" />
+                            <Lock className="w-5 h-5 text-slate-400" />
                           ) : (
-                            <TierIcon className="w-4 h-4 text-white" />
+                            <TierIcon className="w-6 h-6 text-white drop-shadow-lg" />
+                          )}
+                          {isCurrentTier && (
+                            <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
+                              <CheckCircle2 className="w-3 h-3 text-white" />
+                            </div>
                           )}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className={cn("font-semibold text-sm", isCurrentTier && tier.textColor)}>
+                            <span className={cn("font-bold text-base", isCurrentTier && tier.textColor)}>
                               {tier.name}
                             </span>
                             {isCurrentTier && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-600 text-white">CURRENT</span>
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500 text-white font-medium">CURRENT</span>
                             )}
                           </div>
                           <p className="text-xs text-slate-500">
@@ -745,20 +759,20 @@ export default function AffiliateCenter() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className={cn("font-bold text-sm", isLocked ? "text-slate-400" : "text-emerald-600")}>
+                          <p className={cn("font-bold text-lg", isLocked ? "text-slate-400" : "text-emerald-600")}>
                             {tier.commission} GGG
                           </p>
                           <p className="text-[10px] text-slate-500">per referral</p>
                         </div>
                       </div>
                       
-                      <div className="space-y-1 mt-2">
+                      <div className="space-y-1.5 pl-1">
                         {tier.benefits.map((benefit, i) => (
                           <div key={i} className="flex items-center gap-2 text-xs">
                             {isLocked ? (
-                              <Lock className="w-3 h-3 text-slate-300" />
+                              <Lock className="w-3.5 h-3.5 text-slate-300 shrink-0" />
                             ) : (
-                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                             )}
                             <span className={isLocked ? "text-slate-400" : "text-slate-600"}>{benefit}</span>
                           </div>
