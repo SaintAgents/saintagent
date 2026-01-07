@@ -17,6 +17,7 @@ import SaintStewardReviewPanel from '@/components/leader/SaintStewardReviewPanel
 import BroadcastCenter from '@/components/leader/BroadcastCenter';
 import LeaderMissionsPanel from '@/components/leader/LeaderMissionsPanel';
 import GovernancePortal from '@/components/leader/GovernancePortal';
+import BackButton from '@/components/hud/BackButton';
 
 export default function LeaderChannel() {
   const [nominationModalOpen, setNominationModalOpen] = useState(false);
@@ -63,26 +64,43 @@ export default function LeaderChannel() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <Radio className="w-6 h-6 text-amber-500" />
-                144K Leader Channel
-              </h1>
-              <p className="text-slate-500 mt-1">Exclusive space for verified leaders and stewards</p>
-            </div>
-            <Button 
-              onClick={() => setNominationModalOpen(true)}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Nominate Saint Steward
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
+      {/* Hero Section */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/45a43f923_leader.jpg"
+          alt="144K Leader Channel"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              <Radio className="w-10 h-10 text-amber-300 drop-shadow-lg" />
+              144K Leader Channel
+            </h1>
+            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              Exclusive space for verified leaders and stewards
+            </p>
           </div>
+        </div>
+        <div className="absolute top-4 left-4">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Header Actions */}
+        <div className="flex items-center justify-end mb-6">
+          <Button 
+            onClick={() => setNominationModalOpen(true)}
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Nominate Saint Steward
+          </Button>
         </div>
 
         {/* Stats Bar */}
