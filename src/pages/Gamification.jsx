@@ -534,6 +534,7 @@ export default function Gamification() {
       </div>
 
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
+      </div>
     </div>
   );
 }
