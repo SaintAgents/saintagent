@@ -137,6 +137,9 @@ export default function Sidebar({
   const [matrixBrightness, setMatrixBrightness] = useState(() => {
     try { return parseFloat(localStorage.getItem('matrixBrightness')) || 0.8; } catch { return 0.8; }
   });
+  const [matrixVariance, setMatrixVariance] = useState(() => {
+    try { return parseFloat(localStorage.getItem('matrixVariance')) || 0.5; } catch { return 0.5; }
+  });
   const isDark = theme === 'dark';
 
   // Persist background effect and dispatch event for Layout
@@ -153,8 +156,13 @@ export default function Sidebar({
 
   React.useEffect(() => {
     try { localStorage.setItem('matrixBrightness', String(matrixBrightness)); } catch {}
-    document.dispatchEvent(new CustomEvent('matrixSettingsChange', { detail: { speed: matrixSpeed, brightness: matrixBrightness } }));
+    document.dispatchEvent(new CustomEvent('matrixSettingsChange', { detail: { speed: matrixSpeed, brightness: matrixBrightness, variance: matrixVariance } }));
   }, [matrixBrightness]);
+
+  React.useEffect(() => {
+    try { localStorage.setItem('matrixVariance', String(matrixVariance)); } catch {}
+    document.dispatchEvent(new CustomEvent('matrixSettingsChange', { detail: { speed: matrixSpeed, brightness: matrixBrightness, variance: matrixVariance } }));
+  }, [matrixVariance]);
 
   // Pop-off state
   const [isPoppedOff, setIsPoppedOff] = useState(false);
@@ -689,6 +697,20 @@ export default function Sidebar({
                     value={[matrixBrightness]}
                     onValueChange={([v]) => setMatrixBrightness(v)}
                     min={0.1}
+                    max={1}
+                    step={0.05}
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs text-slate-600">Variance</Label>
+                    <span className="text-xs text-slate-500">{Math.round(matrixVariance * 100)}%</span>
+                  </div>
+                  <Slider
+                    value={[matrixVariance]}
+                    onValueChange={([v]) => setMatrixVariance(v)}
+                    min={0}
                     max={1}
                     step={0.05}
                     className="w-full"
