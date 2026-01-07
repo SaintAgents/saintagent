@@ -152,32 +152,28 @@ export default function GlobalChatWidget() {
 
   const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
 
-  // Floating button when closed - vertical orientation
+  // Floating button when closed - compact
   if (!isOpen) {
     return (
       <div
         className="fixed z-50"
         style={{ left: position.x, top: position.y ?? undefined, bottom: position.y ? undefined : 16 }}
       >
-        <div
-          onMouseDown={handleDragStart}
-          onTouchStart={handleDragStart}
+        <button
+          onClick={() => setIsOpen(true)}
           className={cn(
-            "flex flex-col items-center gap-2 px-3 py-4 bg-gradient-to-b from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
-            isDragging ? "cursor-grabbing scale-105" : "cursor-grab hover:scale-105"
+            "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
+            "hover:scale-105"
           )}
         >
-          <GripHorizontal className="w-4 h-4 opacity-60 rotate-90" />
-          <button onClick={() => setIsOpen(true)} className="flex flex-col items-center gap-2">
-            <Globe className="w-5 h-5" />
-            <span className="text-xs font-medium writing-mode-vertical" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>Global Chat</span>
-            {onlineUsers.length > 0 && (
-              <Badge className="bg-emerald-500 text-white text-xs px-1.5">
-                {onlineUsers.length}
-              </Badge>
-            )}
-          </button>
-        </div>
+          <Globe className="w-4 h-4" />
+          <span className="text-xs font-medium">Chat</span>
+          {onlineUsers.length > 0 && (
+            <Badge className="bg-emerald-500 text-white text-[10px] px-1 py-0 h-4 min-w-4">
+              {onlineUsers.length}
+            </Badge>
+          )}
+        </button>
       </div>
     );
   }
