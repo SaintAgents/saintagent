@@ -69,11 +69,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Link } from 'react-router-dom';
-import { Trophy } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
+  { id: 'gamification', label: 'Gamification', icon: Trophy, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
   { id: 'matches', label: 'Matches', icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
   { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
   { id: 'missions', label: 'Missions', icon: Target, page: 'Missions', hint: 'Join collaborative missions and quests' },
