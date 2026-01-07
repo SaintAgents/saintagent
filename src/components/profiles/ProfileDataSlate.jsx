@@ -155,7 +155,7 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
               )}
               style={{ background: `linear-gradient(to right, var(--tw-gradient-stops))` }}>
 
-              <span className={cn(`bg-gradient-to-r ${rankConfig.color} bg-clip-text text-transparent`, "dark:bg-none dark:text-[#00ff88]")}>
+              <span className="bg-lime-900 text-green-100 from-amber-400 to-yellow-500 dark:bg-none dark:text-[#00ff88]">
                 {rankConfig.label}
               </span>
             </Badge>
