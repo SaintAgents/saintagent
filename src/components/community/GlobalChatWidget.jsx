@@ -73,7 +73,7 @@ export default function GlobalChatWidget() {
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const dx = clientX - dragRef.current.startX;
     const dy = clientY - dragRef.current.startY;
-    const newX = Math.max(0, Math.min(window.innerWidth - 200, dragRef.current.startPosX + dx));
+    const newX = Math.max(0, Math.min(window.innerWidth - 50, dragRef.current.startPosX + dx));
     const newY = Math.max(60, Math.min(window.innerHeight - 60, dragRef.current.startPosY + dy));
     setPosition({ x: newX, y: newY });
   };
