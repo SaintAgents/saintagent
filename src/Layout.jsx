@@ -299,11 +299,20 @@ function AuthenticatedLayout({ children, currentPageName }) {
     const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
     if (!currentUser || currentPageName === 'Onboarding') return;
     if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
-    if (!justCompleted && (!onboarding || onboarding.status !== 'complete')) {
-      window.location.href = createPageUrl('Onboarding');
-    }
+
+    // If justCompleted flag is set and onboarding is complete, clear the flag and stay
     if (justCompleted && onboarding?.status === 'complete') {
       try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
+      return;
+    }
+
+    // If justCompleted flag is set, don't redirect even if record doesn't exist yet (race condition)
+    if (justCompleted) return;
+
+    // Only redirect to onboarding if record exists but status is NOT complete
+    // Don't redirect if no record exists (new user might be in process of creating it)
+    if (onboarding && onboarding.status !== 'complete') {
+      window.location.href = createPageUrl('Onboarding');
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
