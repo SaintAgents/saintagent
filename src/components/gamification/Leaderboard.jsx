@@ -104,7 +104,7 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
       <div className="flex justify-center items-end gap-4 mb-6 pt-4">
         {[1, 0, 2].map((idx) => {
           const entry = leaderboardData[idx];
-          if (!entry) return null;
+          if (!entry) return <div key={`empty-${idx}`} />;
           const rank = idx === 1 ? 1 : idx === 0 ? 2 : 3;
           const height = rank === 1 ? 'h-24' : rank === 2 ? 'h-20' : 'h-16';
           const style = RANK_STYLES[rank];
