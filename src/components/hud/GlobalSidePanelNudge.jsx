@@ -57,8 +57,8 @@ export default function GlobalSidePanelNudge() {
     }
   };
 
-  // Show the nudge when panel is closed
-  if (isOpen) return null;
+  // Always show the nudge handle - it's the entry point to the side panel
+  // Only hide if explicitly open on CommandDeck
 
   return (
     <div

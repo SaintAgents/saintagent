@@ -86,33 +86,24 @@ export default function Quests() {
 
   return (
     <div className="min-h-screen bg-[#0a1a0a]">
-      {/* Hero Section */}
-      <div className="relative h-64 md:h-80 overflow-hidden">
-        <img
-          src={HERO_IMAGE}
-          alt="Quests"
-          className="w-full h-full object-cover object-top hero-image"
-          data-no-filter="true" />
-
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a1a0a]" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-amber-100 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
-            style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+      {/* Header Section - No Hero */}
+      <div className="px-4 pt-6 pb-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-2">
+            <BackButton className="text-amber-200/80 hover:text-amber-100" />
+            <h1 className="text-3xl md:text-4xl font-bold text-amber-100 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
+              style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Quests & Rewards
             </h1>
-            <p className="text-amber-200/80 mt-2 text-lg tracking-wider">
-
-            </p>
           </div>
-        </div>
-        <div className="absolute top-4 left-4">
-          <BackButton className="text-amber-200/80 hover:text-amber-100" />
+          <p className="text-amber-200/80 text-lg tracking-wider ml-12">
+            Complete quests, earn badges, and climb the leaderboard
+          </p>
         </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10 pb-12">
+      <div className="max-w-7xl mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
           {/* Left Column - Quest Tracker */}
