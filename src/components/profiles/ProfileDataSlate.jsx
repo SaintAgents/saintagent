@@ -140,11 +140,18 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
             <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors" style={{ color: 'var(--profile-name-color, #0f172a)' }}>
               <span className="dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.6)] dark:group-hover:text-[#00ff88]">
                 {profile.display_name || 'Anonymous'}
+                {profile.sa_number && (
+                  <span className="text-violet-600 dark:text-[#00ff88]/80 ml-1 text-xs font-medium">
+                    - SA#{profile.sa_number}
+                  </span>
+                )}
               </span>
             </h3>
-            {profile.handle && (
-              <p className="text-sm text-slate-500 truncate">
-                <span className="dark:text-[#00ff88]/80">@{profile.handle}</span>
+            {(profile.handle || profile.user_id) && (
+              <p className="text-xs text-slate-500 truncate">
+                <span className="dark:text-[#00ff88]/70">
+                  {profile.handle ? `@${profile.handle}` : ''}{profile.handle && profile.user_id ? ' • ' : ''}{profile.user_id}
+                </span>
               </p>
             )}
             <Badge 

@@ -129,7 +129,9 @@ export default function MiniProfile({
               <div className="min-w-0 flex-1 pt-1">
                 {showName && (
                   <div className="flex items-center gap-1 min-w-0">
-                    <div className="text-base font-semibold text-slate-900 dark:text-white truncate">{displayName}</div>
+                    <div className="text-base font-semibold text-slate-900 dark:text-white truncate">
+                      {displayName}{sa && <span className="text-violet-600 dark:text-violet-400 ml-1">- SA#{sa}</span>}
+                    </div>
                     {showHelpHint && (
                       <HelpHint
                         side="right"
@@ -180,7 +182,9 @@ export default function MiniProfile({
             <div className="min-w-0">
               {showName && (
                 <div className="flex items-center gap-1 min-w-0">
-                  <div className="text-sm font-medium text-slate-900 truncate">{displayName}</div>
+                  <div className="text-sm font-medium text-slate-900 truncate">
+                    {displayName}{sa && <span className="text-violet-600 dark:text-violet-400 ml-1 text-xs">- SA#{sa}</span>}
+                  </div>
                   {showHelpHint && (
                     <HelpHint
                       side="right"
