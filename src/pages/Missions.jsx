@@ -186,7 +186,7 @@ export default function Missions() {
           <div className="flex items-center gap-2 mb-4">
             <BackButton />
             <Target className="w-6 h-6 text-amber-500" />
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Missions
               Missions & Quests
             </h1>
             <HelpHint content="Missions: Structured units of work driving real-world impact. Browse & Join: Find missions by Lane (Food Security, Regenerative Ag, etc.) or Region. Execute Tasks: Complete assigned tasks and submit Evidence (files, links, photos). Verification & Payout: Once the Leader verifies your evidence, GGG is released from mission escrow to your wallet. Mission Types: Platform (system), Circle, Region, Leader. Rewards: GGG, Rank Points, Boost multipliers. Leaders design missions with milestone-based bounties (capped at $55)." />
