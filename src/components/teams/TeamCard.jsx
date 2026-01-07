@@ -79,15 +79,22 @@ export default function TeamCard({ team, onView, onJoin, isMember, isLeader }) {
 
         {/* Stats */}
         {(team.total_missions_completed > 0 || team.total_ggg_earned > 0) && (
-          <div className="flex items-center gap-4 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 mb-3">
-            <div className="flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-amber-600" />
-              <span className="text-xs font-medium text-amber-700">{team.total_missions_completed} completed</span>
+          <div className="flex flex-col gap-1.5 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 mb-3">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5 text-amber-600" />
+                <span className="text-xs font-medium text-amber-700">{team.total_missions_completed} completed</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span className="text-xs font-medium text-amber-700">{team.total_ggg_earned?.toFixed(2)} GGG</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span className="text-xs font-medium text-amber-700">{team.total_ggg_earned?.toFixed(2)} GGG earned</span>
-            </div>
+            {team.total_ggg_earned > 0 && (
+              <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                ≈ ${((team.total_ggg_earned || 0) * 145).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD earned
+              </div>
+            )}
           </div>
         )}
 
