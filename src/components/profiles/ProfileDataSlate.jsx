@@ -128,7 +128,8 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
             <div className={cn(
               "absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
               `bg-gradient-to-br ${rankConfig.color} text-white`,
-              "border-2 border-white dark:border-[#0a0a0a]"
+              "border-2 border-white dark:border-[#050505]",
+              "dark:bg-gradient-to-br dark:from-[#00ff88] dark:to-[#00d4ff] dark:text-black dark:shadow-[0_0_8px_rgba(0,255,136,0.6)]"
             )}>
               {rankConfig.label.charAt(0)}
             </div>
@@ -202,16 +203,17 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
                   key={idx}
                   className={cn(
                     "w-6 h-6 rounded-full flex items-center justify-center",
-                    badge.bg
+                    badge.bg,
+                    "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
                   )}
                   title={badge.label}
                 >
-                  <Icon className={cn("w-3 h-3", badge.color)} />
+                  <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
                 </div>
               );
             })}
             {profile.achievements?.length > 3 && (
-              <span className="text-[10px] text-slate-500 dark:text-slate-400">
+              <span className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">
                 +{profile.achievements.length - 3}
               </span>
             )}
