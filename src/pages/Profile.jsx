@@ -418,7 +418,7 @@ export default function Profile() {
               </div>
               <div className="flex-1 pb-2 mt-8">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || 'User'}</h1>
+                  <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline && (
                     <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
                   )}
