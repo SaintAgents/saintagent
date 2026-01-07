@@ -550,10 +550,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Cards and containers - semi-transparent obsidian with neon glow borders */
-        [data-theme='dark'] .rounded-xl, 
-        [data-theme='dark'] .rounded-lg,
-        [data-theme='dark'] .rounded-2xl,
-        [data-theme='dark'] .rounded-md {
+        /* EXCLUDE images from these styles */
+        [data-theme='dark'] .rounded-xl:not(img), 
+        [data-theme='dark'] .rounded-lg:not(img),
+        [data-theme='dark'] .rounded-2xl:not(img),
+        [data-theme='dark'] .rounded-md:not(img) {
           background-color: rgba(5, 5, 5, 0.85) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
@@ -728,9 +729,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
           box-shadow: 0 0 8px rgba(0, 255, 136, 0.2) !important;
         }
 
-        /* Icons - neon glow */
-        [data-theme='dark'] svg {
+        /* Icons - neon glow - but NOT inside images */
+        [data-theme='dark'] svg:not(.listing-image svg) {
           filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.4));
+        }
+
+        /* Ensure listing images are never filtered */
+        [data-theme='dark'] img.listing-image,
+        [data-theme='dark'] .listing-image {
+          filter: none !important;
+          -webkit-filter: none !important;
+          opacity: 1 !important;
         }
 
         /* Hover effects with neon glow */

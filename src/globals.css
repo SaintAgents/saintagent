@@ -40,9 +40,19 @@ html[data-theme='hacker'] img[data-no-filter="true"],
 [data-theme='dark'] .listing-image,
 [data-theme='dark'] img.listing-image {
   filter: none !important;
+  -webkit-filter: none !important;
   opacity: 1 !important;
   display: block !important;
   visibility: visible !important;
+  mix-blend-mode: normal !important;
+}
+
+/* CRITICAL: Override the global img filter for specific image classes */
+[data-theme='dark'] .rounded-xl img.listing-image,
+[data-theme='dark'] .rounded-lg img.listing-image,
+[data-theme='dark'] div img.listing-image {
+  filter: none !important;
+  -webkit-filter: none !important;
 }
 
 /* Avatar images - preserve natural colors in DARK theme only */
