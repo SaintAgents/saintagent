@@ -160,7 +160,7 @@ export default function RankedAvatar({
               />
             </div>
           </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-[200px]">
+          <TooltipContent side="top" className="max-w-[200px] z-[9999]">
             <p className="font-semibold text-sm capitalize">{rankTitle}</p>
             <p className="text-xs text-slate-500">{rpPointsFinal || 0} RP</p>
             {rpInfo?.nextTitle && (
@@ -180,7 +180,7 @@ export default function RankedAvatar({
               onClick={(e) => e.stopPropagation()}
             />
           </TooltipTrigger>
-          <TooltipContent side="bottom" className="max-w-[200px]">
+          <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
             <p className="font-medium text-sm">{STATUS_LABELS[statusFinal] || 'Online'}</p>
             {statusMessageFinal && (
               <p className="text-xs text-slate-500 mt-0.5">{statusMessageFinal}</p>
@@ -226,7 +226,7 @@ export default function RankedAvatar({
                 <AffiliateBadge tier={affiliateTier} size={symbolPx * 2} />
               </div>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[200px]">
+            <TooltipContent side="top" className="max-w-[200px] z-[9999]">
               <p className="font-semibold text-sm capitalize">{affiliateTier} Affiliate</p>
               <p className="text-xs text-slate-500">{affiliatePaidFinal} paid referrals</p>
             </TooltipContent>
