@@ -675,7 +675,7 @@ export default function CommandDeck() {
                 {/* Living Agent Badge */}
                 <div className="mb-4 flex items-center gap-3">
                   <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/922ce8816_Screenshot2026-01-07044514.png" 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png" 
                     alt="Eternal Flame" 
                     className="w-12 h-12 object-contain"
                     data-no-filter="true"
