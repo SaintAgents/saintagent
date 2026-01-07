@@ -40,9 +40,10 @@ export default function GlobalSidePanelNudge() {
   }, []);
 
   const handleClick = () => {
-    // Dispatch custom event for any listeners (like CommandDeck's SidePanel)
-    // Don't set local state here - let the parent component manage it via the event
+    // Dispatch custom event for CommandDeck to open the SidePanel
     document.dispatchEvent(new CustomEvent('toggleSidePanel', { detail: { open: true } }));
+    // Also update local state immediately so the nudge hides
+    setIsOpen(true);
   };
 
   // Show the nudge when panel is closed
