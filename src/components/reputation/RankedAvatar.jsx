@@ -36,6 +36,11 @@ function getRingConfig(rankCode = 'seeker') {
   return map[rankCode] || map.seeker;
 }
 
+// Default avatars based on gender
+const DEFAULT_AVATAR_MALE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cfced405a_Phoenix_10_A_highly_detailed_and_intricately_designed_bimetal_1_bbf7d098-118c-4923-a728-494807a6f305.jpg';
+const DEFAULT_AVATAR_FEMALE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png';
+const DEFAULT_AVATAR_NEUTRAL = DEFAULT_AVATAR_FEMALE; // Default to gold coin
+
 export default function RankedAvatar({
   src,
   name,
@@ -51,6 +56,7 @@ export default function RankedAvatar({
   showPhotoIcon = false,
   galleryImages = [],
   affiliatePaidCount,
+  gender, // 'male', 'female', or undefined
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
@@ -78,8 +84,28 @@ export default function RankedAvatar({
   const fetchedGallery = fetchedProfile?.gallery_images || [];
   const propsGallery = galleryImages || [];
   const combinedGallery = fetchedGallery.length > 0 ? fetchedGallery : propsGallery;
+  
+  // Determine default avatar based on gender
+  const getDefaultAvatar = () => {
+    if (gender === 'male') return DEFAULT_AVATAR_MALE;
+    if (gender === 'female') return DEFAULT_AVATAR_FEMALE;
+    // Try to guess from name if no gender provided
+    const nameToCheck = (name || '').toLowerCase();
+    const femaleIndicators = ['ms', 'mrs', 'miss', 'divine', 'sarah', 'luna', 'sophia', 'elena', 'aria', 'emma', 'olivia', 'ava', 'isabella', 'mia', 'charlotte', 'amelia', 'harper', 'evelyn', 'jessica', 'jennifer', 'amanda', 'ashley', 'stephanie', 'nicole', 'elizabeth', 'rachel', 'michelle', 'kimberly', 'melissa', 'deborah', 'donna', 'cynthia', 'dorothy', 'lisa', 'nancy', 'karen', 'betty', 'helen', 'sandra', 'maria', 'anna', 'margaret', 'ruth', 'sharon', 'laura', 'barbara', 'susan', 'rebecca', 'kathleen', 'amy', 'shirley', 'angela', 'brenda', 'pamela', 'emma', 'nicole', 'samantha', 'katherine', 'christine', 'helen', 'debra', 'rachel', 'carolyn', 'janet', 'catherine', 'maria', 'heather', 'diane', 'julie', 'joyce', 'victoria', 'kelly', 'christina', 'joan', 'evelyn', 'judith', 'megan', 'andrea', 'cheryl', 'hannah', 'jacqueline', 'martha', 'gloria', 'teresa', 'ann', 'sara', 'madison', 'frances', 'kathryn', 'janice', 'jean', 'abigail', 'alice', 'judy', 'sophia', 'grace', 'denise', 'amber', 'doris', 'marilyn', 'danielle', 'beverly', 'isabella', 'theresa', 'diana', 'natalie', 'brittany', 'charlotte', 'marie', 'kayla', 'alexis', 'lori'];
+    const maleIndicators = ['mr', 'marcus', 'james', 'david', 'phoenix', 'elder', 'michael', 'john', 'robert', 'william', 'richard', 'joseph', 'thomas', 'charles', 'christopher', 'daniel', 'matthew', 'anthony', 'mark', 'donald', 'steven', 'paul', 'andrew', 'joshua', 'kenneth', 'kevin', 'brian', 'george', 'timothy', 'ronald', 'edward', 'jason', 'jeffrey', 'ryan', 'jacob', 'gary', 'nicholas', 'eric', 'jonathan', 'stephen', 'larry', 'justin', 'scott', 'brandon', 'benjamin', 'samuel', 'raymond', 'gregory', 'frank', 'alexander', 'patrick', 'jack', 'dennis', 'jerry', 'tyler', 'aaron', 'jose', 'adam', 'nathan', 'henry', 'douglas', 'zachary', 'peter', 'kyle', 'noah', 'ethan', 'jeremy', 'walter', 'christian', 'keith', 'roger', 'terry', 'austin', 'sean', 'gerald', 'carl', 'harold', 'dylan', 'arthur', 'lawrence', 'jordan', 'jesse', 'bryan', 'billy', 'bruce', 'gabriel', 'joe', 'logan', 'alan', 'juan', 'wayne', 'elijah', 'randy', 'roy', 'vincent', 'ralph', 'eugene', 'russell', 'bobby', 'mason', 'philip', 'louis'];
+    
+    for (const indicator of femaleIndicators) {
+      if (nameToCheck.includes(indicator)) return DEFAULT_AVATAR_FEMALE;
+    }
+    for (const indicator of maleIndicators) {
+      if (nameToCheck.includes(indicator)) return DEFAULT_AVATAR_MALE;
+    }
+    return DEFAULT_AVATAR_NEUTRAL;
+  };
+  
   const avatarUrl = src || fetchedProfile?.avatar_url;
-  const allImages = [avatarUrl, ...combinedGallery].filter(Boolean).slice(0, 6);
+  const finalAvatarUrl = avatarUrl || getDefaultAvatar();
+  const allImages = [avatarUrl || finalAvatarUrl, ...combinedGallery].filter(Boolean).slice(0, 6);
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
@@ -132,7 +158,7 @@ export default function RankedAvatar({
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
             <img 
-                  src={avatarUrl || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cfced405a_Phoenix_10_A_highly_detailed_and_intricately_designed_bimetal_1_bbf7d098-118c-4923-a728-494807a6f305.jpg'} 
+                  src={finalAvatarUrl} 
                   alt={name || 'Avatar'} 
                   className="w-full h-full object-cover"
                   style={{ filter: 'none' }}
