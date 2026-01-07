@@ -320,6 +320,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // Determine if we should show starfield (dark/hacker theme + starfield effect selected)
   const showStarfield = (theme === 'dark' || theme === 'hacker') && bgEffect === 'starfield';
   const showMatrixRain = (theme === 'dark' || theme === 'hacker') && bgEffect === 'matrix';
+  const showNebula = (theme === 'dark' || theme === 'hacker') && bgEffect === 'nebula';
+  const showCircuit = (theme === 'dark' || theme === 'hacker') && bgEffect === 'circuit';
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
