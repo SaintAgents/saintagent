@@ -1128,17 +1128,24 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] [data-avatar-card], [data-theme='hacker'] [data-avatar-card] * { background-color: #000 !important; color: #00ff00 !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
-          /* Hacker theme image filter - exclude hero images, avatars, badges */
-          [data-theme='hacker'] img:not([data-no-filter]):not([data-no-filter="true"]):not(.mission-image):not(.mission-card img):not(.hero-image):not(.rank-badge-img) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
-          /* Force hero images to display without filter */
-          [data-theme='hacker'] .hero-image,
+          
+          /* HERO IMAGES - NEVER FILTER - Highest specificity override */
           [data-theme='hacker'] img.hero-image,
+          [data-theme='hacker'] .hero-image,
+          html[data-theme='hacker'] img.hero-image,
           html[data-theme='hacker'] .hero-image,
-          html[data-theme='hacker'] img.hero-image { 
+          [data-theme='hacker'] img[data-no-filter="true"],
+          html[data-theme='hacker'] img[data-no-filter="true"] { 
             filter: none !important; 
+            -webkit-filter: none !important;
             opacity: 1 !important; 
             display: block !important;
             visibility: visible !important;
+          }
+          
+          /* Hacker theme image filter - exclude hero images, avatars, badges - apply AFTER hero override */
+          [data-theme='hacker'] img:not(.hero-image):not([data-no-filter]):not([data-no-filter="true"]):not(.mission-image):not(.mission-card img):not(.rank-badge-img) { 
+            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; 
           }
           [data-theme='hacker'] .mission-card img,
           [data-theme='hacker'] .mission-image,
