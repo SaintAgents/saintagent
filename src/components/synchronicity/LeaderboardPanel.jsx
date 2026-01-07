@@ -91,12 +91,13 @@ export default function LeaderboardPanel() {
     queryFn: () => base44.entities.UserProfile.list('-created_date', 100)
   });
 
-  // Compute topGGG from wallets + profiles
+  // Compute topGGG from wallets + profiles (always compute, never conditionally)
   const topGGG = React.useMemo(() => {
+    if (!wallets || wallets.length === 0) return [];
     return wallets.map(wallet => {
       const profile = allProfiles.find(p => p.user_id === wallet.user_id);
       return {
-        ...profile,
+        ...(profile || {}),
         id: wallet.id,
         user_id: wallet.user_id,
         display_name: profile?.display_name || wallet.user_id?.split('@')[0] || 'User',
@@ -106,15 +107,16 @@ export default function LeaderboardPanel() {
     }).filter(p => p.ggg_balance > 0).slice(0, 5);
   }, [wallets, allProfiles]);
 
-  const getLeaderboardData = () => {
+  // Get leaderboard data based on active tab
+  const leaderboardData = React.useMemo(() => {
     switch (activeTab) {
       case 'missions': return { data: topMissions, metric: 'meetings_completed', label: 'missions' };
       case 'ggg': return { data: topGGG, metric: 'ggg_balance', label: 'GGG' };
       default: return { data: topAgents, metric: 'rp_points', label: 'RP' };
     }
-  };
+  }, [activeTab, topAgents, topMissions, topGGG]);
 
-  const { data, metric, label } = getLeaderboardData();
+  const { data, metric, label } = leaderboardData;
 
   return (
     <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
