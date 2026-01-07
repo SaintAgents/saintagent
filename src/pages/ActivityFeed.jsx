@@ -94,9 +94,23 @@ export default function ActivityFeed() {
           </CardContent>
         </Card>
 
+        {/* Rate Limit Warning */}
+        {isRateLimited && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3">
+            <RefreshCcw className="w-5 h-5 text-amber-600" />
+            <div className="flex-1">
+              <p className="text-amber-800 font-medium">Temporarily unable to load</p>
+              <p className="text-amber-600 text-sm">Rate limit reached. Please refresh the page in a moment.</p>
+            </div>
+            <Button variant="outline" size="sm" className="rounded-lg border-amber-300 text-amber-700" onClick={() => refetch()}>
+              Retry
+            </Button>
+          </div>
+        )}
+
         {/* Feed */}
         <div className="space-y-3">
-          {items.length === 0 ? (
+          {items.length === 0 && !isRateLimited ? (
             <div className="text-center py-16">
               <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-slate-900 mb-2">No recent activity yet</h3>
