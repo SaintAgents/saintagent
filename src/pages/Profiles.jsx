@@ -304,7 +304,7 @@ export default function Profiles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#0a0a0a] dark:to-[#050505]">
       {/* Hero Section */}
-      <div className="relative h-48 md:h-56 overflow-hidden">
+      <div className="relative h-48 md:h-56 dark:h-20 overflow-hidden">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ac34fe2b1_AroomfilledwithpeoplevisualelementssuggestglobalreachethicalcoordinationandstrategicalignmentSoftlyglowinggridscircularinterfaceslayeredtransparencyandstructuredgeometrycreate4.jpg"
           alt="Community Profiles"
