@@ -419,6 +419,9 @@ export default function Profile() {
               <div className="flex-1 pb-2 mt-8">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || 'User'}</h1>
+                  {profile?.tagline && (
+                    <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
+                  )}
                   {profile?.leader_tier === 'verified144k' && (
                     <Badge className="bg-amber-100 text-amber-700">
                       <Crown className="w-3 h-3 mr-1" />
