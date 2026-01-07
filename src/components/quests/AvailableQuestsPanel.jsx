@@ -27,7 +27,7 @@ const QUEST_TEMPLATES = [
       { id: 'attend_meeting', description: 'Attend or host your first meeting', target: 1 },
       { id: 'send_dm', description: 'Send your first direct message', target: 1 },
     ],
-    rewards: { rp: 50, ggg: 5, badge: 'first_meeting' },
+    rewards: { rp: 50, ggg: 0.1, badge: 'first_meeting' },
     duration: '7 days',
     icon: Calendar
   },
@@ -43,7 +43,7 @@ const QUEST_TEMPLATES = [
       { id: 'daily_login', description: 'Log in each day', target: 7 },
       { id: 'daily_action', description: 'Complete at least one action daily', target: 7 },
     ],
-    rewards: { rp: 100, ggg: 10, badge: 'streak_7' },
+    rewards: { rp: 100, ggg: 0.15, badge: 'streak_7' },
     duration: '7 days',
     icon: Star
   },
@@ -60,7 +60,7 @@ const QUEST_TEMPLATES = [
       { id: 'messages', description: 'Send 25 direct messages', target: 25 },
       { id: 'global_chat', description: 'Participate in Global Chat 5 times', target: 5 },
     ],
-    rewards: { rp: 200, ggg: 25, badge: 'social_butterfly' },
+    rewards: { rp: 200, ggg: 0.2, badge: 'social_butterfly' },
     duration: '30 days',
     icon: Users
   },
@@ -76,7 +76,7 @@ const QUEST_TEMPLATES = [
       { id: 'mentorship_sessions', description: 'Complete 10 mentorship sessions', target: 10 },
       { id: 'positive_feedback', description: 'Receive positive testimonials', target: 5 },
     ],
-    rewards: { rp: 500, ggg: 100, badge: 'top_mentor', title: 'Guide of Light' },
+    rewards: { rp: 500, ggg: 0.5, badge: 'top_mentor', title: 'Guide of Light' },
     duration: '90 days',
     prerequisites: ['initiates_oath'],
     icon: Crown
@@ -94,7 +94,7 @@ const QUEST_TEMPLATES = [
       { id: 'days_maintained', description: 'Hold for 90 days', target: 90 },
       { id: 'transactions', description: 'Complete 50+ verified transactions', target: 50 },
     ],
-    rewards: { rp: 750, ggg: 150, badge: 'trust_anchor', access: ['stewardship_council'] },
+    rewards: { rp: 750, ggg: 1, badge: 'trust_anchor', access: ['stewardship_council'] },
     duration: '90 days',
     icon: Shield
   },
@@ -111,7 +111,7 @@ const QUEST_TEMPLATES = [
       { id: 'perfect_matches', description: 'Achieve 20 perfect synchronicity matches', target: 20 },
       { id: 'collaborations', description: 'Facilitate major collaborative breakthroughs', target: 3 },
     ],
-    rewards: { rp: 1000, ggg: 250, badge: 'synchronicity_weaver', title: 'Reality Weaver' },
+    rewards: { rp: 1000, ggg: 2, badge: 'synchronicity_weaver', title: 'Reality Weaver' },
     duration: 'No limit',
     icon: Sparkles
   },
