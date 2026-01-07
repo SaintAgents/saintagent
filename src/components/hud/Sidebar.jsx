@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import {
   Collapsible,
   CollapsibleContent,
@@ -124,6 +125,12 @@ export default function Sidebar({
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
   });
+  const [matrixSpeed, setMatrixSpeed] = useState(() => {
+    try { return parseFloat(localStorage.getItem('matrixSpeed')) || 1; } catch { return 1; }
+  });
+  const [matrixBrightness, setMatrixBrightness] = useState(() => {
+    try { return parseFloat(localStorage.getItem('matrixBrightness')) || 0.8; } catch { return 0.8; }
+  });
   const isDark = theme === 'dark';
 
   // Persist background effect and dispatch event for Layout
@@ -131,6 +138,17 @@ export default function Sidebar({
     try { localStorage.setItem('bgEffect', bgEffect); } catch {}
     document.dispatchEvent(new CustomEvent('bgEffectChange', { detail: { effect: bgEffect } }));
   }, [bgEffect]);
+
+  // Persist and dispatch matrix settings
+  React.useEffect(() => {
+    try { localStorage.setItem('matrixSpeed', String(matrixSpeed)); } catch {}
+    document.dispatchEvent(new CustomEvent('matrixSettingsChange', { detail: { speed: matrixSpeed, brightness: matrixBrightness } }));
+  }, [matrixSpeed, matrixBrightness]);
+
+  React.useEffect(() => {
+    try { localStorage.setItem('matrixBrightness', String(matrixBrightness)); } catch {}
+    document.dispatchEvent(new CustomEvent('matrixSettingsChange', { detail: { speed: matrixSpeed, brightness: matrixBrightness } }));
+  }, [matrixBrightness]);
 
   // Pop-off state
   const [isPoppedOff, setIsPoppedOff] = useState(false);
@@ -638,6 +656,40 @@ export default function Sidebar({
                 </Label>
               </div>
             </RadioGroup>
+
+            {/* Speed & Brightness sliders for animated effects */}
+            {bgEffect !== 'off' && (
+              <div className="mt-3 space-y-3 pt-3 border-t border-slate-100">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs text-slate-600">Speed</Label>
+                    <span className="text-xs text-slate-500">{matrixSpeed.toFixed(1)}x</span>
+                  </div>
+                  <Slider
+                    value={[matrixSpeed]}
+                    onValueChange={([v]) => setMatrixSpeed(v)}
+                    min={0.2}
+                    max={3}
+                    step={0.1}
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs text-slate-600">Brightness</Label>
+                    <span className="text-xs text-slate-500">{Math.round(matrixBrightness * 100)}%</span>
+                  </div>
+                  <Slider
+                    value={[matrixBrightness]}
+                    onValueChange={([v]) => setMatrixBrightness(v)}
+                    min={0.1}
+                    max={1}
+                    step={0.05}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            )}
           </CollapsibleContent>
         </Collapsible>
         )}
