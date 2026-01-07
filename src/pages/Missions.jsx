@@ -169,7 +169,7 @@ export default function Missions() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
       {/* Hero Image */}
-      <div className="relative h-48 md:h-64 w-full overflow-hidden">
+      <div className="relative h-64 md:h-80 w-full overflow-hidden">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/51f6a87ab_universal_upscale_0_d674b71e-39fb-41e7-8b32-cfaec92f89e7_0.jpg"
           alt="Missions Hero"
