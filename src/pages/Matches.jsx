@@ -119,52 +119,64 @@ export default function Matches() {
     dating: datingCount
   };
 
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d8f7f4b7_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-4.jpg";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-emerald-500" />
-                Synchronicity Engine
-                <a
-                  href={createPageUrl('DatingMatches')}
-                  className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg animate-pulse cursor-pointer"
-                  style={{ boxShadow: '0 0 12px rgba(236, 72, 153, 0.6)' }}
-                  title="View Dating Matches"
-                >
-                  <Heart className="w-4 h-4 text-white fill-white" />
-                </a>
-                <HelpHint content="The Synchronicity Engine uses your profile data to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment into a 0-100 score." />
-              </h1>
-              <p className="text-slate-500 mt-1">AI-powered matches based on values, skills, and intentions</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              className="gap-2"
-              onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
-            >
-              <Sparkles className="w-4 h-4" />
-              AI Assistant
-            </Button>
-            <AIMatchGenerator profile={profile} />
-            <Button
-              variant="outline"
-              className="gap-2"
-              onClick={async () => { await base44.functions.invoke('computeMatches', {}); refetch(); }}
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refresh
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505]">
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 overflow-hidden">
+        <img 
+          src={HERO_IMAGE}
+          alt="Synchronicity Engine"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              Synchronicity Engine
+            </h1>
+            <p className="text-emerald-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+              AI-Powered Connections Based on Values, Skills & Intentions
+            </p>
           </div>
         </div>
+        <div className="absolute top-4 left-4">
+          <Button variant="ghost" size="icon" onClick={() => window.history.back()} className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg">
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+        </div>
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          <a
+            href={createPageUrl('DatingMatches')}
+            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg animate-pulse cursor-pointer"
+            style={{ boxShadow: '0 0 12px rgba(236, 72, 153, 0.6)' }}
+            title="View Dating Matches"
+          >
+            <Heart className="w-5 h-5 text-white fill-white" />
+          </a>
+          <Button
+            variant="outline"
+            className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+            onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
+          >
+            <Sparkles className="w-4 h-4" />
+            AI Assistant
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+            onClick={async () => { await base44.functions.invoke('computeMatches', {}); refetch(); }}
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh
+          </Button>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto p-6 -mt-8 relative z-10">
 
         {/* Search */}
         <div className="relative mb-6">
