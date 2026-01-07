@@ -45,7 +45,7 @@ export default function Marketplace() {
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 50),
+    queryFn: () => base44.entities.Listing.list('-created_date', 50),
     staleTime: 2 * 60 * 1000,
   });
   const queryClient = useQueryClient();
