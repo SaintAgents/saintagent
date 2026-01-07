@@ -34,7 +34,7 @@ function ActivityItem({ ev, onOpen }) {
         <div className={`p-2 rounded-lg ${meta.color} dark:bg-[#00ff88]/20`}><Icon className="w-4 h-4 dark:text-[#00ff88]" /></div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            <div className="font-semibold text-slate-900 dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.5)] truncate">{ev.title}</div>
+            <div className="font-semibold text-slate-800 dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.5)] truncate">{ev.title}</div>
             <div className="text-xs text-slate-500 dark:text-[#00d4ff] dark:font-medium">{new Date(ev.created_date).toLocaleString()}</div>
           </div>
           {ev.description && (
