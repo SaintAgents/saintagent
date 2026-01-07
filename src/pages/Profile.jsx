@@ -975,8 +975,91 @@ export default function Profile() {
                   </Card>
                   <PortfolioSection profile={profile} currentUser={currentUser} />
                   <EndorsementsSection profile={profile} currentUser={currentUser} />
+
+                  {/* Social Links Editor - Own Profile Only */}
+                  {isOwnProfile && (
+                    editingSocialLinks ? (
+                      <SocialLinksEditor
+                        profile={profile}
+                        onSave={async (data) => {
+                          await updateMutation.mutateAsync(data);
+                          setEditingSocialLinks(false);
+                        }}
+                        onCancel={() => setEditingSocialLinks(false)}
+                      />
+                    ) : (
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                          <CardTitle className="text-sm">Social Links & Website</CardTitle>
+                          <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingSocialLinks(true)}>
+                            <Edit className="w-4 h-4 mr-1" /> Edit
+                          </Button>
+                        </CardHeader>
+                        <CardContent>
+                          {profile?.social_links && Object.values(profile.social_links).some(v => v) ? (
+                            <SocialLinksDisplay socialLinks={profile.social_links} />
+                          ) : (
+                            <p className="text-slate-400 text-sm">No social links added yet</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )
+                  )}
+
+                  {/* Detailed Bio Editor - Own Profile Only */}
+                  {isOwnProfile && (
+                    editingBio ? (
+                      <DetailedBioEditor
+                        profile={profile}
+                        onSave={async (data) => {
+                          await updateMutation.mutateAsync(data);
+                          setEditingBio(false);
+                        }}
+                        onCancel={() => setEditingBio(false)}
+                      />
+                    ) : (
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                          <CardTitle className="text-sm">Detailed Bio</CardTitle>
+                          <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingBio(true)}>
+                            <Edit className="w-4 h-4 mr-1" /> Edit
+                          </Button>
+                        </CardHeader>
+                        <CardContent>
+                          {profile?.detailed_bio ? (
+                            <p className="text-slate-700 whitespace-pre-wrap">{profile.detailed_bio}</p>
+                          ) : (
+                            <p className="text-slate-400 text-sm">Add a detailed about section to tell your story</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )
+                  )}
+
+                  {/* Show detailed bio for other profiles */}
+                  {!isOwnProfile && profile?.detailed_bio && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-sm">About</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-slate-700 whitespace-pre-wrap">{profile.detailed_bio}</p>
+                      </CardContent>
+                    </Card>
+                  )}
                   </div>
                   </div>
+                  </TabsContent>
+
+                  {/* Showcase Tab */}
+                  <TabsContent value="showcase" className="space-y-6">
+                    <FeaturedShowcase
+                      profile={profile}
+                      isOwnProfile={isOwnProfile}
+                      onUpdate={async (data) => {
+                        await updateMutation.mutateAsync(data);
+                      }}
+                    />
                   </TabsContent>
 
           <TabsContent value="onboarding" className="space-y-6">
