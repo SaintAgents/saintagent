@@ -121,7 +121,9 @@ export default function CommandDeck() {
     enabled: !!profile?.user_id,
     refetchInterval: 5000
   });
-  const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
+  // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
+  const walletBalance = walletRes?.wallet?.available_balance;
+  const walletAvailable = (walletBalance != null && walletBalance > 0) ? walletBalance : (profile?.ggg_balance ?? 0);
   const rpPoints = profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
 
