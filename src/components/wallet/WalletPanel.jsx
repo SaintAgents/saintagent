@@ -65,11 +65,11 @@ export default function WalletPanel() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-100 dark:border-violet-700/50">
+        <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a0a0a] dark:to-[#0a0a0a] border border-violet-100 dark:border-[rgba(0,255,136,0.3)]">
           <p className="text-xs text-violet-600 dark:text-violet-400 font-medium">Available</p>
-          <p className="text-xl font-bold text-violet-900 dark:text-violet-100">{(available ?? 0).toLocaleString?.()} GGG</p>
+          <p className="text-xl font-bold text-violet-900 dark:text-white">{(available ?? 0).toLocaleString?.()} GGG</p>
         </div>
-        <div className="p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50 border border-slate-200 dark:border-slate-700">
+        <div className="p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-[#0a0a0a] dark:to-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
           <div className="flex items-center gap-1">
             <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Locked</p>
             <HoverCard>
@@ -93,7 +93,7 @@ export default function WalletPanel() {
               </HoverCardContent>
             </HoverCard>
           </div>
-          <p className="text-gray-500 dark:text-slate-300 text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
+          <p className="text-gray-500 dark:text-white text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
         </div>
       </div>
 
