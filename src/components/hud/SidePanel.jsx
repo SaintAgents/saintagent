@@ -999,11 +999,11 @@ export default function SidePanel({
 
           {/* GGG & Rank */}
           <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-100 dark:border-violet-700/50">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
-                  <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
+                  <p className="text-xs font-medium text-violet-600 dark:text-violet-400 uppercase tracking-wider">GGG Balance</p>
+                  <p className="text-2xl font-bold text-violet-900 dark:text-violet-100 flex items-center gap-1.5">
                     <Coins className="w-5 h-5 text-amber-500" />
                     {walletAvailable?.toLocaleString?.() || 0}
                   </p>
@@ -1018,8 +1018,8 @@ export default function SidePanel({
 
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-600">To next rank</span>
-                <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
+                <span className="text-slate-600 dark:text-slate-400">To next rank</span>
+                <span className="font-medium text-violet-700 dark:text-violet-300">{Math.max(0, nextRankAt - rankProgress)} pts</span>
               </div>
               <div className="flex justify-between mt-3">
                 <Button variant="outline" size="sm" className="bg-fuchsia-300 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8" onClick={() => setWalletPopupOpen(true)}>
