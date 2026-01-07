@@ -1166,6 +1166,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
           [data-theme='hacker'] [class*='shadow'] { box-shadow: 0 0 8px #00ff00 !important; }
 
+          /* Hacker theme - square edges on all cards */
+          [data-theme='hacker'] .rounded-xl,
+          [data-theme='hacker'] .rounded-lg,
+          [data-theme='hacker'] .rounded-2xl,
+          [data-theme='hacker'] .rounded-md,
+          [data-theme='hacker'] .rounded-3xl,
+          [data-theme='hacker'] [class*='rounded-'] {
+            border-radius: 0 !important;
+          }
+
           /* Hacker theme - Force ALL buttons to be green on black, no exceptions */
           [data-theme='hacker'] [class*='bg-violet-'],
           [data-theme='hacker'] [class*='bg-purple-'],
