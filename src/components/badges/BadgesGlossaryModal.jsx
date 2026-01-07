@@ -21,10 +21,10 @@ export default function BadgesGlossaryModal({ open, onOpenChange }) {
                       <img 
                         src={QUEST_BADGE_IMAGES[item.code]} 
                         alt={item.label}
-                        className="w-10 h-10 object-contain flex-shrink-0"
+                        className="w-14 h-14 object-contain flex-shrink-0"
                       />
                     ) : (
-                      <BadgeIcon iconKey={item.iconKey} section={section.id} size={16} />
+                      <BadgeIcon iconKey={item.iconKey} section={section.id} size={22} />
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
