@@ -66,8 +66,19 @@ export default function Settings() {
       primary: typeof window !== 'undefined' ? localStorage.getItem('custom_primary') || '#7c3aed' : '#7c3aed',
       accent: typeof window !== 'undefined' ? localStorage.getItem('custom_accent') || '#f59e0b' : '#f59e0b'
     },
-    command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true }
+    command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true },
+    zfold_mode: typeof window !== 'undefined' ? localStorage.getItem('zfold_mode') === 'true' : false
   });
+
+  // Initialize Z Fold mode on mount
+  React.useEffect(() => {
+    try {
+      const zfold = localStorage.getItem('zfold_mode') === 'true';
+      if (zfold) {
+        document.documentElement.setAttribute('data-zfold', 'true');
+      }
+    } catch {}
+  }, []);
 
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
@@ -270,7 +281,8 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={!!settings.visibility_settings?.show_email}
-                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_email: !!checked } })} />
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_email: !!checked } })}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
 
                 </div>
                 <div className="flex items-center justify-between">
@@ -280,7 +292,8 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={!!settings.visibility_settings?.show_location}
-                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_location: !!checked } })} />
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_location: !!checked } })}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
 
                 </div>
                 <div className="flex items-center justify-between">
@@ -290,7 +303,8 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={!!settings.visibility_settings?.show_earnings}
-                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_earnings: !!checked } })} />
+                    onCheckedChange={(checked) => setSettings({ ...settings, visibility_settings: { ...settings.visibility_settings, show_earnings: !!checked } })}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
 
                 </div>
               </CardContent>
@@ -388,6 +402,32 @@ export default function Settings() {
 
             <Card>
               <CardHeader>
+                <CardTitle>Device Optimization</CardTitle>
+                <CardDescription>Optimize for your device</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Optimize for Samsung Z Fold</p>
+                    <p className="text-sm text-slate-500">Adjust layout for foldable screens</p>
+                  </div>
+                  <Switch
+                    checked={settings.zfold_mode}
+                    onCheckedChange={(checked) => {
+                      setSettings({ ...settings, zfold_mode: checked });
+                      try {
+                        localStorage.setItem('zfold_mode', checked ? 'true' : 'false');
+                        document.documentElement.setAttribute('data-zfold', checked ? 'true' : 'false');
+                      } catch {}
+                    }}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
                 <CardTitle>Command Deck Layout</CardTitle>
                 <CardDescription>Set your default layout</CardDescription>
               </CardHeader>
@@ -413,7 +453,8 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={!!settings.command_deck_layout?.show_side_panel}
-                    onCheckedChange={(checked) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, show_side_panel: !!checked } })} className="bg-violet-100 text-stone-950 rounded-full peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input" />
+                    onCheckedChange={(checked) => setSettings({ ...settings, command_deck_layout: { ...settings.command_deck_layout, show_side_panel: !!checked } })}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
 
                 </div>
               </CardContent>
@@ -430,21 +471,21 @@ export default function Settings() {
                     <p className="font-medium">Prioritize local matches</p>
                     <p className="text-sm text-slate-500">Prefer matches in your bioregion</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch defaultChecked className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Include global missions</p>
                     <p className="text-sm text-slate-500">Show platform-wide mission matches</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch defaultChecked className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Show timing windows</p>
                     <p className="text-sm text-slate-500">Display optimal timing for connections</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch defaultChecked className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
                 </div>
               </CardContent>
             </Card>
