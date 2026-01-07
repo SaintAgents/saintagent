@@ -35,15 +35,16 @@ function getRingConfig(rankCode = 'seeker') {
   return map[rankCode] || map.seeker;
 }
 
-// Rank Badge component using images - green filter for dark/hacker themes
+// Rank Badge component using images - preserve original colors
 function RankBadge({ code = 'seeker', size = 24 }) {
   const imgUrl = RANK_BADGE_IMAGES[code] || RANK_BADGE_IMAGES.seeker;
   return (
     <img 
       src={imgUrl} 
       alt={code} 
-      className="object-contain rank-badge-img"
-      style={{ width: size, height: size }}
+      className="object-contain"
+      style={{ width: size, height: size, filter: 'none' }}
+      data-no-filter="true"
     />
   );
 }
@@ -138,12 +139,14 @@ export default function RankedAvatar({
         className="rounded-full"
         style={{ padding: padPx, background: gradient }}
       >
-        <div className="rounded-full bg-white p-1 relative">
+        <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden">
             <img 
                   src={src || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png'} 
                   alt={name || 'Avatar'} 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-cover"
+                  style={{ filter: 'none' }}
+                  data-no-filter="true"
                 />
           </div>
         </div>
