@@ -25,6 +25,7 @@ import IcebreakerPrompts from '@/components/messages/IcebreakerPrompts';
 import MediaAttachment from '@/components/messages/MediaAttachment';
 import MessageBubble from '@/components/messages/MessageBubble';
 import TypingIndicator from '@/components/messages/TypingIndicator';
+import ShareAffiliateLinkButton from '@/components/messages/ShareAffiliateLinkButton';
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -541,6 +542,11 @@ export default function Messages() {
               />
 
               <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
+
+              {/* Share Affiliate Link */}
+              <ShareAffiliateLinkButton 
+                onInsertMessage={(msg) => setMessageText(msg)} 
+              />
 
               <Input
                 placeholder="Type a message..."
