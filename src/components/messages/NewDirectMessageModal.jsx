@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,21 +9,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function NewDirectMessageModal({ open, onClose, onCreated }) {
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  
+  // Debounce the search query
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(query), 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
   const { data: me } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me() });
   const { data: profiles = [] } = useQuery({
     queryKey: ["profiles"],
-    queryFn: () => base44.entities.UserProfile.list("-created_date", 500)
+    queryFn: () => base44.entities.UserProfile.list("-created_date", 500),
+    staleTime: 60000 // Cache for 1 minute
   });
 
   const filtered = useMemo(() => {
-    const q = query.toLowerCase().replace(/^@/, ''); // Strip leading @ for handle search
+    const q = debouncedQuery.toLowerCase().replace(/^@/, ''); // Strip leading @ for handle search
     if (!q) return profiles.filter(p => p.user_id !== me?.email);
     return profiles.filter(p => p.user_id !== me?.email && (
       p.display_name?.toLowerCase().includes(q) ||
       p.handle?.toLowerCase().includes(q) ||
       p.user_id?.toLowerCase().includes(q)
     ));
-  }, [profiles, me, query]);
+  }, [profiles, me, debouncedQuery]);
 
   const startDM = async (targetUserId) => {
     const key = [me.email, targetUserId].sort().join("_");
