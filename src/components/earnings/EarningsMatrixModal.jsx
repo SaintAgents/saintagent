@@ -57,7 +57,7 @@ export default function EarningsMatrixModal({ open, onOpenChange }) {
                   </SelectTrigger>
                   <SelectContent>
                     {ACTIONS.map(a => (
-                      <SelectItem key={a.key} value={a.key}>{a.title} ({a.base.toFixed(3)} GGG)</SelectItem>
+                      <SelectItem key={a.key} value={a.key}>{a.title} ({a.base.toFixed(7)} GGG)</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
