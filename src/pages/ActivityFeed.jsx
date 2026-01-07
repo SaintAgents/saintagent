@@ -56,9 +56,9 @@ export default function ActivityFeed() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <BackButton />
-            <span className="dark:text-[#00ff88] dark:drop-shadow-[0_0_12px_rgba(0,255,136,0.7)] text-shadow-lg">Activity Feed</span>
+            <span className="dark:text-white dark:drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]" style={{ opacity: 1 }}>Activity Feed</span>
           </h1>
           <Button variant="outline" className="rounded-xl" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
