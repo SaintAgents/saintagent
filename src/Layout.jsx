@@ -1313,8 +1313,8 @@ function MatrixRainCanvas() {
     // Array to track y position of each column
     const drops = Array(columns).fill(1);
     
-    // Varying speeds for each column
-    const speeds = Array(columns).fill(0).map(() => Math.random() * 0.5 + 0.5);
+    // Varying speeds for each column (slower)
+    const speeds = Array(columns).fill(0).map(() => Math.random() * 0.2 + 0.15);
     
     const draw = () => {
       // Semi-transparent black to create fade trail effect
