@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import RankedAvatar from '@/components/reputation/RankedAvatar';
 import {
   Coins,
   TrendingUp,
@@ -15,8 +16,8 @@ import {
   MessageCircle,
   UserPlus,
   Target,
-  Send } from
-"lucide-react";
+  Send
+} from "lucide-react";
 
 // Rank configuration with colors and glows
 const RANK_CONFIG = {
@@ -102,62 +103,40 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
       <div className="relative p-4">
         {/* Top Row: Avatar + Name + Rank */}
         <div className="flex items-start gap-3 mb-3">
-          {/* Avatar with rank ring and online indicator */}
-          <div className={cn("relative", rankConfig.glow, "dark:shadow-[0_0_15px_rgba(0,255,136,0.4)]")}>
-            <div className={cn(
-              "absolute inset-0 rounded-full bg-gradient-to-br p-0.5",
-              rankConfig.color,
-              "dark:from-[#00ff88] dark:to-[#00d4ff]"
-            )}>
-              <div className="w-full h-full rounded-full bg-white dark:bg-[#050505]" />
-            </div>
-            <Avatar className="w-14 h-14 relative border-2 border-transparent">
-              <AvatarImage src={profile.avatar_url} className="dark:brightness-100 dark:contrast-100" style={{ filter: 'none' }} />
-              <AvatarFallback className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-[#00ff88]/20 dark:to-[#00d4ff]/20 text-violet-700 dark:text-[#00ff88] font-semibold">
-                {profile.display_name?.charAt(0) || '?'}
-              </AvatarFallback>
-            </Avatar>
-            {/* Online status indicator */}
-            <div className={cn(
-              "absolute top-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#0a0a0a]",
-              isOnline ?
-              "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse" :
-              "bg-slate-400 dark:bg-slate-600"
-            )} />
-            {/* Rank badge overlay */}
-            <div className={cn(
-              "absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
-              `bg-gradient-to-br ${rankConfig.color} text-white`,
-              "border-2 border-white dark:border-[#050505]",
-              "dark:bg-gradient-to-br dark:from-[#00ff88] dark:to-[#00d4ff] dark:text-black dark:shadow-[0_0_8px_rgba(0,255,136,0.6)]"
-            )}>
-              {rankConfig.label.charAt(0)}
-            </div>
-          </div>
+          {/* Avatar with RankedAvatar component for consistent sigils */}
+          <RankedAvatar
+            src={profile.avatar_url}
+            name={profile.display_name}
+            size={56}
+            userId={profile.user_id}
+            status={profile.status}
+            leaderTier={profile.leader_tier}
+            rpRankCode={profile.rp_rank_code}
+            rpPoints={profile.rp_points}
+          />
 
           {/* Name and handle */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-slate-900 truncate group-hover:text-violet-600 transition-colors" style={{ color: 'var(--profile-name-color, #0f172a)' }}>
-              <span className="bg-transparent text-emerald-300 from-green-400 to-emerald-500 dark:bg-none dark:text-[#00ff88]">
-                {profile.display_name || 'Anonymous'}
-              </span>
+            <h3 className="font-semibold truncate group-hover:text-violet-600 transition-colors bg-gradient-to-r from-black to-purple-600 bg-clip-text text-transparent dark:from-white dark:to-violet-400">
+              {profile.display_name || 'Anonymous'}
             </h3>
-            {profile.handle &&
-            <p className="text-sm text-slate-500 truncate">
-                <span className="dark:text-[#00ff88]/80">@{profile.handle}</span>
+            <p className="text-xs font-semibold text-violet-600 dark:text-[#00ff88]/80">
+              {profile.sa_number ? `SA#${profile.sa_number}` : ''}
+            </p>
+            {profile.handle && (
+              <p className="text-xs text-slate-600 truncate">
+                <span className="dark:text-slate-300">@{profile.handle}</span>
               </p>
-            }
-            <Badge
-              variant="outline"
+            )}
+            <Badge 
+              variant="outline" 
               className={cn(
-                "mt-1 text-[10px] px-1.5 py-0 border-0 font-semibold",
-                "dark:text-[#00ff88] dark:drop-shadow-[0_0_4px_rgba(0,255,136,0.5)]"
+                "mt-1 text-[10px] px-2 py-0.5 font-semibold border",
+                `bg-gradient-to-r ${rankConfig.color} text-white border-transparent`,
+                "dark:border-[#00ff88]/50 dark:shadow-[0_0_6px_rgba(0,255,136,0.3)]"
               )}
-              style={{ background: `linear-gradient(to right, var(--tw-gradient-stops))` }}>
-
-              <span className="bg-lime-900 text-green-100 from-amber-400 to-yellow-500 dark:bg-none dark:text-[#00ff88]">
-                {rankConfig.label}
-              </span>
+            >
+              {rankConfig.label}
             </Badge>
           </div>
         </div>
@@ -193,32 +172,71 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
           </div>
         </div>
 
-        {/* Badges Row */}
-        {badges.length > 0 &&
+        {/* Badges Row - always show with tooltips */}
         <div className="flex items-center gap-1.5 mb-3">
-            {badges.map((badge, idx) => {
-            const Icon = badge.icon;
-            return (
-              <div
-                key={idx}
-                className={cn(
-                  "w-6 h-6 rounded-full flex items-center justify-center",
-                  badge.bg,
-                  "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
+          <TooltipProvider>
+            {badges.length > 0 ? (
+              <>
+                {badges.map((badge, idx) => {
+                  const Icon = badge.icon;
+                  return (
+                    <Tooltip key={idx}>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={cn(
+                            "w-6 h-6 rounded-full flex items-center justify-center cursor-help",
+                            badge.bg,
+                            "dark:bg-[rgba(0,255,136,0.15)] dark:border dark:border-[rgba(0,255,136,0.3)]"
+                          )}
+                        >
+                          <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="z-[9999]">
+                        <p className="font-medium text-sm">{badge.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+                {profile.achievements?.length > 3 && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-600 dark:text-slate-300 cursor-help">
+                        +{profile.achievements.length - 3}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="z-[9999]">
+                      <p className="text-xs">{profile.achievements.slice(3).join(', ')}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
-                title={badge.label}>
-
-                  <Icon className={cn("w-3 h-3", badge.color, "dark:text-[#00ff88]")} />
-                </div>);
-
-          })}
-            {profile.achievements?.length > 3 &&
-          <span className="text-[10px] text-slate-500 dark:text-[#00ff88]/70">
-                +{profile.achievements.length - 3}
-              </span>
-          }
-          </div>
-        }
+              </>
+            ) : (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 cursor-help">
+                      <Star className="w-3 h-3 text-slate-400" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="z-[9999]">
+                    <p className="font-medium text-sm">Seeker</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 cursor-help">
+                      <Zap className="w-3 h-3 text-slate-400" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="z-[9999]">
+                    <p className="font-medium text-sm">New Member</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            )}
+          </TooltipProvider>
+        </div>
 
         {/* Skills preview - clickable tags */}
         {profile.skills?.length > 0 &&
