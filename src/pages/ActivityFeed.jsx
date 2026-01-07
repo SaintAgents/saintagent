@@ -29,14 +29,21 @@ export default function ActivityFeed() {
   const { data, refetch, isFetching, isError, error } = useQuery({
     queryKey: ['activityFeed', activeTypes.sort().join(','), scope],
     queryFn: async () => {
-      const { data: res } = await base44.functions.invoke('getActivityFeed', { types: activeTypes, limit: 60, scope });
-      return res?.items || [];
+      try {
+        const { data: res } = await base44.functions.invoke('getActivityFeed', { types: activeTypes, limit: 60, scope });
+        return res?.items || [];
+      } catch (err) {
+        console.error('Activity feed error:', err);
+        return [];
+      }
     },
-    refetchInterval: 10000,
+    refetchInterval: 30000,
+    retry: 1,
+    staleTime: 60000,
   });
 
   const items = data || [];
-  const isRateLimited = isError && error?.message?.toLowerCase().includes('rate limit');
+  const isRateLimited = isError && error?.message?.toLowerCase()?.includes('rate limit');
 
   const handleOpen = (ev) => {
     if (ev.type === 'listings') {
