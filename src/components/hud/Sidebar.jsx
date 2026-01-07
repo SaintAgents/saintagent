@@ -79,6 +79,7 @@ const NAV_ITEMS = [
   { id: 'matches', label: 'Matches', icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
   { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
   { id: 'missions', label: 'Missions', icon: Target, page: 'Missions', hint: 'Join collaborative missions and quests' },
+  { id: 'teams', label: 'Teams & Guilds', icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
   { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
   { id: 'profiles', label: 'Profiles', icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
   { id: 'crm', label: 'Contact Network', icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
