@@ -328,6 +328,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
       {/* Starfield Canvas - rank-colored stars */}
       {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
+      {showNebula && <NebulaCanvas />}
+      {showCircuit && <CircuitCanvas />}
 
       <style>{`
         :root {
