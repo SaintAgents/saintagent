@@ -213,16 +213,25 @@ export default function RankedAvatar({
         </div>
       )}
 
-      {/* Affiliate Badge (top-right) - show SA shield badge */}
+      {/* Affiliate Badge (top-right) - show SA shield badge with tooltip */}
       {affiliatePaidFinal >= 0 && (
-        <div 
-          className="absolute -top-2 -right-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
-          style={{ width: symbolPx * 2, height: symbolPx * 2 }}
-          onClick={(e) => e.stopPropagation()}
-          title={`${affiliateTier.charAt(0).toUpperCase() + affiliateTier.slice(1)} Affiliate • ${affiliatePaidFinal} paid referrals`}
-        >
-          <AffiliateBadge tier={affiliateTier} size={symbolPx * 2} />
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div 
+                className="absolute -top-2 -right-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+                style={{ width: symbolPx * 2, height: symbolPx * 2 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AffiliateBadge tier={affiliateTier} size={symbolPx * 2} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px]">
+              <p className="font-semibold text-sm capitalize">{affiliateTier} Affiliate</p>
+              <p className="text-xs text-slate-500">{affiliatePaidFinal} paid referrals</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
 
       {/* Photo gallery icon (bottom-center) - show if we have images or are still loading */}
