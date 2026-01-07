@@ -417,7 +417,7 @@ export default function Profile() {
                   status={profile?.status}
                 />
               </div>
-              <div className="flex-1 pb-2 mt-4">
+              <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline && (
