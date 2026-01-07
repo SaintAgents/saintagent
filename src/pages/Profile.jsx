@@ -53,6 +53,7 @@ import RPRing from '@/components/reputation/RPRing';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES, RankBadge } from '@/components/reputation/rankBadges';
+import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import TrustScoreCard from '@/components/trust/TrustScoreCard';
 import ReputationScoresCard from '@/components/reputation/ReputationScoresCard';
