@@ -206,17 +206,35 @@ export default function Onboarding() {
             console.error('Post-onboarding welcome flow failed', e);
           }
 
-          // Gamification: award points and badge for profile completion
+          // Gamification: award points, badge, and GGG tokens for profile completion
           try {
             const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
             const profileToUpdate = profiles?.[0];
             if (profileToUpdate) {
+              // Award engagement points
               await base44.entities.UserProfile.update(profileToUpdate.id, {
                 engagement_points: (profileToUpdate.engagement_points || 0) + 100
               });
+              
+              // Award profile complete badge
               const existing = await base44.entities.Badge.filter({ user_id: user.email, code: 'profile_complete' });
               if (!(existing && existing.length)) {
                 await base44.entities.Badge.create({ user_id: user.email, code: 'profile_complete', status: 'active' });
+              }
+              
+              // Award GGG tokens for completing onboarding (0.25 GGG welcome bonus)
+              try {
+                await base44.functions.invoke('walletEngine', {
+                  action: 'credit',
+                  payload: {
+                    user_id: user.email,
+                    amount: 0.25,
+                    reason_code: 'onboarding_complete',
+                    description: 'Welcome bonus for completing profile setup'
+                  }
+                });
+              } catch (walletErr) {
+                console.error('GGG token award failed:', walletErr);
               }
             }
           } catch (e) {
