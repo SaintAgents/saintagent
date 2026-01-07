@@ -4,14 +4,37 @@ import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Trophy, Star, BadgePercent, Users } from 'lucide-react';
+import { Trophy, Star, BadgePercent, Users, Medal, Crown, Coins, Target, TrendingUp, Calendar, Flame } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import BackButton from '@/components/hud/BackButton';
+import RankedAvatar from '@/components/reputation/RankedAvatar';
 
-function Row({ idx, profile, valueLabel }) {
+const RANK_STYLES = {
+  1: { bg: 'bg-gradient-to-r from-amber-100 to-yellow-100', border: 'border-amber-300', text: 'text-amber-700', icon: Crown },
+  2: { bg: 'bg-gradient-to-r from-slate-100 to-gray-100', border: 'border-slate-300', text: 'text-slate-600', icon: Medal },
+  3: { bg: 'bg-gradient-to-r from-orange-100 to-amber-100', border: 'border-orange-300', text: 'text-orange-700', icon: Medal }
+};
+
+function Row({ idx, profile, valueLabel, metric }) {
+  const rank = idx + 1;
+  const rankStyle = RANK_STYLES[rank];
+  const isTopThree = rank <= 3;
+  
   return (
-    <div className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-slate-50">
+    <div className={cn(
+      "flex items-center justify-between py-3 px-4 rounded-xl transition-all",
+      isTopThree ? rankStyle?.bg : "hover:bg-slate-50",
+      isTopThree && `border ${rankStyle?.border}`
+    )}>
       <div className="flex items-center gap-3">
-        <div className="w-6 text-sm font-semibold text-slate-500">{idx + 1}</div>
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100">
+        <div className={cn(
+          "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
+          isTopThree ? `${rankStyle?.bg} ${rankStyle?.text}` : "bg-slate-100 text-slate-500"
+        )}>
+          {isTopThree ? <rankStyle.icon className="w-4 h-4" /> : rank}
+        </div>
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100">
           {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full object-cover" />
           ) : (
@@ -21,11 +44,21 @@ function Row({ idx, profile, valueLabel }) {
           )}
         </div>
         <div>
-          <div className="text-sm font-semibold text-slate-900">{profile?.display_name || profile?.handle || 'User'}</div>
+          <div className={cn("text-sm font-semibold", isTopThree ? rankStyle?.text : "text-slate-900")}>
+            {profile?.display_name || profile?.handle || 'User'}
+          </div>
           <div className="text-xs text-slate-500">@{profile?.handle}</div>
         </div>
       </div>
-      <div className="text-sm font-semibold text-violet-700">{valueLabel}</div>
+      <div className={cn(
+        "text-sm font-bold",
+        metric === 'ggg' ? "text-amber-600" :
+        metric === 'trust' ? "text-emerald-600" :
+        metric === 'points' ? "text-violet-600" :
+        "text-blue-600"
+      )}>
+        {valueLabel}
+      </div>
     </div>
   );
 }
