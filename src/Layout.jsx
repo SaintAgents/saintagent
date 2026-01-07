@@ -440,19 +440,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-image: none !important;
         }
 
-        /* Hero section visibility */
-        [data-theme='dark'] .hero-gradient {
-          background: transparent !important;
+        /* Page header titles - brighter in dark themes */
+        [data-theme='dark'] h1,
+        [data-theme='dark'] h2 {
+          color: #ffffff !important;
+          text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
         }
-        [data-theme='dark'] .hero-gradient > img {
-          opacity: 0.7 !important;
-        }
-        [data-theme='dark'] .hero-gradient::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, #050505 0%, transparent 70%);
-          pointer-events: none;
+        [data-theme='hacker'] h1,
+        [data-theme='hacker'] h2 {
+          color: #00ff00 !important;
+          text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
 
         /* Mission card image container should keep its gradient fallback */
