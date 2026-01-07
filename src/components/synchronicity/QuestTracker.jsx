@@ -3,22 +3,50 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Target, Zap, Trophy, Star, Gift, Check } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Target, Zap, Trophy, Star, Gift, Check, Users, Eye, Route, Lock, Sparkles, Key } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const QUEST_TYPE_CONFIG = {
   daily: { icon: Zap, color: 'text-yellow-400', bgColor: 'bg-yellow-500/20', label: 'Daily Challenge' },
   weekly: { icon: Trophy, color: 'text-violet-400', bgColor: 'bg-violet-500/20', label: 'Weekly Mission' },
   epic: { icon: Star, color: 'text-amber-400', bgColor: 'bg-amber-500/20', label: 'Epic Journey' },
-  hidden: { icon: Target, color: 'text-emerald-400', bgColor: 'bg-emerald-500/20', label: 'Hidden Quest' },
-  pathway: { icon: Target, color: 'text-blue-400', bgColor: 'bg-blue-500/20', label: 'Pathway' },
+  hidden: { icon: Eye, color: 'text-emerald-400', bgColor: 'bg-emerald-500/20', label: 'Hidden Quest' },
+  pathway: { icon: Route, color: 'text-blue-400', bgColor: 'bg-blue-500/20', label: 'Pathway' },
+  cooperative: { icon: Users, color: 'text-cyan-400', bgColor: 'bg-cyan-500/20', label: 'Cooperative' },
+};
+
+const ACCESS_REWARD_LABELS = {
+  early_tools: '🔧 Early Tool Access',
+  exclusive_events: '🎫 Exclusive Events',
+  leader_channel: '👑 Leader Channel',
+  premium_features: '⭐ Premium Features',
+  special_content: '📚 Special Content',
 };
 
 function QuestItem({ quest }) {
   const config = QUEST_TYPE_CONFIG[quest.quest_type] || QUEST_TYPE_CONFIG.daily;
   const Icon = config.icon;
-  const progress = quest.target_count > 0 ? (quest.current_count / quest.target_count) * 100 : 0;
+  
+  // Handle pathway quests with stages
+  let progress = 0;
+  let currentCount = quest.current_count || 0;
+  let targetCount = quest.target_count || 1;
+  
+  if (quest.quest_type === 'pathway' && quest.pathway_data?.stages) {
+    const stages = quest.pathway_data.stages;
+    const completedStages = stages.filter(s => s.completed).length;
+    progress = (completedStages / stages.length) * 100;
+    currentCount = completedStages;
+    targetCount = stages.length;
+  } else {
+    progress = targetCount > 0 ? (currentCount / targetCount) * 100 : 0;
+  }
+  
   const isComplete = quest.status === 'completed' || progress >= 100;
+  const isHidden = quest.visibility === 'hidden';
+  const isCooperative = quest.quest_type === 'cooperative';
+  const participantCount = quest.cooperative_data?.participant_ids?.length || 0;
 
   return (
     <motion.div
@@ -31,12 +59,37 @@ function QuestItem({ quest }) {
           <Icon className={`w-3.5 h-3.5 ${config.color}`} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-amber-300/70">{config.label}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-xs text-amber-300/70">{config.label}</p>
+            {quest.rarity === 'legendary' && <Sparkles className="w-3 h-3 text-amber-400" />}
+            {quest.rarity === 'epic' && <Star className="w-3 h-3 text-violet-400" />}
+          </div>
           <p className="text-sm text-amber-100 font-medium truncate">{quest.title}</p>
         </div>
       </div>
       
       <div className="ml-7">
+        {/* Cooperative quest participants */}
+        {isCooperative && (
+          <div className="flex items-center gap-1 mb-1.5 text-[10px] text-cyan-400/80">
+            <Users className="w-3 h-3" />
+            <span>{participantCount}/{quest.cooperative_data?.max_participants || '∞'} participants</span>
+          </div>
+        )}
+
+        {/* Pathway stages indicator */}
+        {quest.quest_type === 'pathway' && quest.pathway_data?.stages && (
+          <div className="flex gap-1 mb-1.5">
+            {quest.pathway_data.stages.map((stage, i) => (
+              <div 
+                key={i}
+                className={`w-2 h-2 rounded-full ${stage.completed ? 'bg-emerald-400' : 'bg-amber-900/50'}`}
+                title={`Stage ${i + 1}: ${stage.title}`}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center gap-2 mb-1">
           <div className="flex-1 h-2 bg-black/40 rounded-full overflow-hidden border border-amber-900/50">
             <motion.div 
@@ -47,7 +100,7 @@ function QuestItem({ quest }) {
             />
           </div>
           <span className="text-xs text-amber-200/70 w-12 text-right">
-            {quest.current_count}/{quest.target_count}
+            {currentCount}/{targetCount}
           </span>
         </div>
         
@@ -60,11 +113,32 @@ function QuestItem({ quest }) {
           <p className="text-[10px] text-amber-400/60">{Math.round(progress)}%</p>
         )}
         
-        {quest.reward_rp > 0 && (
-          <p className="text-[10px] text-amber-300/50 mt-0.5">
-            Reward: {quest.reward_rp} RP {quest.reward_ggg > 0 && `+ ${quest.reward_ggg} GGG`}
-          </p>
-        )}
+        {/* Rewards section */}
+        <div className="mt-1 space-y-0.5">
+          {(quest.reward_rp > 0 || quest.reward_ggg > 0) && (
+            <p className="text-[10px] text-amber-300/50">
+              {quest.reward_rp > 0 && `${quest.reward_rp} RP`}
+              {quest.reward_rp > 0 && quest.reward_ggg > 0 && ' + '}
+              {quest.reward_ggg > 0 && `${quest.reward_ggg} GGG`}
+            </p>
+          )}
+          {quest.reward_access?.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {quest.reward_access.map((access, i) => (
+                <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                  <Key className="w-2 h-2 inline mr-0.5" />
+                  {ACCESS_REWARD_LABELS[access] || access}
+                </span>
+              ))}
+            </div>
+          )}
+          {quest.reward_badge && (
+            <p className="text-[10px] text-amber-300/50">🏅 Badge: {quest.reward_badge}</p>
+          )}
+          {quest.reward_title && (
+            <p className="text-[10px] text-violet-300/70">👑 Title: {quest.reward_title}</p>
+          )}
+        </div>
       </div>
     </motion.div>
   );
