@@ -190,7 +190,10 @@ export default function UserManagement() {
                 key={profile.id}
                 className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
 
-                  <Avatar className="w-12 h-12">
+                  <Avatar 
+                    className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-violet-400 transition-all"
+                    data-user-id={profile.user_id}
+                  >
                     <AvatarImage src={profile.avatar_url} />
                     <AvatarFallback className="bg-transparent rounded-full flex h-full w-full items-center justify-center">{profile.display_name?.charAt(0)}</AvatarFallback>
                   </Avatar>
