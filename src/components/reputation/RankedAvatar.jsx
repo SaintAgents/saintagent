@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
 
 // Rank badge image URLs
 const RANK_BADGE_IMAGES = {
@@ -62,6 +63,7 @@ export default function RankedAvatar({
   statusMessage,
   showPhotoIcon = false,
   galleryImages = [],
+  affiliatePaidCount,
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
