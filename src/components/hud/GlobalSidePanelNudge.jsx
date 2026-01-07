@@ -27,9 +27,8 @@ export default function GlobalSidePanelNudge() {
       }
       // Also check initial open state from localStorage
       const savedOpen = localStorage.getItem('sidePanelOpen');
-      if (savedOpen !== null) {
-        setIsOpen(savedOpen !== 'false');
-      }
+      // Default to closed (false) so the nudge shows on other pages
+      setIsOpen(savedOpen === 'true');
     } catch {}
     
     document.addEventListener('sidePanelStateChange', handlePanelChange);
@@ -40,10 +39,22 @@ export default function GlobalSidePanelNudge() {
   }, []);
 
   const handleClick = () => {
-    // Dispatch custom event for CommandDeck to open the SidePanel
-    document.dispatchEvent(new CustomEvent('toggleSidePanel', { detail: { open: true } }));
-    // Also update local state immediately so the nudge hides
-    setIsOpen(true);
+    // Check if we're on CommandDeck - if so, dispatch event to open side panel
+    const isCommandDeck = document.querySelector('main[data-page="CommandDeck"]');
+    if (isCommandDeck) {
+      document.dispatchEvent(new CustomEvent('toggleSidePanel', { detail: { open: true } }));
+      setIsOpen(true);
+    } else {
+      // On other pages, open the side panel as a floating window
+      // Save state and redirect to CommandDeck or open floating panel
+      try {
+        localStorage.setItem('sidePanelOpen', 'true');
+        localStorage.setItem('sidePanelPoppedOff', 'true');
+      } catch {}
+      // Dispatch event - Layout will handle showing the floating panel
+      document.dispatchEvent(new CustomEvent('openFloatingSidePanel', { detail: {} }));
+      setIsOpen(true);
+    }
   };
 
   // Show the nudge when panel is closed
