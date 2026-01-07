@@ -1,3 +1,23 @@
+/* Hero image visibility - ensure visible in all themes */
+[data-theme='dark'] .hero-image,
+[data-theme='hacker'] .hero-image,
+[data-theme='dark'] img.hero-image,
+[data-theme='hacker'] img.hero-image {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+}
+
+/* Mission images should also remain visible */
+[data-theme='dark'] .mission-image,
+[data-theme='hacker'] .mission-image,
+[data-theme='dark'] img[data-no-filter],
+[data-theme='hacker'] img[data-no-filter] {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
 /* Dark theme text fixes for improved readability */
 [data-theme='dark'] h1, 
 [data-theme='dark'] h2, 
