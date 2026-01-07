@@ -1160,6 +1160,35 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] ::-webkit-scrollbar-thumb { background-color: #00ff00 !important; }
           [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
           [data-theme='hacker'] [class*='shadow'] { box-shadow: 0 0 8px #00ff00 !important; }
+
+          /* Hacker theme - Force ALL buttons to be green on black, no exceptions */
+          [data-theme='hacker'] [class*='bg-violet-'],
+          [data-theme='hacker'] [class*='bg-purple-'],
+          [data-theme='hacker'] [class*='bg-pink-'],
+          [data-theme='hacker'] [class*='bg-rose-'],
+          [data-theme='hacker'] [class*='bg-fuchsia-'],
+          [data-theme='hacker'] [class*='bg-gradient-'] {
+            background: #000 !important;
+            background-color: #000 !important;
+            background-image: none !important;
+            border-color: #00ff00 !important;
+          }
+          [data-theme='hacker'] [class*='text-violet-'],
+          [data-theme='hacker'] [class*='text-purple-'],
+          [data-theme='hacker'] [class*='text-pink-'],
+          [data-theme='hacker'] [class*='text-rose-'],
+          [data-theme='hacker'] [class*='text-fuchsia-'] {
+            color: #00ff00 !important;
+          }
+          [data-theme='hacker'] [class*='from-violet-'],
+          [data-theme='hacker'] [class*='from-purple-'],
+          [data-theme='hacker'] [class*='from-pink-'],
+          [data-theme='hacker'] [class*='to-violet-'],
+          [data-theme='hacker'] [class*='to-purple-'],
+          [data-theme='hacker'] [class*='to-pink-'] {
+            background: #000 !important;
+            background-image: none !important;
+          }
           [data-theme='hacker'] [data-avatar-card], [data-theme='hacker'] [data-avatar-card] * { background-color: #000 !important; color: #00ff00 !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
