@@ -1113,6 +1113,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='dark'] img[data-no-filter],
           [data-theme='dark'] [data-no-filter="true"] { filter: none !important; }
 
+          /* Rank badge green filter for dark/hacker themes */
+          [data-theme='dark'] .rank-badge-img {
+            filter: hue-rotate(70deg) saturate(1.5) !important;
+          }
+          [data-theme='hacker'] .rank-badge-img {
+            filter: hue-rotate(70deg) saturate(2) brightness(1.2) !important;
+          }
+
           /* Hacker theme - brighter text, no fading */
           [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4,
           [data-theme='hacker'] [class*='font-semibold'], [data-theme='hacker'] [class*='font-bold'] {
