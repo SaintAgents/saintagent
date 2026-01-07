@@ -81,6 +81,8 @@ export default function Profile() {
   const [editingSpiritualProfile, setEditingSpiritualProfile] = useState(false);
   const [editingMysticalProfile, setEditingMysticalProfile] = useState(false);
   const [editingIntentions, setEditingIntentions] = useState(false);
+  const [editingSocialLinks, setEditingSocialLinks] = useState(false);
+  const [editingBio, setEditingBio] = useState(false);
   const [intentionsData, setIntentionsData] = useState([]);
   const [newIntention, setNewIntention] = useState('');
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
