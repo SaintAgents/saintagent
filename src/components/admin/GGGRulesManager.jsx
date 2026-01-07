@@ -14,7 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Coins, Plus, Edit, Trash2 } from "lucide-react";
+import { Coins, Plus, Edit, Trash2, Zap, Gift } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
 // Category labels
@@ -39,6 +40,12 @@ const ACTION_TYPES = ACTIONS.map(a => ({
 
 export default function GGGRulesManager() {
   const [isCreating, setIsCreating] = useState(false);
+  const [bonusMode, setBonusMode] = useState(() => {
+    try { return localStorage.getItem('ggg_bonus_mode') === 'true'; } catch { return true; }
+  });
+  const [bonusMultiplier, setBonusMultiplier] = useState(() => {
+    try { return parseFloat(localStorage.getItem('ggg_bonus_multiplier')) || 2.0; } catch { return 2.0; }
+  });
   const [newRule, setNewRule] = useState({
     action_type: '',
     ggg_amount: 0,
@@ -46,6 +53,17 @@ export default function GGGRulesManager() {
     is_active: true
   });
   const queryClient = useQueryClient();
+
+  // Persist bonus settings
+  const handleBonusModeChange = (enabled) => {
+    setBonusMode(enabled);
+    try { localStorage.setItem('ggg_bonus_mode', enabled.toString()); } catch {}
+  };
+
+  const handleMultiplierChange = (value) => {
+    setBonusMultiplier(value);
+    try { localStorage.setItem('ggg_bonus_multiplier', value.toString()); } catch {}
+  };
 
   const { data: rules = [] } = useQuery({
     queryKey: ['gggRules'],
@@ -105,6 +123,87 @@ export default function GGGRulesManager() {
           New Rule
         </Button>
       </div>
+
+      {/* Bonus Period Control Panel */}
+      <Card className={bonusMode ? "border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-yellow-50" : ""}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${bonusMode ? 'bg-amber-500' : 'bg-slate-200'}`}>
+                <Gift className={`w-5 h-5 ${bonusMode ? 'text-white' : 'text-slate-500'}`} />
+              </div>
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  Bonus Period
+                  {bonusMode && <Badge className="bg-amber-500 text-white animate-pulse">ACTIVE</Badge>}
+                </CardTitle>
+                <p className="text-sm text-slate-500 mt-1">
+                  Multiply all GGG rewards during special periods (onboarding, promotions, etc.)
+                </p>
+              </div>
+            </div>
+            <Switch
+              checked={bonusMode}
+              onCheckedChange={handleBonusModeChange}
+            />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm">Bonus Multiplier</Label>
+                <span className={`font-bold text-lg ${bonusMode ? 'text-amber-600' : 'text-slate-400'}`}>
+                  {bonusMultiplier.toFixed(1)}x
+                </span>
+              </div>
+              <Slider
+                value={[bonusMultiplier]}
+                onValueChange={([val]) => handleMultiplierChange(val)}
+                min={1.0}
+                max={5.0}
+                step={0.25}
+                disabled={!bonusMode}
+                className={bonusMode ? '' : 'opacity-50'}
+              />
+              <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <span>1.0x (normal)</span>
+                <span>2.0x (double)</span>
+                <span>3.0x</span>
+                <span>4.0x</span>
+                <span>5.0x</span>
+              </div>
+            </div>
+
+            {bonusMode && (
+              <div className="p-3 rounded-lg bg-amber-100 border border-amber-200">
+                <div className="flex items-center gap-2 text-amber-800 text-sm font-medium mb-2">
+                  <Zap className="w-4 h-4" />
+                  Active Bonus Examples
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                  {[
+                    { action: 'Profile View', base: 0.0002069 },
+                    { action: 'Posting', base: 0.0038624 },
+                    { action: 'Forum Post', base: 0.0077248 },
+                    { action: 'Mission Participation', base: 0.0154496 },
+                  ].map(ex => (
+                    <div key={ex.action} className="p-2 bg-white rounded border">
+                      <div className="text-slate-600">{ex.action}</div>
+                      <div className="font-mono text-amber-700">
+                        {formatGGGSmart(ex.base)} → <span className="font-bold">{formatGGGSmart(ex.base * bonusMultiplier)}</span>
+                      </div>
+                      <div className="text-emerald-600">
+                        ${(ex.base * GGG_TO_USD).toFixed(2)} → <span className="font-bold">${(ex.base * bonusMultiplier * GGG_TO_USD).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* GGG Earnings Matrix (Reference) */}
       <Card>
