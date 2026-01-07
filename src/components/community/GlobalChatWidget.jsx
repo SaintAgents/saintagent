@@ -152,18 +152,20 @@ export default function GlobalChatWidget() {
 
   const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
 
-  // Floating button when closed - compact
+  // Floating button when closed - compact with drag
   if (!isOpen) {
     return (
       <div
         className="fixed z-50"
         style={{ left: position.x, top: position.y ?? undefined, bottom: position.y ? undefined : 16 }}
       >
-        <button
-          onClick={() => setIsOpen(true)}
+        <div
+          onMouseDown={handleDragStart}
+          onTouchStart={handleDragStart}
+          onClick={() => !isDragging && setIsOpen(true)}
           className={cn(
             "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
-            "hover:scale-105"
+            isDragging ? "cursor-grabbing scale-105" : "cursor-grab hover:scale-105"
           )}
         >
           <Globe className="w-4 h-4" />
@@ -173,7 +175,7 @@ export default function GlobalChatWidget() {
               {onlineUsers.length}
             </Badge>
           )}
-        </button>
+        </div>
       </div>
     );
   }
