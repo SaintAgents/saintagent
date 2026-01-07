@@ -130,7 +130,7 @@ export default function MiniProfile({
                 {showName && (
                   <div className="flex items-center gap-1 min-w-0">
                     <div className="text-base font-semibold text-slate-900 dark:text-white truncate">
-                      {displayName}{sa && <span className="text-violet-600 dark:text-violet-400 ml-1">- SA#{sa}</span>}
+                      {displayName}
                     </div>
                     {showHelpHint && (
                       <HelpHint
@@ -153,9 +153,14 @@ export default function MiniProfile({
                     )}
                   </div>
                 )}
-                {showHandle && (handle || sa) && (
+                {sa && (
+                  <div className="text-sm font-semibold text-violet-600 dark:text-violet-400">
+                    SA#{sa}
+                  </div>
+                )}
+                {showHandle && handle && (
                   <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                    {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
+                    @{handle}
                   </div>
                 )}
               </div>
@@ -183,7 +188,7 @@ export default function MiniProfile({
               {showName && (
                 <div className="flex items-center gap-1 min-w-0">
                   <div className="text-sm font-medium text-slate-900 truncate">
-                    {displayName}{sa && <span className="text-violet-600 dark:text-violet-400 ml-1 text-xs">- SA#{sa}</span>}
+                    {displayName}
                   </div>
                   {showHelpHint && (
                     <HelpHint
@@ -206,9 +211,14 @@ export default function MiniProfile({
                   )}
                 </div>
               )}
-              {showHandle && (handle || sa) && (
+              {sa && (
+                <div className="text-xs font-semibold text-violet-600 dark:text-violet-400">
+                  SA#{sa}
+                </div>
+              )}
+              {showHandle && handle && (
                 <div className="text-xs text-slate-500 truncate">
-                  {handle ? `@${handle}` : null} {sa ? (handle ? ' • ' : '') + `SA#${sa}` : ''}
+                  @{handle}
                 </div>
               )}
               <TooltipProvider delayDuration={200}>
