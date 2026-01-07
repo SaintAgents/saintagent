@@ -1128,7 +1128,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] [data-avatar-card], [data-theme='hacker'] [data-avatar-card] * { background-color: #000 !important; color: #00ff00 !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-bg] { display: none !important; }
           [data-theme='hacker'] [data-avatar-card] [data-avatar-overlay] { background: #000 !important; backdrop-filter: none !important; }
-          [data-theme='hacker'] img:not([data-no-filter]):not(.mission-image):not(.mission-card img):not(.hero-image) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
+          [data-theme='hacker'] img:not([data-no-filter]):not([data-no-filter="true"]):not(.mission-image):not(.mission-card img):not(.hero-image):not(.rank-badge-img) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
           [data-theme='hacker'] .hero-image { filter: none !important; opacity: 1 !important; }
           [data-theme='hacker'] .mission-card img,
           [data-theme='hacker'] .mission-image,
