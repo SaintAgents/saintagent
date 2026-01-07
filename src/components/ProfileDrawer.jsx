@@ -167,13 +167,16 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
 
   const handleMessage = () => {
     // Open floating chat with this user
-    document.dispatchEvent(new CustomEvent('openFloatingChat', {
+    const event = new CustomEvent('openFloatingChat', {
       detail: {
         recipientId: userId,
-        recipientName: profile?.display_name,
-        recipientAvatar: profile?.avatar_url
-      }
-    }));
+        recipientName: profile?.display_name || 'User',
+        recipientAvatar: profile?.avatar_url || ''
+      },
+      bubbles: true
+    });
+    console.log('Dispatching openFloatingChat event:', event.detail);
+    document.dispatchEvent(event);
   };
 
   const handleBook = () => {
