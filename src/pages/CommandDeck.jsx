@@ -709,16 +709,23 @@ export default function CommandDeck() {
                       View Glossary
                     </button>
                   </div>
+                  {/* Eternal Flame Feature Badge */}
+                  <div className="flex items-center gap-3 mb-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                    <img 
+                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
+                      alt="Eternal Flame"
+                      className="w-12 h-12 object-contain"
+                      data-no-filter="true"
+                    />
+                    <div>
+                      <p className="font-semibold text-amber-900">Eternal Flame</p>
+                      <p className="text-xs text-amber-700">Living Agent</p>
+                    </div>
+                  </div>
                   <BadgesBar 
                     badges={badges} 
-                    defaultIfEmpty={true} 
+                    defaultIfEmpty={false} 
                     onMore={() => setBadgeGlossaryOpen(true)}
-                    eternalFlameBadge={{
-                      code: 'eternal_flame',
-                      badge_name: 'Eternal Flame',
-                      description: 'Living Agent',
-                      icon_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png'
-                    }}
                   />
                 </div>
 
