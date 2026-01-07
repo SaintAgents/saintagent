@@ -21,13 +21,14 @@ const TYPE_META = {
 
 export default function ActivityFeed() {
   const [filters, setFilters] = useState({ listings: true, missions: true, testimonials: true, reputation: true });
+  const [scope, setScope] = useState('everyone'); // 'friends' or 'everyone'
 
   const activeTypes = useMemo(() => Object.entries(filters).filter(([,v]) => v).map(([k]) => k), [filters]);
 
   const { data, refetch, isFetching } = useQuery({
-    queryKey: ['activityFeed', activeTypes.sort().join(',')],
+    queryKey: ['activityFeed', activeTypes.sort().join(','), scope],
     queryFn: async () => {
-      const { data: res } = await base44.functions.invoke('getActivityFeed', { types: activeTypes, limit: 60 });
+      const { data: res } = await base44.functions.invoke('getActivityFeed', { types: activeTypes, limit: 60, scope });
       return res?.items || [];
     },
     refetchInterval: 10000,
