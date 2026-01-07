@@ -135,8 +135,11 @@ img[data-no-filter="true"],
 [data-theme='hacker'] h2, 
 [data-theme='hacker'] h3, 
 [data-theme='hacker'] h4,
+[data-theme='hacker'] h5,
+[data-theme='hacker'] h6,
 [data-theme='hacker'] [class*='font-semibold'], 
-[data-theme='hacker'] [class*='font-bold'] {
+[data-theme='hacker'] [class*='font-bold'],
+[data-theme='hacker'] [class*='font-medium'] {
   color: #00ff00 !important;
   text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
 }
@@ -144,17 +147,25 @@ img[data-no-filter="true"],
 [data-theme='hacker'] p,
 [data-theme='hacker'] span:not(.dot-glow):not(.icon-glow),
 [data-theme='hacker'] label,
-[data-theme='hacker'] div:not([class*='bg-']) {
+[data-theme='hacker'] div:not([class*='bg-']),
+[data-theme='hacker'] a,
+[data-theme='hacker'] li,
+[data-theme='hacker'] td,
+[data-theme='hacker'] th {
   color: #00ff00 !important;
 }
 
-[data-theme='hacker'] [class*='text-slate-500'],
-[data-theme='hacker'] [class*='text-slate-400'],
-[data-theme='hacker'] [class*='text-slate-600'],
-[data-theme='hacker'] [class*='text-gray-500'],
-[data-theme='hacker'] [class*='text-gray-400'],
-[data-theme='hacker'] [class*='text-gray-600'] {
+[data-theme='hacker'] [class*='text-slate-'],
+[data-theme='hacker'] [class*='text-gray-'],
+[data-theme='hacker'] [class*='text-zinc-'],
+[data-theme='hacker'] [class*='text-neutral-'] {
   color: #00ff00 !important;
+}
+
+/* Ensure placeholders are visible in hacker theme */
+[data-theme='hacker'] input::placeholder,
+[data-theme='hacker'] textarea::placeholder {
+  color: #006600 !important;
 }
 
 /* Command Deck background - transparent to show main background image */

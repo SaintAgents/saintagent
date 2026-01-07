@@ -480,9 +480,17 @@ export default function CommandDeck() {
         <div className="px-6 pt-6 pb-4">
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50">
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
-            <div className="relative z-10">
-              <h1 className="text-2xl font-bold text-slate-900">Command Deck</h1>
-              <p className="text-teal-500 mt-1">Your mission control center</p>
+            <div className="relative z-10 flex items-center gap-4">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
+                alt="Command Deck"
+                className="w-20 h-20 object-contain drop-shadow-lg"
+                data-no-filter="true"
+              />
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]">Command Deck</h1>
+                <p className="text-teal-500 dark:text-[#00ff88] mt-1">Your mission control center</p>
+              </div>
             </div>
             <div className="flex items-center gap-3 relative z-10">
               <Button
