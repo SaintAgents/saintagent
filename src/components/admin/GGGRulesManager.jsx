@@ -15,18 +15,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Coins, Plus, Edit, Trash2 } from "lucide-react";
-import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD } from '@/components/earnings/gggMatrix';
+import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
-const ACTION_TYPES = [
-  { value: 'meeting_completed', label: 'Meeting Completed' },
-  { value: 'booking_completed', label: 'Booking Completed' },
-  { value: 'event_attended', label: 'Event Attended' },
-  { value: 'mission_completed', label: 'Mission Completed' },
-  { value: 'referral_activated', label: 'Referral Activated' },
-  { value: 'testimonial_given', label: 'Testimonial Given' },
-  { value: 'post_created', label: 'Post Created' },
-  { value: 'profile_completed', label: 'Profile Completed' },
-];
+// Category labels
+const CATEGORY_LABELS = {
+  engagement: 'Micro-Engagement',
+  content: 'Content Creation',
+  mission: 'Mission & Team',
+  leadership: 'Leadership',
+  agent: 'Agent Development',
+  learning: 'Learning & Teaching'
+};
+
+// Build ACTION_TYPES from ACTIONS array
+const ACTION_TYPES = ACTIONS.map(a => ({
+  value: a.key,
+  label: a.title,
+  base: a.base,
+  usd: a.usd,
+  category: a.category,
+  definition: a.definition
+}));
 
 export default function GGGRulesManager() {
   const [isCreating, setIsCreating] = useState(false);
@@ -101,34 +110,64 @@ export default function GGGRulesManager() {
       <Card>
         <CardHeader>
           <CardTitle>GGG Earnings Matrix (Reference)</CardTitle>
+          <p className="text-sm text-slate-500">Based on 1 GGG = USD {GGG_TO_USD.toFixed(2)}</p>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
+          {/* Tiers Table */}
           <div>
-            <div className="text-xs text-slate-500 mb-2">Tiers (GGG → USD)</div>
-            <div className="flex flex-wrap gap-2">
-              {TIERS.map((t) => (
-                <span key={t} className="text-xs px-2 py-1 rounded bg-slate-100 border border-slate-200">
-                  {t.toFixed(2)} GGG ≈ ${ (t * GGG_TO_USD).toFixed(2) }
-                </span>
-              ))}
+            <div className="text-sm font-semibold text-slate-700 mb-3">Tiers (GGG → USD)</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border p-2 text-left">GGG Amount</th>
+                    <th className="border p-2 text-left">USD Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {TIERS.map((t) => {
+                    const usdVal = t * GGG_TO_USD;
+                    return (
+                      <tr key={t} className="hover:bg-slate-50">
+                        <td className="border p-2 font-mono">{formatGGGSmart(t)} GGG (USD {usdVal.toFixed(2)})</td>
+                        <td className="border p-2 text-emerald-600 font-medium">USD {usdVal.toFixed(2)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 mb-2">Actions and base earnings</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {ACTIONS.map((a) => (
-                <div key={a.key} className="p-2 rounded border bg-white">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-700">{a.title}</span>
-                    <span className="text-sm font-semibold text-amber-600">{a.base.toFixed(2)} GGG</span>
-                  </div>
-                  {a.definition && (
-                    <p className="text-xs text-slate-500 mt-1">{a.definition}</p>
-                  )}
+
+          {/* Actions by Category */}
+          {['engagement', 'content', 'mission', 'leadership', 'agent', 'learning'].map(cat => {
+            const catActions = ACTIONS.filter(a => a.category === cat);
+            if (catActions.length === 0) return null;
+            return (
+              <div key={cat}>
+                <div className="text-sm font-semibold text-slate-700 mb-3 border-b pb-2">
+                  {CATEGORY_LABELS[cat] || cat}
                 </div>
-              ))}
-            </div>
-          </div>
+                <div className="space-y-2">
+                  {catActions.map((a) => (
+                    <div key={a.key} className="p-3 rounded-lg border bg-white">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-slate-900">{a.title}</span>
+                            <span className="text-xs text-slate-500">—</span>
+                            <span className="font-mono text-amber-600 font-semibold">{formatGGGSmart(a.base)} GGG</span>
+                            <span className="text-emerald-600 text-sm">(USD {a.usd?.toFixed(2) || (a.base * GGG_TO_USD).toFixed(2)})</span>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-1">{a.definition}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </CardContent>
       </Card>
 
@@ -144,30 +183,52 @@ export default function GGGRulesManager() {
                 <Label>Action Type</Label>
                 <Select
                   value={newRule.action_type}
-                  onValueChange={(value) => setNewRule({ ...newRule, action_type: value })}
+                  onValueChange={(value) => {
+                    const action = ACTION_TYPES.find(t => t.value === value);
+                    setNewRule({ 
+                      ...newRule, 
+                      action_type: value,
+                      ggg_amount: action?.base || 0,
+                      usd_equivalent: action?.usd || (action?.base * GGG_TO_USD) || 0,
+                      category: action?.category || '',
+                      description: action?.definition || ''
+                    });
+                  }}
                 >
                   <SelectTrigger className="mt-2">
                     <SelectValue placeholder="Select action" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {ACTION_TYPES.map(type => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
+                  <SelectContent className="max-h-80">
+                    {['engagement', 'content', 'mission', 'leadership', 'agent', 'learning'].map(cat => (
+                      <React.Fragment key={cat}>
+                        <div className="px-2 py-1 text-xs font-semibold text-slate-500 bg-slate-50">
+                          {CATEGORY_LABELS[cat]}
+                        </div>
+                        {ACTION_TYPES.filter(t => t.category === cat).map(type => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label} ({formatGGGSmart(type.base)} GGG / ${type.usd?.toFixed(2)})
+                          </SelectItem>
+                        ))}
+                      </React.Fragment>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>GGG Amount</Label>
+                <Label>GGG Amount (7 decimal precision)</Label>
                 <Input
                   type="number"
-                  step="0.01"
+                  step="0.0000001"
                   value={newRule.ggg_amount}
                   onChange={(e) => setNewRule({ ...newRule, ggg_amount: parseFloat(e.target.value) })}
-                  className="mt-2"
-                  placeholder="0.00"
+                  className="mt-2 font-mono"
+                  placeholder="0.0000000"
                 />
+                {newRule.ggg_amount > 0 && (
+                  <p className="text-xs text-emerald-600 mt-1">
+                    ≈ USD {(newRule.ggg_amount * GGG_TO_USD).toFixed(2)}
+                  </p>
+                )}
               </div>
             </div>
             <div>
@@ -203,7 +264,9 @@ export default function GGGRulesManager() {
       {/* Existing Rules */}
       <div className="grid gap-4">
         {rules.map((rule) => {
-          const actionLabel = ACTION_TYPES.find(t => t.value === rule.action_type)?.label || rule.action_type;
+          const actionInfo = ACTION_TYPES.find(t => t.value === rule.action_type);
+          const actionLabel = actionInfo?.label || rule.action_type;
+          const usdVal = rule.usd_equivalent || (rule.ggg_amount * GGG_TO_USD);
           return (
             <Card key={rule.id}>
               <CardContent className="pt-6">
@@ -213,8 +276,13 @@ export default function GGGRulesManager() {
                       <Coins className="w-6 h-6 text-amber-600" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold text-slate-900">{actionLabel}</h3>
+                        {rule.category && (
+                          <Badge variant="outline" className="text-xs">
+                            {CATEGORY_LABELS[rule.category] || rule.category}
+                          </Badge>
+                        )}
                         {rule.is_active ? (
                           <Badge className="bg-emerald-100 text-emerald-700">Active</Badge>
                         ) : (
@@ -222,7 +290,8 @@ export default function GGGRulesManager() {
                         )}
                       </div>
                       <p className="text-sm text-slate-500 mt-1">
-                        Awards <span className="font-bold text-amber-600">{rule.ggg_amount} GGG</span>
+                        Awards <span className="font-bold font-mono text-amber-600">{formatGGGSmart(rule.ggg_amount)} GGG</span>
+                        <span className="text-emerald-600 ml-2">(USD {usdVal.toFixed(2)})</span>
                       </p>
                       {rule.description && (
                         <p className="text-xs text-slate-400 mt-1">{rule.description}</p>
