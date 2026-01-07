@@ -1,5 +1,5 @@
 import React from 'react';
-import { BADGE_SECTIONS, BADGE_RULES } from './badgesData';
+import { BADGE_SECTIONS, BADGE_RULES, QUEST_BADGE_IMAGES } from './badgesData';
 import BadgeIcon from './BadgeIcon';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -17,7 +17,15 @@ export default function BadgesGlossaryModal({ open, onOpenChange }) {
               <div className="space-y-3">
                 {section.items.map(item => (
                   <div key={item.code} className="flex items-start gap-3 p-3 rounded-lg border bg-white">
-                    <BadgeIcon iconKey={item.iconKey} section={section.id} size={16} />
+                    {QUEST_BADGE_IMAGES[item.code] ? (
+                      <img 
+                        src={QUEST_BADGE_IMAGES[item.code]} 
+                        alt={item.label}
+                        className="w-10 h-10 object-contain flex-shrink-0"
+                      />
+                    ) : (
+                      <BadgeIcon iconKey={item.iconKey} section={section.id} size={16} />
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-semibold text-slate-900">{item.label}</span>
