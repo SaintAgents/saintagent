@@ -172,8 +172,20 @@ export default function DatingMatches() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50/30 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50/30">
+      {/* Hero Image */}
+      <div className="page-hero relative w-full overflow-hidden bg-slate-900">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cd20de4fb_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-1.jpg"
+          alt="Dating Matches Hero"
+          data-no-filter="true"
+          className="w-full h-full object-cover object-center hero-image"
+          style={{ opacity: 1, filter: 'none', display: 'block', visibility: 'visible' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-pink-50 via-pink-50/30 to-transparent dark:from-[#050505] dark:via-transparent dark:to-transparent" />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
