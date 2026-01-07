@@ -1566,21 +1566,35 @@ function MatrixRainCanvas() {
   );
 }
 
-// Circuit board effect with speed/brightness controls
+// Circuit board effect with speed/brightness/variance controls
 function CircuitCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8 });
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
+  const gridDataRef = React.useRef(null);
   
   React.useEffect(() => {
     try {
       settingsRef.current = {
         speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
-        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8,
+        variance: parseFloat(localStorage.getItem('matrixVariance')) || 0.5
       };
     } catch {}
     const handleSettingsChange = (e) => {
-      if (e.detail) settingsRef.current = { speed: e.detail.speed ?? 1, brightness: e.detail.brightness ?? 0.8 };
+      if (e.detail) {
+        const newVariance = e.detail.variance ?? settingsRef.current.variance;
+        const oldVariance = settingsRef.current.variance;
+        settingsRef.current = { 
+          speed: e.detail.speed ?? 1, 
+          brightness: e.detail.brightness ?? 0.8,
+          variance: newVariance
+        };
+        // Regenerate grid when variance changes significantly
+        if (Math.abs(newVariance - oldVariance) > 0.05 && gridDataRef.current) {
+          gridDataRef.current.needsRegen = true;
+        }
+      }
     };
     document.addEventListener('matrixSettingsChange', handleSettingsChange);
     return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
@@ -1591,87 +1605,128 @@ function CircuitCanvas() {
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    const nodes = [];
-    const traces = [];
-    const gridLines = [];
     
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      if (gridDataRef.current) gridDataRef.current.needsRegen = true;
     };
     resize();
     window.addEventListener('resize', resize);
     
-    // Create geometric grid
-    const gridSpacing = 80;
-    const cols = Math.ceil(canvas.width / gridSpacing) + 1;
-    const rows = Math.ceil(canvas.height / gridSpacing) + 1;
-    
-    // Grid intersection nodes
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        const x = col * gridSpacing;
-        const y = row * gridSpacing;
-        // Add slight offset for organic feel
-        const offsetX = (Math.random() - 0.5) * 10;
-        const offsetY = (Math.random() - 0.5) * 10;
-        nodes.push({
-          x: x + offsetX,
-          y: y + offsetY,
-          gridX: col,
-          gridY: row,
-          pulse: Math.random() * Math.PI * 2,
-          size: Math.random() * 3 + 2,
-          isJunction: Math.random() > 0.7 // Some nodes are brighter junctions
-        });
-      }
-    }
-    
-    // Create grid lines (horizontal and vertical)
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols - 1; col++) {
-        const idx = row * cols + col;
-        gridLines.push({ from: idx, to: idx + 1, type: 'horizontal' });
-      }
-    }
-    for (let row = 0; row < rows - 1; row++) {
-      for (let col = 0; col < cols; col++) {
-        const idx = row * cols + col;
-        gridLines.push({ from: idx, to: idx + cols, type: 'vertical' });
-      }
-    }
-    
-    // Add diagonal connections for geometric patterns
-    for (let row = 0; row < rows - 1; row++) {
-      for (let col = 0; col < cols - 1; col++) {
-        const idx = row * cols + col;
-        if (Math.random() > 0.6) {
-          gridLines.push({ from: idx, to: idx + cols + 1, type: 'diagonal' });
-        }
-        if (Math.random() > 0.6) {
-          gridLines.push({ from: idx + 1, to: idx + cols, type: 'diagonal' });
+    const generateGrid = (variance) => {
+      const nodes = [];
+      const traces = [];
+      const gridLines = [];
+      
+      // Variance affects grid spacing and density
+      const baseSpacing = 80;
+      const gridSpacing = baseSpacing - (variance * 40); // 80 down to 40 at max variance
+      const cols = Math.ceil(canvas.width / gridSpacing) + 1;
+      const rows = Math.ceil(canvas.height / gridSpacing) + 1;
+      
+      // Grid intersection nodes with variance-based offset
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const x = col * gridSpacing;
+          const y = row * gridSpacing;
+          // Variance increases node position randomness
+          const offsetX = (Math.random() - 0.5) * (10 + variance * 30);
+          const offsetY = (Math.random() - 0.5) * (10 + variance * 30);
+          nodes.push({
+            x: x + offsetX,
+            y: y + offsetY,
+            baseX: x,
+            baseY: y,
+            gridX: col,
+            gridY: row,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: 0.01 + Math.random() * variance * 0.03,
+            size: Math.random() * (2 + variance * 3) + 2,
+            isJunction: Math.random() > (0.8 - variance * 0.3) // More junctions at higher variance
+          });
         }
       }
-    }
-    
-    // Create animated traces along grid lines
-    gridLines.forEach((line, i) => {
-      if (Math.random() > 0.85) {
-        traces.push({ 
-          lineIdx: i, 
-          progress: 0, 
-          active: false, 
-          delay: Math.random() * 200,
-          speed: Math.random() * 0.02 + 0.01
-        });
+      
+      // Create grid lines (horizontal and vertical)
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols - 1; col++) {
+          const idx = row * cols + col;
+          if (Math.random() > variance * 0.3) { // Skip some lines at high variance
+            gridLines.push({ from: idx, to: idx + 1, type: 'horizontal' });
+          }
+        }
       }
-    });
+      for (let row = 0; row < rows - 1; row++) {
+        for (let col = 0; col < cols; col++) {
+          const idx = row * cols + col;
+          if (Math.random() > variance * 0.3) {
+            gridLines.push({ from: idx, to: idx + cols, type: 'vertical' });
+          }
+        }
+      }
+      
+      // Add diagonal connections - more at higher variance
+      const diagThreshold = 0.7 - variance * 0.5; // More diagonals at high variance
+      for (let row = 0; row < rows - 1; row++) {
+        for (let col = 0; col < cols - 1; col++) {
+          const idx = row * cols + col;
+          if (Math.random() > diagThreshold) {
+            gridLines.push({ from: idx, to: idx + cols + 1, type: 'diagonal' });
+          }
+          if (Math.random() > diagThreshold) {
+            gridLines.push({ from: idx + 1, to: idx + cols, type: 'diagonal' });
+          }
+        }
+      }
+      
+      // Cross-grid connections at high variance (skip 1-2 nodes)
+      if (variance > 0.4) {
+        for (let row = 0; row < rows - 2; row++) {
+          for (let col = 0; col < cols - 2; col++) {
+            const idx = row * cols + col;
+            if (Math.random() > (1 - variance * 0.5)) {
+              gridLines.push({ from: idx, to: idx + cols * 2 + 2, type: 'long_diagonal' });
+            }
+            if (Math.random() > (1 - variance * 0.5)) {
+              gridLines.push({ from: idx + 2, to: idx + cols * 2, type: 'long_diagonal' });
+            }
+          }
+        }
+      }
+      
+      // Create animated traces - more at higher variance
+      const traceThreshold = 0.9 - variance * 0.4;
+      gridLines.forEach((line, i) => {
+        if (Math.random() > traceThreshold) {
+          traces.push({ 
+            lineIdx: i, 
+            progress: 0, 
+            active: false, 
+            delay: Math.random() * 200,
+            speed: (Math.random() * 0.02 + 0.01) * (1 + variance)
+          });
+        }
+      });
+      
+      return { nodes, traces, gridLines, cols, needsRegen: false };
+    };
+    
+    gridDataRef.current = generateGrid(settingsRef.current.variance);
     
     let frame = 0;
     const animate = () => {
-      const { speed, brightness } = settingsRef.current;
+      const { speed, brightness, variance } = settingsRef.current;
+      
+      // Regenerate grid if variance changed
+      if (gridDataRef.current.needsRegen) {
+        gridDataRef.current = generateGrid(variance);
+      }
+      
+      const { nodes, traces, gridLines } = gridDataRef.current;
+      
       frame++;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.03)';
+      ctx.fillStyle = `rgba(5, 5, 5, ${0.03 + variance * 0.02})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       const greenVal = Math.floor(255 * brightness);
@@ -1681,24 +1736,27 @@ function CircuitCanvas() {
       gridLines.forEach((line, idx) => {
         const from = nodes[line.from];
         const to = nodes[line.to];
+        if (!from || !to) return;
         
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
-        const lineOpacity = line.type === 'diagonal' ? 0.08 : 0.12;
+        const lineOpacity = line.type === 'horizontal' || line.type === 'vertical' ? 0.12 : 0.06;
         ctx.strokeStyle = `rgba(0, ${greenVal}, 136, ${lineOpacity * brightness})`;
-        ctx.lineWidth = line.type === 'diagonal' ? 0.5 : 1;
+        ctx.lineWidth = line.type === 'long_diagonal' ? 0.3 : (line.type === 'diagonal' ? 0.5 : 1);
         ctx.stroke();
       });
       
       // Animate pulses along traces
       traces.forEach(trace => {
         const line = gridLines[trace.lineIdx];
+        if (!line) return;
         const from = nodes[line.from];
         const to = nodes[line.to];
+        if (!from || !to) return;
         
-        const triggerFrame = Math.floor(80 / speed);
-        if (frame % triggerFrame === Math.floor(trace.delay / speed) % triggerFrame) {
+        const triggerFrame = Math.floor((80 - variance * 40) / speed);
+        if (frame % Math.max(1, triggerFrame) === Math.floor(trace.delay / speed) % Math.max(1, triggerFrame)) {
           trace.active = true;
           trace.progress = 0;
         }
@@ -1707,11 +1765,11 @@ function CircuitCanvas() {
           trace.progress += trace.speed * speed;
           if (trace.progress >= 1) {
             trace.active = false;
-            // Chain reaction - activate connected traces
+            // Chain reaction - more likely at higher variance
             const endNode = line.to;
             traces.forEach(t => {
               const tLine = gridLines[t.lineIdx];
-              if ((tLine.from === endNode || tLine.to === endNode) && Math.random() > 0.7) {
+              if (tLine && (tLine.from === endNode || tLine.to === endNode) && Math.random() > (0.8 - variance * 0.3)) {
                 t.active = true;
                 t.progress = 0;
               }
@@ -1721,23 +1779,24 @@ function CircuitCanvas() {
           const px = from.x + (to.x - from.x) * trace.progress;
           const py = from.y + (to.y - from.y) * trace.progress;
           
-          // Glowing pulse
+          // Glowing pulse - larger at high variance
           ctx.beginPath();
-          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.arc(px, py, 3 + variance * 3, 0, Math.PI * 2);
           ctx.fillStyle = `rgb(0, ${greenVal}, 136)`;
           ctx.shadowColor = `rgb(0, ${greenVal}, 136)`;
-          ctx.shadowBlur = 15 * brightness;
+          ctx.shadowBlur = (15 + variance * 10) * brightness;
           ctx.fill();
           
-          // Trail effect
-          for (let t = 1; t <= 5; t++) {
-            const trailProgress = trace.progress - t * 0.05;
+          // Trail effect - longer at high variance
+          const trailLen = Math.floor(5 + variance * 5);
+          for (let t = 1; t <= trailLen; t++) {
+            const trailProgress = trace.progress - t * 0.04;
             if (trailProgress > 0) {
               const tx = from.x + (to.x - from.x) * trailProgress;
               const ty = from.y + (to.y - from.y) * trailProgress;
               ctx.beginPath();
-              ctx.arc(tx, ty, 2, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(0, ${tealVal}, 255, ${(1 - t/5) * 0.5 * brightness})`;
+              ctx.arc(tx, ty, 1.5 + variance, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(0, ${tealVal}, 255, ${(1 - t/trailLen) * 0.5 * brightness})`;
               ctx.fill();
             }
           }
@@ -1747,16 +1806,16 @@ function CircuitCanvas() {
       
       // Draw nodes
       nodes.forEach(node => {
-        node.pulse += 0.015 * speed;
+        node.pulse += node.pulseSpeed * speed;
         const baseBrightness = node.isJunction ? 0.7 : 0.4;
-        const glow = (baseBrightness + Math.sin(node.pulse) * 0.2) * brightness;
+        const glow = (baseBrightness + Math.sin(node.pulse) * (0.2 + variance * 0.2)) * brightness;
         
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.isJunction ? node.size * 1.5 : node.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(0, ${greenVal}, 136, ${glow})`;
         if (node.isJunction) {
           ctx.shadowColor = `rgb(0, ${greenVal}, 136)`;
-          ctx.shadowBlur = 6 * brightness;
+          ctx.shadowBlur = (6 + variance * 6) * brightness;
         }
         ctx.fill();
         ctx.shadowBlur = 0;
