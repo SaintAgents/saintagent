@@ -62,17 +62,19 @@
 [data-theme='dark'] p,
 [data-theme='dark'] span:not(.dot-glow):not(.icon-glow),
 [data-theme='dark'] div:not([class*='bg-']) {
-  color: #e0e0e0 !important;
+  color: #f0f0f0 !important;
 }
 
 [data-theme='dark'] [class*='text-slate-500'],
 [data-theme='dark'] [class*='text-slate-400'],
 [data-theme='dark'] [class*='text-gray-500'],
-[data-theme='dark'] [class*='text-gray-400'] {
-  color: #c5c5c5 !important;
+[data-theme='dark'] [class*='text-gray-400'],
+[data-theme='dark'] [class*='text-slate-600'],
+[data-theme='dark'] [class*='text-gray-600'] {
+  color: #d8d8d8 !important;
 }
 
-/* Hacker theme text fixes - improved contrast */
+/* Hacker theme text fixes - BRIGHT green text */
 [data-theme='hacker'] h1, 
 [data-theme='hacker'] h2, 
 [data-theme='hacker'] h3, 
@@ -80,18 +82,23 @@
 [data-theme='hacker'] [class*='font-semibold'], 
 [data-theme='hacker'] [class*='font-bold'] {
   color: #00ff00 !important;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
 }
 
 [data-theme='hacker'] p,
 [data-theme='hacker'] span:not(.dot-glow):not(.icon-glow),
-[data-theme='hacker'] label {
-  color: #c8ffc8 !important;
+[data-theme='hacker'] label,
+[data-theme='hacker'] div:not([class*='bg-']) {
+  color: #00ff00 !important;
 }
 
 [data-theme='hacker'] [class*='text-slate-500'],
 [data-theme='hacker'] [class*='text-slate-400'],
-[data-theme='hacker'] [class*='text-slate-600'] {
-  color: #90ee90 !important;
+[data-theme='hacker'] [class*='text-slate-600'],
+[data-theme='hacker'] [class*='text-gray-500'],
+[data-theme='hacker'] [class*='text-gray-400'],
+[data-theme='hacker'] [class*='text-gray-600'] {
+  color: #00ff00 !important;
 }
 
 /* Command Deck background - transparent to show main background image */
