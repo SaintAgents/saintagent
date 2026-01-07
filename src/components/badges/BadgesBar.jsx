@@ -87,14 +87,30 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
             <div className="text-xs font-medium text-slate-500 mb-2">All Badges ({derived.length})</div>
             <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
               {derived.map((item) => (
-                <div
-                  key={item.code}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm"
-                  title={item.definition}
-                >
-                  <BadgeIcon iconKey={item.iconKey} section={item.section} size={14} />
-                  <span className="capitalize">{item.label}</span>
-                </div>
+                <TooltipProvider key={item.code}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm cursor-default"
+                      >
+                        {QUEST_BADGE_IMAGES[item.code] ? (
+                          <img 
+                            src={QUEST_BADGE_IMAGES[item.code]} 
+                            alt={item.label}
+                            className="w-5 h-5 object-contain"
+                          />
+                        ) : (
+                          <BadgeIcon iconKey={item.iconKey} section={item.section} size={14} />
+                        )}
+                        <span className="capitalize">{item.label}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <p className="text-sm font-medium">{item.label}</p>
+                      <p className="text-xs text-slate-500">{item.definition}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ))}
             </div>
           </PopoverContent>
