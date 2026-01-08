@@ -958,10 +958,11 @@ export default function Sidebar({
         </FloatingPanel>
       )}
 
-      {/* Presence popup */}
+      {/* Presence popup - includes all bottom section content */}
       {presencePopupOpen && (
-        <FloatingPanel title="Presence & Status" onClose={() => setPresencePopupOpen(false)}>
+        <FloatingPanel title="Presence & Settings" onClose={() => setPresencePopupOpen(false)}>
           <div className="p-4 space-y-4">
+            {/* RP & Rank */}
             {profile && (
               <div className="flex items-center justify-between p-3 bg-violet-50 rounded-xl">
                 <div className="flex items-center gap-2">
@@ -971,7 +972,10 @@ export default function Sidebar({
                 <span className="text-sm font-medium capitalize text-violet-600 bg-violet-100 px-3 py-1 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
               </div>
             )}
+
+            {/* Status & DM */}
             <div className="space-y-3">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</p>
               <div className="flex items-center gap-3">
                 <div className={cn("w-3 h-3 rounded-full animate-pulse", statusOption?.color)} />
                 <Select value={status} onValueChange={handleStatusChange}>
@@ -1006,6 +1010,135 @@ export default function Sidebar({
                 </Select>
               </div>
             </div>
+
+            {/* Theme */}
+            <div className="space-y-2 pt-2 border-t border-slate-100">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Theme</p>
+              <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="light" id="popup-theme-light" className="h-3.5 w-3.5" />
+                  <Label htmlFor="popup-theme-light" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
+                    <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="dark" id="popup-theme-dark" className="h-3.5 w-3.5" />
+                  <Label htmlFor="popup-theme-dark" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
+                    <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="hacker" id="popup-theme-hacker" className="h-3.5 w-3.5" />
+                  <Label htmlFor="popup-theme-hacker" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
+                    <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Background Effects - only for Dark/Hacker */}
+            {(theme === 'dark' || theme === 'hacker') && (
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Background Effect</p>
+                <RadioGroup value={bgEffect} onValueChange={setBgEffect} className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="matrix" id="popup-bg-matrix" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-bg-matrix" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-green-500" /> Matrix Rain
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="starfield" id="popup-bg-starfield" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-bg-starfield" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                      <Star className="w-3.5 h-3.5 text-teal-400" /> Star Field
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="nebula" id="popup-bg-nebula" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-bg-nebula" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                      <Cloud className="w-3.5 h-3.5 text-purple-500" /> Nebula
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="circuit" id="popup-bg-circuit" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-bg-circuit" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                      <Waves className="w-3.5 h-3.5 text-cyan-500" /> Circuit
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="off" id="popup-bg-off" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-bg-off" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                      <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
+                    </Label>
+                  </div>
+                </RadioGroup>
+
+                {/* Speed, Brightness, Variance sliders */}
+                {bgEffect !== 'off' && (
+                  <div className="mt-3 space-y-3 pt-3 border-t border-slate-100">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs text-slate-600">Speed</Label>
+                        <span className="text-xs text-slate-500">{matrixSpeed.toFixed(1)}x</span>
+                      </div>
+                      <Slider
+                        value={[matrixSpeed]}
+                        onValueChange={([v]) => setMatrixSpeed(v)}
+                        min={0.2}
+                        max={3}
+                        step={0.1}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs text-slate-600">Brightness</Label>
+                        <span className="text-xs text-slate-500">{Math.round(matrixBrightness * 100)}%</span>
+                      </div>
+                      <Slider
+                        value={[matrixBrightness]}
+                        onValueChange={([v]) => setMatrixBrightness(v)}
+                        min={0.1}
+                        max={1}
+                        step={0.05}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs text-slate-600">Variance</Label>
+                        <span className="text-xs text-slate-500">{Math.round(matrixVariance * 100)}%</span>
+                      </div>
+                      <Slider
+                        value={[matrixVariance]}
+                        onValueChange={([v]) => setMatrixVariance(v)}
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Profile Link */}
+            <Link
+              to={createPageUrl('Profile')}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mt-2 bg-violet-50 hover:bg-violet-100 text-violet-700"
+              onClick={() => setPresencePopupOpen(false)}
+            >
+              {profile?.avatar_url ? (
+                <Avatar className="w-6 h-6">
+                  <AvatarImage src={profile.avatar_url} />
+                  <AvatarFallback className="text-xs">{profile?.display_name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+              ) : (
+                <User className="w-5 h-5" />
+              )}
+              <span className="font-medium text-sm">My Profile</span>
+            </Link>
           </div>
         </FloatingPanel>
       )}
