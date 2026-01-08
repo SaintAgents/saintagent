@@ -1062,7 +1062,7 @@ export default function SidePanel({
 
           {/* GGG & Rank */}
           <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
-            <div data-wallet-panel className="p-4 rounded-2xl border border-[rgba(0,255,136,0.3)]" style={{ backgroundColor: '#0a1f0a' }}>
+            <div data-wallet-panel className="p-4" style={{ backgroundColor: 'transparent' }}>
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-xs font-medium text-[#00ff88] uppercase tracking-wider">GGG BALANCE</p>
