@@ -24,7 +24,11 @@ export default function ProgressRing({
     blue: { stroke: "#3b82f6", track: "#dbeafe" },
   };
 
-  const colorSet = colors[color] || colors.violet;
+  // Support custom hex color
+  const isCustomColor = color?.startsWith('#');
+  const colorSet = isCustomColor 
+    ? { stroke: color, track: `${color}33` }
+    : (colors[color] || colors.violet);
 
   return (
     <div className={cn("relative inline-flex items-center justify-center", className)}>
@@ -51,7 +55,7 @@ export default function ProgressRing({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-lg font-bold text-slate-900">{label || `${Math.round(percent)}%`}</span>
+        <span className={cn("text-lg font-bold", isCustomColor ? "" : "text-slate-900")} style={isCustomColor ? { color } : undefined}>{label || `${Math.round(percent)}%`}</span>
         {sublabel && (
           <span className="text-xs text-slate-500">{sublabel}</span>
         )}
