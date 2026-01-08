@@ -688,8 +688,8 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0 flex flex-col items-center" data-user-id={profile?.user_id}>
-                {/* Avatar at top - separate from gauge */}
-                <div className="relative z-20 mb-3">
+                {/* Avatar portrait - completely separate, at top */}
+                <div className="relative z-20">
                   <RankedAvatar
                     src={profile?.avatar_url}
                     name={profile?.display_name}
@@ -701,13 +701,41 @@ export default function CommandDeck() {
                     status={profile?.status || 'offline'} />
                 </div>
                 
-                {/* Gauge dial (90px) with Trust ring (95px) tightly around it */}
+                {/* Gap between avatar and gauge */}
+                <div className="h-4" />
+                
+                {/* Trust gauge with ring - isolated below avatar */}
                 <div className="flex flex-col items-center">
+                  {/* Container: 95px for ring, gauge 85px inside */}
                   <div className="relative" style={{ width: '95px', height: '95px' }}>
-                    {/* Trust Score progress ring - 95px diameter */}
-                    <svg className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" viewBox="0 0 95 95">
-                      <circle cx="47.5" cy="47.5" r="45" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
-                      <circle cx="47.5" cy="47.5" r="45" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 45}`} strokeDashoffset={`${2 * Math.PI * 45 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                    {/* Cyan trust ring - 95px outer diameter, wraps only the gauge */}
+                    <svg 
+                      className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
+                      viewBox="0 0 95 95"
+                    >
+                      {/* Background ring */}
+                      <circle 
+                        cx="47.5" 
+                        cy="47.5" 
+                        r="44" 
+                        stroke="currentColor" 
+                        strokeWidth="4" 
+                        fill="none" 
+                        className="text-slate-300/50 dark:text-slate-600/50" 
+                      />
+                      {/* Progress ring */}
+                      <circle 
+                        cx="47.5" 
+                        cy="47.5" 
+                        r="44" 
+                        stroke="url(#trustGradientCmd)" 
+                        strokeWidth="4" 
+                        fill="none" 
+                        strokeDasharray={`${2 * Math.PI * 44}`} 
+                        strokeDashoffset={`${2 * Math.PI * 44 * (1 - (profile?.trust_score || 0) / 100)}`} 
+                        className="transition-all duration-700" 
+                        strokeLinecap="round" 
+                      />
                       <defs>
                         <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="#10b981" />
@@ -716,19 +744,19 @@ export default function CommandDeck() {
                         </linearGradient>
                       </defs>
                     </svg>
-                    {/* Gauge dial image - 90px centered inside 95px ring */}
+                    {/* Gauge dial - 85px centered inside the 95px ring */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                         alt="Command Deck"
                         className="object-contain drop-shadow-lg"
-                        style={{ width: '90px', height: '90px', border: 'none', boxShadow: 'none', background: 'transparent' }}
+                        style={{ width: '85px', height: '85px', border: 'none', boxShadow: 'none', background: 'transparent' }}
                         data-no-filter="true"
                         data-keep-round="true" />
                     </div>
                   </div>
-                  {/* Trust Score value and label below */}
-                  <div className="flex items-center gap-1.5 mt-1">
+                  {/* Trust Score label below ring */}
+                  <div className="flex items-center gap-1.5 mt-2">
                     <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
                     <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
                       Trust
