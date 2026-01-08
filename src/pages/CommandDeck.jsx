@@ -779,8 +779,8 @@ export default function CommandDeck() {
                   </div>
                   
                   {/* Trust Score Gauge - top right corner */}
-                  <div className="flex flex-col items-center shrink-0" style={{ marginTop: '-17px', marginRight: '-3px' }}>
-                    <div className="relative" style={{ width: '170px', height: '170px' }}>
+                  <div className="flex flex-col items-center shrink-0" style={{ marginTop: '-25px', marginRight: '-3px' }}>
+                    <div className="relative" style={{ width: '170px', height: '170px', transform: 'translateY(-8px)' }}>
                       {/* Gauge dial - 170px base */}
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
@@ -805,8 +805,8 @@ export default function CommandDeck() {
                         </defs>
                       </svg>
                     </div>
-                    {/* Trust Score label */}
-                    <div className="flex items-center gap-1.5 mt-1">
+                    {/* Trust Score label - moved up to nearly touch gauge */}
+                    <div className="flex items-center gap-1.5" style={{ marginTop: '-12px' }}>
                       <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
                       <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
                         Trust
