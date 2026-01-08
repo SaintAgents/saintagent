@@ -687,89 +687,17 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
-              <div className="relative shrink-0 flex flex-col items-center" data-user-id={profile?.user_id}>
-                {/* Avatar portrait - completely separate, at top */}
-                <div className="relative z-20">
-                  <RankedAvatar
-                    src={profile?.avatar_url}
-                    name={profile?.display_name}
-                    size={96}
-                    leaderTier={profile?.leader_tier}
-                    rpRankCode={profile?.rp_rank_code}
-                    rpPoints={rpPoints}
-                    userId={profile?.user_id}
-                    status={profile?.status || 'offline'} />
-                </div>
-                
-                {/* Gap between avatar and gauge */}
-                <div className="h-4" />
-                
-                {/* Trust gauge with ring - isolated below avatar */}
-                <div className="flex flex-col items-center">
-                  {/* Container: 95px for ring, gauge 85px inside */}
-                  <div className="relative" style={{ width: '95px', height: '95px' }}>
-                    {/* Cyan trust ring - 95px outer diameter, wraps only the gauge */}
-                    <svg 
-                      className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
-                      viewBox="0 0 95 95"
-                    >
-                      {/* Background ring */}
-                      <circle 
-                        cx="47.5" 
-                        cy="47.5" 
-                        r="44" 
-                        stroke="currentColor" 
-                        strokeWidth="4" 
-                        fill="none" 
-                        className="text-slate-300/50 dark:text-slate-600/50" 
-                      />
-                      {/* Progress ring */}
-                      <circle 
-                        cx="47.5" 
-                        cy="47.5" 
-                        r="44" 
-                        stroke="url(#trustGradientCmd)" 
-                        strokeWidth="4" 
-                        fill="none" 
-                        strokeDasharray={`${2 * Math.PI * 44}`} 
-                        strokeDashoffset={`${2 * Math.PI * 44 * (1 - (profile?.trust_score || 0) / 100)}`} 
-                        className="transition-all duration-700" 
-                        strokeLinecap="round" 
-                      />
-                      <defs>
-                        <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#10b981" />
-                          <stop offset="50%" stopColor="#14b8a6" />
-                          <stop offset="100%" stopColor="#06b6d4" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    {/* Gauge dial - 85px centered inside the 95px ring */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
-                        alt="Command Deck"
-                        className="object-contain drop-shadow-lg"
-                        style={{ width: '85px', height: '85px', border: 'none', boxShadow: 'none', background: 'transparent' }}
-                        data-no-filter="true"
-                        data-keep-round="true" />
-                    </div>
-                  </div>
-                  {/* Trust Score label below ring */}
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
-                    <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
-                      Trust
-                      <HelpHint
-                        content={
-                        <div>
-                            <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
-                            <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
-                          </div>
-                        } />
-                    </p>
-                  </div>
-                </div>
+              {/* Left column: Avatar only */}
+              <div className="relative shrink-0" data-user-id={profile?.user_id}>
+                <RankedAvatar
+                  src={profile?.avatar_url}
+                  name={profile?.display_name}
+                  size={96}
+                  leaderTier={profile?.leader_tier}
+                  rpRankCode={profile?.rp_rank_code}
+                  rpPoints={rpPoints}
+                  userId={profile?.user_id}
+                  status={profile?.status || 'offline'} />
               </div>
 
               <div className="flex-1">
