@@ -647,6 +647,18 @@ export default function CommandDeck() {
     }
   };
 
+  // Show loading state while essential data is being fetched
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4" />
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen cmd-deck-bg pb-20">
       <div className={cn(
