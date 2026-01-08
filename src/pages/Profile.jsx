@@ -49,8 +49,8 @@ import {
   Heart,
   Compass,
   BadgeCheck,
-  MessageSquare
-} from "lucide-react";
+  MessageSquare } from
+"lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
@@ -95,7 +95,7 @@ export default function Profile() {
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
-      try { return await base44.auth.me(); } catch { return null; }
+      try {return await base44.auth.me();} catch {return null;}
     }
   });
 
@@ -115,7 +115,7 @@ export default function Profile() {
     },
     enabled: !!targetUserId
   });
-  
+
   // Also fetch dating profile for the target user (for demo profiles that may not have UserProfile)
   const { data: datingProfiles } = useQuery({
     queryKey: ['datingProfile', targetUserId],
@@ -123,7 +123,7 @@ export default function Profile() {
     enabled: !!targetUserId && !!viewingUserId
   });
   const datingProfile = datingProfiles?.[0];
-  
+
   // Build profile from UserProfile, or fall back to DatingProfile for demo profiles
   const rawProfile = profiles?.[0];
   const profile = rawProfile || (datingProfile ? {
@@ -138,11 +138,11 @@ export default function Profile() {
 
   const [datingData, setDatingData] = useState(null);
   const showDatingTab = !!(profile && (
-    profile.relationship_status === 'single' ||
-    profile.relationship_status === 'open' ||
-    (profile.relationship_type_seeking || []).includes('polyamorous') ||
-    (profile.relationship_type_seeking || []).includes('open')
-  ));
+  profile.relationship_status === 'single' ||
+  profile.relationship_status === 'open' ||
+  (profile.relationship_type_seeking || []).includes('polyamorous') ||
+  (profile.relationship_type_seeking || []).includes('open')));
+
 
   useEffect(() => {
     if (profile) {
@@ -151,7 +151,7 @@ export default function Profile() {
         relationship_type_seeking: profile.relationship_type_seeking || [],
         dating_preferences: profile.dating_preferences || {},
         qualities_seeking: profile.qualities_seeking || [],
-        qualities_providing: profile.qualities_providing || [],
+        qualities_providing: profile.qualities_providing || []
       });
     }
   }, [profile?.id]);
@@ -345,17 +345,17 @@ export default function Profile() {
             <User className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-slate-900 mb-2">Profile Not Found</h2>
             <p className="text-slate-500 mb-6">This user profile doesn't exist or may have been removed.</p>
-            <Button 
+            <Button
               onClick={() => window.history.back()}
               variant="outline"
-              className="rounded-xl"
-            >
+              className="rounded-xl">
+
               Go Back
             </Button>
           </CardContent>
         </Card>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -369,39 +369,39 @@ export default function Profile() {
                             <RankBadge code={profile?.rp_rank_code || 'seeker'} size={112} className="drop-shadow-lg" />
                           </div>
                           {/* SA Shield Badge - Top Right */}
-                          <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
-                            alt="Saint Agent"
-                            className="absolute top-2 right-4 w-28 h-28 object-contain z-10 drop-shadow-lg"
-                            data-no-filter="true"
-                          />
                           <img
-                            src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/90c26e23f_Screenshot2026-01-07063819.png'}
-                            alt="Profile hero"
-                            className="w-full h-full object-cover"
-                            data-no-filter="true"
-                          />
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
+              alt="Saint Agent"
+              className="absolute top-2 right-4 w-28 h-28 object-contain z-10 drop-shadow-lg"
+              data-no-filter="true" />
+
+                          <img
+              src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/90c26e23f_Screenshot2026-01-07063819.png'}
+              alt="Profile hero"
+              className="w-full h-full object-cover"
+              data-no-filter="true" />
+
 
             }
-            {isOwnProfile && (
-              <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+            {isOwnProfile &&
+            <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                 <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                      await updateMutation.mutateAsync({ hero_image_url: file_url });
-                    }
-                  }} />
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    await updateMutation.mutateAsync({ hero_image_url: file_url });
+                  }
+                }} />
                 <div className="text-white text-center">
                   <Edit className="w-8 h-8 mx-auto mb-2" />
                   <p className="text-sm font-medium">Change Hero Image</p>
                 </div>
               </label>
-            )}
+            }
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-0 p-6 relative">
             <div className="flex items-end gap-6 -mt-16">
@@ -414,78 +414,78 @@ export default function Profile() {
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={profile?.rp_points}
                   userId={profile?.user_id}
-                  status={profile?.status}
-                />
+                  status={profile?.status} />
+
               </div>
               <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="bg-transparent text-blue-950 text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
-                  {profile?.tagline && (
-                    <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
-                  )}
-                  {profile?.leader_tier === 'verified144k' && (
-                    <Badge className="bg-amber-100 text-amber-700">
+                  <h1 className="bg-transparent text-fuchsia-50 text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
+                  {profile?.tagline &&
+                  <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
+                  }
+                  {profile?.leader_tier === 'verified144k' &&
+                  <Badge className="bg-amber-100 text-amber-700">
                       <Crown className="w-3 h-3 mr-1" />
                       144K Leader
                     </Badge>
-                  )}
-                  {profile?.leader_tier === 'candidate' && (
-                    <Badge variant="outline">Leader Candidate</Badge>
-                  )}
+                  }
+                  {profile?.leader_tier === 'candidate' &&
+                  <Badge variant="outline">Leader Candidate</Badge>
+                  }
 
                   {/* Render all active roles as badges */}
-                  {activeRoles?.map?.(r => (
-                    <Badge key={r.id} variant="secondary" className="capitalize">
+                  {activeRoles?.map?.((r) =>
+                  <Badge key={r.id} variant="secondary" className="capitalize">
                       {ROLE_LABELS[r.role_code] || r.role_code.replace(/_/g, ' ')}
                     </Badge>
-                  ))}
-                  {typeof profile?.influence_score === 'number' && (
-                    <Badge className="bg-violet-100 text-violet-700">
+                  )}
+                  {typeof profile?.influence_score === 'number' &&
+                  <Badge className="bg-violet-100 text-violet-700">
                       <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile.influence_score)}
                     </Badge>
-                  )}
-                  {typeof profile?.expertise_score === 'number' && (
-                    <Badge className="bg-blue-100 text-blue-700">
+                  }
+                  {typeof profile?.expertise_score === 'number' &&
+                  <Badge className="bg-blue-100 text-blue-700">
                       <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile.expertise_score)}
                     </Badge>
-                  )}
+                  }
                 </div>
                 <p className="text-blue-950">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
                 {/* Social Links */}
                 <SocialLinksDisplay socialLinks={profile?.social_links} className="mt-2" />
                 </div>
-              {isOwnProfile ? (
-                                        <div className="flex items-center gap-2">
+              {isOwnProfile ?
+              <div className="flex items-center gap-2">
                                           <BoostStatusBadge userId={profile?.user_id} />
                                           <QuickBoostButton size="sm" variant="outline" />
                                           <Button
-                                            variant="outline"
-                                            className="rounded-xl gap-2"
-                                            onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
+                  variant="outline"
+                  className="rounded-xl gap-2"
+                  onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
 
                                             {isEditing ?
-                                            <>
+                  <>
                                                 <X className="w-4 h-4" />
                                                 Cancel
                                               </> :
 
-                                            <>
+                  <>
                                                 <Edit className="w-4 h-4" />
                                                 Edit Profile
                                               </>
-                                            }
+                  }
                                           </Button>
+                                        </div> :
+
+              <div className="flex items-center gap-2">
+                                          <TipButton
+                  toUserId={profile?.user_id}
+                  toUserName={profile?.display_name}
+                  contextType="profile"
+                  contextId={profile?.id} />
+
                                         </div>
-                                      ) : (
-                                        <div className="flex items-center gap-2">
-                                          <TipButton 
-                                            toUserId={profile?.user_id} 
-                                            toUserName={profile?.display_name}
-                                            contextType="profile"
-                                            contextId={profile?.id}
-                                          />
-                                        </div>
-                                      )}
+              }
             </div>
           </CardContent>
         </Card>
@@ -525,74 +525,74 @@ export default function Profile() {
             <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Friends</span>
               <Users className="sm:hidden w-4 h-4" />
-              {following.length > 0 && (
-                <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
-              )}
+              {following.length > 0 &&
+              <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
+              }
             </TabsTrigger>
-            {isOwnProfile && (
-              <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            {isOwnProfile &&
+            <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Monetization</span>
                 <Coins className="sm:hidden w-4 h-4" />
               </TabsTrigger>
-            )}
-            {showDatingTab && (
-              <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            }
+            {showDatingTab &&
+            <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Dating</span>
                 <Heart className="sm:hidden w-4 h-4" />
               </TabsTrigger>
-            )}
+            }
             </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Avatar Uploader - only show for own profile */}
-              {isOwnProfile && (
-                <div>
+              {isOwnProfile &&
+              <div>
                   <AvatarUploader
-                    currentAvatar={profile?.avatar_url}
-                    displayName={profile?.display_name}
-                    onAvatarUpdate={handleAvatarUpdate} />
+                  currentAvatar={profile?.avatar_url}
+                  displayName={profile?.display_name}
+                  onAvatarUpdate={handleAvatarUpdate} />
                 </div>
-              )}
+              }
 
               {/* Left Column - Profile Info */}
               <div className="lg:col-span-2 space-y-6">
             {/* Status Message (own profile only) */}
-            {isOwnProfile && (
-              <Card>
+            {isOwnProfile &&
+                <Card>
                 <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <div className={cn(
-                      "w-3 h-3 rounded-full",
-                      profile?.status === 'online' && "bg-emerald-500",
-                      profile?.status === 'focus' && "bg-amber-500",
-                      profile?.status === 'dnd' && "bg-rose-500",
-                      profile?.status === 'offline' && "bg-slate-400",
-                      !profile?.status && "bg-emerald-500"
-                    )} />
+                        "w-3 h-3 rounded-full",
+                        profile?.status === 'online' && "bg-emerald-500",
+                        profile?.status === 'focus' && "bg-amber-500",
+                        profile?.status === 'dnd' && "bg-rose-500",
+                        profile?.status === 'offline' && "bg-slate-400",
+                        !profile?.status && "bg-emerald-500"
+                      )} />
                     Status Message
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4">
                   <div className="flex gap-2">
                     <Input
-                      placeholder="What's on your mind?"
-                      value={profile?.status_message || ''}
-                      maxLength={100}
-                      onChange={async (e) => {
-                        await updateMutation.mutateAsync({ status_message: e.target.value });
-                      }}
-                      className="flex-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]"
-                    />
+                        placeholder="What's on your mind?"
+                        value={profile?.status_message || ''}
+                        maxLength={100}
+                        onChange={async (e) => {
+                          await updateMutation.mutateAsync({ status_message: e.target.value });
+                        }}
+                        className="flex-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
+
                   </div>
                   <p className="text-xs text-slate-400 mt-2">This message shows when others hover over your avatar</p>
                 </CardContent>
               </Card>
-            )}
+                }
 
             {/* Theme Customization (own profile only) */}
-            {isOwnProfile && (
-              <Card>
+            {isOwnProfile &&
+                <Card>
                 <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
                   <CardTitle className="text-sm">Theme Customization</CardTitle>
                 </CardHeader>
@@ -600,15 +600,15 @@ export default function Profile() {
                   <div>
                     <Label className="text-xs text-slate-500 dark:text-slate-400">Theme</Label>
                     <Select
-                      value={profile?.theme_preference || 'light'}
-                      onValueChange={async (v) => {
-                        try {
-                          localStorage.setItem('theme', v);
-                          document.documentElement.setAttribute('data-theme', v);
-                        } catch {}
-                        await updateMutation.mutateAsync({ theme_preference: v });
-                      }}
-                    >
+                        value={profile?.theme_preference || 'light'}
+                        onValueChange={async (v) => {
+                          try {
+                            localStorage.setItem('theme', v);
+                            document.documentElement.setAttribute('data-theme', v);
+                          } catch {}
+                          await updateMutation.mutateAsync({ theme_preference: v });
+                        }}>
+
                       <SelectTrigger className="mt-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                         <SelectValue />
                       </SelectTrigger>
@@ -620,7 +620,7 @@ export default function Profile() {
                       </SelectContent>
                     </Select>
                   </div>
-                  {profile?.theme_preference === 'custom' && (
+                  {profile?.theme_preference === 'custom' &&
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label className="text-xs text-slate-500 dark:text-slate-400">Primary</Label>
@@ -636,8 +636,8 @@ export default function Profile() {
                                 document.documentElement.style.setProperty('--primary', e.target.value);
                               } catch {}
                               await updateMutation.mutateAsync({ custom_theme_colors: colors });
-                            }}
-                          />
+                            }} />
+
                           <span className="text-xs font-mono text-slate-500">{profile?.custom_theme_colors?.primary || '#7c3aed'}</span>
                         </div>
                       </div>
@@ -655,35 +655,35 @@ export default function Profile() {
                                 document.documentElement.style.setProperty('--accent', e.target.value);
                               } catch {}
                               await updateMutation.mutateAsync({ custom_theme_colors: colors });
-                            }}
-                          />
+                            }} />
+
                           <span className="text-xs font-mono text-slate-500">{profile?.custom_theme_colors?.accent || '#f59e0b'}</span>
                         </div>
                       </div>
                     </div>
-                  )}
+                    }
                 </CardContent>
               </Card>
-            )}
+                }
 
             {/* Show status message for other profiles */}
-            {!isOwnProfile && profile?.status_message && (
-              <Card>
+            {!isOwnProfile && profile?.status_message &&
+                <Card>
                 <CardContent className="bg-purple-100 dark:bg-[#050505] p-4">
                   <div className="flex items-center gap-3">
                     <div className={cn(
-                      "w-3 h-3 rounded-full shrink-0",
-                      profile?.status === 'online' && "bg-emerald-500",
-                      profile?.status === 'focus' && "bg-amber-500",
-                      profile?.status === 'dnd' && "bg-rose-500",
-                      profile?.status === 'offline' && "bg-slate-400",
-                      !profile?.status && "bg-emerald-500"
-                    )} />
+                        "w-3 h-3 rounded-full shrink-0",
+                        profile?.status === 'online' && "bg-emerald-500",
+                        profile?.status === 'focus' && "bg-amber-500",
+                        profile?.status === 'dnd' && "bg-rose-500",
+                        profile?.status === 'offline' && "bg-slate-400",
+                        !profile?.status && "bg-emerald-500"
+                      )} />
                     <p className="text-slate-700 dark:text-slate-300 italic">"{profile.status_message}"</p>
                   </div>
                 </CardContent>
               </Card>
-            )}
+                }
 
             {/* Bio & Details */}
             <Card>
@@ -693,7 +693,7 @@ export default function Profile() {
                   About
                 </CardTitle>
               </CardHeader>
-<CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-6 space-y-4">
+                  <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-6 space-y-4">
                 {isEditing ?
                     <>
                     <div>
@@ -767,7 +767,7 @@ export default function Profile() {
                 <CardTitle className="flex items-center justify-between dark:!text-white">
                   <span>Intentions</span>
                   {isOwnProfile && (
-                    !editingIntentions ?
+                      !editingIntentions ?
                       <Button
                         variant="ghost"
                         size="sm"
@@ -776,27 +776,27 @@ export default function Profile() {
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
                     </Button> :
-                        <div className="flex gap-2">
+                      <div className="flex gap-2">
                         <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setEditingIntentions(false)}>
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setEditingIntentions(false)}>
                           <X className="w-4 h-4 mr-1" />
                           Cancel
                         </Button>
                         <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-violet-600"
-                            onClick={handleIntentionsSave}>
+                          variant="ghost"
+                          size="sm"
+                          className="text-violet-600"
+                          onClick={handleIntentionsSave}>
                           <Save className="w-4 h-4 mr-1" />
                           Save
                         </Button>
-                      </div>
-                  )}
+                      </div>)
+                      }
                 </CardTitle>
               </CardHeader>
-<CardContent className="dark:bg-[#050505]">
+                  <CardContent className="dark:bg-[#050505]">
                 {editingIntentions ?
                     <div className="space-y-3">
                     <div className="flex gap-2">
@@ -853,14 +853,14 @@ export default function Profile() {
                       <Star className="w-10 h-10 text-slate-200 mx-auto mb-2" />
                       <p className="text-slate-500 mb-3">No testimonials yet</p>
                       <p className="text-xs text-slate-400 mb-4">Testimonials from collaborators help build your reputation</p>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         className="gap-2"
                         onClick={() => {
                           window.location.href = createPageUrl('Messages');
-                        }}
-                      >
+                        }}>
+
                         <MessageSquare className="w-4 h-4" />
                         Ask a Collaborator for Feedback
                       </Button>
@@ -906,15 +906,15 @@ export default function Profile() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Badges</span>
-                  {isOwnProfile && (
-                    <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-violet-600"
-                          onClick={() => setBadgeGlossaryOpen(true)}>
+                  {isOwnProfile &&
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-violet-600"
+                        onClick={() => setBadgeGlossaryOpen(true)}>
                       View Glossary
                     </Button>
-                  )}
+                      }
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -927,16 +927,16 @@ export default function Profile() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Skills</span>
-                  {isOwnProfile && (
-                    <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-violet-600"
-                          onClick={() => setSkillsPickerOpen(true)}>
+                  {isOwnProfile &&
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-violet-600"
+                        onClick={() => setSkillsPickerOpen(true)}>
                       <Plus className="w-4 h-4 mr-1" />
                       Add Skills
                     </Button>
-                  )}
+                      }
                   </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -979,17 +979,17 @@ export default function Profile() {
 
                   {/* Social Links Editor - Own Profile Only */}
                   {isOwnProfile && (
-                    editingSocialLinks ? (
-                      <SocialLinksEditor
-                        profile={profile}
-                        onSave={async (data) => {
-                          await updateMutation.mutateAsync(data);
-                          setEditingSocialLinks(false);
-                        }}
-                        onCancel={() => setEditingSocialLinks(false)}
-                      />
-                    ) : (
-                      <Card>
+                editingSocialLinks ?
+                <SocialLinksEditor
+                  profile={profile}
+                  onSave={async (data) => {
+                    await updateMutation.mutateAsync(data);
+                    setEditingSocialLinks(false);
+                  }}
+                  onCancel={() => setEditingSocialLinks(false)} /> :
+
+
+                <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                           <CardTitle className="text-sm">Social Links & Website</CardTitle>
                           <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingSocialLinks(true)}>
@@ -997,29 +997,29 @@ export default function Profile() {
                           </Button>
                         </CardHeader>
                         <CardContent>
-                          {profile?.social_links && Object.values(profile.social_links).some(v => v) ? (
-                            <SocialLinksDisplay socialLinks={profile.social_links} />
-                          ) : (
-                            <p className="text-slate-400 text-sm">No social links added yet</p>
-                          )}
+                          {profile?.social_links && Object.values(profile.social_links).some((v) => v) ?
+                    <SocialLinksDisplay socialLinks={profile.social_links} /> :
+
+                    <p className="text-slate-400 text-sm">No social links added yet</p>
+                    }
                         </CardContent>
-                      </Card>
-                    )
-                  )}
+                      </Card>)
+
+                }
 
                   {/* Detailed Bio Editor - Own Profile Only */}
                   {isOwnProfile && (
-                    editingBio ? (
-                      <DetailedBioEditor
-                        profile={profile}
-                        onSave={async (data) => {
-                          await updateMutation.mutateAsync(data);
-                          setEditingBio(false);
-                        }}
-                        onCancel={() => setEditingBio(false)}
-                      />
-                    ) : (
-                      <Card>
+                editingBio ?
+                <DetailedBioEditor
+                  profile={profile}
+                  onSave={async (data) => {
+                    await updateMutation.mutateAsync(data);
+                    setEditingBio(false);
+                  }}
+                  onCancel={() => setEditingBio(false)} /> :
+
+
+                <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                           <CardTitle className="text-sm">Detailed Bio</CardTitle>
                           <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingBio(true)}>
@@ -1027,19 +1027,19 @@ export default function Profile() {
                           </Button>
                         </CardHeader>
                         <CardContent>
-                          {profile?.detailed_bio ? (
-                            <p className="text-slate-700 whitespace-pre-wrap">{profile.detailed_bio}</p>
-                          ) : (
-                            <p className="text-slate-400 text-sm">Add a detailed about section to tell your story</p>
-                          )}
+                          {profile?.detailed_bio ?
+                    <p className="text-slate-700 whitespace-pre-wrap">{profile.detailed_bio}</p> :
+
+                    <p className="text-slate-400 text-sm">Add a detailed about section to tell your story</p>
+                    }
                         </CardContent>
-                      </Card>
-                    )
-                  )}
+                      </Card>)
+
+                }
 
                   {/* Show detailed bio for other profiles */}
-                  {!isOwnProfile && profile?.detailed_bio && (
-                    <Card>
+                  {!isOwnProfile && profile?.detailed_bio &&
+                <Card>
                       <CardHeader>
                         <CardTitle className="text-sm">About</CardTitle>
                       </CardHeader>
@@ -1047,7 +1047,7 @@ export default function Profile() {
                         <p className="text-slate-700 whitespace-pre-wrap">{profile.detailed_bio}</p>
                       </CardContent>
                     </Card>
-                  )}
+                }
                   </div>
                   </div>
                   </TabsContent>
@@ -1055,12 +1055,12 @@ export default function Profile() {
                   {/* Showcase Tab */}
                   <TabsContent value="showcase" className="space-y-6">
                     <FeaturedShowcase
-                      profile={profile}
-                      isOwnProfile={isOwnProfile}
-                      onUpdate={async (data) => {
-                        await updateMutation.mutateAsync(data);
-                      }}
-                    />
+              profile={profile}
+              isOwnProfile={isOwnProfile}
+              onUpdate={async (data) => {
+                await updateMutation.mutateAsync(data);
+              }} />
+
                   </TabsContent>
 
           <TabsContent value="onboarding" className="space-y-6">
@@ -1250,24 +1250,24 @@ export default function Profile() {
             }
           </TabsContent>
 
-          {showDatingTab && (
-            <TabsContent value="dating" className="space-y-6">
+          {showDatingTab &&
+          <TabsContent value="dating" className="space-y-6">
               <Step7Dating
-                data={datingData || {}}
-                onChange={setDatingData}
-                onComplete={async (data) => {
-                  const payload = {
-                    relationship_status: data.relationship_status,
-                    relationship_type_seeking: data.relationship_type_seeking,
-                    dating_preferences: data.dating_preferences,
-                    qualities_seeking: data.qualities_seeking,
-                    qualities_providing: data.qualities_providing,
-                  };
-                  await updateMutation.mutateAsync(payload);
-                }}
-              />
+              data={datingData || {}}
+              onChange={setDatingData}
+              onComplete={async (data) => {
+                const payload = {
+                  relationship_status: data.relationship_status,
+                  relationship_type_seeking: data.relationship_type_seeking,
+                  dating_preferences: data.dating_preferences,
+                  qualities_seeking: data.qualities_seeking,
+                  qualities_providing: data.qualities_providing
+                };
+                await updateMutation.mutateAsync(payload);
+              }} />
+
             </TabsContent>
-          )}
+          }
 
           <TabsContent value="stats" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1302,12 +1302,12 @@ export default function Profile() {
                 <p className="text-sm text-slate-500 mt-1">
                   {affiliatePaidCount} paid referrals
                 </p>
-                {affiliateTier === 'bronze' && affiliatePaidCount < 5 && (
-                  <p className="text-xs text-amber-600 mt-2">{5 - affiliatePaidCount} more to Silver</p>
-                )}
-                {affiliateTier === 'silver' && affiliatePaidCount < 20 && (
-                  <p className="text-xs text-amber-600 mt-2">{20 - affiliatePaidCount} more to Gold</p>
-                )}
+                {affiliateTier === 'bronze' && affiliatePaidCount < 5 &&
+                    <p className="text-xs text-amber-600 mt-2">{5 - affiliatePaidCount} more to Silver</p>
+                    }
+                {affiliateTier === 'silver' && affiliatePaidCount < 20 &&
+                    <p className="text-xs text-amber-600 mt-2">{20 - affiliatePaidCount} more to Gold</p>
+                    }
               </CardContent>
             </Card>
 
@@ -1371,27 +1371,27 @@ export default function Profile() {
                 <CardTitle className="text-base">Current Roles</CardTitle>
               </CardHeader>
               <CardContent>
-                {activeRoles?.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {activeRoles.map((r) => (
-                      <Badge key={r.id} variant="secondary" className="capitalize">
+                {activeRoles?.length ?
+                <div className="flex flex-wrap gap-2">
+                    {activeRoles.map((r) =>
+                  <Badge key={r.id} variant="secondary" className="capitalize">
                         {ROLE_LABELS[r.role_code] || r.role_code.replace(/_/g, ' ')}
                       </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-slate-400 text-sm">No active roles assigned</p>
-                )}
+                  )}
+                  </div> :
+
+                <p className="text-slate-400 text-sm">No active roles assigned</p>
+                }
               </CardContent>
             </Card>
           </TabsContent>
 
            {/* Monetization Tab */}
-           {isOwnProfile && (
-             <TabsContent value="monetization" className="space-y-6">
+           {isOwnProfile &&
+          <TabsContent value="monetization" className="space-y-6">
                <CreatorMonetizationTab profile={profile} />
              </TabsContent>
-           )}
+          }
 
             <TabsContent value="friends" className="space-y-6">
             {/* Followers - People who follow you */}
@@ -1404,24 +1404,24 @@ export default function Profile() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {followers.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {followers.map((follow) => (
-                      <div
-                        key={follow.id}
-                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
-                        data-user-id={follow.follower_id}
-                      >
+                {followers.length > 0 ?
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {followers.map((follow) =>
+                  <div
+                    key={follow.id}
+                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
+                    data-user-id={follow.follower_id}>
+
                         <RankedAvatar src={follow.follower_avatar} name={follow.follower_name} userId={follow.follower_id} size={48} />
                         <p className="text-sm font-medium text-slate-900 text-center line-clamp-1">
                           {follow.follower_name}
                         </p>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-slate-400 text-sm text-center py-4">No followers yet</p>
-                )}
+                  )}
+                  </div> :
+
+                <p className="text-slate-400 text-sm text-center py-4">No followers yet</p>
+                }
               </CardContent>
             </Card>
 
@@ -1435,39 +1435,39 @@ export default function Profile() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {following.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {following.map((follow) => (
-                      <div
-                        key={follow.id}
-                        className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group"
-                      >
+                {following.length > 0 ?
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {following.map((follow) =>
+                  <div
+                    key={follow.id}
+                    className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors relative group">
+
                         <div
-                          className="cursor-pointer"
-                          data-user-id={follow.following_id}
-                        >
+                      className="cursor-pointer"
+                      data-user-id={follow.following_id}>
+
                           <RankedAvatar src={follow.following_avatar} name={follow.following_name} userId={follow.following_id} size={48} />
                         </div>
                         <p
-                          className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
-                          data-user-id={follow.following_id}
-                        >
+                      className="text-sm font-medium text-slate-900 text-center line-clamp-1 cursor-pointer"
+                      data-user-id={follow.following_id}>
+
                           {follow.following_name}
                         </p>
                         <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
-                          onClick={() => unfollowMutation.mutate(follow.id)}
-                        >
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                      onClick={() => unfollowMutation.mutate(follow.id)}>
+
                           Unfollow
                         </Button>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-slate-400 text-sm text-center py-4">Not following anyone yet</p>
-                )}
+                  )}
+                  </div> :
+
+                <p className="text-slate-400 text-sm text-center py-4">Not following anyone yet</p>
+                }
               </CardContent>
             </Card>
           </TabsContent>
@@ -1483,10 +1483,10 @@ export default function Profile() {
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
       <PhotoViewer
         open={viewerOpen}
-        images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0,5)}
+        images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0, 5)}
         startIndex={0}
-        onClose={() => setViewerOpen(false)}
-      />
-    </div>
-  );
+        onClose={() => setViewerOpen(false)} />
+
+    </div>);
+
 }
