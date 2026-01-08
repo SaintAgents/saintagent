@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink, EyeOff, Maximize2, GripVertical, PanelRight } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, EyeOff, Maximize2, PanelRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -33,59 +33,10 @@ export default function CollapsibleCard({
   forceOpen,
   isHidden,
   onToggleHide,
-  onTossToSidePanel, // New prop for toss functionality
-  isDraggable = true // Enable drag by default
+  onTossToSidePanel // Prop for toss functionality (button only)
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const cardRef = useRef(null);
-  const dragStartRef = useRef({ x: 0, y: 0, cardRect: null });
-
-  // Handle drag start
-  const handleDragStart = (e) => {
-    if (!isDraggable || !onTossToSidePanel) return;
-    e.preventDefault();
-    const rect = cardRef.current?.getBoundingClientRect();
-    dragStartRef.current = { 
-      x: e.clientX, 
-      y: e.clientY, 
-      cardRect: rect 
-    };
-    setIsDragging(true);
-    setDragPos({ x: 0, y: 0 });
-    document.addEventListener('mousemove', handleDragMove);
-    document.addEventListener('mouseup', handleDragEnd);
-  };
-
-  const handleDragMove = (e) => {
-    const dx = e.clientX - dragStartRef.current.x;
-    const dy = e.clientY - dragStartRef.current.y;
-    setDragPos({ x: dx, y: dy });
-    
-    // Check if dragging toward right side of screen (side panel area)
-    const screenWidth = window.innerWidth;
-    if (e.clientX > screenWidth - 150) {
-      document.body.style.cursor = 'copy';
-    } else {
-      document.body.style.cursor = 'grabbing';
-    }
-  };
-
-  const handleDragEnd = (e) => {
-    document.removeEventListener('mousemove', handleDragMove);
-    document.removeEventListener('mouseup', handleDragEnd);
-    document.body.style.cursor = '';
-    
-    const screenWidth = window.innerWidth;
-    // If dropped in right 150px zone, toss to side panel
-    if (e.clientX > screenWidth - 150 && onTossToSidePanel) {
-      onTossToSidePanel(cardId, title);
-    }
-    
-    setIsDragging(false);
-    setDragPos({ x: 0, y: 0 });
-  };
 
   React.useEffect(() => {
     if (typeof forceOpen === 'boolean') setIsOpen(forceOpen);
@@ -159,14 +110,8 @@ export default function CollapsibleCard({
       className={cn(
         "relative bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden transition-all duration-300",
         isPinned && "ring-2 ring-violet-500/20",
-        isDragging && "opacity-50 scale-95",
         className
       )}
-      style={isDragging ? { 
-        transform: `translate(${dragPos.x}px, ${dragPos.y}px) scale(0.95)`,
-        zIndex: 100,
-        pointerEvents: 'none'
-      } : undefined}
     >
       {/* Background Image */}
       {backgroundImage &&
@@ -181,18 +126,7 @@ export default function CollapsibleCard({
       onClick={() => setIsOpen(!isOpen)}>
 
         <div className="flex items-center gap-3 min-w-0">
-          {/* Drag handle for tossing to side panel */}
-          {isDraggable && onTossToSidePanel && (
-            <div
-              onMouseDown={handleDragStart}
-              className="cursor-grab active:cursor-grabbing p-1 -ml-2 rounded hover:bg-slate-200/50 transition-colors"
-              title="Drag to side panel to store"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <GripVertical className="w-4 h-4 text-slate-400" />
-            </div>
-          )}
-          {/* Quick toss button */}
+          {/* Quick toss button - send to side panel */}
           {onTossToSidePanel && (
             <Button
               variant="ghost"
