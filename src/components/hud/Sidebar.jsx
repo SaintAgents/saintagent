@@ -609,20 +609,23 @@ export default function Sidebar({
             <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="light" id={inPopup ? "theme-light-pop" : "theme-light"} className="h-3.5 w-3.5" />
-                <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
                   <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
+                  <span className="ml-auto text-xs text-slate-400">(Artist)</span>
                 </Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="dark" id={inPopup ? "theme-dark-pop" : "theme-dark"} className="h-3.5 w-3.5" />
-                <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
                   <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
+                  <span className="ml-auto text-xs text-slate-400">(Less)</span>
                 </Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="hacker" id={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="h-3.5 w-3.5" />
-                <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
                   <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
+                  <span className="ml-auto text-xs text-slate-400">(None)</span>
                 </Label>
               </div>
             </RadioGroup>
