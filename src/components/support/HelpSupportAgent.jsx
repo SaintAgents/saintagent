@@ -291,13 +291,19 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
           className="fixed z-50"
           style={{ left: position.x ?? 16, top: position.y ?? undefined, bottom: position.y ? undefined : 80 }}
         >
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-full shadow-lg transition-all cursor-pointer hover:scale-105 hacker-help-btn"
+          <div
+            onMouseDown={onButtonDragStart}
+            onClick={(e) => {
+              if (!buttonDraggedRef.current) setIsOpen(true);
+            }}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-full shadow-lg transition-all cursor-grab hover:scale-105 hacker-help-btn",
+              buttonDraggingRef.current && "cursor-grabbing scale-105"
+            )}
           >
             <HelpCircle className="w-4 h-4 hacker-help-icon" />
             <span className="text-xs font-medium">Help</span>
-          </button>
+          </div>
         </div>
       )}
 
