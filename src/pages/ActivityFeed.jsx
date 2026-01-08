@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User } from 'lucide-react';
+import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User, FileText, Calendar, UserPlus } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import BackButton from '@/components/hud/BackButton';
@@ -18,6 +18,10 @@ const TYPE_META = {
   missions: { label: 'Missions', icon: Target, color: 'bg-violet-100 text-violet-700' },
   testimonials: { label: 'Testimonials', icon: Star, color: 'bg-amber-100 text-amber-700' },
   reputation: { label: 'Reputation', icon: TrendingUp, color: 'bg-blue-100 text-blue-700' },
+  posts: { label: 'Posts', icon: FileText, color: 'bg-pink-100 text-pink-700' },
+  meetings: { label: 'Meetings', icon: Calendar, color: 'bg-cyan-100 text-cyan-700' },
+  follows: { label: 'Follows', icon: UserPlus, color: 'bg-indigo-100 text-indigo-700' },
+  events: { label: 'Events', icon: Sparkles, color: 'bg-orange-100 text-orange-700' },
 };
 
 // Separate component to ensure consistent hook order - no hooks inside, just renders
@@ -48,6 +52,10 @@ function ActivityItem({ ev, onOpen }) {
               {ev.type === 'missions' && 'Mission update'}
               {ev.type === 'testimonials' && 'Feedback'}
               {ev.type === 'reputation' && 'Reputation'}
+              {ev.type === 'posts' && 'Post'}
+              {ev.type === 'meetings' && 'Meeting'}
+              {ev.type === 'follows' && 'Connection'}
+              {ev.type === 'events' && 'Event'}
             </div>
           </div>
         </div>
@@ -57,7 +65,7 @@ function ActivityItem({ ev, onOpen }) {
 }
 
 export default function ActivityFeed() {
-  const [filters, setFilters] = useState({ listings: true, missions: true, testimonials: true, reputation: true });
+  const [filters, setFilters] = useState({ listings: true, missions: true, testimonials: true, reputation: true, posts: true, meetings: true, follows: true, events: true });
   const [scope, setScope] = useState('me'); // 'me', 'friends', or 'everyone'
 
   const activeTypes = useMemo(() => Object.entries(filters).filter(([,v]) => v).map(([k]) => k), [filters]);

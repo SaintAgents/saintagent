@@ -22,9 +22,10 @@ Deno.serve(async (req) => {
 
     let body = {};
     try { body = await req.json(); } catch {}
-    const types = Array.isArray(body?.types) && body.types.length ? body.types : ['listings','missions','testimonials','reputation'];
+    const types = Array.isArray(body?.types) && body.types.length ? body.types : ['listings','missions','testimonials','reputation','posts','meetings','follows','events'];
     const limit = Math.min(Number(body?.limit || 50), 200);
-    const scope = body?.scope || 'everyone'; // 'friends' or 'everyone'
+    const scope = body?.scope || 'everyone'; // 'me', 'friends', or 'everyone'
+    const filterByMe = scope === 'me';
 
     // Build relevant user set: followings + me
     let followings = [];
@@ -43,6 +44,7 @@ Deno.serve(async (req) => {
         recentListings = await base44.entities.Listing.list('-created_date', 60) || [];
       } catch (_) {}
       for (const l of recentListings) {
+        if (filterByMe && l.owner_id !== me.email) continue;
         if (filterByFriends && !followingIds.has(l.owner_id)) continue;
         results.push(toEvent({
           type: 'listings',
@@ -62,6 +64,7 @@ Deno.serve(async (req) => {
         recentMissions = await base44.entities.Mission.list('-updated_date', 60) || [];
       } catch (_) {}
       for (const m of recentMissions) {
+        if (filterByMe && m.creator_id !== me.email) continue;
         if (filterByFriends && !followingIds.has(m.creator_id)) continue;
         const desc = m.status === 'completed' ? 'Mission completed' : (m.status === 'active' ? 'Mission active' : `Status: ${m.status || 'unknown'}`);
         results.push(toEvent({
@@ -82,6 +85,7 @@ Deno.serve(async (req) => {
         recentTestimonials = await base44.entities.Testimonial.list('-created_date', 60) || [];
       } catch (_) {}
       for (const t of recentTestimonials) {
+        if (filterByMe && t.from_user_id !== me.email && t.to_user_id !== me.email) continue;
         if (filterByFriends && !followingIds.has(t.from_user_id) && !followingIds.has(t.to_user_id)) continue;
         results.push(toEvent({
           type: 'testimonials',
@@ -102,6 +106,7 @@ Deno.serve(async (req) => {
         trustEvents = await base44.entities.TrustEvent.list('-created_date', 60) || [];
       } catch (_) {}
       for (const ev of trustEvents) {
+        if (filterByMe && ev.user_id !== me.email) continue;
         if (filterByFriends && !followingIds.has(ev.user_id)) continue;
         if (Math.abs(Number(ev.delta || 0)) < 3) continue;
         results.push(toEvent({
@@ -119,6 +124,7 @@ Deno.serve(async (req) => {
         repEvents = await base44.entities.ReputationEvent.list('-created_date', 60) || [];
       } catch (_) {}
       for (const ev of repEvents) {
+        if (filterByMe && ev.user_id !== me.email) continue;
         if (filterByFriends && !followingIds.has(ev.user_id)) continue;
         results.push(toEvent({
           type: 'reputation',
@@ -128,6 +134,88 @@ Deno.serve(async (req) => {
           title: ev.reason_code || 'Reputation update',
           description: ev.description || '',
           targetId: ev.user_id,
+        }));
+      }
+    }
+
+    // Posts
+    if (types.includes('posts')) {
+      let recentPosts = [];
+      try {
+        recentPosts = await base44.entities.Post.list('-created_date', 60) || [];
+      } catch (_) {}
+      for (const p of recentPosts) {
+        if (filterByMe && p.author_id !== me.email) continue;
+        if (filterByFriends && !followingIds.has(p.author_id)) continue;
+        results.push(toEvent({
+          type: 'posts',
+          source: p,
+          createdAt: p.created_date,
+          actorId: p.author_id,
+          title: `${p.author_name || 'Someone'} posted`,
+          description: p.content?.substring(0, 100) || '',
+        }));
+      }
+    }
+
+    // Meetings
+    if (types.includes('meetings')) {
+      let recentMeetings = [];
+      try {
+        recentMeetings = await base44.entities.Meeting.list('-created_date', 60) || [];
+      } catch (_) {}
+      for (const m of recentMeetings) {
+        if (filterByMe && m.host_id !== me.email && m.guest_id !== me.email) continue;
+        if (filterByFriends && !followingIds.has(m.host_id) && !followingIds.has(m.guest_id)) continue;
+        results.push(toEvent({
+          type: 'meetings',
+          source: m,
+          createdAt: m.created_date,
+          actorId: m.host_id,
+          title: m.title || 'Meeting scheduled',
+          description: `${m.host_name || 'Host'} & ${m.guest_name || 'Guest'} • ${m.status || 'pending'}`,
+          targetId: m.guest_id,
+        }));
+      }
+    }
+
+    // Follows
+    if (types.includes('follows')) {
+      let recentFollows = [];
+      try {
+        recentFollows = await base44.entities.Follow.list('-created_date', 60) || [];
+      } catch (_) {}
+      for (const f of recentFollows) {
+        if (filterByMe && f.follower_id !== me.email && f.following_id !== me.email) continue;
+        if (filterByFriends && !followingIds.has(f.follower_id) && !followingIds.has(f.following_id)) continue;
+        results.push(toEvent({
+          type: 'follows',
+          source: f,
+          createdAt: f.created_date,
+          actorId: f.follower_id,
+          title: `New follow`,
+          description: `${f.follower_id} followed ${f.following_id}`,
+          targetId: f.following_id,
+        }));
+      }
+    }
+
+    // Events
+    if (types.includes('events')) {
+      let recentEvents = [];
+      try {
+        recentEvents = await base44.entities.Event.list('-created_date', 60) || [];
+      } catch (_) {}
+      for (const e of recentEvents) {
+        if (filterByMe && e.host_id !== me.email) continue;
+        if (filterByFriends && !followingIds.has(e.host_id)) continue;
+        results.push(toEvent({
+          type: 'events',
+          source: e,
+          createdAt: e.created_date,
+          actorId: e.host_id,
+          title: e.title || 'New event',
+          description: `${e.status || 'upcoming'} • ${e.host_name || ''}`,
         }));
       }
     }
