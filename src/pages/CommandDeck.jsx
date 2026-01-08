@@ -803,7 +803,6 @@ export default function CommandDeck() {
                       </div>
 
 
-                    </div>
                     }
                     {profile?.rising_sign &&
                     <div className="flex items-center gap-2">
