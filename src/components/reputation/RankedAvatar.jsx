@@ -216,7 +216,7 @@ export default function RankedAvatar({
                 borderStyle: 'solid',
                 bottom: 0,
                 left: 0,
-                transform: 'translate(-25%, 25%)'
+                transform: 'translate(-50%, 50%)'
               }}
               onClick={(e) => e.stopPropagation()}
             />
