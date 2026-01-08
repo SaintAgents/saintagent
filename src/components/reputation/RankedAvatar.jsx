@@ -214,7 +214,7 @@ export default function RankedAvatar({
                 borderWidth: statusBorder, 
                 borderColor: '#ffffff', 
                 borderStyle: 'solid',
-                bottom: 0,
+                bottom: 7,
                 left: 0,
                 transform: 'translate(-50%, 50%)'
               }}
