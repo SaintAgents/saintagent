@@ -124,6 +124,8 @@ export default function Sidebar({
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
+  const [navPopupOpen, setNavPopupOpen] = useState(false);
+  const [presencePopupOpen, setPresencePopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
   const [themeOpen, setThemeOpen] = useState(false);
@@ -430,6 +432,20 @@ export default function Sidebar({
         )}
       </div>
 
+      {/* Nav Popout Button */}
+      {(!isCollapsed || inPopup) && (
+        <div className="border-t border-slate-100 px-3 pt-2 pb-1">
+          <button
+            onClick={() => setNavPopupOpen(true)}
+            className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
+            title="Pop out navigation"
+          >
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Quick Nav</span>
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+          </button>
+        </div>
+      )}
+
       {/* Leaderboard */}
       {(!isCollapsed || inPopup) && (
         <div className="border-t border-slate-100 p-3">
@@ -525,32 +541,44 @@ export default function Sidebar({
         "border-t border-slate-100 p-4 space-y-3",
         (isCollapsed && !inPopup) && "px-2"
       )}>
-        <button
-          onClick={() => setPresenceOpen(!presenceOpen)}
-          className={cn("w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50", (isCollapsed && !inPopup) && "justify-center")}
-        >
+        {/* RP & Rank Header */}
+        {(!isCollapsed || inPopup) && profile && (
+          <div className="flex items-center justify-between px-1 py-1 bg-violet-50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
+              <span className="text-xs font-semibold text-violet-700">{profile.rp_points || 0} RP</span>
+            </div>
+            <span className="text-xs font-medium capitalize text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setPresenceOpen(!presenceOpen)}
+            className={cn("flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50", (isCollapsed && !inPopup) && "justify-center w-full")}
+          >
+            {(!isCollapsed || inPopup) && (
+              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
+            )}
+            {presenceOpen ? (
+              <ChevronUp className="w-4 h-4 text-slate-500" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-slate-500" />
+            )}
+          </button>
           {(!isCollapsed || inPopup) && (
-            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
+            <button
+              onClick={() => setPresencePopupOpen(true)}
+              className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+              title="Pop out presence"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            </button>
           )}
-          {presenceOpen ? (
-            <ChevronUp className="w-4 h-4 text-slate-500" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-slate-500" />
-          )}
-        </button>
+        </div>
 
         {presenceOpen && (
           <>
-            {(!isCollapsed || inPopup) && profile && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500">RP</span>
-                  <span className="text-sm font-semibold text-slate-900">{profile.rp_points || 0}</span>
-                </div>
-                <span className="text-xs capitalize text-slate-700">{getRPRank(profile.rp_points || 0).title}</span>
-              </div>
-            )}
-
             <div className={cn(
               "flex items-center gap-3",
               (isCollapsed && !inPopup) && "justify-center"
@@ -896,6 +924,91 @@ export default function Sidebar({
       </div>
 
       {renderSidebarContent(false)}
+
+      {/* Nav popup */}
+      {navPopupOpen && (
+        <FloatingPanel title="Quick Navigation" onClose={() => setNavPopupOpen(false)}>
+          <div className="space-y-1 p-2">
+            {NAV_ITEMS.slice(0, 12).map((item) => {
+              const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
+              const isLocked = item.locked || isLeaderLocked;
+              return (
+                <Link
+                  key={item.id}
+                  to={isLocked ? '#' : createPageUrl(item.page)}
+                  onClick={(e) => {
+                    if (isLocked) e.preventDefault();
+                    else setNavPopupOpen(false);
+                  }}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
+                    currentPage === item.id 
+                      ? "bg-violet-100 text-violet-700" 
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                    isLocked && "opacity-60 cursor-not-allowed"
+                  )}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                  {isLocked && <Lock className="w-3 h-3 ml-auto text-slate-400" />}
+                </Link>
+              );
+            })}
+          </div>
+        </FloatingPanel>
+      )}
+
+      {/* Presence popup */}
+      {presencePopupOpen && (
+        <FloatingPanel title="Presence & Status" onClose={() => setPresencePopupOpen(false)}>
+          <div className="p-4 space-y-4">
+            {profile && (
+              <div className="flex items-center justify-between p-3 bg-violet-50 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-violet-500" />
+                  <span className="text-sm font-semibold text-violet-700">{profile.rp_points || 0} RP</span>
+                </div>
+                <span className="text-sm font-medium capitalize text-violet-600 bg-violet-100 px-3 py-1 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
+              </div>
+            )}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className={cn("w-3 h-3 rounded-full animate-pulse", statusOption?.color)} />
+                <Select value={status} onValueChange={handleStatusChange}>
+                  <SelectTrigger className="flex-1 h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        <div className="flex items-center gap-2">
+                          <div className={cn("w-2 h-2 rounded-full", opt.color)} />
+                          {opt.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-3">
+                <MessageCircle className="w-4 h-4 text-slate-400" />
+                <Select value={dmPolicy} onValueChange={handleDMChange}>
+                  <SelectTrigger className="flex-1 h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DM_POLICY_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        DMs: {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        </FloatingPanel>
+      )}
 
       {/* Leaders popup when docked */}
       {leadersPopupOpen && (
