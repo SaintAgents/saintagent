@@ -205,20 +205,25 @@ export default function GGGRulesManager() {
     }
   };
 
-  const handleSeedAllRules = async () => {
+  const seedRulesMutation = useMutation({
+    mutationFn: async () => {
+      for (const action of ACTIONS) {
+        await base44.entities.GGGRewardRule.create({
+          action_type: action.key,
+          ggg_amount: action.base,
+          usd_equivalent: action.usd || (action.base * GGG_TO_USD),
+          category: action.category,
+          description: action.definition,
+          is_active: true
+        });
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['gggRules'] })
+  });
+
+  const handleSeedAllRules = () => {
     if (!confirm('This will create all default GGG rules from the matrix. Continue?')) return;
-    
-    for (const action of ACTIONS) {
-      await base44.entities.GGGRewardRule.create({
-        action_type: action.key,
-        ggg_amount: action.base,
-        usd_equivalent: action.usd || (action.base * GGG_TO_USD),
-        category: action.category,
-        description: action.definition,
-        is_active: true
-      });
-    }
-    queryClient.invalidateQueries({ queryKey: ['gggRules'] });
+    seedRulesMutation.mutate();
   };
 
   return (
