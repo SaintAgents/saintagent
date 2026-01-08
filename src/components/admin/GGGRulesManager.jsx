@@ -236,23 +236,22 @@ export default function GGGRulesManager() {
         </div>
         <div className="flex gap-2">
           <Button
-            onClick={handleSeedAllRules}
-            variant={seedRulesMutation.isPending ? "default" : "outline"}
-            className={`gap-2 ${seedRulesMutation.isPending ? "bg-violet-600 hover:bg-violet-600 text-white" : ""}`}
-            disabled={rules.length > 0 || seedRulesMutation.isPending}
-          >
-            {seedRulesMutation.isPending ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span className="font-semibold">Seeding {ACTIONS.length} rules...</span>
-              </>
-            ) : (
-              <>
-                <Zap className="w-4 h-4" />
-                Seed All Rules
-              </>
-            )}
-          </Button>
+                            onClick={handleSeedAllRules}
+                            className="bg-violet-600 hover:bg-violet-700 gap-2"
+                            disabled={rules.length > 0 || seedRulesMutation.isPending}
+                          >
+                            {seedRulesMutation.isPending ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <span>Seeding {ACTIONS.length} rules...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Zap className="w-4 h-4" />
+                                Seed All Rules
+                              </>
+                            )}
+                          </Button>
           <Button
             onClick={() => setIsCreating(!isCreating)}
             className="bg-violet-600 hover:bg-violet-700 gap-2"
