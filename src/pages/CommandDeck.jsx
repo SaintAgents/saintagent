@@ -701,21 +701,21 @@ export default function CommandDeck() {
                     status={profile?.status || 'offline'} />
                 </div>
                 
-                {/* Gauge image with Trust Score ring - positioned lower, in line with badges */}
-                <div className="relative mt-2 flex flex-col items-center">
-                  <div className="relative" style={{ width: '100px', height: '100px' }}>
-                    {/* Gauge image */}
+                {/* Gauge dial with Trust Score ring tightly around it */}
+                <div className="relative mt-4 flex flex-col items-center">
+                  <div className="relative" style={{ width: '90px', height: '90px' }}>
+                    {/* Gauge dial image */}
                     <img
                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                       alt="Command Deck"
-                      className="absolute inset-0 w-full h-full object-contain drop-shadow-lg border-0"
+                      className="w-full h-full object-contain drop-shadow-lg"
                       style={{ border: 'none', boxShadow: 'none', background: 'transparent' }}
                       data-no-filter="true"
                       data-keep-round="true" />
-                    {/* Trust Score circular ring - tight around gauge edge */}
-                    <svg className="absolute transform -rotate-90" style={{ top: '-3px', left: '-3px', width: '106px', height: '106px' }} viewBox="0 0 106 106">
-                      <circle cx="53" cy="53" r="50" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/40 dark:text-slate-600/40" />
-                      <circle cx="53" cy="53" r="50" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 50}`} strokeDashoffset={`${2 * Math.PI * 50 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                    {/* Trust Score progress ring - hugs the gauge dial edge */}
+                    <svg className="absolute transform -rotate-90 pointer-events-none" style={{ top: '-5px', left: '-5px', width: '100px', height: '100px' }} viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="47" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
+                      <circle cx="50" cy="50" r="47" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 47}`} strokeDashoffset={`${2 * Math.PI * 47 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
                       <defs>
                         <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="#10b981" />
@@ -725,9 +725,9 @@ export default function CommandDeck() {
                       </defs>
                     </svg>
                   </div>
-                  {/* Trust Score label and value below */}
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
+                  {/* Trust Score value and label below gauge */}
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
                     <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
                       Trust
                       <HelpHint
