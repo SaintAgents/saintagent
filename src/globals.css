@@ -1,6 +1,6 @@
-/* Wallet Panel - Force black background in ALL themes */
+/* Wallet Panel - Force dark green background in ALL themes */
 [data-wallet-panel] {
-  background-color: #000000 !important;
+  background-color: #0a1f0a !important;
 }
 
 /* Mini note cards - remove black vertical bars */
