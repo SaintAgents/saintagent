@@ -366,6 +366,20 @@ export default function GGGRulesManager() {
           const actionInfo = ACTION_TYPES.find(t => t.value === rule.action_type);
           const actionLabel = actionInfo?.label || rule.action_type;
           const usdVal = rule.usd_equivalent || (rule.ggg_amount * GGG_TO_USD);
+          const [isEditing, setIsEditing] = React.useState(false);
+          const [editGgg, setEditGgg] = React.useState(rule.ggg_amount);
+          
+          const handleSaveEdit = () => {
+            updateRuleMutation.mutate({
+              id: rule.id,
+              data: { 
+                ggg_amount: editGgg,
+                usd_equivalent: editGgg * GGG_TO_USD
+              }
+            });
+            setIsEditing(false);
+          };
+          
           return (
             <Card key={rule.id}>
               <CardContent className="pt-6">
@@ -374,7 +388,7 @@ export default function GGGRulesManager() {
                     <div className="p-3 rounded-xl bg-amber-100">
                       <Coins className="w-6 h-6 text-amber-600" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold text-slate-900">{actionLabel}</h3>
                         {rule.category && (
@@ -388,16 +402,43 @@ export default function GGGRulesManager() {
                           <Badge variant="outline">Inactive</Badge>
                         )}
                       </div>
-                      <p className="text-sm text-slate-500 mt-1">
-                        Awards <span className="font-bold font-mono text-amber-600">{formatGGGSmart(rule.ggg_amount)} GGG</span>
-                        <span className="text-emerald-600 ml-2">(USD {usdVal.toFixed(2)})</span>
-                      </p>
+                      
+                      {isEditing ? (
+                        <div className="flex items-center gap-2 mt-2">
+                          <Input
+                            type="number"
+                            step="0.0000001"
+                            value={editGgg}
+                            onChange={(e) => setEditGgg(parseFloat(e.target.value) || 0)}
+                            className="w-40 font-mono text-sm"
+                          />
+                          <span className="text-xs text-emerald-600">
+                            ≈ ${(editGgg * GGG_TO_USD).toFixed(2)}
+                          </span>
+                          <Button size="sm" onClick={handleSaveEdit}>Save</Button>
+                          <Button size="sm" variant="ghost" onClick={() => { setIsEditing(false); setEditGgg(rule.ggg_amount); }}>Cancel</Button>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-slate-500 mt-1">
+                          Awards <span className="font-bold font-mono text-amber-600">{formatGGGSmart(rule.ggg_amount)} GGG</span>
+                          <span className="text-emerald-600 ml-2">(USD {usdVal.toFixed(2)})</span>
+                        </p>
+                      )}
+                      
                       {rule.description && (
                         <p className="text-xs text-slate-400 mt-1">{rule.description}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => { setIsEditing(!isEditing); setEditGgg(rule.ggg_amount); }}
+                      className="text-slate-500 hover:text-slate-700"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
                     <Switch
                       checked={rule.is_active}
                       onCheckedChange={() => handleToggleActive(rule)}
