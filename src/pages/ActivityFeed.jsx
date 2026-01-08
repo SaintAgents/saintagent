@@ -123,12 +123,15 @@ export default function ActivityFeed() {
 
         {/* Scope Toggle */}
         <Tabs value={scope} onValueChange={setScope} className="mb-4">
-          <TabsList className="grid w-full max-w-xs grid-cols-2">
+          <TabsList className="grid w-full max-w-sm grid-cols-3">
+            <TabsTrigger value="me" className="gap-2">
+              <User className="w-4 h-4" /> Me
+            </TabsTrigger>
             <TabsTrigger value="friends" className="gap-2">
               <Heart className="w-4 h-4" /> Friends
             </TabsTrigger>
             <TabsTrigger value="everyone" className="gap-2">
-              <Globe className="w-4 h-4" /> Everyone
+              <Globe className="w-4 h-4" /> All
             </TabsTrigger>
           </TabsList>
         </Tabs>
