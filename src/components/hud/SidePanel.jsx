@@ -45,7 +45,7 @@ import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
 import MiniProfile from '@/components/profile/MiniProfile';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
-import { RP_LADDER } from '@/components/reputation/rpUtils';
+import { RP_LADDER, getRPRank } from '@/components/reputation/rpUtils';
 import { createPageUrl } from '@/utils';
 import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
 
@@ -526,8 +526,7 @@ export default function SidePanel({
     enabled: !!profile?.user_id
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
-  const rankProgress = walletAvailable;
-  const nextRankAt = 100;
+  const rpInfo = getRPRank(profile?.rp_points || 0);
 
   // Fetch total users and online users (realtime polling every 10s)
   const { data: allUserProfiles = [] } = useQuery({
