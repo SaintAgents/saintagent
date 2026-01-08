@@ -207,15 +207,30 @@ export default function GGGRulesManager() {
 
   const seedRulesMutation = useMutation({
     mutationFn: async () => {
+      // Get existing rules to check for locked ones
+      const existingRules = await base44.entities.GGGRewardRule.list();
+      const lockedRules = existingRules.filter(r => r.is_locked);
+      const lockedActionTypes = new Set(lockedRules.map(r => r.action_type));
+      
+      // Delete non-locked rules
+      const rulesToDelete = existingRules.filter(r => !r.is_locked);
+      for (const rule of rulesToDelete) {
+        await base44.entities.GGGRewardRule.delete(rule.id);
+      }
+      
+      // Create rules for actions that aren't locked
       for (const action of ACTIONS) {
-        await base44.entities.GGGRewardRule.create({
-          action_type: action.key,
-          ggg_amount: action.base,
-          usd_equivalent: action.usd || (action.base * GGG_TO_USD),
-          category: action.category,
-          description: action.definition,
-          is_active: true
-        });
+        if (!lockedActionTypes.has(action.key)) {
+          await base44.entities.GGGRewardRule.create({
+            action_type: action.key,
+            ggg_amount: action.base,
+            usd_equivalent: action.usd || (action.base * GGG_TO_USD),
+            category: action.category,
+            description: action.definition,
+            is_active: true,
+            is_locked: false
+          });
+        }
       }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['gggRules'] })
