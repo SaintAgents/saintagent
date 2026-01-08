@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink, EyeOff, Maximize2, PanelRight } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
