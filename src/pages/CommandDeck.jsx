@@ -156,12 +156,33 @@ export default function CommandDeck() {
 
   const unhideAllCards = () => setHiddenCards(new Set());
 
+  // Card icon mapping for stored cards (icons can't be serialized to localStorage)
+  const CARD_ICONS = {
+    quickActions: Zap,
+    quickStart: CheckCircle,
+    challenges: Trophy,
+    inbox: Radio,
+    collaborators: Users,
+    circles: Users,
+    leaderPathway: Sparkles,
+    aiDiscover: Sparkles,
+    syncEngine: Sparkles,
+    meetings: Calendar,
+    missions: Target,
+    projects: Folder,
+    market: ShoppingBag,
+    influence: TrendingUp,
+    leader: Radio,
+    dailyops: Calendar
+  };
+
   // Toss card to side panel storage
-  const handleTossToSidePanel = (cardId, title, icon) => {
+  const handleTossToSidePanel = (cardId, title) => {
     // Don't add duplicates
     if (storedCards.some(c => c.id === cardId)) return;
     
-    setStoredCards(prev => [...prev, { id: cardId, title, icon }]);
+    // Store cardId and title only (icons retrieved from mapping)
+    setStoredCards(prev => [...prev, { id: cardId, title }]);
     // Also hide it from main deck
     setHiddenCards(prev => new Set([...prev, cardId]));
     
@@ -170,6 +191,12 @@ export default function CommandDeck() {
       setSidePanelOpen(true);
     }
   };
+
+  // Get stored cards with icons resolved
+  const storedCardsWithIcons = storedCards.map(card => ({
+    ...card,
+    icon: CARD_ICONS[card.id]
+  }));
 
   // Restore card from side panel to main deck
   const handleRestoreCard = (cardId) => {
@@ -1377,7 +1404,7 @@ export default function CommandDeck() {
           onToggle={() => setSidePanelOpen(!sidePanelOpen)}
           onMatchAction={handleMatchAction}
           onMeetingAction={handleMeetingAction}
-          storedCards={storedCards}
+          storedCards={storedCardsWithIcons}
           onRestoreCard={handleRestoreCard}
           onRemoveStoredCard={handleRemoveStoredCard} />
 
