@@ -228,6 +228,44 @@ export default function HelpSupportAgent() {
     document.addEventListener('mouseup', handleUp);
   };
 
+  // Button drag handlers (when closed)
+  const onButtonDragStart = (e) => {
+    e.preventDefault();
+    buttonDraggingRef.current = true;
+    buttonDraggedRef.current = false;
+    const startX = position.x ?? 16;
+    const startY = position.y ?? (window.innerHeight - 80);
+    buttonDragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX: startX,
+      startPosY: startY
+    };
+    
+    const handleMove = (moveE) => {
+      if (!buttonDraggingRef.current) return;
+      const dx = moveE.clientX - buttonDragRef.current.startX;
+      const dy = moveE.clientY - buttonDragRef.current.startY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        buttonDraggedRef.current = true;
+      }
+      const newX = Math.max(0, Math.min(window.innerWidth - 100, buttonDragRef.current.startPosX + dx));
+      const newY = Math.max(0, Math.min(window.innerHeight - 50, buttonDragRef.current.startPosY + dy));
+      setPosition({ x: newX, y: newY });
+    };
+    
+    const handleUp = () => {
+      buttonDraggingRef.current = false;
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleUp);
+      // Reset dragged flag after a short delay to allow click to be ignored
+      setTimeout(() => { buttonDraggedRef.current = false; }, 50);
+    };
+    
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleUp);
+  };
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
