@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 
-export default function HelpHint({ content, side = 'right', align = 'start', className = '', size = 16 }) {
+export default function HelpHint({ content, side = 'right', align = 'start', className = '', size = 16, float = false }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
