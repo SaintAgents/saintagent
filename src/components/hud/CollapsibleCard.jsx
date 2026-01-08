@@ -116,7 +116,7 @@ export default function CollapsibleCard({
 
       }
       
-      <div className="bg-violet-100 px-5 py-4 relative z-10 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors"
+      <div className="bg-violet-100 px-5 py-4 relative z-10 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors border-b border-slate-200/60"
 
       onClick={() => setIsOpen(!isOpen)}>
 

@@ -120,12 +120,27 @@ export default function CommandDeck() {
     } catch { return new Set(); }
   });
   
+  // Note cards ordering
+  const [noteCardsOrder, setNoteCardsOrder] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cmdNoteCardsOrder');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+  
   // Persist hidden cards
   useEffect(() => {
     try {
       localStorage.setItem('cmdHiddenCards', JSON.stringify([...hiddenCards]));
     } catch {}
   }, [hiddenCards]);
+  
+  // Persist note cards order
+  useEffect(() => {
+    try {
+      localStorage.setItem('cmdNoteCardsOrder', JSON.stringify(noteCardsOrder));
+    } catch {}
+  }, [noteCardsOrder]);
   
   const toggleCardVisibility = (cardId) => {
     setHiddenCards(prev => {
@@ -141,6 +156,8 @@ export default function CommandDeck() {
   
   const hideCard = (cardId) => {
     setHiddenCards(prev => new Set([...prev, cardId]));
+    // Add to note cards order if not already there
+    setNoteCardsOrder(prev => prev.includes(cardId) ? prev : [...prev, cardId]);
   };
   
   const hideAllCards = () => {
@@ -336,6 +353,11 @@ export default function CommandDeck() {
       const [removed] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, removed);
       setColCOrder(items);
+    } else if (result.source.droppableId === 'noteCards' && result.destination.droppableId === 'noteCards') {
+      const items = Array.from(noteCardsOrder);
+      const [removed] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, removed);
+      setNoteCardsOrder(items);
     }
   };
 
@@ -1054,6 +1076,56 @@ export default function CommandDeck() {
             </div>
           </div>
         </div>
+
+        {/* Note Cards Area - Draggable mini cards */}
+        {hiddenCards.size > 0 && (
+          <div className="px-6 mb-6">
+            <div className="text-xs text-slate-500 mb-2">Hidden Cards ({hiddenCards.size})</div>
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="noteCards" direction="horizontal">
+                {(provided) => (
+                  <div 
+                    ref={provided.innerRef} 
+                    {...provided.droppableProps}
+                    className="flex flex-wrap gap-3"
+                  >
+                    {noteCardsOrder
+                      .filter(cardId => hiddenCards.has(cardId))
+                      .map((cardId, index) => (
+                        <Draggable draggableId={`note-${cardId}`} index={index} key={cardId}>
+                          {(dragProvided) => (
+                            <div
+                              ref={dragProvided.innerRef}
+                              {...dragProvided.draggableProps}
+                              {...dragProvided.dragHandleProps}
+                            >
+                              {cardId === 'quickActions' && <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => { hideCard('quickActions'); setQuickActionsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('quickActions')} />}
+                              {cardId === 'quickStart' && <CollapsibleCard title="Quick Start Checklist" cardId="quickStart" icon={CheckCircle} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => { hideCard('quickStart'); setQuickStartPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('quickStart')} />}
+                              {cardId === 'challenges' && <CollapsibleCard title="Challenges & Rewards" cardId="challenges" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" onPopout={() => { hideCard('challenges'); setChallengesPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('challenges')} />}
+                              {cardId === 'inbox' && <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => { hideCard('inbox'); setInboxPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('inbox')} />}
+                              {cardId === 'collaborators' && <CollapsibleCard title="Potential Collaborators" cardId="collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" onPopout={() => { hideCard('collaborators'); setCollaboratorsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('collaborators')} />}
+                              {cardId === 'circles' && <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => { hideCard('circles'); setCirclesPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('circles')} />}
+                              {cardId === 'leaderPathway' && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} onPopout={() => { hideCard('leaderPathway'); setLeaderPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('leaderPathway')} />}
+                              {cardId === 'aiDiscover' && <CollapsibleCard title="AI Discover" cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => { hideCard('aiDiscover'); setAiDiscoverPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('aiDiscover')} />}
+                              {cardId === 'syncEngine' && <CollapsibleCard title="Synchronicity Engine" cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => { hideCard('syncEngine'); setSyncPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('syncEngine')} />}
+                              {cardId === 'meetings' && <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => { hideCard('meetings'); setMeetingsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('meetings')} />}
+                              {cardId === 'missions' && <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => { hideCard('missions'); setMissionsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('missions')} />}
+                              {cardId === 'projects' && <CollapsibleCard title="Projects" cardId="projects" icon={Folder} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => { hideCard('projects'); setProjectsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('projects')} />}
+                              {cardId === 'market' && <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => { hideCard('market'); setMarketPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('market')} />}
+                              {cardId === 'influence' && <CollapsibleCard title="Influence & Reach" cardId="influence" icon={TrendingUp} backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80" onPopout={() => { hideCard('influence'); setInfluencePopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('influence')} />}
+                              {cardId === 'leader' && <CollapsibleCard title="144K Leader Channel" cardId="leader" icon={Radio} backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80" onPopout={() => { hideCard('leader'); setLeaderChannelPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('leader')} />}
+                              {cardId === 'dailyops' && <CollapsibleCard title="Daily Ops" cardId="dailyops" icon={Calendar} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => { hideCard('dailyops'); setDailyOpsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={true} onToggleHide={() => toggleCardVisibility('dailyops')} />}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </div>
+        )}
 
         {/* Main Grid - Collapsible Cards */}
         <div className="px-6 relative min-h-[1200px]">
