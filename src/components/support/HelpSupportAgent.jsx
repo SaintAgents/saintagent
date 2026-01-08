@@ -147,6 +147,11 @@ export default function HelpSupportAgent() {
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const isDraggingRef = useRef(false);
   
+  // Button dragging refs
+  const buttonDragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const buttonDraggingRef = useRef(false);
+  const buttonDraggedRef = useRef(false);
+  
   // Initialize position from localStorage
   useEffect(() => {
     try {
