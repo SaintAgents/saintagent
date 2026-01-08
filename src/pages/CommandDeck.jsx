@@ -1150,17 +1150,24 @@ export default function CommandDeck() {
                     <div className="text-xs text-slate-500 dark:text-slate-400">Fuller view</div>
                   </div>
                 </button>
-                {hiddenCards.size > 0 &&
-                <button type="button" onClick={unhideAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                    <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
-                      <Eye className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Unhide All</div>
-                      <div className="text-xs text-emerald-600 dark:text-emerald-400">{hiddenCards.size} card{hiddenCards.size !== 1 ? 's' : ''} hidden</div>
-                    </div>
-                  </button>
-                }
+                <button type="button" onClick={storeAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-violet-50 dark:bg-violet-900/30 border border-violet-300 dark:border-violet-700 hover:bg-violet-100 hover:dark:bg-violet-800/40 hover:border-violet-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                  <div className="w-12 h-12 rounded-lg bg-violet-100 dark:bg-violet-800 flex items-center justify-center">
+                    <EyeOff className="w-6 h-6 text-violet-600 dark:text-violet-400" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-violet-800 dark:text-violet-200">Stow All</div>
+                    <div className="text-xs text-violet-600 dark:text-violet-400">Send all to panel</div>
+                  </div>
+                </button>
+                <button type="button" onClick={restoreAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Unstow All</div>
+                    <div className="text-xs text-emerald-600 dark:text-emerald-400">Restore all cards</div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
