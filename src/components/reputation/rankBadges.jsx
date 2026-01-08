@@ -8,7 +8,7 @@ export const RANK_BADGE_IMAGES = {
   sage: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0f68882e2_sage-Picsart-BackgroundRemover.png',
   oracle: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d3f6ba23f_oracle-Picsart-BackgroundRemover.png',
   ascended: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c3caf20f6_Screenshot2026-01-07044338-Picsart-BackgroundRemover.png',
-  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f37bf041e_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png',
+  guardian: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/735be8e27_gemini-25-flash-image_create_art_from_all-02-Picsart-BackgroundRemover.jpg',
 };
 
 // Rank titles for display
