@@ -33,7 +33,11 @@ import {
   Maximize2,
   Minimize2,
   Move,
-  PanelRight } from
+  PanelRight,
+  Undo2,
+  X,
+  Archive,
+  Inbox } from
   "lucide-react";
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -52,7 +56,10 @@ export default function SidePanel({
   isOpen,
   onToggle,
   onMatchAction,
-  onMeetingAction
+  onMeetingAction,
+  storedCards = [], // Cards tossed from main deck
+  onRestoreCard, // Callback to restore a card to main deck
+  onRemoveStoredCard // Callback to remove from storage
 }) {
   const [commentText, setCommentText] = useState({});
   const [expandedComments, setExpandedComments] = useState({});
@@ -1038,6 +1045,64 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
+          {/* Stored Cards Section */}
+          {storedCards && storedCards.length > 0 && (
+            <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-200">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Archive className="w-4 h-4 text-violet-600" />
+                  <span className="text-sm font-semibold text-violet-800">Stored Cards</span>
+                  <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-violet-200 text-violet-700">
+                    {storedCards.length}
+                  </span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {storedCards.map((card) => {
+                  const CardIcon = card.icon;
+                  return (
+                    <div
+                      key={card.id}
+                      className="flex items-center justify-between p-2 rounded-lg bg-white border border-violet-100 hover:border-violet-300 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        {CardIcon && <CardIcon className="w-4 h-4 text-violet-600 shrink-0" />}
+                        <span className="text-sm font-medium text-slate-700 truncate">{card.title}</span>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => onRestoreCard?.(card.id)}
+                          className="p-1.5 rounded-lg hover:bg-emerald-100 transition-colors"
+                          title="Restore to deck"
+                        >
+                          <Undo2 className="w-3.5 h-3.5 text-emerald-600" />
+                        </button>
+                        <button
+                          onClick={() => onRemoveStoredCard?.(card.id)}
+                          className="p-1.5 rounded-lg hover:bg-rose-100 transition-colors opacity-0 group-hover:opacity-100"
+                          title="Remove"
+                        >
+                          <X className="w-3.5 h-3.5 text-rose-500" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {onRestoreCard && storedCards.length > 1 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full mt-2 text-violet-600 hover:text-violet-700 hover:bg-violet-100"
+                  onClick={() => storedCards.forEach(card => onRestoreCard(card.id))}
+                >
+                  <Inbox className="w-3.5 h-3.5 mr-1.5" />
+                  Restore All
+                </Button>
+              )}
+            </div>
+          )}
+
           {/* Control Panel */}
           <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 flex-wrap">
