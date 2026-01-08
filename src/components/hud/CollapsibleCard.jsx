@@ -126,21 +126,6 @@ export default function CollapsibleCard({
       onClick={() => setIsOpen(!isOpen)}>
 
         <div className="flex items-center gap-3 min-w-0">
-          {/* Quick toss button - send to side panel */}
-          {onTossToSidePanel && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 -ml-1 hover:bg-violet-100"
-              onClick={(e) => {
-                e.stopPropagation();
-                onTossToSidePanel(cardId, title);
-              }}
-              title="Send to side panel"
-            >
-              <PanelRight className="w-3.5 h-3.5 text-slate-400 hover:text-violet-600" />
-            </Button>
-          )}
           {onPopout &&
           <Button
             variant="ghost"
@@ -172,6 +157,20 @@ export default function CollapsibleCard({
           }
         </div>
         <div className="flex items-center gap-1">
+          {onTossToSidePanel && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 hover:bg-violet-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTossToSidePanel(cardId, title);
+              }}
+              title="Send to side panel"
+            >
+              <PanelRight className="w-4 h-4 text-slate-400 hover:text-violet-600" />
+            </Button>
+          )}
           {onToggleHide && (
             <Button
               variant="ghost"
