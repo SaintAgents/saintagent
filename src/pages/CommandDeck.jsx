@@ -701,14 +701,15 @@ export default function CommandDeck() {
                     status={profile?.status || 'offline'} />
                 </div>
                 
-                {/* Trust Score circular gauge - positioned between avatar and gauge image */}
-                <div className="relative -mt-2 mb-0 flex flex-col items-center z-10">
-                  <div className="relative" style={{ width: '56px', height: '56px' }}>
-                    <svg className="absolute inset-0 w-[56px] h-[56px] transform -rotate-90" viewBox="0 0 56 56">
+                {/* Gauge Logo Image with Trust Score ring around it */}
+                <div className="relative -mt-2 flex flex-col items-center">
+                  {/* Trust Score circular gauge - wraps around the gauge image */}
+                  <div className="relative" style={{ width: '180px', height: '180px' }}>
+                    <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 180 180">
                       {/* Background circle */}
-                      <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-300/40 dark:text-slate-600/40" />
+                      <circle cx="90" cy="90" r="86" stroke="currentColor" strokeWidth="6" fill="none" className="text-slate-300/40 dark:text-slate-600/40" />
                       {/* Progress circle - shows percentage filled */}
-                      <circle cx="28" cy="28" r="24" stroke="url(#trustGradientCmd)" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 24}`} strokeDashoffset={`${2 * Math.PI * 24 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                      <circle cx="90" cy="90" r="86" stroke="url(#trustGradientCmd)" strokeWidth="6" fill="none" strokeDasharray={`${2 * Math.PI * 86}`} strokeDashoffset={`${2 * Math.PI * 86 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
                       <defs>
                         <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="#10b981" />
@@ -717,33 +718,31 @@ export default function CommandDeck() {
                         </linearGradient>
                       </defs>
                     </svg>
-                    {/* Trust score value in center */}
+                    {/* Gauge image centered inside the ring */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
+                      <img
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
+                        alt="Command Deck"
+                        className="object-contain drop-shadow-lg border-0"
+                        style={{ width: '150px', height: '150px', border: 'none', boxShadow: 'none', background: 'transparent' }}
+                        data-no-filter="true"
+                        data-keep-round="true" />
                     </div>
                   </div>
-                  {/* Trust Score label */}
-                  <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5 mt-1">
-                    Trust Score
-                    <HelpHint
-                      content={
-                      <div>
-                          <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
-                          <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
-                        </div>
-                      } />
-                  </p>
-                </div>
-                
-                {/* Gauge Logo Image - overlaps slightly with trust score */}
-                <div className="relative -mt-4 flex flex-col items-center">
-                  <img
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
-                    alt="Command Deck"
-                    className="object-contain drop-shadow-lg border-0"
-                    style={{ width: '160px', height: '160px', border: 'none', boxShadow: 'none', background: 'transparent' }}
-                    data-no-filter="true"
-                    data-keep-round="true" />
+                  {/* Trust Score label and value */}
+                  <div className="flex items-center gap-2 -mt-1">
+                    <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
+                    <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
+                      Trust Score
+                      <HelpHint
+                        content={
+                        <div>
+                            <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
+                            <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
+                          </div>
+                        } />
+                    </p>
+                  </div>
                 </div>
               </div>
 
