@@ -648,7 +648,9 @@ export default function CommandDeck() {
   };
 
   // Show loading state while essential data is being fetched
-  if (!currentUser) {
+  const isLoading = !currentUser;
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
