@@ -61,7 +61,8 @@ import {
   Ban,
   Waves,
   Cloud,
-  Shield
+  Shield,
+  Eye
 } from "lucide-react";
 import {
   Tooltip,
