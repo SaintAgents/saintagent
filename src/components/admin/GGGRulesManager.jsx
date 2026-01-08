@@ -235,10 +235,11 @@ export default function GGGRulesManager() {
           <p className="text-slate-500 mt-1">Configure how users earn GGG points</p>
         </div>
         <div className="flex gap-2">
-          <Button
+          {rules.length === 0 && (
+                          <Button
                             onClick={handleSeedAllRules}
                             className="bg-violet-600 hover:bg-violet-700 gap-2"
-                            disabled={rules.length > 0 || seedRulesMutation.isPending}
+                            disabled={seedRulesMutation.isPending}
                           >
                             {seedRulesMutation.isPending ? (
                               <>
@@ -252,6 +253,7 @@ export default function GGGRulesManager() {
                               </>
                             )}
                           </Button>
+                          )}
           <Button
             onClick={() => setIsCreating(!isCreating)}
             className="bg-violet-600 hover:bg-violet-700 gap-2"
