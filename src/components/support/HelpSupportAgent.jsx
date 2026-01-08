@@ -141,9 +141,9 @@ export default function HelpSupportAgent() {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   
-  // Dragging state
+  // Dragging state - start docked on right by default
   const [position, setPosition] = useState({ x: null, y: null });
-  const [dockedSide, setDockedSide] = useState(null); // 'left' | 'right' | null
+  const [dockedSide, setDockedSide] = useState('right'); // 'left' | 'right' | null - default docked right
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const isDraggingRef = useRef(false);
   
@@ -154,7 +154,7 @@ export default function HelpSupportAgent() {
       if (saved) {
         const pos = JSON.parse(saved);
         setPosition({ x: pos.x, y: pos.y });
-        if (pos.dockedSide) setDockedSide(pos.dockedSide);
+        setDockedSide(pos.dockedSide ?? 'right');
       }
     } catch {}
   }, []);

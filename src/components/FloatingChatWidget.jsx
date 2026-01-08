@@ -21,10 +21,10 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const typingRef = useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
 
-  // Draggable & Resizable state
-  const [position, setPosition] = useState({ x: window.innerWidth - 720, y: window.innerHeight - 420 });
+  // Draggable & Resizable state - start docked on left by default
+  const [position, setPosition] = useState({ x: 0, y: window.innerHeight - 420 });
   const [size, setSize] = useState({ width: 320, height: 384 });
-  const [dockedSide, setDockedSide] = useState(null); // 'left' | 'right' | null
+  const [dockedSide, setDockedSide] = useState('left'); // 'left' | 'right' | null - default docked left
   const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
