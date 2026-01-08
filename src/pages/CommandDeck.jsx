@@ -825,25 +825,24 @@ export default function CommandDeck() {
                     </button>
                   </div>
                   
-                  {/* Eternal Flame Badge + Trust Gauge Row */}
-                  <div className="flex items-center gap-4 mb-3">
-                    {/* Eternal Flame Feature Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 flex-1">
-                      <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
-                        alt="Eternal Flame"
-                        className="w-12 h-12 object-contain"
-                        data-no-filter="true" />
-                      <div>
-                        <p className="font-semibold text-amber-900">Eternal Flame</p>
-                        <p className="text-xs text-amber-700">Living Agent</p>
-                      </div>
+                  {/* Eternal Flame Feature Badge */}
+                  <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                    <img
+                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
+                      alt="Eternal Flame"
+                      className="w-12 h-12 object-contain"
+                      data-no-filter="true" />
+                    <div>
+                      <p className="font-semibold text-amber-900">Eternal Flame</p>
+                      <p className="text-xs text-amber-700">Living Agent</p>
                     </div>
-                    
-                    {/* Trust Score Gauge with Ring - 95px ring, 85px gauge */}
+                  </div>
+                  
+                  {/* Trust Score Gauge - centered row between Eternal Flame and BadgesBar */}
+                  <div className="flex justify-center mb-4">
                     <div className="flex flex-col items-center">
                       <div className="relative" style={{ width: '95px', height: '95px' }}>
-                        {/* Cyan trust ring - wraps only the gauge */}
+                        {/* Cyan trust ring - 95px, wraps only the gauge */}
                         <svg 
                           className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
                           viewBox="0 0 95 95"
@@ -869,7 +868,7 @@ export default function CommandDeck() {
                             data-keep-round="true" />
                         </div>
                       </div>
-                      {/* Trust Score label */}
+                      {/* Trust Score label below gauge */}
                       <div className="flex items-center gap-1.5 mt-1">
                         <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
                         <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
