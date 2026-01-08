@@ -36,7 +36,7 @@ export default function HelpHint({ content, side = 'right', align = 'start', cla
             "transition-all duration-300 ease-out",
             "animate-in fade-in-0 slide-in-from-left-2"
           )}
-          style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+          style={{ top: '50%', left: '30%', transform: 'translate(-50%, -50%)' }}
         >
           {/* Crown Border (top neon accent) */}
           <div className="h-[2px] rounded-t-xl bg-gradient-to-r from-emerald-400 via-[#00ff88] to-teal-400 dark:from-[#00ff88] dark:via-emerald-400 dark:to-[#00ff88]" />
