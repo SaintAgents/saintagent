@@ -354,7 +354,7 @@ export default function GGGRulesManager() {
                             <span className="font-semibold text-slate-900">{a.title}</span>
                             <span className="text-xs text-slate-500">—</span>
                             <span className="font-mono text-amber-600 font-semibold">{formatGGGSmart(a.base)} GGG</span>
-                            <span className="text-emerald-600 text-sm">(USD {a.usd?.toFixed(2) || (a.base * GGG_TO_USD).toFixed(2)})</span>
+                            <span className="text-emerald-700 text-sm font-medium">(USD {a.usd?.toFixed(2) || (a.base * GGG_TO_USD).toFixed(2)})</span>
                           </div>
                           <p className="text-xs text-slate-500 mt-1">{a.definition}</p>
                         </div>
