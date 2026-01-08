@@ -801,8 +801,6 @@ export default function CommandDeck() {
                           <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
                         </div>
                       </div>
-
-
                     }
                     {profile?.rising_sign &&
                     <div className="flex items-center gap-2">
