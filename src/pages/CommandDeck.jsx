@@ -692,7 +692,7 @@ export default function CommandDeck() {
                 <RankedAvatar
                   src={profile?.avatar_url}
                   name={profile?.display_name}
-                  size={106}
+                  size={140}
                   leaderTier={profile?.leader_tier}
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={rpPoints}
