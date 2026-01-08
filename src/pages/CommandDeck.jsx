@@ -794,8 +794,8 @@ export default function CommandDeck() {
                         className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
                         viewBox="0 0 100 100"
                       >
-                        <circle cx="50" cy="50" r="44" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
-                        <circle cx="50" cy="50" r="44" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 44}`} strokeDashoffset={`${2 * Math.PI * 44 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                        <circle cx="50" cy="50" r="53" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
+                        <circle cx="50" cy="50" r="53" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 53}`} strokeDashoffset={`${2 * Math.PI * 53 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
                         <defs>
                           <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="#10b981" />
