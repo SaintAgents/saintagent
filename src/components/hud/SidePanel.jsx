@@ -1062,11 +1062,11 @@ export default function SidePanel({
 
           {/* GGG & Rank */}
           <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a0a0a] dark:to-[#0a0a0a] border border-violet-100 dark:border-[rgba(0,255,136,0.3)]">
+            <div data-wallet-panel className="p-4 rounded-2xl bg-black border border-[rgba(0,255,136,0.3)]" style={{ backgroundColor: '#000000' }}>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-xs font-medium text-violet-600 dark:text-violet-400 uppercase tracking-wider">GGG Balance</p>
-                  <p className="text-2xl font-bold text-violet-900 dark:text-violet-100 flex items-center gap-1.5">
+                  <p className="text-xs font-medium text-[#00ff88] uppercase tracking-wider">GGG BALANCE</p>
+                  <p className="text-2xl font-bold text-white flex items-center gap-1.5">
                     <Coins className="w-5 h-5 text-amber-500" />
                     {walletAvailable?.toLocaleString?.() || 0}
                   </p>
@@ -1077,18 +1077,19 @@ export default function SidePanel({
                     size={64}
                     strokeWidth={5}
                     label={profile?.rank_code?.charAt(0).toUpperCase()}
-                    sublabel="Rank" />
+                    sublabel={<span className="text-[#00ff88]">{profile?.rp_points || 0} pts</span>}
+                    color="#00ff88" />
 
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-600 dark:text-slate-400">To next rank</span>
-                <span className="font-medium text-violet-700 dark:text-violet-300">{Math.max(0, nextRankAt - rankProgress)} pts</span>
+                <span className="text-slate-400">To next rank</span>
+                <span className="font-medium text-[#00ff88]">{Math.max(0, nextRankAt - rankProgress)} pts</span>
               </div>
               <div className="flex justify-between mt-3">
-                <Button variant="outline" size="sm" className="bg-fuchsia-300 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8" onClick={() => setWalletPopupOpen(true)}>
+                <Button variant="outline" size="sm" className="bg-black border-[#00ff88]/40 text-[#00ff88] hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setWalletPopupOpen(true)}>
                   Open Wallet
                 </Button>
-                <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setGggAuditOpen(true)}>
+                <Button variant="outline" size="sm" className="bg-black border-[#00ff88]/40 text-[#00ff88] hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setGggAuditOpen(true)}>
                   View audit trail
                 </Button>
               </div>
