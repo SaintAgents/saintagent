@@ -30,6 +30,7 @@
 [data-theme='light'] button[role="checkbox"] svg {
   color: white !important;
   stroke: white !important;
+  fill: white !important;
 }
 
 /* Badge text visibility in light theme */
@@ -54,6 +55,22 @@
 [data-theme='light'] .text-orange-700 {
   opacity: 1 !important;
   font-weight: 600 !important;
+}
+
+/* Light theme - Fix low contrast text in labels and badges */
+[data-theme='light'] label,
+[data-theme='light'] .text-slate-500,
+[data-theme='light'] .text-slate-600,
+[data-theme='light'] .text-slate-700 {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .text-slate-900,
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3,
+[data-theme='light'] h4 {
+  color: #0f172a !important;
 }
 
 /* Hero image visibility - ensure visible in DARK theme only (no filter) */
