@@ -46,6 +46,7 @@ import WalletPanel from '@/components/wallet/WalletPanel';
 import MiniProfile from '@/components/profile/MiniProfile';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 import { RP_LADDER, getRPRank } from '@/components/reputation/rpUtils';
+import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { createPageUrl } from '@/utils';
 import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
 
@@ -1152,9 +1153,10 @@ export default function SidePanel({
                   </svg>
                   {/* Badge image centered */}
                   <img 
-                    src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/rank_${rpInfo.nextTitle?.toLowerCase() || 'initiate'}.png`}
+                    src={RANK_BADGE_IMAGES[rpInfo.nextTitle?.toLowerCase()] || RANK_BADGE_IMAGES.initiate}
                     alt={rpInfo.nextTitle}
                     className="absolute inset-0 w-full h-full object-contain p-2"
+                    data-no-filter="true"
                   />
                 </div>
 
