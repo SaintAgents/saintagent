@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink, EyeOff } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, EyeOff, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -55,11 +55,10 @@ export default function CollapsibleCard({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button
-              onClick={onToggleHide}
+            <div
               className={cn(
                 "relative w-16 h-16 rounded-xl border border-slate-200/60 shadow-sm overflow-hidden",
-                "flex items-center justify-center cursor-pointer",
+                "flex items-center justify-center cursor-pointer group",
                 "hover:scale-105 hover:shadow-md transition-all duration-200",
                 "bg-white/80 backdrop-blur-sm"
               )}
@@ -70,10 +69,27 @@ export default function CollapsibleCard({
                   style={{ backgroundImage: `url(${backgroundImage})` }}
                 />
               )}
-              <div className="relative z-10 flex flex-col items-center gap-1">
+              {/* Popout button - top right corner */}
+              {onPopout && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPopout();
+                  }}
+                  className="absolute top-1 right-1 z-20 w-5 h-5 rounded bg-slate-100/80 hover:bg-violet-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Pop out"
+                >
+                  <Maximize2 className="w-3 h-3 text-slate-500 hover:text-violet-600" />
+                </button>
+              )}
+              {/* Main click area to unhide */}
+              <button
+                onClick={onToggleHide}
+                className="relative z-10 flex flex-col items-center gap-1 w-full h-full justify-center"
+              >
                 {Icon && <Icon className="w-5 h-5 text-slate-600" />}
-              </div>
-            </button>
+              </button>
+            </div>
           </TooltipTrigger>
           <TooltipContent side="top">
             <p className="text-xs font-medium">{title}</p>
