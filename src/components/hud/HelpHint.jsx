@@ -31,15 +31,17 @@ export default function HelpHint({ content, side = 'right', align = 'start', cla
       {isOpen && (
         <div
           className={cn(
-            "absolute z-[100] min-w-[280px] max-w-[400px]",
+            float ? "fixed z-[9999]" : "absolute z-[100]",
+            "min-w-[280px] max-w-[400px]",
             "transition-all duration-300 ease-out",
             "animate-in fade-in-0 slide-in-from-left-2",
-            // Positioning based on side prop
-            side === 'right' && "left-full ml-3 top-0",
-            side === 'left' && "right-full mr-3 top-0",
-            side === 'top' && "bottom-full mb-3 left-1/2 -translate-x-1/2",
-            side === 'bottom' && "top-full mt-3 left-1/2 -translate-x-1/2"
+            // Positioning based on side prop (only for non-float mode)
+            !float && side === 'right' && "left-full ml-3 top-0",
+            !float && side === 'left' && "right-full mr-3 top-0",
+            !float && side === 'top' && "bottom-full mb-3 left-1/2 -translate-x-1/2",
+            !float && side === 'bottom' && "top-full mt-3 left-1/2 -translate-x-1/2"
           )}
+          style={float ? { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } : undefined}
         >
           {/* Crown Border (top neon accent) */}
           <div className="h-[2px] rounded-t-xl bg-gradient-to-r from-emerald-400 via-[#00ff88] to-teal-400 dark:from-[#00ff88] dark:via-emerald-400 dark:to-[#00ff88]" />
