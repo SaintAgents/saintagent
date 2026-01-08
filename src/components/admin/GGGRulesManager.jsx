@@ -213,13 +213,24 @@ export default function GGGRulesManager() {
           <h2 className="text-2xl font-bold text-slate-900">GGG Reward Rules</h2>
           <p className="text-slate-500 mt-1">Configure how users earn GGG points</p>
         </div>
-        <Button
-          onClick={() => setIsCreating(!isCreating)}
-          className="bg-violet-600 hover:bg-violet-700 gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          New Rule
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSeedAllRules}
+            variant="outline"
+            className="gap-2"
+            disabled={rules.length > 0}
+          >
+            <Zap className="w-4 h-4" />
+            Seed All Rules
+          </Button>
+          <Button
+            onClick={() => setIsCreating(!isCreating)}
+            className="bg-violet-600 hover:bg-violet-700 gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            New Rule
+          </Button>
+        </div>
       </div>
 
       {/* Bonus Period Control Panel */}
