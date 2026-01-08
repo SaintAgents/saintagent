@@ -794,7 +794,13 @@ export default function CommandDeck() {
                       </div>
                     }
                     {profile?.astrological_sign &&
-                    <div className="text-indigo-600 text-xs">Badges
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">✨</div>
+                        <div>
+                          <p className="text-cyan-400 text-xs">Sun Sign</p>
+                          <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
+                        </div>
+                      </div>
 
 
 
