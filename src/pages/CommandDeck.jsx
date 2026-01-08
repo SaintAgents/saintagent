@@ -732,32 +732,6 @@ export default function CommandDeck() {
                     </div>
                   </div>
                   
-                  {/* Trust Score Gauge */}
-                  <div className="relative z-10 flex items-center gap-3">
-                    <div className="text-right">
-                      <p className="text-teal-500 text-xs flex items-center gap-1 justify-end">
-                        Trust Score
-                        <HelpHint
-                          content={
-                          <div>
-                              <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
-                              <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
-                            </div>
-                          } />
-
-                      </p>
-                      <p className="text-teal-300 text-2xl font-bold">{profile?.trust_score || 0}</p>
-                    </div>
-                    <div className="relative w-16 h-16">
-                      <svg className="w-16 h-16 transform -rotate-90">
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-200" />
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 28}`} strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.trust_score || 0) / 100)}`} className="text-emerald-600 transition-all duration-500" strokeLinecap="round" />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xs font-bold text-emerald-600">{Math.round(profile?.trust_score || 0)}</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Stats Bar */}
