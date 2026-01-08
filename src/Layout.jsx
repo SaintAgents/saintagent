@@ -1305,6 +1305,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
             filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
           }
 
+          /* HACKER THEME - Gauge/dashboard images should NOT be filtered */
+          [data-theme='hacker'] img[data-no-filter="true"],
+          [data-theme='hacker'] .gauge-image,
+          [data-theme='hacker'] img.gauge-image {
+            filter: none !important;
+            -webkit-filter: none !important;
+          }
+
           /* Hacker theme - brighter text, no fading */
           [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4,
           [data-theme='hacker'] [class*='font-semibold'], [data-theme='hacker'] [class*='font-bold'] {
