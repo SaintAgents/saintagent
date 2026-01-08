@@ -168,13 +168,19 @@ export default function RankedAvatar({
         </div>
       </div>
 
-      {/* Rank badge top-left with tooltip */}
+      {/* Rank badge top-left with tooltip - positioned to touch avatar circle */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <div 
-              className="absolute -top-2 -left-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
-              style={{ width: symbolPx * 2, height: symbolPx * 2 }}
+              className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+              style={{ 
+                width: symbolPx * 2, 
+                height: symbolPx * 2,
+                top: 0,
+                left: 0,
+                transform: 'translate(-30%, -30%)'
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <img 
@@ -196,13 +202,22 @@ export default function RankedAvatar({
         </Tooltip>
       </TooltipProvider>
 
-      {/* Status dot (bottom-left) with tooltip */}
+      {/* Status dot (bottom-left) with tooltip - positioned to touch avatar circle */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <div
-              className={`absolute -bottom-1 -left-1 rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
-              style={{ width: statusPx, height: statusPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+              className={`absolute rounded-full cursor-help z-20 hover:scale-110 transition-transform ${STATUS_STYLES[statusFinal] || STATUS_STYLES.online}`}
+              style={{ 
+                width: statusPx, 
+                height: statusPx, 
+                borderWidth: statusBorder, 
+                borderColor: '#ffffff', 
+                borderStyle: 'solid',
+                bottom: 0,
+                left: 0,
+                transform: 'translate(-25%, 25%)'
+              }}
               onClick={(e) => e.stopPropagation()}
             />
           </TooltipTrigger>
@@ -215,11 +230,20 @@ export default function RankedAvatar({
         </Tooltip>
       </TooltipProvider>
 
-      {/* 144K Leader Badge */}
+      {/* 144K Leader Badge - positioned to touch avatar circle */}
       {leaderTierFinal === 'verified144k' && (
         <div 
-          className="absolute -bottom-1 -right-1 rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-          style={{ width: leaderPx, height: leaderPx, borderWidth: statusBorder, borderColor: '#ffffff', borderStyle: 'solid' }}
+          className="absolute rounded-full bg-amber-400 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+          style={{ 
+            width: leaderPx, 
+            height: leaderPx, 
+            borderWidth: statusBorder, 
+            borderColor: '#ffffff', 
+            borderStyle: 'solid',
+            bottom: 0,
+            right: 0,
+            transform: 'translate(25%, 25%)'
+          }}
           onClick={(e) => e.stopPropagation()}
           title="144K Sovereign Agent - Verified community node with leadership privileges"
         >
@@ -227,11 +251,18 @@ export default function RankedAvatar({
         </div>
       )}
 
-      {/* Trust Sigil (top-right, opposite of rank) - only show if not showing photo icon */}
+      {/* Trust Sigil (top-right, opposite of rank) - positioned to touch avatar circle */}
       {!showPhotoIcon && trustScoreFinal > 0 && (
         <div 
-          className="absolute -top-1 -right-1 rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-          style={{ width: trustPx, height: trustPx, border: '2px solid white' }}
+          className="absolute rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+          style={{ 
+            width: trustPx, 
+            height: trustPx, 
+            border: '2px solid white',
+            top: 0,
+            right: 0,
+            transform: 'translate(25%, -25%)'
+          }}
           onClick={(e) => e.stopPropagation()}
           title={`Trust Score: ${trustScoreFinal}% - Verified through community interactions`}
         >
@@ -239,14 +270,20 @@ export default function RankedAvatar({
         </div>
       )}
 
-      {/* Affiliate Badge (top-right) - show SA shield badge with tooltip */}
+      {/* Affiliate Badge (top-right) - positioned to touch avatar circle */}
       {affiliatePaidFinal >= 0 && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <div 
-                className="absolute -top-2 -right-2 flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
-                style={{ width: symbolPx * 2, height: symbolPx * 2 }}
+                className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+                style={{ 
+                  width: symbolPx * 2, 
+                  height: symbolPx * 2,
+                  top: 0,
+                  right: 0,
+                  transform: 'translate(30%, -30%)'
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <AffiliateBadge tier={affiliateTier} size={symbolPx * 2} />
@@ -260,7 +297,7 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-      {/* Photo gallery icon (bottom-center) - show if we have images or are still loading */}
+      {/* Photo gallery icon (bottom-center) - positioned to touch avatar circle */}
       {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
         <button
           onClick={(e) => {
@@ -270,8 +307,15 @@ export default function RankedAvatar({
               setViewerOpen(true);
             }
           }}
-          className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
-          style={{ width: symbolPx, height: symbolPx, border: '1px solid rgba(0,0,0,0.1)' }}
+          className="absolute rounded-full bg-white/90 hover:bg-white hover:scale-110 flex items-center justify-center shadow-md transition-all cursor-pointer z-20"
+          style={{ 
+            width: symbolPx, 
+            height: symbolPx, 
+            border: '1px solid rgba(0,0,0,0.1)',
+            bottom: 0,
+            left: '50%',
+            transform: 'translate(-50%, 40%)'
+          }}
           title={`View Photos (${allImages.length})`}
         >
           <Image style={{ width: rankIconSize, height: rankIconSize }} className="text-slate-600" />
