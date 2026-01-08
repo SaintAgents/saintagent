@@ -106,42 +106,54 @@ export default function WalletPanel() {
       </div>
 
       <div className="mt-2">
-        <Stat label="Total GGG" value={total} color="violet" />
-        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
+        <div className="p-3 rounded-xl bg-black border border-[rgba(0,255,136,0.3)]">
+          <p className="text-xs font-medium text-[#00ff88]">Total GGG</p>
+          <p className="text-lg font-bold text-white">{(total ?? 0).toLocaleString?.()}</p>
+        </div>
+        <div className="text-xs text-slate-400 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
       </div>
 
       {/* Withdraw Section */}
-      <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 border border-emerald-200 dark:border-emerald-700/50">
+      <div className="p-3 rounded-xl bg-black border border-[#00ff88]/40">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Wallet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-sm font-medium text-emerald-800 dark:text-emerald-300">Withdraw to USDT</span>
+            <Wallet className="w-4 h-4 text-[#00ff88]" />
+            <span className="text-sm font-medium text-[#00ff88]">Withdraw to USDT</span>
           </div>
-          <Badge className="bg-emerald-100 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300 text-xs">
+          <Badge className="bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]/40 text-xs">
             1 GGG = ${GGG_TO_USD}
           </Badge>
         </div>
         {canWithdraw ? (
           <Button 
             size="sm" 
-            className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
+            className="w-full bg-[#00ff88] hover:bg-[#00ff88]/80 text-black gap-2"
             onClick={() => setWithdrawOpen(true)}
           >
             <ArrowUpRight className="w-4 h-4" />
             Withdraw (${availableUSD.toFixed(2)} available)
           </Button>
         ) : (
-          <div className="text-xs text-emerald-700 dark:text-emerald-400">
+          <div className="text-xs text-[#00ff88]">
             <p className="font-medium">Min. withdrawal: ${MIN_WITHDRAWAL_USD}</p>
-            <p className="text-emerald-600 dark:text-emerald-500">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
+            <p className="text-[#00ff88]/70">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-3 gap-3 mt-2">
-        <Stat label="Total Earned" value={wallet?.total_earned} color="emerald" />
-        <Stat label="Total Spent" value={wallet?.total_spent} color="rose" />
-        <Stat label="Rewards" value={wallet?.total_rewards} color="amber" />
+        <div className="p-3 rounded-xl bg-black border border-emerald-500/40">
+          <p className="text-xs font-medium text-emerald-400">Total Earned</p>
+          <p className="text-lg font-bold text-white">{(wallet?.total_earned ?? 0).toLocaleString?.()}</p>
+        </div>
+        <div className="p-3 rounded-xl bg-black border border-rose-500/40">
+          <p className="text-xs font-medium text-rose-400">Total Spent</p>
+          <p className="text-lg font-bold text-white">{(wallet?.total_spent ?? 0).toLocaleString?.()}</p>
+        </div>
+        <div className="p-3 rounded-xl bg-black border border-amber-500/40">
+          <p className="text-xs font-medium text-amber-400">Rewards</p>
+          <p className="text-lg font-bold text-white">{(wallet?.total_rewards ?? 0).toLocaleString?.()}</p>
+        </div>
       </div>
 
       {/* Connected Wallets Section */}
@@ -149,13 +161,13 @@ export default function WalletPanel() {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Recent Transactions</p>
-          <Badge variant="outline" className="text-xs">{txs.length}</Badge>
+          <p className="text-sm font-medium text-[#00ff88]">Recent Transactions</p>
+          <Badge variant="outline" className="text-xs border-[#00ff88]/40 text-[#00ff88]">{txs.length}</Badge>
         </div>
         <ScrollArea className="h-64 pr-2">
           <div className="space-y-2">
             {txs.length === 0 ?
-            <p className="text-sm text-slate-400 py-6 text-center">No transactions yet</p> :
+            <p className="text-sm text-slate-500 py-6 text-center">No transactions yet</p> :
 
             txs.slice(0, 50).map((t) =>
             <TxRow key={t.id} tx={t} />
@@ -195,16 +207,16 @@ function TxRow({ tx }) {
   const isCredit = tx.direction === 'CREDIT';
   const sign = isCredit ? '+' : '-';
   const amount = `${sign}${tx.amount_ggg} GGG`;
-  const color = isCredit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+  const color = isCredit ? 'text-emerald-400' : 'text-rose-400';
   const date = tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '';
 
   return (
-    <div className="p-3 rounded-lg bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+    <div className="p-3 rounded-lg bg-black border border-[#00ff88]/20">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">{tx.tx_type}</p>
-          {tx.memo && <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{tx.memo}</p>}
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">{date}</p>
+          <p className="text-sm font-medium text-white truncate">{tx.tx_type}</p>
+          {tx.memo && <p className="text-xs text-slate-400 truncate">{tx.memo}</p>}
+          <p className="text-[11px] text-slate-500 mt-0.5">{date}</p>
         </div>
         <div className={cn('text-sm font-semibold whitespace-nowrap', color)}>{amount}</div>
       </div>
