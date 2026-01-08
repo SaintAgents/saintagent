@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, PanelRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function FloatingPanel({ title, children, onClose }) {
   const containerRef = React.useRef(null);
