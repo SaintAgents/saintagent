@@ -969,7 +969,7 @@ export default function SidePanel({
       }
       <div
         className={cn(
-          "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-50 transition-all duration-300 flex flex-col",
+          "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-[55] transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "" : "w-0 overflow-hidden"
         )}
