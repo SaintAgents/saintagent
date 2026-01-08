@@ -143,6 +143,7 @@ export default function HelpSupportAgent() {
   
   // Dragging state
   const [position, setPosition] = useState({ x: null, y: null });
+  const [dockedSide, setDockedSide] = useState(null); // 'left' | 'right' | null
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const isDraggingRef = useRef(false);
   
@@ -153,6 +154,7 @@ export default function HelpSupportAgent() {
       if (saved) {
         const pos = JSON.parse(saved);
         setPosition({ x: pos.x, y: pos.y });
+        if (pos.dockedSide) setDockedSide(pos.dockedSide);
       }
     } catch {}
   }, []);
@@ -161,10 +163,10 @@ export default function HelpSupportAgent() {
   useEffect(() => {
     if (position.x !== null && position.y !== null) {
       try {
-        localStorage.setItem('helpSupportPosition', JSON.stringify(position));
+        localStorage.setItem('helpSupportPosition', JSON.stringify({ ...position, dockedSide }));
       } catch {}
     }
-  }, [position]);
+  }, [position, dockedSide]);
   
   const onDragMove = (e) => {
     if (!isDraggingRef.current) return;
@@ -179,6 +181,18 @@ export default function HelpSupportAgent() {
     isDraggingRef.current = false;
     document.removeEventListener('mousemove', onDragMove);
     document.removeEventListener('mouseup', onDragEnd);
+    // Check if should dock to side
+    const DOCK_THRESHOLD = 50;
+    const panelWidth = 416; // w-[26rem]
+    if (position.x !== null) {
+      if (position.x < DOCK_THRESHOLD) {
+        setDockedSide('left');
+      } else if (position.x > window.innerWidth - panelWidth - DOCK_THRESHOLD) {
+        setDockedSide('right');
+      } else {
+        setDockedSide(null);
+      }
+    }
   };
   
   const onDragStart = (e) => {
@@ -269,23 +283,28 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Help button on right side when closed */}
+      {/* Help button - dockable on sides */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
           className={cn(
-            "fixed right-6 z-50 w-12 h-12 transition-all duration-300 group",
-            "rounded-full shadow-lg hover:shadow-xl hover:scale-110",
+            "fixed z-50 transition-all duration-300 group",
+            "shadow-lg hover:shadow-xl",
             "bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700",
             "flex items-center justify-center",
-            "hacker-help-btn"
+            "hacker-help-btn",
+            dockedSide === 'left' 
+              ? "left-0 w-10 h-16 rounded-r-xl rounded-l-none" 
+              : dockedSide === 'right'
+              ? "right-0 w-10 h-16 rounded-l-xl rounded-r-none"
+              : "right-6 w-12 h-12 rounded-full hover:scale-110"
           )}
-          style={{ bottom: '6rem' }}
+          style={{ bottom: dockedSide ? '50%' : '6rem', transform: dockedSide ? 'translateY(50%)' : 'none' }}
           title="Help & Support"
         >
           <HelpCircle className={cn(
             "w-6 h-6 text-white transition-all",
-            "group-hover:scale-110",
+            !dockedSide && "group-hover:scale-110",
             "hacker-help-icon"
           )} />
         </button>
@@ -296,18 +315,23 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
     <div 
       data-help-panel
       className={cn(
-        "fixed z-50 rounded-2xl shadow-2xl border transition-all duration-300",
+        "fixed z-50 shadow-2xl border transition-all duration-300",
         "bg-white/95 backdrop-blur-md border-slate-200",
         "dark:bg-[#050505]/95 dark:backdrop-blur-md dark:border-[rgba(0,255,136,0.4)]",
         "dark:shadow-[0_0_30px_rgba(0,255,136,0.15),_inset_0_0_60px_rgba(0,255,136,0.03)]",
         "[data-theme='hacker']_&:bg-[#050505]/95 [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hacker-glitch-border",
         isMinimized 
           ? "w-72 h-14" 
-          : "w-[26rem] max-h-[75vh]"
+          : "w-[26rem] max-h-[75vh]",
+        dockedSide === 'left' ? "rounded-r-2xl rounded-l-none" : dockedSide === 'right' ? "rounded-l-2xl rounded-r-none" : "rounded-2xl"
       )}
       style={{ 
         height: isMinimized ? '3.5rem' : 'auto',
-        ...(position.x !== null && position.y !== null 
+        ...(dockedSide === 'left'
+          ? { left: 0, top: position.y ?? 100, right: 'auto', bottom: 'auto' }
+          : dockedSide === 'right'
+          ? { right: 0, left: 'auto', top: position.y ?? 100, bottom: 'auto' }
+          : position.x !== null && position.y !== null 
           ? { left: position.x, top: position.y, right: 'auto', bottom: 'auto' }
           : { bottom: 24, right: 24 }
         )

@@ -24,6 +24,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   // Draggable & Resizable state
   const [position, setPosition] = useState({ x: window.innerWidth - 720, y: window.innerHeight - 420 });
   const [size, setSize] = useState({ width: 320, height: 384 });
+  const [dockedSide, setDockedSide] = useState(null); // 'left' | 'right' | null
   const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
@@ -47,6 +48,15 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
     dragRef.current.isDragging = false;
     document.removeEventListener('mousemove', onDragMove);
     document.removeEventListener('mouseup', onDragEnd);
+    // Check if should dock to side
+    const DOCK_THRESHOLD = 50;
+    if (position.x < DOCK_THRESHOLD) {
+      setDockedSide('left');
+    } else if (position.x > window.innerWidth - size.width - DOCK_THRESHOLD) {
+      setDockedSide('right');
+    } else {
+      setDockedSide(null);
+    }
   };
 
   // Resize handlers
@@ -206,10 +216,19 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
     );
   }
 
+  const dockedStyle = dockedSide === 'left' 
+    ? { left: 0, top: position.y, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
+    : dockedSide === 'right'
+    ? { right: 0, left: 'auto', top: position.y, borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+    : { left: position.x, top: position.y };
+
   return (
     <div 
-      className="fixed bg-white rounded-lg shadow-2xl border border-slate-200 z-[150] flex flex-col overflow-hidden"
-      style={{ left: position.x, top: position.y, width: size.width, height: size.height }}
+      className={cn(
+        "fixed bg-white shadow-2xl border border-slate-200 z-[150] flex flex-col overflow-hidden",
+        dockedSide ? "rounded-lg" : "rounded-lg"
+      )}
+      style={{ ...dockedStyle, width: size.width, height: size.height }}
     >
       {/* Resize handles */}
       <div onMouseDown={(e) => onResizeStart(e, 'n')} className="absolute top-0 left-2 right-2 h-1 cursor-n-resize" />
