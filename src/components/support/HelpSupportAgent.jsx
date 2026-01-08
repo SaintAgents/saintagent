@@ -285,31 +285,24 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Help button - dockable on sides */}
+      {/* Help button - pill style matching GlobalChatWidget */}
       {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className={cn(
-            "fixed z-50 transition-all duration-300 group",
-            "shadow-lg hover:shadow-xl",
-            "bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700",
-            "flex items-center justify-center",
-            "hacker-help-btn",
-            dockedSide === 'left' 
-              ? "left-0 w-10 h-16 rounded-r-xl rounded-l-none" 
-              : dockedSide === 'right'
-              ? "right-0 w-10 h-16 rounded-l-xl rounded-r-none"
-              : "right-6 w-12 h-12 rounded-full hover:scale-110"
-          )}
-          style={{ bottom: dockedSide ? '50%' : '6rem', transform: dockedSide ? 'translateY(50%)' : 'none' }}
-          title="Help & Support"
+        <div
+          className="fixed z-50"
+          style={{ left: position.x ?? 16, top: position.y ?? undefined, bottom: position.y ? undefined : 80 }}
         >
-          <HelpCircle className={cn(
-            "w-6 h-6 text-white transition-all",
-            !dockedSide && "group-hover:scale-110",
-            "hacker-help-icon"
-          )} />
-        </button>
+          <div
+            onMouseDown={onDragStart}
+            onClick={() => !isDraggingRef.current && setIsOpen(true)}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-full shadow-lg transition-all cursor-grab hover:scale-105 hacker-help-btn",
+              isDraggingRef.current && "cursor-grabbing scale-105"
+            )}
+          >
+            <HelpCircle className="w-4 h-4 hacker-help-icon" />
+            <span className="text-xs font-medium">Help</span>
+          </div>
+        </div>
       )}
 
       {/* Chat panel when open */}
