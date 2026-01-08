@@ -824,19 +824,68 @@ export default function CommandDeck() {
                       View Glossary
                     </button>
                   </div>
-                  {/* Eternal Flame Feature Badge */}
-                  <div className="flex items-center gap-3 mb-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-                    <img
-                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
-                      alt="Eternal Flame"
-                      className="w-12 h-12 object-contain"
-                      data-no-filter="true" />
-
-                    <div>
-                      <p className="font-semibold text-amber-900">Eternal Flame</p>
-                      <p className="text-xs text-amber-700">Living Agent</p>
+                  
+                  {/* Eternal Flame Badge + Trust Gauge Row */}
+                  <div className="flex items-center gap-4 mb-3">
+                    {/* Eternal Flame Feature Badge */}
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 flex-1">
+                      <img
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
+                        alt="Eternal Flame"
+                        className="w-12 h-12 object-contain"
+                        data-no-filter="true" />
+                      <div>
+                        <p className="font-semibold text-amber-900">Eternal Flame</p>
+                        <p className="text-xs text-amber-700">Living Agent</p>
+                      </div>
+                    </div>
+                    
+                    {/* Trust Score Gauge with Ring - 95px ring, 85px gauge */}
+                    <div className="flex flex-col items-center">
+                      <div className="relative" style={{ width: '95px', height: '95px' }}>
+                        {/* Cyan trust ring - wraps only the gauge */}
+                        <svg 
+                          className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
+                          viewBox="0 0 95 95"
+                        >
+                          <circle cx="47.5" cy="47.5" r="44" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
+                          <circle cx="47.5" cy="47.5" r="44" stroke="url(#trustGradientCmd)" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 44}`} strokeDashoffset={`${2 * Math.PI * 44 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                          <defs>
+                            <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stopColor="#10b981" />
+                              <stop offset="50%" stopColor="#14b8a6" />
+                              <stop offset="100%" stopColor="#06b6d4" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        {/* Gauge dial - 85px inside 95px ring */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <img
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
+                            alt="Trust Gauge"
+                            className="object-contain drop-shadow-lg"
+                            style={{ width: '85px', height: '85px', border: 'none', boxShadow: 'none', background: 'transparent' }}
+                            data-no-filter="true"
+                            data-keep-round="true" />
+                        </div>
+                      </div>
+                      {/* Trust Score label */}
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
+                        <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
+                          Trust
+                          <HelpHint
+                            content={
+                            <div>
+                              <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
+                              <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
+                            </div>
+                            } />
+                        </p>
+                      </div>
                     </div>
                   </div>
+                  
                   <BadgesBar
                     badges={badges}
                     defaultIfEmpty={false}
