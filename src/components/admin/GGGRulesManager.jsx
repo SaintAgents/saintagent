@@ -19,7 +19,7 @@ import { Slider } from "@/components/ui/slider";
 import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
 // Rule Card Component (extracted for proper state management)
-function RuleCard({ rule, onUpdate, onToggle, onDelete, onToggleLock }) {
+function RuleCard({ rule, onUpdate, onToggle, onDelete, onLockToggle }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editGgg, setEditGgg] = useState(rule.ggg_amount);
   
@@ -50,8 +50,8 @@ function RuleCard({ rule, onUpdate, onToggle, onDelete, onToggleLock }) {
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-semibold text-slate-900">{actionLabel}</h3>
                 {rule.is_locked && (
-                  <Badge className="bg-amber-500 text-white text-xs gap-1">
-                    <Lock className="w-3 h-3" /> Locked
+                  <Badge className="bg-amber-500 text-white text-xs">
+                    <Lock className="w-3 h-3 mr-1" /> Locked
                   </Badge>
                 )}
                 {rule.category && (
@@ -97,9 +97,9 @@ function RuleCard({ rule, onUpdate, onToggle, onDelete, onToggleLock }) {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => onToggleLock(rule)}
-              className={rule.is_locked ? "text-amber-600 hover:text-amber-700 border-amber-300" : "text-slate-400 hover:text-slate-600"}
-              title={rule.is_locked ? "Unlock (will be reset on re-seed)" : "Lock (preserve on re-seed)"}
+              onClick={() => onLockToggle(rule)}
+              className={rule.is_locked ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50" : "text-slate-400 hover:text-slate-600"}
+              title={rule.is_locked ? "Unlock (allow re-seed to reset)" : "Lock (preserve during re-seed)"}
             >
               {rule.is_locked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
             </Button>
@@ -120,6 +120,7 @@ function RuleCard({ rule, onUpdate, onToggle, onDelete, onToggleLock }) {
               size="icon"
               onClick={() => onDelete(rule.id)}
               className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+              disabled={rule.is_locked}
             >
               <Trash2 className="w-4 h-4" />
             </Button>
@@ -210,6 +211,13 @@ export default function GGGRulesManager() {
     updateRuleMutation.mutate({
       id: rule.id,
       data: { is_active: !rule.is_active }
+    });
+  };
+
+  const handleToggleLock = (rule) => {
+    updateRuleMutation.mutate({
+      id: rule.id,
+      data: { is_locked: !rule.is_locked }
     });
   };
 
