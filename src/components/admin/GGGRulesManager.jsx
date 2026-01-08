@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Coins, Plus, Edit, Trash2, Zap, Gift } from "lucide-react";
+import { Coins, Plus, Edit, Trash2, Zap, Gift, Lock, Unlock } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
