@@ -780,14 +780,14 @@ export default function CommandDeck() {
                   
                   {/* Trust Score Gauge - top right corner */}
                   <div className="flex flex-col items-center shrink-0">
-                    <div className="relative" style={{ width: '170px', height: '170px' }}>
-                      {/* Cyan trust ring - sized to nearly touch gauge edge */}
+                    <div className="relative" style={{ width: '180px', height: '180px' }}>
+                      {/* Cyan trust ring - sized to nearly touch 170px gauge edge */}
                       <svg 
                         className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
-                        viewBox="0 0 170 170"
+                        viewBox="0 0 180 180"
                       >
-                        <circle cx="85" cy="85" r="82" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
-                        <circle cx="85" cy="85" r="82" stroke="url(#trustGradientCmd)" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 82}`} strokeDashoffset={`${2 * Math.PI * 82 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                        <circle cx="90" cy="90" r="86" stroke="currentColor" strokeWidth="5" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
+                        <circle cx="90" cy="90" r="86" stroke="url(#trustGradientCmd)" strokeWidth="5" fill="none" strokeDasharray={`${2 * Math.PI * 86}`} strokeDashoffset={`${2 * Math.PI * 86 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
                         <defs>
                           <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="#10b981" />
@@ -796,7 +796,7 @@ export default function CommandDeck() {
                           </linearGradient>
                         </defs>
                       </svg>
-                      {/* Gauge dial - 170px */}
+                      {/* Gauge dial - 170px inside 180px container */}
                       <div className="absolute inset-0 flex items-center justify-center">
                         <img
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
