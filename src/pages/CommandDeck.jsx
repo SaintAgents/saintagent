@@ -156,6 +156,46 @@ export default function CommandDeck() {
 
   const unhideAllCards = () => setHiddenCards(new Set());
 
+  // Store all cards to side panel
+  const storeAllCards = () => {
+    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops'];
+    const newStoredCards = allCardIds
+      .filter(id => !storedCards.some(c => c.id === id))
+      .map(id => ({ id, title: getCardTitle(id) }));
+    setStoredCards(prev => [...prev, ...newStoredCards]);
+    setHiddenCards(new Set(allCardIds));
+    if (!sidePanelOpen) setSidePanelOpen(true);
+  };
+
+  // Restore all cards from side panel
+  const restoreAllCards = () => {
+    setStoredCards([]);
+    setHiddenCards(new Set());
+  };
+
+  // Helper to get card title by id
+  const getCardTitle = (id) => {
+    const titles = {
+      quickActions: 'Quick Actions',
+      quickStart: 'Quick Start Checklist',
+      challenges: 'Challenges & Rewards',
+      inbox: 'Inbox & Signals',
+      collaborators: 'Potential Collaborators',
+      circles: 'Circles & Regions',
+      leaderPathway: 'Leader Pathway',
+      aiDiscover: 'AI Discover',
+      syncEngine: 'Synchronicity Engine',
+      meetings: 'Meetings & Momentum',
+      missions: 'Missions',
+      projects: 'Projects',
+      market: 'Marketplace: Earn & Learn',
+      influence: 'Influence & Reach',
+      leader: '144K Leader Channel',
+      dailyops: 'Daily Ops'
+    };
+    return titles[id] || id;
+  };
+
   // Card icon mapping for stored cards (icons can't be serialized to localStorage)
   const CARD_ICONS = {
     quickActions: Zap,
