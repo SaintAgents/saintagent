@@ -17,6 +17,7 @@ import {
   Share2, Award, ArrowRight, MessageCircle
 } from 'lucide-react';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 import { formatDistanceToNow } from 'date-fns';
 
 const CATEGORIES = [
@@ -161,13 +162,16 @@ export default function Forum() {
               <p className="text-violet-200/90 mt-1">Connect, share, and grow together</p>
             </div>
           </div>
-          <Button 
-            className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-            onClick={() => setCreateModalOpen(true)}
-          >
-            <Plus className="w-4 h-4" />
-            New Post
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
+              onClick={() => setCreateModalOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              New Post
+            </Button>
+            <ForwardButton currentPage="Forum" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+          </div>
         </div>
       </div>
 

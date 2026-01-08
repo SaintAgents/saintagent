@@ -19,6 +19,7 @@ import BadgesPanel from '@/components/synchronicity/BadgesPanel';
 import ActiveSynchronicity from '@/components/synchronicity/ActiveSynchronicity';
 import EpicQuestCard from '@/components/synchronicity/EpicQuestCard';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/862e64727_ChatGPTImageJan7202612_58_22AM.png";
 
@@ -89,12 +90,15 @@ export default function Quests() {
       {/* Header Section - No Hero */}
       <div className="px-4 pt-6 pb-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-2">
-            <BackButton className="text-amber-200/80 hover:text-amber-100" />
-            <h1 className="text-3xl md:text-4xl font-bold text-amber-100 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
-              style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-              Quests & Rewards
-            </h1>
+          <div className="flex items-center justify-between gap-4 mb-2">
+            <div className="flex items-center gap-4">
+              <BackButton className="text-amber-200/80 hover:text-amber-100" />
+              <h1 className="text-3xl md:text-4xl font-bold text-amber-100 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+                Quests & Rewards
+              </h1>
+            </div>
+            <ForwardButton currentPage="Quests" className="text-amber-200/80 hover:text-amber-100" />
           </div>
           <p className="text-amber-200/80 text-lg tracking-wider ml-12">
             Complete quests, earn badges, and climb the leaderboard

@@ -13,6 +13,7 @@ import ShareContentModal from '@/components/share/ShareContentModal';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 const TYPE_META = {
   listings: { label: 'Listings', icon: ShoppingBag, color: 'bg-emerald-100 text-emerald-700' },
@@ -138,9 +139,12 @@ export default function ActivityFeed() {
               Activity Feed
             </h1>
           </div>
-          <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
-            <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
+              <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
+            </Button>
+            <ForwardButton currentPage="ActivityFeed" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+          </div>
         </div>
       </div>
 
