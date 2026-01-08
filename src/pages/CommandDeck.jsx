@@ -13,11 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, 
-  Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, 
-  List, Trophy, Eye, EyeOff 
-} from "lucide-react";
+import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
