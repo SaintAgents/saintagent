@@ -38,6 +38,7 @@ import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import StreakTracker from '@/components/gamification/StreakTracker';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 import AvailableQuestsPanel from '@/components/quests/AvailableQuestsPanel';
 
 const ACHIEVEMENT_BADGES = [
@@ -166,7 +167,8 @@ export default function Gamification() {
         <div className="absolute top-3 left-3">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          <ForwardButton currentPage="Gamification" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
           <Button
             onClick={() => generateChallengesMutation.mutate()}
             disabled={isGenerating}
