@@ -1,3 +1,9 @@
+/* Wallet Panel - Force black background in dark mode */
+[data-theme='dark'] [data-wallet-panel],
+[data-theme='hacker'] [data-wallet-panel] {
+  background-color: #000000 !important;
+}
+
 /* Hero image visibility - ensure visible in DARK theme only (no filter) */
 .hero-image,
 img.hero-image,

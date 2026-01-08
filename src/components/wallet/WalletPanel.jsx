@@ -71,7 +71,7 @@ export default function WalletPanel() {
   const canWithdraw = availableUSD >= MIN_WITHDRAWAL_USD;
 
   return (
-    <div className="space-y-4 bg-[#050505] dark:bg-[#050505] p-4 rounded-xl" data-wallet-panel>
+    <div className="space-y-4 bg-[#050505] p-4 rounded-xl" data-wallet-panel style={{ backgroundColor: '#000000' }}>
       <div className="grid grid-cols-3 gap-3">
         <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a0a0a] dark:to-[#0a0a0a] border border-violet-100 dark:border-[rgba(0,255,136,0.3)]">
           <p className="text-xs text-violet-600 dark:text-violet-400 font-medium">Available</p>
