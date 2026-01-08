@@ -19,6 +19,12 @@
   display: none !important;
 }
 
+/* Wallet Panel - Force black background in dark mode */
+[data-theme='dark'] [data-wallet-panel],
+[data-theme='hacker'] [data-wallet-panel] {
+  background-color: #000000 !important;
+}
+
 /* Light theme checkbox fixes - ensure checkmarks are visible */
 [data-theme='light'] button[role="checkbox"],
 [data-theme='light'] [data-state="checked"] {
