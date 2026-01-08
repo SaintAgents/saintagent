@@ -85,7 +85,9 @@ export default function SidePanel({
   // Docking & Dragging
   const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
   const [topOffset, setTopOffset] = useState(80); // px from top
+  const [panelWidth, setPanelWidth] = useState(320); // Adjustable width
   const dragRef = React.useRef({ startY: 0, startTop: 0 });
+  const widthDragRef = React.useRef({ startX: 0, startWidth: 0 });
 
   // Pop-off state
   const [isPoppedOff, setIsPoppedOff] = useState(false);
@@ -223,10 +225,19 @@ export default function SidePanel({
     try {
       localStorage.setItem('sidePanelOpen', String(isOpen));
       localStorage.setItem('sidePanelDockSide', dockSide);
+      localStorage.setItem('sidePanelWidth', String(panelWidth));
     } catch {}
     // Dispatch event for GlobalSidePanelNudge to sync
     document.dispatchEvent(new CustomEvent('sidePanelStateChange', { detail: { isOpen } }));
-  }, [isOpen, dockSide]);
+  }, [isOpen, dockSide, panelWidth]);
+  
+  // Load saved width
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem('sidePanelWidth');
+      if (saved) setPanelWidth(Math.max(280, Math.min(600, parseInt(saved))));
+    } catch {}
+  }, []);
 
   // Note: Global toggle events are now handled by CommandDeck directly
   // SidePanel just receives isOpen as a prop from parent
@@ -247,6 +258,24 @@ export default function SidePanel({
     document.addEventListener('mouseup', onDragEnd);
   };
 
+  // Width resize handlers
+  const onWidthDragMove = (e) => {
+    const dx = e.clientX - widthDragRef.current.startX;
+    const delta = dockSide === 'right' ? -dx : dx;
+    const newWidth = Math.max(280, Math.min(600, widthDragRef.current.startWidth + delta));
+    setPanelWidth(newWidth);
+  };
+  const onWidthDragEnd = () => {
+    document.removeEventListener('mousemove', onWidthDragMove);
+    document.removeEventListener('mouseup', onWidthDragEnd);
+  };
+  const onWidthDragStart = (e) => {
+    e.preventDefault();
+    widthDragRef.current = { startX: e.clientX, startWidth: panelWidth };
+    document.addEventListener('mousemove', onWidthDragMove);
+    document.addEventListener('mouseup', onWidthDragEnd);
+  };
+
   React.useEffect(() => {
     return () => {
       document.removeEventListener('mousemove', onDragMove);
@@ -255,6 +284,8 @@ export default function SidePanel({
       document.removeEventListener('mouseup', onPopDragEnd);
       document.removeEventListener('mousemove', onResizeMove);
       document.removeEventListener('mouseup', onResizeEnd);
+      document.removeEventListener('mousemove', onWidthDragMove);
+      document.removeEventListener('mouseup', onWidthDragEnd);
     };
   }, []);
 
@@ -940,9 +971,30 @@ export default function SidePanel({
         className={cn(
           "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-50 transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
-          isOpen ? "w-80" : "w-0 overflow-hidden"
+          isOpen ? "" : "w-0 overflow-hidden"
         )}
-        style={{ top: topOffset, height: `calc(100vh - ${topOffset}px)`, right: dockSide === 'right' ? 0 : 'auto', left: dockSide === 'left' ? 0 : 'auto' }}>
+        style={{ 
+          top: topOffset, 
+          height: `calc(100vh - ${topOffset}px)`, 
+          right: dockSide === 'right' ? 0 : 'auto', 
+          left: dockSide === 'left' ? 0 : 'auto',
+          width: isOpen ? `${panelWidth}px` : '0'
+        }}>
+      
+      {/* Width resize handle on left edge */}
+      {isOpen && (
+        <div
+          onMouseDown={onWidthDragStart}
+          className={cn(
+            "absolute top-0 bottom-0 w-1 cursor-ew-resize hover:bg-violet-300/50 transition-colors group z-[60]",
+            dockSide === 'right' ? "left-0" : "right-0"
+          )}
+        >
+          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="w-1 h-full bg-violet-400" />
+          </div>
+        </div>
+      )}
 
       {/* Drag Handle */}
       <div

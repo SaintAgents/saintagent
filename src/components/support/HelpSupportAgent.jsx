@@ -317,7 +317,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
     <div 
       data-help-panel
       className={cn(
-        "fixed z-50 shadow-2xl border transition-all duration-300",
+        "fixed z-[70] shadow-2xl border transition-all duration-300",
         "bg-white/95 backdrop-blur-md border-slate-200",
         "dark:bg-[#050505]/95 dark:backdrop-blur-md dark:border-[rgba(0,255,136,0.4)]",
         "dark:shadow-[0_0_30px_rgba(0,255,136,0.15),_inset_0_0_60px_rgba(0,255,136,0.03)]",
