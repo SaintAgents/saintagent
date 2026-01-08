@@ -1169,7 +1169,7 @@ export default function CommandDeck() {
                 </button>
                 <button type="button" onClick={restoreAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
                   <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
-                    <EyeOff className="w-6 h-6 text-emerald-600 dark:text-emerald-400" style={{ transform: 'scaleX(-1)' }} />
+                    <EyeOff className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Unstow All</div>
