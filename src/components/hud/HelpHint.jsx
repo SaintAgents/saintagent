@@ -16,10 +16,11 @@ export default function HelpHint({ content, side = 'right', align = 'start', cla
         aria-label="Help"
         className={cn(
           "inline-flex items-center justify-center leading-none rounded-full border-2 transition-all duration-200",
-          "border-emerald-500/60 text-emerald-600 bg-slate-900/80",
+          "border-emerald-500/60 text-emerald-600 bg-slate-100/80",
           "hover:border-emerald-400 hover:text-emerald-400 hover:shadow-[0_0_8px_rgba(16,185,129,0.4)]",
           "dark:border-[#00ff88]/60 dark:text-[#00ff88] dark:bg-[#050505]/90",
           "dark:hover:border-[#00ff88] dark:hover:shadow-[0_0_12px_rgba(0,255,136,0.5)]",
+          "[data-theme='light'] &:bg-slate-100 [data-theme='light'] &:text-emerald-700",
           className
         )}
         style={{ width: size, height: size, fontSize: Math.round(size * 0.6) }}
