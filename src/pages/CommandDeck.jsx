@@ -779,7 +779,7 @@ export default function CommandDeck() {
                   </div>
                   
                   {/* Trust Score Gauge - top right corner */}
-                  <div className="flex flex-col items-center shrink-0">
+                  <div className="flex flex-col items-center shrink-0" style={{ marginTop: '-17px', marginRight: '-3px' }}>
                     <div className="relative" style={{ width: '170px', height: '170px' }}>
                       {/* Gauge dial - 170px base */}
                       <img

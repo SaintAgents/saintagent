@@ -167,21 +167,24 @@ export default function Gamification() {
         <div className="absolute top-3 left-3">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
-        <div className="absolute top-3 right-3 flex items-center gap-2">
-          <ForwardButton currentPage="Gamification" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
-          <Button
-            onClick={() => generateChallengesMutation.mutate()}
-            disabled={isGenerating}
-            size="sm"
-            className="bg-violet-600/90 hover:bg-violet-700 gap-2 backdrop-blur-sm"
-          >
-            {isGenerating ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Sparkles className="w-4 h-4" />
-            )}
-            Generate Challenges
-          </Button>
+        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+          <div /> {/* spacer */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => generateChallengesMutation.mutate()}
+              disabled={isGenerating}
+              size="sm"
+              className="bg-violet-600/90 hover:bg-violet-700 gap-2 backdrop-blur-sm"
+            >
+              {isGenerating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              Generate Challenges
+            </Button>
+            <ForwardButton currentPage="Gamification" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+          </div>
         </div>
       </div>
 
