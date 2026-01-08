@@ -139,6 +139,15 @@ export default function CommandDeck() {
     });
   };
   
+  const hideCard = (cardId) => {
+    setHiddenCards(prev => new Set([...prev, cardId]));
+  };
+  
+  const hideAllCards = () => {
+    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops'];
+    setHiddenCards(new Set(allCardIds));
+  };
+  
   const unhideAllCards = () => setHiddenCards(new Set());
 
   // Current user (safe for public use)
@@ -1023,17 +1032,24 @@ export default function CommandDeck() {
                     <div className="text-xs text-slate-500 dark:text-slate-400">Fuller view</div>
                   </div>
                 </button>
-                {hiddenCards.size > 0 && (
-                  <button type="button" onClick={unhideAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
-                    <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
-                      <Eye className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Unhide All</div>
-                      <div className="text-xs text-emerald-600 dark:text-emerald-400">{hiddenCards.size} card{hiddenCards.size !== 1 ? 's' : ''} hidden</div>
-                    </div>
-                  </button>
-                )}
+                <button type="button" onClick={hideAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 hover:dark:bg-slate-700/40 hover:border-slate-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                  <div className="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+                    <EyeOff className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">Hide All</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Minimize deck</div>
+                  </div>
+                </button>
+                <button type="button" onClick={unhideAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Unhide All</div>
+                    <div className="text-xs text-emerald-600 dark:text-emerald-400">{hiddenCards.size} hidden</div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -1042,7 +1058,7 @@ export default function CommandDeck() {
         {/* Main Grid - Collapsible Cards */}
         <div className="px-6 relative min-h-[1200px]">
           <div className="block space-y-6">
-            <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')}>
+            <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => { hideCard('quickActions'); setQuickActionsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')}>
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
                   <Button variant="outline" className="bg-zinc-200 text-green-800 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2" onClick={() => setSidePanelOpen(!sidePanelOpen)}>
@@ -1057,37 +1073,37 @@ export default function CommandDeck() {
               </div>
             </CollapsibleCard>
 
-            <CollapsibleCard title="Quick Start Checklist" cardId="quickStart" icon={CheckCircle} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => setQuickStartPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickStart')} onToggleHide={() => toggleCardVisibility('quickStart')}>
+            <CollapsibleCard title="Quick Start Checklist" cardId="quickStart" icon={CheckCircle} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => { hideCard('quickStart'); setQuickStartPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickStart')} onToggleHide={() => toggleCardVisibility('quickStart')}>
               <QuickStartChecklist />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Challenges & Rewards" cardId="challenges" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" onPopout={() => setChallengesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('challenges')} onToggleHide={() => toggleCardVisibility('challenges')}>
+            <CollapsibleCard title="Challenges & Rewards" cardId="challenges" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" onPopout={() => { hideCard('challenges'); setChallengesPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('challenges')} onToggleHide={() => toggleCardVisibility('challenges')}>
               <GamificationWidget profile={profile} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('inbox')} onToggleHide={() => toggleCardVisibility('inbox')}>
+            <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => { hideCard('inbox'); setInboxPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('inbox')} onToggleHide={() => toggleCardVisibility('inbox')}>
               <InboxSignals notifications={notifications} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Potential Collaborators" cardId="collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} onPopout={() => setCollaboratorsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('collaborators')} onToggleHide={() => toggleCardVisibility('collaborators')}>
+            <CollapsibleCard title="Potential Collaborators" cardId="collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} onPopout={() => { hideCard('collaborators'); setCollaboratorsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('collaborators')} onToggleHide={() => toggleCardVisibility('collaborators')}>
               <CollaborationSuggestions profile={profile} compact={false} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')}>
+            <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => { hideCard('circles'); setCirclesPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')}>
               <CirclesRegions />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')}>
+            <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => { hideCard('leaderPathway'); setLeaderPopupOpen(true); }} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')}>
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
           </div>
 
           <div className="block space-y-6 mt-6">
-            <CollapsibleCard title="AI Discover" cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')}>
+            <CollapsibleCard title="AI Discover" cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => { hideCard('aiDiscover'); setAiDiscoverPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')}>
               <AIDiscoverMatches profile={profile} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Synchronicity Engine" cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')}>
+            <CollapsibleCard title="Synchronicity Engine" cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => { hideCard('syncEngine'); setSyncPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -1121,7 +1137,7 @@ export default function CommandDeck() {
               </Tabs>
             </CollapsibleCard>
 
-            <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')}>
+            <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => { hideCard('meetings'); setMeetingsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')}>
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
                 <div className="text-center py-6">
@@ -1139,7 +1155,7 @@ export default function CommandDeck() {
               </div>
             </CollapsibleCard>
 
-            <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')}>
+            <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => { hideCard('missions'); setMissionsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')}>
               <div className="space-y-3">
                 {missions.length === 0 ?
                 <div className="text-center py-6">
@@ -1157,7 +1173,7 @@ export default function CommandDeck() {
               </div>
             </CollapsibleCard>
 
-            <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')}>
+            <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => { hideCard('projects'); setProjectsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                 <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{totalProjects}</div></div>
                 <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submittedCount}</div></div>
@@ -1206,7 +1222,7 @@ export default function CommandDeck() {
                         {(dragProvided) =>
                     <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
                             {id === 'market' &&
-                      <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('market')} onToggleHide={() => toggleCardVisibility('market')}>
+                      <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => { hideCard('market'); setMarketPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('market')} onToggleHide={() => toggleCardVisibility('market')}>
                                 <Tabs defaultValue="offers" className="w-full">
                                   <TabsList className="w-full grid grid-cols-3 mb-4">
                                     <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
@@ -1238,7 +1254,7 @@ export default function CommandDeck() {
                               </CollapsibleCard>
                       }
                             {id === 'influence' &&
-                      <CollapsibleCard title="Influence & Reach" cardId="influence" icon={TrendingUp} backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80" onPopout={() => setInfluencePopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('influence')} onToggleHide={() => toggleCardVisibility('influence')}>
+                      <CollapsibleCard title="Influence & Reach" cardId="influence" icon={TrendingUp} backgroundImage="https://images.unsplash.com/photo-1620421680010-0766ff230392?w=800&q=80" onPopout={() => { hideCard('influence'); setInfluencePopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('influence')} onToggleHide={() => toggleCardVisibility('influence')}>
                                 <div className="space-y-4">
                                   <div className="grid grid-cols-3 gap-3">
                                     <div className="text-center p-3 rounded-xl bg-slate-50">
@@ -1266,7 +1282,7 @@ export default function CommandDeck() {
                               </CollapsibleCard>
                       }
                             {id === 'leader' &&
-                      <CollapsibleCard title="144K Leader Channel" cardId="leader" icon={Radio} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80" onPopout={() => setLeaderChannelPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leader')} onToggleHide={() => toggleCardVisibility('leader')}>
+                      <CollapsibleCard title="144K Leader Channel" cardId="leader" icon={Radio} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80" onPopout={() => { hideCard('leader'); setLeaderChannelPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leader')} onToggleHide={() => toggleCardVisibility('leader')}>
                                 <div className="text-center py-6">
                                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
                                     <Radio className="w-8 h-8 text-amber-600" />
@@ -1280,7 +1296,7 @@ export default function CommandDeck() {
                               </CollapsibleCard>
                       }
                             {id === 'dailyops' &&
-                      <CollapsibleCard title="Daily Ops" cardId="dailyops" icon={Calendar} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => setDailyOpsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('dailyops')} onToggleHide={() => toggleCardVisibility('dailyops')}>
+                      <CollapsibleCard title="Daily Ops" cardId="dailyops" icon={Calendar} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => { hideCard('dailyops'); setDailyOpsPopupOpen(true); }} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('dailyops')} onToggleHide={() => toggleCardVisibility('dailyops')}>
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <div className="text-xs text-slate-500">Today's GGG</div>
