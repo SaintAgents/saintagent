@@ -721,46 +721,46 @@ export default function CommandDeck() {
 
                           <div>You're at the highest rank.</div>
                           }
-                            <div className="text-zinc-700 mt-2">
-                              <div className="text-xs font-semibold text-slate-800 mb-1">Ranks key</div>
-                              <div className="overflow-hidden rounded-lg border border-slate-200">
+                            <div className="mt-2">
+                              <div className="text-xs font-semibold text-slate-900 mb-1">Ranks key</div>
+                              <div className="overflow-hidden rounded-lg border border-slate-300 bg-white">
                                 <table className="w-full text-xs">
-                                  <thead className="bg-slate-50">
-                                    <tr className="text-slate-800">
-                                      <th className="text-left px-3 py-2 font-semibold">Rank</th>
-                                      <th className="text-left px-3 py-2 font-semibold">Min RP</th>
-                                      <th className="text-left px-3 py-2 font-semibold">Short</th>
-                                      <th className="text-left px-3 py-2 font-semibold">Core Meaning</th>
+                                  <thead className="bg-slate-100">
+                                    <tr>
+                                      <th className="text-left px-3 py-2 font-semibold text-slate-900">Rank</th>
+                                      <th className="text-left px-3 py-2 font-semibold text-slate-900">Min RP</th>
+                                      <th className="text-left px-3 py-2 font-semibold text-slate-900">Short</th>
+                                      <th className="text-left px-3 py-2 font-semibold text-slate-900">Core Meaning</th>
                                     </tr>
                                   </thead>
-                                  <tbody>
+                                  <tbody className="bg-white">
                                     {RP_LADDER.map((t) =>
-                                  <tr key={t.code} className="border-t border-slate-100 hover:bg-slate-50">
+                                  <tr key={t.code} className="border-t border-slate-200 hover:bg-slate-50">
                                         <td className="px-3 py-2 text-slate-900 capitalize">
                                           <HoverCard>
                                             <HoverCardTrigger asChild>
-                                              <span className="cursor-help font-medium">{t.title}</span>
+                                              <span className="cursor-help font-medium text-slate-900">{t.title}</span>
                                             </HoverCardTrigger>
-                                            <HoverCardContent className="w-80">
+                                            <HoverCardContent className="w-80 bg-white border-slate-300">
                                               <div className="text-sm font-semibold text-slate-900 capitalize">{t.title} • {t.min}+</div>
                                               {RANK_DEFS[t.code]?.full &&
-                                          <div className="mt-2 text-xs text-slate-800">
-                                                  <div className="font-semibold">Definition:</div>
-                                                  <div>{RANK_DEFS[t.code].full}</div>
+                                          <div className="mt-2 text-xs text-slate-700">
+                                                  <div className="font-semibold text-slate-900">Definition:</div>
+                                                  <div className="text-slate-700">{RANK_DEFS[t.code].full}</div>
                                                 </div>
                                           }
                                             </HoverCardContent>
                                           </HoverCard>
                                         </td>
                                         <td className="px-3 py-2 text-slate-900">{t.min}+</td>
-                                        <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.short || '-'}</td>
-                                        <td className="px-3 py-2 text-slate-800">{RANK_DEFS[t.code]?.core || '-'}</td>
+                                        <td className="px-3 py-2 text-slate-700">{RANK_DEFS[t.code]?.short || '-'}</td>
+                                        <td className="px-3 py-2 text-slate-700">{RANK_DEFS[t.code]?.core || '-'}</td>
                                       </tr>
                                   )}
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="mt-1 text-[11px] text-slate-500">Hover rank name for full definition</div>
+                              <div className="mt-1 text-[11px] text-slate-600">Hover rank name for full definition</div>
                             </div>
                             {rpInfo.nextMin &&
                           <div className="mt-2">
