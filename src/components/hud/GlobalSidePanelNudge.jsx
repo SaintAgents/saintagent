@@ -65,14 +65,14 @@ export default function GlobalSidePanelNudge() {
     <div
       onClick={handleClick}
       className={cn(
-        "fixed top-1/2 -translate-y-1/2 z-[9998] cursor-pointer transition-all duration-300",
+        "fixed top-20 z-[9998] cursor-pointer transition-all duration-300",
         "hover:scale-105 group",
         dockSide === 'right' ? "right-0" : "left-0"
       )}
       title="Open Side Panel"
       data-side-panel-handle
     >
-      {/* Main handle - theme aware */}
+      {/* Main handle - theme aware - moved to top to make room for forward arrow */}
       <div
         className={cn(
           "shadow-lg flex flex-col items-center justify-center gap-1.5 transition-all",
@@ -83,7 +83,7 @@ export default function GlobalSidePanelNudge() {
         )}
         style={{ 
           width: '28px', 
-          height: '140px',
+          height: '100px',
         }}
       >
         {/* Decorative dots */}
