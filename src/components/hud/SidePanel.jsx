@@ -1136,19 +1136,33 @@ export default function SidePanel({
                     {walletAvailable?.toLocaleString?.() || 0}
                   </p>
                 </div>
-                <ProgressRing
-                    value={rankProgress}
-                    max={nextRankAt}
-                    size={64}
-                    strokeWidth={5}
-                    label={profile?.rank_code?.charAt(0).toUpperCase()}
-                    sublabel={<span className="text-[#00ff88]">{profile?.rp_points || 0} pts</span>}
-                    color="#00ff88" />
+                <div className="relative w-16 h-16">
+                  {/* Background ring */}
+                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="28" stroke="rgba(0,255,136,0.2)" strokeWidth="5" fill="none" />
+                    <circle 
+                      cx="32" cy="32" r="28" 
+                      stroke="#00ff88" 
+                      strokeWidth="5" 
+                      fill="none" 
+                      strokeDasharray={`${2 * Math.PI * 28}`} 
+                      strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
+                      className="transition-all duration-700"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {/* Badge image centered */}
+                  <img 
+                    src={`https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/rank_${rpInfo.nextTitle?.toLowerCase() || 'initiate'}.png`}
+                    alt={rpInfo.nextTitle}
+                    className="absolute inset-0 w-full h-full object-contain p-2"
+                  />
+                </div>
 
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-400">To next rank</span>
-                <span className="font-medium text-[#00ff88]">{Math.max(0, nextRankAt - rankProgress)} pts</span>
+                <span className="text-slate-400">To {rpInfo.nextTitle || 'next rank'}</span>
+                <span className="font-medium text-[#00ff88]">{Math.max(0, (rpInfo.nextMin || 0) - (profile?.rp_points || 0))} pts</span>
               </div>
               <div className="flex justify-between mt-3">
                 <Button variant="outline" size="sm" className="bg-black border-[#00ff88]/40 text-[#00ff88] hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setWalletPopupOpen(true)}>
