@@ -43,6 +43,7 @@ import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import AIMissionGenerator from '@/components/missions/AIMissionGenerator';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function Missions() {
   const [tab, setTab] = useState('active');

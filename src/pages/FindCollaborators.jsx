@@ -2,6 +2,7 @@ import React from "react";
 import CollaboratorFinder from "@/components/collaboration/CollaboratorFinder";
 import { Users, Sparkles } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function FindCollaborators() {
   return (

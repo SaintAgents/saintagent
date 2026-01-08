@@ -13,6 +13,7 @@ import MeetingCard from '@/components/hud/MeetingCard';
 import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function Meetings() {
   const [tab, setTab] = useState('upcoming');

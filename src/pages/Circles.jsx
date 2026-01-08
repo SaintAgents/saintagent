@@ -13,6 +13,7 @@ import CreateCircleModal from "@/components/community/CreateCircleModal";
 import CircleChatPanel from "@/components/community/CircleChatPanel";
 import GroupDetailPage from "@/components/groups/GroupDetailPage";
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function Circles() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -122,6 +123,9 @@ export default function Circles() {
         </div>
         <div className="absolute top-4 left-4">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+        <div className="absolute top-4 right-4">
+          <ForwardButton currentPage="Circles" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 

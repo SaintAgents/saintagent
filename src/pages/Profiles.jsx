@@ -43,6 +43,7 @@ import ProfileDataSlate from '@/components/profiles/ProfileDataSlate';
 import NetworkMapView from '@/components/profiles/NetworkMapView';
 import MiniDatingCard from '@/components/profiles/MiniDatingCard';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 const RANK_ORDER = ['guardian', 'ascended', 'oracle', 'sage', 'master', 'practitioner', 'adept', 'initiate', 'seeker'];
 const QUICK_RANKS = ['seeker', 'adept', 'master', 'sage', 'guardian'];

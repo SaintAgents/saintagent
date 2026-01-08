@@ -172,9 +172,10 @@ export default function Matches() {
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
-          </Button>
-        </div>
-      </div>
+            </Button>
+            </div>
+            </div>
+            </div>
 
       <div className="max-w-5xl mx-auto p-6 -mt-8 relative z-10">
 

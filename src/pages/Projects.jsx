@@ -13,6 +13,7 @@ import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
