@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger } from
 "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Custom icon images
 const ICON_SAVE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/593339f18_save_light_iconcopy.png";
@@ -17,6 +18,7 @@ const ICON_EXPAND = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/
 
 export default function CollapsibleCard({
   title,
+  cardId,
   icon: Icon,
   children,
   defaultOpen = true,
@@ -28,7 +30,9 @@ export default function CollapsibleCard({
   isPinned,
   backgroundImage,
   onPopout,
-  forceOpen
+  forceOpen,
+  isHidden,
+  onToggleHide
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -44,6 +48,41 @@ export default function CollapsibleCard({
     rose: "bg-rose-100 text-rose-700",
     blue: "bg-blue-100 text-blue-700"
   };
+
+  // If hidden, render mini card (clickable to unhide)
+  if (isHidden) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={onToggleHide}
+              className={cn(
+                "relative w-16 h-16 rounded-xl border border-slate-200/60 shadow-sm overflow-hidden",
+                "flex items-center justify-center cursor-pointer",
+                "hover:scale-105 hover:shadow-md transition-all duration-200",
+                "bg-white/80 backdrop-blur-sm"
+              )}
+            >
+              {backgroundImage && (
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-20"
+                  style={{ backgroundImage: `url(${backgroundImage})` }}
+                />
+              )}
+              <div className="relative z-10 flex flex-col items-center gap-1">
+                {Icon && <Icon className="w-5 h-5 text-slate-600" />}
+              </div>
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="top">
+            <p className="text-xs font-medium">{title}</p>
+            <p className="text-xs text-slate-400">Click to unhide</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
 
   return (
     <div className={cn(
@@ -95,6 +134,20 @@ export default function CollapsibleCard({
           }
         </div>
         <div className="flex items-center gap-1">
+          {onToggleHide && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 hover:bg-slate-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleHide();
+              }}
+              title="Hide card"
+            >
+              <EyeOff className="w-4 h-4 text-slate-400 hover:text-slate-600" />
+            </Button>
+          )}
           {onPin &&
           <Button
             variant="ghost"
