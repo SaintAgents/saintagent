@@ -103,6 +103,9 @@ export default function CommandDeck() {
   const [leaderChannelPopupOpen, setLeaderChannelPopupOpen] = useState(false);
   const [projectsPopupOpen, setProjectsPopupOpen] = useState(false);
   const [dailyOpsPopupOpen, setDailyOpsPopupOpen] = useState(false);
+  const [challengesPopupOpen, setChallengesPopupOpen] = useState(false);
+  const [collaboratorsPopupOpen, setCollaboratorsPopupOpen] = useState(false);
+  const [aiDiscoverPopupOpen, setAiDiscoverPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
@@ -1018,7 +1021,7 @@ export default function CommandDeck() {
               <QuickStartChecklist />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Challenges & Rewards" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" forceOpen={cardsForceOpen}>
+            <CollapsibleCard title="Challenges & Rewards" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" onPopout={() => setChallengesPopupOpen(true)} forceOpen={cardsForceOpen}>
               <GamificationWidget profile={profile} />
             </CollapsibleCard>
 
@@ -1026,7 +1029,7 @@ export default function CommandDeck() {
               <InboxSignals notifications={notifications} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Potential Collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen}>
+            <CollapsibleCard title="Potential Collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} onPopout={() => setCollaboratorsPopupOpen(true)} forceOpen={cardsForceOpen}>
               <CollaborationSuggestions profile={profile} compact={false} />
             </CollapsibleCard>
 
@@ -1040,7 +1043,7 @@ export default function CommandDeck() {
           </div>
 
           <div className="block space-y-6 mt-6">
-            <CollapsibleCard title="AI Discover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen}>
+            <CollapsibleCard title="AI Discover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen}>
               <AIDiscoverMatches profile={profile} />
             </CollapsibleCard>
 
@@ -1291,6 +1294,9 @@ export default function CommandDeck() {
         {quickActionsPopupOpen && <FloatingPanel title="Quick Actions" onClose={() => setQuickActionsPopupOpen(false)}><div className="grid grid-cols-2 gap-3"><Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}><Calendar className="w-5 h-5" /><span className="text-xs">Book Meeting</span></Button><Button variant="outline" className="bg-violet-100 text-stone-950 rounded-xl h-20 flex-col gap-2" onClick={() => {setQuickCreateType('post');setQuickCreateOpen(true);}}><Plus className="w-5 h-5" /><span className="text-xs">Post Update</span></Button><Button variant="outline" className="bg-violet-100 text-stone-950 rounded-xl h-20 flex-col gap-2" onClick={() => {setQuickCreateType('mission');setQuickCreateOpen(true);}}><Target className="w-5 h-5" /><span className="text-xs">Launch Mission</span></Button><Button variant="outline" className="bg-violet-100 text-neutral-950 rounded-xl h-20 flex-col gap-2" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}><ShoppingBag className="w-5 h-5" /><span className="text-xs">Create Offer</span></Button></div></FloatingPanel>}
         {quickStartPopupOpen && <FloatingPanel title="Quick Start Checklist" onClose={() => setQuickStartPopupOpen(false)}><QuickStartChecklist /></FloatingPanel>}
         {leaderChannelPopupOpen && <FloatingPanel title="144K Leader Channel" onClose={() => setLeaderChannelPopupOpen(false)}><div className="text-center py-6"><div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4"><Radio className="w-8 h-8 text-amber-600" /></div><h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4><p className="text-sm text-slate-500 mb-4">Join the 144,000 Super-Conscious Leaders with special broadcast privileges.</p><Button variant="outline" className="rounded-xl" onClick={() => {window.location.href = createPageUrl('LeaderChannel');}}>{profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}</Button></div></FloatingPanel>}
+        {challengesPopupOpen && <FloatingPanel title="Challenges & Rewards" onClose={() => setChallengesPopupOpen(false)}><GamificationWidget profile={profile} /></FloatingPanel>}
+        {collaboratorsPopupOpen && <FloatingPanel title="Potential Collaborators" onClose={() => setCollaboratorsPopupOpen(false)}><CollaborationSuggestions profile={profile} compact={false} /></FloatingPanel>}
+        {aiDiscoverPopupOpen && <FloatingPanel title="AI Discover" onClose={() => setAiDiscoverPopupOpen(false)}><AIDiscoverMatches profile={profile} /></FloatingPanel>}
 
         {/* Modals */}
         <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
