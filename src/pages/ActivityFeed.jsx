@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User, FileText, Calendar, UserPlus } from 'lucide-react';
+import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User, FileText, Calendar, UserPlus, Share2 } from 'lucide-react';
+import ShareContentModal from '@/components/share/ShareContentModal';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import BackButton from '@/components/hud/BackButton';
@@ -25,21 +26,36 @@ const TYPE_META = {
 };
 
 // Separate component to ensure consistent hook order - no hooks inside, just renders
-function ActivityItem({ ev, onOpen }) {
+function ActivityItem({ ev, onOpen, onShare }) {
   const meta = TYPE_META[ev.type] || { icon: TrendingUp, color: 'bg-slate-100 text-slate-700' };
   const Icon = meta.icon;
   
   return (
     <div
-      className="bg-white dark:bg-[#050505] border border-slate-200 dark:border-[#00ff88]/40 rounded-xl p-4 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all cursor-pointer relative z-10"
-      onClick={() => onOpen(ev)}
+      className="bg-white dark:bg-[#050505] border border-slate-200 dark:border-[#00ff88]/40 rounded-xl p-4 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all relative z-10"
     >
       <div className="flex items-start gap-3">
         <div className={`p-2 rounded-lg ${meta.color} dark:bg-[#00ff88]/20`}><Icon className="w-4 h-4 dark:text-[#00ff88]" /></div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            <div className="font-semibold text-slate-800 dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.5)] truncate">{ev.title}</div>
-            <div className="text-xs text-slate-500 dark:text-[#00d4ff] dark:font-medium">{new Date(ev.created_date).toLocaleString()}</div>
+            <div 
+              className="font-semibold text-slate-800 dark:text-white dark:drop-shadow-[0_0_6px_rgba(0,255,136,0.5)] truncate cursor-pointer hover:text-violet-600"
+              onClick={() => onOpen(ev)}
+            >
+              {ev.title}
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-slate-500 dark:text-[#00d4ff] dark:font-medium">{new Date(ev.created_date).toLocaleString()}</div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-slate-400 hover:text-violet-600 hover:bg-violet-50"
+                onClick={(e) => { e.stopPropagation(); onShare(ev); }}
+                title="Share"
+              >
+                <Share2 className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
           {ev.description && (
             <div className="text-sm text-slate-600 dark:text-slate-200 mt-0.5 line-clamp-2">{ev.description}</div>
@@ -67,6 +83,7 @@ function ActivityItem({ ev, onOpen }) {
 export default function ActivityFeed() {
   const [filters, setFilters] = useState({ listings: true, missions: true, testimonials: true, reputation: true, posts: true, meetings: true, follows: true, events: true });
   const [scope, setScope] = useState('me'); // 'me', 'friends', or 'everyone'
+  const [shareModal, setShareModal] = useState({ open: false, content: null });
 
   const activeTypes = useMemo(() => Object.entries(filters).filter(([,v]) => v).map(([k]) => k), [filters]);
 
@@ -209,11 +226,30 @@ export default function ActivityFeed() {
             </div>
           ) : (
             items.map((ev) => (
-              <ActivityItem key={ev.id} ev={ev} onOpen={handleOpen} />
+              <ActivityItem 
+                key={ev.id} 
+                ev={ev} 
+                onOpen={handleOpen} 
+                onShare={(item) => setShareModal({ 
+                  open: true, 
+                  content: { 
+                    title: item.title, 
+                    description: item.description, 
+                    type: item.type 
+                  } 
+                })}
+              />
             ))
           )}
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+
+          {/* Share Modal */}
+          <ShareContentModal
+          open={shareModal.open}
+          onClose={() => setShareModal({ open: false, content: null })}
+          content={shareModal.content}
+          />
+          </div>
+          </div>
+          );
+          }
