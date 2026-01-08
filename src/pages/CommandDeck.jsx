@@ -619,12 +619,12 @@ export default function CommandDeck() {
                 </div>
                 
                 {/* Gauge Logo with Trust Score ring around it */}
-                <div className="relative mt-4 flex flex-col items-center">
-                  <div className="relative" style={{ width: '180px', height: '180px' }}>
-                    {/* Trust Score circular ring - matches gauge edge */}
-                    <svg className="absolute inset-0 w-[180px] h-[180px] transform -rotate-90" viewBox="0 0 180 180">
-                      <circle cx="90" cy="90" r="86" stroke="currentColor" strokeWidth="5" fill="none" className="text-slate-300/30 dark:text-slate-600/30" />
-                      <circle cx="90" cy="90" r="86" stroke="url(#trustGradient)" strokeWidth="5" fill="none" strokeDasharray={`${2 * Math.PI * 86}`} strokeDashoffset={`${2 * Math.PI * 86 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                <div className="relative mt-8 flex flex-col items-center">
+                  <div className="relative" style={{ width: '160px', height: '160px' }}>
+                    {/* Trust Score circular ring - tighter around gauge */}
+                    <svg className="absolute inset-0 w-[160px] h-[160px] transform -rotate-90" viewBox="0 0 160 160">
+                      <circle cx="80" cy="80" r="76" stroke="currentColor" strokeWidth="5" fill="none" className="text-slate-300/30 dark:text-slate-600/30" />
+                      <circle cx="80" cy="80" r="76" stroke="url(#trustGradient)" strokeWidth="5" fill="none" strokeDasharray={`${2 * Math.PI * 76}`} strokeDashoffset={`${2 * Math.PI * 76 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
                       <defs>
                         <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="#10b981" />
@@ -637,7 +637,7 @@ export default function CommandDeck() {
                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                       alt="Command Deck"
                       className="absolute inset-0 object-contain drop-shadow-lg border-0"
-                      style={{ width: '180px', height: '180px', border: 'none', boxShadow: 'none', background: 'transparent' }}
+                      style={{ width: '160px', height: '160px', border: 'none', boxShadow: 'none', background: 'transparent' }}
                       data-no-filter="true"
                       data-keep-round="true" />
                   </div>
