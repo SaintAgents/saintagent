@@ -19,6 +19,7 @@ import {
 import TeamCard from '@/components/teams/TeamCard';
 import CreateTeamModal from '@/components/teams/CreateTeamModal';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 import HelpHint from '@/components/hud/HelpHint';
 
 export default function Teams() {
@@ -91,6 +92,9 @@ export default function Teams() {
         </div>
         <div className="absolute top-4 left-4">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+        <div className="absolute top-4 right-4">
+          <ForwardButton currentPage="Teams" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 

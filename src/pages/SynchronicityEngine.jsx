@@ -30,6 +30,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 const CATEGORY_CONFIG = {
   numbers: { label: 'Numbers', icon: Hash, color: 'bg-violet-500/20 text-violet-400 border-violet-500/30' },
@@ -299,13 +300,16 @@ export default function SynchronicityEngine() {
                 Synchronicity Engine
               </h1>
             </div>
-            <Button 
-              onClick={() => setSubmitOpen(true)}
-              className="bg-violet-600 hover:bg-violet-500 text-white"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Share Synchronicity
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={() => setSubmitOpen(true)}
+                className="bg-violet-600 hover:bg-violet-500 text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Share Synchronicity
+              </Button>
+              <ForwardButton currentPage="SynchronicityEngine" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+            </div>
           </div>
 
           {/* Filters */}

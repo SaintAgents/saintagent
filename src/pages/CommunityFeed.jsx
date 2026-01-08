@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import MiniProfile from '@/components/profile/MiniProfile';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function CommunityFeed() {
   const [newPostText, setNewPostText] = useState('');
@@ -247,6 +248,7 @@ export default function CommunityFeed() {
               Community Feed
             </h1>
           </div>
+          <ForwardButton currentPage="CommunityFeed" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 
