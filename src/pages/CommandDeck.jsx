@@ -605,7 +605,7 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
-              <div className="relative shrink-0 flex flex-col items-center gap-3" data-user-id={profile?.user_id}>
+              <div className="relative shrink-0 flex flex-col items-center" data-user-id={profile?.user_id}>
                 <RankedAvatar
                   src={profile?.avatar_url}
                   name={profile?.display_name}
@@ -615,14 +615,43 @@ export default function CommandDeck() {
                   rpPoints={rpPoints}
                   userId={profile?.user_id}
                   status={profile?.status || 'offline'} />
-                <img
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
-                  alt="Command Deck"
-                  className="object-contain drop-shadow-lg border-0"
-                  style={{ width: '160px', height: '160px', border: 'none', boxShadow: 'none', background: 'transparent' }}
-                  data-no-filter="true"
-                  data-keep-round="true" />
-
+                
+                {/* Gauge Logo with Trust Score integrated */}
+                <div className="relative mt-4 flex flex-col items-center">
+                  <img
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
+                    alt="Command Deck"
+                    className="object-contain drop-shadow-lg border-0"
+                    style={{ width: '180px', height: '180px', border: 'none', boxShadow: 'none', background: 'transparent' }}
+                    data-no-filter="true"
+                    data-keep-round="true" />
+                  
+                  {/* Trust Score beneath the gauge */}
+                  <div className="flex items-center gap-2 mt-2 p-2 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 border border-emerald-200 dark:border-emerald-700/50">
+                    <div className="relative w-10 h-10">
+                      <svg className="w-10 h-10 transform -rotate-90">
+                        <circle cx="20" cy="20" r="16" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-200 dark:text-slate-700" />
+                        <circle cx="20" cy="20" r="16" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 16}`} strokeDashoffset={`${2 * Math.PI * 16 * (1 - (profile?.trust_score || 0) / 100)}`} className="text-emerald-500 transition-all duration-500" strokeLinecap="round" />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">{Math.round(profile?.trust_score || 0)}</span>
+                      </div>
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[10px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        Trust Score
+                        <HelpHint
+                          content={
+                          <div>
+                              <div className="text-slate-400 mb-1 font-semibold">What is Trust Score?</div>
+                              <div className="text-zinc-500">0-100 indicator influenced by testimonials, completed meetings, positive interactions, and policy adherence.</div>
+                            </div>
+                          } />
+                      </p>
+                      <p className="text-lg font-bold text-emerald-700 dark:text-emerald-300">{profile?.trust_score || 0}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="flex-1">
