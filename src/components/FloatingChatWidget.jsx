@@ -28,35 +28,46 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
+  // Use refs to avoid stale closures
+  const positionRef = useRef(position);
+  const sizeRef = useRef(size);
+  positionRef.current = position;
+  sizeRef.current = size;
+
   // Drag handlers
   const onDragStart = (e) => {
     e.preventDefault();
-    dragRef.current = { isDragging: true, startX: e.clientX, startY: e.clientY, startPosX: position.x, startPosY: position.y };
-    document.addEventListener('mousemove', onDragMove);
-    document.addEventListener('mouseup', onDragEnd);
-  };
-  const onDragMove = (e) => {
-    if (!dragRef.current.isDragging) return;
-    const dx = e.clientX - dragRef.current.startX;
-    const dy = e.clientY - dragRef.current.startY;
-    setPosition({
-      x: Math.max(0, Math.min(window.innerWidth - size.width, dragRef.current.startPosX + dx)),
-      y: Math.max(0, Math.min(window.innerHeight - 50, dragRef.current.startPosY + dy))
-    });
-  };
-  const onDragEnd = () => {
-    dragRef.current.isDragging = false;
-    document.removeEventListener('mousemove', onDragMove);
-    document.removeEventListener('mouseup', onDragEnd);
-    // Check if should dock to side
-    const DOCK_THRESHOLD = 50;
-    if (position.x < DOCK_THRESHOLD) {
-      setDockedSide('left');
-    } else if (position.x > window.innerWidth - size.width - DOCK_THRESHOLD) {
-      setDockedSide('right');
-    } else {
-      setDockedSide(null);
-    }
+    dragRef.current = { isDragging: true, startX: e.clientX, startY: e.clientY, startPosX: positionRef.current.x, startPosY: positionRef.current.y };
+    setDockedSide(null); // Undock when starting to drag
+    
+    const handleMove = (moveE) => {
+      if (!dragRef.current.isDragging) return;
+      const dx = moveE.clientX - dragRef.current.startX;
+      const dy = moveE.clientY - dragRef.current.startY;
+      const newX = Math.max(0, Math.min(window.innerWidth - sizeRef.current.width, dragRef.current.startPosX + dx));
+      const newY = Math.max(0, Math.min(window.innerHeight - 50, dragRef.current.startPosY + dy));
+      setPosition({ x: newX, y: newY });
+      positionRef.current = { x: newX, y: newY };
+    };
+    
+    const handleUp = () => {
+      dragRef.current.isDragging = false;
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleUp);
+      // Check if should dock to side
+      const DOCK_THRESHOLD = 50;
+      const currentX = positionRef.current.x;
+      if (currentX < DOCK_THRESHOLD) {
+        setDockedSide('left');
+      } else if (currentX > window.innerWidth - sizeRef.current.width - DOCK_THRESHOLD) {
+        setDockedSide('right');
+      } else {
+        setDockedSide(null);
+      }
+    };
+    
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleUp);
   };
 
   // Resize handlers
@@ -99,14 +110,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
     document.removeEventListener('mouseup', onResizeEnd);
   };
 
-  useEffect(() => {
-    return () => {
-      document.removeEventListener('mousemove', onDragMove);
-      document.removeEventListener('mouseup', onDragEnd);
-      document.removeEventListener('mousemove', onResizeMove);
-      document.removeEventListener('mouseup', onResizeEnd);
-    };
-  }, []);
+  // Cleanup handled inside handlers now
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],

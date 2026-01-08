@@ -168,58 +168,60 @@ export default function HelpSupportAgent() {
     }
   }, [position, dockedSide]);
   
-  const onDragMove = (e) => {
-    if (!isDraggingRef.current) return;
-    const dx = e.clientX - dragRef.current.startX;
-    const dy = e.clientY - dragRef.current.startY;
-    const newX = Math.max(0, Math.min(window.innerWidth - 420, dragRef.current.startPosX + dx));
-    const newY = Math.max(0, Math.min(window.innerHeight - 100, dragRef.current.startPosY + dy));
-    setPosition({ x: newX, y: newY });
-  };
-  
-  const onDragEnd = () => {
-    isDraggingRef.current = false;
-    document.removeEventListener('mousemove', onDragMove);
-    document.removeEventListener('mouseup', onDragEnd);
-    // Check if should dock to side
-    const DOCK_THRESHOLD = 50;
-    const panelWidth = 416; // w-[26rem]
-    if (position.x !== null) {
-      if (position.x < DOCK_THRESHOLD) {
-        setDockedSide('left');
-      } else if (position.x > window.innerWidth - panelWidth - DOCK_THRESHOLD) {
-        setDockedSide('right');
-      } else {
-        setDockedSide(null);
-      }
-    }
-  };
+  // Use refs for drag handlers to avoid stale closures
+  const positionRef = useRef(position);
+  positionRef.current = position;
   
   const onDragStart = (e) => {
     e.preventDefault();
     isDraggingRef.current = true;
     const rect = e.currentTarget.closest('[data-help-panel]')?.getBoundingClientRect();
+    const startX = positionRef.current.x ?? (rect?.left ?? window.innerWidth - 440);
+    const startY = positionRef.current.y ?? (rect?.top ?? window.innerHeight - 500);
     dragRef.current = {
       startX: e.clientX,
       startY: e.clientY,
-      startPosX: position.x ?? (rect?.left ?? window.innerWidth - 440),
-      startPosY: position.y ?? (rect?.top ?? window.innerHeight - 500)
+      startPosX: startX,
+      startPosY: startY
     };
     // If position not set, initialize it from current element position
-    if (position.x === null) {
-      setPosition({ x: rect?.left ?? window.innerWidth - 440, y: rect?.top ?? window.innerHeight - 500 });
+    if (positionRef.current.x === null) {
+      setPosition({ x: startX, y: startY });
     }
-    document.addEventListener('mousemove', onDragMove);
-    document.addEventListener('mouseup', onDragEnd);
-  };
-  
-  // Cleanup listeners
-  useEffect(() => {
-    return () => {
-      document.removeEventListener('mousemove', onDragMove);
-      document.removeEventListener('mouseup', onDragEnd);
+    setDockedSide(null); // Undock when starting to drag
+    
+    const handleMove = (moveE) => {
+      if (!isDraggingRef.current) return;
+      const dx = moveE.clientX - dragRef.current.startX;
+      const dy = moveE.clientY - dragRef.current.startY;
+      const newX = Math.max(0, Math.min(window.innerWidth - 420, dragRef.current.startPosX + dx));
+      const newY = Math.max(0, Math.min(window.innerHeight - 100, dragRef.current.startPosY + dy));
+      setPosition({ x: newX, y: newY });
+      positionRef.current = { x: newX, y: newY };
     };
-  }, []);
+    
+    const handleUp = () => {
+      isDraggingRef.current = false;
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleUp);
+      // Check if should dock to side
+      const DOCK_THRESHOLD = 50;
+      const panelWidth = 416;
+      const currentX = positionRef.current.x;
+      if (currentX !== null) {
+        if (currentX < DOCK_THRESHOLD) {
+          setDockedSide('left');
+        } else if (currentX > window.innerWidth - panelWidth - DOCK_THRESHOLD) {
+          setDockedSide('right');
+        } else {
+          setDockedSide(null);
+        }
+      }
+    };
+    
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleUp);
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
