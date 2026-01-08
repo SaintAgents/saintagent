@@ -318,6 +318,19 @@ export default function Sidebar({
     <>
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
+        {/* Nav Header with Popout */}
+        {(!isCollapsed || inPopup) && (
+          <div className="px-3 pt-2 pb-1">
+            <button
+              onClick={() => setNavPopupOpen(true)}
+              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
+              title="Pop out navigation"
+            >
+              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Quick Nav</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            </button>
+          </div>
+        )}
         <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center")}> 
           {(!isCollapsed || inPopup) && (
             <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Navigation</span>
@@ -432,20 +445,6 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* Nav Popout Button */}
-      {(!isCollapsed || inPopup) && (
-        <div className="border-t border-slate-100 px-3 pt-2 pb-1">
-          <button
-            onClick={() => setNavPopupOpen(true)}
-            className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
-            title="Pop out navigation"
-          >
-            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Quick Nav</span>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-          </button>
-        </div>
-      )}
-
       {/* Leaderboard */}
       {(!isCollapsed || inPopup) && (
         <div className="border-t border-slate-100 p-3">
@@ -541,6 +540,23 @@ export default function Sidebar({
         "border-t border-slate-100 p-4 space-y-3",
         (isCollapsed && !inPopup) && "px-2"
       )}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {(!isCollapsed || inPopup) && (
+              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
+            )}
+          </div>
+          {(!isCollapsed || inPopup) && (
+            <button
+              onClick={() => setPresencePopupOpen(true)}
+              className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+              title="Pop out presence section"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            </button>
+          )}
+        </div>
+
         {/* RP & Rank Header */}
         {(!isCollapsed || inPopup) && profile && (
           <div className="flex items-center justify-between px-1 py-1 bg-violet-50 rounded-lg">
@@ -552,30 +568,19 @@ export default function Sidebar({
           </div>
         )}
 
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setPresenceOpen(!presenceOpen)}
-            className={cn("flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50", (isCollapsed && !inPopup) && "justify-center w-full")}
-          >
-            {(!isCollapsed || inPopup) && (
-              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
-            )}
-            {presenceOpen ? (
-              <ChevronUp className="w-4 h-4 text-slate-500" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-slate-500" />
-            )}
-          </button>
+        <button
+          onClick={() => setPresenceOpen(!presenceOpen)}
+          className={cn("w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50", (isCollapsed && !inPopup) && "justify-center")}
+        >
           {(!isCollapsed || inPopup) && (
-            <button
-              onClick={() => setPresencePopupOpen(true)}
-              className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-              title="Pop out presence"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-            </button>
+            <span className="text-xs text-slate-500">Status & DM</span>
           )}
-        </div>
+          {presenceOpen ? (
+            <ChevronUp className="w-4 h-4 text-slate-500" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-slate-500" />
+          )}
+        </button>
 
         {presenceOpen && (
           <>

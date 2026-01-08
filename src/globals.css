@@ -4,6 +4,22 @@
   background-color: #000000 !important;
 }
 
+/* Mini note cards - remove black vertical bars */
+.mini-card,
+[data-mini-card],
+.note-card-mini {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.mini-card::before,
+.mini-card::after,
+[data-mini-card]::before,
+[data-mini-card]::after {
+  display: none !important;
+}
+
 /* Hero image visibility - ensure visible in DARK theme only (no filter) */
 .hero-image,
 img.hero-image,
