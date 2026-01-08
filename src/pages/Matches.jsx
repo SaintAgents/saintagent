@@ -25,6 +25,8 @@ import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
 import HelpHint from '@/components/hud/HelpHint';
 import AIMatchAssistant from '@/components/dating/AIMatchAssistant';
+import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -144,9 +146,7 @@ export default function Matches() {
           </div>
         </div>
         <div className="absolute top-4 left-4">
-          <Button variant="ghost" size="icon" onClick={() => window.history.back()} className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg">
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
         <div className="absolute top-4 right-4 flex items-center gap-2">
           <a
@@ -172,10 +172,10 @@ export default function Matches() {
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
-            </Button>
-            </div>
-            </div>
-            </div>
+          </Button>
+          <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
 
       <div className="max-w-5xl mx-auto p-6 -mt-8 relative z-10">
 
