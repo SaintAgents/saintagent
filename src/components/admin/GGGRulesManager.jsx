@@ -18,6 +18,104 @@ import { Coins, Plus, Edit, Trash2, Zap, Gift } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
+// Rule Card Component (extracted for proper state management)
+function RuleCard({ rule, onUpdate, onToggle, onDelete }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editGgg, setEditGgg] = useState(rule.ggg_amount);
+  
+  const actionInfo = ACTIONS.find(a => a.key === rule.action_type);
+  const actionLabel = actionInfo?.title || rule.action_type;
+  const usdVal = rule.usd_equivalent || (rule.ggg_amount * GGG_TO_USD);
+  
+  const handleSaveEdit = () => {
+    onUpdate({
+      id: rule.id,
+      data: { 
+        ggg_amount: editGgg,
+        usd_equivalent: editGgg * GGG_TO_USD
+      }
+    });
+    setIsEditing(false);
+  };
+  
+  return (
+    <Card>
+      <CardContent className="pt-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-amber-100">
+              <Coins className="w-6 h-6 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-semibold text-slate-900">{actionLabel}</h3>
+                {rule.category && (
+                  <Badge variant="outline" className="text-xs">
+                    {CATEGORY_LABELS[rule.category] || rule.category}
+                  </Badge>
+                )}
+                {rule.is_active ? (
+                  <Badge className="bg-emerald-100 text-emerald-700">Active</Badge>
+                ) : (
+                  <Badge variant="outline">Inactive</Badge>
+                )}
+              </div>
+              
+              {isEditing ? (
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <Input
+                    type="number"
+                    step="0.0000001"
+                    value={editGgg}
+                    onChange={(e) => setEditGgg(parseFloat(e.target.value) || 0)}
+                    className="w-40 font-mono text-sm"
+                  />
+                  <span className="text-xs text-emerald-600">
+                    ≈ ${(editGgg * GGG_TO_USD).toFixed(2)}
+                  </span>
+                  <Button size="sm" onClick={handleSaveEdit}>Save</Button>
+                  <Button size="sm" variant="ghost" onClick={() => { setIsEditing(false); setEditGgg(rule.ggg_amount); }}>Cancel</Button>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 mt-1">
+                  Awards <span className="font-bold font-mono text-amber-600">{formatGGGSmart(rule.ggg_amount)} GGG</span>
+                  <span className="text-emerald-600 ml-2">(USD {usdVal.toFixed(2)})</span>
+                </p>
+              )}
+              
+              {rule.description && (
+                <p className="text-xs text-slate-400 mt-1">{rule.description}</p>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => { setIsEditing(!isEditing); setEditGgg(rule.ggg_amount); }}
+              className="text-slate-500 hover:text-slate-700"
+            >
+              <Edit className="w-4 h-4" />
+            </Button>
+            <Switch
+              checked={rule.is_active}
+              onCheckedChange={() => onToggle(rule)}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete(rule.id)}
+              className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 // Category labels
 const CATEGORY_LABELS = {
   engagement: 'Micro-Engagement',
@@ -362,101 +460,15 @@ export default function GGGRulesManager() {
 
       {/* Existing Rules */}
       <div className="grid gap-4">
-        {rules.map((rule) => {
-          const actionInfo = ACTION_TYPES.find(t => t.value === rule.action_type);
-          const actionLabel = actionInfo?.label || rule.action_type;
-          const usdVal = rule.usd_equivalent || (rule.ggg_amount * GGG_TO_USD);
-          const [isEditing, setIsEditing] = React.useState(false);
-          const [editGgg, setEditGgg] = React.useState(rule.ggg_amount);
-          
-          const handleSaveEdit = () => {
-            updateRuleMutation.mutate({
-              id: rule.id,
-              data: { 
-                ggg_amount: editGgg,
-                usd_equivalent: editGgg * GGG_TO_USD
-              }
-            });
-            setIsEditing(false);
-          };
-          
-          return (
-            <Card key={rule.id}>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-amber-100">
-                      <Coins className="w-6 h-6 text-amber-600" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-semibold text-slate-900">{actionLabel}</h3>
-                        {rule.category && (
-                          <Badge variant="outline" className="text-xs">
-                            {CATEGORY_LABELS[rule.category] || rule.category}
-                          </Badge>
-                        )}
-                        {rule.is_active ? (
-                          <Badge className="bg-emerald-100 text-emerald-700">Active</Badge>
-                        ) : (
-                          <Badge variant="outline">Inactive</Badge>
-                        )}
-                      </div>
-                      
-                      {isEditing ? (
-                        <div className="flex items-center gap-2 mt-2">
-                          <Input
-                            type="number"
-                            step="0.0000001"
-                            value={editGgg}
-                            onChange={(e) => setEditGgg(parseFloat(e.target.value) || 0)}
-                            className="w-40 font-mono text-sm"
-                          />
-                          <span className="text-xs text-emerald-600">
-                            ≈ ${(editGgg * GGG_TO_USD).toFixed(2)}
-                          </span>
-                          <Button size="sm" onClick={handleSaveEdit}>Save</Button>
-                          <Button size="sm" variant="ghost" onClick={() => { setIsEditing(false); setEditGgg(rule.ggg_amount); }}>Cancel</Button>
-                        </div>
-                      ) : (
-                        <p className="text-sm text-slate-500 mt-1">
-                          Awards <span className="font-bold font-mono text-amber-600">{formatGGGSmart(rule.ggg_amount)} GGG</span>
-                          <span className="text-emerald-600 ml-2">(USD {usdVal.toFixed(2)})</span>
-                        </p>
-                      )}
-                      
-                      {rule.description && (
-                        <p className="text-xs text-slate-400 mt-1">{rule.description}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => { setIsEditing(!isEditing); setEditGgg(rule.ggg_amount); }}
-                      className="text-slate-500 hover:text-slate-700"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Switch
-                      checked={rule.is_active}
-                      onCheckedChange={() => handleToggleActive(rule)}
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(rule.id)}
-                      className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {rules.map((rule) => (
+          <RuleCard 
+            key={rule.id} 
+            rule={rule} 
+            onUpdate={updateRuleMutation.mutate}
+            onToggle={handleToggleActive}
+            onDelete={handleDelete}
+          />
+        ))}
 
         {rules.length === 0 && !isCreating && (
           <div className="text-center py-12">
