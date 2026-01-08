@@ -606,6 +606,7 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
               <div className="relative shrink-0 flex flex-col items-center" data-user-id={profile?.user_id}>
+                {/* Avatar */}
                 <div className="relative z-20">
                   <RankedAvatar
                     src={profile?.avatar_url}
@@ -618,27 +619,30 @@ export default function CommandDeck() {
                     status={profile?.status || 'offline'} />
                 </div>
                 
-                {/* Trust Score ring - positioned to touch top of gauge image */}
-                <div className="relative -mt-2 flex flex-col items-center">
-                  {/* Small trust score ring bridging avatar and gauge */}
-                  <div className="relative" style={{ width: '48px', height: '48px' }}>
-                    <svg className="absolute inset-0 w-[48px] h-[48px] transform -rotate-90" viewBox="0 0 48 48">
-                      <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-300/30 dark:text-slate-600/30" />
-                      <circle cx="24" cy="24" r="20" stroke="url(#trustGradient)" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 20}`} strokeDashoffset={`${2 * Math.PI * 20 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                {/* Trust Score circular gauge - positioned between avatar and gauge image */}
+                <div className="relative mt-6 mb-2 flex flex-col items-center">
+                  <div className="relative" style={{ width: '56px', height: '56px' }}>
+                    <svg className="absolute inset-0 w-[56px] h-[56px] transform -rotate-90" viewBox="0 0 56 56">
+                      {/* Background circle */}
+                      <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-300/40 dark:text-slate-600/40" />
+                      {/* Progress circle - shows percentage filled */}
+                      <circle cx="28" cy="28" r="24" stroke="url(#trustGradientCmd)" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 24}`} strokeDashoffset={`${2 * Math.PI * 24 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
                       <defs>
-                        <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="#10b981" />
                           <stop offset="50%" stopColor="#14b8a6" />
                           <stop offset="100%" stopColor="#06b6d4" />
                         </linearGradient>
                       </defs>
                     </svg>
+                    {/* Trust score value in center */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
+                      <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
                     </div>
                   </div>
-                  <p className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5 mt-1">
-                    Trust
+                  {/* Trust Score label */}
+                  <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5 mt-1">
+                    Trust Score
                     <HelpHint
                       content={
                       <div>
@@ -649,8 +653,8 @@ export default function CommandDeck() {
                   </p>
                 </div>
                 
-                {/* Gauge Logo */}
-                <div className="relative -mt-3 flex flex-col items-center">
+                {/* Gauge Logo Image */}
+                <div className="relative flex flex-col items-center">
                   <img
                     src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                     alt="Command Deck"
