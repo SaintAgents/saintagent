@@ -243,8 +243,8 @@ export default function GGGRulesManager() {
           >
             {seedRulesMutation.isPending ? (
               <>
-                <span className="animate-spin">⏳</span>
-                Seeding...
+                <div className="w-4 h-4 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+                Seeding {ACTIONS.length} rules...
               </>
             ) : (
               <>
