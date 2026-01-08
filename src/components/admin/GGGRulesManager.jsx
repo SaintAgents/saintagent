@@ -19,7 +19,7 @@ import { Slider } from "@/components/ui/slider";
 import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
 // Rule Card Component (extracted for proper state management)
-function RuleCard({ rule, onUpdate, onToggle, onDelete }) {
+function RuleCard({ rule, onUpdate, onToggle, onDelete, onLockToggle }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editGgg, setEditGgg] = useState(rule.ggg_amount);
   
@@ -39,16 +39,21 @@ function RuleCard({ rule, onUpdate, onToggle, onDelete }) {
   };
   
   return (
-    <Card>
+    <Card className={rule.is_locked ? "border-amber-300 bg-amber-50/30" : ""}>
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-amber-100">
+            <div className={`p-3 rounded-xl ${rule.is_locked ? 'bg-amber-200' : 'bg-amber-100'}`}>
               <Coins className="w-6 h-6 text-amber-600" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-semibold text-slate-900">{actionLabel}</h3>
+                {rule.is_locked && (
+                  <Badge className="bg-amber-500 text-white text-xs">
+                    <Lock className="w-3 h-3 mr-1" /> Locked
+                  </Badge>
+                )}
                 {rule.category && (
                   <Badge variant="outline" className="text-xs">
                     {CATEGORY_LABELS[rule.category] || rule.category}
@@ -91,6 +96,15 @@ function RuleCard({ rule, onUpdate, onToggle, onDelete }) {
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
+              size="icon"
+              onClick={() => onLockToggle(rule)}
+              className={rule.is_locked ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50" : "text-slate-400 hover:text-slate-600"}
+              title={rule.is_locked ? "Unlock (allow re-seed to reset)" : "Lock (preserve during re-seed)"}
+            >
+              {rule.is_locked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+            </Button>
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => { setIsEditing(!isEditing); setEditGgg(rule.ggg_amount); }}
               className="bg-slate-900 text-white hover:bg-slate-800 font-bold"
@@ -106,6 +120,7 @@ function RuleCard({ rule, onUpdate, onToggle, onDelete }) {
               size="icon"
               onClick={() => onDelete(rule.id)}
               className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+              disabled={rule.is_locked}
             >
               <Trash2 className="w-4 h-4" />
             </Button>
