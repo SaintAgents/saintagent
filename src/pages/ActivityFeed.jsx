@@ -58,7 +58,7 @@ function ActivityItem({ ev, onOpen }) {
 
 export default function ActivityFeed() {
   const [filters, setFilters] = useState({ listings: true, missions: true, testimonials: true, reputation: true });
-  const [scope, setScope] = useState('everyone'); // 'friends' or 'everyone'
+  const [scope, setScope] = useState('me'); // 'me', 'friends', or 'everyone'
 
   const activeTypes = useMemo(() => Object.entries(filters).filter(([,v]) => v).map(([k]) => k), [filters]);
 
