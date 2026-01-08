@@ -1,9 +1,8 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { X, PanelRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
-export default function FloatingPanel({ title, children, onClose }) {
+export default function FloatingPanel({ title, children, onClose, onTossToSidePanel, cardId }) {
   const containerRef = React.useRef(null);
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const dragOffsetRef = React.useRef({ x: 0, y: 0 });
@@ -79,14 +78,31 @@ export default function FloatingPanel({ title, children, onClose }) {
         className="h-10 w-full border-b bg-slate-50/80 backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center justify-between px-3 text-sm font-medium text-slate-600"
       >
         <span className="truncate pr-2">{title}</span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 text-slate-600 hover:bg-slate-100"
-          onClick={onClose}
-        >
-          <X className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-1">
+          {onTossToSidePanel && cardId && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-slate-600 hover:bg-violet-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTossToSidePanel(cardId, title);
+                onClose();
+              }}
+              title="Send to side panel"
+            >
+              <PanelRight className="w-4 h-4" />
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 text-slate-600 hover:bg-slate-100"
+            onClick={onClose}
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
       <div className="h-[calc(100%-2.5rem)] overflow-auto p-4">
         {children}
