@@ -49,20 +49,21 @@ export default function CollapsibleCard({
     blue: "bg-blue-100 text-blue-700"
   };
 
-  // If hidden, render mini card (clickable to unhide)
+  // If hidden, render mini card (clickable to unhide) - inline-block to prevent spanning
   if (isHidden) {
     return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div
-              className={cn(
-                "relative w-16 h-16 rounded-xl border border-slate-200/60 shadow-sm overflow-hidden",
-                "flex items-center justify-center cursor-pointer group",
-                "hover:scale-105 hover:shadow-md transition-all duration-200",
-                "bg-white/80 backdrop-blur-sm"
-              )}
-            >
+      <div className="inline-block">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className={cn(
+                  "relative w-16 h-16 rounded-xl border border-slate-200/60 shadow-sm overflow-hidden",
+                  "flex items-center justify-center cursor-pointer group",
+                  "hover:scale-105 hover:shadow-md transition-all duration-200",
+                  "bg-white/80 backdrop-blur-sm"
+                )}
+              >
               {backgroundImage && (
                 <div
                   className="absolute inset-0 bg-cover bg-center opacity-20"
@@ -97,6 +98,7 @@ export default function CollapsibleCard({
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
+      </div>
     );
   }
 
