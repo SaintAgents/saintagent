@@ -80,7 +80,7 @@ export default function CollapsibleCard({
     const screenWidth = window.innerWidth;
     // If dropped in right 150px zone, toss to side panel
     if (e.clientX > screenWidth - 150 && onTossToSidePanel) {
-      onTossToSidePanel(cardId, title, Icon);
+      onTossToSidePanel(cardId, title);
     }
     
     setIsDragging(false);
@@ -200,7 +200,7 @@ export default function CollapsibleCard({
               className="h-7 w-7 -ml-1 hover:bg-violet-100"
               onClick={(e) => {
                 e.stopPropagation();
-                onTossToSidePanel(cardId, title, Icon);
+                onTossToSidePanel(cardId, title);
               }}
               title="Send to side panel"
             >
