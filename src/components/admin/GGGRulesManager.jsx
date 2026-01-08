@@ -239,10 +239,19 @@ export default function GGGRulesManager() {
             onClick={handleSeedAllRules}
             variant="outline"
             className="gap-2"
-            disabled={rules.length > 0}
+            disabled={rules.length > 0 || seedRulesMutation.isPending}
           >
-            <Zap className="w-4 h-4" />
-            Seed All Rules
+            {seedRulesMutation.isPending ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Seeding...
+              </>
+            ) : (
+              <>
+                <Zap className="w-4 h-4" />
+                Seed All Rules
+              </>
+            )}
           </Button>
           <Button
             onClick={() => setIsCreating(!isCreating)}
