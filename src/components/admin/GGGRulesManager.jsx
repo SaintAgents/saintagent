@@ -205,6 +205,22 @@ export default function GGGRulesManager() {
     }
   };
 
+  const handleSeedAllRules = async () => {
+    if (!confirm('This will create all default GGG rules from the matrix. Continue?')) return;
+    
+    for (const action of ACTIONS) {
+      await base44.entities.GGGRewardRule.create({
+        action_type: action.key,
+        ggg_amount: action.base,
+        usd_equivalent: action.usd || (action.base * GGG_TO_USD),
+        category: action.category,
+        description: action.definition,
+        is_active: true
+      });
+    }
+    queryClient.invalidateQueries({ queryKey: ['gggRules'] });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
