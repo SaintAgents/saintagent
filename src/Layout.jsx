@@ -1192,6 +1192,19 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
           [data-theme='hacker'] [class*='shadow'] { box-shadow: 0 0 8px #00ff00 !important; }
 
+          /* Remove border from gauge/control panel image in hacker mode */
+          [data-theme='hacker'] img[alt="Command Deck"],
+          [data-theme='dark'] img[alt="Command Deck"] {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+          }
+          [data-theme='hacker'] img[alt="Command Deck"] + *,
+          [data-theme='hacker'] img[alt="Command Deck"]:not([class*='border']),
+          [data-theme='dark'] img[alt="Command Deck"]:not([class*='border']) {
+            border: none !important;
+          }
+
           /* Hacker theme - square edges on cards but preserve circular elements */
           html[data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]),
           html[data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]),
