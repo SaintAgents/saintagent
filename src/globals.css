@@ -20,6 +20,42 @@
   display: none !important;
 }
 
+/* Light theme checkbox fixes - ensure checkmarks are visible */
+[data-theme='light'] button[role="checkbox"],
+[data-theme='light'] [data-state="checked"] {
+  border-color: #7c3aed !important;
+  background-color: #7c3aed !important;
+}
+
+[data-theme='light'] button[role="checkbox"] svg {
+  color: white !important;
+  stroke: white !important;
+}
+
+/* Badge text visibility in light theme */
+[data-theme='light'] .bg-emerald-100,
+[data-theme='light'] .bg-violet-100,
+[data-theme='light'] .bg-amber-100,
+[data-theme='light'] .bg-blue-100,
+[data-theme='light'] .bg-pink-100,
+[data-theme='light'] .bg-cyan-100,
+[data-theme='light'] .bg-indigo-100,
+[data-theme='light'] .bg-orange-100 {
+  color: inherit !important;
+}
+
+[data-theme='light'] .text-emerald-700,
+[data-theme='light'] .text-violet-700,
+[data-theme='light'] .text-amber-700,
+[data-theme='light'] .text-blue-700,
+[data-theme='light'] .text-pink-700,
+[data-theme='light'] .text-cyan-700,
+[data-theme='light'] .text-indigo-700,
+[data-theme='light'] .text-orange-700 {
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
 /* Hero image visibility - ensure visible in DARK theme only (no filter) */
 .hero-image,
 img.hero-image,

@@ -162,7 +162,7 @@ export default function ActivityFeed() {
         </Tabs>
 
         {/* Type Filters */}
-        <Card className="mb-6">
+        <Card className="mb-6 dark:bg-[#050505] dark:border-[#00ff88]/40">
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center gap-4">
               {Object.entries(TYPE_META).map(([key, meta]) => (
@@ -170,8 +170,9 @@ export default function ActivityFeed() {
                   <Checkbox
                     checked={!!filters[key]}
                     onCheckedChange={(v) => setFilters((prev) => ({ ...prev, [key]: !!v }))}
+                    className="data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
                   />
-                  <Badge className={`${meta.color}`}>{meta.label}</Badge>
+                  <Badge className={`${meta.color} dark:bg-[#00ff88]/20 dark:text-[#00ff88] dark:border-[#00ff88]/40`}>{meta.label}</Badge>
                 </label>
               ))}
             </div>
