@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart } from 'lucide-react';
+import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import BackButton from '@/components/hud/BackButton';
