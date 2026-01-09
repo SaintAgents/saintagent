@@ -1310,10 +1310,15 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] img[data-no-filter="true"],
           [data-theme='hacker'] .gauge-image,
           [data-theme='hacker'] img.gauge-image,
-          [data-theme='hacker'] img[data-no-filter="true"].gauge-image {
+          [data-theme='hacker'] img[data-no-filter="true"].gauge-image,
+          html[data-theme='hacker'] img[alt="Trust Gauge"],
+          [data-theme='hacker'] img[alt="Trust Gauge"] {
             filter: none !important;
             -webkit-filter: none !important;
             opacity: 1 !important;
+            display: block !important;
+            visibility: visible !important;
+            mix-blend-mode: normal !important;
           }
 
           /* Hacker theme - brighter text, no fading */
