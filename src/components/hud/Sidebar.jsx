@@ -850,7 +850,11 @@ export default function Sidebar({
             <TooltipProvider delayDuration={200}>
             <div className="space-y-2">
               {resolvedLeaders.map((leader, index) => (
-                <div key={leader.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                <button
+                  key={leader.id}
+                  className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors"
+                  onClick={() => document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: leader.user_id } }))}
+                >
                   <div className="relative">
                     <Avatar className="w-9 h-9 cursor-pointer" data-user-id={leader.user_id}>
                       <AvatarImage src={leader.avatar_url} />
@@ -877,7 +881,7 @@ export default function Sidebar({
                   {leader.leader_tier === 'verified144k' && (
                     <Crown className="w-4 h-4 text-amber-500 shrink-0" />
                   )}
-                </div>
+                </button>
               ))}
             </div>
             </TooltipProvider>
