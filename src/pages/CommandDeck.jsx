@@ -803,6 +803,10 @@ export default function CommandDeck() {
                         style={{ border: 'none', boxShadow: 'none', background: 'transparent', filter: 'none', WebkitFilter: 'none' }}
                         data-no-filter="true"
                         data-keep-round="true" />
+                      {/* Trust score number centered in gauge */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span className="text-3xl font-bold text-emerald-400 dark:text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]">{profile?.trust_score || 0}</span>
+                      </div>
                       {/* Cyan trust ring - nearly touching gauge edge */}
                       <svg 
                         className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
@@ -821,7 +825,6 @@ export default function CommandDeck() {
                     </div>
                     {/* Trust Score label - moved up to nearly touch gauge */}
                     <div className="flex items-center gap-1.5" style={{ marginTop: '-12px' }}>
-                      <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{profile?.trust_score || 0}</span>
                       <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
                         Trust
                         <HelpHint
