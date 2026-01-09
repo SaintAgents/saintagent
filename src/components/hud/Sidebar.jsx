@@ -370,7 +370,8 @@ export default function Sidebar({
                       isActive 
                         ? "bg-violet-100 text-violet-700" 
                         : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                      isLocked && "opacity-60 cursor-not-allowed"
+                      isLocked && "opacity-60 cursor-not-allowed",
+                      isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center"
                     )}
                   >
                     <item.icon className={cn(
