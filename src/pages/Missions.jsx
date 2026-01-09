@@ -34,7 +34,8 @@ import {
   TrendingUp,
   Zap,
   Clock,
-  X
+  X,
+  Wand2
 } from "lucide-react";
 
 import MissionCard from '@/components/hud/MissionCard';
