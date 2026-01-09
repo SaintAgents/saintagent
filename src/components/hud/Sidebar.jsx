@@ -583,19 +583,7 @@ export default function Sidebar({
           </div>
         )}
 
-        <button
-          onClick={() => setPresenceOpen(!presenceOpen)}
-          className={cn("w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50", (isCollapsed && !inPopup) && "justify-center")}
-        >
-          {(!isCollapsed || inPopup) && (
-            <span className="text-xs text-slate-500">Status & DM</span>
-          )}
-          {presenceOpen ? (
-            <ChevronUp className="w-4 h-4 text-slate-500" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-slate-500" />
-          )}
-        </button>
+
 
         {presenceOpen && (
           <>
