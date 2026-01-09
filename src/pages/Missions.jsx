@@ -231,6 +231,13 @@ export default function Missions() {
           </div>
         </div>
 
+        {/* AI Mission Board */}
+        {aiBoardOpen && (
+          <div className="mb-6">
+            <AIMissionBoard onMissionCreated={() => setAiBoardOpen(false)} />
+          </div>
+        )}
+
         {/* Search and Quick Filters */}
         <div className="flex items-center gap-3 mb-4">
           <div className="relative flex-1 max-w-md">
