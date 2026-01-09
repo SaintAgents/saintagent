@@ -103,6 +103,7 @@ export default function Marketplace() {
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
               Marketplace
             </h1>
+            <ForwardButton />
           </div>
           <p className="text-slate-500 dark:text-slate-400 text-center mb-4">Offer your skills, find mentors, and grow together</p>
           <div className="flex items-center justify-center gap-2">
