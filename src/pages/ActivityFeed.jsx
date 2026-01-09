@@ -122,7 +122,7 @@ export default function ActivityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505] dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] relative z-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:from-transparent dark:via-transparent dark:to-transparent">
       {/* Hero Section */}
       <div className="page-hero relative overflow-hidden">
         <img 
