@@ -100,7 +100,7 @@ export default function MiniProfile({
             style={{ height: `${heroHeight}px` }}
           >
             <img 
-              src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/073608b6e_Screenshot2026-01-07063819.png'} 
+              src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png'} 
               alt="" 
               className="w-full h-full object-cover"
             />
@@ -127,7 +127,7 @@ export default function MiniProfile({
               <div className="min-w-0 flex-1 pt-1">
                 {showName && (
                   <div className="flex items-center gap-1 min-w-0">
-                    <div className="text-base font-semibold truncate bg-gradient-to-r from-black to-purple-600 bg-clip-text text-transparent dark:from-white dark:to-violet-400">
+                    <div className="text-base font-semibold truncate text-slate-900 dark:text-white">
                       {displayName}
                     </div>
                     {showHelpHint && (
@@ -185,7 +185,7 @@ export default function MiniProfile({
             <div className="min-w-0">
               {showName && (
                 <div className="flex items-center gap-1 min-w-0">
-                  <div className="text-sm font-medium truncate bg-gradient-to-r from-black to-purple-600 bg-clip-text text-transparent dark:from-white dark:to-violet-400">
+                  <div className="text-sm font-medium truncate text-slate-900 dark:text-white">
                     {displayName}
                   </div>
                   {showHelpHint && (

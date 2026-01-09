@@ -376,7 +376,7 @@ export default function Profile() {
               data-no-filter="true" />
 
                           <img
-              src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/073608b6e_Screenshot2026-01-07063819.png'}
+              src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png'}
               alt="Profile hero"
               className="w-full h-full object-cover"
               data-no-filter="true" />
@@ -419,7 +419,7 @@ export default function Profile() {
               </div>
               <div className="flex-1 pb-2">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="bg-transparent text-fuchsia-50 text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
+                  <h1 className="text-slate-900 dark:text-white text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline &&
                   <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
                   }
