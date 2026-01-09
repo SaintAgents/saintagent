@@ -477,6 +477,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           border-color: rgba(0, 255, 136, 0.2) !important;
         }
 
+        /* Ensure page backgrounds are transparent to show canvas effects */
+        [data-theme='dark'] .min-h-screen,
+        [data-theme='hacker'] .min-h-screen {
+          background-color: transparent !important;
+          background-image: none !important;
+        }
+
         /* Specific overrides for gradient backgrounds - exclude hero and mission card image containers */
         [data-theme='dark'] [class*='bg-gradient-']:not(.mission-card *):not(.hero-gradient):not(main[data-page='CommandDeck'] *) {
           background: var(--obsidian) !important;
