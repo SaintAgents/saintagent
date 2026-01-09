@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MissionCollaborationBoard from './MissionCollaborationBoard';
+import MissionReflectionModal from './MissionReflectionModal';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from '@/utils';
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
@@ -45,6 +46,7 @@ const MISSION_IMAGES = {
 
 export default function MissionDetailModal({ mission, open, onClose }) {
   const queryClient = useQueryClient();
+  const [reflectionOpen, setReflectionOpen] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -100,6 +102,47 @@ export default function MissionDetailModal({ mission, open, onClose }) {
       queryClient.invalidateQueries({ queryKey: ['missions'] });
     }
   });
+
+  const completeMissionMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.Mission.update(mission.id, {
+        status: 'completed'
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missions'] });
+      setReflectionOpen(true);
+    }
+  });
+
+  const handleReflectionSubmit = async (data) => {
+    try {
+      // Save reflection to a testimonial/review entity
+      await base44.entities.Testimonial.create({
+        from_user_id: profile.user_id,
+        to_user_id: mission.creator_id || 'platform',
+        from_name: profile.display_name,
+        from_avatar: profile.avatar_url,
+        context_type: 'mission',
+        context_id: mission.id,
+        rating: 5,
+        text: data.reflection,
+        tags: ['mission_reflection', data.allowTestimonial ? 'public_testimonial' : 'private'],
+        visibility: data.allowTestimonial ? 'public' : 'private'
+      });
+
+      // Award bonus RP for completing reflection
+      if (profile) {
+        await base44.entities.UserProfile.update(profile.id, {
+          rp_points: (profile.rp_points || 0) + 10
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    } catch (e) {
+      console.error('Reflection save failed:', e);
+    }
+  };
 
   if (!mission) return null;
 
@@ -305,14 +348,27 @@ export default function MissionDetailModal({ mission, open, onClose }) {
         {/* Footer Actions */}
         <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center gap-3">
           {isParticipant ? (
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => leaveMissionMutation.mutate()}
-              disabled={leaveMissionMutation.isPending}
-            >
-              Leave Mission
-            </Button>
+            <>
+              {progressPercent === 100 && mission.status !== 'completed' ? (
+                <Button
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                  onClick={() => completeMissionMutation.mutate()}
+                  disabled={completeMissionMutation.isPending}
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Complete Mission
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => leaveMissionMutation.mutate()}
+                  disabled={leaveMissionMutation.isPending}
+                >
+                  Leave Mission
+                </Button>
+              )}
+            </>
           ) : (
             <Button
               className="flex-1 bg-violet-600 hover:bg-violet-700"
@@ -334,6 +390,14 @@ export default function MissionDetailModal({ mission, open, onClose }) {
             <Share2 className="w-4 h-4" />
           </Button>
         </div>
+
+        {/* Reflection Modal */}
+        <MissionReflectionModal
+          open={reflectionOpen}
+          onClose={() => setReflectionOpen(false)}
+          mission={mission}
+          onSubmit={handleReflectionSubmit}
+        />
       </DialogContent>
     </Dialog>
   );
