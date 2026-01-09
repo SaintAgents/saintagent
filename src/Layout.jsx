@@ -1318,7 +1318,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] img.gauge-image,
           [data-theme='hacker'] img[data-no-filter="true"].gauge-image,
           html[data-theme='hacker'] img[alt="Trust Gauge"],
-          [data-theme='hacker'] img[alt="Trust Gauge"] {
+          [data-theme='hacker'] img[alt="Trust Gauge"],
+          html[data-theme='dark'] img[alt="Trust Gauge"],
+          [data-theme='dark'] img[alt="Trust Gauge"],
+          html[data-theme='dark'] img.gauge-image,
+          [data-theme='dark'] img.gauge-image,
+          html[data-theme='light'] img.gauge-image,
+          [data-theme='light'] img.gauge-image,
+          img.gauge-image {
             filter: none !important;
             -webkit-filter: none !important;
             opacity: 1 !important;
