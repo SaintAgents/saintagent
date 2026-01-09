@@ -239,7 +239,7 @@ export default function Join() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-6 text-center">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-violet-400">
             © Copyright Saint Agents 1998 - Built by Mathew Louis Schlueter aka Mathues Imhotep - Author of "The 7th Seal: Hidden Wisdom Unveiled" - Founder of 7th Seal Temple
           </p>
         </div>
