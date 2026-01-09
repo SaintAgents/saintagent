@@ -953,29 +953,7 @@ export default function SidePanel({
 
   return (
     <>
-      {/* Always visible nudge handle when collapsed */}
-      {!isOpen &&
-      <div
-        onClick={() => onToggle?.()}
-        className={cn(
-          "fixed top-1/2 -translate-y-1/2 z-40 bg-violet-600 hover:bg-violet-700 cursor-pointer transition-all shadow-lg flex items-center justify-center",
-          dockSide === 'right' ? "rounded-l-lg" : "rounded-r-lg"
-        )}
-        style={{ 
-          width: '24px', 
-          height: '120px', 
-          right: dockSide === 'right' ? 0 : 'auto', 
-          left: dockSide === 'left' ? 0 : 'auto' 
-        }}
-        title="Open panel"
-      >
-        <div className="flex flex-col items-center gap-1">
-          <div className="w-1 h-1 rounded-full bg-white/60" />
-          <div className="w-1 h-1 rounded-full bg-white/60" />
-          <div className="w-1 h-1 rounded-full bg-white/60" />
-        </div>
-      </div>
-      }
+      {/* Nudge handle when collapsed - only show if NOT on CommandDeck (GlobalSidePanelNudge handles it there) */}
       <div
         className={cn(
           "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-[55] transition-all duration-300 flex flex-col",
