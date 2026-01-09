@@ -567,12 +567,21 @@ function AuthenticatedLayout({ children, currentPageName }) {
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
         }
         
-        /* Trust gauge container - no box styling */
-        [data-theme='dark'] [data-no-filter],
-        [data-theme='dark'] [data-no-filter] *,
-        [data-theme='hacker'] [data-no-filter],
-        [data-theme='hacker'] [data-no-filter] * {
+        /* Trust gauge container - no box styling - HIGHEST SPECIFICITY */
+        html[data-theme='dark'] [data-no-filter="true"],
+        html[data-theme='dark'] [data-no-filter="true"] *,
+        html[data-theme='dark'] div[data-no-filter="true"],
+        html[data-theme='dark'] div[data-no-filter="true"] *,
+        html[data-theme='hacker'] [data-no-filter="true"],
+        html[data-theme='hacker'] [data-no-filter="true"] *,
+        html[data-theme='hacker'] div[data-no-filter="true"],
+        html[data-theme='hacker'] div[data-no-filter="true"] *,
+        [data-theme='dark'] [data-no-filter="true"],
+        [data-theme='dark'] [data-no-filter="true"] *,
+        [data-theme='hacker'] [data-no-filter="true"],
+        [data-theme='hacker'] [data-no-filter="true"] * {
           background: transparent !important;
+          background-color: transparent !important;
           border: none !important;
           box-shadow: none !important;
         }
