@@ -594,11 +594,11 @@ export default function Profile() {
             {isOwnProfile &&
                 <Card>
                 <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
-                  <CardTitle className="text-sm">Theme Customization</CardTitle>
+                  <CardTitle className="text-sm text-slate-800 dark:text-white">Theme Customization</CardTitle>
                 </CardHeader>
                 <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4 space-y-4">
                   <div>
-                    <Label className="text-xs text-slate-500 dark:text-slate-400">Theme</Label>
+                    <Label className="text-xs text-slate-700 dark:text-slate-400">Theme</Label>
                     <Select
                         value={profile?.theme_preference || 'light'}
                         onValueChange={async (v) => {
@@ -623,7 +623,7 @@ export default function Profile() {
                   {profile?.theme_preference === 'custom' &&
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label className="text-xs text-slate-500 dark:text-slate-400">Primary</Label>
+                        <Label className="text-xs text-slate-700 dark:text-slate-400">Primary</Label>
                         <div className="flex items-center gap-2 mt-1">
                           <Input
                             type="color"
@@ -642,7 +642,7 @@ export default function Profile() {
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs text-slate-500 dark:text-slate-400">Accent</Label>
+                        <Label className="text-xs text-slate-700 dark:text-slate-400">Accent</Label>
                         <div className="flex items-center gap-2 mt-1">
                           <Input
                             type="color"
