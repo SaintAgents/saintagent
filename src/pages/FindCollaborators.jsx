@@ -30,6 +30,7 @@ export default function FindCollaborators() {
               </p>
             </div>
           </div>
+          <ForwardButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 
