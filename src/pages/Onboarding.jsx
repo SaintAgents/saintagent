@@ -240,6 +240,56 @@ export default function Onboarding() {
               } catch (walletErr) {
                 console.error('GGG token award failed:', walletErr);
               }
+
+              // Create Starter Mission Quest for new users
+              try {
+                const existingStarterQuest = await base44.entities.Quest.filter({ 
+                  user_id: user.email, 
+                  quest_template_id: 'starter_mission' 
+                });
+                if (!existingStarterQuest?.length) {
+                  await base44.entities.Quest.create({
+                    user_id: user.email,
+                    quest_template_id: 'starter_mission',
+                    title: 'Your First Mission',
+                    description: 'Complete these starter tasks to learn the platform and earn your first rewards!',
+                    quest_type: 'pathway',
+                    category: 'onboarding',
+                    rarity: 'uncommon',
+                    status: 'active',
+                    reward_rp: 50,
+                    reward_ggg: 25,
+                    reward_badge: 'starter_complete',
+                    target_count: 3,
+                    current_count: 0,
+                    pathway_data: {
+                      pathway_id: 'starter',
+                      pathway_name: 'Starter Mission',
+                      current_stage: 1,
+                      total_stages: 3,
+                      stages: [
+                        { stage_num: 1, title: 'Follow 3 People', target_action: 'follow_user', target_count: 3, current_count: 0, completed: false },
+                        { stage_num: 2, title: 'Create Your First Post', target_action: 'create_post', target_count: 1, current_count: 0, completed: false },
+                        { stage_num: 3, title: 'Join 1 Mission', target_action: 'join_mission', target_count: 1, current_count: 0, completed: false }
+                      ]
+                    },
+                    started_at: new Date().toISOString()
+                  });
+
+                  // Add notification about the starter quest
+                  await base44.entities.Notification.create({
+                    user_id: user.email,
+                    type: 'system',
+                    title: '🚀 Your First Mission Awaits!',
+                    message: 'Complete your Starter Mission: Follow 3 people, create a post, and join a mission to earn 25 GGG and 50 RP!',
+                    action_url: createPageUrl('Quests'),
+                    action_label: 'View Quest',
+                    priority: 'high'
+                  });
+                }
+              } catch (questErr) {
+                console.error('Starter quest creation failed:', questErr);
+              }
             }
           } catch (e) {
             console.error('Gamification award failed', e);
