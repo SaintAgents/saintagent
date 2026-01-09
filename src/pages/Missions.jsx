@@ -41,6 +41,7 @@ import MissionCard from '@/components/hud/MissionCard';
 import CreateMissionModal from '@/components/CreateMissionModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import AIMissionGenerator from '@/components/missions/AIMissionGenerator';
+import AIMissionBoard from '@/components/missions/AIMissionBoard';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
