@@ -143,7 +143,7 @@ export default function ActivityFeed() {
             <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
               <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
             </Button>
-            <ForwardButton currentPage="ActivityFeed" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+<ForwardButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
           </div>
         </div>
       </div>
