@@ -54,7 +54,7 @@ export default function RankedAvatar({
   showPhotoIcon = false,
   galleryImages = [],
   affiliatePaidCount,
-  gender, // 'male', 'female', or undefined
+
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
