@@ -78,6 +78,13 @@ export default function Join() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-violet-200 to-amber-200 bg-clip-text text-transparent">
             Build Together.<br />Rise Together.
           </h1>
+
+          {/* SAINT Acronym */}
+          <div className="mb-8 px-6 py-4 rounded-xl bg-gradient-to-r from-violet-900/40 to-purple-900/40 border border-violet-500/30 max-w-xl mx-auto">
+            <p className="text-lg md:text-xl font-semibold text-violet-200 tracking-wide">
+              <span className="text-amber-400">S</span>piritually <span className="text-amber-400">A</span>ligned <span className="text-amber-400">I</span>nternational <span className="text-amber-400">N</span>etworking <span className="text-amber-400">T</span>eams
+            </p>
+          </div>
           
           <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-10">
             Saint Agents is a platform for conscious creators, healers, builders, and leaders 
@@ -126,6 +133,26 @@ export default function Join() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      </div>
+
+      {/* GGG Value Section */}
+      <div className="max-w-4xl mx-auto px-6 py-12 text-center">
+        <div className="bg-gradient-to-r from-amber-900/30 to-yellow-900/30 rounded-2xl border border-amber-500/30 p-8">
+          <p className="text-lg md:text-xl text-slate-200 mb-4">
+            Earn value through interactions, exchange real currency, gain valuable wisdom and connections.
+          </p>
+          <p className="text-amber-400 font-semibold">
+            <a 
+              href="https://gaiaglobal.gold" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-amber-300 underline underline-offset-4 transition-colors"
+            >
+              Gaia Global Gold (GGG)
+            </a>
+            {" "}redeemable monthly.
+          </p>
         </div>
       </div>
 
@@ -210,6 +237,11 @@ export default function Join() {
             <a href={createPageUrl('Terms')} className="hover:text-white transition-colors">Terms</a>
             <a href={createPageUrl('FAQ')} className="hover:text-white transition-colors">FAQ</a>
           </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-6 mt-6 text-center">
+          <p className="text-xs text-slate-500">
+            © Copyright Saint Agents 1998 - Built by Mathew Louis Schlueter aka Mathues Imhotep - Author of "The 7th Seal: Hidden Wisdom Unveiled" - Founder of 7th Seal Temple
+          </p>
         </div>
       </div>
     </div>
