@@ -793,8 +793,8 @@ export default function CommandDeck() {
                   </div>
                   
                   {/* Trust Score Gauge - top right corner */}
-                  <div className="flex flex-col items-center shrink-0" style={{ marginTop: '-25px', marginRight: '-3px' }}>
-                    <div className="relative" style={{ width: '170px', height: '170px', transform: 'translateY(-8px)' }}>
+                  <div className="flex flex-col items-center shrink-0 bg-transparent border-none" style={{ marginTop: '-25px', marginRight: '-3px', background: 'transparent' }}>
+                    <div className="relative bg-transparent border-none" style={{ width: '170px', height: '170px', transform: 'translateY(-8px)', background: 'transparent', border: 'none', boxShadow: 'none' }}>
                       {/* Gauge dial - 170px base */}
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
