@@ -333,7 +333,7 @@ export default function Sidebar({
             </button>
           </div>
         )}
-        <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center")}> 
+        <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center px-1")}> 
           {(!isCollapsed || inPopup) && (
             <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Navigation</span>
           )}
