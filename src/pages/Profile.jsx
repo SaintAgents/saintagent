@@ -598,7 +598,7 @@ export default function Profile() {
                 </CardHeader>
                 <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4 space-y-4">
                   <div>
-                    <Label className="text-xs text-slate-700 dark:text-slate-400">Theme</Label>
+                    <Label className="text-xs text-slate-800 dark:text-slate-400 font-medium">Theme</Label>
                     <Select
                         value={profile?.theme_preference || 'light'}
                         onValueChange={async (v) => {
