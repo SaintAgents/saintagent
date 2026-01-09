@@ -558,10 +558,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
         /* Cards and containers - semi-transparent obsidian with neon glow borders */
         /* EXCLUDE images from these styles */
-        [data-theme='dark'] .rounded-xl:not(img):not([data-no-filter]), 
-        [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter]),
-        [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter]),
-        [data-theme='dark'] .rounded-md:not(img):not([data-no-filter]) {
+        [data-theme='dark'] .rounded-xl:not(img):not([data-no-filter="true"]), 
+        [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter="true"]),
+        [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter="true"]),
+        [data-theme='dark'] .rounded-md:not(img):not([data-no-filter="true"]) {
           background-color: rgba(5, 5, 5, 0.85) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
@@ -584,6 +584,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: transparent !important;
           border: none !important;
           box-shadow: none !important;
+        }
+        
+        /* Hacker theme - also exclude data-no-filter from square styling */
+        [data-theme='hacker'] .rounded-xl:not(img):not([data-no-filter="true"]),
+        [data-theme='hacker'] .rounded-lg:not(img):not([data-no-filter="true"]),
+        [data-theme='hacker'] .rounded-2xl:not(img):not([data-no-filter="true"]),
+        [data-theme='hacker'] .rounded-md:not(img):not([data-no-filter="true"]) {
+          border-radius: 0 !important;
         }
 
         /* Profile page - ensure all card backgrounds and text are readable */
