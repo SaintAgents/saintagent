@@ -371,9 +371,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
       {/* Starfield Canvas - rank-colored stars */}
       {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
-      {showMatrixRain && <MatrixRainCanvas />}
-      {showNebula && <NebulaCanvas />}
-      {showCircuit && <CircuitCanvas />}
+                {showMatrixRain && <MatrixRainCanvas />}
+                {showNebula && <NebulaCanvas />}
+                {showCircuit && <CircuitCanvas />}
+
+                {/* Ensure content is above canvas effects */}
+                <style>{`
+                  main, aside, nav, header, [role="dialog"], [data-radix-popper-content-wrapper] {
+                    position: relative;
+                    z-index: 1;
+                  }
+                `}</style>
 
       <style>{`
         :root {
