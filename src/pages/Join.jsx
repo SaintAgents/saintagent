@@ -78,6 +78,13 @@ export default function Join() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-violet-200 to-amber-200 bg-clip-text text-transparent">
             Build Together.<br />Rise Together.
           </h1>
+
+          {/* SAINT Acronym */}
+          <div className="mb-8 px-6 py-4 rounded-xl bg-gradient-to-r from-violet-900/40 to-purple-900/40 border border-violet-500/30 max-w-xl mx-auto">
+            <p className="text-lg md:text-xl font-semibold text-violet-200 tracking-wide">
+              <span className="text-amber-400">S</span>piritually <span className="text-amber-400">A</span>ligned <span className="text-amber-400">I</span>nternational <span className="text-amber-400">N</span>etworking <span className="text-amber-400">T</span>eams
+            </p>
+          </div>
           
           <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-10">
             Saint Agents is a platform for conscious creators, healers, builders, and leaders 
