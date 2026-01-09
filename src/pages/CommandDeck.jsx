@@ -799,7 +799,7 @@ export default function CommandDeck() {
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                         alt="Trust Gauge"
-                        className="absolute inset-0 w-full h-full object-contain drop-shadow-lg"
+                        className="absolute inset-0 w-full h-full object-contain drop-shadow-lg gauge-image"
                         style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
                         data-no-filter="true" />
                       {/* Trust score number centered in gauge */}
