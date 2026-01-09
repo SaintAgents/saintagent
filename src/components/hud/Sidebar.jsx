@@ -351,7 +351,7 @@ export default function Sidebar({
           </button>
         </div>
         {navOpen && (
-          <nav className="p-3 pt-0 space-y-1">
+          <nav className={cn("p-3 pt-0 space-y-1", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
             <TooltipProvider delayDuration={200}>
               {NAV_ITEMS.map((item) => {
                 const isActive = currentPage === item.id;
