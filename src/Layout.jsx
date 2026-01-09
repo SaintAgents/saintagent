@@ -375,14 +375,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
                 {showNebula && <NebulaCanvas />}
                 {showCircuit && <CircuitCanvas />}
 
-                {/* Ensure content is above canvas effects */}
-                <style>{`
-                  main, aside, nav, header, [role="dialog"], [data-radix-popper-content-wrapper] {
-                    position: relative;
-                    z-index: 1;
-                  }
-                `}</style>
-
       <style>{`
         :root {
           --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
