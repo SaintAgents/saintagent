@@ -1336,23 +1336,28 @@ function AuthenticatedLayout({ children, currentPageName }) {
             -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
           }
 
-          /* HACKER THEME - Gauge/dashboard images should NOT be filtered - HIGHEST SPECIFICITY */
-          html[data-theme='hacker'] img[data-no-filter="true"],
-          html[data-theme='hacker'] .gauge-image,
+          /* HACKER THEME - Gauge images get green monochrome filter */
           html[data-theme='hacker'] img.gauge-image,
-          [data-theme='hacker'] img[data-no-filter="true"],
-          [data-theme='hacker'] .gauge-image,
+          html[data-theme='hacker'] .gauge-image,
           [data-theme='hacker'] img.gauge-image,
-          [data-theme='hacker'] img[data-no-filter="true"].gauge-image,
+          [data-theme='hacker'] .gauge-image,
           html[data-theme='hacker'] img[alt="Trust Gauge"],
-          [data-theme='hacker'] img[alt="Trust Gauge"],
+          [data-theme='hacker'] img[alt="Trust Gauge"] {
+            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+            -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+            opacity: 1 !important;
+            display: block !important;
+            visibility: visible !important;
+            mix-blend-mode: normal !important;
+          }
+
+          /* DARK/LIGHT THEME - Gauge images preserve original colors */
           html[data-theme='dark'] img[alt="Trust Gauge"],
           [data-theme='dark'] img[alt="Trust Gauge"],
           html[data-theme='dark'] img.gauge-image,
           [data-theme='dark'] img.gauge-image,
           html[data-theme='light'] img.gauge-image,
-          [data-theme='light'] img.gauge-image,
-          img.gauge-image {
+          [data-theme='light'] img.gauge-image {
             filter: none !important;
             -webkit-filter: none !important;
             opacity: 1 !important;
