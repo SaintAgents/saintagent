@@ -36,10 +36,8 @@ function getRingConfig(rankCode = 'seeker') {
   return map[rankCode] || map.seeker;
 }
 
-// Default avatars based on gender
-const DEFAULT_AVATAR_MALE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/cfced405a_Phoenix_10_A_highly_detailed_and_intricately_designed_bimetal_1_bbf7d098-118c-4923-a728-494807a6f305.jpg';
-const DEFAULT_AVATAR_FEMALE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e09de6616_DALLE2024-06-03003136-Adetailedandhigh-resolutioncoindesignfortheGaiaGlobalTreasuryThecoinfeaturesagoldensurfacewithatreeinthecentersymbolizinggro_inPixio.png';
-const DEFAULT_AVATAR_NEUTRAL = DEFAULT_AVATAR_FEMALE; // Default to gold coin
+// Default avatar - "You are steering the shift of the world"
+const DEFAULT_AVATAR = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png';
 
 export default function RankedAvatar({
   src,
