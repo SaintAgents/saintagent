@@ -799,29 +799,12 @@ export default function CommandDeck() {
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
                         alt="Trust Gauge"
-                        className="absolute inset-0 w-full h-full object-contain drop-shadow-lg gauge-image"
-                        style={{ border: 'none', boxShadow: 'none', background: 'transparent', filter: 'none !important', WebkitFilter: 'none !important', opacity: 1, display: 'block', visibility: 'visible' }}
-                        data-no-filter="true"
-                        data-keep-round="true" />
+                        className="absolute inset-0 w-full h-full object-contain drop-shadow-lg"
+                        data-no-filter="true" />
                       {/* Trust score number centered in gauge */}
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <span className="text-3xl font-bold text-emerald-400 dark:text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]">{profile?.trust_score || 0}</span>
                       </div>
-                      {/* Cyan trust ring - nearly touching gauge edge */}
-                      <svg 
-                        className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
-                        viewBox="0 0 100 100"
-                      >
-                        <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
-                        <circle cx="50" cy="50" r="35" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 35}`} strokeDashoffset={`${2 * Math.PI * 35 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
-                        <defs>
-                          <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#10b981" />
-                            <stop offset="50%" stopColor="#14b8a6" />
-                            <stop offset="100%" stopColor="#06b6d4" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
                     </div>
                     {/* Trust Score label - moved up to nearly touch gauge */}
                     <div className="flex items-center gap-1.5" style={{ marginTop: '-12px' }}>
