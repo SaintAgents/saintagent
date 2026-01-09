@@ -549,13 +549,26 @@ export default function Sidebar({
             )}
           </div>
           {(!isCollapsed || inPopup) && (
-            <button
-              onClick={() => setPresencePopupOpen(true)}
-              className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-              title="Pop out presence section"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setPresencePopupOpen(true)}
+                className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                title="Pop out presence section"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+              <button
+                onClick={() => setPresenceOpen(!presenceOpen)}
+                className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                title={presenceOpen ? 'Collapse' : 'Expand'}
+              >
+                {presenceOpen ? (
+                  <ChevronUp className="w-4 h-4 text-slate-500" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
+                )}
+              </button>
+            </div>
           )}
         </div>
 
