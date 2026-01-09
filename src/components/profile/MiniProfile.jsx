@@ -100,7 +100,7 @@ export default function MiniProfile({
             style={{ height: `${heroHeight}px` }}
           >
             <img 
-              src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e7cf97dec_universal_upscale_0_b59b75fe-3454-4d9a-b730-37fb127823f2_0.jpg'} 
+              src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/073608b6e_Screenshot2026-01-07063819.png'} 
               alt="" 
               className="w-full h-full object-cover"
             />

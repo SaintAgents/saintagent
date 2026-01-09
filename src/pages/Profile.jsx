@@ -376,7 +376,7 @@ export default function Profile() {
               data-no-filter="true" />
 
                           <img
-              src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/90c26e23f_Screenshot2026-01-07063819.png'}
+              src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/073608b6e_Screenshot2026-01-07063819.png'}
               alt="Profile hero"
               className="w-full h-full object-cover"
               data-no-filter="true" />
