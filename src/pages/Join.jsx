@@ -136,6 +136,26 @@ export default function Join() {
         </div>
       </div>
 
+      {/* GGG Value Section */}
+      <div className="max-w-4xl mx-auto px-6 py-12 text-center">
+        <div className="bg-gradient-to-r from-amber-900/30 to-yellow-900/30 rounded-2xl border border-amber-500/30 p-8">
+          <p className="text-lg md:text-xl text-slate-200 mb-4">
+            Earn value through interactions, exchange real currency, gain valuable wisdom and connections.
+          </p>
+          <p className="text-amber-400 font-semibold">
+            <a 
+              href="https://gaiaglobal.gold" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-amber-300 underline underline-offset-4 transition-colors"
+            >
+              Gaia Global Gold (GGG)
+            </a>
+            {" "}redeemable monthly.
+          </p>
+        </div>
+      </div>
+
       {/* Trust Features */}
       <div className="bg-slate-800/30 py-16">
         <div className="max-w-6xl mx-auto px-6">
