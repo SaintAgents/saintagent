@@ -582,7 +582,7 @@ export default function Profile() {
                         onChange={async (e) => {
                           await updateMutation.mutateAsync({ status_message: e.target.value });
                         }}
-                        className="flex-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
+                        className="flex-1 text-slate-900 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                   </div>
                   <p className="text-xs text-slate-400 mt-2">This message shows when others hover over your avatar</p>
@@ -609,7 +609,7 @@ export default function Profile() {
                           await updateMutation.mutateAsync({ theme_preference: v });
                         }}>
 
-                      <SelectTrigger className="mt-1 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                      <SelectTrigger className="mt-1 text-slate-900 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
