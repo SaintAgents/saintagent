@@ -561,7 +561,7 @@ export default function Profile() {
             {isOwnProfile &&
                 <Card>
                 <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
-                  <CardTitle className="text-sm text-slate-800 dark:text-white flex items-center gap-2">
+                  <CardTitle className="text-sm text-slate-900 dark:text-white flex items-center gap-2">
                     <div className={cn(
                         "w-3 h-3 rounded-full",
                         profile?.status === 'online' && "bg-emerald-500",
@@ -594,7 +594,7 @@ export default function Profile() {
             {isOwnProfile &&
                 <Card>
                 <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
-                  <CardTitle className="text-sm text-slate-800 dark:text-white">Theme Customization</CardTitle>
+                  <CardTitle className="text-sm text-slate-900 dark:text-white">Theme Customization</CardTitle>
                 </CardHeader>
                 <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4 space-y-4">
                   <div>
