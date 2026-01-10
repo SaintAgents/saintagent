@@ -151,7 +151,7 @@ export default function Forum() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content" style={{ paddingTop: '15px' }}>
           <div className="flex items-center gap-3 mb-2">
             <BackButton className="text-white" />
             <MessageSquare className="w-8 h-8 text-violet-300" />
