@@ -17,8 +17,15 @@ const FEEDBACK_TYPES = [
   { value: 'other', label: 'Other', icon: HelpCircle, color: 'text-slate-500' }
 ];
 
-export default function BetaFeedbackModal({ open, onClose }) {
-  const [feedbackType, setFeedbackType] = useState('comment');
+export default function BetaFeedbackModal({ open, onClose, initialType }) {
+  const [feedbackType, setFeedbackType] = useState(initialType || 'comment');
+
+  // Update feedbackType when initialType changes
+  React.useEffect(() => {
+    if (initialType) {
+      setFeedbackType(initialType);
+    }
+  }, [initialType]);
   const [description, setDescription] = useState('');
   const [severity, setSeverity] = useState('medium');
   const [screenshot, setScreenshot] = useState(null);
