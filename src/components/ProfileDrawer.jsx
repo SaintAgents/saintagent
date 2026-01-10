@@ -229,10 +229,15 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             className="absolute top-2 right-3 w-20 h-20 object-contain z-10 drop-shadow-lg"
             data-no-filter="true" />
 
-          <img
-            src={profile.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png'}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover" />
+          {profile.hero_image_url ? (
+            <img
+              src={profile.hero_image_url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600" />
+          )}
 
           <div className="absolute inset-0 bg-gradient-to-t from-white/80 dark:from-[#0a0a0a]/90 to-transparent" />
         </div>
@@ -311,25 +316,24 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {!isOwnProfile &&
             <div className="space-y-3 mb-6">
                 <div className="grid grid-cols-2 gap-3">
-                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white dark:bg-[rgba(0,255,136,0.2)] dark:hover:bg-[rgba(0,255,136,0.3)] dark:text-[#00ff88] dark:border dark:border-[#00ff88] rounded-xl gap-2">
+                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2">
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
-                  <Button onClick={handleBook} className="bg-violet-600 hover:bg-violet-700 text-white dark:bg-[rgba(0,255,136,0.1)] dark:hover:bg-[rgba(0,255,136,0.2)] dark:text-[#00ff88] dark:border dark:border-[#00ff88]/50 rounded-xl gap-2">
+                  <Button onClick={handleBook} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2">
                     <Calendar className="w-4 h-4" />
                     Book
                   </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <FollowButton targetUserId={userId} className="w-full rounded-xl bg-violet-600 hover:bg-violet-700 text-white dark:bg-[rgba(0,255,136,0.2)] dark:hover:bg-[rgba(0,255,136,0.3)] dark:text-[#00ff88]" />
+                  <FollowButton targetUserId={userId} className="w-full rounded-xl" />
                   <TestimonialButton
-                  toUserId={userId}
-                  toUserName={profile.display_name}
-                  toUserAvatar={profile.avatar_url}
-                  context="profile"
-                  contextId={profile.id}
-                  className="w-full rounded-xl bg-violet-600 hover:bg-violet-700 text-white dark:bg-[rgba(0,255,136,0.2)] dark:hover:bg-[rgba(0,255,136,0.3)] dark:text-[#00ff88]" />
-
+                    toUserId={userId}
+                    toUserName={profile.display_name}
+                    toUserAvatar={profile.avatar_url}
+                    context="profile"
+                    contextId={profile.id}
+                    className="w-full rounded-xl" />
                 </div>
               </div>
             }
