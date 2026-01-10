@@ -83,6 +83,9 @@ export const ACTIONS = [
   { key: 'class_final', title: 'Class Final (Intermediate)', base: 0.0154496, usd: 2.24, category: 'learning', definition: 'Finishing an intermediate-level course with the required final project or exam.' },
   { key: 'security_trained', title: 'Security Trained Certification', base: 0.0308992, usd: 4.48, category: 'learning', definition: 'Completing the full security training path and passing the certification requirements.' },
   { key: 'mentor_ta', title: 'TA / Mentor for Cohort', base: 0.1000000, usd: 14.50, category: 'learning', definition: 'Serving as a teaching assistant or mentor for a cohort over a defined period—supporting learners, answering questions, and keeping them on track.' },
+
+  // Profile Completion Bonuses
+  { key: 'mbti_completion', title: 'MBTI Assessment Complete', base: 0.0344828, usd: 5.00, category: 'profile', definition: 'Completing the MBTI personality assessment to improve match quality and compatibility scoring.' },
 ];
 
 // Smart GGG formatting: 7 decimals for values < 0.01, otherwise appropriate precision

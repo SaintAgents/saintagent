@@ -137,7 +137,8 @@ const CATEGORY_LABELS = {
   mission: 'Mission & Team',
   leadership: 'Leadership',
   agent: 'Agent Development',
-  learning: 'Learning & Teaching'
+  learning: 'Learning & Teaching',
+  profile: 'Profile Completion'
 };
 
 // Build ACTION_TYPES from ACTIONS array
@@ -413,7 +414,7 @@ export default function GGGRulesManager() {
           </div>
 
           {/* Actions by Category */}
-          {['engagement', 'content', 'mission', 'leadership', 'agent', 'learning'].map(cat => {
+          {['engagement', 'content', 'mission', 'leadership', 'agent', 'learning', 'profile'].map(cat => {
             const catActions = ACTIONS.filter(a => a.category === cat);
             if (catActions.length === 0) return null;
             return (
@@ -472,7 +473,7 @@ export default function GGGRulesManager() {
                     <SelectValue placeholder="Select action" />
                   </SelectTrigger>
                   <SelectContent className="max-h-80">
-                    {['engagement', 'content', 'mission', 'leadership', 'agent', 'learning'].map(cat => (
+                    {['engagement', 'content', 'mission', 'leadership', 'agent', 'learning', 'profile'].map(cat => (
                       <React.Fragment key={cat}>
                         <div className="px-2 py-1 text-xs font-semibold text-slate-500 bg-slate-50">
                           {CATEGORY_LABELS[cat]}
