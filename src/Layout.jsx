@@ -472,9 +472,19 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] [class*='bg-white'],
         [data-theme='dark'] [class*='bg-gray-'],
         [data-theme='dark'] [class*='bg-slate-'] { 
-          background-color: rgba(5, 5, 5, 0.85) !important; 
+          background-color: rgba(5, 5, 5, 0.95) !important; 
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
+          position: relative;
+          z-index: 1;
+        }
+        
+        [data-theme='hacker'] [class*='bg-white'],
+        [data-theme='hacker'] [class*='bg-gray-'],
+        [data-theme='hacker'] [class*='bg-slate-'] { 
+          background-color: rgba(0, 0, 0, 0.95) !important; 
+          position: relative;
+          z-index: 1;
         }
 
         /* Ensure page backgrounds are transparent to show canvas effects */
@@ -569,9 +579,21 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter="true"]),
         [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter="true"]),
         [data-theme='dark'] .rounded-md:not(img):not([data-no-filter="true"]) {
-          background-color: rgba(5, 5, 5, 0.85) !important;
+          background-color: rgba(5, 5, 5, 0.95) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
+          position: relative;
+          z-index: 1;
+        }
+        
+        /* Hacker theme cards */
+        [data-theme='hacker'] .rounded-xl:not(img):not([data-no-filter="true"]), 
+        [data-theme='hacker'] .rounded-lg:not(img):not([data-no-filter="true"]),
+        [data-theme='hacker'] .rounded-2xl:not(img):not([data-no-filter="true"]),
+        [data-theme='hacker'] .rounded-md:not(img):not([data-no-filter="true"]) {
+          background-color: rgba(0, 0, 0, 0.95) !important;
+          position: relative;
+          z-index: 1;
         }
         
         /* Trust gauge container - no box styling - HIGHEST SPECIFICITY */
