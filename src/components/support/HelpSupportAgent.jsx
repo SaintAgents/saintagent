@@ -142,15 +142,10 @@ export default function HelpSupportAgent() {
   const inputRef = useRef(null);
   
   // Dragging state - start docked on right by default
-  const [position, setPosition] = useState({ x: null, y: null });
+  const [position, setPosition] = useState({ x: null, y: 200 });
   const [dockedSide, setDockedSide] = useState('right'); // 'left' | 'right' | null - default docked right
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const isDraggingRef = useRef(false);
-  
-  // Button dragging refs
-  const buttonDragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
-  const buttonDraggingRef = useRef(false);
-  const buttonDraggedRef = useRef(false);
   
   // Initialize position from localStorage
   useEffect(() => {
@@ -158,7 +153,7 @@ export default function HelpSupportAgent() {
       const saved = localStorage.getItem('helpSupportPosition');
       if (saved) {
         const pos = JSON.parse(saved);
-        setPosition({ x: pos.x, y: pos.y });
+        setPosition({ x: pos.x, y: pos.y ?? 200 });
         setDockedSide(pos.dockedSide ?? 'right');
       }
     } catch {}
@@ -328,20 +323,21 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Help button - pill style matching GlobalChatWidget */}
+      {/* Docked help tab on right side when closed */}
       {!isOpen && (
         <div
           className="fixed z-50"
-          style={{ left: position.x ?? 16, top: position.y ?? undefined, bottom: position.y ? undefined : 80 }}
+          style={{ 
+            right: dockedSide === 'right' ? 0 : 'auto',
+            left: dockedSide === 'left' ? 0 : (dockedSide === null ? position.x : 'auto'),
+            top: position.y ?? 200
+          }}
         >
           <div
-            onMouseDown={onButtonDragStart}
-            onClick={(e) => {
-              if (!buttonDraggedRef.current) setIsOpen(true);
-            }}
+            onClick={() => setIsOpen(true)}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-full shadow-lg transition-all cursor-grab hover:scale-105 hacker-help-btn",
-              buttonDraggingRef.current && "cursor-grabbing scale-105"
+              "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 hacker-help-btn",
+              dockedSide === 'right' ? "rounded-l-full pr-4" : dockedSide === 'left' ? "rounded-r-full pl-4" : "rounded-full"
             )}
           >
             <HelpCircle className="w-4 h-4 hacker-help-icon" />

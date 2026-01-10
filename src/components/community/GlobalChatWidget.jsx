@@ -26,7 +26,8 @@ export default function GlobalChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [message, setMessage] = useState('');
-  const [position, setPosition] = useState({ x: 16, y: null }); // x from left, y from bottom
+  const [position, setPosition] = useState({ x: null, y: 280 }); // y from top
+  const [dockedSide, setDockedSide] = useState('right'); // 'left' | 'right' | null
   const [size, setSize] = useState({ width: 320, height: 384 });
   const [isDragging, setIsDragging] = useState(false);
   const [townHallOpen, setTownHallOpen] = useState(false);
@@ -41,7 +42,9 @@ export default function GlobalChatWidget() {
     try {
       const saved = localStorage.getItem('globalChatPosition');
       if (saved) {
-        setPosition(JSON.parse(saved));
+        const pos = JSON.parse(saved);
+        setPosition({ x: pos.x, y: pos.y ?? 280 });
+        setDockedSide(pos.dockedSide ?? 'right');
       }
     } catch {}
   }, []);
@@ -49,21 +52,29 @@ export default function GlobalChatWidget() {
   // Save position to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('globalChatPosition', JSON.stringify(position));
+      localStorage.setItem('globalChatPosition', JSON.stringify({ ...position, dockedSide }));
     } catch {}
-  }, [position]);
+  }, [position, dockedSide]);
 
   const handleDragStart = (e) => {
     e.preventDefault();
     setIsDragging(true);
+    setDockedSide(null); // Undock when starting to drag
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    // Get current element position for initial drag
+    const el = e.currentTarget.closest('.fixed');
+    const rect = el?.getBoundingClientRect();
     dragRef.current = {
       startX: clientX,
       startY: clientY,
-      startPosX: position.x,
-      startPosY: position.y ?? (window.innerHeight - 60)
+      startPosX: position.x ?? rect?.left ?? (window.innerWidth - size.width),
+      startPosY: position.y ?? rect?.top ?? 280
     };
+    // Initialize position if not set
+    if (position.x === null) {
+      setPosition({ x: dragRef.current.startPosX, y: dragRef.current.startPosY });
+    }
     document.addEventListener('mousemove', handleDragMove);
     document.addEventListener('mouseup', handleDragEnd);
     document.addEventListener('touchmove', handleDragMove);
@@ -86,6 +97,20 @@ export default function GlobalChatWidget() {
     document.removeEventListener('mouseup', handleDragEnd);
     document.removeEventListener('touchmove', handleDragMove);
     document.removeEventListener('touchend', handleDragEnd);
+    
+    // Check if should dock to side
+    const DOCK_THRESHOLD = 50;
+    const panelWidth = size.width;
+    const currentX = position.x;
+    if (currentX !== null) {
+      if (currentX < DOCK_THRESHOLD) {
+        setDockedSide('left');
+      } else if (currentX > window.innerWidth - panelWidth - DOCK_THRESHOLD) {
+        setDockedSide('right');
+      } else {
+        setDockedSide(null);
+      }
+    }
   };
 
   // Resize handlers
@@ -205,20 +230,22 @@ export default function GlobalChatWidget() {
 
   const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
 
-  // Floating button when closed - compact with drag
+  // Docked tab on right side when closed
   if (!isOpen) {
     return (
       <div
         className="fixed z-50"
-        style={{ left: position.x, top: position.y ?? undefined, bottom: position.y ? undefined : 16 }}
+        style={{ 
+          right: dockedSide === 'right' ? 0 : 'auto',
+          left: dockedSide === 'left' ? 0 : (dockedSide === null ? position.x : 'auto'),
+          top: position.y ?? 280
+        }}
       >
         <div
-          onMouseDown={handleDragStart}
-          onTouchStart={handleDragStart}
-          onClick={() => !isDragging && setIsOpen(true)}
+          onClick={() => setIsOpen(true)}
           className={cn(
-            "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg transition-all",
-            isDragging ? "cursor-grabbing scale-105" : "cursor-grab hover:scale-105"
+            "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105",
+            dockedSide === 'right' ? "rounded-l-full pr-4" : dockedSide === 'left' ? "rounded-r-full pl-4" : "rounded-full"
           )}
         >
           <Globe className="w-4 h-4" />
@@ -236,13 +263,14 @@ export default function GlobalChatWidget() {
   return (
     <div 
       className={cn(
-        "fixed z-50 bg-white rounded-lg shadow-2xl border border-slate-200 flex flex-col overflow-hidden",
-        isExpanded && "inset-4 top-20"
+        "fixed z-50 bg-white shadow-2xl border border-slate-200 flex flex-col overflow-hidden",
+        isExpanded && "inset-4 top-20",
+        dockedSide === 'right' ? "rounded-l-lg rounded-r-none" : dockedSide === 'left' ? "rounded-r-lg rounded-l-none" : "rounded-lg"
       )}
       style={isExpanded ? {} : { 
-        left: position.x, 
-        top: position.y ?? undefined, 
-        bottom: position.y ? undefined : 16,
+        right: dockedSide === 'right' ? 0 : 'auto',
+        left: dockedSide === 'left' ? 0 : (dockedSide === null ? position.x : 'auto'),
+        top: position.y ?? 280,
         width: size.width,
         height: size.height
       }}
