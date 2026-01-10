@@ -74,24 +74,32 @@ export default function Events() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
-      <div className="max-w-6xl mx-auto px-6 pb-6">
-        {/* Standard Header */}
-        <div className="pt-8 pb-6">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <BackButton />
-            <Calendar className="w-7 h-7 text-violet-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-              Events & Meetups
-            </h1>
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 overflow-hidden page-hero">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/faf641524_universal_upscale_0_3edbb2cf-f692-4c67-a028-2024050dad4b_0.jpg"
+          alt="Events"
+          className="w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content">
+          <div className="flex items-center gap-3 mb-2">
+            <BackButton className="text-white/80 hover:text-white" />
+            <Calendar className="w-8 h-8 text-white" />
           </div>
-          <p className="text-slate-500 text-center">Discover and create gatherings</p>
-          <div className="flex justify-center mt-4">
-            <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
-              <Plus className="w-4 h-4" />
-              Create Event
-            </Button>
-          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+            Events & Meetups
+          </h1>
+          <p className="text-white/80 text-lg max-w-md">Discover and create gatherings with conscious community</p>
+          <Button onClick={() => setCreateOpen(true)} className="mt-4 bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
+            <Plus className="w-4 h-4" />
+            Create Event
+          </Button>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 pb-6 -mt-8 relative z-10">
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
