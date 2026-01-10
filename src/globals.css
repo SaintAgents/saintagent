@@ -58,17 +58,24 @@ main {
    CARDS & CONTAINERS - SEMI-TRANSPARENT
    ===================================================== */
 
-/* Cards get semi-transparent black backgrounds */
-[data-theme='dark'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
-[data-theme='dark'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
-[data-theme='dark'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
+/* Cards get semi-transparent black backgrounds - but NOT grid containers */
+[data-theme='dark'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
+[data-theme='dark'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
+[data-theme='dark'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
 [data-theme='dark'] [class*='Card']:not(img),
-[data-theme='hacker'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
-[data-theme='hacker'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
-[data-theme='hacker'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
+[data-theme='hacker'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
+[data-theme='hacker'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
+[data-theme='hacker'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
 [data-theme='hacker'] [class*='Card']:not(img) {
   background-color: rgba(0, 0, 0, 0.75) !important;
   border-color: rgba(0, 255, 136, 0.2) !important;
+}
+
+/* Grid containers should be transparent */
+[data-theme='dark'] .grid,
+[data-theme='hacker'] .grid {
+  background-color: transparent !important;
+  background: transparent !important;
 }
 
 /* Hacker theme - square corners */
