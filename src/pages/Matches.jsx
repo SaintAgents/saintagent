@@ -98,8 +98,10 @@ export default function Matches() {
       (m.target_name || '').toLowerCase().includes(q) ||
       (m.target_subtitle || '').toLowerCase().includes(q);
 
-    const vq = (valuesQuery || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
-    const pq = (practicesQuery || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+    const vqRaw = (valuesQuery || '').toLowerCase();
+    const vq = vqRaw === 'any value' ? [] : vqRaw.split(',').map(s => s.trim()).filter(Boolean);
+    const pqRaw = (practicesQuery || '').toLowerCase();
+    const pq = pqRaw === 'any practice' ? [] : pqRaw.split(',').map(s => s.trim()).filter(Boolean);
     const starters = (m.conversation_starters || []).map(s => (s || '').toLowerCase());
     const valuesOk = vq.length === 0 || vq.some(tok => starters.some(s => s.includes(tok)));
     const practicesOk = pq.length === 0 || pq.some(tok => starters.some(s => s.includes(tok)));
@@ -264,7 +266,7 @@ export default function Matches() {
                       <Badge
                         variant="outline"
                         className="cursor-pointer hover:bg-slate-100 text-xs"
-                        onClick={() => { setValuesQuery(''); setValuesPopoverOpen(false); }}
+                        onClick={() => { setValuesQuery('Any Value'); setValuesPopoverOpen(false); }}
                       >
                         Any Value
                       </Badge>
@@ -306,7 +308,7 @@ export default function Matches() {
                       <Badge
                         variant="outline"
                         className="cursor-pointer hover:bg-slate-100 text-xs"
-                        onClick={() => { setPracticesQuery(''); setPracticesPopoverOpen(false); }}
+                        onClick={() => { setPracticesQuery('Any Practice'); setPracticesPopoverOpen(false); }}
                       >
                         Any Practice
                       </Badge>
