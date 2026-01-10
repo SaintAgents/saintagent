@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Brain, Gift, X, Sparkles, Clock } from "lucide-react";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Brain, Gift, X, Sparkles, Clock, ChevronDown } from "lucide-react";
 import MBTIAssessment from './MBTIAssessment';
 
 export default function MBTIPromptBanner({ profile, onDismiss }) {
   const [showAssessment, setShowAssessment] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [showDismissOptions, setShowDismissOptions] = useState(false);
 
   // Check if already dismissed temporarily
   useEffect(() => {
@@ -26,15 +33,22 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
 
   const handleDismiss = (duration) => {
     const dismissUntil = new Date();
-    if (duration === 'day') {
+    if (duration === 'hour') {
+      dismissUntil.setHours(dismissUntil.getHours() + 1);
+    } else if (duration === 'day') {
       dismissUntil.setDate(dismissUntil.getDate() + 1);
     } else if (duration === 'week') {
       dismissUntil.setDate(dismissUntil.getDate() + 7);
+    } else if (duration === 'month') {
+      dismissUntil.setMonth(dismissUntil.getMonth() + 1);
+    } else if (duration === 'never') {
+      dismissUntil.setFullYear(dismissUntil.getFullYear() + 100);
     }
     try {
       localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
     } catch {}
     setDismissed(true);
+    setShowDismissOptions(false);
     if (onDismiss) onDismiss();
   };
 
@@ -79,29 +93,44 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
                   <Brain className="w-4 h-4" />
                   Take Assessment Now
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => handleDismiss('day')}
-                  className="gap-2 text-slate-600"
-                >
-                  <Clock className="w-4 h-4" />
-                  Remind Me Tomorrow
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => handleDismiss('week')}
-                  className="text-slate-400 hover:text-slate-600"
-                >
-                  Maybe Later
-                </Button>
+                
+                <DropdownMenu open={showDismissOptions} onOpenChange={setShowDismissOptions}>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="text-slate-500 hover:text-slate-700 gap-1"
+                    >
+                      <Clock className="w-4 h-4" />
+                      Maybe Later
+                      <ChevronDown className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-48">
+                    <DropdownMenuItem onClick={() => handleDismiss('hour')}>
+                      Remind me in 1 hour
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDismiss('day')}>
+                      Remind me tomorrow
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDismiss('week')}>
+                      Remind me in a week
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDismiss('month')}>
+                      Remind me in a month
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDismiss('never')} className="text-slate-400">
+                      Don't remind me again
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
             
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => handleDismiss('day')}
+              onClick={() => setShowDismissOptions(true)}
               className="shrink-0 text-slate-400 hover:text-slate-600"
             >
               <X className="w-4 h-4" />
@@ -117,7 +146,7 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
             onComplete={handleComplete}
             onSkip={() => {
               setShowAssessment(false);
-              handleDismiss('day');
+              setShowDismissOptions(true);
             }}
           />
         </DialogContent>
