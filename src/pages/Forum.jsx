@@ -141,28 +141,20 @@ export default function Forum() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
-      {/* Hero */}
-      <div className="page-hero relative overflow-hidden">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/24f4dfba3_Screenshot2026-01-06215401.png"
-          alt="Community Forum"
-          className="w-full h-full object-cover hero-image"
-          data-no-filter="true"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-          <div className="flex items-center gap-3">
-            <BackButton className="text-white hover:bg-white/20" />
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-3">
-                <MessageSquare className="w-8 h-8" />
-                Community Forum
-              </h1>
-              <p className="text-violet-200/90 mt-1">Connect, share, and grow together</p>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
+      {/* Standard Header */}
+      <div className="pt-8 pb-6 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <BackButton />
+            <MessageSquare className="w-7 h-7 text-violet-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Community Forum
+            </h1>
+            <ForwardButton currentPage="Forum" />
           </div>
-          <div className="flex items-center gap-2">
+          <p className="text-slate-500 text-center">Connect, share, and grow together</p>
+          <div className="flex justify-center mt-4">
             <Button 
               className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
               onClick={() => setCreateModalOpen(true)}
@@ -170,12 +162,11 @@ export default function Forum() {
               <Plus className="w-4 h-4" />
               New Post
             </Button>
-            <ForwardButton currentPage="Forum" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto px-6 pb-6">
         {/* Search and Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="relative flex-1">

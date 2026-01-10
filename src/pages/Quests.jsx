@@ -86,21 +86,19 @@ export default function Quests() {
   const hasClaimable = completedQuests.length > 0;
 
   return (
-    <div className="min-h-screen relative">
-      {/* Header Section - No Hero */}
-      <div className="px-4 pt-6 pb-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+      {/* Standard Header */}
+      <div className="pt-8 pb-6 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between gap-4 mb-2">
-            <div className="flex items-center gap-4">
-              <BackButton className="text-amber-200/80 hover:text-amber-100" />
-              <h1 className="text-3xl md:text-4xl font-bold text-amber-100 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
-                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-                Quests & Rewards
-              </h1>
-            </div>
-            <ForwardButton currentPage="Quests" className="text-amber-200/80 hover:text-amber-100" />
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <BackButton />
+            <Sparkles className="w-7 h-7 text-amber-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Quests & Rewards
+            </h1>
+            <ForwardButton currentPage="Quests" />
           </div>
-          <p className="text-amber-200/80 text-lg tracking-wider ml-12">
+          <p className="text-slate-500 text-center">
             Complete quests, earn badges, and climb the leaderboard
           </p>
         </div>

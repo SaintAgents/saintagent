@@ -73,22 +73,24 @@ export default function Events() {
   const liveCount = events.filter(e => e.status === 'live').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <BackButton />
-              <Calendar className="w-6 h-6 text-violet-500" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
+      <div className="max-w-6xl mx-auto px-6 pb-6">
+        {/* Standard Header */}
+        <div className="pt-8 pb-6">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <BackButton />
+            <Calendar className="w-7 h-7 text-violet-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
               Events & Meetups
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 ml-9">Discover and create gatherings</p>
           </div>
-          <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
-            <Plus className="w-4 h-4" />
-            Create Event
-          </Button>
+          <p className="text-slate-500 text-center">Discover and create gatherings</p>
+          <div className="flex justify-center mt-4">
+            <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
+              <Plus className="w-4 h-4" />
+              Create Event
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}

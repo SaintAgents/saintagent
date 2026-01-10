@@ -143,38 +143,27 @@ export default function Gamification() {
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/db92b719b_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-0.jpg";
 
   return (
-    <div className="min-h-screen relative">
-      {/* Hero Section */}
-      <div className="relative h-48 md:h-56 overflow-hidden">
-        <img 
-          src={HERO_IMAGE}
-          alt="Gamification Hub"
-          className="w-full h-full object-cover object-center hero-image"
-          data-no-filter="true"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-slate-50 dark:to-[#050505]" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(168,85,247,0.5)] tracking-wide"
-                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(168,85,247,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
+      {/* Standard Header */}
+      <div className="pt-8 pb-6 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <BackButton />
+            <Trophy className="w-7 h-7 text-violet-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
               Gamification Hub
             </h1>
-            <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
-              Complete Challenges, Earn Badges, Ascend the Leaderboard
-            </p>
+            <ForwardButton currentPage="Gamification" />
           </div>
-        </div>
-        <div className="absolute top-3 left-3">
-          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
-        </div>
-        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-          <div /> {/* spacer */}
-          <div className="flex items-center gap-2">
+          <p className="text-slate-500 text-center">
+            Complete Challenges, Earn Badges, Ascend the Leaderboard
+          </p>
+          <div className="flex justify-center mt-4">
             <Button
               onClick={() => generateChallengesMutation.mutate()}
               disabled={isGenerating}
               size="sm"
-              className="bg-violet-600/90 hover:bg-violet-700 gap-2 backdrop-blur-sm"
+              className="bg-violet-600 hover:bg-violet-700 gap-2"
             >
               {isGenerating ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -183,12 +172,11 @@ export default function Gamification() {
               )}
               Generate Challenges
             </Button>
-            <ForwardButton currentPage="Gamification" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6 -mt-6 relative z-[5]">
+      <div className="max-w-6xl mx-auto px-6 pb-6">
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

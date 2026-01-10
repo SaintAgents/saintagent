@@ -99,7 +99,7 @@ export default function CRM() {
   const domains = ['all', 'finance', 'tech', 'governance', 'health', 'education', 'media', 'legal', 'spiritual', 'creative', 'nonprofit', 'other'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
       <style>{`
         [data-theme='dark'] .crm-import-btn {
           background-color: #1e293b !important;
@@ -115,34 +115,29 @@ export default function CRM() {
         }
       `}</style>
 
-      {/* Hero Section */}
-      <div className="relative h-40 md:h-48 overflow-hidden">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f192709b6_Screenshot2026-01-06215230.png"
-          alt="Contact Network"
-          className="w-full h-full object-cover hero-image"
-          data-no-filter="true"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
-        <div className="absolute bottom-4 left-4 right-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg flex items-center gap-2">
-            <Users className="w-6 h-6 text-violet-300" />
-            Contact Network
+      {/* Standard Header */}
+      <div className="pt-8 pb-6 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <Users className="w-7 h-7 text-violet-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Contact Network
+            </h1>
             <button 
               onClick={() => setHelpOpen(true)}
-              className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              className="p-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
               title="Learn how it works"
             >
-              <HelpCircle className="w-4 h-4 text-white" />
+              <HelpCircle className="w-4 h-4 text-slate-500" />
             </button>
-          </h1>
-          <p className="text-violet-100 mt-0.5 text-xs md:text-sm">
+          </div>
+          <p className="text-slate-500 text-center">
             Your private CRM with optional federated sharing
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-6 p-6">
+      <div className="max-w-7xl mx-auto space-y-6 px-6 pb-6">
         {/* Header Actions */}
         <div className="flex items-center justify-end">
           <div className="flex items-center gap-3">

@@ -49,26 +49,21 @@ export default function Studio() {
   const conversionRate = totalViews > 0 ? ((totalBookings / totalViews) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen relative">
-      {/* Hero Image */}
-      <div className="relative h-72 md:h-96 w-full overflow-hidden">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6dd5f74cd_3c612731-f612-4049-a0fa-c37c6a682477.jpg"
-          alt="Creator Studio Hero"
-          className="w-full h-full object-cover object-center"
-          data-no-filter="true"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
+      {/* Standard Header */}
+      <div className="pt-8 pb-6 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <BarChart3 className="w-7 h-7 text-violet-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Creator Studio
+            </h1>
+          </div>
+          <p className="text-slate-500 text-center">Your business command center</p>
+        </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-[5]">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-violet-500" />
-            Creator Studio
-          </h1>
-          <p className="text-slate-500 mt-1">Your business command center</p>
-        </div>
+      <div className="max-w-6xl mx-auto px-6 pb-6">
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <MetricTile
