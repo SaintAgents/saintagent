@@ -1,4 +1,15 @@
 css
+/* Canvas effects layer - always behind content */
+canvas {
+  z-index: 0 !important;
+}
+
+/* Content always above canvas */
+main, aside, nav, header {
+  position: relative;
+  z-index: 1;
+}
+
 /* Wallet Panel - Force dark green background in ALL themes */
 [data-wallet-panel] {
   background-color: #0a1f0a !important;
@@ -36,7 +47,7 @@ css
 [data-theme='light'] button[role="checkbox"] svg {
   color: white !important;
   stroke: white !important;
-  fill: white !important; /* Preserving existing fill property */
+  fill: white !important;
 }
 
 /* Badge text visibility in light theme */
@@ -79,19 +90,13 @@ css
   color: #0f172a !important;
 }
 
-/* Hero image visibility */
+/* Hero images always visible and without filter */
 .hero-image,
 img.hero-image,
 img[data-no-filter="true"] {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
-}
-
-/* Dark theme - no filter on hero images */
-[data-theme='dark'] img.hero-image,
-[data-theme='dark'] .hero-image,
-[data-theme='dark'] img[data-no-filter="true"] {
   filter: none !important;
   -webkit-filter: none !important;
 }
@@ -118,7 +123,7 @@ img[data-no-filter="true"] {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  z-index: 0 !important;
+  /* z-index is set globally now, but keeping for themed specific position/size */
   pointer-events: none;
 }
 
@@ -130,8 +135,8 @@ img[data-no-filter="true"] {
 
 [data-theme='dark'] main,
 [data-theme='hacker'] main {
-  position: relative;
-  z-index: 1;
+  /* position: relative; */ /* Moved to general rule */
+  /* z-index: 1; */ /* Moved to general rule */
   background: transparent !important;
 }
 
@@ -172,7 +177,7 @@ img[data-no-filter="true"] {
   background-color: rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Hacker theme - square edges */
+/* Hacker theme - square corners */
 [data-theme='hacker'] .rounded-xl:not(img),
 [data-theme='hacker'] .rounded-lg:not(img),
 [data-theme='hacker'] .rounded-2xl:not(img),
@@ -194,50 +199,24 @@ img[data-no-filter="true"] {
   color: #e0e0e0 !important;
 }
 
-/* Hacker theme text - ALL green, no exceptions */
-[data-theme='hacker'] h1,
-[data-theme='hacker'] h2,
-[data-theme='hacker'] h3,
-[data-theme='hacker'] h4,
-[data-theme='hacker'] h5,
-[data-theme='hacker'] h6,
-[data-theme='hacker'] p,
-[data-theme='hacker'] span,
-[data-theme='hacker'] div,
-[data-theme='hacker'] a,
-[data-theme='hacker'] label,
-[data-theme='hacker'] li,
-[data-theme='hacker'] td,
-[data-theme='hacker'] th,
-[data-theme='hacker'] button,
-[data-theme='hacker'] input,
-[data-theme='hacker'] textarea,
-[data-theme='hacker'] select {
+/* Hacker theme - all text green and borders */
+[data-theme='hacker'] * {
   color: #00ff00 !important;
+  border-color: #00ff00 !important;
 }
 
-/* Hacker theme - green filter on ALL images except gauge */
-[data-theme='hacker'] img:not(.gauge-image):not([alt="Trust Gauge"]) {
+/* Hacker theme - green filter on images */
+[data-theme='hacker'] img:not(.gauge-image):not([alt="Trust Gauge"]):not(.hero-image):not([data-no-filter="true"]) {
   filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; /* Added for webkit compatibility */
-}
-
-/* Hacker theme - force green on all color classes */
-[data-theme='hacker'] [class*='text-'] {
-  color: #00ff00 !important;
+  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
 }
 
 [data-theme='hacker'] [class*='bg-']:not(body):not(canvas) {
   background-color: rgba(0, 0, 0, 0.75) !important;
 }
 
-[data-theme='hacker'] [class*='border-'] {
-  border-color: #00ff00 !important;
-}
-
-/* Preserve gauge images in dark mode */
+/* Gauge images preserved */
 img.gauge-image,
-.gauge-image,
 img[alt="Trust Gauge"] {
   filter: none !important;
   -webkit-filter: none !important;
