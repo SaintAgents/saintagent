@@ -33,7 +33,7 @@ function ActivityItem({ ev, onOpen, onShare }) {
   
   return (
     <div
-      className="bg-white dark:bg-[#050505] border border-slate-200 dark:border-[#00ff88]/40 rounded-xl p-4 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all relative z-10"
+      className="bg-white dark:bg-[#050505]/90 border border-slate-200 dark:border-[#00ff88]/40 rounded-xl p-4 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all"
     >
       <div className="flex items-start gap-3">
         <div className={`p-2 rounded-lg ${meta.color} dark:bg-[#00ff88]/20`}><Icon className="w-4 h-4 dark:text-[#00ff88]" /></div>
@@ -122,9 +122,9 @@ export default function ActivityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:from-transparent dark:via-transparent dark:to-transparent relative z-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:from-transparent dark:via-transparent dark:to-transparent">
       {/* Hero Section */}
-      <div className="page-hero relative overflow-hidden z-20">
+      <div className="page-hero relative overflow-hidden">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c8670516_activity.jpg"
           alt="Activity Feed"
@@ -148,7 +148,7 @@ export default function ActivityFeed() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 relative z-20">
+      <div className="max-w-4xl mx-auto p-6 relative z-10">
 
         {/* Scope Toggle */}
         <Tabs value={scope} onValueChange={setScope} className="mb-4">
@@ -166,7 +166,7 @@ export default function ActivityFeed() {
         </Tabs>
 
         {/* Type Filters */}
-        <Card className="mb-6 dark:bg-[#050505] dark:border-[#00ff88]/40">
+        <Card className="mb-6 dark:bg-[#050505]/90 dark:border-[#00ff88]/40">
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center gap-4">
               {Object.entries(TYPE_META).map(([key, meta]) => (
