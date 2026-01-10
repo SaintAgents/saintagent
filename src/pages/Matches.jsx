@@ -170,7 +170,7 @@ export default function Matches() {
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/46b1af7b6_synchro.jpg";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:bg-transparent dark:bg-none relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:bg-transparent dark:bg-none dark:from-transparent dark:via-transparent dark:to-transparent relative">
       {/* Hero Section */}
       <div className="relative h-64 md:h-72 overflow-hidden page-hero">
         <img 
