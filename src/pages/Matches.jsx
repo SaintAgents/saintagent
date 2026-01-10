@@ -102,6 +102,18 @@ export default function Matches() {
     } else if (action === 'decline') {
       await base44.entities.Match.update(match.id, { status: 'declined' });
       refetch();
+    } else if (action === 'message') {
+      // Open floating chat with the matched user
+      document.dispatchEvent(new CustomEvent('openFloatingChat', {
+        detail: {
+          recipientId: match.target_id,
+          recipientName: match.target_name,
+          recipientAvatar: match.target_avatar
+        }
+      }));
+    } else if (action === 'book') {
+      // Navigate to meetings page to book a meeting
+      window.location.href = createPageUrl('Meetings');
     }
   };
 
