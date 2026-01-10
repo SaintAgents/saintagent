@@ -17,6 +17,8 @@ import {
 import MetricTile from '@/components/hud/MetricTile';
 import TierManager from '@/components/creator/TierManager';
 
+const CREATOR_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/740e4858f_universal_upscale_0_1b9b7ded-4214-49b8-8dd1-4839388dd21a_0.jpg";
+
 export default function Studio() {
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -50,16 +52,24 @@ export default function Studio() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
-      {/* Standard Header */}
-      <div className="pt-8 pb-6 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <BarChart3 className="w-7 h-7 text-violet-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+      {/* Hero Section */}
+      <div className="page-hero relative h-48 md:h-56 overflow-hidden">
+        <img
+          src={CREATOR_HERO_IMAGE}
+          alt="Creator Studio"
+          className="hero-image w-full h-full object-cover"
+          style={{ filter: 'none', WebkitFilter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
+          <div className="flex items-center gap-3 mb-2">
+            <BarChart3 className="w-7 h-7 text-violet-400" />
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
               Creator Studio
             </h1>
           </div>
-          <p className="text-slate-500 text-center">Your business command center</p>
+          <p className="text-white/80">Your business command center</p>
         </div>
       </div>
 
