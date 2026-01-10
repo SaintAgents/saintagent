@@ -411,7 +411,9 @@ export default function Profile() {
                   rpRankCode={profile?.rp_rank_code}
                   rpPoints={profile?.rp_points}
                   userId={profile?.user_id}
-                  status={profile?.status} />
+                  status={profile?.status}
+                  showPhotoIcon={true}
+                  galleryImages={profile?.gallery_images} />
 
               </div>
               <div className="flex-1 pb-2">
