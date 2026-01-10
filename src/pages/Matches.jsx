@@ -124,7 +124,7 @@ export default function Matches() {
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d8f7f4b7_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-4.jpg";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Standard Header */}
       <div className="pt-8 pb-6 px-6">
         <div className="max-w-5xl mx-auto">
