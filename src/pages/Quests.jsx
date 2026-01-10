@@ -86,7 +86,7 @@ export default function Quests() {
   const hasClaimable = completedQuests.length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Hero Section */}
       <div className="page-hero relative h-64 md:h-72 overflow-hidden">
         <img
