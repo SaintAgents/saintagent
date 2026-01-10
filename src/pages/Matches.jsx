@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
+import { ChevronDown } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import {
   Search,
@@ -41,6 +44,29 @@ export default function Matches() {
   const [selectedMatchForAI, setSelectedMatchForAI] = useState(null);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedMatchForBooking, setSelectedMatchForBooking] = useState(null);
+
+  const suggestedValues = [
+    'compassion', 'integrity', 'authenticity', 'growth', 'service', 'community', 'creativity',
+    'wisdom', 'love', 'freedom', 'joy', 'peace', 'harmony', 'purpose', 'balance', 'courage',
+    'gratitude', 'humility', 'patience', 'kindness', 'trust', 'forgiveness', 'abundance',
+    'sustainability', 'justice', 'truth', 'beauty', 'connection', 'empowerment', 'resilience'
+  ];
+
+  const suggestedPractices = [
+    'meditation', 'yoga', 'breathwork', 'prayer', 'contemplative_silence', 'energy_work',
+    'martial_arts', 'shamanic_practice', 'sound_healing', 'mantra', 'ritual', 'ceremony',
+    'philosophy', 'plant_medicine', 'fasting', 'pilgrimage', 'dream_work', 'channeling',
+    'astral_projection', 'qigong', 'tai_chi', 'reiki', 'journaling', 'mindfulness',
+    'shadow_work', 'ancestral_healing', 'tarot', 'astrology', 'numerology', 'human_design',
+    'crystal_healing', 'sound_bath', 'ecstatic_dance', 'cold_exposure', 'nature_immersion'
+  ];
+
+  const handleAddTag = (tag, setter, currentQuery) => {
+    const currentTags = currentQuery.split(',').map(s => s.trim()).filter(Boolean);
+    if (!currentTags.includes(tag)) {
+      setter(currentTags.length > 0 ? `${currentQuery}, ${tag}` : tag);
+    }
+  };
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
