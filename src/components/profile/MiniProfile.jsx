@@ -331,6 +331,42 @@ export default function MiniProfile({
             </div>
           )}
         </div>
+      ) : (
+        <div className="flex items-start gap-3">
+          <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
+            <RankedAvatar
+              src={avatar || profile?.avatar_url}
+              name={displayName}
+              size={actualSize}
+              userId={userId}
+              status={profile?.status}
+              leaderTier={profile?.leader_tier}
+              rpRankCode={profile?.rp_rank_code}
+              rpPoints={profile?.rp_points}
+              showPhotoIcon={true}
+              galleryImages={profile?.gallery_images || []}
+            />
+          </div>
+          {(showName || showHandle) && (
+            <div className="min-w-0">
+              {showName && (
+                <div className="text-sm font-medium truncate text-slate-900 dark:text-white">
+                  {displayName}
+                </div>
+              )}
+              {sa && (
+                <div className="text-xs font-semibold text-violet-600 dark:text-violet-400">
+                  SA#{sa}
+                </div>
+              )}
+              {showHandle && handle && (
+                <div className="text-xs text-slate-500 truncate">
+                  @{handle}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
