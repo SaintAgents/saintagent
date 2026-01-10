@@ -1,4 +1,3 @@
-css
 /* =====================================================
    CANVAS & LAYERING - CRITICAL FOR BACKGROUND EFFECTS
    ===================================================== */
@@ -59,39 +58,17 @@ main {
    CARDS & CONTAINERS - SEMI-TRANSPARENT
    ===================================================== */
 
-/* Cards get semi-transparent black backgrounds - but NOT grid containers */
-[data-theme='dark'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
-[data-theme='dark'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
-[data-theme='dark'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
+/* Cards get semi-transparent black backgrounds */
+[data-theme='dark'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
+[data-theme='dark'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
+[data-theme='dark'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='dark'] [class*='Card']:not(img),
-[data-theme='hacker'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
-[data-theme='hacker'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
-[data-theme='hacker'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]):not(.grid):not([class*='grid-cols']),
+[data-theme='hacker'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
+[data-theme='hacker'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
+[data-theme='hacker'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='hacker'] [class*='Card']:not(img) {
   background-color: rgba(0, 0, 0, 0.75) !important;
   border-color: rgba(0, 255, 136, 0.2) !important;
-}
-
-/* Grid containers should be transparent */
-[data-theme='dark'] .grid,
-[data-theme='hacker'] .grid,
-[data-theme='dark'] [class*='grid-cols'],
-[data-theme='hacker'] [class*='grid-cols'],
-[data-theme='dark'] [class*='col-span'],
-[data-theme='hacker'] [class*='col-span'],
-[data-theme='dark'] [class*='space-y'],
-[data-theme='hacker'] [class*='space-y'],
-[data-theme='dark'] [class*='max-w-'],
-[data-theme='hacker'] [class*='max-w-'] {
-  background-color: transparent !important;
-  background: transparent !important;
-}
-
-/* Quests page only - transparent card backgrounds in dark/hacker themes */
-html[data-theme='dark'] [data-page-quests] > div > div > div,
-html[data-theme='hacker'] [data-page-quests] > div > div > div {
-  background-color: transparent !important;
-  background: transparent !important;
 }
 
 /* Hacker theme - square corners */

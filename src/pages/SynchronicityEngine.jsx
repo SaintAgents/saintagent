@@ -290,7 +290,7 @@ export default function SynchronicityEngine() {
   }, [synchronicities]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950 dark:bg-transparent dark:bg-none">
       {/* Hero Section */}
       <div className="page-hero relative h-64 md:h-72 overflow-hidden">
         <img

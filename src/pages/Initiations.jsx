@@ -179,7 +179,7 @@ function TransmissionCard({ id, transmission }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+    <Card className="bg-slate-800/30 border-violet-500/20">
       <CardHeader 
         className="cursor-pointer"
         onClick={() => setExpanded(!expanded)}
@@ -252,7 +252,7 @@ export default function InitiationsPage() {
   }
 
   return (
-    <div className="min-h-screen relative" style={{ background: 'transparent' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920')] bg-cover bg-center opacity-10" />
@@ -281,7 +281,7 @@ export default function InitiationsPage() {
       <div className="px-6 pb-12">
         <div className="max-w-6xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-8" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+            <TabsList className="mb-8 bg-slate-800/50">
               <TabsTrigger value="initiations">Initiations</TabsTrigger>
               <TabsTrigger value="transmissions">Transmissions</TabsTrigger>
               <TabsTrigger value="badges">Badge System</TabsTrigger>
@@ -301,7 +301,7 @@ export default function InitiationsPage() {
               </div>
 
               {/* Meta-Variance Info */}
-              <Card className="mt-8" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+              <Card className="mt-8 bg-gradient-to-r from-violet-900/30 to-purple-900/30 border-violet-500/20">
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <Star className="w-6 h-6 text-amber-400" />

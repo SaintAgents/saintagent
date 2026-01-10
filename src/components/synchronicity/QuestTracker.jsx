@@ -151,7 +151,7 @@ export default function QuestTracker({ quests, onClaimRewards, hasClaimable, isC
   const epicQuests = activeQuests.filter(q => q.quest_type === 'epic' || q.quest_type === 'pathway');
 
   return (
-    <Card className="relative z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+    <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-10">
       <CardHeader className="pb-2 border-b border-amber-900/30">
         <CardTitle className="text-base flex items-center gap-2 text-amber-100">
           <div className="p-1.5 rounded-lg bg-amber-500/20">

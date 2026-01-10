@@ -74,7 +74,7 @@ export default function ActiveSynchronicity({ match, currentUserId }) {
 
   if (!match) {
     return (
-      <Card className="relative z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+      <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-10">
         <CardContent className="py-12 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-8 h-8 text-amber-400/50" />
@@ -95,7 +95,7 @@ export default function ActiveSynchronicity({ match, currentUserId }) {
   };
 
   return (
-    <Card className="overflow-hidden relative z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+    <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden relative z-10">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-center gap-2">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-700/50 to-transparent" />

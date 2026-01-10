@@ -141,7 +141,7 @@ export default function Forum() {
   };
 
   return (
-    <div className="min-h-screen relative" style={{ background: 'transparent' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Standard Header */}
       <div className="pt-8 pb-6 px-6">
         <div className="max-w-6xl mx-auto">
@@ -193,11 +193,7 @@ export default function Forum() {
 
         {/* Category Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full flex-wrap h-auto gap-2 p-2 rounded-xl border"
-            style={{ 
-              backgroundColor: 'rgba(0, 0, 0, 0.75)',
-              borderColor: 'rgba(0, 255, 136, 0.2)'
-            }}>
+          <TabsList className="w-full flex-wrap h-auto gap-2 p-2 bg-white dark:bg-[#0a0a0a] rounded-xl border">
             <TabsTrigger value="all" className="rounded-lg">All</TabsTrigger>
             {CATEGORIES.map(cat => (
               <TabsTrigger key={cat.id} value={cat.id} className="rounded-lg gap-1">
@@ -210,13 +206,13 @@ export default function Forum() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+          <Card className="bg-white dark:bg-[#0a0a0a]">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-violet-600">{posts.length}</div>
               <div className="text-xs text-slate-500">Total Posts</div>
             </CardContent>
           </Card>
-          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+          <Card className="bg-white dark:bg-[#0a0a0a]">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-emerald-600">
                 {posts.filter(p => Date.now() - new Date(p.created_date) < 24*60*60*1000).length}
@@ -224,7 +220,7 @@ export default function Forum() {
               <div className="text-xs text-slate-500">New Today</div>
             </CardContent>
           </Card>
-          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+          <Card className="bg-white dark:bg-[#0a0a0a]">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {posts.reduce((sum, p) => sum + (p.replies_count || 0), 0)}
@@ -232,7 +228,7 @@ export default function Forum() {
               <div className="text-xs text-slate-500">Total Replies</div>
             </CardContent>
           </Card>
-          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+          <Card className="bg-white dark:bg-[#0a0a0a]">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-amber-600">
                 {new Set(posts.map(p => p.author_id)).size}
@@ -246,8 +242,7 @@ export default function Forum() {
         <div className="space-y-4">
           {isLoading ? (
             Array(3).fill(0).map((_, i) => (
-              <div key={i} className="h-32 rounded-xl animate-pulse" 
-                style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }} />
+              <div key={i} className="h-32 bg-white dark:bg-[#0a0a0a] rounded-xl animate-pulse" />
             ))
           ) : filteredPosts.length === 0 ? (
             <div className="text-center py-16">
@@ -264,11 +259,7 @@ export default function Forum() {
               return (
                 <Card 
                   key={post.id} 
-                  className="hover:shadow-lg transition-all cursor-pointer"
-                  style={{ 
-                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    border: '1px solid rgba(0, 255, 136, 0.2)'
-                  }}
+                  className="bg-white dark:bg-[#0a0a0a] hover:shadow-lg transition-all cursor-pointer border dark:border-[#00ff88]/20"
                   onClick={() => setSelectedPost(post)}
                 >
                   <CardContent className="p-4">
