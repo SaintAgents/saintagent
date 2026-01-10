@@ -14,8 +14,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   MessageSquare, Search, Plus, Pin, ThumbsUp, Eye, Clock, 
   Filter, TrendingUp, Users, Megaphone, HelpCircle, Sparkles, 
-  Share2, Award, ArrowRight, MessageCircle
+  Share2, Award, ArrowRight, MessageCircle, Flag, CheckCircle,
+  MoreVertical, Shield, XCircle
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { formatDistanceToNow } from 'date-fns';
@@ -38,6 +46,10 @@ export default function Forum() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [newPost, setNewPost] = useState({ title: '', content: '', category: 'general', tags: '' });
   const [replyContent, setReplyContent] = useState('');
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [reportTarget, setReportTarget] = useState(null); // { type: 'post'|'reply', id, authorId }
+  const [reportReason, setReportReason] = useState('other');
+  const [reportDetails, setReportDetails] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -97,6 +109,53 @@ export default function Forum() {
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['forumPosts'] })
   });
+
+  // Admin: Pin/Unpin post
+  const pinPostMutation = useMutation({
+    mutationFn: async ({ postId, isPinned }) => {
+      return base44.entities.ForumPost.update(postId, { is_pinned: isPinned });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['forumPosts'] })
+  });
+
+  // Mark reply as solution (post author or admin)
+  const markSolutionMutation = useMutation({
+    mutationFn: async ({ replyId, isSolution }) => {
+      return base44.entities.ForumReply.update(replyId, { is_solution: isSolution });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['forumReplies'] })
+  });
+
+  // Report post or reply
+  const createReportMutation = useMutation({
+    mutationFn: (data) => base44.entities.ForumReport.create(data),
+    onSuccess: () => {
+      setReportModalOpen(false);
+      setReportTarget(null);
+      setReportReason('other');
+      setReportDetails('');
+    }
+  });
+
+  const isAdmin = currentUser?.role === 'admin';
+
+  const handleReport = () => {
+    if (!reportTarget) return;
+    createReportMutation.mutate({
+      reporter_id: profile?.user_id,
+      reporter_name: profile?.display_name,
+      target_type: reportTarget.type,
+      target_id: reportTarget.id,
+      target_author_id: reportTarget.authorId,
+      reason: reportReason,
+      details: reportDetails
+    });
+  };
+
+  const openReportModal = (type, id, authorId) => {
+    setReportTarget({ type, id, authorId });
+    setReportModalOpen(true);
+  };
 
   const filteredPosts = posts.filter(post => {
     const categoryMatch = tab === 'all' || post.category === tab;
@@ -308,7 +367,47 @@ export default function Forum() {
                           </span>
                         </div>
                       </div>
-                      <ArrowRight className="w-5 h-5 text-slate-400" />
+                      <div className="flex items-center gap-2">
+                        {isAdmin && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                              <DropdownMenuItem 
+                                onClick={() => pinPostMutation.mutate({ postId: post.id, isPinned: !post.is_pinned })}
+                              >
+                                <Pin className="w-4 h-4 mr-2" />
+                                {post.is_pinned ? 'Unpin Post' : 'Pin Post'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                onClick={() => openReportModal('post', post.id, post.author_id)}
+                                className="text-red-600"
+                              >
+                                <Flag className="w-4 h-4 mr-2" />
+                                Review Reports
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                        {!isAdmin && (
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-slate-400 hover:text-red-500"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openReportModal('post', post.id, post.author_id);
+                            }}
+                          >
+                            <Flag className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <ArrowRight className="w-5 h-5 text-slate-400" />
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -384,6 +483,55 @@ export default function Forum() {
         </DialogContent>
       </Dialog>
 
+      {/* Report Modal */}
+      <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Flag className="w-5 h-5 text-red-500" />
+              Report {reportTarget?.type === 'post' ? 'Post' : 'Reply'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Reason</label>
+              <Select value={reportReason} onValueChange={setReportReason}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="spam">Spam</SelectItem>
+                  <SelectItem value="harassment">Harassment</SelectItem>
+                  <SelectItem value="misinformation">Misinformation</SelectItem>
+                  <SelectItem value="inappropriate">Inappropriate Content</SelectItem>
+                  <SelectItem value="off_topic">Off Topic</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Additional Details (optional)</label>
+              <Textarea
+                value={reportDetails}
+                onChange={(e) => setReportDetails(e.target.value)}
+                placeholder="Provide any additional context..."
+                className="mt-1"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReportModalOpen(false)}>Cancel</Button>
+            <Button 
+              onClick={handleReport}
+              disabled={createReportMutation.isPending}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Submit Report
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Post Detail Modal */}
       <Dialog open={!!selectedPost} onOpenChange={(open) => !open && setSelectedPost(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -438,25 +586,48 @@ export default function Forum() {
                     <p className="text-sm text-slate-500 text-center py-4">No replies yet. Be the first!</p>
                   ) : (
                     replies.map(reply => (
-                      <div key={reply.id} className="flex gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                      <div key={reply.id} className={`flex gap-3 p-3 rounded-lg ${reply.is_solution ? 'bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700' : 'bg-slate-50 dark:bg-slate-800'}`}>
                         <Avatar className="w-8 h-8" data-user-id={reply.author_id}>
                           <AvatarImage src={reply.author_avatar} />
                           <AvatarFallback>{reply.author_name?.[0]}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
                             <span className="font-medium text-sm">{reply.author_name}</span>
                             <span className="text-xs text-slate-500">
                               {formatDistanceToNow(new Date(reply.created_date), { addSuffix: true })}
                             </span>
                             {reply.is_solution && (
                               <Badge className="bg-emerald-100 text-emerald-700 text-xs">
-                                <Award className="w-3 h-3 mr-1" />
+                                <CheckCircle className="w-3 h-3 mr-1" />
                                 Solution
                               </Badge>
                             )}
                           </div>
                           <p className="text-sm text-slate-700 dark:text-slate-300">{reply.content}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            {/* Mark as solution - only post author or admin can do this */}
+                            {(selectedPost?.author_id === profile?.user_id || isAdmin) && selectedPost?.category === 'questions' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className={`text-xs gap-1 ${reply.is_solution ? 'text-emerald-600' : 'text-slate-500'}`}
+                                onClick={() => markSolutionMutation.mutate({ replyId: reply.id, isSolution: !reply.is_solution })}
+                              >
+                                <CheckCircle className="w-3 h-3" />
+                                {reply.is_solution ? 'Unmark Solution' : 'Mark as Solution'}
+                              </Button>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs gap-1 text-slate-400 hover:text-red-500"
+                              onClick={() => openReportModal('reply', reply.id, reply.author_id)}
+                            >
+                              <Flag className="w-3 h-3" />
+                              Report
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ))
