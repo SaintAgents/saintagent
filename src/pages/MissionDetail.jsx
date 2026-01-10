@@ -26,6 +26,7 @@ import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
 import AIDiscussionAssistant from '@/components/ai/AIDiscussionAssistant';
 import AIMissionCopilot from '@/components/ai/AIMissionCopilot';
+import AIMissionCollaboratorSuggester from '@/components/ai/AIMissionCollaboratorSuggester';
 import Breadcrumb from '@/components/hud/Breadcrumb';
 
 export default function MissionDetail() {
@@ -320,7 +321,17 @@ export default function MissionDetail() {
               </TabsContent>
 
               <TabsContent value="team-builder" className="mt-6">
-                <AITeamBuilder mission={mission} currentProfile={profile} />
+                <div className="space-y-6">
+                  <AIMissionCollaboratorSuggester 
+                    mission={mission} 
+                    currentUserId={profile?.user_id}
+                    onInvite={(userId, userProfile) => {
+                      // Could send notification/message to invite
+                      console.log('Invite user:', userId, userProfile);
+                    }}
+                  />
+                  <AITeamBuilder mission={mission} currentProfile={profile} />
+                </div>
               </TabsContent>
 
               <TabsContent value="discussion" className="mt-6">

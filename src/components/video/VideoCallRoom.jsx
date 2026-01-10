@@ -24,8 +24,11 @@ import {
   Send,
   Sparkles,
   Wifi,
-  WifiOff
+  WifiOff,
+  FileText,
+  BrainCircuit
 } from "lucide-react";
+import AIMeetingAssistant from '@/components/ai/AIMeetingAssistant';
 
 export default function VideoCallRoom({ 
   circle, 
@@ -43,6 +46,7 @@ export default function VideoCallRoom({
   const [chatMessages, setChatMessages] = useState([
     { id: 1, user: 'System', content: 'Video call started. Welcome to the Ultranet node sync.', time: new Date() }
   ]);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState('connecting');
   const queryClient = useQueryClient();
@@ -235,29 +239,42 @@ export default function VideoCallRoom({
           </div>
         </div>
 
-        {/* Side Panel - Participants or Chat */}
-        {(showParticipants || showChat) && (
-          <div className="w-72 border-l border-slate-800 flex flex-col bg-slate-900/50">
+        {/* Side Panel - Participants, Chat, or AI Assistant */}
+        {(showParticipants || showChat || showAIAssistant) && (
+          <div className={cn(
+            "border-l border-slate-800 flex flex-col bg-slate-900/50",
+            showAIAssistant ? "w-96" : "w-72"
+          )}>
             <div className="flex border-b border-slate-800">
               <button
-                onClick={() => { setShowParticipants(true); setShowChat(false); }}
+                onClick={() => { setShowParticipants(true); setShowChat(false); setShowAIAssistant(false); }}
                 className={cn(
-                  "flex-1 px-4 py-2 text-sm font-medium transition-colors",
+                  "flex-1 px-3 py-2 text-sm font-medium transition-colors",
                   showParticipants ? "text-white bg-slate-800" : "text-slate-400 hover:text-white"
                 )}
               >
                 <Users className="w-4 h-4 inline mr-1" />
-                Participants
+                Team
               </button>
               <button
-                onClick={() => { setShowChat(true); setShowParticipants(false); }}
+                onClick={() => { setShowChat(true); setShowParticipants(false); setShowAIAssistant(false); }}
                 className={cn(
-                  "flex-1 px-4 py-2 text-sm font-medium transition-colors",
+                  "flex-1 px-3 py-2 text-sm font-medium transition-colors",
                   showChat ? "text-white bg-slate-800" : "text-slate-400 hover:text-white"
                 )}
               >
                 <MessageSquare className="w-4 h-4 inline mr-1" />
                 Chat
+              </button>
+              <button
+                onClick={() => { setShowAIAssistant(true); setShowParticipants(false); setShowChat(false); }}
+                className={cn(
+                  "flex-1 px-3 py-2 text-sm font-medium transition-colors",
+                  showAIAssistant ? "text-white bg-slate-800" : "text-slate-400 hover:text-white"
+                )}
+              >
+                <BrainCircuit className="w-4 h-4 inline mr-1" />
+                AI
               </button>
             </div>
 
@@ -312,6 +329,32 @@ export default function VideoCallRoom({
                 </form>
               </>
             )}
+
+            {showAIAssistant && (
+              <div className="flex-1 overflow-hidden">
+                <AIMeetingAssistant
+                  meetingTitle={circle?.name || 'Team Meeting'}
+                  participants={activeParticipants.map(p => ({ name: p.display_name, ...p }))}
+                  className="h-full border-0 rounded-none bg-transparent"
+                  onSaveSummary={(summary) => {
+                    setChatMessages(prev => [...prev, {
+                      id: Date.now(),
+                      user: 'AI Assistant',
+                      content: `📝 Meeting summary saved. Key points: ${summary.summary?.substring(0, 100)}...`,
+                      time: new Date()
+                    }]);
+                  }}
+                  onSaveActionItems={(items) => {
+                    setChatMessages(prev => [...prev, {
+                      id: Date.now(),
+                      user: 'AI Assistant',
+                      content: `✅ ${items.length} action items captured and ready for follow-up.`,
+                      time: new Date()
+                    }]);
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -362,8 +405,9 @@ export default function VideoCallRoom({
             variant="ghost"
             size="icon"
             onClick={() => {
-              setShowParticipants(!showParticipants && !showChat);
+              setShowParticipants(!showParticipants && !showChat && !showAIAssistant);
               setShowChat(false);
+              setShowAIAssistant(false);
             }}
             className={cn(
               "w-12 h-12 rounded-full",
@@ -378,8 +422,9 @@ export default function VideoCallRoom({
             variant="ghost"
             size="icon"
             onClick={() => {
-              setShowChat(!showChat && !showParticipants);
+              setShowChat(!showChat && !showParticipants && !showAIAssistant);
               setShowParticipants(false);
+              setShowAIAssistant(false);
             }}
             className={cn(
               "w-12 h-12 rounded-full",
@@ -389,6 +434,24 @@ export default function VideoCallRoom({
             )}
           >
             <MessageSquare className="w-5 h-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setShowAIAssistant(!showAIAssistant && !showParticipants && !showChat);
+              setShowParticipants(false);
+              setShowChat(false);
+            }}
+            className={cn(
+              "w-12 h-12 rounded-full",
+              showAIAssistant 
+                ? "bg-emerald-600 text-white hover:bg-emerald-700" 
+                : "bg-slate-800 text-white hover:bg-slate-700"
+            )}
+            title="AI Meeting Assistant"
+          >
+            <BrainCircuit className="w-5 h-5" />
           </Button>
           <div className="w-px h-8 bg-slate-700 mx-2" />
           <Button
