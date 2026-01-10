@@ -1137,21 +1137,32 @@ function AuthenticatedLayout({ children, currentPageName }) {
                       height: 288px;
                     }
                   }
-                  [data-theme='dark'] .page-hero,
-                  [data-theme='hacker'] .page-hero {
+                  [data-theme='dark'] .page-hero {
                     height: 160px !important;
                     min-height: 160px !important;
                     max-height: 160px !important;
                     padding-top: 0 !important;
                   }
-                  [data-theme='dark'] .page-hero h1,
+                  [data-theme='hacker'] .page-hero {
+                    height: 320px !important;
+                    min-height: 320px !important;
+                    max-height: 320px !important;
+                    padding-top: 0 !important;
+                  }
+                  [data-theme='dark'] .page-hero h1 {
+                                  padding-top: 0 !important;
+                                  margin-top: 0 !important;
+                                }
                                 [data-theme='hacker'] .page-hero h1 {
                                   padding-top: 0 !important;
                                   margin-top: 0 !important;
                                 }
-                                [data-theme='dark'] .page-hero .hero-content,
-                                [data-theme='hacker'] .page-hero .hero-content {
+                                [data-theme='dark'] .page-hero .hero-content {
                                   padding-top: 30px !important;
+                                  margin-top: 0 !important;
+                                }
+                                [data-theme='hacker'] .page-hero .hero-content {
+                                  padding-top: 80px !important;
                                   margin-top: 0 !important;
                                 }
 
