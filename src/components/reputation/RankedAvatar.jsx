@@ -136,21 +136,23 @@ export default function RankedAvatar({
       >
         {/* Inner ring: white bg */}
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
-          <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600 relative">
-            {finalAvatarUrl && (
+          <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600">
+            {finalAvatarUrl ? (
               <img 
                 src={finalAvatarUrl} 
                 alt={name || 'Avatar'} 
-                className="absolute inset-0 w-full h-full object-cover z-10"
+                className="w-full h-full object-cover"
                 style={{ filter: 'none' }}
                 data-no-filter="true"
                 onError={(e) => {
-                  e.target.style.opacity = '0';
+                  // Hide the broken image - fallback will show
+                  e.target.style.display = 'none';
+                  e.target.nextSibling?.classList?.remove('hidden');
                 }}
               />
-            )}
-            {/* Fallback initial - always behind image */}
-            <div className="absolute inset-0 flex items-center justify-center z-0">
+            ) : null}
+            {/* Fallback initial - hidden when image loads successfully */}
+            <div className={`absolute inset-0 flex items-center justify-center ${finalAvatarUrl ? 'hidden' : ''}`}>
               <span 
                 className="text-white font-bold select-none" 
                 style={{ fontSize: `${size * 0.35}px` }}
