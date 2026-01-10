@@ -53,8 +53,7 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl p-4 transition-all"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', border: '1px solid rgba(0, 255, 136, 0.2)' }}
+      className="bg-gradient-to-br from-slate-900/80 to-slate-800/60 rounded-xl border border-violet-500/20 p-4 hover:border-violet-500/40 transition-all"
     >
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
@@ -291,7 +290,7 @@ export default function SynchronicityEngine() {
   }, [synchronicities]);
 
   return (
-    <div className="min-h-screen relative" style={{ background: 'transparent' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950">
       {/* Hero Section */}
       <div className="page-hero relative h-64 md:h-72 overflow-hidden">
         <img
@@ -317,7 +316,7 @@ export default function SynchronicityEngine() {
       </div>
 
       {/* Filters Bar */}
-      <div className="border-b border-violet-500/20 backdrop-blur-sm sticky top-16 z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      <div className="border-b border-violet-500/20 bg-slate-900/50 backdrop-blur-sm sticky top-16 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="relative flex-1 max-w-xs">
@@ -363,7 +362,7 @@ export default function SynchronicityEngine() {
             {isLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="h-48 rounded-xl animate-pulse" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} />
+                  <div key={i} className="h-48 bg-slate-800/50 rounded-xl animate-pulse" />
                 ))}
               </div>
             ) : filteredSyncs.length === 0 ? (
@@ -392,7 +391,7 @@ export default function SynchronicityEngine() {
           {/* Sidebar */}
           <div className="space-y-4">
             {/* Trending Symbols */}
-            <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+            <Card className="bg-slate-900/80 border-violet-500/20">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base text-white flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-violet-400" />
@@ -419,7 +418,7 @@ export default function SynchronicityEngine() {
             </Card>
 
             {/* Stats */}
-            <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
+            <Card className="bg-slate-900/80 border-violet-500/20">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base text-white">Community Stats</CardTitle>
               </CardHeader>
