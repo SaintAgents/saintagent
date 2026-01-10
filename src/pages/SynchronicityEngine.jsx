@@ -32,6 +32,8 @@ import { formatDistanceToNow } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
+const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/52771e0da_gemini-25-flash-image_change_the_letters_to_words_-_Synchronicity_is_MetaV_at_work-0.jpg";
+
 const CATEGORY_CONFIG = {
   numbers: { label: 'Numbers', icon: Hash, color: 'bg-violet-500/20 text-violet-400 border-violet-500/30' },
   dreams: { label: 'Dreams', icon: Eye, color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30' },
@@ -289,31 +291,34 @@ export default function SynchronicityEngine() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950">
-      {/* Header */}
+      {/* Hero Section */}
+      <div className="page-hero relative h-64 md:h-72 overflow-hidden">
+        <img
+          src={HERO_IMAGE}
+          alt="Synchronicity Board"
+          className="hero-image w-full h-full object-cover"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <div className="flex items-center gap-3 mb-2">
+            <BackButton className="text-white/80 hover:text-white" />
+            <Orbit className="w-8 h-8 text-violet-400" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+              Synchronicity Board
+            </h1>
+            <ForwardButton currentPage="SynchronicityEngine" className="text-white/80 hover:text-white" />
+          </div>
+          <p className="text-white/80 text-lg max-w-xl">
+            Share and discover meaningful coincidences
+          </p>
+        </div>
+      </div>
+
+      {/* Filters Bar */}
       <div className="border-b border-violet-500/20 bg-slate-900/50 backdrop-blur-sm sticky top-16 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <BackButton />
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Orbit className="w-6 h-6 text-violet-400" />
-                Synchronicity Board
-              </h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                onClick={() => setSubmitOpen(true)}
-                className="bg-violet-600 hover:bg-violet-500 text-white"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Share Synchronicity
-              </Button>
-              <ForwardButton currentPage="SynchronicityEngine" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <Input
@@ -323,20 +328,29 @@ export default function SynchronicityEngine() {
                 className="pl-9 bg-slate-800/50 border-slate-700 text-white"
               />
             </div>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-40 bg-slate-800/50 border-slate-700 text-white">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="all" className="text-white">All Categories</SelectItem>
-                {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
-                  <SelectItem key={key} value={key} className="text-white">
-                    {config.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-2">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-40 bg-slate-800/50 border-slate-700 text-white">
+                  <Filter className="w-4 h-4 mr-2" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-800 border-slate-700">
+                  <SelectItem value="all" className="text-white">All Categories</SelectItem>
+                  {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
+                    <SelectItem key={key} value={key} className="text-white">
+                      {config.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => setSubmitOpen(true)}
+                className="bg-violet-600 hover:bg-violet-500 text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            </div>
           </div>
         </div>
       </div>

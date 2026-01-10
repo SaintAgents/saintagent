@@ -45,16 +45,17 @@ export default function HelpHint({ content, side = 'right', align = 'start', cla
           <div
             className={cn(
               "rounded-b-xl rounded-tr-xl overflow-hidden",
-              // Glassmorphism with obsidian-emerald gradient
-              "bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-emerald-950/90",
+              // Light theme - white/cream background
+              "bg-gradient-to-br from-white via-slate-50 to-emerald-50/50",
+              // Dark theme - obsidian-emerald gradient
               "dark:from-[#050505]/95 dark:via-[#0a0a0a]/95 dark:to-emerald-950/80",
               "backdrop-blur-xl",
               "border border-t-0 border-emerald-500/30 dark:border-[#00ff88]/25",
-              "shadow-[0_8px_32px_rgba(0,0,0,0.4),_0_0_20px_rgba(16,185,129,0.15)]",
+              "shadow-[0_8px_32px_rgba(0,0,0,0.15),_0_0_20px_rgba(16,185,129,0.1)]",
               "dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),_0_0_30px_rgba(0,255,136,0.1)]"
             )}
           >
-            <div className="p-4 text-sm leading-relaxed text-slate-200 dark:text-slate-100">
+            <div className="p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-100">
               {typeof content === 'string' ? (
                 <p className="whitespace-normal break-words">{content}</p>
               ) : (
