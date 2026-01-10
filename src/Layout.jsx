@@ -1103,9 +1103,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: transparent !important;
         }
 
-        /* Hacker theme background for Command Deck - ensure no white flash */
+        /* Hacker theme background for Command Deck - transparent to show canvas effects */
         [data-theme='hacker'] main[data-page='CommandDeck'] {
-          background-color: #000 !important;
+          background-color: transparent !important;
           background-image: none !important;
         }
 
