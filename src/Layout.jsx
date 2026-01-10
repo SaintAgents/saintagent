@@ -1139,9 +1139,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
                   }
                   [data-theme='dark'] .page-hero,
                   [data-theme='hacker'] .page-hero {
-                    height: 80px !important;
-                    min-height: 80px !important;
-                    max-height: 80px !important;
+                    height: 160px !important;
+                    min-height: 160px !important;
+                    max-height: 160px !important;
                     padding-top: 0 !important;
                   }
                   [data-theme='dark'] .page-hero h1,
