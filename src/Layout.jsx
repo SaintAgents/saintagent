@@ -1102,7 +1102,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
         /* Prevent white flash during theme transitions - apply to NON-CommandDeck pages */
         [data-theme='dark'] main:not([data-page='CommandDeck']) {
-                    background-color: #050505 !important;
+                    background-color: transparent !important;
                     background-image: none !important;
                     transition: none !important;
                   }
@@ -1115,7 +1115,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
                       background-color: transparent !important;
                     }
                   [data-theme='hacker'] main:not([data-page='CommandDeck']) {
-                    background-color: #000 !important;
+                    background-color: transparent !important;
                     background-image: none !important;
                     transition: none !important;
                   }
@@ -1192,15 +1192,23 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] *, [data-theme='hacker'] *::before, [data-theme='hacker'] *::after {
             border-color: #00ff00 !important;
           }
-          [data-theme='hacker'] body, [data-theme='hacker'] .min-h-screen, [data-theme='hacker'] div, [data-theme='hacker'] section, [data-theme='hacker'] main, [data-theme='hacker'] aside, [data-theme='hacker'] header, [data-theme='hacker'] footer, [data-theme='hacker'] nav {
+          [data-theme='hacker'] body {
             background-color: #000 !important;
+          }
+          [data-theme='hacker'] .min-h-screen, [data-theme='hacker'] main {
+            background-color: transparent !important;
+            background-image: none !important;
+            color: #00ff00 !important;
+          }
+          [data-theme='hacker'] div, [data-theme='hacker'] section, [data-theme='hacker'] aside, [data-theme='hacker'] header, [data-theme='hacker'] footer, [data-theme='hacker'] nav {
+            background-color: rgba(0, 0, 0, 0.75) !important;
             background-image: none !important;
             color: #00ff00 !important;
           }
           [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4, [data-theme='hacker'] h5, [data-theme='hacker'] h6, [data-theme='hacker'] p, [data-theme='hacker'] span, [data-theme='hacker'] a, [data-theme='hacker'] li, [data-theme='hacker'] label {
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='bg-'] { background-color: #000 !important; }
+          [data-theme='hacker'] [class*='bg-'] { background-color: rgba(0, 0, 0, 0.75) !important; }
           [data-theme='hacker'] [class*='text-'] { color: #00ff00 !important; }
           [data-theme='hacker'] button, [data-theme='hacker'] [role="button"] {
             background-color: #000 !important;
