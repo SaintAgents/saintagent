@@ -38,14 +38,14 @@ import Profiles from './pages/Profiles';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
 import Projects from './pages/Projects';
+import Quests from './pages/Quests';
 import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
+import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import SynchronicityEngine from './pages/SynchronicityEngine';
-import Quests from './pages/Quests';
 import __Layout from './Layout.jsx';
 
 
@@ -90,14 +90,14 @@ export const PAGES = {
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
     "Projects": Projects,
+    "Quests": Quests,
     "ResourceHub": ResourceHub,
     "Settings": Settings,
     "Studio": Studio,
+    "SynchronicityEngine": SynchronicityEngine,
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "SynchronicityEngine": SynchronicityEngine,
-    "Quests": Quests,
 }
 
 export const pagesConfig = {

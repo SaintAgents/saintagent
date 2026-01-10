@@ -24,8 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Orbit, Heart, MessageCircle, Plus, TrendingUp, 
-  Hash, Eye, Users, Filter, Search, Clock, Flame, Sparkles, Target
+  Sparkles, Heart, MessageCircle, Plus, TrendingUp, 
+  Hash, Eye, Users, Filter, Search, Clock, Flame
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
@@ -296,8 +296,8 @@ export default function SynchronicityEngine() {
             <div className="flex items-center gap-3">
               <BackButton />
               <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Orbit className="w-6 h-6 text-violet-400" />
-                Synchronicity Board
+                <Sparkles className="w-6 h-6 text-violet-400" />
+                Synchronicity Engine
               </h1>
             </div>
             <div className="flex items-center gap-2">
@@ -428,28 +428,6 @@ export default function SynchronicityEngine() {
                   <span className="text-white font-semibold">
                     {synchronicities.reduce((acc, s) => acc + (s.resonance_count || 0), 0)}
                   </span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quest Card */}
-            <Card className="bg-gradient-to-br from-amber-900/40 to-amber-800/20 border-amber-500/30">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base text-amber-200 flex items-center gap-2">
-                  <Target className="w-4 h-4 text-amber-400" />
-                  Daily Quest
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-amber-100/80 mb-3">
-                  Share a synchronicity event to earn RP and contribute to the collective consciousness.
-                </p>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-amber-300/70">Reward: +25 RP</span>
-                  <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30">
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    Active
-                  </Badge>
                 </div>
               </CardContent>
             </Card>
