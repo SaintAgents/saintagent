@@ -170,7 +170,7 @@ export default function Missions() {
     console.log('Mission action:', action, mission);
   };
 
-  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d260b7709_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg";
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d702dc79_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
