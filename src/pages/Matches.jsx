@@ -121,28 +121,43 @@ export default function Matches() {
     dating: datingCount
   };
 
-  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/25b435803_synchro.jpg";
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/46b1af7b6_synchro.jpg";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:bg-transparent dark:bg-none relative">
-      {/* Standard Header */}
-      <div className="pt-8 pb-6 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-1">
-            <BackButton />
-            <Sparkles className="w-7 h-7 text-emerald-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 overflow-hidden page-hero">
+        <img 
+          src={HERO_IMAGE}
+          alt="Matches"
+          className="hero-image w-full h-full object-cover object-center"
+          data-no-filter="true"
+        />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Matches
             </h1>
-            <ForwardButton currentPage="Matches" />
+            <p className="text-lg font-semibold text-emerald-300 mt-1 drop-shadow-lg">
+              Synchronicity Engine
+            </p>
+            <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
+              AI-Powered Connections Based on Values, Skills & Intentions
+            </p>
           </div>
-          <p className="text-lg font-semibold text-emerald-600 text-center mb-1">
-            Synchronicity Engine
-          </p>
-          <p className="text-slate-500 text-center">
-            AI-Powered Connections Based on Values, Skills & Intentions
-          </p>
-          <div className="flex justify-center gap-2 mt-4 flex-wrap">
+        </div>
+        <div className="absolute top-3 left-3">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+        <div className="absolute top-3 right-3">
+          <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 -mt-6 relative z-[5]">
+        <div className="flex justify-center gap-2 mb-6 flex-wrap">
             <a
               href={createPageUrl('DatingMatches')}
               className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg cursor-pointer"
