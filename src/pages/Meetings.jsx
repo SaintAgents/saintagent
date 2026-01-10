@@ -97,17 +97,17 @@ export default function Meetings() {
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e53f7af9e_meetings.jpg";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
       {/* Hero Section */}
-      <div className="relative h-48 md:h-56 overflow-hidden">
+      <div className="page-hero relative overflow-hidden">
         <img 
           src={HERO_IMAGE}
           alt="Meetings & Connections"
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
@@ -129,7 +129,7 @@ export default function Meetings() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 -mt-6 relative z-10">
+      <div className="max-w-4xl mx-auto p-6 -mt-6 relative z-[5]">
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
