@@ -86,19 +86,15 @@ main {
   background: transparent !important;
 }
 
-/* Quests page - fully transparent cards - HIGH SPECIFICITY */
-html[data-theme='dark'] [data-page-quests] .rounded-xl,
-html[data-theme='dark'] [data-page-quests] .rounded-lg,
-html[data-theme='dark'] [data-page-quests] .rounded-2xl,
-html[data-theme='dark'] [data-page-quests] .rounded-md,
-html[data-theme='dark'] [data-page-quests] [class*='Card'],
-html[data-theme='dark'] [data-page-quests] [class*='bg-'],
-html[data-theme='hacker'] [data-page-quests] .rounded-xl,
-html[data-theme='hacker'] [data-page-quests] .rounded-lg,
-html[data-theme='hacker'] [data-page-quests] .rounded-2xl,
-html[data-theme='hacker'] [data-page-quests] .rounded-md,
-html[data-theme='hacker'] [data-page-quests] [class*='Card'],
-html[data-theme='hacker'] [data-page-quests] [class*='bg-'] {
+/* Quests page - transparent card backgrounds only (not images) */
+html[data-theme='dark'] [data-page-quests] .rounded-xl:not(img):not(.hero-image),
+html[data-theme='dark'] [data-page-quests] .rounded-lg:not(img):not(.hero-image),
+html[data-theme='dark'] [data-page-quests] .rounded-2xl:not(img):not(.hero-image),
+html[data-theme='dark'] [data-page-quests] [class*='Card']:not(img),
+html[data-theme='hacker'] [data-page-quests] .rounded-xl:not(img):not(.hero-image),
+html[data-theme='hacker'] [data-page-quests] .rounded-lg:not(img):not(.hero-image),
+html[data-theme='hacker'] [data-page-quests] .rounded-2xl:not(img):not(.hero-image),
+html[data-theme='hacker'] [data-page-quests] [class*='Card']:not(img) {
   background-color: transparent !important;
   background: transparent !important;
   backdrop-filter: none !important;
@@ -107,8 +103,8 @@ html[data-theme='hacker'] [data-page-quests] [class*='bg-'] {
 }
 
 /* Quests page cards - restore border only */
-html[data-theme='dark'] [data-page-quests] [class*='Card'],
-html[data-theme='hacker'] [data-page-quests] [class*='Card'] {
+html[data-theme='dark'] [data-page-quests] [class*='Card']:not(img),
+html[data-theme='hacker'] [data-page-quests] [class*='Card']:not(img) {
   border: 1px solid rgba(0, 255, 136, 0.2) !important;
 }
 
