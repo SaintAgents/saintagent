@@ -99,11 +99,18 @@ html[data-theme='dark'] img[data-no-filter="true"],
 
 /* =====================================================
    STANDARDIZED PAGE BACKGROUND RULES
-   All pages should show background effects in dark/hacker
+   Light theme: Show normal gradient backgrounds
+   Dark/Hacker theme: Show canvas background effects
    ===================================================== */
 
-/* Page containers - transparent to show canvas effects */
-[data-theme='dark'] main,
+/* LIGHT THEME - Keep original gradient backgrounds (don't make transparent!) */
+[data-theme='light'] main,
+[data-theme='light'] .min-h-screen {
+  /* Light theme keeps its normal backgrounds - do NOT override */
+}
+
+/* DARK THEME - Page containers transparent to show canvas effects */
+[data-theme='dark'] main:not([data-page='CommandDeck']),
 [data-theme='hacker'] main {
   background-color: transparent !important;
   background-image: none !important;
@@ -152,18 +159,25 @@ html[data-theme='dark'] img[data-no-filter="true"],
   z-index: 5;
 }
 
-/* Gradient backgrounds - make transparent (excluding hero overlays) */
+/* DARK/HACKER: Gradient backgrounds transparent to show canvas effects */
 [data-theme='dark'] .min-h-screen.bg-gradient-to-br,
 [data-theme='dark'] .min-h-screen.bg-gradient-to-b,
 [data-theme='dark'] .min-h-screen.bg-gradient-to-r,
 [data-theme='hacker'] .min-h-screen.bg-gradient-to-br,
 [data-theme='hacker'] .min-h-screen.bg-gradient-to-b,
 [data-theme='hacker'] .min-h-screen.bg-gradient-to-r,
-[data-theme='dark'] div.min-h-screen,
+[data-theme='dark'] div.min-h-screen:not([data-page='CommandDeck']),
 [data-theme='hacker'] div.min-h-screen {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
+}
+
+/* LIGHT THEME: Keep gradient backgrounds visible - DO NOT override */
+[data-theme='light'] .min-h-screen.bg-gradient-to-br,
+[data-theme='light'] .min-h-screen.bg-gradient-to-b,
+[data-theme='light'] .bg-gradient-to-br {
+  /* Let default gradients apply */
 }
 
 /* =====================================================
