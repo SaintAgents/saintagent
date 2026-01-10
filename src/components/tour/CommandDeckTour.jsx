@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { X, ChevronRight, ChevronLeft, Sparkles, LayoutDashboard, PanelLeft, Settings, Layers, Palette, GripVertical, Minimize2, Save, RotateCcw } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Sparkles, LayoutDashboard, PanelLeft, Settings, Layers, Palette, GripVertical, Moon, Cpu } from 'lucide-react';
 
 const TOUR_STEPS = [
   {
@@ -50,6 +50,22 @@ const TOUR_STEPS = [
     icon: Settings,
     position: 'center',
     highlight: 'controls'
+  },
+  {
+    id: 'themes',
+    title: 'Themes',
+    description: 'Switch between Light, Dark, Hacker, or Custom themes from the left sidebar. Each theme transforms the entire interface to match your style.',
+    icon: Moon,
+    position: 'left',
+    highlight: 'sidebar'
+  },
+  {
+    id: 'bgeffects',
+    title: 'Background Effects',
+    description: 'In Dark or Hacker themes, choose animated backgrounds: Matrix Rain, Starfield, Nebula, or Circuit patterns. Adjust speed, brightness, and variance to your liking.',
+    icon: Cpu,
+    position: 'left',
+    highlight: 'sidebar'
   },
   {
     id: 'customize',
