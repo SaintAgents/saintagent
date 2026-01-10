@@ -368,12 +368,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
-    <div className="min-h-screen bg-slate-50 relative" data-bg-effect={bgEffect}>
-      {/* Background effect canvases - behind all content */}
+    <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
+      {/* Starfield Canvas - rank-colored stars */}
       {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
-      {showMatrixRain && <MatrixRainCanvas />}
-      {showNebula && <NebulaCanvas />}
-      {showCircuit && <CircuitCanvas />}
+                {showMatrixRain && <MatrixRainCanvas />}
+                {showNebula && <NebulaCanvas />}
+                {showCircuit && <CircuitCanvas />}
 
       <style>{`
         :root {
@@ -472,19 +472,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] [class*='bg-white'],
         [data-theme='dark'] [class*='bg-gray-'],
         [data-theme='dark'] [class*='bg-slate-'] { 
-          background-color: rgba(5, 5, 5, 0.95) !important; 
+          background-color: rgba(5, 5, 5, 0.85) !important; 
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
-          position: relative;
-          z-index: 1;
-        }
-        
-        [data-theme='hacker'] [class*='bg-white'],
-        [data-theme='hacker'] [class*='bg-gray-'],
-        [data-theme='hacker'] [class*='bg-slate-'] { 
-          background-color: rgba(0, 0, 0, 0.95) !important; 
-          position: relative;
-          z-index: 1;
         }
 
         /* Ensure page backgrounds are transparent to show canvas effects */
@@ -579,21 +569,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter="true"]),
         [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter="true"]),
         [data-theme='dark'] .rounded-md:not(img):not([data-no-filter="true"]) {
-          background-color: rgba(5, 5, 5, 0.95) !important;
+          background-color: rgba(5, 5, 5, 0.85) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
-          position: relative;
-          z-index: 1;
-        }
-        
-        /* Hacker theme cards */
-        [data-theme='hacker'] .rounded-xl:not(img):not([data-no-filter="true"]), 
-        [data-theme='hacker'] .rounded-lg:not(img):not([data-no-filter="true"]),
-        [data-theme='hacker'] .rounded-2xl:not(img):not([data-no-filter="true"]),
-        [data-theme='hacker'] .rounded-md:not(img):not([data-no-filter="true"]) {
-          background-color: rgba(0, 0, 0, 0.95) !important;
-          position: relative;
-          z-index: 1;
         }
         
         /* Trust gauge container - no box styling - HIGHEST SPECIFICITY */
@@ -1146,25 +1124,25 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
                   /* Hero section sizing */
                   .page-hero {
-                    height: 200px;
+                    height: 256px;
                   }
                   @media (min-width: 768px) {
                     .page-hero {
-                      height: 220px;
+                      height: 288px;
                     }
                   }
                   [data-theme='dark'] .page-hero,
                   [data-theme='hacker'] .page-hero {
-                    height: 60px !important;
-                    min-height: 60px !important;
-                    max-height: 60px !important;
+                    height: 80px !important;
+                    min-height: 80px !important;
+                    max-height: 80px !important;
                     padding-top: 0 !important;
                   }
                   [data-theme='dark'] .page-hero h1,
                   [data-theme='hacker'] .page-hero h1,
                   [data-theme='dark'] .page-hero .hero-content,
                   [data-theme='hacker'] .page-hero .hero-content {
-                    padding-top: 0.25rem !important;
+                    padding-top: 0.5rem !important;
                     margin-top: 0 !important;
                   }
 
@@ -1638,7 +1616,7 @@ function NebulaCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.5, zIndex: -10 }}
+      style={{ opacity: 0.8, zIndex: 0 }}
     />
   );
 }
@@ -1776,7 +1754,7 @@ function MatrixRainCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.6, zIndex: -10 }}
+      style={{ opacity: 0.9, zIndex: 0 }}
     />
   );
 }
@@ -2051,7 +2029,7 @@ function CircuitCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.5, zIndex: -10 }}
+      style={{ opacity: 0.7, zIndex: 0 }}
     />
   );
 }
@@ -2206,7 +2184,7 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.5, zIndex: -10 }}
+      style={{ opacity: 0.7, zIndex: 0 }}
     />
   );
 }

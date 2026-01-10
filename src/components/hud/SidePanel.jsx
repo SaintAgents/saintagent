@@ -1011,13 +1011,13 @@ export default function SidePanel({
       <button
           onClick={onToggle}
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 w-8 h-16 bg-white border border-slate-200 flex items-center justify-center shadow-md hover:bg-slate-50 transition-colors z-[56]",
-            dockSide === 'right' ? "-left-8 rounded-l-lg border-r-0" : "-right-8 rounded-r-lg border-l-0"
+            "absolute top-1/2 -translate-y-1/2 w-10 h-20 bg-white border border-slate-200 flex items-center justify-center shadow-md hover:bg-slate-50 transition-colors",
+            dockSide === 'right' ? "-left-10 rounded-l-xl border-r-0" : "-right-10 rounded-r-xl border-l-0"
           )}>
 
         {dockSide === 'right' ?
-          isOpen ? <ChevronRight className="w-4 h-4 text-slate-600" /> : <ChevronLeft className="w-4 h-4 text-slate-600" /> :
-          isOpen ? <ChevronLeft className="w-4 h-4 text-slate-600" /> : <ChevronRight className="w-4 h-4 text-slate-600" />
+          isOpen ? <ChevronRight className="w-5 h-5 text-slate-600" /> : <ChevronLeft className="w-5 h-5 text-slate-600" /> :
+          isOpen ? <ChevronLeft className="w-5 h-5 text-slate-600" /> : <ChevronRight className="w-5 h-5 text-slate-600" />
           }
       </button>
 
