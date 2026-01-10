@@ -210,13 +210,13 @@ export default function Forum() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-white dark:bg-[#0a0a0a]">
+          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-violet-600">{posts.length}</div>
               <div className="text-xs text-slate-500">Total Posts</div>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-[#0a0a0a]">
+          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-emerald-600">
                 {posts.filter(p => Date.now() - new Date(p.created_date) < 24*60*60*1000).length}
@@ -224,7 +224,7 @@ export default function Forum() {
               <div className="text-xs text-slate-500">New Today</div>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-[#0a0a0a]">
+          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {posts.reduce((sum, p) => sum + (p.replies_count || 0), 0)}
@@ -232,7 +232,7 @@ export default function Forum() {
               <div className="text-xs text-slate-500">Total Replies</div>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-[#0a0a0a]">
+          <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-amber-600">
                 {new Set(posts.map(p => p.author_id)).size}
