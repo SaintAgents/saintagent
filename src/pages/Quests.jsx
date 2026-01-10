@@ -112,7 +112,7 @@ export default function Quests() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 pb-12">
+      <div className="max-w-7xl mx-auto px-4 pb-12" style={{ background: 'transparent' }}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
           {/* Left Column - Quest Tracker */}
