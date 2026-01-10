@@ -36,6 +36,11 @@ export default function GlobalChatWidget() {
   const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
+  
+  // Button dragging refs
+  const buttonDragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const buttonDraggingRef = useRef(false);
+  const buttonDraggedRef = useRef(false);
 
   // Initialize position from localStorage
   useEffect(() => {
@@ -164,6 +169,58 @@ export default function GlobalChatWidget() {
     document.removeEventListener('mouseup', onResizeEnd);
   };
 
+  // Button drag handlers (when closed)
+  const handleButtonDragStart = (e) => {
+    e.preventDefault();
+    buttonDraggingRef.current = true;
+    buttonDraggedRef.current = false;
+    setDockedSide(null); // Undock when starting to drag
+    const startX = position.x ?? (window.innerWidth - 100);
+    const startY = position.y ?? (window.innerHeight - 60);
+    buttonDragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX: startX,
+      startPosY: startY
+    };
+    if (position.x === null) {
+      setPosition({ x: startX, y: startY });
+    }
+    
+    const handleMove = (moveE) => {
+      if (!buttonDraggingRef.current) return;
+      const dx = moveE.clientX - buttonDragRef.current.startX;
+      const dy = moveE.clientY - buttonDragRef.current.startY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        buttonDraggedRef.current = true;
+      }
+      const newX = Math.max(0, Math.min(window.innerWidth - 100, buttonDragRef.current.startPosX + dx));
+      const newY = Math.max(0, Math.min(window.innerHeight - 50, buttonDragRef.current.startPosY + dy));
+      setPosition({ x: newX, y: newY });
+    };
+    
+    const handleUp = () => {
+      buttonDraggingRef.current = false;
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleUp);
+      // Check if should dock
+      const DOCK_THRESHOLD = 50;
+      const currentX = position.x;
+      const currentY = position.y;
+      if (currentX !== null && currentY !== null) {
+        if (currentX < DOCK_THRESHOLD && currentY > window.innerHeight - 100) {
+          setDockedSide('left');
+        } else if (currentX > window.innerWidth - 150 && currentY > window.innerHeight - 100) {
+          setDockedSide('right');
+        }
+      }
+      setTimeout(() => { buttonDraggedRef.current = false; }, 50);
+    };
+    
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleUp);
+  };
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -230,18 +287,23 @@ export default function GlobalChatWidget() {
 
   const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
 
-  // Chat button - fixed bottom right
+  // Chat button - starts bottom right, draggable
   if (!isOpen) {
     return (
       <div
         className="fixed z-50"
         style={{ 
-          right: 16,
-          bottom: 16
+          right: dockedSide === 'right' ? 16 : 'auto',
+          left: dockedSide === 'left' ? 16 : (dockedSide === null ? position.x : 'auto'),
+          bottom: dockedSide ? 16 : 'auto',
+          top: dockedSide === null ? position.y : 'auto'
         }}
       >
         <div
-          onClick={() => setIsOpen(true)}
+          onMouseDown={handleButtonDragStart}
+          onClick={() => {
+            if (!buttonDraggedRef.current) setIsOpen(true);
+          }}
           className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 rounded-full"
         >
           <Globe className="w-4 h-4" />

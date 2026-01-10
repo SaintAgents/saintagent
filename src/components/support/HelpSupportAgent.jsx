@@ -141,8 +141,8 @@ export default function HelpSupportAgent() {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   
-  // Dragging state - start docked on right by default
-  const [position, setPosition] = useState({ x: null, y: 200 });
+  // Dragging state - start docked on right bottom by default
+  const [position, setPosition] = useState({ x: null, y: null });
   const [dockedSide, setDockedSide] = useState('right'); // 'left' | 'right' | null - default docked right
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const isDraggingRef = useRef(false);
@@ -328,17 +328,22 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Help button - fixed bottom right, stacked above chat */}
+      {/* Help button - starts bottom right, stacked above chat, draggable */}
       {!isOpen && (
         <div
           className="fixed z-50"
           style={{ 
-            right: 16,
-            bottom: 64 // Stacked above chat button
+            right: dockedSide === 'right' ? 16 : 'auto',
+            left: dockedSide === 'left' ? 16 : (dockedSide === null ? position.x : 'auto'),
+            bottom: dockedSide ? 64 : 'auto', // Stacked above chat button when docked
+            top: dockedSide === null ? position.y : 'auto'
           }}
         >
           <div
-            onClick={() => setIsOpen(true)}
+            onMouseDown={onButtonDragStart}
+            onClick={() => {
+              if (!buttonDraggedRef.current) setIsOpen(true);
+            }}
             className={cn(
               "flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 rounded-full hacker-help-btn"
             )}
