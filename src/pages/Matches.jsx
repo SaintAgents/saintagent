@@ -238,7 +238,10 @@ export default function Matches() {
                 <span>Match score</span>
                 <span>{scoreRange[0]}–{scoreRange[1]}%</span>
               </div>
-              <Slider value={scoreRange} min={0} max={100} step={1} onValueChange={setScoreRange} />
+              <div className="relative py-2">
+                <div className="absolute top-1/2 left-0 right-0 h-1 bg-violet-200 rounded-full -translate-y-1/2" />
+                <Slider value={scoreRange} min={0} max={100} step={1} onValueChange={setScoreRange} className="relative" />
+              </div>
             </div>
             <Select value={proximity} onValueChange={setProximity}>
               <SelectTrigger className="w-full">
