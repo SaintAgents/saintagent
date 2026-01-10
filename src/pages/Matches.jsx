@@ -243,47 +243,71 @@ export default function Matches() {
               <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
                 <span>Filter by values</span>
               </div>
-              <Select value={valuesQuery} onValueChange={setValuesQuery}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select value" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={null}>Any Value</SelectItem>
-                  <SelectItem value="compassion">Compassion</SelectItem>
-                  <SelectItem value="integrity">Integrity</SelectItem>
-                  <SelectItem value="authenticity">Authenticity</SelectItem>
-                  <SelectItem value="growth">Growth</SelectItem>
-                  <SelectItem value="service">Service</SelectItem>
-                  <SelectItem value="community">Community</SelectItem>
-                  <SelectItem value="creativity">Creativity</SelectItem>
-                  <SelectItem value="wisdom">Wisdom</SelectItem>
-                  <SelectItem value="love">Love</SelectItem>
-                  <SelectItem value="freedom">Freedom</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <Input
+                  placeholder="e.g., compassion, integrity"
+                  value={valuesQuery}
+                  onChange={(e) => setValuesQuery(e.target.value)}
+                  className="pr-10"
+                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-3" align="start">
+                    <p className="text-xs text-slate-500 mb-2">Click to add:</p>
+                    <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
+                      {suggestedValues.map(value => (
+                        <Badge
+                          key={value}
+                          variant="secondary"
+                          className="cursor-pointer hover:bg-violet-100 text-xs capitalize"
+                          onClick={() => handleAddTag(value, setValuesQuery, valuesQuery)}
+                        >
+                          {value.replace(/_/g, ' ')}
+                        </Badge>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
             <div className="md:col-span-2">
               <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
                 <span>Filter by practices</span>
               </div>
-              <Select value={practicesQuery} onValueChange={setPracticesQuery}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select practice" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={null}>Any Practice</SelectItem>
-                  <SelectItem value="meditation">Meditation</SelectItem>
-                  <SelectItem value="yoga">Yoga</SelectItem>
-                  <SelectItem value="breathwork">Breathwork</SelectItem>
-                  <SelectItem value="prayer">Prayer</SelectItem>
-                  <SelectItem value="energy_work">Energy Work</SelectItem>
-                  <SelectItem value="sound_mantra">Sound/Mantra</SelectItem>
-                  <SelectItem value="qigong">Qigong</SelectItem>
-                  <SelectItem value="tai_chi">Tai Chi</SelectItem>
-                  <SelectItem value="reiki">Reiki</SelectItem>
-                  <SelectItem value="journaling">Journaling</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <Input
+                  placeholder="e.g., meditation, yoga"
+                  value={practicesQuery}
+                  onChange={(e) => setPracticesQuery(e.target.value)}
+                  className="pr-10"
+                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-3" align="start">
+                    <p className="text-xs text-slate-500 mb-2">Click to add:</p>
+                    <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
+                      {suggestedPractices.map(practice => (
+                        <Badge
+                          key={practice}
+                          variant="secondary"
+                          className="cursor-pointer hover:bg-violet-100 text-xs capitalize"
+                          onClick={() => handleAddTag(practice, setPracticesQuery, practicesQuery)}
+                        >
+                          {practice.replace(/_/g, ' ')}
+                        </Badge>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
             <div className="md:col-span-2">
               <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
