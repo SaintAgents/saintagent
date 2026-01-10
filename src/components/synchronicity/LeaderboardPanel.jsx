@@ -119,7 +119,7 @@ export default function LeaderboardPanel() {
   const { data, metric, label } = leaderboardData;
 
   return (
-    <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-10">
+    <Card className="relative z-10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', borderColor: 'rgba(0, 255, 136, 0.2)' }}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2 text-amber-100">
