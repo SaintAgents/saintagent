@@ -44,13 +44,16 @@ export default function TestimonialButton({
     <>
       <Button
         variant={variant}
-        size={size} className="bg-violet-100 text-green-200 px-3 text-xs font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-2 w-full"
-
-        onClick={() => setModalOpen(true)}>
-
+        size={size}
+        className={cn(
+          "gap-2 bg-violet-600 hover:bg-violet-700 text-white",
+          className
+        )}
+        onClick={() => setModalOpen(true)}
+      >
         <Heart className={cn(
           "w-4 h-4",
-          existingTestimonial && "fill-current text-rose-500"
+          existingTestimonial && "fill-current text-rose-300"
         )} />
         {existingTestimonial ? 'Edit Testimonial' : 'Give Testimonial'}
       </Button>
