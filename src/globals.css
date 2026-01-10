@@ -1,3 +1,4 @@
+css
 /* Wallet Panel - Force dark green background in ALL themes */
 [data-wallet-panel] {
   background-color: #0a1f0a !important;
@@ -126,13 +127,9 @@ html[data-theme='dark'] img[data-no-filter="true"],
   background-color: rgba(5, 5, 5, 0.85) !important;
 }
 
-/* Gradient backgrounds - make transparent */
-[data-theme='dark'] .bg-gradient-to-br,
-[data-theme='dark'] .bg-gradient-to-r,
-[data-theme='dark'] .bg-gradient-to-t,
-[data-theme='hacker'] .bg-gradient-to-br,
-[data-theme='hacker'] .bg-gradient-to-r,
-[data-theme='hacker'] .bg-gradient-to-t {
+/* Gradient backgrounds - make transparent (excluding hero overlays) */
+[data-theme='dark'] .min-h-screen.bg-gradient-to-br,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-br {
   background: transparent !important;
   background-image: none !important;
 }
