@@ -198,9 +198,9 @@ img[alt="Trust Gauge"],
 }
 
 [data-theme='dark'] .page-hero {
-  height: 160px !important;
-  min-height: 160px !important;
-  max-height: 160px !important;
+  height: 360px !important;
+  min-height: 360px !important;
+  max-height: 360px !important;
 }
 
 [data-theme='hacker'] .page-hero {
