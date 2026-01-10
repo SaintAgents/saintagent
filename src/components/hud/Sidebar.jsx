@@ -74,29 +74,29 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
-  { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
-  { id: 'forum', label: 'Community Forum', icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
-  { id: 'initiations', label: 'Initiations', icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
-  { id: 'quests', label: 'Quests', icon: Target, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
-  { id: 'synchronicity', label: 'Synchronicity Engine', icon: Sparkles, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
-  { id: 'gamification', label: 'Gamification', icon: Trophy, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
-  { id: 'matches', label: 'Matches', icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
-  { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
-  { id: 'missions', label: 'Missions', icon: Target, page: 'Missions', hint: 'Join collaborative missions and quests' },
-  { id: 'teams', label: 'Teams & Guilds', icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
-  { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
-  { id: 'profiles', label: 'Profiles', icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
-  { id: 'crm', label: 'Contact Network', icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
-  { id: 'activity', label: 'Activity Feed', icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
-  { id: 'collaborators', label: 'Collaborators', icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
-  { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
-  { id: 'messages', label: 'Messages', icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
-  { id: 'events', label: 'Events', icon: Calendar, page: 'Events', hint: 'Discover and create meetups' },
-  { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
-  { id: 'circles', label: 'Circles', icon: CircleDot, page: 'Circles', hint: 'Join interest and value-based communities' },
-  { id: 'studio', label: 'Creator Studio', icon: Users, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
-  { id: 'affiliate', label: 'Affiliate Center', icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
-  { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
+  { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
+  { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
+  { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
+  { id: 'quests', label: 'Quests', Icon: Target, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
+  { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Sparkles, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
+  { id: 'gamification', label: 'Gamification', Icon: Trophy, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
+  { id: 'matches', label: 'Matches', Icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
+  { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
+  { id: 'missions', label: 'Missions', Icon: Target, page: 'Missions', hint: 'Join collaborative missions and quests' },
+  { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
+  { id: 'projects', label: 'Projects', Icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
+  { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
+  { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
+  { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
+  { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
+  { id: 'marketplace', label: 'Marketplace', Icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
+  { id: 'messages', label: 'Messages', Icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
+  { id: 'events', label: 'Events', Icon: Calendar, page: 'Events', hint: 'Discover and create meetups' },
+  { id: 'leader', label: 'Leader Channel', Icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
+  { id: 'circles', label: 'Circles', Icon: CircleDot, page: 'Circles', hint: 'Join interest and value-based communities' },
+  { id: 'studio', label: 'Creator Studio', Icon: Users, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
+  { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
+  { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
 const STATUS_OPTIONS = [
@@ -359,6 +359,7 @@ export default function Sidebar({
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
                 const isLocked = item.locked || isLeaderLocked;
                 const showExpanded = !isCollapsed || inPopup;
+                const ItemIcon = item.Icon;
                 
                 const navLink = (
                   <Link
@@ -374,10 +375,10 @@ export default function Sidebar({
                       isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center"
                     )}
                   >
-                    <item.icon className={cn(
+                    {ItemIcon && <ItemIcon className={cn(
                       "w-5 h-5 shrink-0",
                       isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
-                    )} />
+                    )} />}
                     {showExpanded && (
                       <>
                         <span className="font-medium text-sm">{item.label}</span>
@@ -950,6 +951,7 @@ export default function Sidebar({
             {NAV_ITEMS.slice(0, 12).map((item) => {
               const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
               const isLocked = item.locked || isLeaderLocked;
+              const ItemIcon = item.Icon;
               return (
                 <Link
                   key={item.id}
@@ -966,7 +968,7 @@ export default function Sidebar({
                     isLocked && "opacity-60 cursor-not-allowed"
                   )}
                 >
-                  <item.icon className="w-4 h-4" />
+                  {ItemIcon && <ItemIcon className="w-4 h-4" />}
                   <span className="text-sm font-medium">{item.label}</span>
                   {isLocked && <Lock className="w-3 h-3 ml-auto text-slate-400" />}
                 </Link>
