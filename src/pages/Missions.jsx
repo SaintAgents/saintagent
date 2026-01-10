@@ -205,7 +205,7 @@ export default function Missions() {
       <div className="max-w-6xl mx-auto px-6 -mt-6 relative z-[5]">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center justify-center gap-2 flex-wrap">
+          <div className="flex items-center justify-center gap-2 flex-wrap pt-4">
             <Button
               variant="outline"
               onClick={() => setAiGeneratorOpen(true)}
