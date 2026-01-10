@@ -112,11 +112,11 @@ export default function Quests() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4" style={{ background: 'transparent' }}>
+      <div className="max-w-7xl mx-auto px-4 pb-12" style={{ background: 'transparent', backgroundColor: 'transparent' }}>
+        <div style={{ background: 'transparent', backgroundColor: 'transparent', display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: '1rem' }}>
           
           {/* Left Column - Quest Tracker */}
-          <div className="lg:col-span-3" style={{ background: 'transparent' }}>
+          <div style={{ background: 'transparent', backgroundColor: 'transparent', gridColumn: 'span 3 / span 3' }} className="lg:col-span-3">
             <QuestTracker
               quests={quests}
               onClaimRewards={() => claimRewardsMutation.mutate()}
@@ -126,13 +126,13 @@ export default function Quests() {
           </div>
 
           {/* Center Column - Leaderboards & Active Synchronicity */}
-          <div className="lg:col-span-6 space-y-4" style={{ background: 'transparent' }}>
+          <div style={{ background: 'transparent', backgroundColor: 'transparent', gridColumn: 'span 6 / span 6' }} className="lg:col-span-6 space-y-4">
             <LeaderboardPanel />
             <ActiveSynchronicity match={activeMatch} currentUserId={currentUser?.email} />
           </div>
 
           {/* Right Column - Badges & Epic Quest */}
-          <div className="lg:col-span-3 space-y-4" style={{ background: 'transparent' }}>
+          <div style={{ background: 'transparent', backgroundColor: 'transparent', gridColumn: 'span 3 / span 3' }} className="lg:col-span-3 space-y-4">
             <BadgesPanel badges={badges} />
             <EpicQuestCard profile={profile} />
           </div>
