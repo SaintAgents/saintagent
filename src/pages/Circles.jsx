@@ -99,7 +99,7 @@ export default function Circles() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 [data-theme='hacker']_&:bg-[#000]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
       {/* Hero Section */}
       <div className="page-hero relative overflow-hidden">
         <img 

@@ -64,7 +64,7 @@ export default function LeaderChannel() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
       {/* Hero Section */}
       <div className="page-hero relative overflow-hidden">
         <img 
