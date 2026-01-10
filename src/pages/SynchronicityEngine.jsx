@@ -297,6 +297,7 @@ export default function SynchronicityEngine() {
           src={HERO_IMAGE}
           alt="Synchronicity Board"
           className="hero-image w-full h-full object-cover"
+          style={{ filter: 'none', WebkitFilter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-transparent" />

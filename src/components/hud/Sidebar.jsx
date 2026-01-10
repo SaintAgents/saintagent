@@ -604,12 +604,12 @@ export default function Sidebar({
               )} />
               {(!isCollapsed || inPopup) && (
                 <Select value={status} onValueChange={handleStatusChange}>
-                  <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                  <SelectTrigger className="h-9 text-sm text-slate-900 dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                     <SelectValue placeholder="Online" />
                   </SelectTrigger>
-                  <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
+                  <SelectContent className="bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                     {STATUS_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
+                      <SelectItem key={opt.value} value={opt.value} className="text-slate-900 dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
                         <div className="flex items-center gap-2">
                           <div className={cn("w-2 h-2 rounded-full", opt.color)} />
                           {opt.label}
@@ -625,12 +625,12 @@ export default function Sidebar({
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <Select value={dmPolicy} onValueChange={handleDMChange}>
-                  <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                  <SelectTrigger className="h-9 text-sm text-slate-900 dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                     <SelectValue placeholder="DMs: Everyone" />
                   </SelectTrigger>
-                  <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
+                  <SelectContent className="bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                     {DM_POLICY_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
+                      <SelectItem key={opt.value} value={opt.value} className="text-slate-900 dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
                         DMs: {opt.label}
                       </SelectItem>
                     ))}
@@ -999,12 +999,12 @@ export default function Sidebar({
             <div className="flex items-center gap-3">
               <div className={cn("w-3 h-3 rounded-full animate-pulse", statusOption?.color)} />
               <Select value={status} onValueChange={handleStatusChange}>
-                <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                <SelectTrigger className="h-9 text-sm text-slate-900 dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
+                <SelectContent className="bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                   {STATUS_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
+                    <SelectItem key={opt.value} value={opt.value} className="text-slate-900 dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
                       <div className="flex items-center gap-2">
                         <div className={cn("w-2 h-2 rounded-full", opt.color)} />
                         {opt.label}
@@ -1019,12 +1019,12 @@ export default function Sidebar({
             <div className="flex items-center gap-3">
               <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" />
               <Select value={dmPolicy} onValueChange={handleDMChange}>
-                <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                <SelectTrigger className="h-9 text-sm text-slate-900 dark:text-white dark:border-[rgba(0,255,136,0.3)]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
+                <SelectContent className="bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                   {DM_POLICY_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
+                    <SelectItem key={opt.value} value={opt.value} className="text-slate-900 dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
                       DMs: {opt.label}
                     </SelectItem>
                   ))}
