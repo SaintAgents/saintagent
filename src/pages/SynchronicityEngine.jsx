@@ -363,7 +363,7 @@ export default function SynchronicityEngine() {
             {isLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="h-48 bg-slate-800/50 rounded-xl animate-pulse" />
+                  <div key={i} className="h-48 rounded-xl animate-pulse" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} />
                 ))}
               </div>
             ) : filteredSyncs.length === 0 ? (
