@@ -1633,7 +1633,7 @@ function NebulaCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.8, zIndex: 0 }}
+      style={{ opacity: 0.8, zIndex: -1 }}
     />
   );
 }
@@ -1771,7 +1771,7 @@ function MatrixRainCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.9, zIndex: 0 }}
+      style={{ opacity: 0.9, zIndex: -1 }}
     />
   );
 }
@@ -2046,7 +2046,7 @@ function CircuitCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: 0 }}
+      style={{ opacity: 0.7, zIndex: -1 }}
     />
   );
 }
@@ -2201,7 +2201,7 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: 0 }}
+      style={{ opacity: 0.7, zIndex: -1 }}
     />
   );
 }
