@@ -62,8 +62,7 @@ import {
   Waves,
   Cloud,
   Shield,
-  Eye,
-  Orbit
+  Eye
 } from "lucide-react";
 import {
   Tooltip,
@@ -78,7 +77,7 @@ const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
   { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
-  { id: 'quests', label: 'Synchronicity Board', Icon: Orbit, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
+  { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
   { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Sparkles, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
   { id: 'gamification', label: 'Gamification', Icon: Crown, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
   { id: 'matches', label: 'Matches', Icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },

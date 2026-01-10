@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Orbit, Trophy, Target, Users, Coins, Star, Crown,
+  Sparkles, Trophy, Target, Users, Coins, Star, Crown,
   Zap, Gift, ChevronRight, Heart, Shield, Eye, Lock } from
 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -91,7 +91,7 @@ export default function Quests() {
       <div className="page-hero relative h-64 md:h-72 overflow-hidden">
         <img 
           src={HERO_IMAGE} 
-          alt="Synchronicity Board" 
+          alt="Synchronicity Engine" 
           className="hero-image w-full h-full object-cover"
           data-no-filter="true"
         />
@@ -99,9 +99,8 @@ export default function Quests() {
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
           <div className="flex items-center gap-3 mb-2">
             <BackButton className="text-white/80 hover:text-white" />
-            <Orbit className="w-8 h-8 text-amber-400 drop-shadow-lg" />
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-              Synchronicity Board
+              Synchronicity Engine
             </h1>
             <ForwardButton currentPage="Quests" className="text-white/80 hover:text-white" />
           </div>
