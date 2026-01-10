@@ -1,6 +1,7 @@
 import ActivityFeed from './pages/ActivityFeed';
 import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
+import BetaFeedback from './pages/BetaFeedback';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
@@ -46,7 +47,6 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import BetaFeedback from './pages/BetaFeedback';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +54,7 @@ export const PAGES = {
     "ActivityFeed": ActivityFeed,
     "Admin": Admin,
     "AffiliateCenter": AffiliateCenter,
+    "BetaFeedback": BetaFeedback,
     "CRM": CRM,
     "Circles": Circles,
     "CommandDeck": CommandDeck,
@@ -99,7 +100,6 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "BetaFeedback": BetaFeedback,
 }
 
 export const pagesConfig = {

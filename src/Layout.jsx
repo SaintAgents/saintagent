@@ -17,6 +17,7 @@ import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
+import UserTourModal from '@/components/hud/UserTourModal';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home'];
 
@@ -33,6 +34,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
   });
   const [floatingSidePanelOpen, setFloatingSidePanelOpen] = useState(false);
+  const [userTourOpen, setUserTourOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Listen for background effect changes from Sidebar
@@ -329,7 +331,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
       // For returning users with complete onboarding, redirect to Command Deck if on generic pages
       const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
       if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
+        if (!onboarding.tour_completed) {
+          setUserTourOpen(true);
+          return;
+        }
         window.location.href = createPageUrl('CommandDeck');
+        return;
+      }
+
+      // If on CommandDeck and tour not completed, show tour
+      if (currentPageName === 'CommandDeck' && onboarding?.status === 'complete' && !onboarding?.tour_completed) {
+        setUserTourOpen(true);
       }
     }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
@@ -1079,19 +1091,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
       <style>{`
         /* Light theme background for Command Deck */
         [data-theme='light'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/98d67726c_gemini-25-flash-image_merge_the_shield_into_the_center-0.jpg');
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6fc853590_gemini-25-flash-image_place_into_the_circuit_board_coin_in_most_clear_space_and_the_shield_lower_left-01.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
         }
 
-        /* Dark theme background for Command Deck */
+        /* Dark theme background for Command Deck - transparent to show canvas effects */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ebbb7d483_universal_upscale_0_d6828612-8b20-4bc7-aefe-008865240cf1_0.jpg') !important;
-          background-size: cover;
-          background-position: center;
-          background-attachment: fixed;
-          background-color: #050505 !important;
+          background-image: none !important;
+          background-color: transparent !important;
         }
 
         /* Hacker theme background for Command Deck - ensure no white flash */
@@ -1166,13 +1175,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
                                   margin-top: 0 !important;
                                 }
 
-        /* Command Deck keeps its background image in dark mode */
+        /* Command Deck transparent in dark mode to show canvas effects */
         [data-theme='dark'] main[data-page='CommandDeck'] {
-          background-color: #050505 !important;
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ebbb7d483_universal_upscale_0_d6828612-8b20-4bc7-aefe-008865240cf1_0.jpg') !important;
-          background-size: cover !important;
-          background-position: center !important;
-          background-attachment: fixed !important;
+          background-color: transparent !important;
+          background-image: none !important;
         }
 
         /* Avatar card background - light mode uses gold shield, dark mode solid obsidian */
@@ -1559,6 +1565,24 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Meeting Reminder Service */}
       {currentUser && <MeetingReminderService />}
+
+      {/* User Tour Modal */}
+      {userTourOpen && (
+        <UserTourModal 
+          open={userTourOpen} 
+          onClose={async () => {
+            setUserTourOpen(false);
+            if (onboarding?.id) {
+              await base44.entities.OnboardingProgress.update(onboarding.id, { tour_completed: true });
+              queryClient.invalidateQueries({ queryKey: ['onboardingProgress'] });
+            }
+            const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
+            if (genericPages.includes(currentPageName)) {
+              window.location.href = createPageUrl('CommandDeck');
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
