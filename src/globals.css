@@ -73,7 +73,15 @@ main {
 
 /* Grid containers should be transparent */
 [data-theme='dark'] .grid,
-[data-theme='hacker'] .grid {
+[data-theme='hacker'] .grid,
+[data-theme='dark'] [class*='grid-cols'],
+[data-theme='hacker'] [class*='grid-cols'],
+[data-theme='dark'] [class*='col-span'],
+[data-theme='hacker'] [class*='col-span'],
+[data-theme='dark'] [class*='space-y'],
+[data-theme='hacker'] [class*='space-y'],
+[data-theme='dark'] [class*='max-w-'],
+[data-theme='hacker'] [class*='max-w-'] {
   background-color: transparent !important;
   background: transparent !important;
 }
