@@ -122,7 +122,7 @@ export default function ActivityFeed() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:from-transparent dark:via-transparent dark:to-transparent">
+    <div className="min-h-screen relative">
       {/* Hero Section */}
       <div className="page-hero relative overflow-hidden">
         <img 
@@ -148,7 +148,7 @@ export default function ActivityFeed() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 relative z-10">
+      <div className="max-w-4xl mx-auto p-6 relative z-[5]">
 
         {/* Scope Toggle */}
         <Tabs value={scope} onValueChange={setScope} className="mb-4">
