@@ -68,7 +68,7 @@ export default function Teams() {
   }, [teams, myTeams, publicTeams, tab, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none dark:from-transparent dark:via-transparent dark:to-transparent">
       {/* Hero */}
       <div className="page-hero relative overflow-hidden">
         <img 
