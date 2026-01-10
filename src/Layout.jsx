@@ -454,11 +454,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           display: none !important;
         }
 
-        /* SOLID OBSIDIAN - No transparency anywhere */
-        [data-theme='dark'] body, 
+        /* Dark theme backgrounds - transparent to show effects */
+        [data-theme='dark'] body {
+          background-color: var(--obsidian) !important;
+        }
         [data-theme='dark'] .min-h-screen,
         [data-theme='dark'] main {
-          background-color: var(--obsidian) !important;
+          background-color: transparent !important;
           color: #ffffff !important;
         }
 
@@ -472,7 +474,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] [class*='bg-white'],
         [data-theme='dark'] [class*='bg-gray-'],
         [data-theme='dark'] [class*='bg-slate-'] { 
-          background-color: rgba(5, 5, 5, 0.85) !important; 
+          background-color: rgba(5, 5, 5, 0.75) !important; 
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
         }
@@ -483,10 +485,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
           background-color: transparent !important;
           background-image: none !important;
         }
+        
+        [data-theme='hacker'] body {
+          background-color: #000 !important;
+        }
 
-        /* Specific overrides for gradient backgrounds - exclude hero and mission card image containers */
-        [data-theme='dark'] [class*='bg-gradient-']:not(.mission-card *):not(.hero-gradient):not(main[data-page='CommandDeck'] *) {
-          background: var(--obsidian) !important;
+        /* Specific overrides for gradient backgrounds - make transparent */
+        [data-theme='dark'] [class*='bg-gradient-']:not(.mission-card *):not(.hero-gradient):not(main[data-page='CommandDeck'] *):not(.page-hero *) {
+          background: transparent !important;
           background-image: none !important;
         }
 
@@ -563,13 +569,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           color: #b8b8b8 !important;
         }
 
-        /* Cards and containers - semi-transparent obsidian with neon glow borders */
+        /* Cards and containers - semi-transparent to show effects through */
         /* EXCLUDE images from these styles */
         [data-theme='dark'] .rounded-xl:not(img):not([data-no-filter="true"]), 
         [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter="true"]),
         [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter="true"]),
         [data-theme='dark'] .rounded-md:not(img):not([data-no-filter="true"]) {
-          background-color: rgba(5, 5, 5, 0.85) !important;
+          background-color: rgba(0, 0, 0, 0.75) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
         }
