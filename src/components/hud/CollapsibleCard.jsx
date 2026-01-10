@@ -93,7 +93,7 @@ export default function CollapsibleCard({
               <ExternalLink className="w-4 h-4 text-slate-500" />
             </Button>
           }
-          {Icon &&
+          {Icon && typeof Icon === 'function' &&
           <div className="bg-fuchsia-100 p-2 rounded-xl shrink-0 flex items-center">
               <Icon className="w-4 h-4 text-slate-600" />
             </div>
