@@ -1604,14 +1604,13 @@ function NebulaCanvas() {
         const drawX = p.x + orbitX;
         const drawY = p.y + orbitY;
         
-        const safeSize = Math.max(1, size);
-      const gradient = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, safeSize);
+        const gradient = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, size);
         gradient.addColorStop(0, color + Math.floor(Math.min(1, adjustedOpacity) * 255).toString(16).padStart(2, '0'));
         gradient.addColorStop(0.5 + variance * 0.3, color + Math.floor(adjustedOpacity * 0.3 * 255).toString(16).padStart(2, '0'));
         gradient.addColorStop(1, 'transparent');
         
         ctx.beginPath();
-        ctx.arc(drawX, drawY, Math.max(1, size), 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, size, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
         ctx.fill();
       });
