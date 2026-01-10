@@ -52,6 +52,7 @@ import RankedAvatar from '@/components/reputation/RankedAvatar';
 import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
 import GamificationWidget from '@/components/gamification/GamificationWidget';
 import GoldPriceTicker from '@/components/hud/GoldPriceTicker';
+import MBTIPromptBanner from '@/components/profile/MBTIPromptBanner';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -991,6 +992,13 @@ export default function CommandDeck() {
               </div>
             </div>
           </div>
+
+          {/* MBTI Assessment Prompt */}
+          {profile && !profile.mbti_type && (
+            <div className="mb-6">
+              <MBTIPromptBanner profile={profile} />
+            </div>
+          )}
 
           {/* Platform Stats Mini Dashboard */}
           <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
