@@ -83,7 +83,7 @@ const NAV_ITEMS = [
   { id: 'gamification', label: 'Gamification', Icon: Crown, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
   { id: 'matches', label: 'Matches', Icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
   { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
-  { id: 'missions', label: 'Missions', Icon: Target, page: 'Missions', hint: 'Join collaborative missions and quests' },
+  { id: 'missions', label: 'Missions', Icon: Zap, page: 'Missions', hint: 'Join collaborative missions and quests' },
   { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
   { id: 'projects', label: 'Projects', Icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
   { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
