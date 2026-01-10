@@ -28,7 +28,7 @@ import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
-const MARKETPLACE_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/580eea501_Screenshot2026-01-06215246.png";
+const MARKETPLACE_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7fc6cc632_mp2.png";
 
 export default function Marketplace() {
   const [tab, setTab] = useState('browse');
