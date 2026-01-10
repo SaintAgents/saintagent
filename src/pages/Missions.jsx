@@ -228,6 +228,17 @@ export default function Missions() {
               AI Mission Board
             </Button>
             <Button
+              variant="outline"
+              onClick={() => setAiProposalOpen(!aiProposalOpen)}
+              className={cn(
+                "rounded-xl gap-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50",
+                aiProposalOpen && "bg-emerald-50"
+              )}
+            >
+              <Sparkles className="w-4 h-4" />
+              AI Proposal
+            </Button>
+            <Button
               onClick={() => {
                 setPrefillMission(null);
                 setCreateModalOpen(true);
@@ -248,6 +259,20 @@ export default function Missions() {
         {aiBoardOpen && (
           <div className="mb-6">
             <AIMissionBoard onMissionCreated={() => setAiBoardOpen(false)} />
+          </div>
+        )}
+
+        {/* AI Mission Proposal Generator */}
+        {aiProposalOpen && (
+          <div className="mb-6">
+            <AIMissionProposalGenerator 
+              profile={profile}
+              onMissionGenerated={(missionData) => {
+                setPrefillMission(missionData);
+                setCreateModalOpen(true);
+                setAiProposalOpen(false);
+              }} 
+            />
           </div>
         )}
 
