@@ -37,7 +37,9 @@ import {
   ShoppingBag,
   Target,
   CircleDot,
-  X
+  X,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -74,6 +76,7 @@ export default function TopBar({
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
   const [isBoostActive, setIsBoostActive] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const searchRef = useRef(null);
   
   // Listen for boost activation event
@@ -186,11 +189,27 @@ export default function TopBar({
 
   return (
     <header className={cn(
-      "fixed top-0 right-0 h-16 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-6 transition-all duration-300",
-      sidebarCollapsed ? "left-20" : "left-64"
+      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-6 transition-all duration-300",
+      sidebarCollapsed ? "left-20" : "left-64",
+      isCollapsed ? "h-8" : "h-16"
     )}>
-      {/* Mode Selector */}
-      <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1" data-no-top>
+      {/* Collapse/Expand Toggle */}
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-slate-200/60 transition-colors"
+        title={isCollapsed ? "Expand top bar" : "Collapse top bar"}
+      >
+        {isCollapsed ? (
+          <ChevronDown className="w-4 h-4 text-slate-500" />
+        ) : (
+          <ChevronUp className="w-4 h-4 text-slate-500" />
+        )}
+      </button>
+      {/* Mode Selector - hidden when collapsed */}
+      <div className={cn(
+        "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300",
+        isCollapsed && "hidden"
+      )} data-no-top>
         {MODE_TABS.map((tab) => (
           <div key={tab.id} className="flex items-center">
             <button
@@ -233,8 +252,11 @@ export default function TopBar({
         mode={helpMode || 'command'}
       />
 
-      {/* Search */}
-      <div ref={searchRef} className="flex-1 max-w-xl mx-auto relative" data-no-top>
+      {/* Search - hidden when collapsed */}
+      <div ref={searchRef} className={cn(
+        "flex-1 max-w-xl mx-auto relative transition-all duration-300",
+        isCollapsed && "hidden"
+      )} data-no-top>
         <form onSubmit={handleSearch}>
           <div className={cn(
             "relative transition-all duration-300",
@@ -362,8 +384,11 @@ export default function TopBar({
         )}
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2" data-no-top>
+      {/* Actions - hidden when collapsed */}
+      <div className={cn(
+        "flex items-center gap-2 transition-all duration-300",
+        isCollapsed && "hidden"
+      )} data-no-top>
         {/* Language */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
