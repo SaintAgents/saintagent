@@ -30,6 +30,28 @@ export default function StepMystical({ data, onComplete, user }) {
     sun_card: data.sun_card || ''
   });
 
+  // Auto-populate from profile (calculated in Step1Identity)
+  React.useEffect(() => {
+    const loadFromProfile = async () => {
+      if (!user?.email) return;
+      try {
+        const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
+        if (profiles.length > 0) {
+          const profile = profiles[0];
+          setFormData(prev => ({
+            ...prev,
+            astrological_sign: prev.astrological_sign || profile.astrological_sign || '',
+            numerology_life_path: prev.numerology_life_path || (profile.numerology_life_path ? String(profile.numerology_life_path) : ''),
+            numerology_personality: prev.numerology_personality || (profile.numerology_personality ? String(profile.numerology_personality) : '')
+          }));
+        }
+      } catch (e) {
+        console.error('Failed to load profile data:', e);
+      }
+    };
+    loadFromProfile();
+  }, [user?.email]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
