@@ -9,7 +9,7 @@ import { Calendar, Plus, Search, MapPin, Video, Sparkles } from "lucide-react";
 import CreateEventModal from '@/components/community/CreateEventModal';
 import EventCard from '@/components/community/EventCard';
 import BackButton from '@/components/hud/BackButton';
-import DemoStamp from '@/components/ui/DemoStamp';
+
 import { isPast, parseISO, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 export default function Events() {
@@ -212,7 +212,6 @@ export default function Events() {
         onOpenChange={setCreateOpen} 
         user={user}
       />
-      <DemoStamp />
     </div>
   );
 }

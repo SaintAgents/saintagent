@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Clock, MapPin, Video, Users, ExternalLink } from "lucide-react";
 import { format, parseISO, isPast, isToday, isTomorrow } from "date-fns";
 import { cn } from "@/lib/utils";
+import DemoStamp from '@/components/ui/DemoStamp';
 
 export default function EventCard({ event, user, onViewDetails }) {
   const queryClient = useQueryClient();
@@ -153,6 +154,9 @@ export default function EventCard({ event, user, onViewDetails }) {
             {event.price_ggg} GGG
           </div>
         )}
+
+        {/* Demo Stamp */}
+        <DemoStamp size="sm" />
 
         {/* Actions */}
         <div className="flex gap-2">
