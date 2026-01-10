@@ -125,7 +125,7 @@ export default function MBTIAssessment({ profile, onComplete, onSkip }) {
       // Only award if not already awarded
       if (existingTransactions.length === 0) {
         const currentBalance = profile.ggg_balance || 0;
-        const gggReward = 0.0344828; // $5 USD worth of GGG
+        const gggReward = 0.0500000; // $7.25 USD worth of GGG
         
         await base44.entities.GGGTransaction.create({
           user_id: profile.user_id,
@@ -177,8 +177,8 @@ export default function MBTIAssessment({ profile, onComplete, onSkip }) {
                 <Gift className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="font-semibold text-amber-800">$5.00 GGG Reward!</div>
-                <div className="text-sm text-amber-700">You'll receive 0.0344828 GGG for completing this assessment</div>
+                <div className="font-semibold text-amber-800">0.0500000 GGG (USD $7.25) Reward!</div>
+                <div className="text-sm text-amber-700">You'll receive 0.0500000 GGG (USD $7.25) for completing this assessment</div>
               </div>
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function MBTIAssessment({ profile, onComplete, onSkip }) {
           </Badge>
           <Badge className="bg-amber-100 text-amber-700 gap-1">
             <Gift className="w-3 h-3" />
-            Earn $5 GGG
+            Earn 0.0500000 GGG (USD $7.25)
           </Badge>
         </div>
         <Progress value={progress} className="h-2" />
