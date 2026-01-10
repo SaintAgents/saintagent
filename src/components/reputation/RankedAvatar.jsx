@@ -37,8 +37,8 @@ function getRingConfig(rankCode = 'seeker') {
   return map[rankCode] || map.seeker;
 }
 
-// Default avatar - "You are steering the shift of the world"
-const DEFAULT_AVATAR = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png';
+// Default avatar - purple silhouette
+const DEFAULT_AVATAR = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7ede07682_12563.jpg';
 
 export default function RankedAvatar({
   src,
