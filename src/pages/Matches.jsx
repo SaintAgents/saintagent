@@ -259,6 +259,13 @@ export default function Matches() {
                   <PopoverContent className="w-80 p-3" align="start">
                     <p className="text-xs text-slate-500 mb-2">Click to add:</p>
                     <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
+                      <Badge
+                        variant="outline"
+                        className="cursor-pointer hover:bg-slate-100 text-xs"
+                        onClick={() => setValuesQuery('')}
+                      >
+                        Any Value
+                      </Badge>
                       {suggestedValues.map(value => (
                         <Badge
                           key={value}
@@ -294,6 +301,13 @@ export default function Matches() {
                   <PopoverContent className="w-80 p-3" align="start">
                     <p className="text-xs text-slate-500 mb-2">Click to add:</p>
                     <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
+                      <Badge
+                        variant="outline"
+                        className="cursor-pointer hover:bg-slate-100 text-xs"
+                        onClick={() => setPracticesQuery('')}
+                      >
+                        Any Practice
+                      </Badge>
                       {suggestedPractices.map(practice => (
                         <Badge
                           key={practice}
