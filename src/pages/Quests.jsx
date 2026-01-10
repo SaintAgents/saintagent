@@ -87,19 +87,25 @@ export default function Quests() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
-      {/* Standard Header */}
-      <div className="pt-8 pb-6 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <BackButton />
-            <Sparkles className="w-7 h-7 text-amber-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-              Quests & Rewards
+      {/* Hero Section */}
+      <div className="page-hero relative h-64 md:h-72 overflow-hidden">
+        <img 
+          src={HERO_IMAGE} 
+          alt="Synchronicity Engine" 
+          className="hero-image w-full h-full object-cover"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent hero-gradient" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
+          <div className="flex items-center gap-3 mb-2">
+            <BackButton className="text-white/80 hover:text-white" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+              Synchronicity Engine
             </h1>
-            <ForwardButton currentPage="Quests" />
+            <ForwardButton currentPage="Quests" className="text-white/80 hover:text-white" />
           </div>
-          <p className="text-slate-500 text-center">
-            Complete quests, earn badges, and climb the leaderboard
+          <p className="text-white/90 text-lg drop-shadow">
+            Unlock Your Destiny, Earn Your Rewards
           </p>
         </div>
       </div>
