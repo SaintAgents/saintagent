@@ -160,13 +160,31 @@ html[data-theme='dark'] img[data-no-filter="true"],
 [data-theme='dark'] [role='tablist'] {
   background-color: #000 !important;
   position: relative;
-  z-index: 1;
+  z-index: 10;
+}
+
+/* Weather/effect canvas - sits BELOW cards */
+[data-theme='dark'] canvas,
+[data-theme='hacker'] canvas {
+  z-index: 0 !important;
+  pointer-events: none;
 }
 
 /* Main content area stays above canvas */
 [data-theme='dark'] main > div,
 [data-theme='hacker'] main > div {
   position: relative;
+  z-index: 5;
+}
+
+/* All interactive elements above weather effects */
+[data-theme='dark'] main *,
+[data-theme='hacker'] main * {
+  position: relative;
+}
+
+[data-theme='dark'] main > *:not(canvas),
+[data-theme='hacker'] main > *:not(canvas) {
   z-index: 5;
 }
 
