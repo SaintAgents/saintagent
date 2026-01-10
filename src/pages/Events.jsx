@@ -76,7 +76,7 @@ export default function Events() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Hero Section */}
-      <div className="relative h-64 md:h-72 overflow-hidden page-hero">
+      <div className="relative h-64 md:h-72 dark:h-[512px] dark:md:h-[576px] overflow-hidden page-hero">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/faf641524_universal_upscale_0_3edbb2cf-f692-4c67-a028-2024050dad4b_0.jpg"
           alt="Events"
