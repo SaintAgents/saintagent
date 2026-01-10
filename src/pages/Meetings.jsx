@@ -94,7 +94,7 @@ export default function Meetings() {
     setQuickCreateOpen(false);
   };
 
-  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e53f7af9e_meetings.jpg";
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/650e0f938_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-7.jpg";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
@@ -109,11 +109,11 @@ export default function Meetings() {
         <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
-                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-              Meetings & Connections
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              Synchronicity Engine
             </h1>
-            <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
+            <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
               Schedule, Attend & Verify Meetings to Earn GGG
             </p>
           </div>
