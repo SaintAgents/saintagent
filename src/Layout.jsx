@@ -1199,19 +1199,40 @@ function AuthenticatedLayout({ children, currentPageName }) {
             background-color: #000 !important;
           }
           [data-theme='hacker'] .min-h-screen, [data-theme='hacker'] main {
+            background: transparent !important;
             background-color: transparent !important;
             background-image: none !important;
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] div, [data-theme='hacker'] section, [data-theme='hacker'] aside, [data-theme='hacker'] header, [data-theme='hacker'] footer, [data-theme='hacker'] nav {
-            background-color: rgba(0, 0, 0, 0.75) !important;
+          [data-theme='hacker'] [class*='bg-gradient-'],
+          [data-theme='hacker'] [class*='from-slate-'],
+          [data-theme='hacker'] [class*='via-'],
+          [data-theme='hacker'] [class*='to-slate-'],
+          [data-theme='hacker'] [class*='to-violet-'] {
+            background: transparent !important;
+            background-color: transparent !important;
+            background-image: none !important;
+          }
+          [data-theme='hacker'] aside, [data-theme='hacker'] header, [data-theme='hacker'] footer, [data-theme='hacker'] nav {
+            background-color: rgba(0, 0, 0, 0.9) !important;
+            background-image: none !important;
+            color: #00ff00 !important;
+          }
+          [data-theme='hacker'] div, [data-theme='hacker'] section {
+            background-color: transparent !important;
             background-image: none !important;
             color: #00ff00 !important;
           }
           [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4, [data-theme='hacker'] h5, [data-theme='hacker'] h6, [data-theme='hacker'] p, [data-theme='hacker'] span, [data-theme='hacker'] a, [data-theme='hacker'] li, [data-theme='hacker'] label {
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='bg-'] { background-color: rgba(0, 0, 0, 0.75) !important; }
+          [data-theme='hacker'] [class*='bg-']:not(canvas) { background-color: transparent !important; }
+          [data-theme='hacker'] .rounded-xl:not(img):not([data-no-filter="true"]),
+          [data-theme='hacker'] .rounded-lg:not(img):not([data-no-filter="true"]),
+          [data-theme='hacker'] .rounded-2xl:not(img):not([data-no-filter="true"]),
+          [data-theme='hacker'] [class*='Card']:not(img) {
+            background-color: rgba(0, 0, 0, 0.85) !important;
+          }
           [data-theme='hacker'] [class*='text-'] { color: #00ff00 !important; }
           [data-theme='hacker'] button, [data-theme='hacker'] [role="button"] {
             background-color: #000 !important;
