@@ -37,6 +37,20 @@ main {
   background-image: none !important;
 }
 
+/* Force gradient backgrounds transparent in hacker mode */
+[data-theme='hacker'] .bg-gradient-to-br,
+[data-theme='hacker'] .bg-gradient-to-b,
+[data-theme='hacker'] .bg-gradient-to-t,
+[data-theme='hacker'] .bg-gradient-to-r,
+[data-theme='hacker'] .bg-gradient-to-l,
+[data-theme='hacker'] [class*='from-slate-'],
+[data-theme='hacker'] [class*='via-violet-'],
+[data-theme='hacker'] [class*='to-slate-'] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
 /* Ensure body shows canvas through */
 [data-theme='dark'] body,
 [data-theme='hacker'] body {
