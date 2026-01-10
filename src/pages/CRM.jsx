@@ -22,6 +22,8 @@ import ContactCleanupModal from '@/components/crm/ContactCleanupModal';
 import ContactEnrichModal from '@/components/crm/ContactEnrichModal';
 import { cn } from '@/lib/utils';
 
+const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
+
 export default function CRM() {
   const [tab, setTab] = useState('my-contacts');
   const [search, setSearch] = useState('');
@@ -115,23 +117,31 @@ export default function CRM() {
         }
       `}</style>
 
-      {/* Standard Header */}
-      <div className="pt-8 pb-6 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <Users className="w-7 h-7 text-violet-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+      {/* Hero Section */}
+      <div className="page-hero relative h-48 md:h-56 overflow-hidden">
+        <img
+          src={CRM_HERO_IMAGE}
+          alt="Contact Network"
+          className="hero-image w-full h-full object-cover"
+          style={{ filter: 'none', WebkitFilter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
+          <div className="flex items-center gap-3 mb-2">
+            <Users className="w-7 h-7 text-violet-400" />
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
               Contact Network
             </h1>
             <button 
               onClick={() => setHelpOpen(true)}
-              className="p-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
+              className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
               title="Learn how it works"
             >
-              <HelpCircle className="w-4 h-4 text-slate-500" />
+              <HelpCircle className="w-4 h-4 text-white" />
             </button>
           </div>
-          <p className="text-slate-500 text-center">
+          <p className="text-white/80">
             Your private CRM with optional federated sharing
           </p>
         </div>

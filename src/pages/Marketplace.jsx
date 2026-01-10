@@ -82,28 +82,39 @@ export default function Marketplace() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none dark:from-transparent dark:via-transparent dark:to-transparent relative">
-      <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <BackButton />
-            <ShoppingBag className="w-7 h-7 text-emerald-500" />
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
+      {/* Hero Section */}
+      <div className="page-hero relative h-48 md:h-56 overflow-hidden">
+        <img
+          src={MARKETPLACE_HERO_IMAGE}
+          alt="Marketplace"
+          className="hero-image w-full h-full object-cover"
+          style={{ filter: 'none', WebkitFilter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
+          <div className="flex items-center gap-2 mb-2">
+            <BackButton className="text-white/80 hover:text-white" />
+            <ShoppingBag className="w-7 h-7 text-emerald-400" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
               Marketplace
             </h1>
-            <ForwardButton />
+            <ForwardButton className="text-white/80 hover:text-white" />
           </div>
-          <p className="text-slate-500 dark:text-slate-400 text-center mb-4">Offer your skills, find mentors, and grow together</p>
+          <p className="text-white/80 mb-4">Offer your skills, find mentors, and grow together</p>
           <div className="flex items-center justify-center gap-2">
             <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
               <Plus className="w-4 h-4" />
               Create Listing
             </Button>
-            <Button variant="outline" className="bg-slate-50 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9" onClick={() => setMatrixOpen(true)}>
+            <Button variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors h-9" onClick={() => setMatrixOpen(true)}>
               Earnings Matrix
             </Button>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
 
         {/* Search & Filters */}
         <div className="flex items-center gap-4 mb-6">
