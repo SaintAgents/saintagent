@@ -292,7 +292,7 @@ export default function SynchronicityEngine() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950" style={{ background: 'transparent' }}>
       {/* Hero Section */}
-      <div className="page-hero relative h-64 md:h-72 overflow-hidden">
+      <div className="relative h-[512px] md:h-[576px] overflow-hidden">
         <img
           src={HERO_IMAGE}
           alt="Synchronicity Board"
