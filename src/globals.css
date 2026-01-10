@@ -357,16 +357,18 @@ html[data-theme='hacker'] .listing-image {
   color: #ffffff !important;
 }
 
-/* Prevent white flash on page load - SOLID backgrounds */
-[data-theme='dark'] body,
-[data-theme='dark'] .min-h-screen,
-[data-theme='dark'] main {
+/* Prevent white flash on page load - SOLID backgrounds for DARK themes only */
+[data-theme='dark'] body {
   background-color: #050505 !important;
 }
-[data-theme='hacker'] body,
-[data-theme='hacker'] .min-h-screen,
-[data-theme='hacker'] main {
+[data-theme='hacker'] body {
   background-color: #000 !important;
+}
+
+/* LIGHT THEME: Keep body/container backgrounds normal */
+[data-theme='light'] body,
+[data-theme='light'] .min-h-screen {
+  /* Don't override - let normal styles apply */
 }
 
 /* Force solid backgrounds on gradient containers - NO fading/opacity */
