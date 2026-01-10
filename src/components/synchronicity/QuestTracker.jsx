@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Target, Zap, Trophy, Star, Gift, Check, Users, Eye, Route, Lock, Sparkles, Key } from 'lucide-react';
+import { Target, Zap, Trophy, Star, Gift, Check, Users, Eye, Route, Lock, Sparkles, Key, Orbit } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const QUEST_TYPE_CONFIG = {
@@ -14,6 +14,7 @@ const QUEST_TYPE_CONFIG = {
   hidden: { icon: Eye, color: 'text-emerald-400', bgColor: 'bg-emerald-500/20', label: 'Hidden Quest' },
   pathway: { icon: Route, color: 'text-blue-400', bgColor: 'bg-blue-500/20', label: 'Pathway' },
   cooperative: { icon: Users, color: 'text-cyan-400', bgColor: 'bg-cyan-500/20', label: 'Cooperative' },
+  synchronicity: { icon: Orbit, color: 'text-teal-400', bgColor: 'bg-teal-500/20', label: 'Synchronicity' },
 };
 
 const ACCESS_REWARD_LABELS = {
