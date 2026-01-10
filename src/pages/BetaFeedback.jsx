@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
-  MessageSquare, Bug, Lightbulb, HelpCircle, Search, Filter, Plus,
-  Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink
+  MessageSquare, Bug, Lightbulb, HelpCircle, Plus, CheckCircle2, Clock
 } from "lucide-react";
 import { format } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
@@ -24,27 +19,15 @@ const TYPE_CONFIG = {
 };
 
 const STATUS_CONFIG = {
-  pending: { icon: Clock, color: 'bg-yellow-100 text-yellow-700', label: 'Pending' },
-  reviewed: { icon: Eye, color: 'bg-blue-100 text-blue-700', label: 'Reviewed' },
-  in_progress: { icon: Loader2, color: 'bg-purple-100 text-purple-700', label: 'In Progress' },
+  pending: { icon: Clock, color: 'bg-yellow-100 text-yellow-700', label: 'Pending Review' },
+  reviewed: { color: 'bg-blue-100 text-blue-700', label: 'Reviewed' },
+  in_progress: { color: 'bg-purple-100 text-purple-700', label: 'In Progress' },
   resolved: { icon: CheckCircle2, color: 'bg-green-100 text-green-700', label: 'Resolved' },
-  dismissed: { icon: XCircle, color: 'bg-slate-100 text-slate-700', label: 'Dismissed' }
-};
-
-const SEVERITY_CONFIG = {
-  low: 'bg-slate-100 text-slate-600',
-  medium: 'bg-yellow-100 text-yellow-700',
-  high: 'bg-orange-100 text-orange-700',
-  critical: 'bg-red-100 text-red-700'
+  dismissed: { color: 'bg-slate-100 text-slate-700', label: 'Dismissed' }
 };
 
 export default function BetaFeedback() {
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterType, setFilterType] = useState('all');
-  const [selectedFeedback, setSelectedFeedback] = useState(null);
-  const [adminNotes, setAdminNotes] = useState('');
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
   const { data: currentUser } = useQuery({
@@ -52,72 +35,16 @@ export default function BetaFeedback() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: feedbackList = [], isLoading } = useQuery({
-    queryKey: ['betaFeedback'],
-    queryFn: () => base44.entities.BetaFeedback.list('-created_date', 500)
+  // Fetch only the current user's feedback
+  const { data: myFeedback = [], isLoading } = useQuery({
+    queryKey: ['myBetaFeedback', currentUser?.email],
+    queryFn: () => base44.entities.BetaFeedback.filter({ reporter_id: currentUser.email }, '-created_date', 100),
+    enabled: !!currentUser?.email
   });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.BetaFeedback.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['betaFeedback'] })
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.BetaFeedback.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
-      setSelectedFeedback(null);
-    }
-  });
-
-  const isAdmin = currentUser?.role === 'admin';
-
-  const filtered = feedbackList.filter(f => {
-    const matchesSearch = !search || 
-      f.description?.toLowerCase().includes(search.toLowerCase()) ||
-      f.reporter_name?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || f.status === filterStatus;
-    const matchesType = filterType === 'all' || f.feedback_type === filterType;
-    return matchesSearch && matchesStatus && matchesType;
-  });
-
-  const stats = {
-    total: feedbackList.length,
-    pending: feedbackList.filter(f => f.status === 'pending').length,
-    bugs: feedbackList.filter(f => f.feedback_type === 'bug').length,
-    suggestions: feedbackList.filter(f => f.feedback_type === 'suggestion').length
-  };
-
-  const handleStatusChange = (id, newStatus) => {
-    updateMutation.mutate({ id, data: { status: newStatus } });
-  };
-
-  const handleSaveNotes = () => {
-    if (selectedFeedback) {
-      updateMutation.mutate({ 
-        id: selectedFeedback.id, 
-        data: { admin_notes: adminNotes } 
-      });
-    }
-  };
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <Card className="max-w-md">
-          <CardContent className="pt-6 text-center">
-            <XCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-slate-900 mb-2">Access Denied</h2>
-            <p className="text-slate-600">Only administrators can view beta feedback.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
@@ -127,137 +54,62 @@ export default function BetaFeedback() {
                 <MessageSquare className="w-6 h-6 text-violet-600" />
                 Beta Feedback
               </h1>
-              <p className="text-slate-600 mt-1">Review feedback from beta testers</p>
+              <p className="text-slate-600 mt-1">Help us improve by sharing your feedback</p>
             </div>
           </div>
-          <Button 
-            className="bg-violet-600 hover:bg-violet-700 gap-2"
-            onClick={() => setSubmitModalOpen(true)}
-          >
-            <Plus className="w-4 h-4" />
-            Submit Feedback
-          </Button>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
-              <div className="text-sm text-slate-500">Total</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-              <div className="text-sm text-slate-500">Pending</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-red-600">{stats.bugs}</div>
-              <div className="text-sm text-slate-500">Bugs</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-amber-600">{stats.suggestions}</div>
-              <div className="text-sm text-slate-500">Suggestions</div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Submit CTA */}
+        <Card className="mb-6 border-violet-200 bg-violet-50/50">
+          <CardContent className="p-6 text-center">
+            <MessageSquare className="w-10 h-10 text-violet-600 mx-auto mb-3" />
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Found a bug? Have a suggestion?</h2>
+            <p className="text-slate-600 mb-4">Your feedback helps us build a better platform for everyone.</p>
+            <Button 
+              className="bg-violet-600 hover:bg-violet-700 gap-2"
+              onClick={() => setSubmitModalOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Submit Feedback
+            </Button>
+          </CardContent>
+        </Card>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              placeholder="Search feedback..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-          <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              {Object.entries(STATUS_CONFIG).map(([key, { label }]) => (
-                <SelectItem key={key} value={key}>{label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              {Object.entries(TYPE_CONFIG).map(([key, { label }]) => (
-                <SelectItem key={key} value={key}>{label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Feedback List */}
+        {/* My Previous Submissions */}
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Your Previous Submissions</h3>
+        
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-violet-600" />
-          </div>
-        ) : filtered.length === 0 ? (
+          <div className="text-center py-8 text-slate-500">Loading...</div>
+        ) : myFeedback.length === 0 ? (
           <Card>
-            <CardContent className="py-16 text-center">
-              <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">No feedback found</h3>
-              <p className="text-slate-500">No feedback matches your filters.</p>
+            <CardContent className="py-12 text-center">
+              <MessageSquare className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-500">You haven't submitted any feedback yet.</p>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4">
-            {filtered.map((feedback) => {
+          <div className="space-y-3">
+            {myFeedback.map((feedback) => {
               const typeConfig = TYPE_CONFIG[feedback.feedback_type] || TYPE_CONFIG.other;
               const statusConfig = STATUS_CONFIG[feedback.status] || STATUS_CONFIG.pending;
               const TypeIcon = typeConfig.icon;
-              const StatusIcon = statusConfig.icon;
 
               return (
-                <Card 
-                  key={feedback.id} 
-                  className="cursor-pointer hover:shadow-md transition-shadow"
-                  onClick={() => {
-                    setSelectedFeedback(feedback);
-                    setAdminNotes(feedback.admin_notes || '');
-                  }}
-                >
+                <Card key={feedback.id}>
                   <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-3">
                       <div className={`p-2 rounded-lg ${typeConfig.color}`}>
-                        <TypeIcon className="w-5 h-5" />
+                        <TypeIcon className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap mb-1">
-                          <Badge className={typeConfig.color}>{typeConfig.label}</Badge>
-                          <Badge className={statusConfig.color}>
-                            <StatusIcon className="w-3 h-3 mr-1" />
-                            {statusConfig.label}
-                          </Badge>
-                          {feedback.feedback_type === 'bug' && (
-                            <Badge className={SEVERITY_CONFIG[feedback.severity]}>
-                              {feedback.severity}
-                            </Badge>
-                          )}
+                          <Badge className={typeConfig.color} variant="secondary">{typeConfig.label}</Badge>
+                          <Badge className={statusConfig.color} variant="secondary">{statusConfig.label}</Badge>
                         </div>
-                        <p className="text-slate-900 line-clamp-2">{feedback.description}</p>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
-                          <span>{feedback.reporter_name || feedback.reporter_id}</span>
-                          <span>{format(new Date(feedback.created_date), 'MMM d, yyyy h:mm a')}</span>
-                          {feedback.screenshot_url && (
-                            <span className="text-violet-600">📷 Has screenshot</span>
-                          )}
-                        </div>
+                        <p className="text-slate-700 text-sm line-clamp-2">{feedback.description}</p>
+                        <p className="text-xs text-slate-400 mt-2">
+                          {format(new Date(feedback.created_date), 'MMM d, yyyy')}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -267,133 +119,12 @@ export default function BetaFeedback() {
           </div>
         )}
 
-        {/* Detail Modal */}
-        <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
-          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-            {selectedFeedback && (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2">
-                    {(() => {
-                      const TypeIcon = TYPE_CONFIG[selectedFeedback.feedback_type]?.icon || HelpCircle;
-                      return <TypeIcon className="w-5 h-5 text-violet-600" />;
-                    })()}
-                    Feedback Details
-                  </DialogTitle>
-                </DialogHeader>
-
-                <div className="space-y-4">
-                  {/* Meta */}
-                  <div className="flex flex-wrap gap-2">
-                    <Badge className={TYPE_CONFIG[selectedFeedback.feedback_type]?.color}>
-                      {TYPE_CONFIG[selectedFeedback.feedback_type]?.label}
-                    </Badge>
-                    <Badge className={STATUS_CONFIG[selectedFeedback.status]?.color}>
-                      {STATUS_CONFIG[selectedFeedback.status]?.label}
-                    </Badge>
-                    {selectedFeedback.feedback_type === 'bug' && (
-                      <Badge className={SEVERITY_CONFIG[selectedFeedback.severity]}>
-                        {selectedFeedback.severity}
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Reporter Info */}
-                  <div className="text-sm text-slate-600">
-                    <strong>From:</strong> {selectedFeedback.reporter_name || selectedFeedback.reporter_id}
-                    <br />
-                    <strong>Date:</strong> {format(new Date(selectedFeedback.created_date), 'PPpp')}
-                    <br />
-                    <strong>Page:</strong>{' '}
-                    <a href={selectedFeedback.page_url} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline inline-flex items-center gap-1">
-                      {selectedFeedback.page_url?.split('?')[0]}
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-
-                  {/* Description */}
-                  <div>
-                    <h4 className="font-medium text-slate-900 mb-1">Description</h4>
-                    <p className="text-slate-700 whitespace-pre-wrap bg-slate-50 p-3 rounded-lg">
-                      {selectedFeedback.description}
-                    </p>
-                  </div>
-
-                  {/* Screenshot */}
-                  {selectedFeedback.screenshot_url && (
-                    <div>
-                      <h4 className="font-medium text-slate-900 mb-1">Screenshot</h4>
-                      <a href={selectedFeedback.screenshot_url} target="_blank" rel="noopener noreferrer">
-                        <img 
-                          src={selectedFeedback.screenshot_url} 
-                          alt="Screenshot" 
-                          className="w-full rounded-lg border hover:opacity-90 transition-opacity"
-                        />
-                      </a>
-                    </div>
-                  )}
-
-                  {/* Status Update */}
-                  <div>
-                    <h4 className="font-medium text-slate-900 mb-1">Update Status</h4>
-                    <Select 
-                      value={selectedFeedback.status} 
-                      onValueChange={(value) => handleStatusChange(selectedFeedback.id, value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(STATUS_CONFIG).map(([key, { label }]) => (
-                          <SelectItem key={key} value={key}>{label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Admin Notes */}
-                  <div>
-                    <h4 className="font-medium text-slate-900 mb-1">Admin Notes</h4>
-                    <Textarea
-                      placeholder="Add internal notes..."
-                      value={adminNotes}
-                      onChange={(e) => setAdminNotes(e.target.value)}
-                      className="min-h-20"
-                    />
-                    <Button 
-                      size="sm" 
-                      className="mt-2"
-                      onClick={handleSaveNotes}
-                      disabled={updateMutation.isPending}
-                    >
-                      Save Notes
-                    </Button>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex justify-end gap-2 pt-4 border-t">
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteMutation.mutate(selectedFeedback.id)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="w-4 h-4 mr-1" />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
-          </DialogContent>
-        </Dialog>
-
         {/* Submit Feedback Modal */}
         <BetaFeedbackModal 
           open={submitModalOpen} 
           onClose={() => {
             setSubmitModalOpen(false);
-            queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
+            queryClient.invalidateQueries({ queryKey: ['myBetaFeedback'] });
           }} 
         />
       </div>
