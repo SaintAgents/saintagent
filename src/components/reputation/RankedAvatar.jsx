@@ -136,12 +136,12 @@ export default function RankedAvatar({
       >
         {/* Inner ring: white bg */}
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
-          <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-            {finalAvatarUrl ? (
+          <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center relative">
+            {finalAvatarUrl && (
               <img 
                 src={finalAvatarUrl} 
                 alt={name || 'Avatar'} 
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover z-10"
                 style={{ filter: 'none' }}
                 data-no-filter="true"
                 onError={(e) => {
@@ -149,10 +149,10 @@ export default function RankedAvatar({
                   e.target.style.display = 'none';
                 }}
               />
-            ) : null}
+            )}
             {/* Fallback initial - always rendered behind image */}
             <span 
-              className="absolute text-white font-bold select-none" 
+              className="text-white font-bold select-none z-0" 
               style={{ fontSize: `${size * 0.35}px` }}
             >
               {name?.[0]?.toUpperCase() || '?'}
