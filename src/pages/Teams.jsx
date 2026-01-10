@@ -72,7 +72,7 @@ export default function Teams() {
       {/* Hero */}
       <div className="page-hero relative overflow-hidden">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a7560a6fc_Screenshot2026-01-07022705.png"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ded1e9bcc_gemini-image-2_these_people_in_the_digital_marketplace-1.jpg"
           alt="Teams & Guilds"
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
