@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 
-const BETA_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/666f59358_universal_upscale_0_67b4f4ac-1a26-41b4-953c-b950fb28d875_0.jpg";
+const BETA_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5924f334a_gemini-25-flash-image_A_playful_futuristic_feedback_space_inside_Saint_Agents_World_where_creativity_a-2.jpg";
 
 const TYPE_CONFIG = {
   bug: { icon: Bug, color: 'bg-red-100 text-red-700', label: 'Bug' },
