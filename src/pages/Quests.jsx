@@ -86,7 +86,7 @@ export default function Quests() {
   const hasClaimable = completedQuests.length > 0;
 
   return (
-    <div className="min-h-screen bg-[#0a1a0a]">
+    <div className="min-h-screen relative">
       {/* Header Section - No Hero */}
       <div className="px-4 pt-6 pb-4">
         <div className="max-w-7xl mx-auto">

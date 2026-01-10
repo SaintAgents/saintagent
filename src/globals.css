@@ -152,29 +152,18 @@ html[data-theme='dark'] img[data-no-filter="true"],
   z-index: 5;
 }
 
-/* ALL page content must be above matrix rain canvas */
-[data-theme='dark'] main,
-[data-theme='hacker'] main {
-  position: relative;
-  z-index: 2;
-}
-
-[data-theme='dark'] main *,
-[data-theme='hacker'] main * {
-  position: relative;
-}
-
-/* Ensure specific UI elements have high z-index */
-[data-theme='dark'] [class*='CollapsibleCard'],
-[data-theme='hacker'] [class*='CollapsibleCard'],
-[data-theme='dark'] [class*='Collapsible'],
-[data-theme='hacker'] [class*='Collapsible'],
-[data-theme='dark'] .bg-white,
-[data-theme='hacker'] .bg-white,
-[data-theme='dark'] .bg-black,
-[data-theme='hacker'] .bg-black {
-  position: relative;
-  z-index: 10 !important;
+/* Gradient backgrounds - make transparent (excluding hero overlays) */
+[data-theme='dark'] .min-h-screen.bg-gradient-to-br,
+[data-theme='dark'] .min-h-screen.bg-gradient-to-b,
+[data-theme='dark'] .min-h-screen.bg-gradient-to-r,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-br,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-b,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-r,
+[data-theme='dark'] div.min-h-screen,
+[data-theme='hacker'] div.min-h-screen {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 /* Gradient backgrounds - make transparent (excluding hero overlays) */
