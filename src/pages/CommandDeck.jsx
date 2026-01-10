@@ -53,6 +53,7 @@ import CollaborationSuggestions from '@/components/notifications/CollaborationSu
 import GamificationWidget from '@/components/gamification/GamificationWidget';
 import GoldPriceTicker from '@/components/hud/GoldPriceTicker';
 import MBTIPromptBanner from '@/components/profile/MBTIPromptBanner';
+import CommandDeckTour, { CommandDeckLoadingScreen } from '@/components/tour/CommandDeckTour';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -112,6 +113,10 @@ export default function CommandDeck() {
   const [projectStatus, setProjectStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
   const [cardsForceOpen, setCardsForceOpen] = useState(null);
+  
+  // Tour and loading states
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [showTour, setShowTour] = useState(false);
 
   // Hide/Unhide functionality for cards
   const [hiddenCards, setHiddenCards] = useState(() => {
@@ -648,6 +653,34 @@ export default function CommandDeck() {
     }
   };
 
+  // Check if user just completed onboarding or first visit
+  useEffect(() => {
+    const justCompletedOnboarding = localStorage.getItem('onboardingJustCompleted') === '1';
+    const tourComplete = localStorage.getItem('commandDeckTourComplete') === 'true';
+    
+    if (justCompletedOnboarding && !tourComplete) {
+      // Show loading screen then tour for new users
+      setShowLoadingScreen(true);
+      try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
+    } else if (!tourComplete && currentUser) {
+      // First visit but not from onboarding - still show tour
+      const firstVisit = !localStorage.getItem('commandDeckVisited');
+      if (firstVisit) {
+        setShowLoadingScreen(true);
+        try { localStorage.setItem('commandDeckVisited', 'true'); } catch {}
+      }
+    }
+  }, [currentUser]);
+
+  const handleLoadComplete = () => {
+    setShowLoadingScreen(false);
+    setShowTour(true);
+  };
+
+  const handleTourComplete = () => {
+    setShowTour(false);
+  };
+
   // Show loading state while essential data is being fetched
   const isLoading = !currentUser;
 
@@ -660,6 +693,11 @@ export default function CommandDeck() {
         </div>
       </div>
     );
+  }
+
+  // Show loading screen with Command Deck preview
+  if (showLoadingScreen) {
+    return <CommandDeckLoadingScreen onLoadComplete={handleLoadComplete} />;
   }
 
   return (
@@ -1503,6 +1541,9 @@ export default function CommandDeck() {
         {boostTarget && <BoostModal open={!!boostTarget} onClose={() => setBoostTarget(null)} targetType={boostTarget.type} targetId={boostTarget.id} />}
         <TuneEngineModal open={tuneEngineOpen} onClose={() => setTuneEngineOpen(false)} />
         <OnlineUsersModal open={onlineUsersOpen} onClose={() => setOnlineUsersOpen(false)} />
+        
+        {/* Command Deck Tour */}
+        <CommandDeckTour autoStart={showTour} onComplete={handleTourComplete} />
       </div>
     </div>);
 
