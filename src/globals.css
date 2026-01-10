@@ -86,16 +86,29 @@ main {
   background: transparent !important;
 }
 
-/* Quests page - fully transparent cards */
-[data-theme='dark'] [data-page-quests] *,
-[data-theme='hacker'] [data-page-quests] * {
+/* Quests page - fully transparent cards - HIGH SPECIFICITY */
+html[data-theme='dark'] [data-page-quests] .rounded-xl,
+html[data-theme='dark'] [data-page-quests] .rounded-lg,
+html[data-theme='dark'] [data-page-quests] .rounded-2xl,
+html[data-theme='dark'] [data-page-quests] .rounded-md,
+html[data-theme='dark'] [data-page-quests] [class*='Card'],
+html[data-theme='dark'] [data-page-quests] [class*='bg-'],
+html[data-theme='hacker'] [data-page-quests] .rounded-xl,
+html[data-theme='hacker'] [data-page-quests] .rounded-lg,
+html[data-theme='hacker'] [data-page-quests] .rounded-2xl,
+html[data-theme='hacker'] [data-page-quests] .rounded-md,
+html[data-theme='hacker'] [data-page-quests] [class*='Card'],
+html[data-theme='hacker'] [data-page-quests] [class*='bg-'] {
   background-color: transparent !important;
   background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
 }
 
 /* Quests page cards - restore border only */
-[data-theme='dark'] [data-page-quests] [class*='Card'],
-[data-theme='hacker'] [data-page-quests] [class*='Card'] {
+html[data-theme='dark'] [data-page-quests] [class*='Card'],
+html[data-theme='hacker'] [data-page-quests] [class*='Card'] {
   border: 1px solid rgba(0, 255, 136, 0.2) !important;
 }
 
