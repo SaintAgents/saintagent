@@ -27,6 +27,7 @@ import HelpHint from '@/components/hud/HelpHint';
 import AIMatchAssistant from '@/components/dating/AIMatchAssistant';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import BookingModal from '@/components/matches/BookingModal';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -38,6 +39,8 @@ export default function Matches() {
   const [sortBy, setSortBy] = useState('match');
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
   const [selectedMatchForAI, setSelectedMatchForAI] = useState(null);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedMatchForBooking, setSelectedMatchForBooking] = useState(null);
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -112,8 +115,9 @@ export default function Matches() {
         }
       }));
     } else if (action === 'book') {
-      // Navigate to meetings page to book a meeting
-      window.location.href = createPageUrl('Meetings');
+      // Open booking modal with the matched user's listings
+      setSelectedMatchForBooking(match);
+      setBookingModalOpen(true);
     }
   };
 
@@ -338,6 +342,12 @@ export default function Matches() {
           isOpen={aiAssistantOpen}
           onClose={() => { setAiAssistantOpen(false); setSelectedMatchForAI(null); }}
           selectedMatch={selectedMatchForAI}
+        />
+
+        <BookingModal
+          open={bookingModalOpen}
+          onClose={() => { setBookingModalOpen(false); setSelectedMatchForBooking(null); }}
+          match={selectedMatchForBooking}
         />
       </div>
     </div>
