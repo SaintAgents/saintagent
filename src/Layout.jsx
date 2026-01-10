@@ -1145,12 +1145,15 @@ function AuthenticatedLayout({ children, currentPageName }) {
                     padding-top: 0 !important;
                   }
                   [data-theme='dark'] .page-hero h1,
-                  [data-theme='hacker'] .page-hero h1,
-                  [data-theme='dark'] .page-hero .hero-content,
-                  [data-theme='hacker'] .page-hero .hero-content {
-                    padding-top: 0.5rem !important;
-                    margin-top: 0 !important;
-                  }
+                                [data-theme='hacker'] .page-hero h1 {
+                                  padding-top: 0 !important;
+                                  margin-top: 0 !important;
+                                }
+                                [data-theme='dark'] .page-hero .hero-content,
+                                [data-theme='hacker'] .page-hero .hero-content {
+                                  padding-top: 30px !important;
+                                  margin-top: 0 !important;
+                                }
 
         /* Command Deck keeps its background image in dark mode */
         [data-theme='dark'] main[data-page='CommandDeck'] {
