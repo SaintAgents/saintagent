@@ -127,14 +127,29 @@ html[data-theme='dark'] img[data-no-filter="true"],
   background-color: #050505 !important;
 }
 
-/* Hacker theme cards - solid black */
-[data-theme='hacker'] .rounded-xl,
-[data-theme='hacker'] .rounded-lg,
-[data-theme='hacker'] .rounded-2xl,
+/* Hacker theme cards - solid black, z-index to stay above canvas */
+[data-theme='hacker'] .rounded-xl:not(img),
+[data-theme='hacker'] .rounded-lg:not(img),
+[data-theme='hacker'] .rounded-2xl:not(img),
 [data-theme='hacker'] [class*='Card'],
 [data-theme='hacker'] [role='tabpanel'],
-[data-theme='hacker'] [role='tablist'] {
+[data-theme='hacker'] [role='tablist'],
+[data-theme='dark'] .rounded-xl:not(img),
+[data-theme='dark'] .rounded-lg:not(img),
+[data-theme='dark'] .rounded-2xl:not(img),
+[data-theme='dark'] [class*='Card'],
+[data-theme='dark'] [role='tabpanel'],
+[data-theme='dark'] [role='tablist'] {
   background-color: #000 !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Main content area stays above canvas */
+[data-theme='dark'] main > div,
+[data-theme='hacker'] main > div {
+  position: relative;
+  z-index: 5;
 }
 
 /* Gradient backgrounds - make transparent (excluding hero overlays) */
