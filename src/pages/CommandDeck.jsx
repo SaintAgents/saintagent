@@ -704,15 +704,26 @@ export default function CommandDeck() {
             <div className="relative z-10 flex items-start gap-6">
               {/* Left column: Avatar only */}
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
-                <RankedAvatar
-                  src={profile?.avatar_url}
-                  name={profile?.display_name}
-                  size={140}
-                  leaderTier={profile?.leader_tier}
-                  rpRankCode={profile?.rp_rank_code}
-                  rpPoints={rpPoints}
-                  userId={profile?.user_id}
-                  status={profile?.status || 'offline'} />
+                {profile?.avatar_url ? (
+                  <RankedAvatar
+                    src={profile.avatar_url}
+                    name={profile?.display_name}
+                    size={140}
+                    leaderTier={profile?.leader_tier}
+                    rpRankCode={profile?.rp_rank_code}
+                    rpPoints={rpPoints}
+                    userId={profile?.user_id}
+                    status={profile?.status || 'offline'} />
+                ) : (
+                  <RankedAvatar
+                    name={profile?.display_name || currentUser?.full_name}
+                    size={140}
+                    leaderTier={profile?.leader_tier}
+                    rpRankCode={profile?.rp_rank_code}
+                    rpPoints={rpPoints}
+                    userId={profile?.user_id}
+                    status={profile?.status || 'offline'} />
+                )}
               </div>
 
               <div className="flex-1">
