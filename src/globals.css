@@ -1,3 +1,4 @@
+css
 /* =====================================================
    CANVAS & LAYERING - CRITICAL FOR BACKGROUND EFFECTS
    ===================================================== */
@@ -86,26 +87,11 @@ main {
   background: transparent !important;
 }
 
-/* Quests page - transparent card backgrounds only (not images) */
-html[data-theme='dark'] [data-page-quests] .rounded-xl:not(img):not(.hero-image),
-html[data-theme='dark'] [data-page-quests] .rounded-lg:not(img):not(.hero-image),
-html[data-theme='dark'] [data-page-quests] .rounded-2xl:not(img):not(.hero-image),
-html[data-theme='dark'] [data-page-quests] [class*='Card']:not(img),
-html[data-theme='hacker'] [data-page-quests] .rounded-xl:not(img):not(.hero-image),
-html[data-theme='hacker'] [data-page-quests] .rounded-lg:not(img):not(.hero-image),
-html[data-theme='hacker'] [data-page-quests] .rounded-2xl:not(img):not(.hero-image),
-html[data-theme='hacker'] [data-page-quests] [class*='Card']:not(img) {
+/* Quests page only - transparent card backgrounds in dark/hacker themes */
+html[data-theme='dark'] [data-page-quests] > div > div > div,
+html[data-theme='hacker'] [data-page-quests] > div > div > div {
   background-color: transparent !important;
   background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-/* Quests page cards - restore border only */
-html[data-theme='dark'] [data-page-quests] [class*='Card']:not(img),
-html[data-theme='hacker'] [data-page-quests] [class*='Card']:not(img) {
-  border: 1px solid rgba(0, 255, 136, 0.2) !important;
 }
 
 /* Hacker theme - square corners */
