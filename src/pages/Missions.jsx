@@ -170,18 +170,41 @@ export default function Missions() {
     console.log('Mission action:', action, mission);
   };
 
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d260b7709_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
-      <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 overflow-hidden page-hero">
+        <img 
+          src={HERO_IMAGE}
+          alt="Missions"
+          className="hero-image w-full h-full object-cover object-center"
+          data-no-filter="true"
+        />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              Missions
+            </h1>
+            <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
+              Join Collaborative Missions to Earn GGG, Rank Points & Boosts
+            </p>
+          </div>
+        </div>
+        <div className="absolute top-3 left-3">
+          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+        <div className="absolute top-3 right-3">
+          <ForwardButton currentPage="Missions" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 -mt-6 relative z-[5]">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <BackButton />
-            <Target className="w-6 h-6 text-amber-500" />
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Missions</h1>
-            <HelpHint content="Missions: Structured units of work driving real-world impact. Browse & Join: Find missions by Lane (Food Security, Regenerative Ag, etc.) or Region. Execute Tasks: Complete assigned tasks and submit Evidence (files, links, photos). Verification & Payout: Once the Leader verifies your evidence, GGG is released from mission escrow to your wallet. Mission Types: Platform (system), Circle, Region, Leader. Rewards: GGG, Rank Points, Boost multipliers. Leaders design missions with milestone-based bounties (capped at $55)." />
-          </div>
-          <p className="text-slate-500 dark:text-slate-400 mb-4 text-center">Join collaborative missions to earn GGG, rank points, and boosts (mission rewards capped at $55).</p>
           <div className="flex items-center justify-center gap-2 flex-wrap">
             <Button
               variant="outline"
