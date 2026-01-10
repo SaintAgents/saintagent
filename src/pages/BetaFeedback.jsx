@@ -70,21 +70,39 @@ export default function BetaFeedback() {
 
       <div className="max-w-3xl mx-auto px-6 pt-6">
 
-        {/* Submit CTA */}
-        <Card className="mb-6 border-violet-200 bg-violet-50/50">
-          <CardContent className="p-6 text-center">
-            <MessageSquare className="w-10 h-10 text-violet-600 mx-auto mb-3" />
-            <h2 className="text-lg font-semibold text-slate-900 mb-2">Found a bug? Have a suggestion?</h2>
-            <p className="text-slate-600 mb-4">Your feedback helps us build a better platform for everyone.</p>
-            <Button 
-              className="bg-violet-600 hover:bg-violet-700 gap-2"
-              onClick={() => setSubmitModalOpen(true)}
-            >
-              <Plus className="w-4 h-4" />
-              Submit Feedback
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Quick Submit Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <Card 
+            className="border-red-200 bg-red-50/50 cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => setSubmitModalOpen('bug')}
+          >
+            <CardContent className="p-4 text-center">
+              <Bug className="w-8 h-8 text-red-600 mx-auto mb-2" />
+              <h3 className="font-semibold text-slate-900">Report Bug</h3>
+              <p className="text-xs text-slate-500 mt-1">Found something broken?</p>
+            </CardContent>
+          </Card>
+          <Card 
+            className="border-amber-200 bg-amber-50/50 cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => setSubmitModalOpen('suggestion')}
+          >
+            <CardContent className="p-4 text-center">
+              <Lightbulb className="w-8 h-8 text-amber-600 mx-auto mb-2" />
+              <h3 className="font-semibold text-slate-900">Suggestion</h3>
+              <p className="text-xs text-slate-500 mt-1">Have an idea?</p>
+            </CardContent>
+          </Card>
+          <Card 
+            className="border-blue-200 bg-blue-50/50 cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => setSubmitModalOpen('comment')}
+          >
+            <CardContent className="p-4 text-center">
+              <MessageSquare className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+              <h3 className="font-semibold text-slate-900">Comment</h3>
+              <p className="text-xs text-slate-500 mt-1">General feedback</p>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* My Previous Submissions */}
         <h3 className="text-lg font-semibold text-slate-900 mb-4">Your Previous Submissions</h3>
@@ -132,7 +150,8 @@ export default function BetaFeedback() {
 
         {/* Submit Feedback Modal */}
         <BetaFeedbackModal 
-          open={submitModalOpen} 
+          open={!!submitModalOpen} 
+          initialType={typeof submitModalOpen === 'string' ? submitModalOpen : undefined}
           onClose={() => {
             setSubmitModalOpen(false);
             queryClient.invalidateQueries({ queryKey: ['myBetaFeedback'] });
