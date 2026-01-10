@@ -3,7 +3,6 @@ import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
-import CommandDeck from './pages/CommandDeck';
 import CommunityFeed from './pages/CommunityFeed';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
@@ -46,6 +45,7 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
+import CommandDeck from './pages/CommandDeck';
 import __Layout from './Layout.jsx';
 
 
@@ -55,7 +55,6 @@ export const PAGES = {
     "AffiliateCenter": AffiliateCenter,
     "CRM": CRM,
     "Circles": Circles,
-    "CommandDeck": CommandDeck,
     "CommunityFeed": CommunityFeed,
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
@@ -98,6 +97,7 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
+    "CommandDeck": CommandDeck,
 }
 
 export const pagesConfig = {

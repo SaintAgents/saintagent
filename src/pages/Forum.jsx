@@ -142,27 +142,32 @@ export default function Forum() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
-      {/* Standard Header */}
-      <div className="pt-8 pb-6 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <BackButton />
-            <MessageSquare className="w-7 h-7 text-violet-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 page-hero overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6f911f9fc_universal_upscale_0_78f63644-c1c1-437a-984c-78bd21bad71e_0.jpg"
+          alt="Community Forum"
+          className="absolute inset-0 w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content">
+          <div className="flex items-center gap-3 mb-2">
+            <BackButton className="text-white" />
+            <MessageSquare className="w-8 h-8 text-violet-300" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
               Community Forum
             </h1>
-            <ForwardButton currentPage="Forum" />
+            <ForwardButton currentPage="Forum" className="text-white" />
           </div>
-          <p className="text-slate-500 text-center">Connect, share, and grow together</p>
-          <div className="flex justify-center mt-4">
-            <Button 
-              className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-              onClick={() => setCreateModalOpen(true)}
-            >
-              <Plus className="w-4 h-4" />
-              New Post
-            </Button>
-          </div>
+          <p className="text-violet-200 text-lg mb-4">Connect, share, and grow together</p>
+          <Button 
+            className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2 shadow-lg"
+            onClick={() => setCreateModalOpen(true)}
+          >
+            <Plus className="w-4 h-4" />
+            New Post
+          </Button>
         </div>
       </div>
 
