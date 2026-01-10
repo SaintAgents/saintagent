@@ -368,12 +368,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
-    <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
-      {/* Starfield Canvas - rank-colored stars */}
+    <div className="min-h-screen bg-slate-50 relative" data-bg-effect={bgEffect}>
+      {/* Background effect canvases - behind all content */}
       {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
-                {showMatrixRain && <MatrixRainCanvas />}
-                {showNebula && <NebulaCanvas />}
-                {showCircuit && <CircuitCanvas />}
+      {showMatrixRain && <MatrixRainCanvas />}
+      {showNebula && <NebulaCanvas />}
+      {showCircuit && <CircuitCanvas />}
 
       <style>{`
         :root {
@@ -1146,25 +1146,25 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
                   /* Hero section sizing */
                   .page-hero {
-                    height: 256px;
+                    height: 200px;
                   }
                   @media (min-width: 768px) {
                     .page-hero {
-                      height: 288px;
+                      height: 220px;
                     }
                   }
                   [data-theme='dark'] .page-hero,
                   [data-theme='hacker'] .page-hero {
-                    height: 80px !important;
-                    min-height: 80px !important;
-                    max-height: 80px !important;
+                    height: 60px !important;
+                    min-height: 60px !important;
+                    max-height: 60px !important;
                     padding-top: 0 !important;
                   }
                   [data-theme='dark'] .page-hero h1,
                   [data-theme='hacker'] .page-hero h1,
                   [data-theme='dark'] .page-hero .hero-content,
                   [data-theme='hacker'] .page-hero .hero-content {
-                    padding-top: 0.5rem !important;
+                    padding-top: 0.25rem !important;
                     margin-top: 0 !important;
                   }
 
@@ -1638,7 +1638,7 @@ function NebulaCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.8, zIndex: -1 }}
+      style={{ opacity: 0.5, zIndex: -10 }}
     />
   );
 }
@@ -1776,7 +1776,7 @@ function MatrixRainCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.9, zIndex: -1 }}
+      style={{ opacity: 0.6, zIndex: -10 }}
     />
   );
 }
@@ -2051,7 +2051,7 @@ function CircuitCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: -1 }}
+      style={{ opacity: 0.5, zIndex: -10 }}
     />
   );
 }
@@ -2206,7 +2206,7 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: -1 }}
+      style={{ opacity: 0.5, zIndex: -10 }}
     />
   );
 }
