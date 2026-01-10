@@ -49,7 +49,7 @@ export default function Studio() {
   const conversionRate = totalViews > 0 ? ((totalBookings / totalViews) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
+    <div className="min-h-screen relative">
       {/* Hero Image */}
       <div className="relative h-72 md:h-96 w-full overflow-hidden">
         <img 

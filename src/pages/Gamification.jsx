@@ -143,7 +143,7 @@ export default function Gamification() {
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/db92b719b_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-0.jpg";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-[#050505]">
+    <div className="min-h-screen relative">
       {/* Hero Section */}
       <div className="relative h-48 md:h-56 overflow-hidden">
         <img 
