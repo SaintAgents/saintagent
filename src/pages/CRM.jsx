@@ -99,7 +99,7 @@ export default function CRM() {
   const domains = ['all', 'finance', 'tech', 'governance', 'health', 'education', 'media', 'legal', 'spiritual', 'creative', 'nonprofit', 'other'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       <style>{`
         [data-theme='dark'] .crm-import-btn {
           background-color: #1e293b !important;

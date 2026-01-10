@@ -55,7 +55,7 @@ export default function Projects() {
   const drafts = projects.filter((p) => p.status === 'draft').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-[#050505] dark:via-[#050505] dark:to-[#050505] relative z-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative z-10">
       {/* Hero */}
       <div className="page-hero relative overflow-hidden">
         <img 

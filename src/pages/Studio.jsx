@@ -49,7 +49,7 @@ export default function Studio() {
   const conversionRate = totalViews > 0 ? ((totalBookings / totalViews) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Standard Header */}
       <div className="pt-8 pb-6 px-6">
         <div className="max-w-6xl mx-auto">

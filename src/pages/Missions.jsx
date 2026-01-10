@@ -171,7 +171,7 @@ export default function Missions() {
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
         {/* Header */}
         <div className="mb-6">
