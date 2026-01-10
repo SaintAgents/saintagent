@@ -898,8 +898,14 @@ export default function Sidebar({
       <div className="flex items-center justify-between p-4 border-b border-slate-100">
         <div
           className={cn("flex items-center gap-3 cursor-pointer", isCollapsed && "justify-center w-full")}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          title="Go to top"
+          onClick={() => {
+            if (isCollapsed) {
+              onToggle?.();
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          title={isCollapsed ? "Expand sidebar" : "Go to top"}
         >
           <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
             <img
