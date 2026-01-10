@@ -5,7 +5,7 @@ import { Rocket, Lightbulb, Shield, Users, Globe } from "lucide-react";
 
 export default function UserTourModal({ open, onClose }) {
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
           <Rocket className="w-12 h-12 text-violet-600 mx-auto mb-2" />
@@ -46,7 +46,15 @@ export default function UserTourModal({ open, onClose }) {
           </div>
         </div>
 
-        <Button onClick={onClose} className="w-full bg-violet-600 hover:bg-violet-700">
+        <Button 
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }} 
+          className="w-full bg-violet-600 hover:bg-violet-700"
+        >
           Got it! Let's Go
         </Button>
       </DialogContent>
