@@ -182,10 +182,6 @@ export default function Matches() {
               Refresh
             </Button>
           </div>
-        </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-6 pb-6">
 
         {/* Search */}
         <div className="relative mb-6">
