@@ -230,23 +230,19 @@ export default function GlobalChatWidget() {
 
   const bottomPos = position.y ? `${window.innerHeight - position.y}px` : '16px';
 
-  // Docked tab on right side when closed
+  // Chat button - fixed bottom right
   if (!isOpen) {
     return (
       <div
         className="fixed z-50"
         style={{ 
-          right: dockedSide === 'right' ? 0 : 'auto',
-          left: dockedSide === 'left' ? 0 : (dockedSide === null ? position.x : 'auto'),
-          top: position.y ?? 280
+          right: 16,
+          bottom: 16
         }}
       >
         <div
           onClick={() => setIsOpen(true)}
-          className={cn(
-            "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105",
-            dockedSide === 'right' ? "rounded-l-full pr-4" : dockedSide === 'left' ? "rounded-r-full pl-4" : "rounded-full"
-          )}
+          className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 rounded-full"
         >
           <Globe className="w-4 h-4" />
           <span className="text-xs font-medium">Chat</span>

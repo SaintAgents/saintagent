@@ -328,21 +328,19 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
-      {/* Docked help tab on right side when closed */}
+      {/* Help button - fixed bottom right, stacked above chat */}
       {!isOpen && (
         <div
           className="fixed z-50"
           style={{ 
-            right: dockedSide === 'right' ? 0 : 'auto',
-            left: dockedSide === 'left' ? 0 : (dockedSide === null ? position.x : 'auto'),
-            top: position.y ?? 200
+            right: 16,
+            bottom: 64 // Stacked above chat button
           }}
         >
           <div
             onClick={() => setIsOpen(true)}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 hacker-help-btn",
-              dockedSide === 'right' ? "rounded-l-full pr-4" : dockedSide === 'left' ? "rounded-r-full pl-4" : "rounded-full"
+              "flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 rounded-full hacker-help-btn"
             )}
           >
             <HelpCircle className="w-4 h-4 hacker-help-icon" />
