@@ -24,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DemoStamp from '@/components/ui/DemoStamp';
 
 const getCategoryImage = (category) => {
   const images = {
@@ -63,6 +64,9 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
       onClick={() => window.location.href = createPageUrl('ListingDetail') + '?id=' + listing.id}
     >
       <div className="relative h-36 overflow-hidden">
+        {/* DEMO Stamp */}
+        <DemoStamp size="sm" className="top-2 left-2" />
+        
         <img 
           src={listing.image_url || getCategoryImage(listing.category)} 
           alt={listing.title}
@@ -71,7 +75,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <Badge className={cn("absolute top-3 left-3", categoryColors[listing.category])}>
+        <Badge className={cn("absolute top-3 left-12", categoryColors[listing.category])}>
           {listing.category}
         </Badge>
         {listing.is_free && (

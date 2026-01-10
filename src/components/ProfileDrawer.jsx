@@ -32,6 +32,10 @@ import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { formatDistanceToNow } from 'date-fns';
 import CommunityStatsCard from '@/components/profile/CommunityStatsCard';
+import DemoStamp from '@/components/ui/DemoStamp';
+
+// Default fallback hero image
+const DEFAULT_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/31742c677_universal_upscale_0_ec38ae88-7005-4eed-a87e-5dd7b72e47dc_0.jpg';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
@@ -213,8 +217,11 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       <ScrollArea className="flex-1">
         {/* Hero Background */}
         <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
-          {/* Rank Badge - Top Left */}
-          <div className="absolute top-2 left-3 z-10">
+          {/* DEMO Stamp */}
+          <DemoStamp size="md" className="top-2 left-2" />
+          
+          {/* Rank Badge - Top Left (shifted right for demo stamp) */}
+          <div className="absolute top-2 left-12 z-10">
             <img
               src={RANK_BADGE_IMAGES[profile.rp_rank_code] || RANK_BADGE_IMAGES.seeker}
               alt={profile.rp_rank_code || 'seeker'}
@@ -229,15 +236,12 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             className="absolute top-2 right-3 w-20 h-20 object-contain z-10 drop-shadow-lg"
             data-no-filter="true" />
 
-          {profile.hero_image_url ? (
-            <img
-              src={profile.hero_image_url}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600" />
-          )}
+          {/* Hero Image - always show, use default if none */}
+          <img
+            src={profile.hero_image_url || DEFAULT_HERO_IMAGE}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
 
           <div className="absolute inset-0 bg-gradient-to-t from-white/80 dark:from-[#0a0a0a]/90 to-transparent" />
         </div>

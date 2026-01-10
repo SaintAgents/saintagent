@@ -9,6 +9,10 @@ import { cn } from '@/lib/utils';
 import { Shield, TrendingUp, BadgeCheck, Users, Coins } from 'lucide-react';
 import HelpHint from '@/components/hud/HelpHint';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import DemoStamp from '@/components/ui/DemoStamp';
+
+// Default fallback hero image
+const DEFAULT_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/31742c677_universal_upscale_0_ec38ae88-7005-4eed-a87e-5dd7b72e47dc_0.jpg';
 
 const ROLE_LABELS = {
   member: 'Member',
@@ -94,13 +98,16 @@ export default function MiniProfile({
     <div className={cn('min-w-0', className)} data-user-id={userId}>
       {showHeroLayout ? (
         <div className="relative">
+          {/* DEMO Stamp */}
+          <DemoStamp size="sm" className="top-1 left-1" />
+          
           {/* Mini Hero Banner - smaller */}
           <div 
             className="w-full rounded-t-lg overflow-hidden bg-gradient-to-r from-violet-500 to-purple-600"
             style={{ height: `${heroHeight}px` }}
           >
             <img 
-              src={heroImage || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png'} 
+              src={heroImage || DEFAULT_HERO_IMAGE} 
               alt="" 
               className="w-full h-full object-cover"
             />
@@ -166,7 +173,10 @@ export default function MiniProfile({
           </div>
         </div>
       ) : (
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 relative">
+          {/* DEMO Stamp for non-hero layout */}
+          <DemoStamp size="sm" className="top-0 left-0" />
+          
           <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
             <RankedAvatar
               src={avatar || profile?.avatar_url}
