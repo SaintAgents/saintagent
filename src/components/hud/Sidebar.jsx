@@ -329,14 +329,14 @@ export default function Sidebar({
               className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
               title="Pop out navigation"
             >
-              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Quick Nav</span>
+              <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Quick Nav</span>
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </button>
           </div>
         )}
         <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center px-1")}> 
           {(!isCollapsed || inPopup) && (
-            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Navigation</span>
+            <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Navigation</span>
           )}
           <button
             onClick={() => setNavOpen(!navOpen)}
@@ -382,7 +382,7 @@ export default function Sidebar({
                     )} />}
                     {showExpanded && (
                       <>
-                        <span className="font-medium text-sm">{item.label}</span>
+                        <span className="font-medium text-sm text-slate-900">{item.label}</span>
                         {badgeValue > 0 && !isLocked && (
                           <Badge className="ml-auto bg-violet-600 text-white text-xs">
                             {badgeValue}
@@ -460,7 +460,7 @@ export default function Sidebar({
                 className="flex items-center gap-2 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors"
               >
                 <Trophy className="w-4 h-4 text-amber-500" />
-                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Top Leaders</span>
+                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Top Leaders</span>
               </button>
               <div className="flex items-center gap-1">
                 <Button 
@@ -551,7 +551,7 @@ export default function Sidebar({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {(!isCollapsed || inPopup) && (
-              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Presence</span>
+              <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Presence</span>
             )}
           </div>
           {(!isCollapsed || inPopup) && (
@@ -642,28 +642,28 @@ export default function Sidebar({
             {(!isCollapsed || inPopup) && (
             <Collapsible open={themeOpen} onOpenChange={setThemeOpen}>
               <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
-                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Theme</span>
+                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Theme</span>
                 {themeOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-2 space-y-2">
                 <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="light" id={inPopup ? "theme-light-pop" : "theme-light"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
+                    <Label htmlFor={inPopup ? "theme-light-pop" : "theme-light"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
                       <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
                       <span className="ml-auto text-xs text-slate-400">(Artist)</span>
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="dark" id={inPopup ? "theme-dark-pop" : "theme-dark"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
+                    <Label htmlFor={inPopup ? "theme-dark-pop" : "theme-dark"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
                       <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
                       <span className="ml-auto text-xs text-slate-400">(Less)</span>
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="hacker" id={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
+                    <Label htmlFor={inPopup ? "theme-hacker-pop" : "theme-hacker"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
                       <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
                       <span className="ml-auto text-xs text-slate-400">(None)</span>
                     </Label>
@@ -677,38 +677,38 @@ export default function Sidebar({
             {(!isCollapsed || inPopup) && (theme === 'dark' || theme === 'hacker') && (
             <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
               <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
-                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Background Effect</span>
+                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Background Effect</span>
                 {bgEffectOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-2 space-y-2">
                 <RadioGroup value={bgEffect} onValueChange={setBgEffect} className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="matrix" id={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor={inPopup ? "bg-matrix-pop" : "bg-matrix"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Zap className="w-3.5 h-3.5 text-green-500" /> Matrix Rain
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="starfield" id={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor={inPopup ? "bg-starfield-pop" : "bg-starfield"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Star className="w-3.5 h-3.5 text-teal-400" /> Star Field
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="nebula" id={inPopup ? "bg-nebula-pop" : "bg-nebula"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "bg-nebula-pop" : "bg-nebula"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor={inPopup ? "bg-nebula-pop" : "bg-nebula"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Cloud className="w-3.5 h-3.5 text-purple-500" /> Nebula
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="circuit" id={inPopup ? "bg-circuit-pop" : "bg-circuit"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "bg-circuit-pop" : "bg-circuit"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor={inPopup ? "bg-circuit-pop" : "bg-circuit"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Waves className="w-3.5 h-3.5 text-cyan-500" /> Circuit
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="off" id={inPopup ? "bg-off-pop" : "bg-off"} className="h-3.5 w-3.5" />
-                    <Label htmlFor={inPopup ? "bg-off-pop" : "bg-off"} className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor={inPopup ? "bg-off-pop" : "bg-off"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
                     </Label>
                   </div>
