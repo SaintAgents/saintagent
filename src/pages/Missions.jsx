@@ -43,6 +43,7 @@ import CreateMissionModal from '@/components/CreateMissionModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import AIMissionGenerator from '@/components/missions/AIMissionGenerator';
 import AIMissionBoard from '@/components/missions/AIMissionBoard';
+import AIMissionProposalGenerator from '@/components/ai/AIMissionProposalGenerator';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
@@ -53,6 +54,7 @@ export default function Missions() {
   const [matrixOpen, setMatrixOpen] = useState(false);
   const [aiGeneratorOpen, setAiGeneratorOpen] = useState(false);
   const [aiBoardOpen, setAiBoardOpen] = useState(false);
+  const [aiProposalOpen, setAiProposalOpen] = useState(false);
   const [prefillMission, setPrefillMission] = useState(null);
   
   // Advanced filters
