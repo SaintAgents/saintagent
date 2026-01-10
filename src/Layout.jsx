@@ -321,9 +321,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
         return; // Let the page render normally
       }
 
-      // Only redirect to onboarding if record exists but status is NOT complete
-      // Don't redirect if no record exists (new user might be in process of creating it)
-      if (onboarding && onboarding.status !== 'complete') {
+      // Redirect to onboarding if:
+      // 1. No record exists (brand new user)
+      // 2. Record exists but status is not complete
+      if (!onboarding || onboarding.status !== 'complete') {
         window.location.href = createPageUrl('Onboarding');
         return;
       }
