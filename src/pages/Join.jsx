@@ -69,6 +69,59 @@ export default function Join() {
         <div className="absolute inset-0 bg-slate-900/50" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-violet-950/60 to-slate-900/90" />
         
+        {/* Gold Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="gold-particle absolute rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                bottom: `-20px`,
+                width: `${Math.random() * 6 + 3}px`,
+                height: `${Math.random() * 6 + 3}px`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${Math.random() * 4 + 4}s`,
+              }}
+            />
+          ))}
+        </div>
+        
+        <style>{`
+          @keyframes floatUp {
+            0% {
+              transform: translateY(0) scale(0.5);
+              opacity: 0;
+            }
+            10% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 1;
+              transform: translateY(-40vh) scale(1);
+            }
+            90% {
+              opacity: 0.5;
+            }
+            100% {
+              transform: translateY(-80vh) scale(0.3);
+              opacity: 0;
+            }
+          }
+          @keyframes pulse {
+            0%, 100% {
+              box-shadow: 0 0 4px 2px rgba(255, 215, 0, 0.6);
+            }
+            50% {
+              box-shadow: 0 0 12px 4px rgba(255, 215, 0, 1);
+            }
+          }
+          .gold-particle {
+            background: radial-gradient(circle, #ffd700 0%, #daa520 50%, #b8860b 100%);
+            animation: floatUp 6s ease-in-out infinite, pulse 2s ease-in-out infinite;
+          }
+        `}</style>
+        
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-32 text-center">
           {/* Animated Gold Title */}
           <h2 className="text-2xl md:text-3xl font-bold mb-6 gold-shimmer-text">
