@@ -983,119 +983,130 @@ export default function Sidebar({
       {/* Presence popup - includes all bottom section content */}
       {presencePopupOpen && (
         <FloatingPanel title="Presence & Settings" onClose={() => setPresencePopupOpen(false)}>
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-3">
             {/* RP & Rank */}
             {profile && (
-              <div className="flex items-center justify-between p-3 bg-violet-50 rounded-xl">
+              <div className="flex items-center justify-between px-1 py-1 bg-violet-50 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-violet-500" />
-                  <span className="text-sm font-semibold text-violet-700">{profile.rp_points || 0} RP</span>
+                  <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
+                  <span className="text-xs font-semibold text-violet-700">{profile.rp_points || 0} RP</span>
                 </div>
-                <span className="text-sm font-medium capitalize text-violet-600 bg-violet-100 px-3 py-1 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
+                <span className="text-xs font-medium capitalize text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
               </div>
             )}
 
-            {/* Status & DM */}
-            <div className="space-y-3">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</p>
-              <div className="flex items-center gap-3">
-                <div className={cn("w-3 h-3 rounded-full animate-pulse", statusOption?.color)} />
-                <Select value={status} onValueChange={handleStatusChange}>
-                  <SelectTrigger className="flex-1 h-10">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STATUS_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        <div className="flex items-center gap-2">
-                          <div className={cn("w-2 h-2 rounded-full", opt.color)} />
-                          {opt.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center gap-3">
-                <MessageCircle className="w-4 h-4 text-slate-400" />
-                <Select value={dmPolicy} onValueChange={handleDMChange}>
-                  <SelectTrigger className="flex-1 h-10">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DM_POLICY_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        DMs: {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Status */}
+            <div className="flex items-center gap-3">
+              <div className={cn("w-3 h-3 rounded-full animate-pulse", statusOption?.color)} />
+              <Select value={status} onValueChange={handleStatusChange}>
+                <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
+                  {STATUS_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
+                      <div className="flex items-center gap-2">
+                        <div className={cn("w-2 h-2 rounded-full", opt.color)} />
+                        {opt.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Theme */}
-            <div className="space-y-2 pt-2 border-t border-slate-100">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Theme</p>
-              <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="light" id="popup-theme-light" className="h-3.5 w-3.5" />
-                  <Label htmlFor="popup-theme-light" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
-                    <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="dark" id="popup-theme-dark" className="h-3.5 w-3.5" />
-                  <Label htmlFor="popup-theme-dark" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
-                    <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="hacker" id="popup-theme-hacker" className="h-3.5 w-3.5" />
-                  <Label htmlFor="popup-theme-hacker" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5 flex-1">
-                    <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
-                  </Label>
-                </div>
-              </RadioGroup>
+            {/* DM Policy */}
+            <div className="flex items-center gap-3">
+              <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+              <Select value={dmPolicy} onValueChange={handleDMChange}>
+                <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
+                  {DM_POLICY_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value} className="dark:text-white dark:hover:bg-[rgba(0,255,136,0.1)]">
+                      DMs: {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Background Effects - only for Dark/Hacker */}
+            {/* Theme Toggle - Collapsible */}
+            <Collapsible open={themeOpen} onOpenChange={setThemeOpen}>
+              <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
+                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Theme</span>
+                {themeOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-2 space-y-2">
+                <RadioGroup value={theme} onValueChange={onThemeToggle} className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="light" id="popup-theme-light" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-theme-light" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
+                      <Sun className="w-3.5 h-3.5 text-amber-500" /> Light
+                      <span className="ml-auto text-xs text-slate-400">(Artist)</span>
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="dark" id="popup-theme-dark" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-theme-dark" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
+                      <Moon className="w-3.5 h-3.5 text-indigo-500" /> Dark
+                      <span className="ml-auto text-xs text-slate-400">(Less)</span>
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="hacker" id="popup-theme-hacker" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-theme-hacker" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
+                      <Terminal className="w-3.5 h-3.5 text-green-500" /> Hacker
+                      <span className="ml-auto text-xs text-slate-400">(None)</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </CollapsibleContent>
+            </Collapsible>
+
+            {/* Background Effects - only for Dark/Hacker themes */}
             {(theme === 'dark' || theme === 'hacker') && (
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Background Effect</p>
+            <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
+              <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
+                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Background Effect</span>
+                {bgEffectOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-2 space-y-2">
                 <RadioGroup value={bgEffect} onValueChange={setBgEffect} className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="matrix" id="popup-bg-matrix" className="h-3.5 w-3.5" />
-                    <Label htmlFor="popup-bg-matrix" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor="popup-bg-matrix" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Zap className="w-3.5 h-3.5 text-green-500" /> Matrix Rain
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="starfield" id="popup-bg-starfield" className="h-3.5 w-3.5" />
-                    <Label htmlFor="popup-bg-starfield" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor="popup-bg-starfield" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Star className="w-3.5 h-3.5 text-teal-400" /> Star Field
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="nebula" id="popup-bg-nebula" className="h-3.5 w-3.5" />
-                    <Label htmlFor="popup-bg-nebula" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor="popup-bg-nebula" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Cloud className="w-3.5 h-3.5 text-purple-500" /> Nebula
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="circuit" id="popup-bg-circuit" className="h-3.5 w-3.5" />
-                    <Label htmlFor="popup-bg-circuit" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor="popup-bg-circuit" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Waves className="w-3.5 h-3.5 text-cyan-500" /> Circuit
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="off" id="popup-bg-off" className="h-3.5 w-3.5" />
-                    <Label htmlFor="popup-bg-off" className="text-sm text-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <Label htmlFor="popup-bg-off" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
                     </Label>
                   </div>
                 </RadioGroup>
 
-                {/* Speed, Brightness, Variance sliders */}
+                {/* Speed & Brightness sliders for animated effects */}
                 {bgEffect !== 'off' && (
                   <div className="mt-3 space-y-3 pt-3 border-t border-slate-100">
                     <div className="space-y-1.5">
@@ -1142,7 +1153,8 @@ export default function Sidebar({
                     </div>
                   </div>
                 )}
-              </div>
+              </CollapsibleContent>
+            </Collapsible>
             )}
 
             {/* Profile Link */}
