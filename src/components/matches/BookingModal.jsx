@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, DollarSign, Video, MapPin, Send, Loader2, ShoppingBag, CalendarPlus } from "lucide-react";
 import { toast } from "sonner";
+import { createPageUrl } from '@/utils';
 
 export default function BookingModal({ open, onClose, match }) {
   const [tab, setTab] = useState('listings');
@@ -46,7 +47,7 @@ export default function BookingModal({ open, onClose, match }) {
         type: 'meeting',
         title: 'New Meeting Request',
         message: `${currentUser.full_name} wants to meet with you${selectedListing ? ` for "${selectedListing.title}"` : ''}`,
-        action_url: `/Meetings`,
+        action_url: createPageUrl('Meetings'),
         source_user_id: currentUser.email,
         source_user_name: currentUser.full_name,
         source_user_avatar: myProfile?.[0]?.avatar_url
