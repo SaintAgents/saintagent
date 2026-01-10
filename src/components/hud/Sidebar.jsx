@@ -605,7 +605,7 @@ export default function Sidebar({
               {(!isCollapsed || inPopup) && (
                 <Select value={status} onValueChange={handleStatusChange}>
                   <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
-                    <SelectValue />
+                    <SelectValue placeholder="Online" />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                     {STATUS_OPTIONS.map((opt) => (
@@ -626,7 +626,7 @@ export default function Sidebar({
                 <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <Select value={dmPolicy} onValueChange={handleDMChange}>
                   <SelectTrigger className="h-9 text-sm dark:text-white dark:border-[rgba(0,255,136,0.3)]">
-                    <SelectValue />
+                    <SelectValue placeholder="DMs: Everyone" />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.3)]">
                     {DM_POLICY_OPTIONS.map((opt) => (
