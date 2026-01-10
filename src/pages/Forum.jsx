@@ -141,7 +141,7 @@ export default function Forum() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
+    <div className="min-h-screen relative" style={{ background: 'transparent' }}>
       {/* Standard Header */}
       <div className="pt-8 pb-6 px-6">
         <div className="max-w-6xl mx-auto">
@@ -193,7 +193,11 @@ export default function Forum() {
 
         {/* Category Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full flex-wrap h-auto gap-2 p-2 bg-white dark:bg-[#0a0a0a] rounded-xl border">
+          <TabsList className="w-full flex-wrap h-auto gap-2 p-2 rounded-xl border"
+            style={{ 
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+              borderColor: 'rgba(0, 255, 136, 0.2)'
+            }}>
             <TabsTrigger value="all" className="rounded-lg">All</TabsTrigger>
             {CATEGORIES.map(cat => (
               <TabsTrigger key={cat.id} value={cat.id} className="rounded-lg gap-1">
@@ -242,7 +246,8 @@ export default function Forum() {
         <div className="space-y-4">
           {isLoading ? (
             Array(3).fill(0).map((_, i) => (
-              <div key={i} className="h-32 bg-white dark:bg-[#0a0a0a] rounded-xl animate-pulse" />
+              <div key={i} className="h-32 rounded-xl animate-pulse" 
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }} />
             ))
           ) : filteredPosts.length === 0 ? (
             <div className="text-center py-16">
@@ -259,7 +264,11 @@ export default function Forum() {
               return (
                 <Card 
                   key={post.id} 
-                  className="bg-white dark:bg-[#0a0a0a] hover:shadow-lg transition-all cursor-pointer border dark:border-[#00ff88]/20"
+                  className="hover:shadow-lg transition-all cursor-pointer"
+                  style={{ 
+                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                    border: '1px solid rgba(0, 255, 136, 0.2)'
+                  }}
                   onClick={() => setSelectedPost(post)}
                 >
                   <CardContent className="p-4">
