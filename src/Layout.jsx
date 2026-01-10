@@ -1472,9 +1472,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Beta Ticker */}
       <div 
         className={cn(
-          "fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden",
+          "fixed left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
           sidebarCollapsed ? "pl-10" : "pl-64"
         )}
+        style={{ top: '64px' }}
       >
         <div className="animate-marquee whitespace-nowrap inline-block">
           🚀 This is a Mock up demo app - many elements are for beta testing - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
