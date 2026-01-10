@@ -9,11 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
-  MessageSquare, Bug, Lightbulb, HelpCircle, Search, Filter,
+  MessageSquare, Bug, Lightbulb, HelpCircle, Search, Filter, Plus,
   Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink
 } from "lucide-react";
 import { format } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
+import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 
 const TYPE_CONFIG = {
   bug: { icon: Bug, color: 'bg-red-100 text-red-700', label: 'Bug' },
@@ -44,6 +45,7 @@ export default function BetaFeedback() {
   const [filterType, setFilterType] = useState('all');
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [adminNotes, setAdminNotes] = useState('');
+  const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -117,15 +119,24 @@ export default function BetaFeedback() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <BackButton />
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <MessageSquare className="w-6 h-6 text-violet-600" />
-              Beta Feedback
-            </h1>
-            <p className="text-slate-600 mt-1">Review feedback from beta testers</p>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <BackButton />
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                <MessageSquare className="w-6 h-6 text-violet-600" />
+                Beta Feedback
+              </h1>
+              <p className="text-slate-600 mt-1">Review feedback from beta testers</p>
+            </div>
           </div>
+          <Button 
+            className="bg-violet-600 hover:bg-violet-700 gap-2"
+            onClick={() => setSubmitModalOpen(true)}
+          >
+            <Plus className="w-4 h-4" />
+            Submit Feedback
+          </Button>
         </div>
 
         {/* Stats */}
@@ -376,6 +387,15 @@ export default function BetaFeedback() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Submit Feedback Modal */}
+        <BetaFeedbackModal 
+          open={submitModalOpen} 
+          onClose={() => {
+            setSubmitModalOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
+          }} 
+        />
       </div>
     </div>
   );
