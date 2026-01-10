@@ -129,9 +129,72 @@ html[data-theme='dark'] img[data-no-filter="true"],
 
 /* Gradient backgrounds - make transparent (excluding hero overlays) */
 [data-theme='dark'] .min-h-screen.bg-gradient-to-br,
-[data-theme='hacker'] .min-h-screen.bg-gradient-to-br {
+[data-theme='dark'] .min-h-screen.bg-gradient-to-b,
+[data-theme='dark'] .min-h-screen.bg-gradient-to-r,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-br,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-b,
+[data-theme='hacker'] .min-h-screen.bg-gradient-to-r,
+[data-theme='dark'] div.min-h-screen,
+[data-theme='hacker'] div.min-h-screen {
   background: transparent !important;
+  background-color: transparent !important;
   background-image: none !important;
+}
+
+/* =====================================================
+   HACKER THEME - HIDE HERO SECTIONS COMPLETELY
+   In hacker mode, heroes are distracting - show minimal header
+   ===================================================== */
+[data-theme='hacker'] .page-hero,
+[data-theme='hacker'] .relative.h-48,
+[data-theme='hacker'] .relative.h-56,
+[data-theme='hacker'] .relative.h-72,
+[data-theme='hacker'] .relative.h-96,
+[data-theme='hacker'] [class*='h-48'][class*='overflow-hidden'],
+[data-theme='hacker'] [class*='h-56'][class*='overflow-hidden'],
+[data-theme='hacker'] [class*='h-72'][class*='overflow-hidden'],
+[data-theme='hacker'] [class*='h-96'][class*='overflow-hidden'] {
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+}
+
+/* Hide hero images completely in hacker theme */
+[data-theme='hacker'] .page-hero img,
+[data-theme='hacker'] .relative.h-48 img,
+[data-theme='hacker'] .relative.h-56 img,
+[data-theme='hacker'] .relative.h-72 img,
+[data-theme='hacker'] .relative.h-96 img,
+[data-theme='hacker'] .hero-image {
+  display: none !important;
+}
+
+/* Hacker theme hero overlays - make solid black */
+[data-theme='hacker'] .page-hero .absolute,
+[data-theme='hacker'] .relative.h-48 .absolute.inset-0,
+[data-theme='hacker'] .relative.h-56 .absolute.inset-0,
+[data-theme='hacker'] .relative.h-72 .absolute.inset-0,
+[data-theme='hacker'] .relative.h-96 .absolute.inset-0 {
+  background: #000 !important;
+  background-image: none !important;
+}
+
+/* Hacker theme - hero text stays visible and green */
+[data-theme='hacker'] .page-hero h1,
+[data-theme='hacker'] .relative.h-48 h1,
+[data-theme='hacker'] .relative.h-56 h1,
+[data-theme='hacker'] .relative.h-72 h1,
+[data-theme='hacker'] .relative.h-96 h1 {
+  color: #00ff00 !important;
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.6) !important;
+}
+
+[data-theme='hacker'] .page-hero p,
+[data-theme='hacker'] .relative.h-48 p,
+[data-theme='hacker'] .relative.h-56 p,
+[data-theme='hacker'] .relative.h-72 p,
+[data-theme='hacker'] .relative.h-96 p {
+  color: #00cc00 !important;
 }
 
 /* HACKER THEME - ALL images get green monochrome filter (including hero-image with data-no-filter) */
