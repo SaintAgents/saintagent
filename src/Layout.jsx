@@ -1463,12 +1463,34 @@ function AuthenticatedLayout({ children, currentPageName }) {
          sidebarCollapsed={sidebarCollapsed}
       />
 
+      {/* Beta Ticker */}
+      <div 
+        className={cn(
+          "fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden",
+          sidebarCollapsed ? "pl-10" : "pl-64"
+        )}
+      >
+        <div className="animate-marquee whitespace-nowrap inline-block">
+          🚀 This is a Mock up demo app - many elements are for beta testing - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          🚀 This is a Mock up demo app - many elements are for beta testing - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+      </div>
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+      `}</style>
+
       {/* Main Content */}
       <main
         data-page={currentPageName}
         data-cmd-view={cmdViewMode || 'standard'}
         className={cn(
-            "pt-16 min-h-screen transition-all duration-300",
+            "pt-24 min-h-screen transition-all duration-300",
             sidebarCollapsed ? "pl-10" : "pl-64",
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
