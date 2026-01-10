@@ -137,13 +137,23 @@ export default function RankedAvatar({
         {/* Inner ring: white bg */}
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
           <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
-            <img 
-                  src={finalAvatarUrl} 
-                  alt={name || 'Avatar'} 
-                  className="w-full h-full object-cover"
-                  style={{ filter: 'none' }}
-                  data-no-filter="true"
-                />
+            {finalAvatarUrl ? (
+              <img 
+                src={finalAvatarUrl} 
+                alt={name || 'Avatar'} 
+                className="w-full h-full object-cover"
+                style={{ filter: 'none' }}
+                data-no-filter="true"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.style.background = 'linear-gradient(135deg, #7c3aed, #a78bfa)';
+                }}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold" style={{ fontSize: `${size * 0.4}px` }}>
+                {name?.[0]?.toUpperCase() || '?'}
+              </div>
+            )}
           </div>
         </div>
       </div>
