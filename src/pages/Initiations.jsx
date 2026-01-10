@@ -254,24 +254,26 @@ export default function InitiationsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920')] bg-cover bg-center opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-950/50 to-slate-900" />
-        
-        <div className="relative px-6 py-12">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center gap-3 mb-4">
-              <BackButton />
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/20 border border-violet-500/30">
-                <Sparkles className="w-4 h-4 text-violet-400" />
-                <span className="text-violet-300 text-sm">Sacred Pathways</span>
-              </div>
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8444707dd_universal_upscale_0_b83dfdbd-8157-43be-bdb5-6f097ca370c0_0.jpg"
+          alt="Initiations"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+              <Sparkles className="w-8 h-8 text-violet-400" />
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
+                  style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+                Initiations
+              </h1>
             </div>
-            
-            <h1 className="text-4xl font-bold text-white mb-3">Initiations</h1>
-            <p className="text-xl text-violet-300 mb-2">Saint Germain Transmissions</p>
-            <p className="text-slate-400 max-w-2xl">
-              {META_VARIANCE_TAGLINES.seal}
+            <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
+              Sacred Pathways · Saint Germain Transmissions
             </p>
           </div>
         </div>
