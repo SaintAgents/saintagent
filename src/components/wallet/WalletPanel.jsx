@@ -59,11 +59,12 @@ export default function WalletPanel() {
   const txs = txRes?.transactions || [];
 
   // Fallback: if wallet not present yet but profile has ggg_balance, show that
-  const [profile] = useQuery({
+  const { data: profileData = [] } = useQuery({
     queryKey: ['userProfileSelf', user?.email],
     queryFn: async () => user?.email ? await base44.entities.UserProfile.filter({ user_id: user.email }) : [],
     enabled: !!user?.email
-  }).data || [];
+  });
+  const profile = profileData?.[0];
   const available = wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const locked = wallet?.locked_balance ?? 0;
   const total = (Number(available) || 0) + (Number(locked) || 0);
