@@ -70,6 +70,52 @@ export default function Join() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-violet-950/60 to-slate-900/90" />
         
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-32 text-center">
+          {/* Animated Gold Title */}
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 gold-shimmer-text">
+            Agents of Positive Change Unite!
+          </h2>
+          
+          <style>{`
+            @keyframes goldShimmer {
+              0% {
+                background-position: -200% center;
+              }
+              90% {
+                background-position: 200% center;
+              }
+              95% {
+                background-position: 200% center;
+                filter: brightness(1);
+              }
+              97% {
+                filter: brightness(2);
+              }
+              100% {
+                background-position: 200% center;
+                filter: brightness(1);
+              }
+            }
+            .gold-shimmer-text {
+              background: linear-gradient(
+                90deg,
+                #b8860b 0%,
+                #ffd700 15%,
+                #ffec8b 30%,
+                #ffd700 45%,
+                #daa520 60%,
+                #b8860b 75%,
+                #ffd700 90%,
+                #ffec8b 100%
+              );
+              background-size: 200% auto;
+              -webkit-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+              animation: goldShimmer 4s ease-in-out infinite;
+              text-shadow: none;
+            }
+          `}</style>
+          
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/20 border border-violet-400/30 mb-8">
             <Sparkles className="w-4 h-4 text-violet-400" />
             <span className="text-sm text-violet-300">Join the 144,000 Super-Conscious Leaders</span>
