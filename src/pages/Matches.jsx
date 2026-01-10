@@ -121,7 +121,7 @@ export default function Matches() {
     dating: datingCount
   };
 
-  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/650e0f938_gemini-25-flash-image_A_glowing_ethereal_engine_at_the_center_of_a_cosmic_web_with_luminous_threads_co-7.jpg";
+  const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/25b435803_synchro.jpg";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:bg-transparent dark:bg-none relative">
