@@ -11,6 +11,8 @@ import { format } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 
+const BETA_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/666f59358_universal_upscale_0_67b4f4ac-1a26-41b4-953c-b950fb28d875_0.jpg";
+
 const TYPE_CONFIG = {
   bug: { icon: Bug, color: 'bg-red-100 text-red-700', label: 'Bug' },
   suggestion: { icon: Lightbulb, color: 'bg-amber-100 text-amber-700', label: 'Suggestion' },
@@ -43,21 +45,30 @@ export default function BetaFeedback() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <BackButton />
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <MessageSquare className="w-6 h-6 text-violet-600" />
-                Beta Feedback
-              </h1>
-              <p className="text-slate-600 mt-1">Help us improve by sharing your feedback</p>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
+      {/* Hero Section */}
+      <div className="page-hero relative h-48 md:h-56 overflow-hidden">
+        <img
+          src={BETA_HERO_IMAGE}
+          alt="Beta Feedback"
+          className="hero-image w-full h-full object-cover"
+          style={{ filter: 'none', WebkitFilter: 'none', opacity: 1, display: 'block', visibility: 'visible' }}
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
+          <div className="flex items-center gap-3 mb-2">
+            <BackButton className="text-white/80 hover:text-white" />
+            <MessageSquare className="w-7 h-7 text-violet-400" />
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+              Beta Feedback
+            </h1>
           </div>
+          <p className="text-white/80">Help us improve by sharing your feedback</p>
         </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-6 pt-6">
 
         {/* Submit CTA */}
         <Card className="mb-6 border-violet-200 bg-violet-50/50">
