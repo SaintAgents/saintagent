@@ -111,7 +111,7 @@ export default function Meetings() {
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-              Synchronicity Engine
+              Meetings
             </h1>
             <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
               Schedule, Attend & Verify Meetings to Earn GGG

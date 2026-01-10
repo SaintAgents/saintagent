@@ -128,14 +128,17 @@ export default function Matches() {
       {/* Standard Header */}
       <div className="pt-8 pb-6 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="flex items-center justify-center gap-3 mb-1">
             <BackButton />
             <Sparkles className="w-7 h-7 text-emerald-500" />
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-              Synchronicity Engine
+              Matches
             </h1>
             <ForwardButton currentPage="Matches" />
           </div>
+          <p className="text-lg font-semibold text-emerald-600 text-center mb-1">
+            Synchronicity Engine
+          </p>
           <p className="text-slate-500 text-center">
             AI-Powered Connections Based on Values, Skills & Intentions
           </p>
