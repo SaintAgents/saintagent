@@ -57,7 +57,7 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
                 <h3 className="font-semibold text-slate-900">Discover Your Personality Type</h3>
                 <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-medium">
                   <Gift className="w-3 h-3" />
-                  Earn $5 GGG
+                  Earn 0.0500000 GGG (USD $7.25)
                 </div>
               </div>
               
