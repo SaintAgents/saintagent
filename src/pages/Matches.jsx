@@ -44,6 +44,8 @@ export default function Matches() {
   const [selectedMatchForAI, setSelectedMatchForAI] = useState(null);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedMatchForBooking, setSelectedMatchForBooking] = useState(null);
+  const [valuesPopoverOpen, setValuesPopoverOpen] = useState(false);
+  const [practicesPopoverOpen, setPracticesPopoverOpen] = useState(false);
 
   const suggestedValues = [
     'compassion', 'integrity', 'authenticity', 'growth', 'service', 'community', 'creativity',
@@ -250,7 +252,7 @@ export default function Matches() {
                   onChange={(e) => setValuesQuery(e.target.value)}
                   className="pr-10"
                 />
-                <Popover>
+                <Popover open={valuesPopoverOpen} onOpenChange={setValuesPopoverOpen}>
                   <PopoverTrigger asChild>
                     <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
                       <ChevronDown className="h-4 w-4" />
@@ -262,7 +264,7 @@ export default function Matches() {
                       <Badge
                         variant="outline"
                         className="cursor-pointer hover:bg-slate-100 text-xs"
-                        onClick={() => setValuesQuery('')}
+                        onClick={() => { setValuesQuery(''); setValuesPopoverOpen(false); }}
                       >
                         Any Value
                       </Badge>
@@ -271,7 +273,7 @@ export default function Matches() {
                           key={value}
                           variant="secondary"
                           className="cursor-pointer hover:bg-violet-100 text-xs capitalize"
-                          onClick={() => handleAddTag(value, setValuesQuery, valuesQuery)}
+                          onClick={() => { handleAddTag(value, setValuesQuery, valuesQuery); setValuesPopoverOpen(false); }}
                         >
                           {value.replace(/_/g, ' ')}
                         </Badge>
@@ -292,7 +294,7 @@ export default function Matches() {
                   onChange={(e) => setPracticesQuery(e.target.value)}
                   className="pr-10"
                 />
-                <Popover>
+                <Popover open={practicesPopoverOpen} onOpenChange={setPracticesPopoverOpen}>
                   <PopoverTrigger asChild>
                     <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
                       <ChevronDown className="h-4 w-4" />
@@ -304,7 +306,7 @@ export default function Matches() {
                       <Badge
                         variant="outline"
                         className="cursor-pointer hover:bg-slate-100 text-xs"
-                        onClick={() => setPracticesQuery('')}
+                        onClick={() => { setPracticesQuery(''); setPracticesPopoverOpen(false); }}
                       >
                         Any Practice
                       </Badge>
@@ -313,7 +315,7 @@ export default function Matches() {
                           key={practice}
                           variant="secondary"
                           className="cursor-pointer hover:bg-violet-100 text-xs capitalize"
-                          onClick={() => handleAddTag(practice, setPracticesQuery, practicesQuery)}
+                          onClick={() => { handleAddTag(practice, setPracticesQuery, practicesQuery); setPracticesPopoverOpen(false); }}
                         >
                           {practice.replace(/_/g, ' ')}
                         </Badge>
