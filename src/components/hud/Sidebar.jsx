@@ -492,9 +492,11 @@ export default function Sidebar({
                 {resolvedLeaders.map((leader, index) => (
                   <button
                     key={leader.id}
-                    className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
-                    onClick={() => document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: leader.user_id } }))}
-                    data-user-id={leader.user_id}
+                    className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: leader.user_id } }));
+                    }}
                   >
                     <div className="relative">
                       <Avatar className="w-8 h-8 cursor-pointer" data-user-id={leader.user_id}>
