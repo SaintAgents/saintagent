@@ -61,7 +61,7 @@ export default function Studio() {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent" />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-[5]">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <BarChart3 className="w-6 h-6 text-violet-500" />
