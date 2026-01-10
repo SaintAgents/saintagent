@@ -116,7 +116,13 @@ export default function NotificationBell({ notifications = [], onAction }) {
                       "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors",
                       !notif.is_read && "bg-violet-50/30 dark:bg-violet-900/20"
                     )}
-                    onClick={() => onAction?.('click', notif)}
+                    onClick={() => {
+                      // Navigate to action_url if available
+                      if (notif.action_url) {
+                        window.location.href = notif.action_url;
+                      }
+                      onAction?.('click', notif);
+                    }}
                   >
                     {notif.source_user_avatar ? (
                       <Avatar className="w-10 h-10 shrink-0">

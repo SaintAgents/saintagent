@@ -20,7 +20,7 @@ import {
   Minimize2,
   Maximize2,
   Shield,
-  Bug
+  Smile
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
@@ -530,7 +530,7 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
               onClick={() => setFeedbackOpen(true)}
               className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
             >
-              <Bug className="w-3.5 h-3.5" />
+              <Smile className="w-3.5 h-3.5" />
               Submit Beta Feedback
             </button>
             <div className="flex gap-2">
