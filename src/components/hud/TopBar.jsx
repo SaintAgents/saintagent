@@ -189,8 +189,7 @@ export default function TopBar({
 
   return (
     <header className={cn(
-      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-6 transition-all duration-300",
-      sidebarCollapsed ? "left-20" : "left-64",
+      "fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-6 transition-all duration-300",
       isCollapsed ? "h-8" : "h-16"
     )}>
       {/* Collapse/Expand Toggle */}
