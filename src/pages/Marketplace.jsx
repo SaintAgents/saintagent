@@ -81,20 +81,8 @@ export default function Marketplace() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      {/* Hero Image */}
-      <div className="page-hero relative w-full overflow-hidden bg-slate-900">
-        <img 
-          src={MARKETPLACE_HERO_IMAGE}
-          alt="Marketplace Hero"
-          data-no-filter="true"
-          className="w-full h-full object-cover object-center hero-image"
-          style={{ opacity: 1, filter: 'none', display: 'block', visibility: 'visible' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/30 to-transparent dark:from-[#050505] dark:via-transparent dark:to-transparent" />
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
+    <div className="min-h-screen relative">
+      <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-center gap-2 mb-2">
