@@ -7,6 +7,7 @@ import PhotoViewer from '@/components/profile/PhotoViewer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
+import { QUEST_BADGE_IMAGES } from '@/components/badges/badgesData';
 
 // Rank titles for tooltips
 const RANK_TITLES = {
@@ -292,6 +293,47 @@ export default function RankedAvatar({
           </Tooltip>
         </TooltipProvider>
       )}
+
+      {/* Open Badge (right side, below affiliate) */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div 
+              className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
+              style={{ 
+                width: symbolPx * 1.8, 
+                height: symbolPx * 1.8,
+                right: -4,
+                top: '50%',
+                transform: 'translateY(-50%)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img 
+                src={QUEST_BADGE_IMAGES.open} 
+                alt="Open" 
+                className="object-contain"
+                style={{ width: symbolPx * 1.8, height: symbolPx * 1.8, filter: 'none' }}
+                data-no-filter="true"
+              />
+              <span 
+                className="absolute text-purple-400 font-bold"
+                style={{ 
+                  fontSize: `${Math.max(6, symbolPx * 0.35)}px`,
+                  bottom: '15%',
+                  textShadow: '0 0 2px rgba(0,0,0,0.5)'
+                }}
+              >
+                Open
+              </span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="max-w-[200px] z-[9999]">
+            <p className="font-semibold text-sm">Open</p>
+            <p className="text-xs text-slate-500">Open to connecting and collaboration</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* Photo gallery icon (bottom-center) - positioned to touch avatar circle */}
       {showPhotoIcon && (allImages.length > 0 || needsFetch) && (

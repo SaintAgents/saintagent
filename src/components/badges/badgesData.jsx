@@ -62,6 +62,13 @@ export const BADGE_SECTIONS = [
         icon_desc: 'Check on a profile card',
         definition: 'Completed onboarding profile setup.',
         iconKey: 'badgeCheck'
+      },
+      {
+        code: 'open',
+        label: 'Open',
+        icon_desc: 'Open badge with light purple text',
+        definition: 'Open to connecting and collaboration—signals availability and willingness to engage.',
+        iconKey: 'sparkles'
       }
     ]
   },
@@ -302,6 +309,7 @@ export const BADGE_INDEX = Object.fromEntries(
 
 // Quest/Achievement badge images
 export const QUEST_BADGE_IMAGES = {
+  open: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/734cd4872_open.png',
   first_meeting: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2a0b1a50c_Screenshot2026-01-07044449-Picsart-BackgroundRemover.png',
   audit_expert: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/211bccd26_audit-Picsart-BackgroundRemover.png',
   streak_7: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png',
