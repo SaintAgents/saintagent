@@ -79,16 +79,10 @@ css
   color: #0f172a !important;
 }
 
-/* Hero image visibility - ensure visible in DARK theme only (no filter) */
+/* Hero image visibility */
 .hero-image,
 img.hero-image,
-[data-theme='dark'] .hero-image,
-[data-theme='dark'] img.hero-image,
-html[data-theme='dark'] .hero-image,
-[data-theme='dark'] img[data-no-filter="true"],
-html[data-theme='dark'] img[data-no-filter="true"],
-[data-theme='light'] .hero-image,
-[data-theme='light'] img.hero-image {
+img[data-no-filter="true"] {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -97,34 +91,64 @@ html[data-theme='dark'] img[data-no-filter="true"],
   mix-blend-mode: normal !important;
 }
 
+/* Hero section sizing */
+.page-hero {
+  height: 256px;
+}
+@media (min-width: 768px) {
+  .page-hero {
+    height: 288px;
+  }
+}
+
 /* =====================================================
-   STANDARDIZED PAGE BACKGROUND RULES
-   Light theme: Show normal gradient backgrounds
-   Dark/Hacker theme: Show canvas background effects
+   DARK/HACKER THEME - Background effects visible
    ===================================================== */
 
-/* LIGHT THEME - Keep original gradient backgrounds (don't make transparent!) */
-[data-theme='light'] main,
-[data-theme='light'] .min-h-screen {
-  /* Light theme keeps its normal backgrounds - do NOT override */
+/* Canvas effects - fixed behind everything */
+[data-theme='dark'] canvas,
+[data-theme='hacker'] canvas {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important;
+  pointer-events: none;
 }
 
-/* DARK THEME - Page containers transparent to show canvas effects */
-[data-theme='dark'] main:not([data-page='CommandDeck']),
+/* Page backgrounds transparent to show effects */
+[data-theme='dark'] body,
+[data-theme='hacker'] body {
+  background-color: #050505 !important;
+}
+
+[data-theme='dark'] main,
 [data-theme='hacker'] main {
-  background-color: transparent !important;
-  background-image: none !important;
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
 }
 
-/* Exception: CommandDeck keeps its background image in dark mode */
-[data-theme='dark'] main[data-page='CommandDeck'] {
-  background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ebbb7d483_universal_upscale_0_d6828612-8b20-4bc7-aefe-008865240cf1_0.jpg') !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-attachment: fixed !important;
+[data-theme='dark'] .min-h-screen,
+[data-theme='hacker'] .min-h-screen {
+  background: transparent !important;
 }
 
-/* DARK/HACKER: Cards and containers - semi-transparent */
+/* Cards semi-transparent to show effects through */
+[data-theme='dark'] .rounded-xl:not(img),
+[data-theme='dark'] .rounded-lg:not(img),
+[data-theme='dark'] .rounded-2xl:not(img),
+[data-theme='dark'] [class*='Card'],
+[data-theme='hacker'] .rounded-xl:not(img),
+[data-theme='hacker'] .rounded-lg:not(img),
+[data-theme='hacker'] .rounded-2xl:not(img),
+[data-theme='hacker'] [class*='Card'] {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  position: relative;
+  z-index: 1;
+}
+
 [data-theme='dark'] .bg-white,
 [data-theme='dark'] .bg-slate-50,
 [data-theme='dark'] .bg-gray-50,
@@ -134,357 +158,57 @@ html[data-theme='dark'] img[data-no-filter="true"],
   background-color: rgba(5, 5, 5, 0.8) !important;
 }
 
-/* LIGHT THEME: Preserve white/light backgrounds - DO NOT override */
-[data-theme='light'] .bg-white {
-  background-color: white !important;
-}
-[data-theme='light'] .bg-slate-50 {
-  background-color: rgb(248 250 252) !important;
-}
-[data-theme='light'] .bg-gray-50 {
-  background-color: rgb(249 250 251) !important;
-}
-
-/* Dark/Hacker theme cards - semi-transparent to show effects through */
+/* Hacker theme - square edges */
 [data-theme='hacker'] .rounded-xl:not(img),
 [data-theme='hacker'] .rounded-lg:not(img),
 [data-theme='hacker'] .rounded-2xl:not(img),
-[data-theme='hacker'] [class*='Card'],
-[data-theme='dark'] .rounded-xl:not(img),
-[data-theme='dark'] .rounded-lg:not(img),
-[data-theme='dark'] .rounded-2xl:not(img),
-[data-theme='dark'] [class*='Card'] {
-  background-color: rgba(0, 0, 0, 0.75) !important;
-  position: relative;
-  z-index: 10;
+[data-theme='hacker'] .rounded-md:not(img) {
+  border-radius: 0 !important;
 }
 
-/* Weather/effect canvas - behind content */
-[data-theme='dark'] canvas,
-[data-theme='hacker'] canvas {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 1 !important;
-  pointer-events: none;
-}
-
-/* Main content area stays above canvas */
-[data-theme='dark'] main,
-[data-theme='hacker'] main {
-  position: relative;
-  z-index: 5;
-  background: transparent !important;
-}
-
-/* Page backgrounds transparent to show effects */
-[data-theme='dark'] .min-h-screen,
-[data-theme='hacker'] .min-h-screen {
-  background: transparent !important;
-}
-
-/* DARK/HACKER: Gradient backgrounds transparent to show canvas effects */
-[data-theme='dark'] .min-h-screen.bg-gradient-to-br,
-[data-theme='dark'] .min-h-screen.bg-gradient-to-b,
-[data-theme='dark'] .min-h-screen.bg-gradient-to-r,
-[data-theme='hacker'] .min-h-screen.bg-gradient-to-br,
-[data-theme='hacker'] .min-h-screen.bg-gradient-to-b,
-[data-theme='hacker'] .min-h-screen.bg-gradient-to-r,
-[data-theme='dark'] div.min-h-screen:not([data-page='CommandDeck']),
-[data-theme='hacker'] div.min-h-screen {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-}
-
-/* LIGHT THEME: Keep gradient backgrounds visible - DO NOT override */
-[data-theme='light'] .min-h-screen.bg-gradient-to-br,
-[data-theme='light'] .min-h-screen.bg-gradient-to-b,
-[data-theme='light'] .bg-gradient-to-br {
-  /* Let default gradients apply */
-}
-
-/* =====================================================
-   HACKER THEME - HIDE HERO SECTIONS COMPLETELY
-   In hacker mode, heroes are distracting - show minimal header
-   ===================================================== */
-[data-theme='hacker'] .page-hero,
-[data-theme='hacker'] .relative.h-48,
-[data-theme='hacker'] .relative.h-56,
-[data-theme='hacker'] .relative.h-72,
-[data-theme='hacker'] .relative.h-96,
-[data-theme='hacker'] [class*='h-48'][class*='overflow-hidden'],
-[data-theme='hacker'] [class*='h-56'][class*='overflow-hidden'],
-[data-theme='hacker'] [class*='h-72'][class*='overflow-hidden'],
-[data-theme='hacker'] [class*='h-96'][class*='overflow-hidden'] {
-  height: 80px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
-}
-
-/* Hide hero images completely in hacker theme */
-[data-theme='hacker'] .page-hero img,
-[data-theme='hacker'] .relative.h-48 img,
-[data-theme='hacker'] .relative.h-56 img,
-[data-theme='hacker'] .relative.h-72 img,
-[data-theme='hacker'] .relative.h-96 img,
-[data-theme='hacker'] .hero-image {
-  display: none !important;
-}
-
-/* Hacker theme hero overlays - make solid black */
-[data-theme='hacker'] .page-hero .absolute,
-[data-theme='hacker'] .relative.h-48 .absolute.inset-0,
-[data-theme='hacker'] .relative.h-56 .absolute.inset-0,
-[data-theme='hacker'] .relative.h-72 .absolute.inset-0,
-[data-theme='hacker'] .relative.h-96 .absolute.inset-0 {
-  background: #000 !important;
-  background-image: none !important;
-}
-
-/* Hacker theme - hero text stays visible and green */
-[data-theme='hacker'] .page-hero h1,
-[data-theme='hacker'] .relative.h-48 h1,
-[data-theme='hacker'] .relative.h-56 h1,
-[data-theme='hacker'] .relative.h-72 h1,
-[data-theme='hacker'] .relative.h-96 h1 {
-  color: #00ff00 !important;
-  text-shadow: 0 0 15px rgba(0, 255, 0, 0.6) !important;
-}
-
-[data-theme='hacker'] .page-hero p,
-[data-theme='hacker'] .relative.h-48 p,
-[data-theme='hacker'] .relative.h-56 p,
-[data-theme='hacker'] .relative.h-72 p,
-[data-theme='hacker'] .relative.h-96 p {
-  color: #00cc00 !important;
-}
-
-/* HACKER THEME - ALL images get green monochrome filter - MAXIMUM SPECIFICITY */
-html[data-theme='hacker'] img,
-html[data-theme='hacker'] img[src],
-html[data-theme='hacker'] img[class],
-html[data-theme='hacker'] * img,
-[data-theme='hacker'] img,
-[data-theme='hacker'] * img {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-}
-
-/* HACKER THEME - Gauge images MUST NOT be filtered - highest specificity */
-html[data-theme='hacker'] img.gauge-image,
-html[data-theme='hacker'] .gauge-image,
-[data-theme='hacker'] img.gauge-image,
-[data-theme='hacker'] .gauge-image,
-html[data-theme='hacker'] img[alt="Trust Gauge"],
-[data-theme='hacker'] img[alt="Trust Gauge"] {
-  filter: none !important;
-  -webkit-filter: none !important;
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-  mix-blend-mode: normal !important;
-}
-
-/* HACKER THEME - Profile/avatar images MUST be green monochrome */
-html[data-theme='hacker'] [data-user-id] img:not(.gauge-image),
-html[data-theme='hacker'] [data-avatar-card] img:not(.gauge-image):not([alt="Trust Gauge"]),
-[data-theme='hacker'] [data-user-id] img:not(.gauge-image),
-[data-theme='hacker'] [data-avatar-card] img:not(.gauge-image):not([alt="Trust Gauge"]) {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-}
-
-/* Dark theme - Mission images and listing images preserve original colors */
-[data-theme='dark'] .mission-image,
-[data-theme='dark'] img.mission-image,
-[data-theme='dark'] img[data-no-filter],
-[data-theme='dark'] [data-no-filter="true"],
-[data-theme='dark'] .rank-badge-img,
-[data-theme='dark'] img[data-no-filter="true"] { 
-  filter: none !important; 
-  -webkit-filter: none !important;
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-  mix-blend-mode: normal !important;
-}
-
-/* CRITICAL: Override the global img filter for listing images */
-[data-theme='dark'] .rounded-xl img.listing-image,
-[data-theme='dark'] .rounded-lg img.listing-image,
-[data-theme='dark'] div img.listing-image,
-[data-theme='dark'] img.listing-image,
-html[data-theme='dark'] img.listing-image,
-html[data-theme='dark'] .listing-image {
-  filter: none !important;
-  -webkit-filter: none !important;
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-  mix-blend-mode: normal !important;
-}
-
-/* HACKER THEME: Listing images get green monochrome filter */
-[data-theme='hacker'] .rounded-xl img.listing-image,
-[data-theme='hacker'] .rounded-lg img.listing-image,
-[data-theme='hacker'] div img.listing-image,
-[data-theme='hacker'] img.listing-image,
-html[data-theme='hacker'] img.listing-image,
-html[data-theme='hacker'] .listing-image {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-  mix-blend-mode: normal !important;
-}
-
-/* Avatar images - preserve natural colors in DARK theme only */
-[data-theme='dark'] [class*='Avatar'] img,
-[data-theme='dark'] .avatar-image,
-[data-theme='dark'] [data-slot='avatar'] img {
-  filter: none !important;
-  opacity: 1 !important;
-}
-
-/* HACKER THEME - ALL images including avatars get green monochrome */
-[data-theme='hacker'] [class*='Avatar'] img,
-[data-theme='hacker'] .avatar-image,
-[data-theme='hacker'] [data-slot='avatar'] img,
-[data-theme='hacker'] img[src*='avatar'],
-[data-theme='hacker'] img[src*='profile'],
-[data-theme='hacker'] img[src*='user'],
-[data-theme='hacker'] img {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-}
-
-/* Dark theme text fixes for improved readability */
+/* Dark theme text - high contrast */
 [data-theme='dark'] h1, 
 [data-theme='dark'] h2, 
 [data-theme='dark'] h3, 
-[data-theme='dark'] h4,
-[data-theme='dark'] [class*='font-semibold'], 
-[data-theme='dark'] [class*='font-bold'],
-[data-theme='dark'] [class*='font-medium'] {
+[data-theme='dark'] h4 {
   color: #ffffff !important;
 }
 
-/* Prevent white flash on page load - SOLID backgrounds for DARK themes only */
-[data-theme='dark'] body {
-  background-color: #050505 !important;
-}
-[data-theme='hacker'] body {
-  background-color: #000 !important;
-}
-
-/* LIGHT THEME: Keep body/container backgrounds normal */
-[data-theme='light'] body,
-[data-theme='light'] .min-h-screen {
-  /* Don't override - let normal styles apply */
-}
-
-/* Force solid backgrounds on gradient containers - NO fading/opacity */
-[data-theme='dark'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *):not(.hero-gradient) {
-  background-color: #050505 !important;
-  background-image: none !important;
-}
-[data-theme='hacker'] [class*='bg-gradient-']:not(main[data-page='CommandDeck'] *):not(.hero-gradient) {
-  background-color: #000 !important;
-  background-image: none !important;
-}
-
-/* Override any semi-transparent white backgrounds */
-[data-theme='dark'] [class*='bg-white/'],
-[data-theme='dark'] [class*='bg-slate-50/'],
-[data-theme='dark'] [class*='bg-gray-50/'] {
-  background-color: #050505 !important;
-}
-[data-theme='hacker'] [class*='bg-white/'],
-[data-theme='hacker'] [class*='bg-slate-50/'],
-[data-theme='hacker'] [class*='bg-gray-50/'] {
-  background-color: #000 !important;
-}
-
-/* Force solid slate/gray backgrounds to dark */
-[data-theme='dark'] [class*='bg-slate-50'],
-[data-theme='dark'] [class*='bg-slate-100'],
-[data-theme='dark'] [class*='bg-gray-50'],
-[data-theme='dark'] [class*='bg-gray-100'],
-[data-theme='dark'] [class*='bg-white'] {
-  background-color: #050505 !important;
-}
-[data-theme='hacker'] [class*='bg-slate-50'],
-[data-theme='hacker'] [class*='bg-slate-100'],
-[data-theme='hacker'] [class*='bg-gray-50'],
-[data-theme='hacker'] [class*='bg-gray-100'],
-[data-theme='hacker'] [class*='bg-white'] {
-  background-color: #000 !important;
-}
-
 [data-theme='dark'] p,
-[data-theme='dark'] span:not(.dot-glow):not(.icon-glow),
-[data-theme='dark'] div:not([class*='bg-']) {
-  color: #f0f0f0 !important;
+[data-theme='dark'] span,
+[data-theme='dark'] div {
+  color: #e0e0e0 !important;
 }
 
-[data-theme='dark'] [class*='text-slate-500'],
-[data-theme='dark'] [class*='text-slate-400'],
-[data-theme='dark'] [class*='text-gray-500'],
-[data-theme='dark'] [class*='text-gray-400'],
-[data-theme='dark'] [class*='text-slate-600'],
-[data-theme='dark'] [class*='text-gray-600'] {
-  color: #d8d8d8 !important;
-}
-
-/* Hacker theme text fixes - BRIGHT green text */
+/* Hacker theme text - green */
 [data-theme='hacker'] h1, 
 [data-theme='hacker'] h2, 
 [data-theme='hacker'] h3, 
 [data-theme='hacker'] h4,
-[data-theme='hacker'] h5,
-[data-theme='hacker'] h6,
-[data-theme='hacker'] [class*='font-semibold'], 
-[data-theme='hacker'] [class*='font-bold'],
-[data-theme='hacker'] [class*='font-medium'] {
-  color: #00ff00 !important;
-  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
-}
-
 [data-theme='hacker'] p,
-[data-theme='hacker'] span:not(.dot-glow):not(.icon-glow),
-[data-theme='hacker'] label,
-[data-theme='hacker'] div:not([class*='bg-']),
+[data-theme='hacker'] span,
+[data-theme='hacker'] div,
 [data-theme='hacker'] a,
-[data-theme='hacker'] li,
-[data-theme='hacker'] td,
-[data-theme='hacker'] th {
+[data-theme='hacker'] label {
   color: #00ff00 !important;
 }
 
-[data-theme='hacker'] [class*='text-slate-'],
-[data-theme='hacker'] [class*='text-gray-'],
-[data-theme='hacker'] [class*='text-zinc-'],
-[data-theme='hacker'] [class*='text-neutral-'] {
-  color: #00ff00 !important;
+/* Hacker theme - green filter on images */
+[data-theme='hacker'] img:not(.hero-image):not([data-no-filter="true"]):not(.gauge-image) {
+  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
 }
 
-/* Ensure placeholders are visible in hacker theme */
-[data-theme='hacker'] input::placeholder,
-[data-theme='hacker'] textarea::placeholder {
-  color: #006600 !important;
-}
-
-/* Command Deck background - transparent to show main background image */
-.cmd-deck-bg {
-  background: transparent;
+/* Preserve gauge images */
+img.gauge-image,
+.gauge-image,
+img[alt="Trust Gauge"] {
+  filter: none !important;
+  -webkit-filter: none !important;
 }
 
 /* Samsung Z Fold Optimization */
 [data-zfold="true"] {
-  /* Increase touch targets */
   --touch-target-min: 48px;
 }
 
@@ -502,125 +226,6 @@ html[data-theme='hacker'] .listing-image {
   font-size: 16px;
 }
 
-/* Larger text for readability */
 [data-zfold="true"] body {
   font-size: 17px;
-}
-
-[data-zfold="true"] .text-sm {
-  font-size: 0.9375rem !important;
-}
-
-[data-zfold="true"] .text-xs {
-  font-size: 0.8125rem !important;
-}
-
-/* Better spacing for foldable screens */
-[data-zfold="true"] .p-6 {
-  padding: 1.75rem;
-}
-
-[data-zfold="true"] .gap-4 {
-  gap: 1.25rem;
-}
-
-/* Wider sidebar on unfolded screen */
-@media (min-width: 600px) and (max-width: 900px) {
-  [data-zfold="true"] aside {
-    width: 280px !important;
-  }
-  
-  [data-zfold="true"] main {
-    padding-left: 296px !important;
-  }
-}
-
-/* Two-column grid optimization for fold screen */
-@media (min-width: 600px) and (max-width: 900px) {
-  [data-zfold="true"] .grid-cols-3 {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
-/* Profile Drawer specific dark/hacker fixes */
-[data-theme='dark'] [id*='profile-drawer'] p,
-[data-theme='dark'] [id*='profile-drawer'] span,
-[data-theme='hacker'] [id*='profile-drawer'] p,
-[data-theme='hacker'] [id*='profile-drawer'] span {
-  color: inherit !important;
-}
-
-/* Activity Feed MiniProfile fixes */
-[data-theme='dark'] [data-user-id] span,
-[data-theme='dark'] [data-user-id] p,
-[data-theme='hacker'] [data-user-id] span,
-[data-theme='hacker'] [data-user-id] p {
-  color: inherit !important;
-}
-
-/* Ensure badges maintain their colors */
-[data-theme='dark'] [class*='bg-violet-'] span,
-[data-theme='dark'] [class*='bg-emerald-'] span,
-[data-theme='dark'] [class*='bg-amber-'] span,
-[data-theme='dark'] [class*='bg-blue-'] span,
-[data-theme='dark'] [class*='bg-rose-'] span,
-[data-theme='hacker'] [class*='bg-violet-'] span,
-[data-theme='hacker'] [class*='bg-emerald-'] span,
-[data-theme='hacker'] [class*='bg-amber-'] span,
-[data-theme='hacker'] [class*='bg-blue-'] span,
-[data-theme='hacker'] [class*='bg-rose-'] span {
-  color: inherit !important;
-}
-
-/* Missions page dark mode text fixes */
-[data-theme='dark'] main[data-page='Missions'] h1,
-[data-theme='dark'] main[data-page='Missions'] h2,
-[data-theme='dark'] main[data-page='Missions'] h3,
-[data-theme='dark'] main[data-page='Missions'] h4 {
-  color: #ffffff !important;
-}
-
-[data-theme='dark'] main[data-page='Missions'] p,
-[data-theme='dark'] main[data-page='Missions'] span:not([class*='bg-']),
-[data-theme='dark'] main[data-page='Missions'] .text-slate-500,
-[data-theme='dark'] main[data-page='Missions'] .text-slate-600,
-[data-theme='dark'] main[data-page='Missions'] .text-gray-500,
-[data-theme='dark'] main[data-page='Missions'] .text-gray-600 {
-  color: #e0e0e0 !important;
-}
-
-/* Hacker theme Missions page */
-[data-theme='hacker'] main[data-page='Missions'] h1,
-[data-theme='hacker'] main[data-page='Missions'] h2,
-[data-theme='hacker'] main[data-page='Missions'] h3,
-[data-theme='hacker'] main[data-page='Missions'] h4,
-[data-theme='hacker'] main[data-page='Missions'] p,
-[data-theme='hacker'] main[data-page='Missions'] span:not([class*='bg-']) {
-  color: #00ff00 !important;
-}
-
-/* HACKER THEME - ALL SVG icons get green color */
-html[data-theme='hacker'] svg,
-html[data-theme='hacker'] svg *,
-[data-theme='hacker'] svg,
-[data-theme='hacker'] svg * {
-  color: #00ff00 !important;
-  stroke: #00ff00 !important;
-}
-
-html[data-theme='hacker'] svg path[fill]:not([fill='none']),
-html[data-theme='hacker'] svg circle[fill]:not([fill='none']),
-html[data-theme='hacker'] svg rect[fill]:not([fill='none']),
-[data-theme='hacker'] svg path[fill]:not([fill='none']),
-[data-theme='hacker'] svg circle[fill]:not([fill='none']),
-[data-theme='hacker'] svg rect[fill]:not([fill='none']) {
-  fill: #00ff00 !important;
-}
-
-/* Emoji icons - make them green via filter */
-html[data-theme='hacker'] .emoji,
-html[data-theme='hacker'] [class*='emoji'],
-[data-theme='hacker'] .emoji,
-[data-theme='hacker'] [class*='emoji'] {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
 }
