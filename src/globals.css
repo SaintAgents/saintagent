@@ -273,6 +273,19 @@ html[data-theme='hacker'] [class*='emoji'],
   filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
 }
 
+/* HACKER THEME - Force filter on ALL span/text that might contain emoji */
+html[data-theme='hacker'] span:not(.dot-glow):not(.icon-glow),
+[data-theme='hacker'] span:not(.dot-glow):not(.icon-glow) {
+  /* Text stays green, but any emoji images inside get filtered */
+}
+
+/* Unicode emoji characters - apply green tint */
+html[data-theme='hacker'] [class*='Badge'] span,
+html[data-theme='hacker'] .text-amber-300\\/50,
+[data-theme='hacker'] [class*='Badge'] span {
+  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+}
+
 /* HACKER THEME - Gauge images MUST NOT be filtered - highest specificity */
 html[data-theme='hacker'] img.gauge-image,
 html[data-theme='hacker'] .gauge-image,
