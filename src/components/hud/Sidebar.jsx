@@ -76,6 +76,7 @@ import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
+  { id: 'betafeedback', label: 'Beta Feedback', Icon: MessageCircle, page: 'BetaFeedback', hint: 'Review beta tester feedback (Admin)', adminOnly: true },
   { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
@@ -354,7 +355,7 @@ export default function Sidebar({
         {navOpen && (
           <nav className={cn("p-3 pt-0 space-y-1", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
             <TooltipProvider delayDuration={200}>
-              {NAV_ITEMS.map((item) => {
+              {NAV_ITEMS.filter(item => !item.adminOnly || currentUser?.role === 'admin').map((item) => {
                 const isActive = currentPage === item.id;
                 const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
@@ -949,7 +950,7 @@ export default function Sidebar({
       {navPopupOpen && (
         <FloatingPanel title="Quick Navigation" onClose={() => setNavPopupOpen(false)}>
           <div className="space-y-1 p-2">
-            {NAV_ITEMS.slice(0, 12).map((item) => {
+            {NAV_ITEMS.filter(item => !item.adminOnly || currentUser?.role === 'admin').slice(0, 12).map((item) => {
               const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
               const isLocked = item.locked || isLeaderLocked;
               const ItemIcon = item.Icon;

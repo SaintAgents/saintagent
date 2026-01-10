@@ -19,10 +19,12 @@ import {
   ChevronRight,
   Minimize2,
   Maximize2,
-  Shield
+  Shield,
+  Bug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
+import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 
 // Glitch animation keyframes for hacker theme
 const glitchStyles = `
@@ -130,6 +132,7 @@ Always guide users to explore features and complete their profiles for better ma
 export default function HelpSupportAgent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -328,6 +331,9 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
       {/* Inject glitch animation styles */}
       <style>{glitchStyles}</style>
       
+      {/* Beta Feedback Modal */}
+      <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+      
       {/* Help button - starts bottom right, stacked above chat, draggable */}
       {!isOpen && (
         <div
@@ -518,6 +524,15 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
             "dark:border-[rgba(0,255,136,0.3)] dark:bg-[#050505]/80",
             "[data-theme='hacker']_&:bg-[#050505]/80 [data-theme='hacker']_&:border-[#00ff00]"
           )}>
+            {/* Beta Feedback Button */}
+            <button
+              type="button"
+              onClick={() => setFeedbackOpen(true)}
+              className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
+            >
+              <Bug className="w-3.5 h-3.5" />
+              Submit Beta Feedback
+            </button>
             <div className="flex gap-2">
               <Input
                 ref={inputRef}
