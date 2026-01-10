@@ -304,24 +304,29 @@ export default function Profiles() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
-      {/* Standard Header */}
-      <div className="pt-8 pb-6 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <BackButton />
-            <Users className="w-7 h-7 text-violet-500" />
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+      {/* Hero Section */}
+      <div className="page-hero relative overflow-hidden">
+        <img
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1e9ff4ff2_universal_upscale_0_9f257f95-48b1-44e8-a0f9-60663ca8cf9d_0.jpg"
+          alt="Community Profiles"
+          className="hero-image absolute inset-0 w-full h-full object-cover"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-slate-50 dark:to-[#050505]" />
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pt-8 pb-12">
+          <div className="flex items-center gap-3 mb-2">
+            <BackButton className="text-white/80 hover:text-white hover:bg-white/10" />
+            <Users className="w-8 h-8 text-white drop-shadow-lg" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
               Community Profiles
             </h1>
           </div>
-          <p className="text-slate-500 text-center">
+          <p className="text-white/90 text-lg max-w-2xl drop-shadow">
             Discover members by rank, expertise, and influence
           </p>
-          <div className="flex justify-center mt-2">
-            <Badge variant="outline" className="text-sm px-3 py-1">
-              {filteredProfiles.length} members
-            </Badge>
-          </div>
+          <Badge variant="outline" className="mt-3 text-sm px-3 py-1 bg-white/20 border-white/40 text-white backdrop-blur-sm">
+            {filteredProfiles.length} members
+          </Badge>
         </div>
       </div>
 
