@@ -13,10 +13,8 @@ import EventDetail from './pages/EventDetail';
 import Events from './pages/Events';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
-import Forum from './pages/Forum';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
-import Initiations from './pages/Initiations';
 import Join from './pages/Join';
 import Landing from './pages/Landing';
 import LeaderChannel from './pages/LeaderChannel';
@@ -38,14 +36,16 @@ import Profiles from './pages/Profiles';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
 import Projects from './pages/Projects';
-import Quests from './pages/Quests';
 import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import Studio from './pages/Studio';
-import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
+import SynchronicityEngine from './pages/SynchronicityEngine';
+import Quests from './pages/Quests';
+import Initiations from './pages/Initiations';
+import Forum from './pages/Forum';
 import __Layout from './Layout.jsx';
 
 
@@ -65,10 +65,8 @@ export const PAGES = {
     "Events": Events,
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
-    "Forum": Forum,
     "Gamification": Gamification,
     "Home": Home,
-    "Initiations": Initiations,
     "Join": Join,
     "Landing": Landing,
     "LeaderChannel": LeaderChannel,
@@ -90,14 +88,16 @@ export const PAGES = {
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
     "Projects": Projects,
-    "Quests": Quests,
     "ResourceHub": ResourceHub,
     "Settings": Settings,
     "Studio": Studio,
-    "SynchronicityEngine": SynchronicityEngine,
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
+    "SynchronicityEngine": SynchronicityEngine,
+    "Quests": Quests,
+    "Initiations": Initiations,
+    "Forum": Forum,
 }
 
 export const pagesConfig = {
