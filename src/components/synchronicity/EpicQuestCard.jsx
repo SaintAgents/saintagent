@@ -20,7 +20,7 @@ export default function EpicQuestCard({ profile }) {
   const isMaxRank = rankInfo.code === 'guardian';
 
   return (
-    <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden">
+    <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden relative z-10">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-center gap-2">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-700/50 to-transparent" />
