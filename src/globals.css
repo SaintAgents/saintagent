@@ -152,6 +152,31 @@ html[data-theme='dark'] img[data-no-filter="true"],
   z-index: 5;
 }
 
+/* ALL page content must be above matrix rain canvas */
+[data-theme='dark'] main,
+[data-theme='hacker'] main {
+  position: relative;
+  z-index: 2;
+}
+
+[data-theme='dark'] main *,
+[data-theme='hacker'] main * {
+  position: relative;
+}
+
+/* Ensure specific UI elements have high z-index */
+[data-theme='dark'] [class*='CollapsibleCard'],
+[data-theme='hacker'] [class*='CollapsibleCard'],
+[data-theme='dark'] [class*='Collapsible'],
+[data-theme='hacker'] [class*='Collapsible'],
+[data-theme='dark'] .bg-white,
+[data-theme='hacker'] .bg-white,
+[data-theme='dark'] .bg-black,
+[data-theme='hacker'] .bg-black {
+  position: relative;
+  z-index: 10 !important;
+}
+
 /* Gradient backgrounds - make transparent (excluding hero overlays) */
 [data-theme='dark'] .min-h-screen.bg-gradient-to-br,
 [data-theme='dark'] .min-h-screen.bg-gradient-to-b,
@@ -231,6 +256,32 @@ html[data-theme='hacker'] * img,
 [data-theme='hacker'] * img {
   filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
   -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+}
+
+/* HACKER THEME - ALL SVG icons get green color */
+html[data-theme='hacker'] svg,
+html[data-theme='hacker'] svg *,
+[data-theme='hacker'] svg,
+[data-theme='hacker'] svg * {
+  color: #00ff00 !important;
+  stroke: #00ff00 !important;
+}
+
+html[data-theme='hacker'] svg path[fill]:not([fill='none']),
+html[data-theme='hacker'] svg circle[fill]:not([fill='none']),
+html[data-theme='hacker'] svg rect[fill]:not([fill='none']),
+[data-theme='hacker'] svg path[fill]:not([fill='none']),
+[data-theme='hacker'] svg circle[fill]:not([fill='none']),
+[data-theme='hacker'] svg rect[fill]:not([fill='none']) {
+  fill: #00ff00 !important;
+}
+
+/* Emoji icons - make them green via filter */
+html[data-theme='hacker'] .emoji,
+html[data-theme='hacker'] [class*='emoji'],
+[data-theme='hacker'] .emoji,
+[data-theme='hacker'] [class*='emoji'] {
+  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
 }
 
 /* HACKER THEME - Gauge images MUST NOT be filtered - highest specificity */
