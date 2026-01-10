@@ -136,7 +136,7 @@ export default function RankedAvatar({
       >
         {/* Inner ring: white bg */}
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
-          <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-[#050505]">
+          <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
             {finalAvatarUrl ? (
               <img 
                 src={finalAvatarUrl} 
@@ -145,15 +145,18 @@ export default function RankedAvatar({
                 style={{ filter: 'none' }}
                 data-no-filter="true"
                 onError={(e) => {
+                  // Hide the broken image and show fallback initial
                   e.target.style.display = 'none';
-                  e.target.parentElement.style.background = 'linear-gradient(135deg, #7c3aed, #a78bfa)';
                 }}
               />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold" style={{ fontSize: `${size * 0.4}px` }}>
-                {name?.[0]?.toUpperCase() || '?'}
-              </div>
-            )}
+            ) : null}
+            {/* Fallback initial - always rendered behind image */}
+            <span 
+              className="absolute text-white font-bold select-none" 
+              style={{ fontSize: `${size * 0.35}px` }}
+            >
+              {name?.[0]?.toUpperCase() || '?'}
+            </span>
           </div>
         </div>
       </div>
