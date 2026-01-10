@@ -24,8 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Sparkles, Heart, MessageCircle, Plus, TrendingUp, 
-  Hash, Eye, Users, Filter, Search, Clock, Flame
+  Orbit, Heart, MessageCircle, Plus, TrendingUp, 
+  Hash, Eye, Users, Filter, Search, Clock, Flame, Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
@@ -296,8 +296,8 @@ export default function SynchronicityEngine() {
             <div className="flex items-center gap-3">
               <BackButton />
               <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-violet-400" />
-                Synchronicity Engine
+                <Orbit className="w-6 h-6 text-violet-400" />
+                Synchronicity Board
               </h1>
             </div>
             <div className="flex items-center gap-2">
