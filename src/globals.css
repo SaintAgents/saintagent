@@ -86,6 +86,19 @@ main {
   background: transparent !important;
 }
 
+/* Quests page - fully transparent cards */
+[data-theme='dark'] [data-page-quests] *,
+[data-theme='hacker'] [data-page-quests] * {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Quests page cards - restore border only */
+[data-theme='dark'] [data-page-quests] [class*='Card'],
+[data-theme='hacker'] [data-page-quests] [class*='Card'] {
+  border: 1px solid rgba(0, 255, 136, 0.2) !important;
+}
+
 /* Hacker theme - square corners */
 [data-theme='hacker'] .rounded-xl:not(img),
 [data-theme='hacker'] .rounded-lg:not(img),

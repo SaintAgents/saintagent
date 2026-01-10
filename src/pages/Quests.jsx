@@ -86,7 +86,7 @@ export default function Quests() {
   const hasClaimable = completedQuests.length > 0;
 
   return (
-    <div className="min-h-screen relative" style={{ background: 'transparent' }}>
+    <div className="min-h-screen relative" style={{ background: 'transparent' }} data-page-quests>
       {/* Hero Section */}
       <div className="page-hero relative h-64 md:h-72 overflow-hidden">
         <img
