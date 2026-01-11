@@ -9,6 +9,7 @@ import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 import GlobalChatWidget from '@/components/community/GlobalChatWidget';
+import DatingMatchesPopup from '@/components/hud/DatingMatchesPopup';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
 import SidePanel from '@/components/hud/SidePanel';
 import HelpSupportAgent from '@/components/support/HelpSupportAgent';
