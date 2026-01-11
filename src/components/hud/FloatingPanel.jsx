@@ -27,7 +27,7 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
   React.useEffect(() => {
     const onMouseMove = (e) => {
       if (resizingRef.current.active) {
-        const minW = 60, minH = 240;
+        const minW = 320, minH = 240;
         const maxW = Math.max(minW, window.innerWidth - pos.x - 8);
         const maxH = Math.max(minH, window.innerHeight - pos.y - 8);
         const edge = resizingRef.current.edge;
