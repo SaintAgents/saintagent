@@ -144,14 +144,19 @@ export default function DatingMatchesPopup({ currentUser }) {
     };
   }, [isDragging]);
 
-  // Fetch dating profile opt-in status
+  // Fetch dating profile opt-in status - refetch frequently to catch updates
   const { data: myDatingProfile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['myDatingProfilePopup', currentUser?.email],
     queryFn: () => base44.entities.DatingProfile.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 0, // Always refetch
+    refetchOnWindowFocus: true
   });
   const isDatingOptedIn = myDatingProfile?.[0]?.opt_in === true;
   const profileLoaded = !isLoadingProfile && myDatingProfile !== undefined;
+  
+  // Debug logging
+  console.log('DatingMatchesPopup - currentUser:', currentUser?.email, 'myDatingProfile:', myDatingProfile, 'isDatingOptedIn:', isDatingOptedIn, 'profileLoaded:', profileLoaded);
 
   // Fetch dating profiles - always call hook but conditionally enable
   const { data: datingProfiles = [] } = useQuery({
