@@ -152,11 +152,9 @@ export default function DatingMatchesPopup({ currentUser }) {
     staleTime: 0, // Always refetch
     refetchOnWindowFocus: true
   });
-  const isDatingOptedIn = myDatingProfile?.[0]?.opt_in === true;
+  // Check ANY of the returned profiles for opt_in (in case of duplicates)
+  const isDatingOptedIn = myDatingProfile?.some(p => p.opt_in === true) ?? false;
   const profileLoaded = !isLoadingProfile && myDatingProfile !== undefined;
-  
-  // Debug logging
-  console.log('DatingMatchesPopup - currentUser:', currentUser?.email, 'myDatingProfile:', myDatingProfile, 'isDatingOptedIn:', isDatingOptedIn, 'profileLoaded:', profileLoaded);
 
   // Fetch dating profiles - always call hook but conditionally enable
   const { data: datingProfiles = [] } = useQuery({
