@@ -313,6 +313,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     // Otherwise, redirect to Command Deck if on a generic/home page
     useEffect(() => {
       const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
+      const tourDismissed = typeof window !== 'undefined' && localStorage.getItem('tourDismissed') === '1';
       if (!currentUser || currentPageName === 'Onboarding') return;
       if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
 
@@ -333,7 +334,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       // For returning users with complete onboarding, redirect to Command Deck if on generic pages
       const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
       if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
-        if (!onboarding.tour_completed) {
+        if (!onboarding.tour_completed && !tourDismissed) {
           setUserTourOpen(true);
           return;
         }
@@ -341,8 +342,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         return;
       }
 
-      // If on CommandDeck and tour not completed, show tour
-      if (currentPageName === 'CommandDeck' && onboarding?.status === 'complete' && !onboarding?.tour_completed) {
+      // If on CommandDeck and tour not completed (and not already dismissed this session), show tour ONCE
+      if (currentPageName === 'CommandDeck' && onboarding?.status === 'complete' && !onboarding?.tour_completed && !tourDismissed && !userTourOpen) {
         setUserTourOpen(true);
       }
     }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
@@ -1575,6 +1576,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           open={userTourOpen} 
           onClose={async () => {
             setUserTourOpen(false);
+            // Mark tour as dismissed in localStorage immediately to prevent re-showing
+            try { localStorage.setItem('tourDismissed', '1'); } catch {}
             if (onboarding?.id) {
               await base44.entities.OnboardingProgress.update(onboarding.id, { tour_completed: true });
               queryClient.invalidateQueries({ queryKey: ['onboardingProgress'] });
