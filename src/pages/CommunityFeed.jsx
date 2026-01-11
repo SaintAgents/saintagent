@@ -235,7 +235,7 @@ export default function CommunityFeed() {
       {/* Hero Section */}
       <div className="page-hero relative overflow-hidden">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c8670516_activity.jpg"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg"
           alt="Community Feed"
           className="w-full h-full object-cover hero-image"
           data-no-filter="true"
