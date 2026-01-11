@@ -410,7 +410,9 @@ export default function TopBar({
         </DropdownMenu>
 
         {/* Dating Heart Popup */}
-        <DatingMatchesPopup currentUser={currentUser} />
+        <div className="relative z-50">
+          <DatingMatchesPopup currentUser={currentUser} />
+        </div>
 
         <Link to={createPageUrl('DailyOps')}>
           <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Calendar">
