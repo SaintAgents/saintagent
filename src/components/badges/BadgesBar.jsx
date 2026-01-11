@@ -119,21 +119,20 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
             <button
-              className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200"
-              onClick={handleMoreClick}
+              className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
             >
               +{remaining} more
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-72 p-3" align="start" onClick={(e) => e.stopPropagation()}>
-            <div className="text-xs font-medium text-slate-500 mb-2">All Badges ({derived.length})</div>
+            <div className="text-xs font-medium text-slate-500 mb-2">Additional Badges ({hiddenItems.length})</div>
             <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
-              {derived.map((item) => (
+              {hiddenItems.map((item) => (
                 <TooltipProvider key={item.code}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm cursor-default"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm cursor-default"
                       >
                         {item.customIcon ? (
                           <img 
