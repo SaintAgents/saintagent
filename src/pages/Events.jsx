@@ -100,7 +100,7 @@ export default function Events() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-6 -mt-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 pb-6 -mt-8 [html[data-theme='dark']_&]:mt-4 [html[data-theme='hacker']_&]:mt-4 relative z-10">
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
