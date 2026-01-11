@@ -954,11 +954,14 @@ export default function Sidebar({
           onClose={() => setNavPopupOpen(false)}
           headerExtra={
             <button
-              onClick={() => setNavPopupCollapsed(!navPopupCollapsed)}
-              className="p-1 rounded hover:bg-white/20 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setNavPopupCollapsed(!navPopupCollapsed);
+              }}
+              className="p-1.5 rounded-lg hover:bg-slate-200 transition-colors"
               title={navPopupCollapsed ? "Expand" : "Collapse to icons"}
             >
-              {navPopupCollapsed ? <ChevronRight className="w-4 h-4 text-white" /> : <ChevronLeft className="w-4 h-4 text-white" />}
+              {navPopupCollapsed ? <ChevronRight className="w-4 h-4 text-slate-600" /> : <ChevronLeft className="w-4 h-4 text-slate-600" />}
             </button>
           }
         >
