@@ -740,17 +740,49 @@ export default function CommandDeck() {
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex items-start gap-6">
-              {/* Left column: Avatar only */}
-              <div className="relative shrink-0" data-user-id={profile?.user_id}>
-                <RankedAvatar
-                  src={profile?.avatar_url}
-                  name={profile?.display_name}
-                  size={140}
-                  leaderTier={profile?.leader_tier}
-                  rpRankCode={profile?.rp_rank_code}
-                  rpPoints={rpPoints}
-                  userId={profile?.user_id}
-                  status={profile?.status || 'offline'} />
+              {/* Left column: Avatar + Quick Action Buttons */}
+              <div className="flex flex-col items-center gap-3 shrink-0">
+                <div className="relative" data-user-id={profile?.user_id}>
+                  <RankedAvatar
+                    src={profile?.avatar_url}
+                    name={profile?.display_name}
+                    size={140}
+                    leaderTier={profile?.leader_tier}
+                    rpRankCode={profile?.rp_rank_code}
+                    rpPoints={rpPoints}
+                    userId={profile?.user_id}
+                    status={profile?.status || 'offline'} />
+                </div>
+                {/* Quick Action Buttons below avatar */}
+                <div className="flex flex-col gap-2 w-full">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="w-full rounded-lg text-xs gap-1.5 bg-violet-50 hover:bg-violet-100 border-violet-200 text-violet-700"
+                    onClick={() => setQuickCreateOpen(true)}
+                  >
+                    <Plus className="w-3 h-3" />
+                    Create
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="w-full rounded-lg text-xs gap-1.5 bg-emerald-50 hover:bg-emerald-100 border-emerald-200 text-emerald-700"
+                    onClick={() => setSidePanelOpen(!sidePanelOpen)}
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    Panel
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="w-full rounded-lg text-xs gap-1.5 bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700"
+                    onClick={() => window.location.href = createPageUrl('Profile')}
+                  >
+                    <Users className="w-3 h-3" />
+                    Profile
+                  </Button>
+                </div>
               </div>
 
               <div className="flex-1">
