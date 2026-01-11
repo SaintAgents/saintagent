@@ -101,6 +101,9 @@ export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete 
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Connection & Relationships</h2>
         <p className="text-slate-600">Share what you're seeking in connections (completely optional)</p>
+        <p className="text-sm text-slate-500 mt-2">
+          💡 This data also helps us find your most compatible <strong>friends and collaborators</strong> — even if you opt out of dating features.
+        </p>
       </div>
 
       {/* Relationship Status */}
