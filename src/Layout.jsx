@@ -8,11 +8,11 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
-import GlobalChatWidget from '@/components/community/GlobalChatWidget';
+import RightSideTabs from '@/components/hud/RightSideTabs';
 import DatingMatchesPopup from '@/components/hud/DatingMatchesPopup';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
 import SidePanel from '@/components/hud/SidePanel';
-import HelpSupportAgent from '@/components/support/HelpSupportAgent';
+
 import GlobalPhotoViewer from '@/components/profile/GlobalPhotoViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
@@ -1541,8 +1541,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         />
       )}
 
-      {/* Global Chat Widget */}
-      <GlobalChatWidget />
+      {/* Right Side Tabs (Help + Chat) */}
+      <RightSideTabs />
 
       {/* Global Side Panel Nudge */}
       <GlobalSidePanelNudge />
@@ -1557,9 +1557,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
           onToggle={() => setFloatingSidePanelOpen(false)}
         />
       )}
-
-      {/* Help Support Agent */}
-      <HelpSupportAgent />
 
       {/* Global Photo Viewer */}
       <GlobalPhotoViewer />
