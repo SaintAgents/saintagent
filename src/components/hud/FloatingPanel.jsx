@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { X, PanelRight } from "lucide-react";
 
-export default function FloatingPanel({ title, children, onClose, onTossToSidePanel, cardId }) {
+export default function FloatingPanel({ title, children, onClose, onTossToSidePanel, cardId, headerExtra }) {
   const containerRef = React.useRef(null);
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const dragOffsetRef = React.useRef({ x: 0, y: 0 });
@@ -79,6 +79,7 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
       >
         <span className="truncate pr-2">{title}</span>
         <div className="flex items-center gap-1">
+          {headerExtra}
           {onTossToSidePanel && cardId && (
             <Button
               variant="ghost"
