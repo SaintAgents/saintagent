@@ -1564,6 +1564,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Global Photo Viewer */}
       <GlobalPhotoViewer />
 
+      {/* Global Dating Matches Popup */}
+      <DatingMatchesPopup currentUser={currentUser} />
+
 
 
       {/* Meeting Reminder Service */}
