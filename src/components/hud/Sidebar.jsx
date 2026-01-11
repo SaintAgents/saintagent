@@ -91,6 +91,7 @@ const NAV_ITEMS = [
   { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
   { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
   { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
+  { id: 'communityfeed', label: 'Community Feed', Icon: Sparkles, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
   { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
   { id: 'marketplace', label: 'Marketplace', Icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
   { id: 'messages', label: 'Messages', Icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },

@@ -54,6 +54,7 @@ import GamificationWidget from '@/components/gamification/GamificationWidget';
 import GoldPriceTicker from '@/components/hud/GoldPriceTicker';
 import MBTIPromptBanner from '@/components/profile/MBTIPromptBanner';
 import CommandDeckTour, { CommandDeckLoadingScreen } from '@/components/tour/CommandDeckTour';
+import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -1266,6 +1267,10 @@ export default function CommandDeck() {
 
             <CollapsibleCard title="Potential Collaborators" cardId="collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} onPopout={() => setCollaboratorsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('collaborators')} onToggleHide={() => toggleCardVisibility('collaborators')} onTossToSidePanel={handleTossToSidePanel}>
               <CollaborationSuggestions profile={profile} compact={false} />
+            </CollapsibleCard>
+
+            <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel}>
+              <CommunityFeedCard maxHeight="400px" />
             </CollapsibleCard>
 
             <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')} onTossToSidePanel={handleTossToSidePanel}>
