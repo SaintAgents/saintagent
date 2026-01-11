@@ -956,13 +956,13 @@ export default function SidePanel({
       {/* Nudge handle when collapsed - only show if NOT on CommandDeck (GlobalSidePanelNudge handles it there) */}
       <div
         className={cn(
-          "fixed top-0 h-screen bg-white border-slate-200 shadow-xl z-[55] transition-all duration-300 flex flex-col",
+          "fixed h-screen bg-white border-slate-200 shadow-xl z-[55] transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "" : "w-0 overflow-hidden"
         )}
         style={{ 
-          top: topOffset, 
-          height: `calc(100vh - ${topOffset}px)`, 
+          top: '64px',
+          height: `calc(100vh - 64px)`, 
           right: dockSide === 'right' ? 0 : 'auto', 
           left: dockSide === 'left' ? 0 : 'auto',
           width: isOpen ? `${panelWidth}px` : '0'
