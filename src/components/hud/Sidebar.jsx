@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import { getRPRank } from '@/components/reputation/rpUtils';
+import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import {
   Select,
   SelectContent,
@@ -451,6 +452,13 @@ export default function Sidebar({
           </nav>
         )}
       </div>
+
+      {/* Community Feed */}
+      {(!isCollapsed || inPopup) && (
+        <div className="border-t border-slate-100 p-3">
+          <CommunityFeedCard maxHeight="300px" />
+        </div>
+      )}
 
       {/* Leaderboard */}
       {(!isCollapsed || inPopup) && (
