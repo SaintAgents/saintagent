@@ -338,12 +338,17 @@ export default function DatingMatchesPopup({ currentUser }) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          // Wait for profile to load before deciding action
-          if (!profileLoaded) return;
+          console.log('Heart clicked - profileLoaded:', profileLoaded, 'isDatingOptedIn:', isDatingOptedIn, 'open:', open);
+          // If still loading, navigate to dating page (safe fallback)
+          if (!profileLoaded) {
+            window.location.href = createPageUrl('DatingMatches');
+            return;
+          }
           if (!isDatingOptedIn) {
             // Navigate to dating page to opt in
             window.location.href = createPageUrl('DatingMatches');
           } else {
+            console.log('Toggling popup open state from', open, 'to', !open);
             setOpen(!open);
           }
         }}
