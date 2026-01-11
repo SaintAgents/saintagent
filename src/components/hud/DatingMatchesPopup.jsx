@@ -623,7 +623,6 @@ export default function DatingMatchesPopup({ currentUser }) {
           </div>
         }
         </div>
-      )}
     </>);
 
 }
