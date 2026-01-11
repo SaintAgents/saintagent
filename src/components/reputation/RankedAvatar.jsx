@@ -294,18 +294,17 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-      {/* Open Badge (right side, below affiliate) */}
+      {/* Open Badge (bottom-right, outside avatar) */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <div 
               className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
               style={{ 
-                width: symbolPx * 1.8, 
-                height: symbolPx * 1.8,
-                right: -4,
-                top: '50%',
-                transform: 'translateY(-50%)'
+                width: symbolPx * 1.6, 
+                height: symbolPx * 1.6,
+                bottom: -symbolPx * 0.4,
+                right: -symbolPx * 0.4,
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -313,14 +312,14 @@ export default function RankedAvatar({
                 src={QUEST_BADGE_IMAGES.open} 
                 alt="Open" 
                 className="object-contain"
-                style={{ width: symbolPx * 1.8, height: symbolPx * 1.8, filter: 'none' }}
+                style={{ width: symbolPx * 1.6, height: symbolPx * 1.6, filter: 'none' }}
                 data-no-filter="true"
               />
               <span 
                 className="absolute text-purple-400 font-bold"
                 style={{ 
-                  fontSize: `${Math.max(6, symbolPx * 0.35)}px`,
-                  bottom: '15%',
+                  fontSize: `${Math.max(5, symbolPx * 0.3)}px`,
+                  bottom: '18%',
                   textShadow: '0 0 2px rgba(0,0,0,0.5)'
                 }}
               >
