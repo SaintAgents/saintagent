@@ -360,8 +360,8 @@ export default function DatingMatchesPopup({ currentUser }) {
         </span>
       </Button>
       
-      {/* Draggable Popup */}
-      {open && (
+      {/* Draggable Popup - only shows if opted in */}
+      {open && isDatingOptedIn && (
         <div 
           ref={dragRef}
           className="fixed z-50 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
