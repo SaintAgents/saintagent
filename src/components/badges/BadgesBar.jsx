@@ -90,9 +90,17 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                 )}
               </div>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 p-3">
-              <p className="text-sm font-semibold text-white">{item.label}</p>
-              <p className="text-xs text-slate-300 mt-1">{item.definition}</p>
+            <TooltipContent 
+              side="top" 
+              className="max-w-xs p-0 border-0 bg-transparent shadow-none overflow-visible"
+            >
+              <div>
+                <div className="h-[2px] rounded-t-xl bg-gradient-to-r from-emerald-400 via-[#00ff88] to-teal-400 dark:from-[#00ff88] dark:via-emerald-400 dark:to-[#00ff88]" />
+                <div className="rounded-b-xl rounded-tr-xl overflow-hidden bg-gradient-to-br from-white via-slate-50 to-emerald-50/50 dark:from-[#050505]/95 dark:via-[#0a0a0a]/95 dark:to-emerald-950/80 backdrop-blur-xl border border-t-0 border-emerald-500/30 dark:border-[#00ff88]/25 shadow-[0_8px_32px_rgba(0,0,0,0.15),_0_0_20px_rgba(16,185,129,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),_0_0_30px_rgba(0,255,136,0.1)] p-3">
+                  <p className="text-sm font-semibold text-slate-800 dark:text-white">{item.label}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{item.definition}</p>
+                </div>
+              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -108,9 +116,17 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                 <Award className="w-5 h-5 text-slate-400 dark:text-slate-500" />
               </div>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 p-3">
-              <p className="text-sm font-semibold text-white">Empty Slot</p>
-              <p className="text-xs text-slate-300 mt-1">Earn badges to fill this slot</p>
+            <TooltipContent 
+              side="top" 
+              className="max-w-xs p-0 border-0 bg-transparent shadow-none overflow-visible"
+            >
+              <div>
+                <div className="h-[2px] rounded-t-xl bg-gradient-to-r from-emerald-400 via-[#00ff88] to-teal-400 dark:from-[#00ff88] dark:via-emerald-400 dark:to-[#00ff88]" />
+                <div className="rounded-b-xl rounded-tr-xl overflow-hidden bg-gradient-to-br from-white via-slate-50 to-emerald-50/50 dark:from-[#050505]/95 dark:via-[#0a0a0a]/95 dark:to-emerald-950/80 backdrop-blur-xl border border-t-0 border-emerald-500/30 dark:border-[#00ff88]/25 shadow-[0_8px_32px_rgba(0,0,0,0.15),_0_0_20px_rgba(16,185,129,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),_0_0_30px_rgba(0,255,136,0.1)] p-3">
+                  <p className="text-sm font-semibold text-slate-800 dark:text-white">Empty Slot</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">Earn badges to fill this slot</p>
+                </div>
+              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -153,9 +169,17 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                         <span className="capitalize">{item.label}</span>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 p-3">
-                      <p className="text-sm font-semibold text-white">{item.label}</p>
-                      <p className="text-xs text-slate-300 mt-1">{item.definition}</p>
+                    <TooltipContent 
+                      side="top" 
+                      className="max-w-xs p-0 border-0 bg-transparent shadow-none overflow-visible"
+                    >
+                      <div>
+                        <div className="h-[2px] rounded-t-xl bg-gradient-to-r from-emerald-400 via-[#00ff88] to-teal-400 dark:from-[#00ff88] dark:via-emerald-400 dark:to-[#00ff88]" />
+                        <div className="rounded-b-xl rounded-tr-xl overflow-hidden bg-gradient-to-br from-white via-slate-50 to-emerald-50/50 dark:from-[#050505]/95 dark:via-[#0a0a0a]/95 dark:to-emerald-950/80 backdrop-blur-xl border border-t-0 border-emerald-500/30 dark:border-[#00ff88]/25 shadow-[0_8px_32px_rgba(0,0,0,0.15),_0_0_20px_rgba(16,185,129,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),_0_0_30px_rgba(0,255,136,0.1)] p-3">
+                          <p className="text-sm font-semibold text-slate-800 dark:text-white">{item.label}</p>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{item.definition}</p>
+                        </div>
+                      </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
