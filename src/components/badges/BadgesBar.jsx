@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BADGE_INDEX, QUEST_BADGE_IMAGES } from './badgesData';
 import BadgeIcon from './BadgeIcon';
+import { Award } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
@@ -13,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8, onMore, className = '', eternalFlameBadge }) {
+export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8, onMore, className = '', eternalFlameBadge, showEmptySlots = false, emptySlotCount = 4 }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   
   const derived = React.useMemo(() => {
@@ -55,6 +56,9 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
     }
   };
 
+  // Calculate how many empty slots to show
+  const slotsToShow = showEmptySlots ? Math.max(0, emptySlotCount - visible.length) : 0;
+
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {visible.map((item) => (
@@ -62,7 +66,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
           <Tooltip>
             <TooltipTrigger asChild>
               <div
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white border border-slate-200 shadow-sm cursor-default"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm cursor-default"
               >
                 {item.customIcon ? (
                   <img 
@@ -89,6 +93,24 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8,
             <TooltipContent side="top" className="max-w-xs">
               <p className="text-sm font-medium">{item.label}</p>
               <p className="text-xs text-slate-500">{item.definition}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ))}
+      {/* Empty badge slots */}
+      {Array.from({ length: slotsToShow }).map((_, idx) => (
+        <TooltipProvider key={`empty-${idx}`}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-800/60 dark:bg-slate-900/80 border border-slate-600/30 dark:border-[#00ff88]/20 cursor-default"
+              >
+                <Award className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs">
+              <p className="text-sm font-medium">Empty Slot</p>
+              <p className="text-xs text-slate-500">Earn badges to fill this slot</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

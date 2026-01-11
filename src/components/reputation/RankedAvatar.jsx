@@ -294,45 +294,7 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-      {/* Open Badge (bottom-right, outside avatar) */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div 
-              className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
-              style={{ 
-                width: symbolPx * 1.6, 
-                height: symbolPx * 1.6,
-                bottom: -symbolPx * 0.4,
-                right: -symbolPx * 0.4,
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img 
-                src={QUEST_BADGE_IMAGES.open} 
-                alt="Open" 
-                className="object-contain"
-                style={{ width: symbolPx * 1.6, height: symbolPx * 1.6, filter: 'none' }}
-                data-no-filter="true"
-              />
-              <span 
-                className="absolute text-purple-400 font-bold"
-                style={{ 
-                  fontSize: `${Math.max(5, symbolPx * 0.3)}px`,
-                  bottom: '18%',
-                  textShadow: '0 0 2px rgba(0,0,0,0.5)'
-                }}
-              >
-                Open
-              </span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="right" className="max-w-[200px] z-[9999]">
-            <p className="font-semibold text-sm">Open</p>
-            <p className="text-xs text-slate-500">Open to connecting and collaboration</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+
 
       {/* Photo gallery icon (bottom-center) - positioned to touch avatar circle */}
       {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
