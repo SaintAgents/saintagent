@@ -179,6 +179,18 @@ export default function Join() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/20 border border-violet-400/30 mb-8">
             <Sparkles className="w-4 h-4 text-violet-400" />
             <span className="text-sm text-violet-300">Join the 144,000 Super-Conscious Leaders</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="w-4 h-4 rounded-full border border-violet-400/60 text-violet-400 text-[10px] font-bold flex items-center justify-center hover:border-violet-300 hover:text-violet-300 transition-colors">
+                    ?
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs bg-slate-900 border-violet-500/30 text-slate-200 p-3">
+                  <p className="text-sm">The 144,000 is a symbolic number found in spiritual and mystical traditions, representing a critical mass of individuals who embody wisdom, compassion, and conscious service—helping elevate collective awareness and restore balance.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-violet-200 to-amber-200 bg-clip-text text-transparent">
