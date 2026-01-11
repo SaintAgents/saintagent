@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 8, onMore, className = '', eternalFlameBadge, showEmptySlots = false, emptySlotCount = 4 }) {
+export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20, onMore, className = '', eternalFlameBadge, showEmptySlots = false, emptySlotCount = 4 }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   
   const derived = React.useMemo(() => {
