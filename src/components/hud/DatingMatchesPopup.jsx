@@ -99,6 +99,15 @@ export default function DatingMatchesPopup({ currentUser }) {
   const dragRef = useRef(null);
   const dragStartPos = useRef({ x: 0, y: 0 });
   
+  // Listen for global open event from TopBar
+  useEffect(() => {
+    const handleOpenDatingPopup = () => {
+      setOpen(true);
+    };
+    document.addEventListener('openDatingPopup', handleOpenDatingPopup);
+    return () => document.removeEventListener('openDatingPopup', handleOpenDatingPopup);
+  }, []);
+  
   // Reset position when popup closes
   useEffect(() => {
     if (!open) {
