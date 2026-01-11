@@ -335,6 +335,8 @@ export default function DatingMatchesPopup({ currentUser }) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
+          // Wait for profile to load before deciding action
+          if (!profileLoaded) return;
           if (!isDatingOptedIn) {
             // Navigate to dating page to opt in
             window.location.href = createPageUrl('DatingMatches');
@@ -346,12 +348,12 @@ export default function DatingMatchesPopup({ currentUser }) {
         <div
           className={cn(
             "w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center",
-            isDatingOptedIn && "animate-pulse"
+            profileLoaded && isDatingOptedIn && "animate-pulse"
           )}
-          style={{ boxShadow: isDatingOptedIn ? '0 0 10px rgba(236, 72, 153, 0.5)' : 'none' }}>
-          <Heart className={cn("w-3.5 h-3.5 text-white", isDatingOptedIn && "fill-white")} />
+          style={{ boxShadow: profileLoaded && isDatingOptedIn ? '0 0 10px rgba(236, 72, 153, 0.5)' : 'none' }}>
+          <Heart className={cn("w-3.5 h-3.5 text-white", profileLoaded && isDatingOptedIn && "fill-white")} />
         </div>
-        {isDatingOptedIn && enrichedMatches.length > 0 &&
+        {profileLoaded && isDatingOptedIn && enrichedMatches.length > 0 &&
           <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
             {enrichedMatches.length > 99 ? '99+' : enrichedMatches.length}
           </span>
