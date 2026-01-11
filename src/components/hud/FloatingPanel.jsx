@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { X, PanelRight } from "lucide-react";
 
-export default function FloatingPanel({ title, children, onClose, onTossToSidePanel, cardId, headerExtra }) {
+export default function FloatingPanel({ title, children, onClose, onTossToSidePanel, cardId, headerExtra, collapsedWidth }) {
   const containerRef = React.useRef(null);
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const dragOffsetRef = React.useRef({ x: 0, y: 0 });
@@ -16,13 +16,20 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
   };
 
   React.useEffect(() => {
-    const width = 420;
+    const width = collapsedWidth || 420;
     const height = Math.min(window.innerHeight * 0.6, 560);
     const x = Math.max(8, window.innerWidth - width - 24);
     const y = Math.max(8, window.innerHeight - height - 24);
     setPos({ x, y });
     setSize({ w: width, h: height });
   }, []);
+
+  // Auto-resize width when collapsedWidth changes
+  React.useEffect(() => {
+    if (collapsedWidth) {
+      setSize(s => ({ ...s, w: collapsedWidth }));
+    }
+  }, [collapsedWidth]);
 
   React.useEffect(() => {
     const onMouseMove = (e) => {

@@ -952,6 +952,7 @@ export default function Sidebar({
         <FloatingPanel 
           title={navPopupCollapsed ? "" : "Quick Navigation"} 
           onClose={() => setNavPopupOpen(false)}
+          collapsedWidth={navPopupCollapsed ? 72 : 420}
           headerExtra={
             <button
               onClick={(e) => {
