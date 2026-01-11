@@ -409,10 +409,23 @@ export default function TopBar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Dating Heart Popup */}
-        <div className="relative z-50">
-          <DatingMatchesPopup currentUser={currentUser} />
-        </div>
+        {/* Dating Heart Button - triggers global popup */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="rounded-xl relative group" 
+          title="Dating Matches"
+          onClick={() => {
+            document.dispatchEvent(new CustomEvent('openDatingPopup'));
+          }}
+        >
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+            <Heart className="w-3.5 h-3.5 text-white fill-white" />
+          </div>
+          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            Dating
+          </span>
+        </Button>
 
         <Link to={createPageUrl('DailyOps')}>
           <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Calendar">
