@@ -115,17 +115,6 @@ export default function RightSideTabs() {
     }, 300);
   };
 
-  // Chat panel hover handlers
-  const handleChatMouseEnter = () => {
-    clearTimeout(chatTimeoutRef.current);
-    setChatHovered(true);
-  };
-  const handleChatMouseLeave = () => {
-    chatTimeoutRef.current = setTimeout(() => {
-      if (!chatOpen) setChatHovered(false);
-    }, 300);
-  };
-
   // Auto-scroll help messages
   useEffect(() => {
     if (helpScrollRef.current) {
