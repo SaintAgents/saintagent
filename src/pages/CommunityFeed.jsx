@@ -244,9 +244,12 @@ export default function CommunityFeed() {
         <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
           <div className="flex items-center gap-3">
             <BackButton className="text-white hover:bg-white/20" />
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-              Community Feed
-            </h1>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+                Community Feed
+              </h1>
+              <p className="text-lg text-white/80">Saint agents social media timeline</p>
+            </div>
           </div>
           <ForwardButton currentPage="CommunityFeed" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
