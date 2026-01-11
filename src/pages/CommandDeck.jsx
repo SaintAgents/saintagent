@@ -1277,6 +1277,10 @@ export default function CommandDeck() {
               <CirclesRegions />
             </CollapsibleCard>
 
+            <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel}>
+              <CommunityFeedCard maxHeight="400px" />
+            </CollapsibleCard>
+
             <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
               <LeaderPathway profile={profile} />
             </CollapsibleCard>
