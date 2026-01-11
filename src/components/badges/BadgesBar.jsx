@@ -90,9 +90,9 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                 )}
               </div>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs">
-              <p className="text-sm font-medium">{item.label}</p>
-              <p className="text-xs text-slate-500">{item.definition}</p>
+            <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 p-3">
+              <p className="text-sm font-semibold text-white">{item.label}</p>
+              <p className="text-xs text-slate-300 mt-1">{item.definition}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -108,9 +108,9 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                 <Award className="w-5 h-5 text-slate-400 dark:text-slate-500" />
               </div>
             </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs">
-              <p className="text-sm font-medium">Empty Slot</p>
-              <p className="text-xs text-slate-500">Earn badges to fill this slot</p>
+            <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 p-3">
+              <p className="text-sm font-semibold text-white">Empty Slot</p>
+              <p className="text-xs text-slate-300 mt-1">Earn badges to fill this slot</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -153,9 +153,9 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                         <span className="capitalize">{item.label}</span>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-xs">
-                      <p className="text-sm font-medium">{item.label}</p>
-                      <p className="text-xs text-slate-500">{item.definition}</p>
+                    <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 p-3">
+                      <p className="text-sm font-semibold text-white">{item.label}</p>
+                      <p className="text-xs text-slate-300 mt-1">{item.definition}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
