@@ -134,6 +134,7 @@ export default function Sidebar({
   const [presenceOpen, setPresenceOpen] = useState(true);
   const [themeOpen, setThemeOpen] = useState(false);
   const [bgEffectOpen, setBgEffectOpen] = useState(false);
+  const [navPopupCollapsed, setNavPopupCollapsed] = useState(false);
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
   });
@@ -948,34 +949,63 @@ export default function Sidebar({
 
       {/* Nav popup */}
       {navPopupOpen && (
-        <FloatingPanel title="Quick Navigation" onClose={() => setNavPopupOpen(false)}>
-          <div className="space-y-1 p-2">
-            {NAV_ITEMS.filter(item => !item.adminOnly || currentUser?.role === 'admin').slice(0, 12).map((item) => {
-              const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
-              const isLocked = item.locked || isLeaderLocked;
-              const ItemIcon = item.Icon;
-              return (
-                <Link
-                  key={item.id}
-                  to={isLocked ? '#' : createPageUrl(item.page)}
-                  onClick={(e) => {
-                    if (isLocked) e.preventDefault();
-                    else setNavPopupOpen(false);
-                  }}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
-                    currentPage === item.id 
-                      ? "bg-violet-100 text-violet-700" 
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                    isLocked && "opacity-60 cursor-not-allowed"
-                  )}
-                >
-                  {ItemIcon && <ItemIcon className="w-4 h-4" />}
-                  <span className="text-sm font-medium">{item.label}</span>
-                  {isLocked && <Lock className="w-3 h-3 ml-auto text-slate-400" />}
-                </Link>
-              );
-            })}
+        <FloatingPanel 
+          title={navPopupCollapsed ? "" : "Quick Navigation"} 
+          onClose={() => setNavPopupOpen(false)}
+          headerExtra={
+            <button
+              onClick={() => setNavPopupCollapsed(!navPopupCollapsed)}
+              className="p-1 rounded hover:bg-white/20 transition-colors"
+              title={navPopupCollapsed ? "Expand" : "Collapse to icons"}
+            >
+              {navPopupCollapsed ? <ChevronRight className="w-4 h-4 text-white" /> : <ChevronLeft className="w-4 h-4 text-white" />}
+            </button>
+          }
+        >
+          <div className={cn("space-y-1 p-2", navPopupCollapsed && "p-1")}>
+            <TooltipProvider delayDuration={100}>
+              {NAV_ITEMS.filter(item => !item.adminOnly || currentUser?.role === 'admin').slice(0, 12).map((item) => {
+                const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
+                const isLocked = item.locked || isLeaderLocked;
+                const ItemIcon = item.Icon;
+                const linkContent = (
+                  <Link
+                    key={item.id}
+                    to={isLocked ? '#' : createPageUrl(item.page)}
+                    onClick={(e) => {
+                      if (isLocked) e.preventDefault();
+                      else setNavPopupOpen(false);
+                    }}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
+                      currentPage === item.id 
+                        ? "bg-violet-100 text-violet-700" 
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                      isLocked && "opacity-60 cursor-not-allowed",
+                      navPopupCollapsed && "px-2 py-2 justify-center"
+                    )}
+                  >
+                    {ItemIcon && <ItemIcon className="w-4 h-4 shrink-0" />}
+                    {!navPopupCollapsed && <span className="text-sm font-medium">{item.label}</span>}
+                    {!navPopupCollapsed && isLocked && <Lock className="w-3 h-3 ml-auto text-slate-400" />}
+                  </Link>
+                );
+                
+                if (navPopupCollapsed) {
+                  return (
+                    <Tooltip key={item.id}>
+                      <TooltipTrigger asChild>
+                        {linkContent}
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p className="text-sm font-medium">{item.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                }
+                return linkContent;
+              })}
+            </TooltipProvider>
           </div>
         </FloatingPanel>
       )}
