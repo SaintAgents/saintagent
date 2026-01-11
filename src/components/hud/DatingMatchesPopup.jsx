@@ -332,9 +332,13 @@ export default function DatingMatchesPopup({ currentUser }) {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="rounded-xl relative group" 
+        className="rounded-xl relative group z-50 pointer-events-auto" 
         title="Dating Matches"
-        onClick={() => setOpen(!open)}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(!open);
+        }}
       >
         <div
           className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse"
