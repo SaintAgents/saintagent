@@ -336,63 +336,36 @@ export default function DatingMatchesPopup({ currentUser }) {
 
   const currentMatch = enrichedMatches[currentIndex];
 
+  // Don't render anything if not open
+  if (!open) return null;
+
+  // If not opted in, redirect to dating page
+  if (profileLoaded && !isDatingOptedIn) {
+    window.location.href = createPageUrl('DatingMatches');
+    return null;
+  }
+
   return (
     <>
-      {/* Trigger Button - always shows, navigates to DatingMatches if not opted in */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="rounded-xl relative group z-50 pointer-events-auto" 
-        title="Dating Matches"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('Heart clicked - profileLoaded:', profileLoaded, 'isDatingOptedIn:', isDatingOptedIn, 'open:', open);
-          // If still loading, navigate to dating page (safe fallback)
-          if (!profileLoaded) {
-            window.location.href = createPageUrl('DatingMatches');
-            return;
-          }
-          if (!isDatingOptedIn) {
-            // Navigate to dating page to opt in
-            window.location.href = createPageUrl('DatingMatches');
-          } else {
-            console.log('Toggling popup open state from', open, 'to', !open);
-            setOpen(!open);
-          }
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[9998]" 
+        onClick={() => setOpen(false)}
+      />
+      
+      {/* Centered Draggable Popup */}
+      <div 
+        ref={dragRef}
+        className="fixed z-[9999] w-96 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+        style={{ 
+          top: `calc(50% + ${position.y}px)`,
+          left: `calc(50% + ${position.x}px)`,
+          transform: 'translate(-50%, -50%)',
+          cursor: isDragging ? 'grabbing' : 'auto',
+          maxHeight: 'calc(100vh - 100px)',
+          overflowY: 'auto'
         }}
       >
-        <div
-          className={cn(
-            "w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center",
-            profileLoaded && isDatingOptedIn && "animate-pulse"
-          )}
-          style={{ boxShadow: profileLoaded && isDatingOptedIn ? '0 0 10px rgba(236, 72, 153, 0.5)' : 'none' }}>
-          <Heart className={cn("w-3.5 h-3.5 text-white", profileLoaded && isDatingOptedIn && "fill-white")} />
-        </div>
-        {profileLoaded && isDatingOptedIn && enrichedMatches.length > 0 &&
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
-            {enrichedMatches.length > 99 ? '99+' : enrichedMatches.length}
-          </span>
-        }
-        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-          Dating
-        </span>
-      </Button>
-      
-      {/* Draggable Popup - only shows if opted in */}
-      {open && isDatingOptedIn && (
-        <div 
-          ref={dragRef}
-          className="fixed z-[9999] w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
-          style={{ 
-            top: `calc(80px + ${position.y}px)`,
-            right: `calc(20px - ${position.x}px)`,
-            cursor: isDragging ? 'grabbing' : 'auto',
-            maxHeight: 'calc(100vh - 100px)',
-            overflowY: 'auto'
-          }}
-        >
           {/* Draggable Header */}
           <div 
             className="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-[rgba(0,255,136,0.15)] cursor-grab active:cursor-grabbing"
