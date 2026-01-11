@@ -28,12 +28,12 @@ export default function DatingSettings({ currentUser }) {
   });
   const existing = records?.[0];
 
-  const [form, setForm] = React.useState(() => ({
-    opt_in: existing?.opt_in ?? false,
-    visible: existing?.visible ?? true,
-    gender: existing?.gender || '',
-    interested_in: existing?.interested_in || [],
-    domains_enabled: existing?.domains_enabled ?? {
+  const defaultForm = {
+    opt_in: false,
+    visible: true,
+    gender: '',
+    interested_in: [],
+    domains_enabled: {
       identity_values: true,
       emotional_stability: true,
       communication: true,
@@ -41,37 +41,42 @@ export default function DatingSettings({ currentUser }) {
       lifestyle: true,
       synchronicity: false
     },
-    core_values_ranked: existing?.core_values_ranked || [],
-    life_priorities: existing?.life_priorities || [],
-    ethical_boundaries: existing?.ethical_boundaries || [],
-    dealbreakers: existing?.dealbreakers || [],
-    regulation_style: existing?.regulation_style || 'adaptive',
-    conflict_response: existing?.conflict_response || 'direct_repair',
-    stress_tolerance: existing?.stress_tolerance || 'medium',
-    comm_depth: existing?.comm_depth || 'balanced',
-    comm_frequency: existing?.comm_frequency || 'daily',
-    responsiveness_boundaries: existing?.responsiveness_boundaries || '',
-    feedback_receptivity: existing?.feedback_receptivity || 'medium',
-    growth_orientation: existing?.growth_orientation || 'steady',
-    learning_mindset: existing?.learning_mindset || 'intermediate',
-    long_term_vision: existing?.long_term_vision || '',
-    relationship_intent: existing?.relationship_intent || 'companionship',
-    location_mobility: existing?.location_mobility || 'flexible',
-    daily_rhythm: existing?.daily_rhythm || 'ambivert',
-    work_life_balance: existing?.work_life_balance || 'balanced',
-    health_lifestyle: existing?.health_lifestyle || '',
-    synchronicity_enabled: existing?.synchronicity_enabled ?? false
-  }));
+    core_values_ranked: [],
+    life_priorities: [],
+    ethical_boundaries: [],
+    dealbreakers: [],
+    regulation_style: 'adaptive',
+    conflict_response: 'direct_repair',
+    stress_tolerance: 'medium',
+    comm_depth: 'balanced',
+    comm_frequency: 'daily',
+    responsiveness_boundaries: '',
+    feedback_receptivity: 'medium',
+    growth_orientation: 'steady',
+    learning_mindset: 'intermediate',
+    long_term_vision: '',
+    relationship_intent: 'companionship',
+    location_mobility: 'flexible',
+    daily_rhythm: 'ambivert',
+    work_life_balance: 'balanced',
+    health_lifestyle: '',
+    synchronicity_enabled: false
+  };
 
+  const [form, setForm] = React.useState(defaultForm);
+
+  // Sync form state when existing record loads
   React.useEffect(() => {
     if (existing) {
-      setForm((f) => ({
-        ...f,
+      setForm({
+        ...defaultForm,
         ...existing,
-        domains_enabled: { ...f.domains_enabled, ...(existing.domains_enabled || {}) }
-      }));
+        opt_in: existing.opt_in === true, // Ensure boolean
+        visible: existing.visible !== false, // Default to true
+        domains_enabled: { ...defaultForm.domains_enabled, ...(existing.domains_enabled || {}) }
+      });
     }
-  }, [existing?.id]);
+  }, [existing?.id, existing?.opt_in, existing?.visible]);
 
   const upsert = useMutation({
     mutationFn: async (overridePayload) => {
