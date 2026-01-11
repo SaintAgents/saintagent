@@ -323,12 +323,9 @@ export default function DatingMatchesPopup({ currentUser }) {
 
   const currentMatch = enrichedMatches[currentIndex];
 
-  // Don't render anything if user hasn't opted into dating
-  if (!isDatingOptedIn) return null;
-
   return (
     <>
-      {/* Trigger Button - only shows when opted in */}
+      {/* Trigger Button - always shows, navigates to DatingMatches if not opted in */}
       <Button 
         variant="ghost" 
         size="icon" 
@@ -337,15 +334,23 @@ export default function DatingMatchesPopup({ currentUser }) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setOpen(!open);
+          if (!isDatingOptedIn) {
+            // Navigate to dating page to opt in
+            window.location.href = createPageUrl('DatingMatches');
+          } else {
+            setOpen(!open);
+          }
         }}
       >
         <div
-          className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse"
-          style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
-          <Heart className="w-3.5 h-3.5 text-white fill-white" />
+          className={cn(
+            "w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center",
+            isDatingOptedIn && "animate-pulse"
+          )}
+          style={{ boxShadow: isDatingOptedIn ? '0 0 10px rgba(236, 72, 153, 0.5)' : 'none' }}>
+          <Heart className={cn("w-3.5 h-3.5 text-white", isDatingOptedIn && "fill-white")} />
         </div>
-        {enrichedMatches.length > 0 &&
+        {isDatingOptedIn && enrichedMatches.length > 0 &&
           <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-pink-500 rounded-full">
             {enrichedMatches.length > 99 ? '99+' : enrichedMatches.length}
           </span>
