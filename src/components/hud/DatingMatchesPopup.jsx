@@ -145,12 +145,13 @@ export default function DatingMatchesPopup({ currentUser }) {
   }, [isDragging]);
 
   // Fetch dating profile opt-in status
-  const { data: myDatingProfile } = useQuery({
+  const { data: myDatingProfile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['myDatingProfilePopup', currentUser?.email],
     queryFn: () => base44.entities.DatingProfile.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email
   });
   const isDatingOptedIn = myDatingProfile?.[0]?.opt_in === true;
+  const profileLoaded = !isLoadingProfile && myDatingProfile !== undefined;
 
   // Fetch dating profiles - always call hook but conditionally enable
   const { data: datingProfiles = [] } = useQuery({
