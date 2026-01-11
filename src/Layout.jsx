@@ -1480,8 +1480,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         style={{ top: '64px' }}
       >
         <div className="animate-marquee whitespace-nowrap inline-block">
-          🚀 This is a Mock up demo app - many elements are for beta testing - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          🚀 This is a Mock up demo app - many elements are for beta testing - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
       </div>
       <style>{`
