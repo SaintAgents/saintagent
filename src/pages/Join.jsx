@@ -19,8 +19,15 @@ import {
   Zap,
   Target,
   Heart,
-  Crown
+  Crown,
+  HelpCircle
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const PILLARS = [
   { id: 'earn', label: 'Earn', icon: DollarSign, color: 'from-emerald-500 to-teal-600', description: 'Monetize your skills and services in our trusted marketplace' },
