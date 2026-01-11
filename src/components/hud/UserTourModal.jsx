@@ -46,17 +46,15 @@ export default function UserTourModal({ open, onClose }) {
           </div>
         </div>
 
-        <Button 
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onClose();
-          }} 
-          className="w-full bg-violet-600 hover:bg-violet-700"
-        >
-          Got it! Let's Go
-        </Button>
+        <div className="pt-2">
+          <Button 
+            type="button"
+            onClick={() => onClose()} 
+            className="w-full bg-violet-600 hover:bg-violet-700 relative z-50 pointer-events-auto"
+          >
+            Got it! Let's Go
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
