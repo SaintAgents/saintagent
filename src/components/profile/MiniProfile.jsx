@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Shield, TrendingUp, BadgeCheck, Users, Coins } from 'lucide-react';
 import HelpHint from '@/components/hud/HelpHint';
+import TipButton from '@/components/creator/TipButton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import DemoStamp from '@/components/ui/DemoStamp';
 
@@ -37,7 +38,8 @@ export default function MiniProfile({
   showRankBadge = true,
   showTrustBadge = true,
   showReachBadge = true,
-  showHelpHint = true
+  showHelpHint = true,
+  showTipButton = true
 }) {
   // Always call hooks unconditionally with stable keys
   // Use longer stale times to reduce API calls and prevent rate limiting
@@ -336,6 +338,16 @@ export default function MiniProfile({
               {miniBadges?.length > 0 && (
                 <div className="mt-1">
                   <BadgesBar badges={miniBadges} max={4} defaultIfEmpty={false} />
+                </div>
+              )}
+              {showTipButton && userId && (
+                <div className="mt-2">
+                  <TipButton
+                    toUserId={userId}
+                    toUserName={displayName}
+                    variant="icon"
+                    className="h-7 w-7"
+                  />
                 </div>
               )}
             </div>

@@ -27,6 +27,7 @@ import {
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
+import TipButton from '@/components/creator/TipButton';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
@@ -330,7 +331,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                     Book
                   </Button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   <FollowButton targetUserId={userId} className="w-full rounded-xl" />
                   <TestimonialButton
                     toUserId={userId}
@@ -339,6 +340,13 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                     context="profile"
                     contextId={profile.id}
                     className="w-full rounded-xl" />
+                  <TipButton
+                    toUserId={userId}
+                    toUserName={profile.display_name}
+                    contextType="profile"
+                    contextId={profile.id}
+                    className="w-full rounded-xl"
+                  />
                 </div>
               </div>
             }
