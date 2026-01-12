@@ -363,7 +363,7 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
-          <div className="relative h-48 bg-gradient-to-r from-violet-500 to-purple-600 group">
+          <div className="relative h-64 bg-gradient-to-r from-violet-500 to-purple-600 group">
                           {/* Rank Badge - Top Left */}
                           <div className="absolute top-2 left-4 z-10">
                             <RankBadge code={profile?.rp_rank_code || 'seeker'} size={112} className="drop-shadow-lg" />
@@ -375,11 +375,15 @@ export default function Profile() {
               className="absolute top-2 right-4 w-28 h-28 object-contain z-10 drop-shadow-lg"
               data-no-filter="true" />
 
-                          <img
-              src={profile?.hero_image_url || 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/feaborb54_You_are_steering_the_shift_of_the_world.png'}
-              alt="Profile hero"
-              className="w-full h-full object-cover"
-              data-no-filter="true" />
+                          {profile?.hero_image_url ? (
+              <img
+                src={profile.hero_image_url}
+                alt=""
+                className="w-full h-full object-cover"
+                data-no-filter="true" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
+            )}
             {isOwnProfile &&
             <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                 <input
@@ -400,8 +404,8 @@ export default function Profile() {
               </label>
             }
           </div>
-          <CardContent className="bg-purple-100 text-zinc-500 pt-0 p-6 relative">
-            <div className="flex items-end gap-6 -mt-16">
+          <CardContent className="bg-purple-100 text-zinc-500 pt-4 p-6 relative">
+            <div className="flex items-start gap-6">
               <div className="cursor-pointer" onClick={() => setViewerOpen(true)} title="View photos">
                 <RankedAvatar
                   src={profile?.avatar_url}
@@ -416,7 +420,7 @@ export default function Profile() {
                   galleryImages={profile?.gallery_images} />
 
               </div>
-              <div className="flex-1 pb-2">
+              <div className="flex-1 pt-2">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-slate-900 dark:text-white text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline &&
@@ -450,6 +454,16 @@ export default function Profile() {
                   }
                 </div>
                 <p className="text-blue-950">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
+                {/* Joined Date */}
+                {profile?.created_date &&
+                <p className="text-sm text-slate-500 mt-1 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5" />
+                    Joined {new Date(profile.created_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    <span className="text-slate-400">
+                      ({Math.floor((Date.now() - new Date(profile.created_date).getTime()) / (1000 * 60 * 60 * 24))} days ago)
+                    </span>
+                  </p>
+                }
                 {/* Social Links */}
                 <SocialLinksDisplay socialLinks={profile?.social_links} className="mt-2" />
                 </div>
