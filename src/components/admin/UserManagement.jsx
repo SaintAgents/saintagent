@@ -20,8 +20,9 @@ import {
   DialogHeader,
   DialogTitle } from
 "@/components/ui/dialog";
-import { Search, Shield, Ban, CheckCircle, XCircle, Edit } from "lucide-react";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from 'date-fns';
 
 export default function UserManagement() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -212,6 +213,15 @@ export default function UserManagement() {
                   </div>
 
                   <div className="flex items-center gap-4 text-sm">
+                    <div className="text-center min-w-[80px]">
+                      <p className="font-semibold text-slate-900 flex items-center justify-center gap-1">
+                        <Calendar className="w-3 h-3 text-slate-400" />
+                        {profile.created_date ? new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '-'}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {profile.created_date ? formatDistanceToNow(new Date(profile.created_date), { addSuffix: true }) : 'Joined'}
+                      </p>
+                    </div>
                     <div className="text-center">
                       <p className="font-semibold text-slate-900">{profile.ggg_balance?.toFixed(2) || 0}</p>
                       <p className="text-xs text-slate-500">GGG</p>
