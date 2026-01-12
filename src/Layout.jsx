@@ -317,10 +317,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
       if (!currentUser || currentPageName === 'Onboarding') return;
       if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
 
-      // If justCompleted flag is set, clear flag and allow page to render (no redirect loop)
-      if (justCompleted) {
+      // If justCompleted flag is set, show tour then clear flag
+      if (justCompleted && !tourDismissed && !userTourOpen) {
         try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
-        return; // Let the page render normally
+        setUserTourOpen(true);
+        return;
       }
 
       // Redirect to onboarding if:
