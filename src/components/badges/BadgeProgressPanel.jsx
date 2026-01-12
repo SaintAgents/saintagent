@@ -216,7 +216,7 @@ export default function BadgeProgressPanel({
                 <Crown className="w-5 h-5 text-white" />
               </div>
               <div>
-                <DialogTitle className="text-amber-100">All 32 Badges - Progress Tracker</DialogTitle>
+                <DialogTitle className="text-amber-100">All {totalBadges} Badges - Progress Tracker</DialogTitle>
                 <p className="text-xs text-amber-400/70">Track your progress towards earning each badge</p>
               </div>
             </div>
