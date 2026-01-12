@@ -318,31 +318,31 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {/* Actions */}
             {!isOwnProfile &&
             <div className="space-y-3 mb-6">
-                <div className="grid grid-cols-2 gap-3">
-                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm px-3">
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
-                  <Button onClick={handleBook} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2">
+                  <Button onClick={handleBook} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm px-3">
                     <Calendar className="w-4 h-4" />
                     Book
                   </Button>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <FollowButton targetUserId={userId} className="w-full rounded-xl" />
+                <div className="flex flex-wrap gap-2">
+                  <FollowButton targetUserId={userId} className="rounded-xl text-xs px-3 h-8" />
                   <TestimonialButton
                     toUserId={userId}
                     toUserName={profile.display_name}
                     toUserAvatar={profile.avatar_url}
                     context="profile"
                     contextId={profile.id}
-                    className="w-full rounded-xl" />
+                    className="rounded-xl text-xs px-3 h-8" />
                   <TipButton
                     toUserId={userId}
                     toUserName={profile.display_name}
                     contextType="profile"
                     contextId={profile.id}
-                    className="w-full rounded-xl"
+                    className="rounded-xl text-xs px-3 h-8"
                   />
                 </div>
               </div>
