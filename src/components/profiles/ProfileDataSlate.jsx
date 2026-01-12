@@ -16,7 +16,8 @@ import {
   MessageCircle,
   UserPlus,
   Target,
-  Send
+  Send,
+  Calendar
 } from "lucide-react";
 
 // Rank configuration with colors and glows
@@ -125,6 +126,12 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
             {profile.handle && (
               <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                 @{profile.handle}
+              </p>
+            )}
+            {profile.created_date && (
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
+                <Calendar className="w-2.5 h-2.5" />
+                Joined {new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
               </p>
             )}
             {/* Rank badge - flat style in dark mode */}

@@ -754,6 +754,12 @@ export default function Profile() {
                           {profile.timezone}
                         </span>
                         }
+                      {profile?.created_date &&
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          Joined {new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </span>
+                        }
                     </div>
                   </>
                     }
