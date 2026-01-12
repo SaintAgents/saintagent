@@ -67,7 +67,9 @@ export default function TopBar({
   onSearch,
   onQuickCreate,
   onNotificationAction,
-  sidebarCollapsed
+  sidebarCollapsed,
+  isCollapsed,
+  onToggleCollapse
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -76,7 +78,6 @@ export default function TopBar({
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
   const [isBoostActive, setIsBoostActive] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const searchRef = useRef(null);
   
   // Listen for boost activation event
@@ -195,7 +196,7 @@ export default function TopBar({
     )}>
       {/* Collapse/Expand Toggle */}
       <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
+        onClick={() => onToggleCollapse?.()}
         className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-slate-200/60 transition-colors"
         title={isCollapsed ? "Expand top bar" : "Collapse top bar"}
       >
