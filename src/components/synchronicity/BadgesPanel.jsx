@@ -265,7 +265,7 @@ export default function BadgesPanel({ badges = [] }) {
               <div className="p-1.5 rounded-lg bg-amber-500/20">
                 <Crown className="w-4 h-4 text-amber-400" />
               </div>
-              22-Badge Ascension Grid
+              32-Badge Ascension Grid
             </CardTitle>
             <Button 
               variant="ghost" 
@@ -286,8 +286,8 @@ export default function BadgesPanel({ badges = [] }) {
                 <BadgeIcon key={badge.id || i} badge={badge} size="sm" />
               ))
             ) : (
-              // Show locked placeholders from the 22-badge grid
-              ALL_22_BADGES.slice(0, 5).map((badge, i) => {
+              // Show locked placeholders from the badge grid
+              SOUL_RESONANCE_BADGES.slice(0, 5).map((badge, i) => {
                 const Icon = badge.icon;
                 return (
                   <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center opacity-30">
@@ -322,7 +322,7 @@ export default function BadgesPanel({ badges = [] }) {
                 <Crown className="w-5 h-5 text-white" />
               </div>
               <div>
-                <DialogTitle className="text-amber-100">22-Badge Ascension Grid</DialogTitle>
+                <DialogTitle className="text-amber-100">32-Badge Ascension Grid</DialogTitle>
                 <p className="text-xs text-amber-400/70">Soul Resonance • Quest Families • Verification</p>
               </div>
             </div>
