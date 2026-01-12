@@ -209,6 +209,23 @@ img[alt="Trust Gauge"],
   color: #ffffff !important;
 }
 
+/* Page titles and headings - force white in dark mode */
+[data-theme='dark'] .text-3xl,
+[data-theme='dark'] .text-4xl,
+[data-theme='dark'] .text-2xl,
+[data-theme='dark'] .text-xl,
+[data-theme='dark'] .text-lg {
+  color: #ffffff !important;
+}
+
+/* Section headers and card headers */
+[data-theme='dark'] [class*='Header'] h1,
+[data-theme='dark'] [class*='Header'] h2,
+[data-theme='dark'] [class*='Header'] h3,
+[data-theme='dark'] [class*='Header'] p {
+  color: #ffffff !important;
+}
+
 /* =====================================================
    WALLET PANEL - FORCE DARK
    ===================================================== */
