@@ -228,12 +228,18 @@ function BadgeDetailModal({ badge, onClose }) {
 
 export default function BadgesPanel({ badges = [] }) {
   const [viewAllOpen, setViewAllOpen] = useState(false);
+  const [selectedBadge, setSelectedBadge] = useState(null);
+  const [activeTab, setActiveTab] = useState('soul');
   
   const earnedBadgeCodes = badges.map(b => b.badge_code || b.code);
-  const allBadgeKeys = QUEST_BADGE_KEYS;
+  const earnedBadgeIds = badges.map(b => b.badge_code || b.code || b.id);
+  
+  // Count earned from the 22-badge grid
+  const earnedFromGrid = ALL_22_BADGES.filter(b => earnedBadgeIds.includes(b.id)).length;
+  const totalBadges = 22;
+  const progress = (earnedFromGrid / totalBadges) * 100;
+  
   const displayBadges = badges.slice(0, 5);
-  const totalEarned = earnedBadgeCodes.filter(c => allBadgeKeys.includes(c)).length;
-  const totalPossible = allBadgeKeys.length;
 
   return (
     <>
@@ -242,9 +248,9 @@ export default function BadgesPanel({ badges = [] }) {
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2 text-amber-100">
               <div className="p-1.5 rounded-lg bg-amber-500/20">
-                <Award className="w-4 h-4 text-amber-400" />
+                <Crown className="w-4 h-4 text-amber-400" />
               </div>
-              My Badges
+              22-Badge Ascension Grid
             </CardTitle>
             <Button 
               variant="ghost" 
@@ -258,75 +264,129 @@ export default function BadgesPanel({ badges = [] }) {
         </CardHeader>
         
         <CardContent className="pt-2">
-          {/* Badge Grid */}
+          {/* Badge Preview Grid */}
           <div className="flex flex-wrap gap-2 justify-center mb-3">
             {displayBadges.length > 0 ? (
               displayBadges.map((badge, i) => (
                 <BadgeIcon key={badge.id || i} badge={badge} size="sm" />
               ))
             ) : (
-              // Show locked placeholders
-              Array.from({ length: 5 }).map((_, i) => (
-                <BadgeIcon key={i} badge={{ code: allBadgeKeys[i] }} size="sm" locked />
-              ))
+              // Show locked placeholders from the 22-badge grid
+              ALL_22_BADGES.slice(0, 5).map((badge, i) => {
+                const Icon = badge.icon;
+                return (
+                  <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center opacity-30">
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                );
+              })
             )}
           </div>
 
           {/* Progress */}
-          <div className="text-center border-t border-amber-900/30 pt-3">
-            <p className="text-sm text-amber-300">
-              <span className="font-bold">{totalEarned}</span>
-              <span className="text-amber-400/50"> / {totalPossible} COLLECTED</span>
+          <div className="border-t border-amber-900/30 pt-3">
+            <div className="flex justify-between text-xs text-amber-400/70 mb-1">
+              <span>Ascension Progress</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+            <Progress value={progress} className="h-1.5 bg-amber-900/30" />
+            <p className="text-center text-sm text-amber-300 mt-2">
+              <span className="font-bold">{earnedFromGrid}</span>
+              <span className="text-amber-400/50"> / {totalBadges} COLLECTED</span>
             </p>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-xs text-amber-400/70 hover:text-amber-300 mt-1"
-              onClick={() => setViewAllOpen(true)}
-            >
-              View All <ChevronDown className="w-3 h-3 ml-1" />
-            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* View All Dialog */}
+      {/* View All Dialog - 22-Badge Ascension Grid */}
       <Dialog open={viewAllOpen} onOpenChange={setViewAllOpen}>
-        <DialogContent className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 max-w-lg">
+        <DialogContent className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 max-w-2xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle className="text-amber-100 flex items-center gap-2">
-              <Award className="w-5 h-5 text-amber-400" />
-              All Badges
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-96 mt-4">
-            <div className="grid grid-cols-3 gap-4">
-              {allBadgeKeys.map(code => {
-                const def = BADGE_INDEX[code] || {};
-                const earned = earnedBadgeCodes.includes(code);
-                return (
-                  <div key={code} className="flex flex-col items-center gap-2 p-2">
-                    <BadgeIcon badge={{ code }} size="lg" locked={!earned} />
-                    <p className={`text-xs text-center font-medium ${earned ? 'text-amber-200' : 'text-amber-400/40'}`}>
-                      {def.label || code}
-                    </p>
-                    {def.rarity && (
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${
-                        def.rarity === 'legendary' ? 'bg-amber-500/20 text-amber-300' :
-                        def.rarity === 'epic' ? 'bg-violet-500/20 text-violet-300' :
-                        def.rarity === 'rare' ? 'bg-blue-500/20 text-blue-300' :
-                        'bg-slate-500/20 text-slate-300'
-                      }`}>
-                        {def.rarity}
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                <Crown className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <DialogTitle className="text-amber-100">22-Badge Ascension Grid</DialogTitle>
+                <p className="text-xs text-amber-400/70">Soul Resonance • Quest Families • Verification</p>
+              </div>
             </div>
-          </ScrollArea>
+            <div className="mt-3">
+              <div className="flex justify-between text-xs text-amber-400/70 mb-1">
+                <span>Progress</span>
+                <span>{earnedFromGrid}/{totalBadges} ({Math.round(progress)}%)</span>
+              </div>
+              <Progress value={progress} className="h-2 bg-amber-900/30" />
+            </div>
+          </DialogHeader>
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
+            <TabsList className="grid grid-cols-3 bg-black/30 border border-amber-900/30">
+              <TabsTrigger value="soul" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
+                <Heart className="w-3 h-3 mr-1" />
+                Soul (10)
+              </TabsTrigger>
+              <TabsTrigger value="family" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
+                <Target className="w-3 h-3 mr-1" />
+                Quests (5)
+              </TabsTrigger>
+              <TabsTrigger value="verification" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
+                <Shield className="w-3 h-3 mr-1" />
+                Verify (7)
+              </TabsTrigger>
+            </TabsList>
+            
+            <ScrollArea className="h-80 mt-4">
+              <TabsContent value="soul" className="mt-0">
+                <p className="text-xs text-amber-300/70 mb-3">Core badges representing your soul's resonance and spiritual development.</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {SOUL_RESONANCE_BADGES.map((badge) => (
+                    <AscensionBadgeCard
+                      key={badge.id}
+                      badge={badge}
+                      isEarned={earnedBadgeIds.includes(badge.id)}
+                      onSelect={setSelectedBadge}
+                    />
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="family" className="mt-0">
+                <p className="text-xs text-amber-300/70 mb-3">Badges earned by completing families of related quests.</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {QUEST_FAMILY_BADGES.map((badge) => (
+                    <AscensionBadgeCard
+                      key={badge.id}
+                      badge={badge}
+                      isEarned={earnedBadgeIds.includes(badge.id)}
+                      onSelect={setSelectedBadge}
+                    />
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="verification" className="mt-0">
+                <p className="text-xs text-amber-300/70 mb-3">Trust and authentication badges verifying your identity and behavior.</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {VERIFICATION_BADGES.map((badge) => (
+                    <AscensionBadgeCard
+                      key={badge.id}
+                      badge={badge}
+                      isEarned={earnedBadgeIds.includes(badge.id)}
+                      onSelect={setSelectedBadge}
+                    />
+                  ))}
+                </div>
+              </TabsContent>
+            </ScrollArea>
+          </Tabs>
         </DialogContent>
       </Dialog>
+      
+      {/* Badge Detail Modal */}
+      {selectedBadge && (
+        <BadgeDetailModal badge={selectedBadge} onClose={() => setSelectedBadge(null)} />
+      )}
     </>
   );
 }
