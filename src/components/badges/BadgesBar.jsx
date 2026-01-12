@@ -14,7 +14,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20, onMore, className = '', eternalFlameBadge, showEmptySlots = false, emptySlotCount = 4 }) {
+export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20, maxDisplay, onMore, className = '', eternalFlameBadge, showEmptySlots = false, emptySlotCount = 4, size = 'default' }) {
+  const effectiveMax = maxDisplay ?? max;
   const [popoverOpen, setPopoverOpen] = useState(false);
   
   const derived = React.useMemo(() => {
@@ -43,8 +44,8 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
     return items;
   }, [badges, defaultIfEmpty, eternalFlameBadge]);
 
-  const visible = derived.slice(0, max);
-  const hiddenItems = derived.slice(max);
+  const visible = derived.slice(0, effectiveMax);
+  const hiddenItems = derived.slice(effectiveMax);
   const remaining = hiddenItems.length;
 
   const handleMoreClick = (e) => {
@@ -66,26 +67,28 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
           <Tooltip>
             <TooltipTrigger asChild>
               <div
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm cursor-default"
+                className={`inline-flex items-center gap-1.5 rounded-lg font-medium bg-white/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm cursor-default backdrop-blur-sm ${
+                  size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs'
+                }`}
               >
                 {item.customIcon ? (
                   <img 
                     src={item.customIcon} 
                     alt={item.label}
-                    className="w-5 h-5 object-contain"
+                    className={size === 'sm' ? 'w-4 h-4 object-contain' : 'w-5 h-5 object-contain'}
                     data-no-filter="true"
                   />
                 ) : QUEST_BADGE_IMAGES[item.code] ? (
                   <img 
                     src={QUEST_BADGE_IMAGES[item.code]} 
                     alt={item.label}
-                    className="w-5 h-5 object-contain"
+                    className={size === 'sm' ? 'w-4 h-4 object-contain' : 'w-5 h-5 object-contain'}
                   />
                 ) : (
-                  <BadgeIcon iconKey={item.iconKey} section={item.section} size={14} />
+                  <BadgeIcon iconKey={item.iconKey} section={item.section} size={size === 'sm' ? 12 : 14} />
                 )}
                 <span className="capitalize">{item.label}</span>
-                {item.subtitle && (
+                {item.subtitle && size !== 'sm' && (
                   <span className="text-[10px] text-slate-500">• {item.subtitle}</span>
                 )}
               </div>
