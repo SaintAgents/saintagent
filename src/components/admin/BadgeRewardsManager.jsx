@@ -62,7 +62,7 @@ const CATEGORY_CONFIG = {
 
 // Default badge definitions for seeding
 const DEFAULT_BADGES = [
-  // Soul Resonance Badges (10)
+  // Soul Resonance Badges (11)
   { badge_code: 'core_soul_resonance', badge_name: 'Core Soul Resonance Glyph', category: 'soul_resonance', rarity: 'uncommon', ggg_reward: 0.025, description: 'Complete profile and first Daily Field Update', quest_type: 'solo' },
   { badge_code: 'twin_flame_seal', badge_name: 'Twin Flame / Twin Christ Seal', category: 'soul_resonance', rarity: 'epic', ggg_reward: 0.1, description: 'Complete Twin Convergence Pact with another agent', quest_type: 'paired' },
   { badge_code: 'oversoul_lineage', badge_name: 'Oversoul Lineage Sigil', category: 'soul_resonance', rarity: 'rare', ggg_reward: 0.05, description: 'Complete Oversoul Lineage reading and integration', quest_type: 'solo' },
@@ -73,15 +73,21 @@ const DEFAULT_BADGES = [
   { badge_code: 'metav_harmonic_grid', badge_name: 'MetaV Harmonic Grid', category: 'soul_resonance', rarity: 'epic', ggg_reward: 0.1, description: 'Participate in grid missions and create accepted artifact', quest_type: 'solo' },
   { badge_code: 'soul_signature', badge_name: 'Soul Signature Seal', category: 'soul_resonance', rarity: 'legendary', ggg_reward: 0.25, description: 'Complete full Soul Profile with AI and human review', quest_type: 'solo' },
   { badge_code: 'divine_authority', badge_name: 'Divine Authority Sigil - 7th Seal Crown', category: 'soul_resonance', rarity: 'legendary', ggg_reward: 0.5, description: 'Council appointment as Guardian/Steward', quest_type: 'solo' },
+  { badge_code: 'akashic_record', badge_name: 'Akashic Record Keeper', category: 'soul_resonance', rarity: 'epic', ggg_reward: 0.1, description: 'Access and document insights from the Akashic Records', quest_type: 'solo' },
   
-  // Quest Type Badges (5)
+  // Quest Type Badges (10)
   { badge_code: 'initiation_quest', badge_name: 'Initiation Quest Badge', category: 'quest_type', rarity: 'uncommon', ggg_reward: 0.025, description: 'Complete 3+ Initiation quests', quest_type: 'solo' },
   { badge_code: 'ascension_quest', badge_name: 'Ascension Quest Badge', category: 'quest_type', rarity: 'rare', ggg_reward: 0.05, description: 'Complete 3+ Ascension quests with measurable upgrade', quest_type: 'solo' },
   { badge_code: 'service_quest', badge_name: 'Service Quest Badge', category: 'quest_type', rarity: 'uncommon', ggg_reward: 0.025, description: 'Complete 5+ Service quests with positive feedback', quest_type: 'solo' },
   { badge_code: 'shadow_quest', badge_name: 'Shadow Quest Badge', category: 'quest_type', rarity: 'rare', ggg_reward: 0.05, description: 'Complete 3+ Shadow Integration quests', quest_type: 'solo' },
   { badge_code: 'timewalker_quest', badge_name: 'Timewalker Quest Badge', category: 'quest_type', rarity: 'rare', ggg_reward: 0.05, description: 'Complete 3+ Timewalker missions', quest_type: 'solo' },
+  { badge_code: 'healing_quest', badge_name: 'Healing Quest Badge', category: 'quest_type', rarity: 'uncommon', ggg_reward: 0.025, description: 'Complete 3+ Healing quests with verified outcomes', quest_type: 'solo' },
+  { badge_code: 'creation_quest', badge_name: 'Creation Quest Badge', category: 'quest_type', rarity: 'rare', ggg_reward: 0.05, description: 'Complete 3+ Creation quests with published artifacts', quest_type: 'solo' },
+  { badge_code: 'unity_quest', badge_name: 'Unity Quest Badge', category: 'quest_type', rarity: 'epic', ggg_reward: 0.1, description: 'Complete 3+ Unity quests with team success', quest_type: 'team' },
+  { badge_code: 'guardian_quest', badge_name: 'Guardian Quest Badge', category: 'quest_type', rarity: 'rare', ggg_reward: 0.05, description: 'Complete 3+ Guardian protection quests', quest_type: 'solo' },
+  { badge_code: 'mastery_quest', badge_name: 'Mastery Quest Badge', category: 'quest_type', rarity: 'legendary', ggg_reward: 0.25, description: 'Complete all quest types and master one specialty', quest_type: 'solo' },
   
-  // Verification Badges (7)
+  // Verification Badges (8)
   { badge_code: 'digital_proof', badge_name: 'Digital Proof Badge', category: 'verification', rarity: 'common', ggg_reward: 0.01, description: 'Verify email, phone, and optional wallet', quest_type: 'solo' },
   { badge_code: 'behavioral_authenticity', badge_name: 'Behavioral Authenticity Badge', category: 'verification', rarity: 'uncommon', ggg_reward: 0.025, description: '60-90 days active with clean record and AI scan', quest_type: 'solo' },
   { badge_code: 'peer_witness', badge_name: 'Peer Witness / Steward Verification', category: 'verification', rarity: 'uncommon', ggg_reward: 0.025, description: '3+ endorsements from Stewards/Guardians', quest_type: 'solo' },
@@ -89,6 +95,7 @@ const DEFAULT_BADGES = [
   { badge_code: 'meta_variance', badge_name: 'Meta-Variance Marker Badge', category: 'verification', rarity: 'rare', ggg_reward: 0.05, description: 'Navigate high-variance missions as stabilizer', quest_type: 'solo' },
   { badge_code: 'real_world_validation', badge_name: 'Real-World Validation Badge', category: 'verification', rarity: 'rare', ggg_reward: 0.05, description: 'Complete verified real-world mission with proof', quest_type: 'solo' },
   { badge_code: 'human_audit', badge_name: 'Human Audit / Oversight Badge', category: 'verification', rarity: 'epic', ggg_reward: 0.1, description: 'Pass formal Human Audit and Council review', quest_type: 'solo' },
+  { badge_code: 'identity_verified', badge_name: 'Identity Verified Badge', category: 'verification', rarity: 'rare', ggg_reward: 0.05, description: 'Complete full identity verification process', quest_type: 'solo' },
   
   // Achievement Badges (10)
   { badge_code: 'first_meeting', badge_name: 'First Meeting', category: 'achievement', rarity: 'common', ggg_reward: 0.01, description: 'Complete your first meeting with another agent' },
