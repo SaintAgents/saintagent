@@ -227,7 +227,7 @@ export default function RPSettingsManager() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label>Double RP Event</Label>
+                  <Label className="text-slate-900 font-medium">Double RP Event</Label>
                   <Switch 
                     checked={doubleRPEnabled}
                     onCheckedChange={(checked) => {
@@ -297,7 +297,7 @@ export default function RPSettingsManager() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label>Enable Decay</Label>
+                  <Label className="text-slate-900 font-medium">Enable Decay</Label>
                   <Switch 
                     checked={decayEnabled}
                     onCheckedChange={setDecayEnabled}
@@ -351,15 +351,15 @@ export default function RPSettingsManager() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                  <span className="text-sm">Prevent negative RP</span>
+                  <span className="text-sm text-slate-900 font-medium">Prevent negative RP</span>
                   <Switch defaultChecked disabled />
                 </div>
                 <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                  <span className="text-sm">Rank demotion protection (24h)</span>
+                  <span className="text-sm text-slate-900 font-medium">Rank demotion protection (24h)</span>
                   <Switch defaultChecked />
                 </div>
                 <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                  <span className="text-sm">Log all RP transactions</span>
+                  <span className="text-sm text-slate-900 font-medium">Log all RP transactions</span>
                   <Switch defaultChecked disabled />
                 </div>
               </CardContent>
