@@ -54,7 +54,22 @@ const VERIFICATION_BADGES = [
   { id: 'human_audit', name: 'Human Audit / Oversight Badge', icon: Scale, color: 'from-amber-600 to-yellow-700', quest: 'Council Review & Oversight Track', type: 'Verification (Council)', metav: '33', objectives: ['Meet minimum rank + verification requirements', 'Provide dossier: mission history, quest log, conflicts', 'Undergo review session with audit team', 'Address any requested remediations'], description: 'Passed the highest level of human review.' }
 ];
 
-const ALL_22_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES];
+// Achievement/Quest Badges (from original badgesData)
+const ACHIEVEMENT_BADGES = [
+  { id: 'first_meeting', code: 'first_meeting', name: 'First Meeting', rarity: 'common', description: 'Took the first step into connection.' },
+  { id: 'audit_expert', code: 'audit_expert', name: 'Audit Expert', rarity: 'rare', description: 'Master of verification and quality assurance.' },
+  { id: 'streak_7', code: 'streak_7', name: '7-Day Streak', rarity: 'common', description: 'Consistency and dedication to daily practice.' },
+  { id: 'top_mentor', code: 'top_mentor', name: 'Top Mentor', rarity: 'epic', description: 'Guide and teacher who uplifts others.' },
+  { id: 'ascended_tier', code: 'ascended_tier', name: 'Ascended Tier', rarity: 'epic', description: 'Reached elevated rank status.' },
+  { id: 'social_butterfly', code: 'social_butterfly', name: 'Social Butterfly', rarity: 'rare', description: 'Community connector and relationship builder.' },
+  { id: 'mission_master', code: 'mission_master', name: 'Mission Master', rarity: 'epic', description: 'Completed major platform objectives.' },
+  { id: 'trust_anchor', code: 'trust_anchor', name: 'Trust Anchor', rarity: 'epic', description: 'Pillar of reliability and integrity.' },
+  { id: 'synchronicity_weaver', code: 'synchronicity_weaver', name: 'Synchronicity Weaver', rarity: 'legendary', description: 'Master of meaningful connections and divine timing.' },
+  { id: 'eternal_flame', code: 'eternal_flame', name: 'Eternal Flame', rarity: 'common', description: 'Baseline awakening badge—signals a living agent.' },
+];
+
+const ALL_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES, ...ACHIEVEMENT_BADGES];
+const TOTAL_BADGE_COUNT = ALL_BADGES.length; // 32 total
 
 // Rarity glow effects
 const RARITY_GLOW = {
