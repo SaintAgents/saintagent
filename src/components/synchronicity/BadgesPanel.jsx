@@ -416,11 +416,12 @@ export default function BadgesPanel({ badges = [] }) {
               </TabsContent>
               
               <TabsContent value="achievements" className="mt-0">
-                <p className="text-xs text-amber-300/70 mb-3">Achievement badges earned through platform activity and milestones.</p>
+                <p className="text-xs text-amber-300/70 mb-3">Achievement badges from the database including identity, achievement, and other categories.</p>
                 <div className="grid grid-cols-5 gap-2">
-                  {ACHIEVEMENT_BADGES.map((badge) => {
-                    const isEarned = earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code);
-                    const imageUrl = QUEST_BADGE_IMAGES[badge.code];
+                  {/* Show database badge definitions */}
+                  {badgeDefinitions.map((badge) => {
+                    const isEarned = earnedBadgeIds.includes(badge.badge_code) || earnedBadgeCodes.includes(badge.badge_code);
+                    const imageUrl = badge.icon_url || QUEST_BADGE_IMAGES[badge.badge_code];
                     return (
                       <TooltipProvider key={badge.id}>
                         <Tooltip>
@@ -437,7 +438,7 @@ export default function BadgesPanel({ badges = [] }) {
                             >
                               <div className={`w-10 h-10 rounded-full mx-auto mb-1.5 flex items-center justify-center ${isEarned ? '' : 'opacity-50 grayscale'}`}>
                                 {imageUrl ? (
-                                  <img src={imageUrl} alt={badge.name} className="w-full h-full object-contain" data-no-filter="true" />
+                                  <img src={imageUrl} alt={badge.badge_name} className="w-full h-full object-contain" data-no-filter="true" />
                                 ) : (
                                   <div className={`w-full h-full rounded-full bg-gradient-to-br ${RARITY_COLORS[badge.rarity] || RARITY_COLORS.common} flex items-center justify-center`}>
                                     <Award className="w-5 h-5 text-white" />
@@ -445,7 +446,7 @@ export default function BadgesPanel({ badges = [] }) {
                                 )}
                               </div>
                               <p className={`text-[10px] text-center font-medium line-clamp-2 ${isEarned ? 'text-amber-200' : 'text-amber-400/50'}`}>
-                                {badge.name}
+                                {badge.badge_name}
                               </p>
                               {isEarned && (
                                 <div className="absolute -top-1 -right-1">
@@ -457,6 +458,7 @@ export default function BadgesPanel({ badges = [] }) {
                                   badge.rarity === 'legendary' ? 'bg-amber-500/30 text-amber-300' :
                                   badge.rarity === 'epic' ? 'bg-violet-500/30 text-violet-300' :
                                   badge.rarity === 'rare' ? 'bg-blue-500/30 text-blue-300' :
+                                  badge.rarity === 'uncommon' ? 'bg-emerald-500/30 text-emerald-300' :
                                   'bg-slate-500/30 text-slate-300'
                                 }`}>
                                   {badge.rarity}
@@ -465,8 +467,11 @@ export default function BadgesPanel({ badges = [] }) {
                             </motion.div>
                           </TooltipTrigger>
                           <TooltipContent side="top" className="max-w-xs bg-[#1a2f1a] text-amber-100 border border-amber-900/50">
-                            <p className="font-semibold text-amber-200">{badge.name}</p>
+                            <p className="font-semibold text-amber-200">{badge.badge_name}</p>
                             <p className="text-xs text-amber-300/70">{badge.description}</p>
+                            {badge.ggg_reward > 0 && (
+                              <p className="text-xs text-emerald-400 mt-1">+{badge.ggg_reward} GGG</p>
+                            )}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
