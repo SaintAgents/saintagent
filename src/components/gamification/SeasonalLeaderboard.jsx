@@ -56,7 +56,7 @@ const CATEGORY_CONFIG = {
     description: 'Mentorship Hours + Upvotes',
     metric: 'mentorship_hours_season',
     secondaryMetric: 'mentorship_upvotes_season',
-    reward: 'Top Mentor Badge + 500 GGG',
+    reward: 'Top Mentor Badge + 0.1 GGG ($14.50)',
     rewardIcon: Medal
   }
 };
