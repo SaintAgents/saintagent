@@ -48,6 +48,21 @@ export default function TipButton({
     }
   });
 
+  // Wallet for authoritative GGG balance
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', currentUser?.email],
+    queryFn: async () => {
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'getWallet',
+        payload: { user_id: currentUser.email }
+      });
+      return data;
+    },
+    enabled: !!currentUser?.email,
+    refetchInterval: 5000
+  });
+  const walletBalance = walletRes?.wallet?.available_balance ?? userProfile?.ggg_balance ?? 0;
+
   const tipMutation = useMutation({
     mutationFn: async () => {
       const tipAmount = customAmount ? parseFloat(customAmount) : amount;
@@ -124,7 +139,7 @@ export default function TipButton({
   });
 
   const finalAmount = customAmount ? parseFloat(customAmount) : amount;
-  const canTip = userProfile?.ggg_balance >= finalAmount && finalAmount > 0;
+  const canTip = walletBalance >= finalAmount && finalAmount > 0;
 
   if (currentUser?.email === toUserId) return null;
 
@@ -228,7 +243,7 @@ export default function TipButton({
                 <span className="text-slate-600">Your balance</span>
                 <span className="font-medium flex items-center gap-1">
                   <Coins className="w-4 h-4 text-amber-500" />
-                  {userProfile?.ggg_balance?.toFixed(2) || 0} GGG
+                  {walletBalance?.toFixed?.(2) || walletBalance || 0} GGG
                 </span>
               </div>
               {!canTip && finalAmount > 0 && (
