@@ -25,9 +25,10 @@ import {
 } from "@/components/ui/select";
 import {
   Sparkles, Heart, MessageCircle, Plus, TrendingUp, 
-  Hash, Eye, Users, Filter, Search, Clock, Flame, Orbit
+  Hash, Eye, Users, Filter, Search, Clock, Flame, Orbit, HelpCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatDistanceToNow } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
@@ -35,15 +36,32 @@ import ForwardButton from '@/components/hud/ForwardButton';
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/52771e0da_gemini-25-flash-image_change_the_letters_to_words_-_Synchronicity_is_MetaV_at_work-0.jpg";
 
 const CATEGORY_CONFIG = {
-  numbers: { label: 'Numbers', icon: Hash, color: 'bg-violet-500/20 text-violet-400 border-violet-500/30' },
-  dreams: { label: 'Dreams', icon: Eye, color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30' },
-  encounters: { label: 'Encounters', icon: Users, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  signs: { label: 'Signs', icon: Sparkles, color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-  timing: { label: 'Timing', icon: Clock, color: 'bg-rose-500/20 text-rose-400 border-rose-500/30' },
-  patterns: { label: 'Patterns', icon: TrendingUp, color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' },
-  messages: { label: 'Messages', icon: MessageCircle, color: 'bg-pink-500/20 text-pink-400 border-pink-500/30' },
-  other: { label: 'Other', icon: Flame, color: 'bg-slate-500/20 text-slate-400 border-slate-500/30' },
+  numbers: { label: 'Numbers', icon: Hash, color: 'bg-violet-500/20 text-violet-400 border-violet-500/30', hint: 'Repeated numbers like 11:11, 222, 333 appearing meaningfully' },
+  dreams: { label: 'Dreams', icon: Eye, color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30', hint: 'Prophetic dreams or dream symbols that manifest in waking life' },
+  encounters: { label: 'Encounters', icon: Users, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', hint: 'Meeting the right person at the right time unexpectedly' },
+  signs: { label: 'Signs', icon: Sparkles, color: 'bg-amber-500/20 text-amber-400 border-amber-500/30', hint: 'Animals, objects, or symbols appearing as messages' },
+  timing: { label: 'Timing', icon: Clock, color: 'bg-rose-500/20 text-rose-400 border-rose-500/30', hint: 'Perfect timing of events, doors opening at the exact moment needed' },
+  patterns: { label: 'Patterns', icon: TrendingUp, color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30', hint: 'Recurring themes or patterns across different areas of life' },
+  messages: { label: 'Messages', icon: MessageCircle, color: 'bg-pink-500/20 text-pink-400 border-pink-500/30', hint: 'Songs, words, or phrases that answer questions or confirm guidance' },
+  other: { label: 'Other', icon: Flame, color: 'bg-slate-500/20 text-slate-400 border-slate-500/30', hint: 'Other meaningful coincidences that don\'t fit categories above' },
 };
+
+function HelpTooltip({ children }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-colors">
+            <HelpCircle className="w-3.5 h-3.5" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs bg-white text-slate-700 border border-slate-200 shadow-lg">
+          <p className="text-sm">{children}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 
 function SynchronicityCard({ sync, onLike, onResonate }) {
   const config = CATEGORY_CONFIG[sync.category] || CATEGORY_CONFIG.other;
@@ -69,10 +87,19 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
             {sync.created_date ? formatDistanceToNow(new Date(sync.created_date), { addSuffix: true }) : 'Recently'}
           </p>
         </div>
-        <Badge className={`${config.color} border text-xs`}>
-          <Icon className="w-3 h-3 mr-1" />
-          {config.label}
-        </Badge>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Badge className={`${config.color} border text-xs cursor-help`}>
+                <Icon className="w-3 h-3 mr-1" />
+                {config.label}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs bg-white text-slate-700 border border-slate-200 shadow-lg">
+              <p className="text-sm">{config.hint}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       {/* Content */}
@@ -94,20 +121,38 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
 
       {/* Actions */}
       <div className="flex items-center gap-4 pt-3 border-t border-slate-700/50">
-        <button 
-          onClick={() => onLike?.(sync)}
-          className="flex items-center gap-1.5 text-slate-400 hover:text-rose-400 transition-colors group"
-        >
-          <Heart className="w-4 h-4 group-hover:fill-rose-400" />
-          <span className="text-sm">{sync.likes_count || 0}</span>
-        </button>
-        <button 
-          onClick={() => onResonate?.(sync)}
-          className="flex items-center gap-1.5 text-slate-400 hover:text-violet-400 transition-colors"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span className="text-sm">{sync.resonance_count || 0} resonated</span>
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                onClick={() => onLike?.(sync)}
+                className="flex items-center gap-1.5 text-slate-400 hover:text-rose-400 transition-colors group"
+              >
+                <Heart className="w-4 h-4 group-hover:fill-rose-400" />
+                <span className="text-sm">{sync.likes_count || 0}</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="bg-white text-slate-700 border border-slate-200 shadow-lg">
+              <p className="text-sm">Like this synchronicity</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                onClick={() => onResonate?.(sync)}
+                className="flex items-center gap-1.5 text-slate-400 hover:text-violet-400 transition-colors"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm">{sync.resonance_count || 0} resonated</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="bg-white text-slate-700 border border-slate-200 shadow-lg">
+              <p className="text-sm">I've experienced something similar</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </motion.div>
   );
@@ -397,6 +442,7 @@ export default function SynchronicityEngine() {
                 <CardTitle className="text-base text-white flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-violet-400" />
                   Trending Symbols
+                  <HelpTooltip>Symbols and patterns most frequently appearing in recent synchronicity reports. Click any symbol to filter the feed.</HelpTooltip>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -421,15 +467,24 @@ export default function SynchronicityEngine() {
             {/* Stats */}
             <Card className="bg-slate-900/80 border-violet-500/20">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base text-white">Community Stats</CardTitle>
+                <CardTitle className="text-base text-white flex items-center gap-2">
+                  Community Stats
+                  <HelpTooltip>Real-time metrics showing how the community is experiencing synchronicities together.</HelpTooltip>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">Total Shared</span>
+                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    Total Shared
+                    <HelpTooltip>All synchronicities ever shared by the community</HelpTooltip>
+                  </span>
                   <span className="text-white font-semibold">{synchronicities.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">This Week</span>
+                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    This Week
+                    <HelpTooltip>Synchronicities shared in the last 7 days</HelpTooltip>
+                  </span>
                   <span className="text-white font-semibold">
                     {synchronicities.filter(s => {
                       const d = new Date(s.created_date);
@@ -439,7 +494,10 @@ export default function SynchronicityEngine() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">Total Resonances</span>
+                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    Total Resonances
+                    <HelpTooltip>When others click "resonate" to acknowledge experiencing similar synchronicities</HelpTooltip>
+                  </span>
                   <span className="text-white font-semibold">
                     {synchronicities.reduce((acc, s) => acc + (s.resonance_count || 0), 0)}
                   </span>
