@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -14,6 +14,7 @@ import ReferralDatasets from '@/components/admin/ReferralDatasets';
 import AdminStats from '@/components/admin/AdminStats';
 import AdminCRM from '@/components/admin/AdminCRM';
 import AdminBetaFeedback from '@/components/admin/AdminBetaFeedback';
+import BadgeRewardsManager from '@/components/admin/BadgeRewardsManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -65,7 +66,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-5xl grid-cols-9">
+          <TabsList className="grid w-full max-w-6xl grid-cols-10">
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Users
@@ -73,6 +74,10 @@ export default function Admin() {
             <TabsTrigger value="ggg" className="gap-2">
               <Coins className="w-4 h-4" />
               GGG Rules
+            </TabsTrigger>
+            <TabsTrigger value="badges" className="gap-2">
+              <Award className="w-4 h-4" />
+              Badges
             </TabsTrigger>
             <TabsTrigger value="leaders" className="gap-2">
               <Crown className="w-4 h-4" />
@@ -110,6 +115,10 @@ export default function Admin() {
 
           <TabsContent value="ggg">
             <GGGRulesManager />
+          </TabsContent>
+
+          <TabsContent value="badges">
+            <BadgeRewardsManager />
           </TabsContent>
 
           <TabsContent value="leaders">
