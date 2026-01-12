@@ -63,7 +63,8 @@ import {
   Cloud,
   Shield,
   Eye,
-  Orbit
+  Orbit,
+  Smile
 } from "lucide-react";
 import {
   Tooltip,
@@ -76,7 +77,7 @@ import { createPageUrl } from '@/utils';
 
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
-  { id: 'betafeedback', label: 'Beta Feedback', Icon: MessageCircle, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
+  { id: 'betafeedback', label: 'Beta Feedback', Icon: Smile, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
   { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
