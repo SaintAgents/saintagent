@@ -32,6 +32,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { formatDistanceToNow } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import BadgeProgressPanel from '@/components/badges/BadgeProgressPanel';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/52771e0da_gemini-25-flash-image_change_the_letters_to_words_-_Synchronicity_is_MetaV_at_work-0.jpg";
 
@@ -270,6 +271,12 @@ export default function SynchronicityEngine() {
     enabled: !!currentUser?.email
   });
 
+  const { data: userBadges = [] } = useQuery({
+    queryKey: ['userBadges', currentUser?.email],
+    queryFn: () => base44.entities.Badge.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+
   const { data: synchronicities = [], isLoading } = useQuery({
     queryKey: ['synchronicities'],
     queryFn: () => base44.entities.Synchronicity.filter({ status: 'active' }, '-created_date', 50)
@@ -436,6 +443,13 @@ export default function SynchronicityEngine() {
 
           {/* Sidebar */}
           <div className="space-y-4">
+            {/* Badge Progress Panel */}
+            <BadgeProgressPanel 
+              userBadges={userBadges} 
+              userProgress={{}} 
+              onStartQuest={(badge) => console.log('Start quest:', badge)}
+            />
+
             {/* Trending Symbols */}
             <Card className="bg-slate-900/80 border-violet-500/20">
               <CardHeader className="pb-2">
