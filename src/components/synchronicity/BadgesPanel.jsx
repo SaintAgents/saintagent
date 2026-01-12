@@ -336,7 +336,7 @@ export default function BadgesPanel({ badges = [] }) {
           </DialogHeader>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-            <TabsList className="grid grid-cols-3 bg-black/30 border border-amber-900/30">
+            <TabsList className="grid grid-cols-4 bg-black/30 border border-amber-900/30">
               <TabsTrigger value="soul" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
                 <Heart className="w-3 h-3 mr-1" />
                 Soul (10)
@@ -348,6 +348,10 @@ export default function BadgesPanel({ badges = [] }) {
               <TabsTrigger value="verification" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
                 <Shield className="w-3 h-3 mr-1" />
                 Verify (7)
+              </TabsTrigger>
+              <TabsTrigger value="achievements" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
+                <Award className="w-3 h-3 mr-1" />
+                Achieve (10)
               </TabsTrigger>
             </TabsList>
             
@@ -391,6 +395,66 @@ export default function BadgesPanel({ badges = [] }) {
                       onSelect={setSelectedBadge}
                     />
                   ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="achievements" className="mt-0">
+                <p className="text-xs text-amber-300/70 mb-3">Achievement badges earned through platform activity and milestones.</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {ACHIEVEMENT_BADGES.map((badge) => {
+                    const isEarned = earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code);
+                    const imageUrl = QUEST_BADGE_IMAGES[badge.code];
+                    return (
+                      <TooltipProvider key={badge.id}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <motion.div
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.98 }}
+                              className={`
+                                relative cursor-pointer rounded-xl p-2 border-2 transition-all
+                                ${isEarned 
+                                  ? 'border-amber-400 bg-gradient-to-br from-amber-900/30 to-yellow-900/30 shadow-lg shadow-amber-500/20' 
+                                  : 'border-amber-900/30 bg-black/30 hover:border-amber-700/50 hover:bg-black/40'}
+                              `}
+                            >
+                              <div className={`w-10 h-10 rounded-full mx-auto mb-1.5 flex items-center justify-center ${isEarned ? '' : 'opacity-50 grayscale'}`}>
+                                {imageUrl ? (
+                                  <img src={imageUrl} alt={badge.name} className="w-full h-full object-contain" data-no-filter="true" />
+                                ) : (
+                                  <div className={`w-full h-full rounded-full bg-gradient-to-br ${RARITY_COLORS[badge.rarity] || RARITY_COLORS.common} flex items-center justify-center`}>
+                                    <Award className="w-5 h-5 text-white" />
+                                  </div>
+                                )}
+                              </div>
+                              <p className={`text-[10px] text-center font-medium line-clamp-2 ${isEarned ? 'text-amber-200' : 'text-amber-400/50'}`}>
+                                {badge.name}
+                              </p>
+                              {isEarned && (
+                                <div className="absolute -top-1 -right-1">
+                                  <CheckCircle2 className="w-4 h-4 text-amber-400 fill-amber-900" />
+                                </div>
+                              )}
+                              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
+                                <span className={`text-[8px] px-1 py-0.5 rounded capitalize ${
+                                  badge.rarity === 'legendary' ? 'bg-amber-500/30 text-amber-300' :
+                                  badge.rarity === 'epic' ? 'bg-violet-500/30 text-violet-300' :
+                                  badge.rarity === 'rare' ? 'bg-blue-500/30 text-blue-300' :
+                                  'bg-slate-500/30 text-slate-300'
+                                }`}>
+                                  {badge.rarity}
+                                </span>
+                              </div>
+                            </motion.div>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="max-w-xs bg-[#1a2f1a] text-amber-100 border border-amber-900/50">
+                            <p className="font-semibold text-amber-200">{badge.name}</p>
+                            <p className="text-xs text-amber-300/70">{badge.description}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    );
+                  })}
                 </div>
               </TabsContent>
             </ScrollArea>
