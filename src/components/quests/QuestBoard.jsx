@@ -9,8 +9,25 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import {
   Sparkles, Crown, Shield, Users, Eye, Lock, CheckCircle2, Circle,
   Heart, Zap, Star, Target, Compass, Key, Grid3X3, Fingerprint,
-  UserCheck, Bot, Activity, MapPin, Scale, ChevronRight, Info
+  UserCheck, Bot, Activity, MapPin, Scale, ChevronRight, Info, HelpCircle
 } from 'lucide-react';
+
+function HelpTooltip({ children }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-colors">
+            <HelpCircle className="w-3.5 h-3.5" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs bg-white text-slate-700 border border-slate-200 shadow-lg">
+          <p className="text-sm">{children}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 import { motion } from 'framer-motion';
 
 // Soul Resonance Badges (10)
@@ -410,8 +427,8 @@ function BadgeCard({ badge, isEarned, onSelect }) {
             </div>
           </motion.div>
         </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs">
-          <p className="font-semibold">{badge.name}</p>
+        <TooltipContent side="top" className="max-w-xs bg-white text-slate-700 border border-slate-200 shadow-lg">
+          <p className="font-semibold text-slate-900">{badge.name}</p>
           <p className="text-xs text-slate-500">{badge.description}</p>
         </TooltipContent>
       </Tooltip>
@@ -515,9 +532,12 @@ export default function QuestBoard({ earnedBadges = [] }) {
               <p className="text-sm text-slate-500">Soul Resonance Path • Quest Families • Verification Tracks</p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-amber-600">{earnedCount}/{totalBadges}</p>
-            <p className="text-xs text-slate-500">Badges Earned</p>
+          <div className="text-right flex items-start gap-2">
+            <div>
+              <p className="text-2xl font-bold text-amber-600">{earnedCount}/{totalBadges}</p>
+              <p className="text-xs text-slate-500">Badges Earned</p>
+            </div>
+            <HelpTooltip>Collect all 22 badges to complete your Ascension Grid. Each badge unlocks through specific quests tied to MetaV sacred numbers.</HelpTooltip>
           </div>
         </div>
         
@@ -552,8 +572,8 @@ export default function QuestBoard({ earnedBadges = [] }) {
           <TabsContent value="soul">
             <div className="mb-3">
               <p className="text-sm text-slate-600 flex items-center gap-2">
-                <Info className="w-4 h-4" />
                 Core badges representing your soul's resonance and spiritual development.
+                <HelpTooltip>These 10 badges track your inner journey - from Core Soul Resonance through Twin Flame connections to the ultimate Divine Authority Sigil. Each is tied to MetaV sacred numbers.</HelpTooltip>
               </p>
             </div>
             <div className="grid grid-cols-5 sm:grid-cols-5 gap-3">
@@ -572,8 +592,8 @@ export default function QuestBoard({ earnedBadges = [] }) {
           <TabsContent value="family">
             <div className="mb-3">
               <p className="text-sm text-slate-600 flex items-center gap-2">
-                <Info className="w-4 h-4" />
                 Badges earned by completing families of related quests.
+                <HelpTooltip>Complete 3-5 quests within each family to earn the badge. Families include Initiation, Ascension, Service, Shadow Integration, and Timewalker paths.</HelpTooltip>
               </p>
             </div>
             <div className="grid grid-cols-5 gap-3">
@@ -592,8 +612,8 @@ export default function QuestBoard({ earnedBadges = [] }) {
           <TabsContent value="verification">
             <div className="mb-3">
               <p className="text-sm text-slate-600 flex items-center gap-2">
-                <Info className="w-4 h-4" />
                 Trust and authentication badges verifying your identity and behavior.
+                <HelpTooltip>These 7 badges establish trust through digital proof, behavioral patterns, peer witnesses, AI coherence checks, and human audits. Higher ranks require more verification.</HelpTooltip>
               </p>
             </div>
             <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
