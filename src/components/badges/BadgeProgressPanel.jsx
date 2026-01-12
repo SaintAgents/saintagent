@@ -65,6 +65,9 @@ const ACHIEVEMENT_BADGES = [
 
 const ALL_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES, ...ACHIEVEMENT_BADGES];
 
+// Total badge count for the system (may exceed ALL_BADGES if some aren't defined yet)
+const TOTAL_BADGE_COUNT = 42;
+
 export default function BadgeProgressPanel({ 
   userBadges = [], 
   userProgress = {},
@@ -81,7 +84,7 @@ export default function BadgeProgressPanel({
   );
   
   // Calculate stats
-  const totalBadges = ALL_BADGES.length;
+  const totalBadges = TOTAL_BADGE_COUNT;
   const earnedCount = ALL_BADGES.filter(b => earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code)).length;
   const inProgressCount = ALL_BADGES.filter(b => {
     const isEarned = earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code);
