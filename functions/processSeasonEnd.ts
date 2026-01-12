@@ -115,9 +115,10 @@ Deno.serve(async (req) => {
         rewardsDistributed.connectors++;
       }
 
-      // Mystics - Badge + GGG Bonus
+      // Mystics - Badge + GGG Bonus (Tier 10: mentor_ta = 0.1 GGG = $14.50)
+      const MYSTICS_GGG_REWARD = 0.1; // Using GGG Rules tier system
       if (categories.mystics.includes(profile.user_id)) {
-        gggBonus = rewardConfig.mystics_ggg_bonus || 500;
+        gggBonus = MYSTICS_GGG_REWARD;
         updates.ggg_balance = (profile.ggg_balance || 0) + gggBonus;
         
         // Create Top Mentor badge
