@@ -368,7 +368,7 @@ export default function BadgesPanel({ badges = [] }) {
               </TabsTrigger>
               <TabsTrigger value="achievements" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
                 <Award className="w-3 h-3 mr-1" />
-                Achieve (10)
+                DB ({badgeDefinitions.length})
               </TabsTrigger>
             </TabsList>
             
