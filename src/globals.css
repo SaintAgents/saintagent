@@ -170,6 +170,45 @@ img[alt="Trust Gauge"],
   color: #e0e0e0 !important;
 }
 
+/* Challenge/Quest cards - ensure high contrast text */
+[data-theme='dark'] [class*='text-slate-'],
+[data-theme='dark'] [class*='text-gray-'],
+[data-theme='dark'] [class*='text-zinc-'] {
+  color: #e8e8e8 !important;
+}
+
+[data-theme='dark'] [class*='text-slate-900'],
+[data-theme='dark'] [class*='text-gray-900'] {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] [class*='text-slate-700'],
+[data-theme='dark'] [class*='text-gray-700'] {
+  color: #f0f0f0 !important;
+}
+
+[data-theme='dark'] [class*='text-slate-500'],
+[data-theme='dark'] [class*='text-gray-500'] {
+  color: #c0c0c0 !important;
+}
+
+/* Progress numbers and labels */
+[data-theme='dark'] .font-medium,
+[data-theme='dark'] .font-semibold,
+[data-theme='dark'] .font-bold {
+  color: #ffffff !important;
+}
+
+/* Card titles */
+[data-theme='dark'] [class*='CardTitle'] {
+  color: #ffffff !important;
+}
+
+/* Badge text */
+[data-theme='dark'] [class*='Badge'] {
+  color: #ffffff !important;
+}
+
 /* =====================================================
    WALLET PANEL - FORCE DARK
    ===================================================== */
