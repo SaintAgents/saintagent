@@ -1464,11 +1464,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
          sidebarCollapsed={sidebarCollapsed}
       />
 
-      {/* Beta Ticker */}
+      {/* Beta Ticker - only show when sidebar is expanded */}
+      {!sidebarCollapsed && (
       <div 
         className={cn(
           "fixed left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
-          sidebarCollapsed ? "pl-10" : "pl-64"
+          "pl-64"
         )}
         style={{ top: '64px' }}
       >
@@ -1476,8 +1477,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
           🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
-      </div>
-      <style>{`
+        </div>
+        )}
+        <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -1485,15 +1487,15 @@ function AuthenticatedLayout({ children, currentPageName }) {
         .animate-marquee {
           animation: marquee 20s linear infinite;
         }
-      `}</style>
+        `}</style>
 
-      {/* Main Content */}
-      <main
-        data-page={currentPageName}
-        data-cmd-view={cmdViewMode || 'standard'}
-        className={cn(
-            "pt-24 min-h-screen transition-all duration-300",
-            sidebarCollapsed ? "pl-10" : "pl-64",
+        {/* Main Content */}
+        <main
+          data-page={currentPageName}
+          data-cmd-view={cmdViewMode || 'standard'}
+          className={cn(
+              "min-h-screen transition-all duration-300",
+              sidebarCollapsed ? "pt-16 pl-10" : "pt-24 pl-64",
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>
