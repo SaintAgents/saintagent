@@ -249,9 +249,9 @@ export default function BadgesPanel({ badges = [] }) {
   const earnedBadgeCodes = badges.map(b => b.badge_code || b.code);
   const earnedBadgeIds = badges.map(b => b.badge_code || b.code || b.id);
   
-  // Count earned from the 22-badge grid
-  const earnedFromGrid = ALL_22_BADGES.filter(b => earnedBadgeIds.includes(b.id)).length;
-  const totalBadges = 22;
+  // Count earned from all badges
+  const earnedFromGrid = ALL_BADGES.filter(b => earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code)).length;
+  const totalBadges = TOTAL_BADGE_COUNT;
   const progress = (earnedFromGrid / totalBadges) * 100;
   
   const displayBadges = badges.slice(0, 5);
