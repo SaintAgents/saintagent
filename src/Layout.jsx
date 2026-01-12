@@ -335,15 +335,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
       // For returning users with complete onboarding, redirect to Command Deck if on generic pages
       const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
       if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
-        if (!onboarding.tour_completed && !tourDismissed) {
-          setUserTourOpen(true);
-          return;
-        }
         window.location.href = createPageUrl('CommandDeck');
         return;
       }
-
-      // Tour logic removed - tour should only be shown from generic pages redirect, not on CommandDeck
     }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
   // If auth state is still loading (undefined), show loading spinner
