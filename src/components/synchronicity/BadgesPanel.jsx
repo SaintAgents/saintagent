@@ -248,12 +248,27 @@ export default function BadgesPanel({ badges = [] }) {
   const [selectedBadge, setSelectedBadge] = useState(null);
   const [activeTab, setActiveTab] = useState('soul');
   
+  // Fetch badge definitions from database
+  const { data: badgeDefinitions = [] } = useQuery({
+    queryKey: ['badgeDefinitions'],
+    queryFn: () => base44.entities.BadgeDefinition.filter({ is_active: true }, 'sort_order', 100)
+  });
+  
   const earnedBadgeCodes = badges.map(b => b.badge_code || b.code);
   const earnedBadgeIds = badges.map(b => b.badge_code || b.code || b.id);
   
-  // Count earned from all badges
-  const earnedFromGrid = ALL_BADGES.filter(b => earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code)).length;
-  const totalBadges = TOTAL_BADGE_COUNT;
+  // Combine hardcoded badges with database badge definitions
+  const dbBadgeCodes = badgeDefinitions.map(bd => bd.badge_code);
+  const allBadgeCodes = new Set([
+    ...ALL_BADGES.map(b => b.id || b.code),
+    ...dbBadgeCodes
+  ]);
+  const totalBadges = allBadgeCodes.size;
+  
+  // Count earned from all badges (hardcoded + database)
+  const earnedFromGrid = [...allBadgeCodes].filter(code => 
+    earnedBadgeIds.includes(code) || earnedBadgeCodes.includes(code)
+  ).length;
   const progress = (earnedFromGrid / totalBadges) * 100;
   
   const displayBadges = badges.slice(0, 5);
