@@ -34,12 +34,14 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import ChallengeCard from '@/components/gamification/ChallengeCard';
 import Leaderboard from '@/components/gamification/Leaderboard';
+import SeasonalLeaderboard from '@/components/gamification/SeasonalLeaderboard';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import StreakTracker from '@/components/gamification/StreakTracker';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import AvailableQuestsPanel from '@/components/quests/AvailableQuestsPanel';
+import PlanetaryGrid from '@/components/quests/PlanetaryGrid';
 
 const ACHIEVEMENT_BADGES = [
   { code: 'first_meeting', title: 'First Meeting', description: 'Complete your first meeting', icon: Calendar, points: 50 },
@@ -406,6 +408,25 @@ export default function Gamification() {
 
           {/* Quests Tab */}
           <TabsContent value="quests" className="space-y-6">
+            {/* Ascension Grid */}
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-violet-900 to-purple-900 text-white">
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Sparkles className="w-5 h-5 text-amber-400" />
+                  Ascension Grid
+                </CardTitle>
+                <p className="text-violet-200 text-sm">Global consciousness activation tracker</p>
+              </CardHeader>
+              <CardContent className="p-0 bg-gradient-to-b from-slate-900 to-violet-950">
+                <PlanetaryGrid 
+                  activeNodes={activeQuests.length * 100 + (profile?.engagement_points || 0)}
+                  totalNodes={144000}
+                  userNodeActive={activeQuests.length > 0}
+                  className="py-4"
+                />
+              </CardContent>
+            </Card>
+
             <AvailableQuestsPanel profile={profile} activeQuests={activeQuests} />
           </TabsContent>
 
@@ -531,8 +552,22 @@ export default function Gamification() {
           </TabsContent>
 
           {/* Leaderboard Tab */}
-          <TabsContent value="leaderboard">
-            <Leaderboard />
+          <TabsContent value="leaderboard" className="space-y-6">
+            {/* Seasonal Leaderboard */}
+            <SeasonalLeaderboard />
+
+            {/* Overall Leaderboard */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-amber-500" />
+                  All-Time Leaderboard
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Leaderboard />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
