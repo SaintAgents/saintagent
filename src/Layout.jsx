@@ -1467,12 +1467,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
         onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
       />
 
-      {/* Beta Ticker - only show when sidebar is expanded and topbar is not collapsed */}
-      {!sidebarCollapsed && !topbarCollapsed && (
+      {/* Beta Ticker - only show when topbar is not collapsed */}
+      {!topbarCollapsed && (
       <div 
         className={cn(
           "fixed left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
-          "pl-64"
+          sidebarCollapsed ? "pl-20" : "pl-64"
         )}
         style={{ top: '64px' }}
       >
@@ -1498,8 +1498,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           data-cmd-view={cmdViewMode || 'standard'}
           className={cn(
               "min-h-screen transition-all duration-300",
-              sidebarCollapsed ? "pl-10" : "pl-64",
-              topbarCollapsed ? "pt-8" : "pt-24",
+              sidebarCollapsed ? "pl-20" : "pl-64",
+              topbarCollapsed ? "pt-8" : "pt-28",
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>

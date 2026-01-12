@@ -384,6 +384,12 @@ export default function Profile() {
             ) : (
               <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
             )}
+            
+            {/* Badges Bar at Bottom of Hero */}
+            <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
+              <BadgesBar badges={profileBadges} defaultIfEmpty={false} maxDisplay={8} size="sm" />
+            </div>
+            
             {isOwnProfile &&
             <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                 <input
