@@ -41,7 +41,7 @@ import StreakTracker from '@/components/gamification/StreakTracker';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import AvailableQuestsPanel from '@/components/quests/AvailableQuestsPanel';
-import PlanetaryGrid from '@/components/quests/PlanetaryGrid';
+import AscensionGrid from '@/components/gamification/AscensionGrid';
 
 const ACHIEVEMENT_BADGES = [
   { code: 'first_meeting', title: 'First Meeting', description: 'Complete your first meeting', icon: Calendar, points: 50 },
@@ -408,20 +408,19 @@ export default function Gamification() {
 
           {/* Quests Tab */}
           <TabsContent value="quests" className="space-y-6">
-            {/* 22-Badge Ascension Grid */}
+            {/* 42-Badge Ascension Grid */}
             <Card className="overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-violet-900 to-purple-900 text-white">
                 <CardTitle className="flex items-center gap-2 text-white">
                   <Sparkles className="w-5 h-5 text-amber-400" />
-                  22-Badge Ascension Grid
+                  42-Badge Ascension Grid
                 </CardTitle>
                 <p className="text-violet-200 text-sm">Soul Resonance Path • Quest Families • Verification Tracks</p>
               </CardHeader>
               <CardContent className="p-0 bg-gradient-to-b from-slate-900 to-violet-950">
-                <PlanetaryGrid 
-                  activeNodes={badges.length}
-                  totalNodes={22}
-                  userNodeActive={badges.length > 0}
+                <AscensionGrid 
+                  badges={badges}
+                  totalBadges={42}
                   className="py-4"
                 />
               </CardContent>
