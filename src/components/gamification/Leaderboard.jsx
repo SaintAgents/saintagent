@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Trophy, Medal, Award, Crown, TrendingUp, Users, Calendar, Coins } from 'lucide-react';
 import { motion } from 'framer-motion';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import { RankBadge } from '@/components/reputation/rankBadges';
 
 const PERIOD_LABELS = {
   daily: 'Today',
@@ -134,7 +135,7 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
               <p className="text-sm font-medium text-slate-900 text-center truncate max-w-[80px]">
                 {entry.display_name?.split(' ')[0] || 'User'}
               </p>
-              <p className="text-xs text-amber-600 font-semibold">{entry.points.toLocaleString()} pts</p>
+              <p className="text-xs text-amber-600 font-semibold">{entry.points.toLocaleString()} RP</p>
               <div className={cn("w-16 rounded-t-lg mt-2", height, style.bg, "border", style.border)} />
             </motion.div>
           );
@@ -171,6 +172,8 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
 function LeaderboardRow({ entry, rank, isCurrentUser, compact }) {
   if (!entry) return <div key={`empty-row-${rank}`} className="hidden" />;
 
+  const rankCode = entry.rp_rank_code || 'seeker';
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
@@ -180,12 +183,14 @@ function LeaderboardRow({ entry, rank, isCurrentUser, compact }) {
         isCurrentUser ? "bg-violet-50 border border-violet-200" : "hover:bg-slate-50"
       )}
     >
-      <div className={cn(
-        "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold",
-        rank <= 3 ? RANK_STYLES[rank]?.bg : "bg-slate-100",
-        rank <= 3 ? RANK_STYLES[rank]?.text : "text-slate-600"
-      )}>
-        {rank}
+      <div className="relative flex items-center justify-center">
+        <RankBadge code={rankCode} size={compact ? 28 : 36} />
+        <div className={cn(
+          "absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-white border shadow-sm",
+          rank <= 3 ? RANK_STYLES[rank]?.text : "text-slate-600"
+        )}>
+          {rank}
+        </div>
       </div>
       <RankedAvatar
         src={entry.avatar_url}
@@ -211,7 +216,7 @@ function LeaderboardRow({ entry, rank, isCurrentUser, compact }) {
         )}>
           {(entry.points || entry.engagement_points || 0).toLocaleString()}
         </p>
-        {!compact && <p className="text-xs text-slate-400">points</p>}
+        {!compact && <p className="text-xs text-slate-400">RP</p>}
       </div>
     </motion.div>
   );
