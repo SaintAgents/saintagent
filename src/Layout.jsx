@@ -342,10 +342,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         return;
       }
 
-      // If on CommandDeck and tour not completed (and not already dismissed this session), show tour ONCE
-      if (currentPageName === 'CommandDeck' && onboarding?.status === 'complete' && !onboarding?.tour_completed && !tourDismissed && !userTourOpen) {
-        setUserTourOpen(true);
-      }
+      // Tour logic removed - tour should only be shown from generic pages redirect, not on CommandDeck
     }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
   // If auth state is still loading (undefined), show loading spinner
