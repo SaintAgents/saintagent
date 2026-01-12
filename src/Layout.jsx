@@ -25,6 +25,7 @@ const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms'
 // Authenticated layout with all the hooks - only used for protected pages
 function AuthenticatedLayout({ children, currentPageName }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [topbarCollapsed, setTopbarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
@@ -1461,11 +1462,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
         onSearch={handleSearch}
         onQuickCreate={() => setQuickCreateOpen(true)}
         onNotificationAction={handleNotificationAction}
-         sidebarCollapsed={sidebarCollapsed}
+        sidebarCollapsed={sidebarCollapsed}
+        isCollapsed={topbarCollapsed}
+        onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
       />
 
-      {/* Beta Ticker - only show when sidebar is expanded */}
-      {!sidebarCollapsed && (
+      {/* Beta Ticker - only show when sidebar is expanded and topbar is not collapsed */}
+      {!sidebarCollapsed && !topbarCollapsed && (
       <div 
         className={cn(
           "fixed left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
@@ -1495,7 +1498,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           data-cmd-view={cmdViewMode || 'standard'}
           className={cn(
               "min-h-screen transition-all duration-300",
-              sidebarCollapsed ? "pt-16 pl-10" : "pt-24 pl-64",
+              sidebarCollapsed ? "pl-10" : "pl-64",
+              topbarCollapsed ? "pt-8" : "pt-24",
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>
