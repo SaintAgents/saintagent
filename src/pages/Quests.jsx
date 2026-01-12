@@ -18,6 +18,7 @@ import LeaderboardPanel from '@/components/synchronicity/LeaderboardPanel';
 import BadgesPanel from '@/components/synchronicity/BadgesPanel';
 import ActiveSynchronicity from '@/components/synchronicity/ActiveSynchronicity';
 import EpicQuestCard from '@/components/synchronicity/EpicQuestCard';
+import QuestBoard from '@/components/quests/QuestBoard';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
@@ -136,6 +137,11 @@ export default function Quests() {
             <BadgesPanel badges={badges} />
             <EpicQuestCard profile={profile} />
           </div>
+        </div>
+
+        {/* Quest Board - 22 Badge Ascension Grid */}
+        <div className="mt-8">
+          <QuestBoard earnedBadges={badges} />
         </div>
       </div>
     </div>);
