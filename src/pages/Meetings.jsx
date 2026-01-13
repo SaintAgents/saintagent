@@ -76,6 +76,15 @@ export default function Meetings() {
       case 'reschedule':
         setRescheduleMeeting(meeting);
         break;
+      case 'join':
+        // If meeting has an online link, open it
+        if (meeting.online_link) {
+          window.open(meeting.online_link, '_blank');
+        } else {
+          // No link available - show message
+          alert('No video link has been set for this meeting yet. Please coordinate with your meeting partner to add a Zoom, Google Meet, or other video call link.');
+        }
+        break;
     }
   };
 
