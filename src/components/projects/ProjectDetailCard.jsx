@@ -263,12 +263,12 @@ export default function ProjectDetailCard({ project }) {
 
 function DetailItem({ icon: Icon, label, value }) {
   return (
-    <div className="p-3 rounded-lg bg-slate-50 border">
-      <div className="flex items-center gap-2 text-slate-500 mb-1">
+    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border dark:border-slate-700">
+      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-1">
         <Icon className="w-4 h-4" />
         <span className="text-xs">{label}</span>
       </div>
-      <div className="font-medium text-slate-900">{value}</div>
+      <div className="font-medium text-slate-900 dark:text-white">{value}</div>
     </div>
   );
 }
