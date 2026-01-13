@@ -1,4 +1,3 @@
-
 // Badge definitions grouped by section
 // Badges can be earned via Quest completion, Challenge milestones, or both (Hybrid)
 
@@ -292,6 +291,40 @@ export const BADGE_SECTIONS = [
         icon_desc: 'Golden flame in a circular base',
         definition: 'Ignition/transformation—awakened inner fire, sustained devotion, and consistent motion.',
         iconKey: 'flame'
+      }
+    ]
+  },
+  {
+    id: 'sigils',
+    title: 'SIGILS',
+    items: [
+      {
+        code: 'trust_shield',
+        label: 'Trust Shield',
+        icon_desc: 'Emerald shield with checkmark',
+        definition: 'Perfect trust score badge—signals 100% verified trust.',
+        iconKey: 'shield'
+      },
+      {
+        code: 'affiliate_bronze',
+        label: 'Bronze Affiliate',
+        icon_desc: 'Bronze shield with "A" emblem',
+        definition: 'Entry-level affiliate status—signals participation in the referral network.',
+        iconKey: 'shield'
+      },
+      {
+        code: 'affiliate_silver',
+        label: 'Silver Affiliate',
+        icon_desc: 'Silver shield with "A" emblem',
+        definition: 'Mid-tier affiliate status—signals 5+ paid referrals.',
+        iconKey: 'shield'
+      },
+      {
+        code: 'affiliate_gold',
+        label: 'Gold Affiliate',
+        icon_desc: 'Gold shield with "A" emblem',
+        definition: 'Top-tier affiliate status—signals 20+ paid referrals.',
+        iconKey: 'shield'
       }
     ]
   }
