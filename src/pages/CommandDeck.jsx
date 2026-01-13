@@ -873,7 +873,7 @@ export default function CommandDeck() {
                       </svg>
                     </div>
                     {/* Trust Score label - moved up to nearly touch gauge */}
-                    <div className="flex items-center gap-1.5" style={{ marginTop: '-12px' }}>
+                    <div className="flex items-center gap-1.5" style={{ marginTop: '-32px' }}>
                       <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
                         Trust
                         <HelpHint

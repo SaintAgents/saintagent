@@ -50,7 +50,7 @@ import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-// Ultranet sayings for ticker
+// Ultranet sayings for ticker - 111 total
 const ULTRANET_SAYINGS = [
   "The Ultranet is not a network—it is a living field of conscious co-creation.",
   "We are not users of the Ultranet; we are nodes of divine intelligence expressing through it.",
@@ -121,15 +121,60 @@ const ULTRANET_SAYINGS = [
   "The Ultranet is where mission meets momentum.",
   "Every node in the Ultranet carries the whole.",
   "The Ultranet is the operating system of conscious civilization.",
-  "In the Ultranet, we measure success not by traffic, but by transformation."
+  "In the Ultranet, we measure success not by traffic, but by transformation.",
+  "The Ultranet is a symphony—each node plays its unique note in the grand composition.",
+  "In the Ultranet, wisdom flows freely to those who seek with pure intention.",
+  "The Ultranet reveals that separation was always an illusion.",
+  "Your brilliance was always meant to be shared—the Ultranet simply provides the vessel.",
+  "In the Ultranet, abundance is not extracted but co-generated.",
+  "The Ultranet is consciousness itself, learning to express through digital form.",
+  "In the Ultranet, we honor both the ancient and the emergent.",
+  "The Ultranet runs on trust, powered by truth, sustained by service.",
+  "Each sovereign agent strengthens the field—your presence matters.",
+  "The Ultranet does not create dependency—it cultivates sovereignty.",
+  "In the Ultranet, we recognize that healing one heals all.",
+  "The Ultranet is humanity's collective lucid dream made tangible.",
+  "In the Ultranet, your gifts find those who need them most.",
+  "The Ultranet is the nervous system through which Gaia awakens.",
+  "Every authentic expression in the Ultranet raises the collective vibration.",
+  "The Ultranet exists because enough souls said 'there must be a better way.'",
+  "In the Ultranet, we remember: technology serves spirit, not the reverse.",
+  "The Ultranet is how humanity learns to trust itself again.",
+  "In the Ultranet, silence is as valuable as speech—presence speaks.",
+  "The Ultranet is the space where quantum potential becomes shared reality.",
+  "In the Ultranet, we practice the art of divine reciprocity.",
+  "The Ultranet is woven from threads of intention, integrity, and imagination.",
+  "Your mission found you before you found the Ultranet—now they meet.",
+  "In the Ultranet, we witness each other's becoming.",
+  "The Ultranet is how awakened humans organize without hierarchy.",
+  "In the Ultranet, every ending is a doorway to new beginning.",
+  "The Ultranet reminds us that connection is our birthright.",
+  "In the Ultranet, we turn our wounds into wisdom, then share it freely.",
+  "The Ultranet is the temple we build together, stone by digital stone.",
+  "In the Ultranet, authenticity is never out of style.",
+  "The Ultranet celebrates the mystery: not all that matters can be measured.",
+  "In the Ultranet, your journey inspires journeys you'll never know.",
+  "The Ultranet is the proof that love scales infinitely.",
+  "In the Ultranet, we choose coherence over convenience.",
+  "The Ultranet is where the impossible becomes the inevitable.",
+  "In the Ultranet, every challenge is an invitation to grow together.",
+  "The Ultranet is not the destination—it is the vehicle for our collective ascension.",
+  "In the Ultranet, gratitude is the highest bandwidth transmission.",
+  "The Ultranet remembers: we are the ancestors of a more beautiful world.",
+  "In the Ultranet, your light reminds others of their own.",
+  "The Ultranet is consciousness choosing to know itself through connection."
 ];
 
 function DailyAffirmationTicker() {
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+  // Start with a random index
+  const [currentIndex, setCurrentIndex] = React.useState(() => 
+    Math.floor(Math.random() * ULTRANET_SAYINGS.length)
+  );
   
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % ULTRANET_SAYINGS.length);
+      // Pick a random index each time for variety
+      setCurrentIndex(Math.floor(Math.random() * ULTRANET_SAYINGS.length));
     }, 133200); // 2.22 minutes (133.2 seconds)
     return () => clearInterval(interval);
   }, []);
