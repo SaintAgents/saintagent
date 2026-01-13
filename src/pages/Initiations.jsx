@@ -287,7 +287,7 @@ export default function InitiationsPage() {
       <div className="px-6 pb-12">
         <div className="max-w-6xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-8 bg-[rgba(0,0,0,0.75)] border border-[rgba(0,255,136,0.2)]">
+            <TabsList className="mb-8 bg-[rgba(0,0,0,0.75)] border border-[rgba(0,255,136,0.2)] flex flex-wrap">
               <TabsTrigger value="initiations">Initiations</TabsTrigger>
               <TabsTrigger value="progress">
                 <Trophy className="w-4 h-4 mr-2" />
@@ -299,6 +299,10 @@ export default function InitiationsPage() {
               </TabsTrigger>
               <TabsTrigger value="transmissions">Transmissions</TabsTrigger>
               <TabsTrigger value="badges">Badge System</TabsTrigger>
+              <TabsTrigger value="source">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Source Texts
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="initiations">
