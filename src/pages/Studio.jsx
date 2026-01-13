@@ -74,7 +74,26 @@ export default function Studio() {
             </h1>
             <ForwardButton currentPage="Studio" className="text-white/80 hover:text-white" />
           </div>
-          <p className="text-white/80">Your business command center</p>
+          <p className="text-white/80 flex items-center gap-1.5">
+            Your business command center
+            <HelpHint
+              content={
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-violet-400 font-bold text-sm mb-1">Welcome to Your Creator Studio</div>
+                    <div className="text-amber-400 text-xs font-semibold">"The Ultimate Command Center for High-Frequency Impact"</div>
+                  </div>
+                  <ul className="space-y-2 text-xs">
+                    <li><span className="text-emerald-400 font-semibold">Patreon on Steroids:</span> <span className="text-slate-300">Your decentralized economic engine where content and service translate directly into gold-pegged value.</span></li>
+                    <li><span className="text-emerald-400 font-semibold">Total Sovereignty:</span> <span className="text-slate-300">Manage your entire business ecosystem—from mentorship tiers and activation sessions to advanced monetization funnels—all in one high-performance dashboard.</span></li>
+                    <li><span className="text-emerald-400 font-semibold">Performance Tracking:</span> <span className="text-slate-300">Gain deep insights into your Revenue, Conversion Rates, and Audience Resonance to see exactly how your frequency is moving the needle.</span></li>
+                    <li><span className="text-emerald-400 font-semibold">The ULTRANET Advantage:</span> <span className="text-slate-300">Leverage AI-driven discovery to find the exact collaborators and students who are already Grid Aligned with your specific mission.</span></li>
+                    <li><span className="text-emerald-400 font-semibold">Scale Your Influence:</span> <span className="text-slate-300">This is more than a profile; it is your launchpad for planetary-scale growth, designed to reward your integrity as much as your output.</span></li>
+                  </ul>
+                </div>
+              }
+            />
+          </p>
         </div>
       </div>
 
