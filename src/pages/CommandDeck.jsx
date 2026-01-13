@@ -59,7 +59,7 @@ import MysticalIDImage from '@/components/profile/MysticalIDImage';
 import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 
-export default function CommandDeck() {
+export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
     // Initialize from localStorage if available
     try {
@@ -1276,6 +1276,49 @@ export default function CommandDeck() {
                     <div className="text-xs text-emerald-600 dark:text-emerald-400">Restore all cards</div>
                   </div>
                 </button>
+              </div>
+              
+              {/* Theme Radio Dials */}
+              <div className="absolute bottom-3 right-3 flex gap-2">
+                <button
+                  onClick={() => {
+                    const newTheme = 'light';
+                    onThemeToggle?.(newTheme);
+                  }}
+                  className={cn(
+                    "w-3 h-3 rounded-full border-2 transition-all",
+                    theme === 'light' 
+                      ? "bg-white border-violet-500 ring-2 ring-violet-200" 
+                      : "bg-white border-slate-300 hover:border-slate-400"
+                  )}
+                  title="Light theme"
+                />
+                <button
+                  onClick={() => {
+                    const newTheme = 'dark';
+                    onThemeToggle?.(newTheme);
+                  }}
+                  className={cn(
+                    "w-3 h-3 rounded-full border-2 transition-all",
+                    theme === 'dark' 
+                      ? "bg-green-800 border-violet-500 ring-2 ring-violet-200" 
+                      : "bg-green-800 border-green-900 hover:border-green-700"
+                  )}
+                  title="Dark theme"
+                />
+                <button
+                  onClick={() => {
+                    const newTheme = 'hacker';
+                    onThemeToggle?.(newTheme);
+                  }}
+                  className={cn(
+                    "w-3 h-3 rounded-full border-2 transition-all",
+                    theme === 'hacker' 
+                      ? "bg-green-500 border-violet-500 ring-2 ring-violet-200" 
+                      : "bg-green-500 border-green-600 hover:border-green-400"
+                  )}
+                  title="Hacker theme"
+                />
               </div>
             </div>
           </div>
