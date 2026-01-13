@@ -19,6 +19,7 @@ import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 import UserTourModal from '@/components/hud/UserTourModal';
+import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home'];
 
@@ -1482,6 +1483,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
         </div>
         </div>
         )}
+
+      {/* System-wide Announcement Banner */}
+      <AnnouncementBanner 
+        sidebarCollapsed={sidebarCollapsed} 
+        topbarCollapsed={topbarCollapsed} 
+      />
         <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
