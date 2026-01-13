@@ -51,7 +51,8 @@ import {
   Heart,
   Compass,
   BadgeCheck,
-  MessageSquare
+  MessageSquare,
+  Shield
 } from
 "lucide-react";
 
@@ -74,6 +75,7 @@ import QuickBoostButton from '@/components/boost/QuickBoostButton';
 import BoostStatusBadge from '@/components/boost/BoostStatusBadge';
 import CreatorMonetizationTab from '@/components/creator/CreatorMonetizationTab';
 import TipButton from '@/components/creator/TipButton';
+import OptOutSettings from '@/components/profile/OptOutSettings';
 import { createPageUrl } from '@/utils';
 
 export default function Profile() {
@@ -556,6 +558,12 @@ export default function Profile() {
             <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Dating</span>
                 <Heart className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            }
+            {isOwnProfile &&
+            <TabsTrigger value="optout" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Opt-Out</span>
+                <Shield className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             }
             </TabsList>
@@ -1421,6 +1429,13 @@ export default function Profile() {
           <TabsContent value="monetization" className="space-y-6">
                <CreatorMonetizationTab profile={profile} />
              </TabsContent>
+          }
+
+          {/* Opt-Out Settings Tab - Master+ only */}
+          {isOwnProfile &&
+          <TabsContent value="optout" className="space-y-6">
+              <OptOutSettings profile={profile} />
+            </TabsContent>
           }
 
             <TabsContent value="friends" className="space-y-6">
