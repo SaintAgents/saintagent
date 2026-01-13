@@ -65,7 +65,7 @@ export default function Mentorship() {
       {/* Hero Section */}
       <div className="page-hero relative overflow-hidden">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/004244915_ideogram-v30_Heres_a_clean_high-concept_image_prompt_for_a_gamification_hub_that_fits_sain-4.jpg"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7e50f7bf_universal_upscale_0_616bb1f7-8a11-4de2-bec2-b326e9e4b195_0.jpg"
           alt="Mentorship"
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
