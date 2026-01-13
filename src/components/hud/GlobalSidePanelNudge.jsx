@@ -25,10 +25,9 @@ export default function GlobalSidePanelNudge() {
       if (savedSide === 'left' || savedSide === 'right') {
         setDockSide(savedSide);
       }
-      // Also check initial open state from localStorage
-      const savedOpen = localStorage.getItem('sidePanelOpen');
-      // Default to closed (false) so the nudge shows on other pages
-      setIsOpen(savedOpen === 'true');
+      // Default to closed (false) so the nudge shows - don't auto-open from localStorage
+      // This prevents the panel from persisting open state across sessions unintentionally
+      setIsOpen(false);
     } catch {}
     
     document.addEventListener('sidePanelStateChange', handlePanelChange);
