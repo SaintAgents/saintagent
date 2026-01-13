@@ -412,24 +412,6 @@ export default function BadgeRewardsManager() {
     setDialogOpen(true);
   };
   
-  // Group by category
-  const badgesByCategory = filteredBadgesFinal.reduce((acc, badge) => {
-    const cat = badge.category || 'achievement';
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(badge);
-    return acc;
-  }, {});
-  
-  // Stats
-  const totalGGG = badges.reduce((sum, b) => sum + (b.ggg_reward || 0), 0);
-  const badgeCounts = {
-    total: badges.length,
-    soul_resonance: badges.filter(b => b.category === 'soul_resonance').length,
-    quest_type: badges.filter(b => b.category === 'quest_type').length,
-    verification: badges.filter(b => b.category === 'verification').length,
-    achievement: badges.filter(b => b.category === 'achievement').length
-  };
-  
   // Filter by badge/sigil type
   const badgeCategories = ['soul_resonance', 'quest_type', 'verification', 'achievement', 'streak', 'social', 'marketplace', 'mission', 'alignment'];
   const sigilCategories = ['agent', 'security', 'identity'];
@@ -449,6 +431,24 @@ export default function BadgeRewardsManager() {
     }
     return true;
   });
+  
+  // Group by category
+  const badgesByCategory = filteredBadgesFinal.reduce((acc, badge) => {
+    const cat = badge.category || 'achievement';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(badge);
+    return acc;
+  }, {});
+  
+  // Stats
+  const totalGGG = badges.reduce((sum, b) => sum + (b.ggg_reward || 0), 0);
+  const badgeCounts = {
+    total: badges.length,
+    soul_resonance: badges.filter(b => b.category === 'soul_resonance').length,
+    quest_type: badges.filter(b => b.category === 'quest_type').length,
+    verification: badges.filter(b => b.category === 'verification').length,
+    achievement: badges.filter(b => b.category === 'achievement').length
+  };
   
   return (
     <div className="space-y-6">
