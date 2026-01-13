@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle } from
 "@/components/ui/dialog";
-import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar } from "lucide-react";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 
@@ -153,6 +153,21 @@ export default function UserManagement() {
     await Promise.all((notifs || []).map((n) => base44.entities.Notification.delete(n.id)));
   };
 
+  const [resettingSA, setResettingSA] = useState(false);
+  const handleResetSANumbers = async () => {
+    if (!confirm('Reset and reassign ALL SA numbers in order by join date? This cannot be undone.')) return;
+    setResettingSA(true);
+    try {
+      const { data } = await base44.functions.invoke('resetSaNumbers', {});
+      alert(`Done! Assigned ${data.totalAssigned} SA numbers. Next new user will get SA#${String(data.nextNumber).padStart(6, '0')}`);
+      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+    } catch (e) {
+      alert('Error: ' + (e.message || 'Failed to reset SA numbers'));
+    } finally {
+      setResettingSA(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Search & Stats */}
@@ -174,6 +189,24 @@ export default function UserManagement() {
           <CardContent className="bg-purple-100 pt-6 p-6 text-center">
             <p className="text-purple-950 text-3xl font-bold">{profiles.length}</p>
             <p className="text-zinc-950 mt-1 text-sm">Total Users</p>
+          </CardContent>
+        </Card>
+        <Card className="col-span-4">
+          <CardContent className="bg-violet-50 pt-4 p-4 flex items-center justify-between">
+            <div>
+              <p className="font-medium text-slate-900">SA# Management</p>
+              <p className="text-xs text-slate-500">Reset and reassign all SA numbers in join order</p>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleResetSANumbers}
+              disabled={resettingSA}
+              className="gap-2"
+            >
+              <RefreshCw className={cn("w-4 h-4", resettingSA && "animate-spin")} />
+              {resettingSA ? 'Resetting...' : 'Reset All SA#'}
+            </Button>
           </CardContent>
         </Card>
       </div>
