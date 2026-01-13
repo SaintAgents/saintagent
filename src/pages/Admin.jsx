@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -17,6 +17,7 @@ import AdminBetaFeedback from '@/components/admin/AdminBetaFeedback';
 import BadgeRewardsManager from '@/components/admin/BadgeRewardsManager';
 import RPSettingsManager from '@/components/admin/RPSettingsManager';
 import AdminChallenges from '@/components/admin/AdminChallenges';
+import AffiliateSettings from '@/components/admin/AffiliateSettings';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -68,7 +69,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-6xl grid-cols-12">
+          <TabsList className="grid w-full max-w-7xl grid-cols-13">
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Users
@@ -92,6 +93,10 @@ export default function Admin() {
             <TabsTrigger value="referrals" className="gap-2">
               <Share2 className="w-4 h-4" />
               Referrals
+            </TabsTrigger>
+            <TabsTrigger value="affiliate" className="gap-2">
+              <Percent className="w-4 h-4" />
+              Affiliate
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="w-4 h-4" />
@@ -141,6 +146,10 @@ export default function Admin() {
 
           <TabsContent value="referrals">
             <ReferralDatasets />
+          </TabsContent>
+
+          <TabsContent value="affiliate">
+            <AffiliateSettings />
           </TabsContent>
 
           <TabsContent value="settings">
