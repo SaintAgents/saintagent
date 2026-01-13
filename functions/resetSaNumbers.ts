@@ -6,7 +6,10 @@ function padSix(n) {
 
 function isDemoUser(email) {
   if (!email) return false;
-  return email.toLowerCase().includes('demo');
+  const lower = email.toLowerCase();
+  return lower.includes('demo') || 
+         lower.includes('@example.com') || 
+         lower.includes('@saintagent.io');
 }
 
 Deno.serve(async (req) => {
