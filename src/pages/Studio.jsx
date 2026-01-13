@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import MetricTile from '@/components/hud/MetricTile';
 import TierManager from '@/components/creator/TierManager';
+import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 
 const CREATOR_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/740e4858f_universal_upscale_0_1b9b7ded-4214-49b8-8dd1-4839388dd21a_0.jpg";
 
@@ -64,10 +65,12 @@ export default function Studio() {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
           <div className="flex items-center gap-3 mb-2">
+            <LoopStartIndicator currentPage="Studio" className="text-white/80 hover:text-emerald-300" />
             <BarChart3 className="w-7 h-7 text-violet-400" />
             <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
               Creator Studio
             </h1>
+            <ForwardButton currentPage="Studio" className="text-white/80 hover:text-white" />
           </div>
           <p className="text-white/80">Your business command center</p>
         </div>
