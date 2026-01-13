@@ -39,7 +39,7 @@ function getRingConfig(rankCode = 'seeker') {
 
 // Default avatar - purple silhouette
 const DEFAULT_AVATAR = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7ede07682_12563.jpg';
-const SA_SHIELD_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png';
+
 
 export default function RankedAvatar({
   src,
@@ -105,7 +105,6 @@ export default function RankedAvatar({
   // Determine which sigils to show
   const showTrustSigil = trustScoreFinal > 0;
   const showAffiliateBadge = affiliatePaidFinal > 0;
-  const showSaSigil = !!saNumberFinal;
 
   // Presence indicator mapping
   const STATUS_STYLES = {
@@ -315,38 +314,7 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-      {/* SA Shield Sigil (adjusts position dynamically) */}
-      {showSaSigil && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div 
-                className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg"
-                style={{
-                  width: symbolPx * 2,
-                  height: symbolPx * 2,
-                  top: showAffiliateBadge ? (showTrustSigil ? '40%' : '20%') : (showTrustSigil ? '20%' : '0'),
-                  right: showAffiliateBadge ? (showTrustSigil ? '-10%' : '-5%') : (showTrustSigil ? '-5%' : '0'),
-                  transform: 'translate(30%, -30%)'
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img 
-                  src={SA_SHIELD_IMAGE}
-                  alt="SA Shield"
-                  className="object-contain"
-                  style={{ width: symbolPx * 2, height: symbolPx * 2, filter: 'none' }}
-                  data-no-filter="true"
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[200px] z-[9999]">
-              <p className="font-semibold text-sm">Saint Agent</p>
-              <p className="text-xs text-slate-500">SA#{saNumberFinal}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+
 
       {/* Photo gallery icon (bottom-center) - positioned to touch avatar circle */}
       {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
