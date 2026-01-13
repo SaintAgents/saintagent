@@ -234,7 +234,7 @@ export default function CommunityFeed() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent">
       {/* Hero Section */}
-      <div className="page-hero relative overflow-hidden">
+      <div className="page-hero relative overflow-hidden -mt-6">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg"
           alt="Community Feed"
