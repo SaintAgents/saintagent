@@ -385,6 +385,21 @@ export default function Profile() {
               <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
             )}
             
+            {/* Rank Badge - Top Left */}
+            <div className="absolute top-3 left-3 z-10">
+              <RankBadge code={profile?.rp_rank_code || 'seeker'} size={48} className="drop-shadow-lg" />
+            </div>
+            
+            {/* SA# Badge - Top Right */}
+            {profile?.sa_number && (
+              <div className="absolute top-3 right-3 z-10">
+                <div className="bg-gradient-to-br from-amber-400 to-amber-600 text-white px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 font-bold text-sm">
+                  <Shield className="w-4 h-4" />
+                  SA#{profile.sa_number}
+                </div>
+              </div>
+            )}
+            
             {/* Badges & Sigils Bar at Bottom of Hero */}
             <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 z-10">
               <BadgesBar badges={profileBadges} defaultIfEmpty={false} maxDisplay={8} size="sm" />
