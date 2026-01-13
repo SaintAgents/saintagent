@@ -136,6 +136,17 @@ export default function GamificationWidget({ profile, compact = false }) {
       {/* Daily Flame Directive */}
       <MotivationalCard className="mt-4" />
 
+      {/* Source Text Reference */}
+      <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-200 dark:border-violet-700">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-amber-500">📖</span>
+          <p className="text-xs font-medium text-violet-700 dark:text-violet-300">Foundation</p>
+        </div>
+        <p className="text-xs text-slate-600 dark:text-slate-400">
+          Based on the <span className="font-semibold text-violet-600 dark:text-violet-400">7th Seal Hidden Wisdom Unveiled</span> (Volumes 1-5)
+        </p>
+      </div>
+
       <Dialog open={hubOpen} onOpenChange={setHubOpen}>
         <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
