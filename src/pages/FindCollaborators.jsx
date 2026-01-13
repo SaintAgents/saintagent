@@ -36,19 +36,17 @@ export default function FindCollaborators() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
         <HeroGalleryTrigger startIndex={13} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
-        <div className="absolute bottom-4 left-12 right-4 flex items-end justify-between">
-          <div className="flex items-center gap-2">
-            <BackButton className="text-white hover:bg-white/20" />
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg flex items-center gap-2">
-                <Users className="w-6 h-6 text-violet-300" />
-                Find Collaborators
-                <Sparkles className="w-5 h-5 text-amber-400" />
-              </h1>
-              <p className="text-violet-100 mt-0.5 text-xs md:text-sm">
-                AI-powered matching based on skills, values, availability, and collaboration goals
-              </p>
-            </div>
+        <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+          <BackButton className="text-white hover:bg-white/20" />
+          <div className="text-center">
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg flex items-center justify-center gap-2">
+              <Users className="w-6 h-6 text-violet-300" />
+              Find Collaborators
+              <Sparkles className="w-5 h-5 text-amber-400" />
+            </h1>
+            <p className="text-violet-100 mt-0.5 text-xs md:text-sm">
+              AI-powered matching based on skills, values, availability, and collaboration goals
+            </p>
           </div>
           <ForwardButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
