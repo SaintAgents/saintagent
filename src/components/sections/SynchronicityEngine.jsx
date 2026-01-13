@@ -5,7 +5,7 @@ import { Sparkles, ArrowRight, Heart } from "lucide-react";
 import { createPageUrl } from '@/utils';
 import MatchCard from '@/components/hud/MatchCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
-import HelpHint from '@/components/hud/HelpHint';
+import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 
 export default function SynchronicityEngine({ profile, matchTab, setMatchTab, filteredMatches = [], matches = [], onMatchAction }) {
   return (
@@ -19,7 +19,7 @@ export default function SynchronicityEngine({ profile, matchTab, setMatchTab, fi
             </Button>
           </a>
         </div>
-        <HelpHint content="The Synchronicity Engine uses your profile data—skills, intentions, values, spiritual practices, and mystical identifiers—to find highest-resonance collaborators. Match Scoring combines Intent Alignment, Skill Complementarity, Proximity, Timing Readiness, Trust Score, and Spiritual Alignment (0-100). Match Types: People, Offers, Missions, Events, Teachers. Complete both 'Skills' and 'Mystical Identity' for optimal matching. AI-generated Conversation Starters help break the ice." />
+        <SynchronicityHelpHint />
       </div>
       <Tabs value={matchTab} onValueChange={setMatchTab} className="w-full">
         <TabsList className="w-full grid grid-cols-5 mb-4">
