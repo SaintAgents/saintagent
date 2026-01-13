@@ -191,7 +191,7 @@ export default function Matches() {
               </h1>
               <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <div className="p-4 rounded-2xl bg-black/[0.94] backdrop-blur-sm border border-white/20 mt-4">
+            <div className="p-4 rounded-2xl bg-black/[0.88] backdrop-blur-sm border border-white/20 mt-4">
               <p className="text-lg font-semibold text-emerald-300 drop-shadow-lg flex items-center justify-center gap-2">
                 Synchronicity Engine
                 <SynchronicityHelpHint className="text-emerald-200/80" />

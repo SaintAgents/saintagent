@@ -166,7 +166,7 @@ export default function Gamification() {
               </h1>
               <ForwardButton currentPage="Gamification" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <div className="p-4 rounded-2xl bg-black/[0.94] backdrop-blur-sm border border-white/20 mt-4">
+            <div className="p-4 rounded-2xl bg-black/[0.88] backdrop-blur-sm border border-white/20 mt-4">
               <p className="text-amber-100/[0.92] text-base tracking-wider drop-shadow-lg">
                 Challenges, Achievements & Leaderboards
               </p>
