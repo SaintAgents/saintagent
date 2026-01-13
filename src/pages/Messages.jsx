@@ -443,22 +443,26 @@ export default function Messages() {
                   }}>
                     <Trash2 className="w-4 h-4 mr-2" /> Clear for me
                   </DropdownMenuItem>
-                  {selectedConversation.isGroup && (
-                    <DropdownMenuItem 
-                      className="text-rose-600 focus:text-rose-700"
-                      onClick={async () => {
-                        const convEntity = conversations.find((c) => c.id === selectedConversation.id);
-                        if (convEntity) {
-                          const newParticipants = (convEntity.participant_ids || []).filter((pid) => pid !== user.email);
-                          await base44.entities.Conversation.update(convEntity.id, { participant_ids: newParticipants });
-                          queryClient.invalidateQueries({ queryKey: ['conversations'] });
-                          setSelectedConversation(null);
-                        }
-                      }}
-                    >
-                      <LogOut className="w-4 h-4 mr-2" /> Leave Group
-                    </DropdownMenuItem>
-                  )}
+                  {(() => {
+                    const convEntity = conversations.find((c) => c.id === selectedConversation.id);
+                    const isGroupConv = convEntity?.type === 'group' || selectedConversation.isGroup;
+                    if (!isGroupConv) return null;
+                    return (
+                      <DropdownMenuItem 
+                        className="text-rose-600 focus:text-rose-700"
+                        onClick={async () => {
+                          if (convEntity) {
+                            const newParticipants = (convEntity.participant_ids || []).filter((pid) => pid !== user.email);
+                            await base44.entities.Conversation.update(convEntity.id, { participant_ids: newParticipants });
+                            queryClient.invalidateQueries({ queryKey: ['conversations'] });
+                            setSelectedConversation(null);
+                          }
+                        }}
+                      >
+                        <LogOut className="w-4 h-4 mr-2" /> Leave Group
+                      </DropdownMenuItem>
+                    );
+                  })()}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
