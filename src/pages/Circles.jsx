@@ -112,15 +112,17 @@ export default function Circles() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <HeroGalleryTrigger startIndex={11} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center bg-white/[0.02] rounded-xl px-8 py-6">
+          <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               <Users className="w-10 h-10 text-cyan-300 drop-shadow-lg" />
               Groups & Communities
             </h1>
-            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
-              Find your tribe based on shared values and interests
-            </p>
+            <div className="mt-4 px-6 py-3 rounded-xl bg-white/[0.02]">
+              <p className="text-violet-200/90 text-lg tracking-wider drop-shadow-lg">
+                Find your tribe based on shared values and interests
+              </p>
+            </div>
           </div>
         </div>
         <div className="absolute top-4 left-4">
