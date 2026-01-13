@@ -663,24 +663,19 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   };
 
-  // Check if user just completed onboarding or first visit
+  // Check if user just completed onboarding - ONLY show tour once ever
   useEffect(() => {
-    const justCompletedOnboarding = localStorage.getItem('onboardingJustCompleted') === '1';
     const tourComplete = localStorage.getItem('commandDeckTourComplete') === 'true';
+    const justCompletedOnboarding = localStorage.getItem('onboardingJustCompleted') === '1';
     
+    // Only show tour if user JUST completed onboarding AND tour hasn't been shown before
     if (justCompletedOnboarding && !tourComplete) {
-      // Show loading screen then tour for new users
       setShowLoadingScreen(true);
       try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
-    } else if (!tourComplete && currentUser) {
-      // First visit but not from onboarding - still show tour
-      const firstVisit = !localStorage.getItem('commandDeckVisited');
-      if (firstVisit) {
-        setShowLoadingScreen(true);
-        try { localStorage.setItem('commandDeckVisited', 'true'); } catch {}
-      }
+      try { localStorage.setItem('commandDeckTourComplete', 'true'); } catch {}
     }
-  }, [currentUser]);
+    // Never show tour for returning users - tour is ONLY for fresh onboarding completion
+  }, []);
 
   const handleLoadComplete = () => {
     setShowLoadingScreen(false);
