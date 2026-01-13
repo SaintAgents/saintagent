@@ -1296,7 +1296,21 @@ export default function CommandDeck() {
               <QuickStartChecklist />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Challenges & Rewards" cardId="challenges" icon={Trophy} badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} badgeColor="emerald" defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" onPopout={() => setChallengesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('challenges')} onToggleHide={() => toggleCardVisibility('challenges')} onTossToSidePanel={handleTossToSidePanel}>
+            <CollapsibleCard 
+              title="Challenges & Rewards" 
+              cardId="challenges" 
+              icon={Trophy} 
+              badge={challenges.filter((c) => c.current_count >= c.target_count && c.status === 'active').length || undefined} 
+              badgeColor="emerald" 
+              defaultOpen={true} 
+              backgroundImage="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=800&q=80" 
+              onPopout={() => setChallengesPopupOpen(true)} 
+              forceOpen={cardsForceOpen} 
+              isHidden={hiddenCards.has('challenges')} 
+              onToggleHide={() => toggleCardVisibility('challenges')} 
+              onTossToSidePanel={handleTossToSidePanel}
+              badgeImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
+            >
               <GamificationWidget profile={profile} />
             </CollapsibleCard>
 
@@ -1316,8 +1330,31 @@ export default function CommandDeck() {
               <CirclesRegions />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel}>
-              <CommunityFeedCard maxHeight="400px" />
+            <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel}>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-white font-bold">1</div>
+                    <div>
+                      <p className="font-semibold text-slate-900">Top Earner</p>
+                      <p className="text-xs text-slate-500">This week's leader</p>
+                    </div>
+                  </div>
+                  <span className="text-amber-600 font-bold">1,250 GGG</span>
+                </div>
+                <Button variant="outline" className="w-full rounded-xl" onClick={() => window.location.href = createPageUrl('Leaderboards')}>
+                  View Full Leaderboard
+                </Button>
+              </div>
+            </CollapsibleCard>
+
+            <CollapsibleCard title="Letterboard" cardId="letterboard" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('letterboard')} onToggleHide={() => toggleCardVisibility('letterboard')} onTossToSidePanel={handleTossToSidePanel}>
+              <div className="p-4 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-200">
+                <p className="text-lg font-medium text-violet-900 italic text-center">
+                  "Your frequency is your invitation to the universe."
+                </p>
+                <p className="text-xs text-violet-600 text-center mt-2">— Daily Affirmation</p>
+              </div>
             </CollapsibleCard>
 
             <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
@@ -1500,9 +1537,9 @@ export default function CommandDeck() {
                                   <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
                                     <div className="flex items-center gap-3 mb-3">
                                       <Flame className="w-5 h-5 text-amber-500" />
-                                      <span className="text-yellow-400 font-medium">Boost Your Reach</span>
+                                      <span className="text-emerald-700 dark:text-emerald-400 font-medium">Boost Your Reach</span>
                                     </div>
-                                    <p className="text-sm text-slate-600 mb-3">Spend GGG to amplify your profile and attract more matches.</p>
+                                    <p className="text-sm text-slate-700 dark:text-slate-300 mb-3">Spend GGG to amplify your profile and attract more matches.</p>
                                     <QuickBoostButton className="w-full" />
                                   </div>
                                 </div>
