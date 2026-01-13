@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Globe, Twitter, Instagram, Linkedin, Youtube, Send, MessageCircle, Save, X, Link2, Plus } from 'lucide-react';
+import { Globe, Twitter, Instagram, Linkedin, Youtube, Send, MessageCircle, Save, X, Link2, Plus, Facebook } from 'lucide-react';
 
 const SOCIAL_PLATFORMS = [
   { key: 'website', label: 'Website', icon: Globe, placeholder: 'https://yoursite.com' },
   { key: 'twitter', label: 'X / Twitter', icon: Twitter, placeholder: '@username or full URL' },
   { key: 'instagram', label: 'Instagram', icon: Instagram, placeholder: '@username or full URL' },
+  { key: 'facebook', label: 'Facebook', icon: Facebook, placeholder: 'Profile or Page URL' },
   { key: 'linkedin', label: 'LinkedIn', icon: Linkedin, placeholder: 'Profile URL' },
   { key: 'youtube', label: 'YouTube', icon: Youtube, placeholder: 'Channel URL' },
   { key: 'tiktok', label: 'TikTok', icon: () => <span className="font-bold text-xs">TT</span>, placeholder: '@username' },
