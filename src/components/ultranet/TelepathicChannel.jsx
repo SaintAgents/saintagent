@@ -1,326 +1,236 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 import { 
-  Radio, Send, Sparkles, Eye, Clock, Check, CheckCheck, 
-  Zap, Heart, Star, Flame, Lock, Unlock
+  Brain, Send, Sparkles, Lock, Unlock, Eye, 
+  Clock, CheckCircle2, Circle, Wifi, Heart
 } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 
-// Telepathic message types with different frequencies
-const MESSAGE_FREQUENCIES = {
-  standard: { 
-    label: 'Standard', 
-    icon: Radio, 
-    color: 'slate',
-    description: 'Normal consciousness transmission'
-  },
-  heart: { 
-    label: 'Heart Resonance', 
-    icon: Heart, 
-    color: 'rose',
-    description: 'Transmitted from the heart center'
-  },
-  vision: { 
-    label: 'Vision Download', 
-    icon: Eye, 
-    color: 'violet',
-    description: 'Visual/intuitive transmission'
-  },
-  flame: { 
-    label: 'Flame Transmission', 
-    icon: Flame, 
-    color: 'amber',
-    description: 'High frequency sacred message'
-  },
-  star: { 
-    label: 'Star Seed', 
-    icon: Star, 
-    color: 'cyan',
-    description: 'Cosmic origin transmission'
-  }
-};
+// Telepathic messages are special async messages for verified connections
+// They appear with a mystical UI and emphasize soul-level communication
 
-// Single telepathic message component
-function TelepathicMessage({ message, isOwn, senderProfile }) {
-  const frequency = MESSAGE_FREQUENCIES[message.frequency || 'standard'];
-  const FreqIcon = frequency.icon;
-  
-  const colorStyles = {
-    slate: 'border-slate-500/30 bg-slate-500/10',
-    rose: 'border-rose-500/30 bg-rose-500/10',
-    violet: 'border-violet-500/30 bg-violet-500/10',
-    amber: 'border-amber-500/30 bg-amber-500/10',
-    cyan: 'border-cyan-500/30 bg-cyan-500/10'
-  };
-  
-  return (
-    <div className={cn(
-      "flex gap-3 mb-4",
-      isOwn && "flex-row-reverse"
-    )}>
-      <Avatar className="w-8 h-8 flex-shrink-0">
-        <AvatarImage src={senderProfile?.avatar_url} />
-        <AvatarFallback className="bg-violet-500/20 text-violet-400 text-xs">
-          {senderProfile?.display_name?.[0] || '?'}
-        </AvatarFallback>
-      </Avatar>
-      
-      <div className={cn(
-        "max-w-[75%] rounded-2xl p-3 border",
-        colorStyles[frequency.color],
-        isOwn ? "rounded-tr-sm" : "rounded-tl-sm"
-      )}>
-        <div className="flex items-center gap-2 mb-1">
-          <FreqIcon className={cn(
-            "w-3 h-3",
-            frequency.color === 'slate' && "text-slate-400",
-            frequency.color === 'rose' && "text-rose-400",
-            frequency.color === 'violet' && "text-violet-400",
-            frequency.color === 'amber' && "text-amber-400",
-            frequency.color === 'cyan' && "text-cyan-400"
-          )} />
-          <span className="text-[10px] text-slate-500">{frequency.label}</span>
-        </div>
-        
-        <p className="text-sm text-slate-200 whitespace-pre-wrap">{message.content}</p>
-        
-        <div className="flex items-center justify-between mt-2">
-          <span className="text-[10px] text-slate-500">
-            {formatDistanceToNow(new Date(message.created_date), { addSuffix: true })}
-          </span>
-          {isOwn && (
-            <div className="flex items-center gap-1">
-              {message.is_read ? (
-                <CheckCheck className="w-3 h-3 text-violet-400" />
-              ) : (
-                <Check className="w-3 h-3 text-slate-500" />
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Main Telepathic Channel component
-export default function TelepathicChannel({ recipientId, recipientProfile, currentUser, currentProfile }) {
-  const [content, setContent] = useState('');
-  const [frequency, setFrequency] = useState('standard');
-  const [showFrequencyPicker, setShowFrequencyPicker] = useState(false);
+export default function TelepathicChannel({ currentUserId, recipientId, recipientProfile }) {
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
   const queryClient = useQueryClient();
-  
-  // Generate channel ID (sorted to be consistent)
-  const channelId = [currentUser?.email, recipientId].sort().join('_telepathic_');
-  
-  // Fetch telepathic messages
-  const { data: messages = [], isLoading } = useQuery({
-    queryKey: ['telepathicMessages', channelId],
+
+  // Check if both users have high resonance (verified connection)
+  const { data: currentProfile } = useQuery({
+    queryKey: ['currentProfile', currentUserId],
     queryFn: async () => {
-      const all = await base44.entities.Message.filter({ 
-        conversation_id: channelId 
-      }, '-created_date', 100);
-      return all.reverse();
+      const profiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
+      return profiles?.[0];
     },
-    enabled: !!currentUser && !!recipientId,
-    refetchInterval: 10000 // Poll every 10 seconds
+    enabled: !!currentUserId
   });
+
+  // Get telepathic messages (messages with telepathic flag)
+  const conversationId = [currentUserId, recipientId].sort().join('_telepathic_');
   
-  // Send telepathic message
+  const { data: messages = [] } = useQuery({
+    queryKey: ['telepathicMessages', conversationId],
+    queryFn: async () => {
+      const allMessages = await base44.entities.Message.filter({ 
+        conversation_id: conversationId 
+      }, '-created_date', 50);
+      return allMessages;
+    },
+    enabled: !!currentUserId && !!recipientId
+  });
+
+  // Determine if channel is unlocked (both users have coherence 5+)
+  const getCoherenceLevel = (profile) => {
+    const rankScores = {
+      seeker: 3, initiate: 5, adept: 6, practitioner: 7,
+      master: 8, sage: 9, oracle: 9, ascended: 10, guardian: 10
+    };
+    return rankScores[profile?.rp_rank_code] || 3;
+  };
+
+  const myCoherence = getCoherenceLevel(currentProfile);
+  const theirCoherence = getCoherenceLevel(recipientProfile);
+  const isUnlocked = myCoherence >= 5 && theirCoherence >= 5;
+
   const sendMutation = useMutation({
-    mutationFn: async () => {
-      await base44.entities.Message.create({
-        conversation_id: channelId,
-        from_user_id: currentUser.email,
+    mutationFn: async (content) => {
+      return base44.entities.Message.create({
+        conversation_id: conversationId,
+        from_user_id: currentUserId,
         to_user_id: recipientId,
-        from_name: currentProfile?.display_name || currentUser.full_name,
+        from_name: currentProfile?.display_name,
         from_avatar: currentProfile?.avatar_url,
         to_name: recipientProfile?.display_name,
         content: content,
-        message_type: 'telepathic',
-        icebreaker_prompt: frequency // Store frequency in icebreaker_prompt field
+        message_type: 'icebreaker', // Using icebreaker type for telepathic
+        icebreaker_prompt: 'Telepathic Transmission'
       });
     },
     onSuccess: () => {
-      setContent('');
-      setFrequency('standard');
-      queryClient.invalidateQueries({ queryKey: ['telepathicMessages', channelId] });
+      setMessage('');
+      queryClient.invalidateQueries(['telepathicMessages', conversationId]);
     }
   });
-  
-  const handleSend = () => {
-    if (!content.trim()) return;
-    sendMutation.mutate();
+
+  const handleSend = async () => {
+    if (!message.trim() || !isUnlocked) return;
+    setSending(true);
+    await sendMutation.mutateAsync(message);
+    setSending(false);
   };
-  
-  const currentFreq = MESSAGE_FREQUENCIES[frequency];
-  const FreqIcon = currentFreq.icon;
-  
+
+  if (!isUnlocked) {
+    return (
+      <Card className="bg-gradient-to-br from-violet-950/50 to-purple-950/30 border-violet-500/20">
+        <CardContent className="py-8 text-center">
+          <Lock className="w-12 h-12 text-violet-400/50 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-violet-200 mb-2">
+            Telepathic Channel Locked
+          </h3>
+          <p className="text-sm text-slate-400 mb-4 max-w-sm mx-auto">
+            This sacred channel opens when both souls reach Coherence Level 5 (Initiate rank or higher).
+          </p>
+          <div className="flex items-center justify-center gap-6 text-xs">
+            <div className="text-center">
+              <div className="text-slate-500">Your Coherence</div>
+              <div className={cn(
+                "font-bold text-lg",
+                myCoherence >= 5 ? "text-emerald-400" : "text-amber-400"
+              )}>
+                {myCoherence}/10
+              </div>
+            </div>
+            <Wifi className="w-5 h-5 text-violet-400/30" />
+            <div className="text-center">
+              <div className="text-slate-500">Their Coherence</div>
+              <div className={cn(
+                "font-bold text-lg",
+                theirCoherence >= 5 ? "text-emerald-400" : "text-amber-400"
+              )}>
+                {theirCoherence}/10
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)] h-full flex flex-col">
+    <Card className="bg-gradient-to-br from-violet-950/50 to-purple-950/30 border-violet-500/30">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-              <Radio className="w-5 h-5 text-violet-400 animate-pulse" />
+              <Brain className="w-5 h-5 text-violet-400" />
             </div>
             <div>
-              <CardTitle className="text-white text-base flex items-center gap-2">
+              <CardTitle className="text-violet-200 text-lg flex items-center gap-2">
                 Telepathic Channel
-                <Badge variant="outline" className="text-[10px] border-violet-500/30 text-violet-400">
-                  ULTRANET
-                </Badge>
+                <Unlock className="w-4 h-4 text-emerald-400" />
               </CardTitle>
-              <CardDescription className="text-xs">
-                Asynchronous consciousness transmission with {recipientProfile?.display_name}
-              </CardDescription>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="flex-1 flex flex-col min-h-0">
-        {/* Messages Area */}
-        <ScrollArea className="flex-1 pr-3 mb-4">
-          {isLoading ? (
-            <div className="flex items-center justify-center h-32">
-              <div className="animate-spin w-6 h-6 border-2 border-violet-500 border-t-transparent rounded-full" />
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="text-center py-12">
-              <Sparkles className="w-10 h-10 text-violet-400/50 mx-auto mb-3" />
-              <p className="text-slate-400 text-sm">No transmissions yet</p>
-              <p className="text-slate-500 text-xs mt-1">
-                Send your first telepathic message
+              <p className="text-xs text-violet-400/70">
+                Soul-to-soul communication beyond words
               </p>
             </div>
+          </div>
+          <Badge className="bg-violet-500/20 text-violet-300 border-violet-500/40">
+            <Sparkles className="w-3 h-3 mr-1" />
+            Active
+          </Badge>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        {/* Messages */}
+        <ScrollArea className="h-64 rounded-lg bg-black/30 p-3">
+          {messages.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-center">
+              <div>
+                <Eye className="w-8 h-8 text-violet-400/30 mx-auto mb-2" />
+                <p className="text-sm text-violet-300/50">
+                  The channel awaits your first transmission...
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Speak from the heart. Words here carry frequency.
+                </p>
+              </div>
+            </div>
           ) : (
-            messages.map(msg => (
-              <TelepathicMessage
-                key={msg.id}
-                message={{
-                  ...msg,
-                  frequency: msg.icebreaker_prompt || 'standard'
-                }}
-                isOwn={msg.from_user_id === currentUser?.email}
-                senderProfile={msg.from_user_id === currentUser?.email ? currentProfile : recipientProfile}
-              />
-            ))
-          )}
-        </ScrollArea>
-        
-        {/* Frequency Picker */}
-        {showFrequencyPicker && (
-          <div className="mb-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700">
-            <p className="text-xs text-slate-400 mb-2">Select Transmission Frequency</p>
-            <div className="grid grid-cols-5 gap-2">
-              {Object.entries(MESSAGE_FREQUENCIES).map(([key, freq]) => {
-                const Icon = freq.icon;
+            <div className="space-y-3">
+              {messages.map((msg) => {
+                const isMe = msg.from_user_id === currentUserId;
                 return (
-                  <button
-                    key={key}
-                    onClick={() => {
-                      setFrequency(key);
-                      setShowFrequencyPicker(false);
-                    }}
+                  <div 
+                    key={msg.id}
                     className={cn(
-                      "p-2 rounded-lg flex flex-col items-center gap-1 transition-all",
-                      "hover:bg-slate-700/50 border",
-                      frequency === key 
-                        ? "border-violet-500 bg-violet-500/10" 
-                        : "border-transparent"
+                      "flex",
+                      isMe ? "justify-end" : "justify-start"
                     )}
                   >
-                    <Icon className={cn(
-                      "w-4 h-4",
-                      freq.color === 'slate' && "text-slate-400",
-                      freq.color === 'rose' && "text-rose-400",
-                      freq.color === 'violet' && "text-violet-400",
-                      freq.color === 'amber' && "text-amber-400",
-                      freq.color === 'cyan' && "text-cyan-400"
-                    )} />
-                    <span className="text-[9px] text-slate-400">{freq.label}</span>
-                  </button>
+                    <div className={cn(
+                      "max-w-[80%] rounded-2xl px-4 py-3",
+                      isMe 
+                        ? "bg-violet-600/30 border border-violet-500/30" 
+                        : "bg-purple-900/30 border border-purple-500/20"
+                    )}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Sparkles className="w-3 h-3 text-violet-400" />
+                        <span className="text-xs text-violet-400/70">
+                          {isMe ? 'You transmitted' : `${msg.from_name} transmitted`}
+                        </span>
+                      </div>
+                      <p className="text-violet-100 text-sm whitespace-pre-wrap">
+                        {msg.content}
+                      </p>
+                      <div className="flex items-center justify-end gap-2 mt-2">
+                        <span className="text-[10px] text-slate-500">
+                          {format(new Date(msg.created_date), 'MMM d, h:mm a')}
+                        </span>
+                        {msg.is_read ? (
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        ) : (
+                          <Circle className="w-3 h-3 text-slate-500" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
-          </div>
-        )}
-        
-        {/* Input Area */}
+          )}
+        </ScrollArea>
+
+        {/* Input */}
         <div className="space-y-2">
           <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Transmit your consciousness..."
-            className="bg-slate-800/50 border-slate-700 text-white resize-none min-h-[80px]"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Transmit your thoughts through the Ultranet..."
+            className="bg-black/30 border-violet-500/30 text-violet-100 placeholder:text-violet-400/40 min-h-[80px] resize-none"
           />
-          
           <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowFrequencyPicker(!showFrequencyPicker)}
-              className="gap-2 text-slate-400 hover:text-white"
-            >
-              <FreqIcon className={cn(
-                "w-4 h-4",
-                currentFreq.color === 'slate' && "text-slate-400",
-                currentFreq.color === 'rose' && "text-rose-400",
-                currentFreq.color === 'violet' && "text-violet-400",
-                currentFreq.color === 'amber' && "text-amber-400",
-                currentFreq.color === 'cyan' && "text-cyan-400"
-              )} />
-              <span className="text-xs">{currentFreq.label}</span>
-            </Button>
-            
+            <p className="text-xs text-violet-400/50 flex items-center gap-1">
+              <Heart className="w-3 h-3" />
+              Messages here transcend ordinary communication
+            </p>
             <Button
               onClick={handleSend}
-              disabled={!content.trim() || sendMutation.isPending}
-              className="bg-violet-600 hover:bg-violet-700 gap-2"
+              disabled={!message.trim() || sending}
+              className="bg-violet-600 hover:bg-violet-700 text-white gap-2"
             >
-              {sendMutation.isPending ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
+              <Send className="w-4 h-4" />
               Transmit
             </Button>
           </div>
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-// Compact trigger button for opening telepathic channel
-export function TelepathicChannelTrigger({ recipientProfile, onClick, className }) {
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={onClick}
-      className={cn(
-        "gap-2 text-violet-400 hover:text-violet-300 hover:bg-violet-500/10",
-        className
-      )}
-    >
-      <Radio className="w-4 h-4 animate-pulse" />
-      <span className="text-xs">Telepathic</span>
-    </Button>
   );
 }

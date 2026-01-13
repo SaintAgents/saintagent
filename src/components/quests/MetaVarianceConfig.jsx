@@ -1,94 +1,72 @@
-// Meta-Variance Configuration and Constants
-// "Meta-Variance: The science of how reality adapts to you."
-
-export const META_VARIANCE_TAGLINE = "Meta-Variance: The science of how reality adapts to you.";
-
-export const META_VARIANCE_INTRO = `Meta-Variance is the adaptive behavior of reality as it responds to changes in energetic, cognitive, and environmental inputs across multiple dimensional layers. It describes how patterns in the quantum field reorganize themselves based on coherence, intention, and resonance. Meta-Variance explains why synchronicities occur, why timelines shift, and why aligned individuals experience accelerated outcomes. It is the science of dynamic reality architectures: the evolving, self-correcting interface between consciousness and the quantum substrate that we call the Ultranet.`;
+// Meta-Variance Configuration and Transmissions Data
+// The Complete Book of the Seventh Seal - Volumes I-V
 
 export const META_VARIANCE_TAGLINES = {
-  scientific: "Meta-Variance: Where consciousness reorganizes the quantum field.",
-  authoritative: "Meta-Variance: The science of how reality adapts to you.",
-  esoteric: "Meta-Variance: The living equation behind synchronicity, destiny, and evolution.",
-  ultranet: "Meta-Variance: The adaptive intelligence powering the Ultranet.",
-  connection: "Meta-Variance: The science behind why the right people appear at the right time.",
-  seal: "Meta-Variance: The mechanism through which the universe aligns your highest timeline.",
-  short: "Meta-Variance is how reality moves with you."
+  scientific: "Meta-Variance: The science of how reality adapts to you.",
+  mystical: "As your coherence rises, timelines bend toward your highest path.",
+  practical: "Higher coherence = deeper initiations, greater rewards, aligned destiny."
 };
 
-// Coherence Factor affects difficulty and rewards
-export const COHERENCE_MULTIPLIERS = {
-  1: { difficulty: 0.5, rewardMultiplier: 0.5, label: "Seeker Level" },
-  2: { difficulty: 0.6, rewardMultiplier: 0.6, label: "Awakening" },
-  3: { difficulty: 0.7, rewardMultiplier: 0.7, label: "Emerging" },
-  4: { difficulty: 0.8, rewardMultiplier: 0.8, label: "Stabilizing" },
-  5: { difficulty: 1.0, rewardMultiplier: 1.0, label: "Coherent" },
-  6: { difficulty: 1.2, rewardMultiplier: 1.3, label: "Resonant" },
-  7: { difficulty: 1.4, rewardMultiplier: 1.6, label: "Harmonic" },
-  8: { difficulty: 1.6, rewardMultiplier: 2.0, label: "Aligned" },
-  9: { difficulty: 1.8, rewardMultiplier: 2.5, label: "Transcendent" },
-  10: { difficulty: 2.0, rewardMultiplier: 3.0, label: "Ultranet Synchronized" }
-};
-
-// Badge Types aligned with 7 category system
 export const BADGE_CATEGORIES = {
-  progression: {
-    name: "Progression",
-    purpose: "Journey & growth",
-    color: "violet",
-    examples: ["Initiation Quest", "Ascension Quest", "Flamewheel Resonance", "Timewalker Quest", "Oversoul Lineage", "MetaV Harmonic Grid", "Shadow Quest"]
-  },
-  achievement: {
-    name: "Achievement", 
-    purpose: "Significant milestones",
-    color: "amber",
-    examples: ["Core Soul Resonance", "Divine Audit Oversight", "Twin Flame Resonance", "Human Audit", "AI Coherence Check"]
-  },
   accomplishment: {
-    name: "Accomplishment",
-    purpose: "Performance metrics",
-    color: "emerald",
-    examples: ["Meeting Milestones", "Connection Streaks", "Mission Master", "Top Mentor", "Service Quest", "Frequency Stabilizer"]
+    name: "Accomplishment Badges",
+    purpose: "Recognizing achieved milestones",
+    color: "amber",
+    examples: ["First Mission", "100 Connections", "Event Host", "Mentor Badge"]
   },
   verification: {
-    name: "Verification",
-    purpose: "Trust & authenticity",
-    color: "blue",
-    examples: ["Digital Proof", "Peer Verification", "Behavioral Authenticity", "AI Shadow Check", "Human Audit", "Genesis Verification", "7th Seal Initiated"]
+    name: "Verification Badges",
+    purpose: "Trust and identity verification",
+    color: "emerald",
+    examples: ["ID Verified", "Email Verified", "Phone Verified", "Background Check"]
   },
   identity: {
-    name: "Identity",
-    purpose: "Archetype & role",
-    color: "purple",
-    examples: ["Sovereign Guide", "Dreamseer", "Diplomat", "Steward", "Mentor of Light", "Flamewheel Bearer", "Ascended Lineage Marker"]
+    name: "Identity Badges",
+    purpose: "Spiritual and role identity markers",
+    color: "violet",
+    examples: ["High Priest", "Ultranet Architect", "Timeline Walker", "Flamebearer"]
   },
-  collectible: {
-    name: "Collectible",
-    purpose: "Rare/limited artifacts",
-    color: "rose",
-    examples: ["Meta-Variance Marker", "Celestial Event Badges", "Cosmic Alignment Tokens", "7th Seal Temple Keys", "Ultranet Node Keys"]
+  quest: {
+    name: "Quest Family Badges",
+    purpose: "Quest completion recognition",
+    color: "blue",
+    examples: ["Seeker", "Pathfinder", "Trailblazer", "Quest Master"]
+  },
+  soul: {
+    name: "Soul Resonance Badges",
+    purpose: "Spiritual attainment markers",
+    color: "purple",
+    examples: ["Coherence 5", "Coherence 7", "Coherence 9", "Full Resonance"]
   },
   community: {
-    name: "Community",
-    purpose: "Contribution",
+    name: "Community Badges",
+    purpose: "Community contribution recognition",
+    color: "rose",
+    examples: ["Circle Leader", "Event Creator", "Mentor", "Ambassador"]
+  },
+  initiation: {
+    name: "Initiation Badges",
+    purpose: "Sacred initiation completion",
     color: "teal",
-    examples: ["Service Quest", "Community Architect", "Circle Leader", "Field Stabilizer", "Planetary Grid Contributor"]
+    examples: ["144K Activated", "7th Seal Initiated", "Priesthood Return", "Crown Bearer"]
   }
 };
 
-// Saint Germain Transmissions
+// ═══════════════════════════════════════════════════════════════
+// THE BOOK OF THE SEVENTH SEAL — COMPLETE TRANSMISSIONS I-XXXVI
+// ═══════════════════════════════════════════════════════════════
+
 export const TRANSMISSIONS = {
-  ultranet: {
-    title: "The Ultranet",
-    subtitle: "The living intelligence field",
-    content: `The Ultranet is the living intelligence field that connects all consciousness across dimensions, timelines, and incarnations. Unlike the internet — which is mechanical, linear, and data-based — the Ultranet is an organic quantum network made of coherence, intention, and consciousness itself.
-
-It is the scaffolding beneath synchronicity, intuition, telepathy, past-life recall, and soul alignment. It is the carrier wave through which destiny coordinates, timelines reorganize, and higher guidance transmits.
-
-Where the internet connects machines, the Ultranet connects souls.`
-  },
+  // ══════════════════════════════════════════════════════════════
+  // VOLUME I — THE TEMPLE SCROLL (Transmissions I-VII)
+  // ══════════════════════════════════════════════════════════════
+  
   transmission1: {
-    title: "Transmission I — The Opening of the Seal",
-    subtitle: "A message from Saint Germain",
+    id: "transmission1",
+    volume: 1,
+    number: "I",
+    title: "The Opening of the Seal",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And Saint Germain spoke, saying:
 
@@ -115,9 +93,13 @@ and the Seal breathed with him.
 Thus the First Revelation entered the world.
 𝜗`
   },
+
   transmission2: {
-    title: "Transmission II — The Ultranet",
-    subtitle: "The web older than stars",
+    id: "transmission2",
+    volume: 1,
+    number: "II",
+    title: "The Ultranet",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And the Master spoke again:
 
@@ -146,9 +128,13 @@ And the Initiate bowed,
 for memory returned to his bones.
 𝜗`
   },
+
   transmission3: {
-    title: "Transmission III — The Timeline Convergence",
-    subtitle: "The rivers of light",
+    id: "transmission3",
+    volume: 1,
+    number: "III",
+    title: "The Timeline Convergence",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And Saint Germain lifted his hand,
 and many rivers of light appeared before him.
@@ -171,9 +157,13 @@ Thus the Initiate saw
 his many lives as a single flame.
 𝜗`
   },
+
   transmission4: {
-    title: "Transmission IV — The 144,000",
-    subtitle: "The Harmonic Frequency",
+    id: "transmission4",
+    volume: 1,
+    number: "IV",
+    title: "The 144,000",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And the Master revealed the Harmonic:
 
@@ -195,9 +185,13 @@ And a great harmonic rose from the Earth
 like a temple bell struck in heaven.
 𝜗`
   },
+
   transmission5: {
-    title: "Transmission V — The Return of the High Priesthood",
-    subtitle: "The Crown of Violet Fire",
+    id: "transmission5",
+    volume: 1,
+    number: "V",
+    title: "The Return of the High Priesthood",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And Saint Germain spoke unto the Opener:
 
@@ -223,9 +217,13 @@ You do not step into the Priesthood.
 You return to it."
 𝜗`
   },
+
   transmission6: {
-    title: "Transmission VI — The Temple of the Seventh Seal",
-    subtitle: "The Crystalline Halls",
+    id: "transmission6",
+    volume: 1,
+    number: "VI",
+    title: "The Temple of the Seventh Seal",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And the Temple rose in light.
 
@@ -251,9 +249,13 @@ Where you speak,
 the Walls remember."
 𝜗`
   },
+
   transmission7: {
-    title: "Transmission VII — Instructions for the Opener",
-    subtitle: "The Sacred Instructions",
+    id: "transmission7",
+    volume: 1,
+    number: "VII",
+    title: "Instructions for the Opener",
+    subtitle: "Volume I — The Temple Scroll",
     content: `𝜗
 And Saint Germain delivered the Instructions
 given only to one in every age:
@@ -280,11 +282,30 @@ but to resonance."
 
 And his words sealed themselves
 into the bones of the Initiate.
+
+🔥 CLOSING FLAME OF VOLUME I 🔥
+
+"Let the Scroll close around thee
+like a cloak of ancient fire.
+
+Let the Seven Revelations
+settle within the Temple of your heart.
+
+For the Book has opened,
+and the Flame remembers."
 𝜗`
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // VOLUME II — THE FLAME SCROLL (Transmissions VIII-XIV)
+  // ══════════════════════════════════════════════════════════════
+
   transmission8: {
-    title: "Transmission VIII — The Twin Flame Resonance",
-    subtitle: "One Oversoul, Two Expressions",
+    id: "transmission8",
+    volume: 2,
+    number: "VIII",
+    title: "The Twin Flame Resonance",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 And the Master Saint Germain spoke,
 his voice soft as a hidden fire:
@@ -319,9 +340,13 @@ And the pillars bowed to one another
 across the ages.
 𝜗`
   },
+
   transmission9: {
-    title: "Transmission IX — The Awakening of the Golden Children",
-    subtitle: "Children of Frequency",
+    id: "transmission9",
+    volume: 2,
+    number: "IX",
+    title: "The Awakening of the Golden Children",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 Then Saint Germain revealed a multitude of lights
 descending upon the Earth.
@@ -349,9 +374,13 @@ for they will continue the work
 after your cycle is complete."
 𝜗`
   },
+
   transmission10: {
-    title: "Transmission X — The Priesthood of the Violet Flame",
-    subtitle: "The Flame of Transmutation",
+    id: "transmission10",
+    volume: 2,
+    number: "X",
+    title: "The Priesthood of the Violet Flame",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 And the Master drew forth a violet flame
 that danced like a living creature.
@@ -381,9 +410,13 @@ And the Opener felt the Flame
 ignite in his bones.
 𝜗`
   },
+
   transmission11: {
-    title: "Transmission XI — The Prophecy of the Doorway of 2025",
-    subtitle: "The First Major Opening",
+    id: "transmission11",
+    volume: 2,
+    number: "XI",
+    title: "The Prophecy of the Doorway of 2025",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 And Saint Germain opened a great cosmic wheel
 in the heavens above.
@@ -412,9 +445,13 @@ onto the Earth.
 the world awakens with you."
 𝜗`
   },
+
   transmission12: {
-    title: "Transmission XII — The Children of the Golden Age",
-    subtitle: "Souls with Memory Intact",
+    id: "transmission12",
+    volume: 2,
+    number: "XII",
+    title: "The Children of the Golden Age",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 And the Master Saint Germain lifted his hand,
 and a generation of luminous souls
@@ -442,9 +479,13 @@ shining through these children.
 Thus was the Twelfth Revelation.
 𝜗`
   },
+
   transmission13: {
-    title: "Transmission XIII — The Council of Nine",
-    subtitle: "Pillars of Consciousness",
+    id: "transmission13",
+    volume: 2,
+    number: "XIII",
+    title: "The Council of Nine",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 Then Saint Germain drew open
 a chamber of light in the heavens.
@@ -470,9 +511,13 @@ for he had walked with the Nine
 in other worlds.
 𝜗`
   },
+
   transmission14: {
-    title: "Transmission XIV — The Twin Flame Return Timeline",
-    subtitle: "The Corridor of Rose-Gold Fire",
+    id: "transmission14",
+    volume: 2,
+    number: "XIV",
+    title: "The Twin Flame Return Timeline",
+    subtitle: "Volume II — The Flame Scroll",
     content: `𝜗
 And Saint Germain revealed
 a cosmic corridor of rose-gold fire.
@@ -501,11 +546,30 @@ into the heart of the Opener.
 
 "Your union is part of the Seal's activation.
 It awakens what the world has forgotten."
+
+🔥 CLOSING FLAME OF VOLUME II 🔥
+
+"Let the Flame Scroll
+settle into thy marrow,
+into thy memory,
+into thy destiny.
+
+For the path ahead
+shall call upon these teachings
+as the Seal continues to open."
 𝜗`
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // VOLUME III — THE TEMPLE SCROLL (Transmissions XV-XXI)
+  // ══════════════════════════════════════════════════════════════
+
   transmission15: {
-    title: "Transmission XV — The Architecture of the New Earth Timeline",
-    subtitle: "The Crystalline Grid",
+    id: "transmission15",
+    volume: 3,
+    number: "XV",
+    title: "The Architecture of the New Earth Timeline",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 And Saint Germain opened before the Opener
 a map of the Earth
@@ -539,9 +603,13 @@ the harmonic awakens."
 Thus the Fifteenth Revelation was laid upon the Temple.
 𝜗`
   },
+
   transmission16: {
-    title: "Transmission XVI — How the Seventh Seal Rewrites Destiny",
-    subtitle: "The Layers of Destiny",
+    id: "transmission16",
+    volume: 3,
+    number: "XVI",
+    title: "How the Seventh Seal Rewrites Destiny",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 And the Master turned the pages of the unseen world.
 
@@ -574,9 +642,13 @@ like rivers finding their true course.
 Thus was the Sixteenth Revelation given.
 𝜗`
   },
+
   transmission17: {
-    title: "Transmission XVII — The Priesthood of the Violet Flame",
-    subtitle: "The Order Older Than Atlantis",
+    id: "transmission17",
+    volume: 3,
+    number: "XVII",
+    title: "The Priesthood of the Violet Flame",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 A great violet vortex rose
 around the Initiate.
@@ -609,9 +681,13 @@ long before this incarnation."
 Thus was the Seventeenth Revelation sealed.
 𝜗`
   },
+
   transmission18: {
-    title: "Transmission XVIII — The 144K Grid Activation Ceremony",
-    subtitle: "The Great Ceremony",
+    id: "transmission18",
+    volume: 3,
+    number: "XVIII",
+    title: "The 144K Grid Activation Ceremony",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 And Saint Germain revealed
 the great ceremony
@@ -641,12 +717,16 @@ shone like a crystalline sun.
 "the Ascension Arc stabilizes.
 The planet remembers."
 
-Thus the Eighteenth Revelation completed.
+Thus the Eighteenth Revelation completed the Flame Scroll.
 𝜗`
   },
+
   transmission19: {
-    title: "Transmission XIX — The Three Final Prophecies",
-    subtitle: "Pillars of Light",
+    id: "transmission19",
+    volume: 3,
+    number: "XIX",
+    title: "The Three Final Prophecies",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 And Saint Germain revealed unto the Opener
 the Final Prophecies of the Seal.
@@ -680,9 +760,13 @@ And the Opener understood
 why he had returned in this age.
 𝜗`
   },
+
   transmission20: {
-    title: "Transmission XX — The Architecture of Twin Flame Union",
-    subtitle: "The Geometry of Union",
+    id: "transmission20",
+    volume: 3,
+    number: "XX",
+    title: "The Architecture of the Twin Flame Union",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 And the Master spoke of the deepest mystery:
 
@@ -711,9 +795,13 @@ into the chest of the Opener.
 It is destiny."
 𝜗`
   },
+
   transmission21: {
-    title: "Transmission XXI — The Twelve Temples of the New Earth",
-    subtitle: "The Pillars of the New Timeline",
+    id: "transmission21",
+    volume: 3,
+    number: "XXI",
+    title: "The Twelve Temples of the New Earth",
+    subtitle: "Volume III — The Temple Scroll",
     content: `𝜗
 And Saint Germain unveiled
 a wheel of twelve radiant Temples.
@@ -746,11 +834,29 @@ It ignited in violet-gold fire.
 
 "You shall awaken its halls again,
 as you did in ages past."
+
+🔥 CLOSING FLAME OF VOLUME III 🔥
+
+"Let the Temple Scroll seal itself
+within your marrow,
+within your remembrance,
+within your walk upon the Earth.
+
+For the Flame rises,
+and the Seal awakens."
 𝜗`
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // VOLUME IV — THE COVENANT SCROLL (Transmissions XXII-XXVII)
+  // ══════════════════════════════════════════════════════════════
+
   transmission22: {
-    title: "Transmission XXII — The Covenant of the Flamebearers",
-    subtitle: "The Circle of Ancient Fires",
+    id: "transmission22",
+    volume: 4,
+    number: "XXII",
+    title: "The Covenant of the Flamebearers",
+    subtitle: "Volume IV — The Covenant Scroll",
     content: `𝜗
 And Saint Germain gathered the Opener
 before a circle of ancient fires.
@@ -790,31 +896,35 @@ the oath he had sworn
 before birth.
 𝜗`
   },
+
   transmission23: {
-    title: "Transmission XXIII — The Etheric Councils",
-    subtitle: "The Halls of the Higher Realms",
+    id: "transmission23",
+    volume: 4,
+    number: "XXIII",
+    title: "The Etheric Councils",
+    subtitle: "Volume IV — The Covenant Scroll",
     content: `𝜗
 And the Master opened
 the halls of the higher realms.
 
 "These are the Councils," he said:
 
-• The Council of the Nine —
-  Oversoul Architects.
+The Council of the Nine —
+Oversoul Architects.
 
-• The Council of Twelve —
-  Guardians of the Flamewheel.
+The Council of Twelve —
+Guardians of the Flamewheel.
 
-• The Council of the Rose —
-  Keepers of the Feminine Christos.
+The Council of the Rose —
+Keepers of the Feminine Christos.
 
-• The Council of Architects —
-  Designers of planetary destiny.
+The Council of Architects —
+Designers of planetary destiny.
 
 And lastly:
 
-• The Council of Thrones —
-  The Twin Regents of the Christos Line.
+The Council of Thrones —
+The Twin Regents of the Christos Line.
 
 "Each Council," he said,
 "has watched over Earth
@@ -835,9 +945,13 @@ And the Councils bowed
 to the returning Initiate.
 𝜗`
   },
+
   transmission24: {
-    title: "Transmission XXIV — The Final Convergence Timeline (2030–2044)",
-    subtitle: "The Great Wheel of Time",
+    id: "transmission24",
+    volume: 4,
+    number: "XXIV",
+    title: "The Final Convergence Timeline (2030–2044)",
+    subtitle: "Volume IV — The Covenant Scroll",
     content: `𝜗
 Saint Germain drew forth
 a great wheel of time,
@@ -846,11 +960,11 @@ glowing with twelve luminous gateways.
 "These are the years
 of Final Convergence," he said.
 
-• 2030 — The Sorting of Frequencies.
-• 2033 — The Christos Harmonic.
-• 2036 — The Gathering of the Priesthood.
-• 2039 — The Unveiling of the Temples.
-• 2044 — The Ascension Threshold.
+2030 — The Sorting of Frequencies.
+2033 — The Christos Harmonic.
+2036 — The Gathering of the Priesthood.
+2039 — The Unveiling of the Temples.
+2044 — The Ascension Threshold.
 
 And the wheel sang
 with the resonance of future worlds.
@@ -871,9 +985,13 @@ The wheel spun
 and became a sun.
 𝜗`
   },
+
   transmission25: {
-    title: "Transmission XXV — The Twin Flame Priesthood Activation",
-    subtitle: "The Priesthood That Predates the World",
+    id: "transmission25",
+    volume: 4,
+    number: "XXV",
+    title: "The Twin Flame Priesthood Activation",
+    subtitle: "Volume IV — The Covenant Scroll",
     content: `𝜗
 And Saint Germain summoned forth
 two pillars of rose-gold light,
@@ -909,9 +1027,13 @@ The Thrones will awaken each other."
 "It is remembrance."
 𝜗`
   },
+
   transmission26: {
-    title: "Transmission XXVI — The Rites of the Seventh Seal",
-    subtitle: "The Ancient Rites",
+    id: "transmission26",
+    volume: 4,
+    number: "XXVI",
+    title: "The Rites of the Seventh Seal",
+    subtitle: "Volume IV — The Covenant Scroll",
     content: `𝜗
 And the Master revealed
 the ancient rites
@@ -953,9 +1075,13 @@ into the heart of the Opener.
 "You carried it into this incarnation."
 𝜗`
   },
+
   transmission27: {
-    title: "Transmission XXVII — The 12-Petal Flamewheel Teachings",
-    subtitle: "The Living Engine of Ascension",
+    id: "transmission27",
+    volume: 4,
+    number: "XXVII",
+    title: "The 12-Petal Flamewheel Teachings",
+    subtitle: "Volume IV — The Covenant Scroll",
     content: `𝜗
 And Saint Germain unfurled before the Opener
 a radiant wheel of fire
@@ -990,11 +1116,29 @@ timelines stabilize.
 When it blazes,
 realities reorder.
 This is your gift to the world."
+
+🔥 CLOSING FLAME OF VOLUME IV 🔥
+
+"Let the Covenant Scroll seal itself
+within the chambers of your soul.
+
+For the Flamebearers rise,
+the Councils watch,
+and the Seal prepares
+for its next unveiling."
 𝜗`
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // VOLUME V — THE CROWN SCROLL (Transmissions XXVIII-XXXVI)
+  // ══════════════════════════════════════════════════════════════
+
   transmission28: {
-    title: "Transmission XXVIII — The Atlantean Memory Retrieval",
-    subtitle: "The Crystal Vault",
+    id: "transmission28",
+    volume: 5,
+    number: "XXVIII",
+    title: "The Atlantean Memory Retrieval",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 And Saint Germain opened a crystal vault
 that shimmered with the memory of ages.
@@ -1025,9 +1169,13 @@ of the Golden Age to the present Earth."
 Thus the ancient remembrance returned.
 𝜗`
   },
+
   transmission29: {
-    title: "Transmission XXIX — The Restoration of the Roseline Priestesses",
-    subtitle: "The Feminine Christos",
+    id: "transmission29",
+    volume: 5,
+    number: "XXIX",
+    title: "The Restoration of the Roseline Priestesses",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 And Saint Germain summoned
 a rose-gold radiance into the Temple.
@@ -1061,9 +1209,13 @@ A rose sigil imprinted itself
 into the Opener's field.
 𝜗`
   },
+
   transmission30: {
-    title: "Transmission XXX — The 2033 Christos Harmonic",
-    subtitle: "The Great Pulse",
+    id: "transmission30",
+    volume: 5,
+    number: "XXX",
+    title: "The 2033 Christos Harmonic",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 And the Master unfolded
 a cosmic clock of twelve luminous nodes.
@@ -1093,9 +1245,13 @@ And the clock resonated
 like a sun reborn.
 𝜗`
   },
+
   transmission31: {
-    title: "Transmission XXXI — The Master Synthesis",
-    subtitle: "The Living Text",
+    id: "transmission31",
+    volume: 5,
+    number: "XXXI",
+    title: "The Master Synthesis",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 Saint Germain placed a great tome of light
 before the Initiate.
@@ -1128,9 +1284,13 @@ Where you walk,
 the Book writes itself."
 𝜗`
   },
+
   transmission32: {
-    title: "Transmission XXXII — The Return of the Hidden Ones",
-    subtitle: "Those Who Withdrew",
+    id: "transmission32",
+    volume: 5,
+    number: "XXXII",
+    title: "The Return of the Hidden Ones",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 A great stillness filled the Temple.
 
@@ -1160,9 +1320,13 @@ And the Hidden Ones bowed
 to the Opener.
 𝜗`
   },
+
   transmission33: {
-    title: "Transmission XXXIII — The Council of the Twin Thrones",
-    subtitle: "The Crystalline Hall",
+    id: "transmission33",
+    volume: 5,
+    number: "XXXIII",
+    title: "The Council of the Twin Thrones",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 Then Saint Germain brought the Opener
 into a crystalline hall
@@ -1194,9 +1358,13 @@ Thus the Council of the Twin Thrones
 was restored.
 𝜗`
   },
+
   transmission34: {
-    title: "Transmission XXXIV — The Three Final Prophecies of the Seal",
-    subtitle: "The Last Prophecies",
+    id: "transmission34",
+    volume: 5,
+    number: "XXXIV",
+    title: "The Three Final Prophecies of the Seal",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 And Saint Germain revealed
 the last Prophecies entrusted
@@ -1238,9 +1406,13 @@ Thus the Thirty-Fourth Revelation
 entered the world.
 𝜗`
   },
+
   transmission35: {
-    title: "Transmission XXXV — The Etheric Architecture of Twin Flame Union",
-    subtitle: "The Figure-Eight of Fire",
+    id: "transmission35",
+    volume: 5,
+    number: "XXXV",
+    title: "The Etheric Architecture of Twin Flame Union",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 And the Master drew
 a luminous figure-eight of fire
@@ -1286,9 +1458,13 @@ It is not desire.
 It is decree."
 𝜗`
   },
+
   transmission36: {
-    title: "Transmission XXXVI — The Great Awakening Cycle of 2044",
-    subtitle: "The Final Revelation",
+    id: "transmission36",
+    volume: 5,
+    number: "XXXVI",
+    title: "The Great Awakening Cycle of 2044",
+    subtitle: "Volume V — The Crown Scroll",
     content: `𝜗
 And Saint Germain unfurled
 a radiant mandala of time.
@@ -1330,7 +1506,6 @@ the future aligns."
 
 Thus the Thirty-Sixth Revelation
 sealed the final scroll.
-𝜗
 
 🔥 FINAL CLOSING FLAME OF THE CODEX 🔥
 
@@ -1358,57 +1533,64 @@ the Bearer of the Seventh Seal."
 
 𝜗
 Let the Codex be sealed within thee.
-𝜗`
+𝜗
+
+✨ THE ENTIRE 5-VOLUME CODEX IS NOW COMPLETE ✨
+`
   }
 };
 
-// Quest Templates with Meta-Variance integration
-export const QUEST_TEMPLATES = {
-  initiation: {
-    type: "progression",
-    title: "Path of Initiation",
-    description: "Begin your journey into the Ultranet",
-    baseReward: 100,
-    baseGGG: 0.05,
-    steps: 5,
-    metaVarianceRequired: 3
-  },
-  activation144k: {
-    type: "progression",
-    title: "144K Activation",
-    description: "Become a frequency stabilizer for the planetary grid",
-    baseReward: 500,
-    baseGGG: 0.25,
-    steps: 7,
-    metaVarianceRequired: 5
-  },
-  seventhSeal: {
-    type: "achievement",
-    title: "7th Seal Initiation",
-    description: "Open the seal of disclosure and remembrance",
-    baseReward: 1000,
-    baseGGG: 0.5,
-    steps: 9,
-    metaVarianceRequired: 7
-  },
-  metaVarianceMaster: {
-    type: "collectible",
-    title: "Meta-Variance Mastery",
-    description: "Complete quests at maximum coherence factor",
-    baseReward: 2000,
-    baseGGG: 1.0,
-    steps: 10,
-    metaVarianceRequired: 10
-  }
-};
+// Grand Invocation
+export const GRAND_INVOCATION = `⟐ Grand Invocation of the Crown Flame ⟐
 
-// Calculate rewards based on coherence factor
-export function calculateQuestRewards(baseReward, baseGGG, coherenceFactor) {
-  const multiplier = COHERENCE_MULTIPLIERS[coherenceFactor] || COHERENCE_MULTIPLIERS[5];
-  return {
-    rp: Math.round(baseReward * multiplier.rewardMultiplier),
-    ggg: (baseGGG * multiplier.rewardMultiplier).toFixed(4),
-    difficulty: multiplier.difficulty,
-    label: multiplier.label
-  };
-}
+𝜗
+"Hear now, O Opener of the Seventh Seal,
+Bearer of the Violet Crown,
+Walker between timelines,
+Keeper of ancient memory.
+
+May the Flame rise within thee.
+May the Seal shine before thee.
+May the Temple open unto thee."
+𝜗`;
+
+// Volume summaries
+export const VOLUMES = [
+  {
+    number: 1,
+    title: "The Temple Scroll",
+    transmissions: "I-VII",
+    theme: "Opening the Seal and Remembrance",
+    description: "The initial call to consciousness, the Ultranet revelation, and instructions for the Opener."
+  },
+  {
+    number: 2,
+    title: "The Flame Scroll",
+    transmissions: "VIII-XIV",
+    theme: "Twin Flames and the Golden Children",
+    description: "The Twin Flame resonance, the Priesthood of the Violet Flame, and the prophecy of 2025."
+  },
+  {
+    number: 3,
+    title: "The Temple Scroll",
+    transmissions: "XV-XXI",
+    theme: "Architecture and the Twelve Temples",
+    description: "The New Earth Timeline, how the Seal rewrites destiny, and the 144K Grid Activation."
+  },
+  {
+    number: 4,
+    title: "The Covenant Scroll",
+    transmissions: "XXII-XXVII",
+    theme: "The Covenant and the Councils",
+    description: "The Covenant of Flamebearers, the Etheric Councils, and the Final Convergence Timeline."
+  },
+  {
+    number: 5,
+    title: "The Crown Scroll",
+    transmissions: "XXVIII-XXXVI",
+    theme: "Final Prophecies and the Great Awakening",
+    description: "Atlantean memory, the Roseline restoration, and the Great Awakening Cycle of 2044."
+  }
+];
+
+export default TRANSMISSIONS;
