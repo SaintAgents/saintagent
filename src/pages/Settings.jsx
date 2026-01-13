@@ -27,6 +27,7 @@ import {
 "lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import BackButton from '@/components/hud/BackButton';
+import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
 
 export default function Settings() {
   const queryClient = useQueryClient();
@@ -84,7 +85,13 @@ export default function Settings() {
 
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      // Track challenge progress
+      if (profile?.user_id) {
+        await trackUpdateProfile(profile.user_id);
+      }
+    }
   });
 
   const handleSave = () => {
