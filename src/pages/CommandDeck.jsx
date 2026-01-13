@@ -940,16 +940,34 @@ export default function CommandDeck() {
                     </button>
                   </div>
                   
-                  {/* Eternal Flame Feature Badge */}
-                  <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-                    <img
-                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
-                      alt="Eternal Flame"
-                      className="w-12 h-12 object-contain"
-                      data-no-filter="true" />
-                    <div>
-                      <p className="font-semibold text-amber-900">Eternal Flame</p>
-                      <p className="text-xs text-amber-700">Living Agent</p>
+                  {/* Featured: Eternal Flame + Recent Badge */}
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    {/* Eternal Flame Feature Badge */}
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                      <img
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
+                        alt="Eternal Flame"
+                        className="w-12 h-12 object-contain"
+                        data-no-filter="true" />
+                      <div>
+                        <p className="font-semibold text-amber-900 text-sm">Eternal Flame</p>
+                        <p className="text-xs text-amber-700">Living Agent</p>
+                      </div>
+                    </div>
+                    
+                    {/* Recently Achieved Badge */}
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-200">
+                      <img
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b40aecf5e_7-day-streak.png"
+                        alt="7-Day Streak"
+                        className="w-12 h-12 object-contain"
+                        data-no-filter="true"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                      <div>
+                        <p className="font-semibold text-slate-900 text-sm">7-Day Streak</p>
+                        <p className="text-xs text-slate-500">Recent</p>
+                      </div>
                     </div>
                   </div>
                   
@@ -959,24 +977,6 @@ export default function CommandDeck() {
                     showEmptySlots={true}
                     emptySlotCount={5}
                     onMore={() => setBadgeGlossaryOpen(true)} />
-                  
-                  {/* Recent Badges Section */}
-                  <div className="mt-3 p-3 rounded-xl bg-slate-50/80 border border-slate-200">
-                    <p className="text-xs font-medium text-slate-600 mb-2">Recently Achieved</p>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b40aecf5e_7-day-streak.png"
-                        alt="7-Day Streak"
-                        className="w-10 h-10 object-contain"
-                        data-no-filter="true"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                      />
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">7-Day Streak</p>
-                        <p className="text-xs text-slate-500">Logged in 7 days in a row</p>
-                      </div>
-                    </div>
-                  </div>
 
                 </div>
 

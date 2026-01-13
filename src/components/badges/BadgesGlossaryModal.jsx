@@ -9,10 +9,10 @@ export default function BadgesGlossaryModal({ open, onOpenChange }) {
   
   // Separate sections into badges and sigils
   const badgeSections = BADGE_SECTIONS.filter(s => 
-    !['sigils', 'trust', 'affiliate'].includes(s.id?.toLowerCase())
+    s.id !== 'sigils'
   );
   const sigilSections = BADGE_SECTIONS.filter(s => 
-    ['sigils', 'trust', 'affiliate'].includes(s.id?.toLowerCase())
+    s.id === 'sigils'
   );
   
   const sectionsToShow = filterTab === 'all' ? BADGE_SECTIONS :

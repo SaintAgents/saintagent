@@ -302,13 +302,21 @@ function BadgeEditDialog({ badge, open, onClose, onSave }) {
           </div>
           
           <div>
-            <Label>Icon URL</Label>
+            <Label>Icon URL (Badge/Sigil Image)</Label>
             <Input
               value={formData.icon_url || ''}
               onChange={(e) => setFormData({ ...formData, icon_url: e.target.value })}
               placeholder="https://..."
               className="mt-1"
             />
+            <p className="text-xs text-slate-500 mt-1">Upload image to Supabase storage first, then paste URL here</p>
+            <a 
+              href="https://qtrypzzcjebvfcihiynt.supabase.co/project/default/storage/buckets/base44-prod" 
+              target="_blank"
+              className="text-xs text-violet-600 hover:underline"
+            >
+              → Open Supabase Storage
+            </a>
           </div>
           
           <div className="flex items-center justify-between pt-4 border-t">
@@ -337,6 +345,7 @@ export default function BadgeRewardsManager() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [badgeSigilTab, setBadgeSigilTab] = useState('badges');
   const queryClient = useQueryClient();
   
   const { data: badges = [], isLoading } = useQuery({
@@ -403,20 +412,8 @@ export default function BadgeRewardsManager() {
     setDialogOpen(true);
   };
   
-  // Filter badges
-  const filteredBadges = badges.filter(b => {
-    if (categoryFilter !== 'all' && b.category !== categoryFilter) return false;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      return b.badge_name?.toLowerCase().includes(q) || 
-             b.badge_code?.toLowerCase().includes(q) ||
-             b.description?.toLowerCase().includes(q);
-    }
-    return true;
-  });
-  
   // Group by category
-  const badgesByCategory = filteredBadges.reduce((acc, badge) => {
+  const badgesByCategory = filteredBadgesFinal.reduce((acc, badge) => {
     const cat = badge.category || 'achievement';
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(badge);
@@ -433,13 +430,33 @@ export default function BadgeRewardsManager() {
     achievement: badges.filter(b => b.category === 'achievement').length
   };
   
+  // Filter by badge/sigil type
+  const badgeCategories = ['soul_resonance', 'quest_type', 'verification', 'achievement', 'streak', 'social', 'marketplace', 'mission', 'alignment'];
+  const sigilCategories = ['agent', 'security', 'identity'];
+  
+  const categoriesToShow = badgeSigilTab === 'badges' ? badgeCategories : sigilCategories;
+  const filteredByType = badges.filter(b => 
+    categoriesToShow.includes(b.category)
+  );
+  
+  const filteredBadgesFinal = filteredByType.filter(b => {
+    if (categoryFilter !== 'all' && b.category !== categoryFilter) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return b.badge_name?.toLowerCase().includes(q) || 
+             b.badge_code?.toLowerCase().includes(q) ||
+             b.description?.toLowerCase().includes(q);
+    }
+    return true;
+  });
+  
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Badge GGG Rewards</h2>
-          <p className="text-slate-500 mt-1">Configure GGG rewards for badge acquisition</p>
+          <h2 className="text-2xl font-bold text-slate-900">Badge & Sigil GGG Rewards</h2>
+          <p className="text-slate-500 mt-1">Configure GGG rewards for badge and sigil acquisition</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -496,6 +513,14 @@ export default function BadgeRewardsManager() {
         </Card>
       </div>
       
+      {/* Badge/Sigil Tabs */}
+      <Tabs value={badgeSigilTab} onValueChange={setBadgeSigilTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-xs">
+          <TabsTrigger value="badges">Badges</TabsTrigger>
+          <TabsTrigger value="sigils">Sigils</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      
       {/* Filters */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-xs">
@@ -513,9 +538,11 @@ export default function BadgeRewardsManager() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
-              <SelectItem key={key} value={key}>{config.label}</SelectItem>
-            ))}
+            {Object.entries(CATEGORY_CONFIG)
+              .filter(([key]) => categoriesToShow.includes(key))
+              .map(([key, config]) => (
+                <SelectItem key={key} value={key}>{config.label}</SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </div>
