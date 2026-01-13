@@ -26,7 +26,6 @@ import MediaAttachment from '@/components/messages/MediaAttachment';
 import MessageBubble from '@/components/messages/MessageBubble';
 import TypingIndicator from '@/components/messages/TypingIndicator';
 import ShareAffiliateLinkButton from '@/components/messages/ShareAffiliateLinkButton';
-import { trackSendMessage } from '@/components/gamification/challengeTracker';
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -65,13 +64,9 @@ export default function Messages() {
 
   const sendMutation = useMutation({
     mutationFn: (data) => base44.entities.Message.create(data),
-    onSuccess: async () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       setMessageText('');
-      // Track challenge progress
-      if (user?.email) {
-        await trackSendMessage(user.email);
-      }
     }
   });
 
