@@ -30,6 +30,11 @@ const LOOP_INFO = {
     name: 'Spiritual Loop',
     pages: ['Initiations', 'Mentorship'],
     description: 'Spiritual: Initiations → Mentorship'
+  },
+  projects: {
+    name: 'Projects Loop',
+    pages: ['Projects'],
+    description: 'Projects → Collaborators (joins Community loop)'
   }
 };
 
