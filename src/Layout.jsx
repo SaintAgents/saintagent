@@ -311,6 +311,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
               }
             }, [currentUser]);
 
+  // Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [currentPageName]);
+
   // If authenticated and onboarding missing or not complete, force Onboarding
     // Otherwise, redirect to Command Deck if on a generic/home page
     useEffect(() => {
