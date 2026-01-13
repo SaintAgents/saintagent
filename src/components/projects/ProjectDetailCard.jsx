@@ -243,9 +243,9 @@ export default function ProjectDetailCard({ project }) {
           {/* Metadata */}
           {project.metadata && Object.keys(project.metadata).length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-slate-500 mb-2">Additional Data</h4>
-              <div className="p-3 rounded-lg bg-slate-50 border text-sm">
-                <pre className="whitespace-pre-wrap text-slate-600">
+              <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Additional Data</h4>
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border dark:border-slate-700 text-sm">
+                <pre className="whitespace-pre-wrap text-slate-600 dark:text-slate-300">
                   {JSON.stringify(project.metadata, null, 2)}
                 </pre>
               </div>
