@@ -81,7 +81,7 @@ const NAV_ITEMS = [
   { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
-  { id: 'synchronicity', label: 'Synchronicity Board', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
+  { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
   { id: 'gamification', label: 'Gamification', Icon: Crown, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
   { id: 'matches', label: 'Matches', Icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
   { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },

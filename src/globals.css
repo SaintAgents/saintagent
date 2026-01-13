@@ -298,6 +298,17 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   color: #10b981 !important;
 }
 
+/* Dark mode: Brighten subtitle text */
+[data-theme='dark'] .text-slate-600,
+[data-theme='dark'] [class*='text-slate-600'] {
+  color: #d0d0d0 !important;
+}
+
+[data-theme='dark'] .text-slate-700,
+[data-theme='dark'] [class*='text-slate-700'] {
+  color: #e0e0e0 !important;
+}
+
 /* Progress numbers and labels */
 [data-theme='dark'] .font-medium,
 [data-theme='dark'] .font-semibold,
