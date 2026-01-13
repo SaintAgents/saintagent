@@ -99,7 +99,7 @@ export default function CollapsibleCard({
               <Icon className="w-4 h-4 text-slate-600" />
             </div>
           }
-          <h3 className="font-semibold text-slate-900 tracking-tight hidden md:block truncate">{title}</h3>
+          <h3 className="font-semibold text-slate-900 tracking-tight hidden md:block truncate">{typeof title === 'string' ? title : title}</h3>
           {badgeImage && (
             <img 
               src={badgeImage} 
