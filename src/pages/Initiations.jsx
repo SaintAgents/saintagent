@@ -95,9 +95,7 @@ function InitiationCard({ initiation, profile, badges, onStart }) {
 
   return (
     <Card className={cn(
-      "relative overflow-hidden transition-all cursor-pointer",
-      "bg-gradient-to-br border",
-      colorClasses[initiation.color],
+      "relative overflow-hidden transition-all cursor-pointer bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]",
       isLocked && "opacity-60"
     )}>
       {isCompleted && (
@@ -181,7 +179,7 @@ function TransmissionCard({ id, transmission }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Card className="bg-slate-800/30 border-violet-500/20">
+    <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
       <CardHeader 
         className="cursor-pointer"
         onClick={() => setExpanded(!expanded)}
@@ -263,7 +261,7 @@ export default function InitiationsPage() {
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
         />
-        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ backgroundColor: 'transparent', opacity: '0.96' }} />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
@@ -285,7 +283,7 @@ export default function InitiationsPage() {
       <div className="px-6 pb-12">
         <div className="max-w-6xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-8 bg-slate-800/50">
+            <TabsList className="mb-8 bg-[rgba(0,0,0,0.75)] border border-[rgba(0,255,136,0.2)]">
               <TabsTrigger value="initiations">Initiations</TabsTrigger>
               <TabsTrigger value="progress">
                 <Trophy className="w-4 h-4 mr-2" />
@@ -313,7 +311,7 @@ export default function InitiationsPage() {
               </div>
 
               {/* Meta-Variance Info */}
-              <Card className="mt-8 bg-gradient-to-r from-violet-900/30 to-purple-900/30 border-violet-500/20">
+              <Card className="mt-8 bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <Star className="w-6 h-6 text-amber-400" />
@@ -360,7 +358,7 @@ export default function InitiationsPage() {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.entries(BADGE_CATEGORIES).map(([key, category]) => (
                   <Card key={key} className={cn(
-                    "bg-slate-800/30 border-slate-700/50",
+                    "bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]",
                     category.color === 'violet' && "border-l-4 border-l-violet-500",
                     category.color === 'amber' && "border-l-4 border-l-amber-500",
                     category.color === 'emerald' && "border-l-4 border-l-emerald-500",

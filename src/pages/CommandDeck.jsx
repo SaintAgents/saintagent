@@ -171,7 +171,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations'];
     const newStoredCards = allCardIds
       .filter(id => !storedCards.some(c => c.id === id))
-      .map(id => ({ id, title: getCardTitle(id) }));
+      .map(id => ({ id, title: getCardTitle(id), icon: CARD_ICONS[id] }));
     setStoredCards(prev => [...prev, ...newStoredCards]);
     setHiddenCards(new Set(allCardIds));
     if (!sidePanelOpen) setSidePanelOpen(true);
@@ -237,8 +237,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     // Don't add duplicates
     if (storedCards.some(c => c.id === cardId)) return;
     
-    // Store cardId and title only (icons retrieved from mapping)
-    setStoredCards(prev => [...prev, { id: cardId, title }]);
+    // Store cardId, title, and icon
+    setStoredCards(prev => [...prev, { id: cardId, title, icon: CARD_ICONS[cardId] }]);
     // Also hide it from main deck
     setHiddenCards(prev => new Set([...prev, cardId]));
     
@@ -248,10 +248,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   };
 
-  // Get stored cards with icons resolved
+  // Get stored cards with icons resolved (backwards compatibility - icon may already be stored)
   const storedCardsWithIcons = storedCards.map(card => ({
     ...card,
-    icon: CARD_ICONS[card.id]
+    icon: card.icon || CARD_ICONS[card.id]
   }));
 
   // Restore card from side panel to main deck
