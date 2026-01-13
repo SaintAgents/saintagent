@@ -14,6 +14,7 @@ import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
 import SidePanel from '@/components/hud/SidePanel';
 
 import GlobalPhotoViewer from '@/components/profile/GlobalPhotoViewer';
+import HeroGalleryViewer from '@/components/hud/HeroGalleryViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
@@ -1571,6 +1572,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Photo Viewer */}
       <GlobalPhotoViewer />
+
+      {/* Hero Gallery Viewer */}
+      <HeroGalleryViewer />
 
       {/* Global Dating Matches Popup */}
       <DatingMatchesPopup currentUser={currentUser} />
