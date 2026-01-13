@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import AffiliateTracker from '@/components/affiliate/AffiliateTracker';
+import ReferrerCard from '@/components/affiliate/ReferrerCard';
 import { 
   Sparkles, 
   DollarSign, 
@@ -130,6 +131,9 @@ export default function Join() {
         `}</style>
         
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-32 text-center">
+          {/* Referrer Card - shows who invited them */}
+          <ReferrerCard />
+          
           {/* Animated Gold Title */}
           <h2 className="text-2xl md:text-3xl font-bold mb-6 gold-shimmer-text">
             Agents of Positive Change Unite!
