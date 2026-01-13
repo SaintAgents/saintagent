@@ -39,6 +39,7 @@ function getRingConfig(rankCode = 'seeker') {
 
 // Default avatar - purple silhouette
 const DEFAULT_AVATAR = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7ede07682_12563.jpg';
+const SA_SHIELD_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png';
 
 export default function RankedAvatar({
   src,
@@ -55,16 +56,21 @@ export default function RankedAvatar({
   showPhotoIcon = false,
   galleryImages = [],
   affiliatePaidCount,
+  saNumber,
 
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
   // Always call useQuery unconditionally to avoid hook order issues
   // The enabled flag controls whether it actually fetches
-  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null);
+  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null || saNumber == null);
   const { data: fetched = [] } = useQuery({
     queryKey: ['rankedAvatarProfile', userId || 'none'],
-    queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
+    queryFn: () => {
+      if (!userId) return null;
+      // Ensure we refetch if userId changes
+      return base44.entities.UserProfile.filter({ user_id: userId });
+    },
     enabled: needsFetch,
   });
   const fetchedProfile = fetched?.[0];
@@ -94,6 +100,12 @@ export default function RankedAvatar({
   const trustScoreFinal = trustScore ?? fetchedProfile?.trust_score ?? 0;
   const rpInfo = getRPRank(rpPointsFinal || 0);
   const statusMessageFinal = statusMessage ?? fetchedProfile?.status_message;
+  const saNumberFinal = saNumber ?? fetchedProfile?.sa_number;
+
+  // Determine which sigils to show
+  const showTrustSigil = trustScoreFinal > 0;
+  const showAffiliateBadge = affiliatePaidFinal > 0;
+  const showSaSigil = !!saNumberFinal;
 
   // Presence indicator mapping
   const STATUS_STYLES = {
@@ -248,27 +260,36 @@ export default function RankedAvatar({
         </div>
       )}
 
-      {/* Trust Sigil (top-right, opposite of rank) - positioned to touch avatar circle */}
-      {!showPhotoIcon && trustScoreFinal > 0 && (
-        <div 
-          className="absolute rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
-          style={{ 
-            width: trustPx, 
-            height: trustPx, 
-            border: '2px solid white',
-            top: 0,
-            right: 0,
-            transform: 'translate(25%, -25%)'
-          }}
-          onClick={(e) => e.stopPropagation()}
-          title={`Trust Score: ${trustScoreFinal}% - Verified through community interactions`}
-        >
-          <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
-        </div>
+      {/* Trust Sigil (top-right) - positioned to touch avatar circle */}
+      {showTrustSigil && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div 
+                className="absolute rounded-full bg-emerald-500 flex items-center justify-center shadow-md cursor-help z-20 hover:scale-110 transition-transform" 
+                style={{ 
+                  width: trustPx, 
+                  height: trustPx, 
+                  border: '2px solid white',
+                  top: 0,
+                  right: 0,
+                  transform: 'translate(25%, -25%)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Shield style={{ width: trustIconPx, height: trustIconPx }} className="text-white" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] z-[9999]">
+              <p className="font-semibold text-sm">Trust Score</p>
+              <p className="text-xs text-slate-500">{trustScoreFinal}% verified</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
 
-      {/* Affiliate Badge (top-right) - positioned to touch avatar circle */}
-      {affiliatePaidFinal >= 0 && (
+      {/* Affiliate Badge (adjusts position vertically if Trust is present) */}
+      {showAffiliateBadge && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -277,8 +298,8 @@ export default function RankedAvatar({
                 style={{ 
                   width: symbolPx * 2, 
                   height: symbolPx * 2,
-                  top: 0,
-                  right: 0,
+                  top: showTrustSigil ? '20%' : 0,
+                  right: showTrustSigil ? '-5%' : 0,
                   transform: 'translate(30%, -30%)'
                 }}
                 onClick={(e) => e.stopPropagation()}
@@ -294,7 +315,38 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-
+      {/* SA Shield Sigil (adjusts position dynamically) */}
+      {showSaSigil && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div 
+                className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg"
+                style={{
+                  width: symbolPx * 2,
+                  height: symbolPx * 2,
+                  top: showAffiliateBadge ? (showTrustSigil ? '40%' : '20%') : (showTrustSigil ? '20%' : '0'),
+                  right: showAffiliateBadge ? (showTrustSigil ? '-10%' : '-5%') : (showTrustSigil ? '-5%' : '0'),
+                  transform: 'translate(30%, -30%)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img 
+                  src={SA_SHIELD_IMAGE}
+                  alt="SA Shield"
+                  className="object-contain"
+                  style={{ width: symbolPx * 2, height: symbolPx * 2, filter: 'none' }}
+                  data-no-filter="true"
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[200px] z-[9999]">
+              <p className="font-semibold text-sm">Saint Agent</p>
+              <p className="text-xs text-slate-500">SA#{saNumberFinal}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
 
       {/* Photo gallery icon (bottom-center) - positioned to touch avatar circle */}
       {showPhotoIcon && (allImages.length > 0 || needsFetch) && (

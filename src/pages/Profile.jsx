@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,7 +29,8 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue } from
+  SelectValue
+} from
 "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -49,7 +51,8 @@ import {
   Heart,
   Compass,
   BadgeCheck,
-  MessageSquare } from
+  MessageSquare
+} from
 "lucide-react";
 
 import ProgressRing from '@/components/hud/ProgressRing';
@@ -95,7 +98,7 @@ export default function Profile() {
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
-      try {return await base44.auth.me();} catch {return null;}
+      try { return await base44.auth.me(); } catch { return null; }
     }
   });
 
@@ -138,10 +141,10 @@ export default function Profile() {
 
   const [datingData, setDatingData] = useState(null);
   const showDatingTab = !!(profile && (
-  profile.relationship_status === 'single' ||
-  profile.relationship_status === 'open' ||
-  (profile.relationship_type_seeking || []).includes('polyamorous') ||
-  (profile.relationship_type_seeking || []).includes('open')));
+    profile.relationship_status === 'single' ||
+    profile.relationship_status === 'open' ||
+    (profile.relationship_type_seeking || []).includes('polyamorous') ||
+    (profile.relationship_type_seeking || []).includes('open')));
 
 
   useEffect(() => {
@@ -364,18 +367,7 @@ export default function Profile() {
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
           <div className="relative h-64 bg-gradient-to-r from-violet-500 to-purple-600 group">
-                          {/* Rank Badge - Top Left */}
-                          <div className="absolute top-2 left-4 z-10">
-                            <RankBadge code={profile?.rp_rank_code || 'seeker'} size={112} className="drop-shadow-lg" />
-                          </div>
-                          {/* SA Shield Badge - Top Right */}
-                          <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
-              alt="Saint Agent"
-              className="absolute top-2 right-4 w-28 h-28 object-contain z-10 drop-shadow-lg"
-              data-no-filter="true" />
-
-                          {profile?.hero_image_url ? (
+            {profile?.hero_image_url ? (
               <img
                 src={profile.hero_image_url}
                 alt=""
@@ -385,7 +377,7 @@ export default function Profile() {
               <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
             )}
             
-            {/* Badges Bar at Bottom of Hero */}
+            {/* Badges & Sigils Bar at Bottom of Hero */}
             <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
               <BadgesBar badges={profileBadges} defaultIfEmpty={false} maxDisplay={8} size="sm" />
             </div>
@@ -422,6 +414,7 @@ export default function Profile() {
                   rpPoints={profile?.rp_points}
                   userId={profile?.user_id}
                   status={profile?.status}
+                  saNumber={profile?.sa_number}
                   showPhotoIcon={true}
                   galleryImages={profile?.gallery_images} />
 
@@ -926,11 +919,11 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            {/* Badges */}
+            {/* Badges & Sigils */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span>Badges</span>
+                  <span>Badges & Sigils</span>
                   {isOwnProfile &&
                       <Button
                         variant="ghost"
