@@ -65,14 +65,12 @@ export default function Messages() {
 
   const sendMutation = useMutation({
     mutationFn: (data) => base44.entities.Message.create(data),
-    onSuccess: async () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       setMessageText('');
       // Track challenge progress for sending messages
       if (user?.email) {
-        console.log('Messages: Tracking send_message for', user.email);
-        await trackSendMessage(user.email);
-        queryClient.invalidateQueries({ queryKey: ['challenges'] });
+        trackSendMessage(user.email);
       }
     }
   });
@@ -202,6 +200,10 @@ export default function Messages() {
         content: messageText
       })]
       );
+      // Track challenge progress for sending messages (group)
+      if (user?.email) {
+        trackSendMessage(user.email);
+      }
       await Promise.all(recipients.map((r) => base44.entities.Notification.create({
         user_id: r,
         type: 'message',
