@@ -19,6 +19,7 @@ import BadgesPanel from '@/components/synchronicity/BadgesPanel';
 import ActiveSynchronicity from '@/components/synchronicity/ActiveSynchronicity';
 import EpicQuestCard from '@/components/synchronicity/EpicQuestCard';
 import QuestBoard from '@/components/quests/QuestBoard';
+import TimelineQuestGenerator from '@/components/quests/TimelineQuestGenerator';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
@@ -137,6 +138,11 @@ export default function Quests() {
             <BadgesPanel badges={badges} />
             <EpicQuestCard profile={profile} />
           </div>
+        </div>
+
+        {/* Timeline Quest Generator - Personalized Quests */}
+        <div className="mt-8">
+          <TimelineQuestGenerator userId={currentUser?.email} profile={profile} />
         </div>
 
         {/* Quest Board - 22 Badge Ascension Grid */}
