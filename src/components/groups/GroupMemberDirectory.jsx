@@ -164,13 +164,16 @@ function MemberCard({ member, isOwner, onChat, onProfile }) {
               onClick={onProfile}
             >
               {member.display_name}
+              {member.sa_number && (
+                <span className="text-slate-400 font-normal ml-1.5">SA#{member.sa_number}</span>
+              )}
             </h4>
             {isOwner && <Crown className="w-4 h-4 text-amber-500" />}
             {member.leader_tier === 'verified144k' && (
               <Badge className="bg-amber-100 text-amber-700 text-xs">144K</Badge>
             )}
           </div>
-          <p className="text-sm text-slate-500">@{member.handle}</p>
+          <p className="text-sm text-slate-500">@{member.handle} • {member.user_id}</p>
           
           {member.region && (
             <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
