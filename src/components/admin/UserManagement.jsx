@@ -72,11 +72,23 @@ export default function UserManagement() {
     }
   });
 
-  const filteredProfiles = profiles.filter((p) =>
-  p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  p.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProfiles = profiles
+    .filter((p) =>
+      p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOrder === 'alpha') {
+        return (a.display_name || '').localeCompare(b.display_name || '');
+      } else if (sortOrder === 'sa') {
+        const saA = a.sa_number || 'zzzzzz';
+        const saB = b.sa_number || 'zzzzzz';
+        return saA.localeCompare(saB);
+      }
+      // Default: date (newest first)
+      return new Date(b.created_date) - new Date(a.created_date);
+    });
 
   const handleChangeRole = (profile, newRole) => {
     if (confirm(`Change ${profile.display_name}'s role to ${newRole}?`)) {
