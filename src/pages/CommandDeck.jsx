@@ -1278,47 +1278,47 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 </button>
               </div>
               
-              {/* Theme Radio Dials */}
-              <div className="absolute bottom-3 right-3 flex gap-2">
-                <button
-                  onClick={() => {
-                    const newTheme = 'light';
-                    onThemeToggle?.(newTheme);
-                  }}
-                  className={cn(
-                    "w-3 h-3 rounded-full border-2 transition-all",
-                    theme === 'light' 
-                      ? "bg-white border-violet-500 ring-2 ring-violet-200" 
-                      : "bg-white border-slate-300 hover:border-slate-400"
-                  )}
-                  title="Light theme"
-                />
-                <button
-                  onClick={() => {
-                    const newTheme = 'dark';
-                    onThemeToggle?.(newTheme);
-                  }}
-                  className={cn(
-                    "w-3 h-3 rounded-full border-2 transition-all",
-                    theme === 'dark' 
-                      ? "bg-green-800 border-violet-500 ring-2 ring-violet-200" 
-                      : "bg-green-800 border-green-900 hover:border-green-700"
-                  )}
-                  title="Dark theme"
-                />
-                <button
-                  onClick={() => {
-                    const newTheme = 'hacker';
-                    onThemeToggle?.(newTheme);
-                  }}
-                  className={cn(
-                    "w-3 h-3 rounded-full border-2 transition-all",
-                    theme === 'hacker' 
-                      ? "bg-green-500 border-violet-500 ring-2 ring-violet-200" 
-                      : "bg-green-500 border-green-600 hover:border-green-400"
-                  )}
-                  title="Hacker theme"
-                />
+              {/* Theme Toggle Buttons */}
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Theme</div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => onThemeToggle?.('light')}
+                    className={cn(
+                      "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2",
+                      theme === 'light' 
+                        ? "bg-violet-600 text-white shadow-md" 
+                        : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-violet-300"
+                    )}
+                  >
+                    <div className={cn("w-3 h-3 rounded-full border-2", theme === 'light' ? "bg-white border-white" : "bg-amber-100 border-amber-300")} />
+                    Light
+                  </button>
+                  <button
+                    onClick={() => onThemeToggle?.('dark')}
+                    className={cn(
+                      "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2",
+                      theme === 'dark' 
+                        ? "bg-violet-600 text-white shadow-md" 
+                        : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-violet-300"
+                    )}
+                  >
+                    <div className={cn("w-3 h-3 rounded-full border-2", theme === 'dark' ? "bg-teal-400 border-teal-400" : "bg-slate-700 border-slate-600")} />
+                    Dark
+                  </button>
+                  <button
+                    onClick={() => onThemeToggle?.('hacker')}
+                    className={cn(
+                      "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2",
+                      theme === 'hacker' 
+                        ? "bg-green-600 text-white shadow-md shadow-green-500/30" 
+                        : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-green-400"
+                    )}
+                  >
+                    <div className={cn("w-3 h-3 rounded-full border-2", theme === 'hacker' ? "bg-green-400 border-green-400" : "bg-green-500 border-green-600")} />
+                    Hacker
+                  </button>
+                </div>
               </div>
             </div>
           </div>
