@@ -20,7 +20,8 @@ import {
   DialogHeader,
   DialogTitle } from
 "@/components/ui/dialog";
-import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw } from "lucide-react";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 
