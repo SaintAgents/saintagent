@@ -116,8 +116,10 @@ export default function MiniProfile({
           >
             <img 
               src={heroImage || DEFAULT_HERO_IMAGE} 
-              alt="" 
-              className="w-full h-full object-cover"
+              alt="Profile Hero" 
+              className="w-full h-full object-cover hero-image"
+              data-no-filter="true"
+              style={{ filter: 'none' }}
             />
           </div>
           

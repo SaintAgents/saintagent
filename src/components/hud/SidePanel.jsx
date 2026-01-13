@@ -1317,7 +1317,9 @@ export default function SidePanel({
                 <p className="text-sm text-slate-400 py-4 text-center">No matches yet</p> :
 
                 matches.slice(0, 5).map((match, i) => {
-                  const handleClick = () => {
+                  const handleClick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (match.target_type === 'person') {
                       const event = new CustomEvent('openProfile', { detail: { userId: match.target_id } });
                       document.dispatchEvent(event);
@@ -1333,24 +1335,14 @@ export default function SidePanel({
                   };
 
                   return (
-                    <button
+                    <div
                       key={i}
                       onClick={handleClick}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left">
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 hover:border-violet-200 border border-transparent transition-colors text-left cursor-pointer">
 
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (match.target_type === 'person') {
-                            const event = new CustomEvent('openProfile', { detail: { userId: match.target_id } });
-                            document.dispatchEvent(event);
-                          }
-                        }}
-                        data-user-id={match.target_type === 'person' ? match.target_id : null}>
-                      </div>
                       <div className="flex-1 min-w-0">
                         {match.target_type === 'person' ? (
-                          <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={36} />
+                          <MiniProfile userId={match.target_id} name={match.target_name} avatar={match.target_avatar} size={36} showTipButton={false} />
                         ) : (
                           <>
                             <p className="text-sm font-medium text-slate-900 truncate">{match.target_name}</p>
@@ -1359,7 +1351,7 @@ export default function SidePanel({
                         )}
                       </div>
                       <div className="text-sm font-bold text-violet-600">{match.match_score}%</div>
-                    </button>);
+                    </div>);
 
                 })
                 }
