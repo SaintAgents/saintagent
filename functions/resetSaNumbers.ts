@@ -16,12 +16,25 @@ Deno.serve(async (req) => {
     // Get all profiles ordered by created_date (oldest first)
     const allProfiles = await base44.asServiceRole.entities.UserProfile.list('created_date', 1000);
     
+    if (!allProfiles || allProfiles.length === 0) {
+      return Response.json({ error: 'No profiles found' }, { status: 404 });
+    }
+
     // Reset all SA numbers in order
     let counter = 0;
+    const updates = [];
     for (const profile of allProfiles) {
       counter++;
       const saNumber = padSix(counter);
-      await base44.asServiceRole.entities.UserProfile.update(profile.id, { sa_number: saNumber });
+      updates.push(
+        base44.asServiceRole.entities.UserProfile.update(profile.id, { sa_number: saNumber })
+      );
+    }
+    
+    // Execute updates in batches to avoid timeout
+    const batchSize = 10;
+    for (let i = 0; i < updates.length; i += batchSize) {
+      await Promise.all(updates.slice(i, i + batchSize));
     }
 
     // Update the counter in PlatformSetting
@@ -40,6 +53,7 @@ Deno.serve(async (req) => {
       nextNumber: counter + 1
     });
   } catch (error) {
+    console.error('Reset SA error:', error);
     return Response.json({ error: error?.message || 'Server error' }, { status: 500 });
   }
 });
