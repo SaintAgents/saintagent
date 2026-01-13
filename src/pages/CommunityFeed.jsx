@@ -350,7 +350,7 @@ export default function CommunityFeed() {
                     <div className="flex items-center justify-between gap-3">
                       <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={40} />
                       <p className="text-xs text-slate-500">
-                        {format(parseISO(post.created_date), 'MMM d, h:mm a')}
+                        {post.created_date ? format(typeof post.created_date === 'string' ? parseISO(post.created_date) : new Date(post.created_date), 'MMM d, h:mm a') : ''}
                       </p>
                     </div>
 
