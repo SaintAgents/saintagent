@@ -80,7 +80,7 @@ export default function ProjectDetailCard({ project }) {
               </Badge>
             )}
           </div>
-          <h2 className="text-xl font-bold text-slate-900">{project.title}</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">{project.title}</h2>
         </div>
         
         {/* Quick Scores */}
