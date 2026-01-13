@@ -344,15 +344,15 @@ Return an array of 3 quest objects.`;
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="text-center p-3 rounded-xl bg-white/60">
               <p className="text-2xl font-bold text-slate-900">{userChoices.initiations.length}</p>
-              <p className="text-xs text-slate-600">Initiations</p>
+              <p className="text-xs text-slate-700 font-medium">Initiations</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-white/60">
               <p className="text-2xl font-bold text-slate-900">{activeQuests.length}</p>
-              <p className="text-xs text-slate-600">Active Quests</p>
+              <p className="text-xs text-slate-700 font-medium">Active Quests</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-white/60">
               <p className="text-2xl font-bold text-slate-900">{completedQuests.length}</p>
-              <p className="text-xs text-slate-600">Completed</p>
+              <p className="text-xs text-slate-700 font-medium">Completed</p>
             </div>
           </div>
 
