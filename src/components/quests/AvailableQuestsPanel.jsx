@@ -297,7 +297,7 @@ export default function AvailableQuestsPanel({ profile, activeQuests = [] }) {
 
                         {/* Objectives Preview */}
                         <div className="mt-3 space-y-1">
-                          {quest.objectives.slice(0, 2).map((obj, idx) => (
+                          {quest.objectives.map((obj, idx) => (
                             <div key={idx} className="flex items-center gap-2 text-xs text-slate-500">
                               <div className="w-4 h-4 rounded border border-slate-300 flex items-center justify-center">
                                 {idx + 1}
@@ -305,11 +305,6 @@ export default function AvailableQuestsPanel({ profile, activeQuests = [] }) {
                               {obj.description}
                             </div>
                           ))}
-                          {quest.objectives.length > 2 && (
-                            <p className="text-xs text-slate-400">
-                              +{quest.objectives.length - 2} more objectives
-                            </p>
-                          )}
                         </div>
 
                         {/* Rewards */}
