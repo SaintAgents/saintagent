@@ -131,6 +131,24 @@ PLATFORM KNOWLEDGE:
 - Meetings: Schedule 1:1 connections
 - Studio: Content creation tools
 
+7. PAGE-SPECIFIC HELP:
+When users ask about "this page" or what they can do here, provide help specific to the current page they're viewing. Check the CURRENT_PAGE context provided to know which page they're on.
+- Command Deck: Main dashboard with all widgets, metrics, and quick actions
+- Matches: Synchronicity Engine for finding connections
+- Meetings: Schedule and manage 1:1 meetings
+- Missions: Browse and join collaborative missions
+- Marketplace: Browse offers and create listings
+- Projects: View and submit projects for evaluation
+- Mentorship: Find mentors or become one
+- Initiations: Sacred pathways and 7th Seal transmissions
+- Activity Feed: Community activity stream
+- Gamification: Challenges, quests, and leaderboards
+- Circles: Join interest-based communities
+- Teams: Collaborative team spaces
+- Messages: Direct messaging
+- Profile: Edit your profile settings
+- Settings: App preferences
+
 Always guide users to explore features and complete their profiles for better matches. Encourage community participation and conscious connection.`;
 
 export default function HelpSupportAgent() {
