@@ -4,6 +4,20 @@ function padSix(n) {
   return String(n).padStart(6, '0');
 }
 
+// Demo emails that should get "Demo" instead of a number
+const DEMO_EMAILS = [
+  'demo@saintagent.io',
+  'sarah.moon@example.com'
+];
+
+function isDemoUser(email) {
+  if (!email) return false;
+  const lower = email.toLowerCase();
+  return DEMO_EMAILS.some(d => lower === d.toLowerCase()) || 
+         lower.includes('example.com') || 
+         lower.includes('demo@');
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -20,14 +34,45 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No profiles found' }, { status: 404 });
     }
 
-    // Reset all SA numbers in order
-    let counter = 0;
+    // Separate: find creator first, then real users, then demo users
+    const creatorEmail = 'germaintrust@gmail.com';
+    const creatorProfile = allProfiles.find(p => p.user_id?.toLowerCase() === creatorEmail.toLowerCase());
+    const realUsers = allProfiles.filter(p => 
+      p.user_id?.toLowerCase() !== creatorEmail.toLowerCase() && !isDemoUser(p.user_id)
+    );
+    const demoUsers = allProfiles.filter(p => isDemoUser(p.user_id));
+
     const updates = [];
-    for (const profile of allProfiles) {
-      counter++;
-      const saNumber = padSix(counter);
+    let counter = 0;
+
+    // 1. Creator gets SA#000001
+    if (creatorProfile) {
+      counter = 1;
       updates.push(
-        base44.asServiceRole.entities.UserProfile.update(profile.id, { sa_number: saNumber })
+        base44.asServiceRole.entities.UserProfile.update(creatorProfile.id, { sa_number: padSix(counter) })
+      );
+    }
+
+    // 2. Real users get incremental numbers
+    for (const profile of realUsers) {
+      counter++;
+      updates.push(
+        base44.asServiceRole.entities.UserProfile.update(profile.id, { sa_number: padSix(counter) })
+      );
+    }
+
+    // 3. Demo users get "Demo" and " - Demo" appended to name
+    for (const profile of demoUsers) {
+      const nameUpdate = {};
+      nameUpdate.sa_number = 'Demo';
+      
+      // Add " - Demo" to display_name if not already there
+      if (profile.display_name && !profile.display_name.toLowerCase().includes('demo')) {
+        nameUpdate.display_name = profile.display_name + ' - Demo';
+      }
+      
+      updates.push(
+        base44.asServiceRole.entities.UserProfile.update(profile.id, nameUpdate)
       );
     }
     
@@ -37,7 +82,7 @@ Deno.serve(async (req) => {
       await Promise.all(updates.slice(i, i + batchSize));
     }
 
-    // Update the counter in PlatformSetting
+    // Update the counter in PlatformSetting (only count real SA numbers)
     const settings = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_counter' });
     const setting = settings?.[0];
     
@@ -50,6 +95,7 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: true, 
       totalAssigned: counter,
+      demoUsers: demoUsers.length,
       nextNumber: counter + 1
     });
   } catch (error) {
