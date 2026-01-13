@@ -65,8 +65,8 @@ const ACHIEVEMENT_BADGES = [
 
 const ALL_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES, ...ACHIEVEMENT_BADGES];
 
-// Total badge count for the system (may exceed ALL_BADGES if some aren't defined yet)
-const TOTAL_BADGE_COUNT = 42;
+// Total badge count = actual defined badges in this panel
+const TOTAL_BADGE_COUNT = ALL_BADGES.length;
 
 export default function BadgeProgressPanel({ 
   userBadges = [], 
