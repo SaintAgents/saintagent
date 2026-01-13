@@ -9,13 +9,15 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { 
   Sparkles, Eye, Globe, Lock, Unlock, ChevronRight, 
-  Flame, Star, Zap, Heart, BookOpen, Crown
+  Flame, Star, Zap, Heart, BookOpen, Crown, Trophy, Compass
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import Activation144K from '@/components/quests/Activation144K';
 import SeventhSealInitiation from '@/components/quests/SeventhSealInitiation';
 import { TRANSMISSIONS, META_VARIANCE_TAGLINES, BADGE_CATEGORIES } from '@/components/quests/MetaVarianceConfig';
 import BackButton from '@/components/hud/BackButton';
+import InitiationGamification from '@/components/gamification/InitiationGamification';
+import AIOnboardingGuidance from '@/components/ai/AIOnboardingGuidance';
 
 const INITIATIONS = [
   {
@@ -285,6 +287,14 @@ export default function InitiationsPage() {
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-8 bg-slate-800/50">
               <TabsTrigger value="initiations">Initiations</TabsTrigger>
+              <TabsTrigger value="progress">
+                <Trophy className="w-4 h-4 mr-2" />
+                Progress
+              </TabsTrigger>
+              <TabsTrigger value="guidance">
+                <Compass className="w-4 h-4 mr-2" />
+                Guidance
+              </TabsTrigger>
               <TabsTrigger value="transmissions">Transmissions</TabsTrigger>
               <TabsTrigger value="badges">Badge System</TabsTrigger>
             </TabsList>
@@ -322,6 +332,20 @@ export default function InitiationsPage() {
                   </p>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="progress">
+              <InitiationGamification 
+                userId={currentUser?.email} 
+                profile={profile}
+              />
+            </TabsContent>
+
+            <TabsContent value="guidance">
+              <AIOnboardingGuidance 
+                userId={currentUser?.email} 
+                profile={profile}
+              />
             </TabsContent>
 
             <TabsContent value="transmissions">
