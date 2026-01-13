@@ -191,7 +191,7 @@ export default function Matches() {
               Synchronicity Engine
               <SynchronicityHelpHint className="text-emerald-200/80" />
             </p>
-            <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
+            <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg">
               AI-Powered Connections Based on Values, Skills & Intentions
             </p>
           </div>

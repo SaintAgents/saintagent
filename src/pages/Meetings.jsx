@@ -113,7 +113,7 @@ export default function Meetings() {
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Meetings
             </h1>
-            <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
+            <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg">
               Schedule, Attend & Verify Meetings to Earn GGG
             </p>
           </div>
