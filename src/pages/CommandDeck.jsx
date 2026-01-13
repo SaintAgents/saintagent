@@ -898,36 +898,41 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </div>
                 </div>
 
-                {/* Avatar Display Mode Radio Buttons */}
+                {/* Theme Radio Buttons */}
                 <div className="mb-4 flex items-center gap-4">
-                  <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Avatar Display:</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Theme:</span>
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="radio"
-                      name="avatarDisplayMode"
-                      value="standard"
-                      defaultChecked
+                      name="themeSelect"
+                      value="light"
+                      checked={theme === 'light'}
+                      onChange={() => onThemeToggle?.('light')}
                       className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
                     />
-                    <span className="text-xs text-slate-700 dark:text-slate-300">Standard</span>
+                    <span className="text-xs text-slate-700 dark:text-slate-300">Light</span>
                   </label>
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="radio"
-                      name="avatarDisplayMode"
-                      value="compact"
+                      name="themeSelect"
+                      value="dark"
+                      checked={theme === 'dark'}
+                      onChange={() => onThemeToggle?.('dark')}
                       className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
                     />
-                    <span className="text-xs text-slate-700 dark:text-slate-300">Compact</span>
+                    <span className="text-xs text-slate-700 dark:text-slate-300">Dark</span>
                   </label>
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="radio"
-                      name="avatarDisplayMode"
-                      value="minimal"
+                      name="themeSelect"
+                      value="hacker"
+                      checked={theme === 'hacker'}
+                      onChange={() => onThemeToggle?.('hacker')}
                       className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
                     />
-                    <span className="text-xs text-slate-700 dark:text-slate-300">Minimal</span>
+                    <span className="text-xs text-slate-700 dark:text-slate-300">Hacker</span>
                   </label>
                 </div>
 
