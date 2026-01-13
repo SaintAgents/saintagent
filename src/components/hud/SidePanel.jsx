@@ -1050,26 +1050,26 @@ export default function SidePanel({
                   return (
                     <div
                       key={card.id}
-                      className="flex items-center justify-between p-2 rounded-lg bg-white border border-violet-100 hover:border-violet-300 transition-colors group"
+                      className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800/75 border border-violet-100 dark:border-[rgba(0,255,136,0.2)] hover:border-violet-300 dark:hover:border-[rgba(0,255,136,0.4)] transition-colors group"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        {CardIcon && <CardIcon className="w-4 h-4 text-violet-600 shrink-0" />}
-                        <span className="text-sm font-medium text-slate-700 truncate">{card.title}</span>
+                        {CardIcon && <CardIcon className="w-4 h-4 text-violet-600 dark:text-violet-400 shrink-0" />}
+                        <span className="text-sm font-medium text-slate-700 dark:text-white truncate">{card.title}</span>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={() => onRestoreCard?.(card.id)}
-                          className="p-1.5 rounded-lg hover:bg-emerald-100 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors"
                           title="Restore to deck"
                         >
-                          <Undo2 className="w-3.5 h-3.5 text-emerald-600" />
+                          <Undo2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         </button>
                         <button
                           onClick={() => onRemoveStoredCard?.(card.id)}
-                          className="p-1.5 rounded-lg hover:bg-rose-100 transition-colors opacity-0 group-hover:opacity-100"
+                          className="p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors opacity-0 group-hover:opacity-100"
                           title="Remove"
                         >
-                          <X className="w-3.5 h-3.5 text-rose-500" />
+                          <X className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
                         </button>
                       </div>
                     </div>
