@@ -107,7 +107,7 @@ export default function Quests() {
             </h1>
             <ForwardButton currentPage="Quests" className="text-white/80 hover:text-white" />
           </div>
-          <p className="text-white/80 text-lg max-w-xl">
+          <p className="text-white/[0.92] text-lg max-w-xl">
             Complete quests, earn badges, and climb the leaderboard
           </p>
         </div>

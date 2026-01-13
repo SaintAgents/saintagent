@@ -85,7 +85,7 @@ export default function Teams() {
               <Shield className="w-10 h-10 text-amber-300 drop-shadow-lg" />
               Teams & Guilds
             </h1>
-            <p className="text-violet-200/90 mt-2 text-lg tracking-wider drop-shadow-lg">
+            <p className="text-violet-200/[0.92] mt-2 text-lg tracking-wider drop-shadow-lg">
               Form Teams to Tackle Missions Together & Earn Collective Rewards
             </p>
           </div>
