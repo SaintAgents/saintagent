@@ -1,11 +1,12 @@
 import React from 'react';
-import { Globe, Twitter, Instagram, Linkedin, Youtube, Send, MessageCircle, ExternalLink } from 'lucide-react';
+import { Globe, Twitter, Instagram, Linkedin, Youtube, Send, MessageCircle, ExternalLink, Facebook } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const SOCIAL_ICONS = {
   website: Globe,
   twitter: Twitter,
   instagram: Instagram,
+  facebook: Facebook,
   linkedin: Linkedin,
   youtube: Youtube,
   tiktok: () => <span className="font-bold text-[10px]">TT</span>,
@@ -18,6 +19,7 @@ const SOCIAL_COLORS = {
   website: 'hover:bg-slate-100 hover:text-slate-700',
   twitter: 'hover:bg-sky-50 hover:text-sky-600',
   instagram: 'hover:bg-pink-50 hover:text-pink-600',
+  facebook: 'hover:bg-blue-50 hover:text-blue-600',
   linkedin: 'hover:bg-blue-50 hover:text-blue-700',
   youtube: 'hover:bg-red-50 hover:text-red-600',
   tiktok: 'hover:bg-slate-100 hover:text-slate-900',
@@ -33,6 +35,7 @@ function normalizeUrl(value, platform) {
   const prefixes = {
     twitter: 'https://twitter.com/',
     instagram: 'https://instagram.com/',
+    facebook: 'https://facebook.com/',
     linkedin: 'https://linkedin.com/in/',
     youtube: 'https://youtube.com/',
     tiktok: 'https://tiktok.com/@',
