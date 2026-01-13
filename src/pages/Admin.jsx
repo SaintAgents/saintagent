@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -16,6 +16,7 @@ import AdminCRM from '@/components/admin/AdminCRM';
 import AdminBetaFeedback from '@/components/admin/AdminBetaFeedback';
 import BadgeRewardsManager from '@/components/admin/BadgeRewardsManager';
 import RPSettingsManager from '@/components/admin/RPSettingsManager';
+import AdminChallenges from '@/components/admin/AdminChallenges';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -67,7 +68,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-6xl grid-cols-11">
+          <TabsList className="grid w-full max-w-6xl grid-cols-12">
             <TabsTrigger value="users" className="gap-2">
               <Users className="w-4 h-4" />
               Users
@@ -111,6 +112,10 @@ export default function Admin() {
             <TabsTrigger value="feedback" className="gap-2">
               <MessageSquare className="w-4 h-4" />
               Feedback
+            </TabsTrigger>
+            <TabsTrigger value="challenges" className="gap-2">
+              <Target className="w-4 h-4" />
+              Challenges
             </TabsTrigger>
           </TabsList>
 
@@ -156,6 +161,10 @@ export default function Admin() {
 
           <TabsContent value="feedback">
             <AdminBetaFeedback />
+          </TabsContent>
+
+          <TabsContent value="challenges">
+            <AdminChallenges />
           </TabsContent>
         </Tabs>
       </div>

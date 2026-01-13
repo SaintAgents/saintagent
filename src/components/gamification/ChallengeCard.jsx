@@ -15,10 +15,19 @@ import {
   Gift,
   Clock,
   CheckCircle,
-  Sparkles
+  Sparkles,
+  Download,
+  Edit
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const CATEGORY_ICONS = {
   profile: Target,
@@ -40,10 +49,22 @@ const CATEGORY_COLORS = {
 
 export default function ChallengeCard({ challenge, onClaim, compact = false }) {
   const queryClient = useQueryClient();
+  const [notesOpen, setNotesOpen] = React.useState(false);
+  const [userNotes, setUserNotes] = React.useState(challenge.user_notes || '');
   const Icon = CATEGORY_ICONS[challenge.category] || Target;
   const progress = Math.min(100, (challenge.current_count / challenge.target_count) * 100);
   const isComplete = challenge.current_count >= challenge.target_count;
   const canClaim = isComplete && challenge.status !== 'claimed';
+  
+  const saveNotesMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.Challenge.update(challenge.id, { user_notes: userNotes });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['challenges'] });
+      setNotesOpen(false);
+    }
+  });
 
   const claimMutation = useMutation({
     mutationFn: async () => {
@@ -207,6 +228,82 @@ export default function ChallengeCard({ challenge, onClaim, compact = false }) {
           </p>
         </div>
       )}
+
+      {/* Download & Notes Section */}
+      {(challenge.download_url || challenge.image_url) && (
+        <div className="mt-3 p-3 rounded-lg bg-blue-50 border border-blue-200 space-y-2">
+          {challenge.image_url && (
+            <img 
+              src={challenge.image_url} 
+              alt={challenge.title}
+              className="w-full rounded-lg mb-2"
+            />
+          )}
+          <div className="flex items-center gap-2">
+            {challenge.download_url && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 gap-2"
+                asChild
+              >
+                <a href={challenge.download_url} download>
+                  <Download className="w-4 h-4" />
+                  Download Sigil
+                </a>
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-2"
+              onClick={() => setNotesOpen(true)}
+            >
+              <Edit className="w-4 h-4" />
+              {challenge.user_notes ? 'Edit Notes' : 'Add Impressions'}
+            </Button>
+          </div>
+          {challenge.user_notes && (
+            <div className="text-xs text-slate-600 bg-white p-2 rounded border">
+              <p className="font-medium mb-1">Your Notes:</p>
+              <p className="italic">{challenge.user_notes}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Notes Modal */}
+      <Dialog open={notesOpen} onOpenChange={setNotesOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Your Impressions & Experiences</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Share your experiences with the {challenge.title}. What insights, dreams, or synchronicities did you notice?
+            </p>
+            <Textarea
+              value={userNotes}
+              onChange={(e) => setUserNotes(e.target.value)}
+              placeholder="Describe your impressions, experiences, or insights..."
+              rows={6}
+              className="resize-none"
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setNotesOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => saveNotesMutation.mutate()}
+                disabled={saveNotesMutation.isPending}
+                className="bg-violet-600 hover:bg-violet-700"
+              >
+                Save Notes
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }
