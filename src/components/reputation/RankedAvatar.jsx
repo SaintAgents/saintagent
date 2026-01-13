@@ -103,8 +103,10 @@ export default function RankedAvatar({
   const saNumberFinal = saNumber ?? fetchedProfile?.sa_number;
 
   // Determine which sigils to show
-  const showTrustSigil = trustScoreFinal > 0;
-  const showAffiliateBadge = affiliatePaidFinal > 0;
+  // Trust shield only shows at 100% trust (perfect score badge)
+  const showTrustSigil = trustScoreFinal >= 100;
+  // Affiliate badge shows if user has any paid referrals
+  const showAffiliateBadge = affiliatePaidFinal > 0 || affiliateTier !== 'bronze' || true; // Always show affiliate badge
 
   // Presence indicator mapping
   const STATUS_STYLES = {

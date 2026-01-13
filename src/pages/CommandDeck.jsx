@@ -846,14 +846,23 @@ export default function CommandDeck() {
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ background: 'transparent' }}>
                         <span className="text-3xl font-bold text-emerald-400 dark:text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]">{profile?.trust_score || 0}</span>
                       </div>
-                      {/* Cyan trust ring */}
+                      {/* Cyan trust ring - correctly shows percentage */}
                       <svg 
                         className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none" 
                         viewBox="0 0 100 100"
                         style={{ background: 'transparent' }}
                       >
                         <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="3" fill="none" className="text-slate-300/50 dark:text-slate-600/50" />
-                        <circle cx="50" cy="50" r="35" stroke="url(#trustGradientCmd)" strokeWidth="3" fill="none" strokeDasharray={`${2 * Math.PI * 35}`} strokeDashoffset={`${2 * Math.PI * 35 * (1 - (profile?.trust_score || 0) / 100)}`} className="transition-all duration-700" strokeLinecap="round" />
+                        <circle 
+                          cx="50" cy="50" r="35" 
+                          stroke="url(#trustGradientCmd)" 
+                          strokeWidth="3" 
+                          fill="none" 
+                          strokeDasharray={`${2 * Math.PI * 35}`} 
+                          strokeDashoffset={`${2 * Math.PI * 35 * (1 - Math.min(100, profile?.trust_score || 0) / 100)}`} 
+                          className="transition-all duration-700" 
+                          strokeLinecap="round" 
+                        />
                         <defs>
                           <linearGradient id="trustGradientCmd" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="#10b981" />
@@ -915,10 +924,10 @@ export default function CommandDeck() {
                   </div>
                 }
 
-                {/* Badges */}
+                {/* Badges & Sigils */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-teal-200 text-xs">Badges</p>
+                    <p className="text-teal-200 text-xs">Badges & Sigils</p>
                     <button className="text-xs text-violet-600 hover:underline" onClick={() => setBadgeGlossaryOpen(true)}>
                       View Glossary
                     </button>
@@ -943,6 +952,24 @@ export default function CommandDeck() {
                     showEmptySlots={true}
                     emptySlotCount={5}
                     onMore={() => setBadgeGlossaryOpen(true)} />
+                  
+                  {/* Recent Badges Section */}
+                  <div className="mt-3 p-3 rounded-xl bg-slate-50/80 border border-slate-200">
+                    <p className="text-xs font-medium text-slate-600 mb-2">Recently Achieved</p>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b40aecf5e_7-day-streak.png"
+                        alt="7-Day Streak"
+                        className="w-10 h-10 object-contain"
+                        data-no-filter="true"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900">7-Day Streak</p>
+                        <p className="text-xs text-slate-500">Logged in 7 days in a row</p>
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
 

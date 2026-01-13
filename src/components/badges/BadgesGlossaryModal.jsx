@@ -1,17 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BADGE_SECTIONS, BADGE_RULES, QUEST_BADGE_IMAGES } from './badgesData';
 import BadgeIcon from './BadgeIcon';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function BadgesGlossaryModal({ open, onOpenChange }) {
+  const [filterTab, setFilterTab] = useState('all');
+  
+  // Separate sections into badges and sigils
+  const badgeSections = BADGE_SECTIONS.filter(s => 
+    !['sigils', 'trust', 'affiliate'].includes(s.id?.toLowerCase())
+  );
+  const sigilSections = BADGE_SECTIONS.filter(s => 
+    ['sigils', 'trust', 'affiliate'].includes(s.id?.toLowerCase())
+  );
+  
+  const sectionsToShow = filterTab === 'all' ? BADGE_SECTIONS :
+    filterTab === 'badges' ? badgeSections : sigilSections;
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Badge Glossary</DialogTitle>
+          <DialogTitle>Badge & Sigil Glossary</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-1">
-          {BADGE_SECTIONS.map(section => (
+        
+        {/* Filter Tabs */}
+        <Tabs value={filterTab} onValueChange={setFilterTab} className="w-full mb-4">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="badges">Badges</TabsTrigger>
+            <TabsTrigger value="sigils">Sigils</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        
+        <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-1">
+          {sectionsToShow.map(section => (
             <div key={section.id}>
               <h3 className="text-xs font-semibold text-slate-500 tracking-wider mb-3">{section.title}</h3>
               <div className="space-y-3">
