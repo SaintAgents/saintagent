@@ -1013,6 +1013,42 @@ export default function Sidebar({
               })}
             </TooltipProvider>
           </div>
+          
+          {/* Theme Dots at Bottom */}
+          <div className="border-t border-slate-100 p-3">
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={() => onThemeToggle('light')}
+                className={cn(
+                  "w-4 h-4 rounded-full border-2 transition-all",
+                  theme === 'light' 
+                    ? "bg-white border-violet-500 ring-2 ring-violet-200" 
+                    : "bg-white border-slate-300 hover:border-slate-400"
+                )}
+                title="Light theme"
+              />
+              <button
+                onClick={() => onThemeToggle('dark')}
+                className={cn(
+                  "w-4 h-4 rounded-full border-2 transition-all",
+                  theme === 'dark' 
+                    ? "bg-slate-800 border-violet-500 ring-2 ring-violet-200" 
+                    : "bg-slate-800 border-slate-500 hover:border-slate-400"
+                )}
+                title="Dark theme"
+              />
+              <button
+                onClick={() => onThemeToggle('hacker')}
+                className={cn(
+                  "w-4 h-4 rounded-full border-2 transition-all",
+                  theme === 'hacker' 
+                    ? "bg-green-500 border-violet-500 ring-2 ring-violet-200" 
+                    : "bg-green-500 border-green-600 hover:border-green-400"
+                )}
+                title="Hacker theme"
+              />
+            </div>
+          </div>
         </FloatingPanel>
       )}
 

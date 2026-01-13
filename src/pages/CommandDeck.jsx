@@ -168,7 +168,7 @@ export default function CommandDeck() {
 
   // Store all cards to side panel
   const storeAllCards = () => {
-    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops'];
+    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations'];
     const newStoredCards = allCardIds
       .filter(id => !storedCards.some(c => c.id === id))
       .map(id => ({ id, title: getCardTitle(id) }));
@@ -201,7 +201,10 @@ export default function CommandDeck() {
       market: 'Marketplace: Earn & Learn',
       influence: 'Influence & Reach',
       leader: '144K Leader Channel',
-      dailyops: 'Daily Ops'
+      dailyops: 'Daily Ops',
+      communityFeed: 'Community Feed',
+      leaderboard: 'Leaderboard',
+      affirmations: 'Affirmations'
     };
     return titles[id] || id;
   };
@@ -223,7 +226,10 @@ export default function CommandDeck() {
     market: ShoppingBag,
     influence: TrendingUp,
     leader: Radio,
-    dailyops: Calendar
+    dailyops: Calendar,
+    communityFeed: Sparkles,
+    leaderboard: Trophy,
+    affirmations: Sparkles
   };
 
   // Toss card to side panel storage
@@ -1323,7 +1329,7 @@ export default function CommandDeck() {
               <CollaborationSuggestions profile={profile} compact={false} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel}>
+            <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <CommunityFeedCard maxHeight="400px" />
             </CollapsibleCard>
 
@@ -1331,16 +1337,16 @@ export default function CommandDeck() {
               <CirclesRegions />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel}>
+            <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <LeaderboardMiniCard />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Letterboard" cardId="letterboard" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('letterboard')} onToggleHide={() => toggleCardVisibility('letterboard')} onTossToSidePanel={handleTossToSidePanel}>
-              <div className="p-4 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-200">
-                <p className="text-lg font-medium text-violet-900 italic text-center">
+            <CollapsibleCard title="Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+              <div className="p-4 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-200 dark:border-violet-700">
+                <p className="text-lg font-medium text-violet-900 dark:text-violet-200 italic text-center">
                   "Your frequency is your invitation to the universe."
                 </p>
-                <p className="text-xs text-violet-600 text-center mt-2">— Daily Affirmation</p>
+                <p className="text-xs text-violet-600 dark:text-violet-400 text-center mt-2">— Daily Affirmation</p>
               </div>
             </CollapsibleCard>
 
