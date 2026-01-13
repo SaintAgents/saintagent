@@ -24,6 +24,7 @@ export default function CollapsibleCard({
   defaultOpen = true,
   badge,
   badgeColor = "slate",
+  badgeImage, // Optional badge image URL
   actions,
   className,
   onPin,
@@ -99,6 +100,14 @@ export default function CollapsibleCard({
             </div>
           }
           <h3 className="font-semibold text-slate-900 tracking-tight hidden md:block truncate">{title}</h3>
+          {badgeImage && (
+            <img 
+              src={badgeImage} 
+              alt="Badge" 
+              className="w-8 h-8 object-contain shrink-0"
+              data-no-filter="true"
+            />
+          )}
           {badge &&
           <span className={cn(
             "px-2.5 py-0.5 text-xs font-medium rounded-full shrink-0",

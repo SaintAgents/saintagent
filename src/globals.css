@@ -289,7 +289,13 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 
 [data-theme='dark'] [class*='text-slate-500'],
 [data-theme='dark'] [class*='text-gray-500'] {
-  color: #c0c0c0 !important;
+  color: #b0b0b0 !important;
+}
+
+/* Dark mode: Fix gold/yellow titles to dark green */
+[data-theme='dark'] [class*='text-yellow-'],
+[data-theme='dark'] [class*='text-amber-'] {
+  color: #10b981 !important;
 }
 
 /* Progress numbers and labels */
