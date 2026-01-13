@@ -12,8 +12,10 @@ import {
   ShoppingBag,
   Calendar,
   BarChart3,
-  Zap
+  Zap,
+  HelpCircle
 } from "lucide-react";
+import HelpHint from '@/components/hud/HelpHint';
 import MetricTile from '@/components/hud/MetricTile';
 import TierManager from '@/components/creator/TierManager';
 import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
