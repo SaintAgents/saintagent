@@ -56,6 +56,8 @@ import MBTIPromptBanner from '@/components/profile/MBTIPromptBanner';
 import CommandDeckTour, { CommandDeckLoadingScreen } from '@/components/tour/CommandDeckTour';
 import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import MysticalIDImage from '@/components/profile/MysticalIDImage';
+import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
+import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -1331,21 +1333,7 @@ export default function CommandDeck() {
             </CollapsibleCard>
 
             <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel}>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-200">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-white font-bold">1</div>
-                    <div>
-                      <p className="font-semibold text-slate-900">Top Earner</p>
-                      <p className="text-xs text-slate-500">This week's leader</p>
-                    </div>
-                  </div>
-                  <span className="text-amber-600 font-bold">1,250 GGG</span>
-                </div>
-                <Button variant="outline" className="w-full rounded-xl" onClick={() => window.location.href = createPageUrl('Leaderboards')}>
-                  View Full Leaderboard
-                </Button>
-              </div>
+              <LeaderboardMiniCard />
             </CollapsibleCard>
 
             <CollapsibleCard title="Letterboard" cardId="letterboard" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('letterboard')} onToggleHide={() => toggleCardVisibility('letterboard')} onTossToSidePanel={handleTossToSidePanel}>
@@ -1367,7 +1355,7 @@ export default function CommandDeck() {
               <AIDiscoverMatches profile={profile} />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Synchronicity Engine" cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel}>
+            <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
