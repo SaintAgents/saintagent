@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 // Quest navigation loops - each page maps to its "next" destination
 const QUEST_PATHS = {
@@ -53,16 +54,12 @@ export default function ForwardButton({ currentPage, className }) {
   
   // Don't show on CommandDeck itself
   if (currentPage === 'CommandDeck') return null;
-  
-  const handleForward = () => {
-    window.location.href = createPageUrl(nextPage);
-  };
 
   return (
-    <button
-      onClick={handleForward}
+    <Link
+      to={createPageUrl(nextPage)}
       className={cn(
-        "p-2 rounded-lg transition-all duration-200",
+        "p-2 rounded-lg transition-all duration-200 inline-flex items-center justify-center",
         "text-slate-500 hover:text-slate-700 hover:bg-slate-100",
         "dark:text-[#00ff88]/70 dark:hover:text-[#00ff88] dark:hover:bg-[rgba(0,255,136,0.1)]",
         "dark:hover:shadow-[0_0_12px_rgba(0,255,136,0.3)]",
@@ -72,7 +69,7 @@ export default function ForwardButton({ currentPage, className }) {
       title={`Continue to ${nextPage}`}
     >
       <ArrowRight className="w-5 h-5" />
-    </button>
+    </Link>
   );
 }
 
