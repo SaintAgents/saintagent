@@ -154,6 +154,50 @@ img[alt="Trust Gauge"],
 }
 
 /* =====================================================
+   TIP DIALOG - HIGHEST Z-INDEX
+   ===================================================== */
+
+/* Ensure tip dialog and all dialogs are above everything */
+[role="dialog"][data-state="open"],
+.tip-dialog,
+[data-radix-popper-content-wrapper] {
+  z-index: 99999 !important;
+}
+
+/* Dialog overlay */
+[data-radix-dialog-overlay] {
+  z-index: 99998 !important;
+}
+
+/* =====================================================
+   HACKER THEME - BADGES GREEN MONOCHROME
+   ===================================================== */
+
+/* Badge images in hacker theme should be green monochrome */
+[data-theme='hacker'] [class*='BadgesBar'] img,
+[data-theme='hacker'] img[alt*="Badge"],
+[data-theme='hacker'] .badge-image,
+html[data-theme='hacker'] [class*='BadgesBar'] img,
+html[data-theme='hacker'] img[alt*="Badge"] {
+  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
+}
+
+/* Make badge container visible in hero */
+[data-theme='dark'] .absolute.bottom-0 [class*='BadgesBar'],
+[data-theme='hacker'] .absolute.bottom-0 [class*='BadgesBar'] {
+  background: rgba(0, 0, 0, 0.6) !important;
+  padding: 0.5rem !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Badge text visible in dark themes */
+[data-theme='dark'] [class*='BadgesBar'] span,
+[data-theme='hacker'] [class*='BadgesBar'] span {
+  color: #ffffff !important;
+}
+
+/* =====================================================
    DARK THEME TEXT - HIGH CONTRAST
    ===================================================== */
 
