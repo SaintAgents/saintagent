@@ -170,6 +170,62 @@ img[alt="Trust Gauge"],
 }
 
 /* =====================================================
+   DARK THEME - DIALOG/MODAL INPUT VISIBILITY
+   ===================================================== */
+
+/* Dialog content needs solid background in dark themes */
+[data-theme='dark'] [role="dialog"],
+[data-theme='dark'] [data-radix-dialog-content],
+[data-theme='hacker'] [role="dialog"],
+[data-theme='hacker'] [data-radix-dialog-content] {
+  background-color: #0a0a0a !important;
+  border: 1px solid rgba(0, 255, 136, 0.3) !important;
+}
+
+/* Input fields inside dialogs - solid dark background */
+[data-theme='dark'] [role="dialog"] input,
+[data-theme='dark'] [role="dialog"] textarea,
+[data-theme='dark'] [role="dialog"] select,
+[data-theme='dark'] [data-radix-dialog-content] input,
+[data-theme='dark'] [data-radix-dialog-content] textarea,
+[data-theme='dark'] [data-radix-dialog-content] select,
+[data-theme='hacker'] [role="dialog"] input,
+[data-theme='hacker'] [role="dialog"] textarea,
+[data-theme='hacker'] [role="dialog"] select,
+[data-theme='hacker'] [data-radix-dialog-content] input,
+[data-theme='hacker'] [data-radix-dialog-content] textarea,
+[data-theme='hacker'] [data-radix-dialog-content] select {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: rgba(0, 255, 136, 0.4) !important;
+}
+
+/* Select dropdown content inside dialogs */
+[data-theme='dark'] [data-radix-select-content],
+[data-theme='dark'] [data-radix-popper-content-wrapper] [role="listbox"],
+[data-theme='hacker'] [data-radix-select-content],
+[data-theme='hacker'] [data-radix-popper-content-wrapper] [role="listbox"] {
+  background-color: #0a0a0a !important;
+  border: 1px solid rgba(0, 255, 136, 0.3) !important;
+}
+
+/* Labels inside dialogs */
+[data-theme='dark'] [role="dialog"] label,
+[data-theme='dark'] [data-radix-dialog-content] label,
+[data-theme='hacker'] [role="dialog"] label,
+[data-theme='hacker'] [data-radix-dialog-content] label {
+  color: #e0e0e0 !important;
+}
+
+/* Card backgrounds inside dialogs */
+[data-theme='dark'] [role="dialog"] [class*='Card'],
+[data-theme='dark'] [data-radix-dialog-content] [class*='Card'],
+[data-theme='hacker'] [role="dialog"] [class*='Card'],
+[data-theme='hacker'] [data-radix-dialog-content] [class*='Card'] {
+  background-color: #0f0f0f !important;
+}
+
+/* =====================================================
    HACKER THEME - BADGES GREEN MONOCHROME
    ===================================================== */
 
