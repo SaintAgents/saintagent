@@ -344,12 +344,20 @@ export default function BadgesPanel({ badges = [] }) {
                 <p className="text-xs text-amber-400/70">Soul Resonance • Quest Families • Verification Tracks</p>
               </div>
             </div>
-            <div className="mt-3">
-              <div className="flex justify-between text-xs text-amber-400/70 mb-1">
-                <span>Progress</span>
-                <span>{earnedFromGrid}/{totalBadges} ({Math.round(progress)}%)</span>
+            <div className="flex items-center gap-4 mt-3">
+              <div className="text-right">
+                <p className="text-2xl font-bold text-[#00ff88]">
+                  {earnedFromGrid}/{totalBadges}
+                </p>
+                <p className="text-xs text-amber-400/70">Badges Earned</p>
               </div>
-              <Progress value={progress} className="h-2 bg-amber-900/30" />
+              <div className="flex-1">
+                <div className="flex justify-between text-xs text-amber-400/70 mb-1">
+                  <span>Ascension Progress</span>
+                  <span>{Math.round(progress)}%</span>
+                </div>
+                <Progress value={progress} className="h-2 bg-amber-900/30" />
+              </div>
             </div>
           </DialogHeader>
           
