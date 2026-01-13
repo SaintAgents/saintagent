@@ -26,7 +26,7 @@ import { createPageUrl } from '@/utils';
 import MatchCard from '@/components/hud/MatchCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import DatingTab from '@/components/dating/DatingTab';
-import HelpHint from '@/components/hud/HelpHint';
+import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import AIMatchAssistant from '@/components/dating/AIMatchAssistant';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
@@ -186,8 +186,8 @@ export default function Matches() {
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Matches
             </h1>
-            <p className="text-lg font-semibold text-emerald-300 mt-1 drop-shadow-lg">
-              Synchronicity Engine
+            <p className="text-lg font-semibold text-emerald-300 mt-1 drop-shadow-lg flex items-center justify-center gap-2">
+              Synchronicity Engine <SynchronicityHelpHint className="text-white/70 hover:text-white" />
             </p>
             <p className="text-emerald-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
               AI-Powered Connections Based on Values, Skills & Intentions
