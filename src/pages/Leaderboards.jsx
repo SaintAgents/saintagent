@@ -8,6 +8,7 @@ import { Trophy, Star, BadgePercent, Users, Medal, Crown, Coins, Target, Trendin
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import BackButton from '@/components/hud/BackButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 const RANK_STYLES = {
   1: { bg: 'bg-gradient-to-r from-amber-100 to-yellow-100', border: 'border-amber-300', text: 'text-amber-700', icon: Crown },

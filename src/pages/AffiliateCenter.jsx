@@ -30,6 +30,7 @@ import { Progress } from "@/components/ui/progress";
 import CreateCampaignModal from '@/components/affiliate/CreateCampaignModal';
 import CampaignAnalytics from '@/components/affiliate/CampaignAnalytics';
 import BackButton from '@/components/hud/BackButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import { AFFILIATE_BADGE_IMAGES } from '@/components/reputation/affiliateBadges';
 
 // Affiliate Tier System with badge-style icons
@@ -266,6 +267,7 @@ export default function AffiliateCenter() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <HeroGalleryTrigger startIndex={16} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"

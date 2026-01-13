@@ -14,6 +14,7 @@ import { format, parseISO } from 'date-fns';
 import MiniProfile from '@/components/profile/MiniProfile';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 export default function CommunityFeed() {
   const [newPostText, setNewPostText] = useState('');
@@ -241,7 +242,8 @@ export default function CommunityFeed() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+        <HeroGalleryTrigger startIndex={17} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
+        <div className="absolute bottom-6 left-12 right-6 flex items-end justify-between">
           <div className="flex items-center gap-3">
             <BackButton className="text-white hover:bg-white/20" />
             <div>

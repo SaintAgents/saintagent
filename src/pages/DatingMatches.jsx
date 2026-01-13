@@ -193,6 +193,7 @@ export default function DatingMatches() {
           style={{ opacity: 1, filter: 'none', display: 'block', visibility: 'visible' }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-pink-50 via-pink-50/30 to-transparent dark:from-[#050505] dark:via-transparent dark:to-transparent" />
+        <HeroGalleryTrigger startIndex={19} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">

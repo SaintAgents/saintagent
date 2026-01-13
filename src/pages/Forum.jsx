@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import { formatDistanceToNow } from 'date-fns';
 
 const CATEGORIES = [
@@ -210,6 +211,7 @@ export default function Forum() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+        <HeroGalleryTrigger startIndex={15} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content" style={{ paddingTop: '15px' }}>
           <div className="flex items-center gap-3 mb-2">
             <BackButton className="text-white" />

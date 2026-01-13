@@ -9,6 +9,7 @@ import { Calendar, Plus, Search, MapPin, Video, Sparkles } from "lucide-react";
 import CreateEventModal from '@/components/community/CreateEventModal';
 import EventCard from '@/components/community/EventCard';
 import BackButton from '@/components/hud/BackButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 import { isPast, parseISO, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
@@ -84,6 +85,7 @@ export default function Events() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <HeroGalleryTrigger startIndex={18} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content">
           <div className="flex items-center gap-3 mb-2">
             <BackButton className="text-white/80 hover:text-white" />
