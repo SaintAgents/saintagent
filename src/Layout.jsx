@@ -20,6 +20,7 @@ import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 import UserTourModal from '@/components/hud/UserTourModal';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
+import BetaTicker from '@/components/hud/BetaTicker';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home'];
 
