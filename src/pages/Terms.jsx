@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Terms() {
+  const [activeTab, setActiveTab] = useState("terms");
+  
+  // Check URL params for tab
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "privacy") {
+      setActiveTab("privacy");
+    }
+  }, []);
+
   const { data: user } = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => base44.auth.me(),
@@ -287,13 +298,112 @@ C/o 7th Seal Temple
     .replace(/{{Date}}/g, effectiveDate)
     .replace(/{{first_name}}/g, firstName);
 
+  const privacyPolicy = `SAINT AGENTS – PRIVACY POLICY
+Effective Date: ${effectiveDate}
+
+This Privacy Policy describes how Gaia Global Holdings/Saint Agents 508 ("we," "us," or "our") collects, uses, and shares information about you when you use the Saint Agents platform, including any related websites, applications, services, tools, and features (collectively, the "Platform").
+
+1. INFORMATION WE COLLECT
+
+1.1 Information You Provide
+- Account information (name, email, password)
+- Profile information (bio, skills, interests, photos)
+- Communications (messages, feedback, support requests)
+- Transaction information (missions, payments, GGG activity)
+- Identity verification data (when applicable)
+
+1.2 Information Collected Automatically
+- Device and browser information
+- IP address and location data
+- Usage data and activity logs
+- Cookies and similar technologies
+
+1.3 Information from Third Parties
+- Social login providers (if you connect accounts)
+- Payment processors
+- Identity verification services
+
+2. HOW WE USE YOUR INFORMATION
+
+We use your information to:
+- Provide, maintain, and improve the Platform
+- Process transactions and manage your account
+- Calculate and display reputation, trust scores, and badges
+- Communicate with you about the Platform
+- Ensure safety and security
+- Comply with legal obligations
+
+3. HOW WE SHARE YOUR INFORMATION
+
+3.1 Public Information
+Your profile, reputation score, trust meter, badges, and public activity are visible to other users.
+
+3.2 Service Providers
+We share information with third-party service providers who help us operate the Platform.
+
+3.3 Legal Requirements
+We may disclose information when required by law or to protect rights, safety, or property.
+
+3.4 Business Transfers
+In connection with mergers, acquisitions, or asset sales, your information may be transferred.
+
+4. YOUR RIGHTS AND CHOICES
+
+You may:
+- Access and update your account information
+- Request deletion of your account
+- Opt out of marketing communications
+- Control cookie preferences
+
+5. DATA SECURITY
+
+We implement reasonable security measures to protect your information. However, no system is completely secure.
+
+6. DATA RETENTION
+
+We retain your information as long as your account is active or as needed to provide services, comply with legal obligations, and resolve disputes.
+
+7. CHILDREN'S PRIVACY
+
+The Platform is not intended for users under 18 years of age.
+
+8. INTERNATIONAL DATA TRANSFERS
+
+Your information may be transferred to and processed in countries other than your own.
+
+9. CHANGES TO THIS POLICY
+
+We may update this Privacy Policy from time to time. We will notify you of material changes.
+
+10. CONTACT US
+
+If you have questions about this Privacy Policy, contact us at:
+Email: support@saintagent.world
+Address: 2370 W State Route 89a STE 11 #166, Sedona, AZ 86336`;
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Terms and Conditions</h1>
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <pre className="whitespace-pre-wrap text-slate-700 text-sm">{rendered}</pre>
-        </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="terms">Terms of Service</TabsTrigger>
+            <TabsTrigger value="privacy">Privacy Policy</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="terms">
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">Terms and Conditions</h1>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+              <pre className="whitespace-pre-wrap text-slate-700 text-sm">{rendered}</pre>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="privacy">
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">Privacy Policy</h1>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+              <pre className="whitespace-pre-wrap text-slate-700 text-sm">{privacyPolicy}</pre>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
