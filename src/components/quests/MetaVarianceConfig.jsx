@@ -1593,4 +1593,28 @@ export const VOLUMES = [
   }
 ];
 
+// Coherence multipliers for quest rewards
+export const COHERENCE_MULTIPLIERS = {
+  1: { reward: 0.5, difficulty: 0.8, label: 'Dormant' },
+  2: { reward: 0.6, difficulty: 0.85, label: 'Stirring' },
+  3: { reward: 0.7, difficulty: 0.9, label: 'Awakening' },
+  4: { reward: 0.85, difficulty: 0.95, label: 'Rising' },
+  5: { reward: 1.0, difficulty: 1.0, label: 'Aligned' },
+  6: { reward: 1.15, difficulty: 1.05, label: 'Resonant' },
+  7: { reward: 1.3, difficulty: 1.1, label: 'Harmonic' },
+  8: { reward: 1.5, difficulty: 1.15, label: 'Luminous' },
+  9: { reward: 1.75, difficulty: 1.2, label: 'Radiant' },
+  10: { reward: 2.0, difficulty: 1.25, label: 'Transcendent' }
+};
+
+// Calculate quest rewards based on coherence
+export function calculateQuestRewards(baseReward, coherenceLevel) {
+  const multiplier = COHERENCE_MULTIPLIERS[coherenceLevel] || COHERENCE_MULTIPLIERS[5];
+  return {
+    reward: Math.round(baseReward * multiplier.reward),
+    difficulty: multiplier.difficulty,
+    label: multiplier.label
+  };
+}
+
 export default TRANSMISSIONS;
