@@ -33,6 +33,8 @@ export const TIERS = [
 
 export const INTERACTION_BONUS_GGG = 0.0019312; // +$0.28 for 5+ interactions
 export const INTERACTION_THRESHOLD = 5; // likes, comments, shares needed for bonus
+export const INTERACTION_CONTINUED_BONUS_GGG = 0.0022759; // +$0.33 for every 15 interactions after initial 5
+export const INTERACTION_CONTINUED_THRESHOLD = 15; // every 15 interactions earns continued bonus
 
 // Tier multipliers for rank-based scaling
 export const TIER_MULTIPLIERS = [1.0, 2.0, 4.0, 8.0, 16.0];
@@ -50,7 +52,7 @@ export const ACTIONS = [
 
   // Content Creation
   { key: 'post_update', title: 'Daily Field Update', base: 0.0038624, usd: 0.56, category: 'content', definition: 'A short daily report on what you did, observed, or progressed that day—focused on signal (status, blockers, key insights), not noise.' },
-  { key: 'posting', title: 'Posting', base: 0.0038624, usd: 0.56, category: 'content', definition: 'A post with at least 30 characters earns base reward. Earn an additional bonus when the post receives at least 5 interactions (likes, comments, shares).' },
+  { key: 'posting', title: 'Posting', base: 0.0038624, usd: 0.56, category: 'content', definition: 'A post with at least 30 characters earns base reward. Earn +$0.28 bonus when the post receives 5+ interactions, then +$0.33 for every 15 additional interactions.' },
   { key: 'forum_post', title: 'Forum Post', base: 0.0077248, usd: 1.12, category: 'content', definition: 'Creating a structured forum post for community discussion and knowledge sharing.' },
   { key: 'comment_helpful', title: 'Helpful Comment (Accepted)', base: 0.0100000, usd: 1.45, category: 'content', definition: 'A comment that meaningfully solves a problem, clarifies confusion, or adds value and is marked as "accepted" or "helpful" by the mission owner/mod.' },
   { key: 'thread_summary', title: 'Thread Summary', base: 0.0100000, usd: 1.45, category: 'content', definition: 'A concise summary of a discussion thread, capturing key decisions, options, links, and next steps so others do not have to read the entire thread.' },
@@ -166,6 +168,7 @@ export const MATRIX_SECTIONS = [
     'Share = $0.28',
     'Daily Check-in = $0.28',
     '+$0.28 bonus when post gets 5+ interactions',
+    '+$0.33 for every 15 interactions after initial 5',
   ] },
   { tier: 0.0038624, title: 'Tier 5: Content Creation ($0.56)', items: [
     'Follow = $0.56',
