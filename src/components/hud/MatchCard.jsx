@@ -204,16 +204,16 @@ export default function MatchCard({ match, onAction, onAskAI }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={handleCardClick}
-      className="group relative bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/60 dark:border-slate-700 p-4 hover:shadow-lg hover:border-violet-200 dark:hover:border-violet-600 transition-all duration-300 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]">
+      className="group relative bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/60 dark:border-slate-700 p-3 hover:shadow-lg hover:border-violet-200 dark:hover:border-violet-600 transition-all duration-300 h-fit [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]">
 
-      <div className="flex items-start gap-4">
-        <div className="relative" onClick={handleNavigateTarget}>
+      <div className="flex items-center gap-3">
+        <div className="relative shrink-0" onClick={handleNavigateTarget}>
           {match.target_type === 'person' ? (
             <div className="relative">
               <RankedAvatar
                 src={resolvedAvatar}
                 name={match.target_name}
-                size={52}
+                size={44}
                 userId={match.target_id}
                 rpRankCode={effectiveRpRankCode}
                 rpPoints={effectiveRpPoints}
@@ -230,7 +230,7 @@ export default function MatchCard({ match, onAction, onAskAI }) {
             </div>
           ) : (
             <>
-              <Avatar className="w-12 h-12 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all dark:ring-slate-700 [data-theme='hacker']_&:ring-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_8px_#00ff00]">
+              <Avatar className="w-11 h-11 ring-2 ring-white shadow-md cursor-pointer hover:ring-violet-300 transition-all dark:ring-slate-700 [data-theme='hacker']_&:ring-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_8px_#00ff00]">
                 <AvatarImage src={resolvedAvatar} />
                 <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white font-medium [data-theme='hacker']_&:from-[#001a00] [data-theme='hacker']_&:to-[#003300] [data-theme='hacker']_&:text-[#00ff00]">
                   {match.target_name?.charAt(0) || "?"}
@@ -244,81 +244,62 @@ export default function MatchCard({ match, onAction, onAskAI }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
                 <h4
-                  className="font-semibold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00] truncate cursor-pointer"
+                  className="font-semibold text-slate-900 dark:text-white [data-theme='hacker']_&:text-[#00ff00] truncate cursor-pointer text-sm"
                   onClick={handleNavigateTarget}>
                   {match.target_name}
                 </h4>
                 {/* Verified badge for 144K leaders */}
                 {effectiveLeaderTier === 'verified144k' && (
-                  <CheckCircle className="w-4 h-4 text-amber-500 shrink-0 [data-theme='hacker']_&:text-[#00ff00]" title="Verified 144K Leader" />
+                  <CheckCircle className="w-3.5 h-3.5 text-amber-500 shrink-0 [data-theme='hacker']_&:text-[#00ff00]" title="Verified 144K Leader" />
                 )}
+                <div className={cn(
+                  "shrink-0 px-2 py-0.5 rounded-full text-xs font-bold ml-auto",
+                  scoreColor
+                )}>
+                  {match.match_score}%
+                </div>
               </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00cc00] truncate">{match.target_subtitle}</p>
-            </div>
-            <div className={cn(
-              "shrink-0 px-2.5 py-1 rounded-full text-sm font-bold",
-              scoreColor
-            )}>
-              {match.match_score}%
+              <p className="text-xs text-slate-500 dark:text-slate-400 [data-theme='hacker']_&:text-[#00cc00] truncate">{match.target_subtitle}</p>
             </div>
           </div>
-
-          {match.timing_window &&
-          <div className="flex items-center gap-1.5 mt-2">
-              <Clock className="w-3.5 h-3.5 text-violet-500" />
-              <span className="text-xs text-violet-600 font-medium">{match.timing_window}</span>
-            </div>
-          }
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 mt-4">
+      <div className="flex items-center gap-1.5 mt-3">
         <Button
           size="sm"
-          className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg h-9"
+          className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg h-8 text-xs px-2"
           onClick={() => onAction?.('message', match)}>
-
-          <MessageCircle className="w-4 h-4 mr-1.5" />
+          <MessageCircle className="w-3.5 h-3.5 mr-1" />
           Message
         </Button>
         <Button
           size="sm"
-          variant="outline" className="bg-purple-100 text-neutral-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground flex-1 h-9"
-
+          variant="outline" 
+          className="flex-1 h-8 text-xs px-2 rounded-lg"
           onClick={() => onAction?.('book', match)}>
-
-          <Calendar className="w-4 h-4 mr-1.5" />
+          <Calendar className="w-3.5 h-3.5 mr-1" />
           Book
         </Button>
         <Button
           size="icon"
           variant="ghost"
-          className="h-9 w-9 shrink-0"
+          className="h-8 w-8 shrink-0"
           onClick={() => setShowRating(!showRating)}
           title="Rate this match">
-
-          <Star className={cn("w-4 h-4", rating > 0 ? "text-amber-500 fill-amber-500" : "text-slate-400")} />
+          <Star className={cn("w-3.5 h-3.5", rating > 0 ? "text-amber-500 fill-amber-500" : "text-slate-400")} />
         </Button>
         <Button
           size="icon"
           variant="ghost"
-          className="h-9 w-9 shrink-0"
-          onClick={() => onAction?.('save', match)}>
-
-          <Bookmark className="w-4 h-4 text-slate-400" />
-        </Button>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-9 w-9 shrink-0 hover:text-rose-600"
+          className="h-8 w-8 shrink-0 hover:text-rose-600"
           onClick={handleBlock}
           title="Block this user">
-
-          <Ban className="w-4 h-4 text-slate-400" />
+          <Ban className="w-3.5 h-3.5 text-slate-400" />
         </Button>
       </div>
 
@@ -361,12 +342,11 @@ export default function MatchCard({ match, onAction, onAskAI }) {
 
       <button
         onClick={() => setShowExplanation(!showExplanation)}
-        className="flex items-center gap-1.5 mt-3 text-xs text-slate-500 hover:text-violet-600 transition-colors">
-
-        <Sparkles className="w-3.5 h-3.5" />
+        className="flex items-center gap-1 mt-2 text-[11px] text-slate-500 hover:text-violet-600 transition-colors">
+        <Sparkles className="w-3 h-3" />
         Why this match?
         <ChevronDown className={cn(
-          "w-3.5 h-3.5 transition-transform",
+          "w-3 h-3 transition-transform",
           showExplanation && "rotate-180"
         )} />
       </button>
