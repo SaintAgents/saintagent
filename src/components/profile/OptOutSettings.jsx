@@ -1,447 +1,300 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { base44 } from '@/api/base44Client';
+import { cn } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   Shield, 
   Eye, 
   EyeOff, 
-  Bell, 
-  BellOff, 
-  Users, 
-  Search, 
-  MessageSquare, 
-  Sparkles, 
-  Trophy, 
-  TrendingUp,
-  MapPin,
-  Heart,
-  Zap,
-  Save,
-  Crown
+  Lock, 
+  Unlock,
+  Users,
+  Search,
+  Bell,
+  Database,
+  Sparkles,
+  AlertTriangle,
+  CheckCircle
 } from 'lucide-react';
-import { cn } from "@/lib/utils";
-
-// Ranks that have access to opt-out settings (master and above)
-const ELIGIBLE_RANKS = ['master', 'sage', 'oracle', 'ascended', 'guardian'];
+import { canAccessOptOutControls, RANK_HIERARCHY } from '@/components/merit/MeritScoreUtils';
 
 export default function OptOutSettings({ profile }) {
   const queryClient = useQueryClient();
-  const currentRank = profile?.rp_rank_code || 'seeker';
-  const isEligible = ELIGIBLE_RANKS.includes(currentRank);
+  const rankCode = profile?.rp_rank_code || profile?.rank_code || 'seeker';
+  const canAccess = canAccessOptOutControls(rankCode);
 
-  // Initialize opt-out settings from profile or defaults
   const [settings, setSettings] = useState({
-    // Visibility
-    hide_from_search: false,
-    hide_from_matches: false,
-    hide_profile_publicly: false,
-    hide_location: false,
-    hide_online_status: false,
-    
-    // Leaderboards & Rankings
-    opt_out_leaderboards: false,
-    hide_rank_badge: false,
-    hide_rp_points: false,
-    hide_ggg_balance: false,
-    
-    // Social Features
-    disable_dms: false,
-    disable_follow_requests: false,
-    hide_follower_count: false,
-    hide_following_list: false,
-    
-    // Matching & Discovery
-    disable_synchronicity_engine: false,
-    disable_ai_matching: false,
-    disable_dating_matches: false,
-    
-    // Notifications
-    disable_match_notifications: false,
-    disable_mission_notifications: false,
-    disable_community_notifications: false,
-    disable_email_notifications: false,
-    
-    // Gamification
-    opt_out_challenges: false,
-    opt_out_quests: false,
-    opt_out_seasonal_events: false,
-    
-    // Creator/Monetization
-    hide_earnings: false,
-    hide_tip_button: false,
-    disable_boost_visibility: false
+    profile_visibility: profile?.profile_visibility || 'public',
+    show_in_search: profile?.visibility_settings?.show_in_search !== false,
+    show_in_matches: profile?.visibility_settings?.show_in_matches !== false,
+    show_performance_score: profile?.visibility_settings?.show_performance_score !== false,
+    allow_dm_requests: profile?.dm_policy !== 'none',
+    share_activity_data: profile?.visibility_settings?.share_activity_data !== false,
+    show_online_status: profile?.visibility_settings?.show_online_status !== false,
+    block_shares: profile?.block_shares || false
   });
 
-  // Load existing settings from profile
-  useEffect(() => {
-    if (profile?.opt_out_settings) {
-      setSettings(prev => ({ ...prev, ...profile.opt_out_settings }));
-    }
-  }, [profile?.opt_out_settings]);
-
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
+    mutationFn: async (newSettings) => {
+      await base44.entities.UserProfile.update(profile.id, {
+        profile_visibility: newSettings.profile_visibility,
+        block_shares: newSettings.block_shares,
+        dm_policy: newSettings.allow_dm_requests ? 'everyone' : 'none',
+        visibility_settings: {
+          ...profile.visibility_settings,
+          show_in_search: newSettings.show_in_search,
+          show_in_matches: newSettings.show_in_matches,
+          show_performance_score: newSettings.show_performance_score,
+          share_activity_data: newSettings.share_activity_data,
+          show_online_status: newSettings.show_online_status
+        }
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     }
   });
 
-  const handleToggle = (key) => {
-    setSettings(prev => ({ ...prev, [key]: !prev[key] }));
+  const handleChange = (key, value) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
   };
 
-  const handleSave = async () => {
-    await updateMutation.mutateAsync({ opt_out_settings: settings });
+  const handleSave = () => {
+    updateMutation.mutate(settings);
   };
 
-  if (!isEligible) {
+  // Show locked state for users below Sage rank
+  if (!canAccess) {
+    const currentRankLevel = RANK_HIERARCHY[rankCode] || 0;
+    const sageLevel = RANK_HIERARCHY['sage'];
+    const ranksToGo = sageLevel - currentRankLevel;
+
     return (
-      <Card className="border-amber-200 bg-amber-50/50">
-        <CardContent className="pt-6">
-          <div className="text-center py-8">
-            <Crown className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Master Rank Required</h3>
-            <p className="text-slate-600 mb-4">
-              Opt-out settings are available for members who have achieved <strong>Master</strong> rank or higher.
-            </p>
-            <Badge className="bg-amber-100 text-amber-700 capitalize">
-              Current Rank: {currentRank}
-            </Badge>
-            <p className="text-sm text-slate-500 mt-4">
-              Continue earning RP to unlock advanced privacy controls.
-            </p>
+      <Card className="border-slate-200 dark:border-slate-800">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Lock className="w-5 h-5 text-slate-400" />
+            <span>Visibility & Data Controls</span>
+            <Badge variant="outline" className="ml-2">Sage+</Badge>
+          </CardTitle>
+          <CardDescription>
+            Manage your platform visibility and data sovereignty
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="p-4 rounded-lg bg-gradient-to-r from-violet-50 to-cyan-50 dark:from-violet-900/20 dark:to-cyan-900/20 border border-violet-100 dark:border-violet-800">
+            <div className="flex items-start gap-3">
+              <Shield className="w-6 h-6 text-violet-500 mt-0.5" />
+              <div>
+                <p className="font-medium text-slate-800 dark:text-slate-200">
+                  Data Sovereignty Awaits
+                </p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  At <span className="font-semibold text-violet-600">Sage rank</span>, you'll unlock full control over your visibility and platform data. This is a taste of the sovereignty that comes with deeper commitment.
+                </p>
+                <p className="text-xs text-slate-500 mt-2">
+                  {ranksToGo > 0 
+                    ? `${ranksToGo} rank${ranksToGo > 1 ? 's' : ''} away from unlocking these controls.`
+                    : 'Keep building your legend to unlock.'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Preview of what's coming */}
+          <div className="space-y-3 opacity-50">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 text-slate-400" />
+                <span className="text-sm text-slate-500">Profile Visibility</span>
+              </div>
+              <Lock className="w-4 h-4 text-slate-400" />
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-slate-400" />
+                <span className="text-sm text-slate-500">Search Visibility</span>
+              </div>
+              <Lock className="w-4 h-4 text-slate-400" />
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+              <div className="flex items-center gap-2">
+                <Database className="w-4 h-4 text-slate-400" />
+                <span className="text-sm text-slate-500">Activity Data Sharing</span>
+              </div>
+              <Lock className="w-4 h-4 text-slate-400" />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-xs">
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <span className="text-amber-700 dark:text-amber-300">
+              "The path of mastery is walked one quest at a time."
+            </span>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  const SettingRow = ({ icon: Icon, label, description, settingKey, iconColor = "text-slate-500" }) => (
-    <div className="flex items-start justify-between py-3">
-      <div className="flex items-start gap-3 flex-1">
-        <Icon className={cn("w-5 h-5 mt-0.5", iconColor)} />
-        <div>
-          <Label className="text-sm font-medium text-slate-900">{label}</Label>
-          <p className="text-xs text-slate-500 mt-0.5">{description}</p>
-        </div>
-      </div>
-      <Switch
-        checked={settings[settingKey]}
-        onCheckedChange={() => handleToggle(settingKey)}
-      />
-    </div>
-  );
-
+  // Full opt-out controls for Sage+ users
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <Card className="border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50">
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-violet-100">
-              <Shield className="w-8 h-8 text-violet-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">Opt-Out Settings</h2>
-              <p className="text-slate-600">
-                As a <span className="font-semibold capitalize text-violet-600">{currentRank}</span>, 
-                you have full control over your visibility and participation.
-              </p>
-            </div>
+    <Card className="border-violet-200 dark:border-violet-800">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Shield className="w-5 h-5 text-violet-500" />
+          <span>Visibility & Data Controls</span>
+          <Badge className="ml-2 bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300">
+            Unlocked
+          </Badge>
+        </CardTitle>
+        <CardDescription>
+          You've earned sovereignty over your platform presence
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Profile Visibility */}
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Profile Visibility</Label>
+          <div className="flex gap-2">
+            {['public', 'members_only', 'private'].map((option) => (
+              <Button
+                key={option}
+                variant={settings.profile_visibility === option ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleChange('profile_visibility', option)}
+                className={cn(
+                  settings.profile_visibility === option && 
+                  "bg-violet-600 hover:bg-violet-700"
+                )}
+              >
+                {option === 'public' && <Eye className="w-4 h-4 mr-1" />}
+                {option === 'members_only' && <Users className="w-4 h-4 mr-1" />}
+                {option === 'private' && <EyeOff className="w-4 h-4 mr-1" />}
+                {option.replace('_', ' ')}
+              </Button>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Visibility Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Eye className="w-5 h-5 text-blue-500" />
-            Visibility & Privacy
-          </CardTitle>
-          <CardDescription>Control who can see your profile and activity</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={Search}
-            iconColor="text-blue-500"
-            label="Hide from Search"
-            description="Your profile won't appear in search results"
-            settingKey="hide_from_search"
-          />
-          <SettingRow
-            icon={Sparkles}
-            iconColor="text-purple-500"
-            label="Hide from Matches"
-            description="Don't appear as a match suggestion to others"
-            settingKey="hide_from_matches"
-          />
-          <SettingRow
-            icon={EyeOff}
-            iconColor="text-slate-500"
-            label="Private Profile"
-            description="Only followers can view your full profile"
-            settingKey="hide_profile_publicly"
-          />
-          <SettingRow
-            icon={MapPin}
-            iconColor="text-emerald-500"
-            label="Hide Location"
-            description="Don't display your region or location"
-            settingKey="hide_location"
-          />
-          <SettingRow
-            icon={Zap}
-            iconColor="text-green-500"
-            label="Hide Online Status"
-            description="Others won't see when you're online"
-            settingKey="hide_online_status"
-          />
-        </CardContent>
-      </Card>
+        {/* Toggle Options */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-slate-500" />
+              <Label htmlFor="show_in_search" className="text-sm">Show in Search Results</Label>
+            </div>
+            <Switch 
+              id="show_in_search"
+              checked={settings.show_in_search}
+              onCheckedChange={(v) => handleChange('show_in_search', v)}
+            />
+          </div>
 
-      {/* Leaderboards & Rankings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Trophy className="w-5 h-5 text-amber-500" />
-            Leaderboards & Rankings
-          </CardTitle>
-          <CardDescription>Control your visibility on leaderboards</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={Trophy}
-            iconColor="text-amber-500"
-            label="Opt Out of Leaderboards"
-            description="Don't appear on any public leaderboards"
-            settingKey="opt_out_leaderboards"
-          />
-          <SettingRow
-            icon={Shield}
-            iconColor="text-violet-500"
-            label="Hide Rank Badge"
-            description="Don't display your rank badge publicly"
-            settingKey="hide_rank_badge"
-          />
-          <SettingRow
-            icon={TrendingUp}
-            iconColor="text-blue-500"
-            label="Hide RP Points"
-            description="Keep your reputation points private"
-            settingKey="hide_rp_points"
-          />
-          <SettingRow
-            icon={TrendingUp}
-            iconColor="text-amber-500"
-            label="Hide GGG Balance"
-            description="Don't display your GGG earnings"
-            settingKey="hide_ggg_balance"
-          />
-        </CardContent>
-      </Card>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-slate-500" />
+              <Label htmlFor="show_in_matches" className="text-sm">Appear in Match Suggestions</Label>
+            </div>
+            <Switch 
+              id="show_in_matches"
+              checked={settings.show_in_matches}
+              onCheckedChange={(v) => handleChange('show_in_matches', v)}
+            />
+          </div>
 
-      {/* Social Features */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Users className="w-5 h-5 text-rose-500" />
-            Social Features
-          </CardTitle>
-          <CardDescription>Manage social interactions</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={MessageSquare}
-            iconColor="text-blue-500"
-            label="Disable Direct Messages"
-            description="Only allow messages from people you follow"
-            settingKey="disable_dms"
-          />
-          <SettingRow
-            icon={Users}
-            iconColor="text-violet-500"
-            label="Disable Follow Requests"
-            description="Prevent others from following you"
-            settingKey="disable_follow_requests"
-          />
-          <SettingRow
-            icon={Users}
-            iconColor="text-slate-500"
-            label="Hide Follower Count"
-            description="Don't display how many followers you have"
-            settingKey="hide_follower_count"
-          />
-          <SettingRow
-            icon={Heart}
-            iconColor="text-rose-500"
-            label="Hide Following List"
-            description="Keep who you follow private"
-            settingKey="hide_following_list"
-          />
-        </CardContent>
-      </Card>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-slate-500" />
+              <Label htmlFor="show_performance_score" className="text-sm">Display Performance Score</Label>
+            </div>
+            <Switch 
+              id="show_performance_score"
+              checked={settings.show_performance_score}
+              onCheckedChange={(v) => handleChange('show_performance_score', v)}
+            />
+          </div>
 
-      {/* Matching & Discovery */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Sparkles className="w-5 h-5 text-purple-500" />
-            Matching & Discovery
-          </CardTitle>
-          <CardDescription>Control AI-powered matching features</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={Sparkles}
-            iconColor="text-purple-500"
-            label="Disable Synchronicity Engine"
-            description="Opt out of all synchronicity-based matching"
-            settingKey="disable_synchronicity_engine"
-          />
-          <SettingRow
-            icon={Zap}
-            iconColor="text-blue-500"
-            label="Disable AI Matching"
-            description="Don't use AI to suggest collaborators"
-            settingKey="disable_ai_matching"
-          />
-          <SettingRow
-            icon={Heart}
-            iconColor="text-rose-500"
-            label="Disable Dating Matches"
-            description="Opt out of romantic matching entirely"
-            settingKey="disable_dating_matches"
-          />
-        </CardContent>
-      </Card>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4 text-slate-500" />
+              <Label htmlFor="allow_dm_requests" className="text-sm">Allow DM Requests</Label>
+            </div>
+            <Switch 
+              id="allow_dm_requests"
+              checked={settings.allow_dm_requests}
+              onCheckedChange={(v) => handleChange('allow_dm_requests', v)}
+            />
+          </div>
 
-      {/* Notifications */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Bell className="w-5 h-5 text-orange-500" />
-            Notifications
-          </CardTitle>
-          <CardDescription>Silence specific notification types</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={Sparkles}
-            iconColor="text-purple-500"
-            label="Disable Match Notifications"
-            description="Don't notify me about new matches"
-            settingKey="disable_match_notifications"
-          />
-          <SettingRow
-            icon={Trophy}
-            iconColor="text-amber-500"
-            label="Disable Mission Notifications"
-            description="Don't notify me about missions"
-            settingKey="disable_mission_notifications"
-          />
-          <SettingRow
-            icon={Users}
-            iconColor="text-blue-500"
-            label="Disable Community Notifications"
-            description="Silence community activity alerts"
-            settingKey="disable_community_notifications"
-          />
-          <SettingRow
-            icon={BellOff}
-            iconColor="text-slate-500"
-            label="Disable Email Notifications"
-            description="Don't send any email notifications"
-            settingKey="disable_email_notifications"
-          />
-        </CardContent>
-      </Card>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Database className="w-4 h-4 text-slate-500" />
+              <Label htmlFor="share_activity_data" className="text-sm">Share Activity Data for Matching</Label>
+            </div>
+            <Switch 
+              id="share_activity_data"
+              checked={settings.share_activity_data}
+              onCheckedChange={(v) => handleChange('share_activity_data', v)}
+            />
+          </div>
 
-      {/* Gamification */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Zap className="w-5 h-5 text-yellow-500" />
-            Gamification
-          </CardTitle>
-          <CardDescription>Opt out of gamification features</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={Trophy}
-            iconColor="text-amber-500"
-            label="Opt Out of Challenges"
-            description="Don't participate in daily/weekly challenges"
-            settingKey="opt_out_challenges"
-          />
-          <SettingRow
-            icon={Sparkles}
-            iconColor="text-violet-500"
-            label="Opt Out of Quests"
-            description="Don't receive or participate in quests"
-            settingKey="opt_out_quests"
-          />
-          <SettingRow
-            icon={Zap}
-            iconColor="text-yellow-500"
-            label="Opt Out of Seasonal Events"
-            description="Don't participate in seasonal competitions"
-            settingKey="opt_out_seasonal_events"
-          />
-        </CardContent>
-      </Card>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Eye className="w-4 h-4 text-slate-500" />
+              <Label htmlFor="show_online_status" className="text-sm">Show Online Status</Label>
+            </div>
+            <Switch 
+              id="show_online_status"
+              checked={settings.show_online_status}
+              onCheckedChange={(v) => handleChange('show_online_status', v)}
+            />
+          </div>
 
-      {/* Creator/Monetization */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <TrendingUp className="w-5 h-5 text-emerald-500" />
-            Creator & Monetization
-          </CardTitle>
-          <CardDescription>Control monetization visibility</CardDescription>
-        </CardHeader>
-        <CardContent className="divide-y">
-          <SettingRow
-            icon={TrendingUp}
-            iconColor="text-emerald-500"
-            label="Hide Earnings"
-            description="Don't display total earnings on profile"
-            settingKey="hide_earnings"
-          />
-          <SettingRow
-            icon={Heart}
-            iconColor="text-rose-500"
-            label="Hide Tip Button"
-            description="Remove the tip button from your profile"
-            settingKey="hide_tip_button"
-          />
-          <SettingRow
-            icon={Zap}
-            iconColor="text-amber-500"
-            label="Disable Boost Visibility"
-            description="Don't show boosted status on profile"
-            settingKey="disable_boost_visibility"
-          />
-        </CardContent>
-      </Card>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500" />
+              <Label htmlFor="block_shares" className="text-sm">Block Content Shares to Me</Label>
+            </div>
+            <Switch 
+              id="block_shares"
+              checked={settings.block_shares}
+              onCheckedChange={(v) => handleChange('block_shares', v)}
+            />
+          </div>
+        </div>
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button
-          onClick={handleSave}
+        {/* Save Button */}
+        <Button 
+          onClick={handleSave} 
           disabled={updateMutation.isPending}
-          className="bg-violet-600 hover:bg-violet-700 gap-2"
+          className="w-full bg-violet-600 hover:bg-violet-700"
         >
-          <Save className="w-4 h-4" />
-          {updateMutation.isPending ? 'Saving...' : 'Save Opt-Out Settings'}
+          {updateMutation.isPending ? (
+            'Saving...'
+          ) : updateMutation.isSuccess ? (
+            <>
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Saved
+            </>
+          ) : (
+            'Save Privacy Settings'
+          )}
         </Button>
-      </div>
-    </div>
+
+        {/* Wisdom note */}
+        <div className="p-3 rounded-lg bg-gradient-to-r from-violet-50 to-amber-50 dark:from-violet-900/20 dark:to-amber-900/20 text-xs text-center">
+          <span className="text-slate-600 dark:text-slate-400">
+            "With great rank comes great sovereignty. Use it wisely."
+          </span>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
