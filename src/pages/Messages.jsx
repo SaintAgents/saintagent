@@ -522,7 +522,21 @@ export default function Messages() {
                 }}
               />
 
-              {/* Icebreaker Prompts */}
+              <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
+
+              {/* Share Affiliate Link */}
+              <ShareAffiliateLinkButton 
+                onInsertMessage={(msg) => setMessageText(msg)} 
+              />
+
+              <Input
+                placeholder="Type a message..."
+                value={messageText}
+                onChange={async (e) => {setMessageText(e.target.value);await sendTypingPing();}}
+                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                className="flex-1 rounded-xl min-w-[150px]" />
+
+              {/* Icebreaker Prompts - next to input */}
               <IcebreakerPrompts
                 recipientName={selectedConversation?.otherUser?.name}
                 onSelect={async (prompt) => {
@@ -540,20 +554,6 @@ export default function Messages() {
                   queryClient.invalidateQueries({ queryKey: ['messages'] });
                 }}
               />
-
-              <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
-
-              {/* Share Affiliate Link */}
-              <ShareAffiliateLinkButton 
-                onInsertMessage={(msg) => setMessageText(msg)} 
-              />
-
-              <Input
-                placeholder="Type a message..."
-                value={messageText}
-                onChange={async (e) => {setMessageText(e.target.value);await sendTypingPing();}}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 rounded-xl min-w-[150px]" />
 
               <Button
                 onClick={handleSend}

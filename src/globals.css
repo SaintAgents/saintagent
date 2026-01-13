@@ -292,10 +292,17 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   color: #b0b0b0 !important;
 }
 
-/* Dark mode: Fix gold/yellow titles to dark green */
+/* Dark mode: Fix gold/yellow titles to emerald green */
 [data-theme='dark'] [class*='text-yellow-'],
 [data-theme='dark'] [class*='text-amber-'] {
   color: #10b981 !important;
+}
+
+/* Dark mode: Fix badge backgrounds - emerald green tones */
+[data-theme='dark'] [class*='bg-yellow-'],
+[data-theme='dark'] [class*='bg-amber-'] {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  border-color: #10b981 !important;
 }
 
 /* Dark mode: Brighten subtitle text */
@@ -313,6 +320,13 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 [data-theme='dark'] [class*='text-purple-'],
 [data-theme='dark'] [class*='text-violet-'] {
   color: #10b981 !important;
+}
+
+/* Dark mode: Fix purple/violet backgrounds to emerald green */
+[data-theme='dark'] [class*='bg-purple-'],
+[data-theme='dark'] [class*='bg-violet-'] {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
 }
 
 /* Progress numbers and labels */
