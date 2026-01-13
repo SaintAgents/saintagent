@@ -528,6 +528,8 @@ export default function SidePanel({
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpInfo = getRPRank(profile?.rp_points || 0);
+  const rankProgress = profile?.rp_points || 0;
+  const nextRankAt = rpInfo?.nextMin || 1000;
 
   // Fetch total users and online users (realtime polling every 10s)
   const { data: allUserProfiles = [] } = useQuery({
