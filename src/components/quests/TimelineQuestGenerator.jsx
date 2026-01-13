@@ -367,7 +367,7 @@ Return an array of 3 quest objects.`;
           <Button
             onClick={() => generateQuestsMutation.mutate()}
             disabled={generating}
-            className={`w-full bg-gradient-to-r ${timelineConfig.color} text-white`}
+            className={`w-full bg-gradient-to-r ${timelineConfig.color === 'from-white to-amber-100' ? 'from-amber-500 to-amber-600' : timelineConfig.color} text-white`}
           >
             {generating ? (
               <>
