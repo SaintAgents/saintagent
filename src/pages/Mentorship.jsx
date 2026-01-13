@@ -8,6 +8,9 @@ import SessionList from '@/components/mentorship/SessionList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { Users } from 'lucide-react';
+import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 
 function useUserAndProfiles() {
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
@@ -58,11 +61,40 @@ export default function Mentorship() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Mentorship</h1>
-      <div className="mb-6">
-        <ProfileSetup />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
+      {/* Hero Section */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/004244915_ideogram-v30_Heres_a_clean_high-concept_image_prompt_for_a_gamification_hub_that_fits_sain-4.jpg"
+          alt="Mentorship"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <Users className="w-8 h-8 text-violet-400" />
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
+                  style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+                Mentorship
+              </h1>
+              <ForwardButton currentPage="Mentorship" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+            </div>
+            <div className="p-4 rounded-2xl bg-black/[0.47] backdrop-blur-sm border border-white/20 mt-4">
+              <p className="text-violet-200/90 text-base tracking-wider drop-shadow-lg">
+                Find Mentors · Share Knowledge · Grow Together
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="mb-6">
+          <ProfileSetup />
+        </div>
 
       <Tabs defaultValue="discover" className="w-full">
         <TabsList className="mb-4">
@@ -109,6 +141,7 @@ export default function Mentorship() {
           <SessionList />
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
