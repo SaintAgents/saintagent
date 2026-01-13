@@ -898,6 +898,39 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </div>
                 </div>
 
+                {/* Avatar Display Mode Radio Buttons */}
+                <div className="mb-4 flex items-center gap-4">
+                  <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Avatar Display:</span>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="avatarDisplayMode"
+                      value="standard"
+                      defaultChecked
+                      className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
+                    />
+                    <span className="text-xs text-slate-700 dark:text-slate-300">Standard</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="avatarDisplayMode"
+                      value="compact"
+                      className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
+                    />
+                    <span className="text-xs text-slate-700 dark:text-slate-300">Compact</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="avatarDisplayMode"
+                      value="minimal"
+                      className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
+                    />
+                    <span className="text-xs text-slate-700 dark:text-slate-300">Minimal</span>
+                  </label>
+                </div>
+
                 {/* Stats Bar */}
                 <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
                   <div className="text-center">
