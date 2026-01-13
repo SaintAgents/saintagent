@@ -26,6 +26,7 @@ import MediaAttachment from '@/components/messages/MediaAttachment';
 import MessageBubble from '@/components/messages/MessageBubble';
 import TypingIndicator from '@/components/messages/TypingIndicator';
 import ShareAffiliateLinkButton from '@/components/messages/ShareAffiliateLinkButton';
+import { trackSendMessage } from '@/components/gamification/challengeTracker';
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -67,6 +68,10 @@ export default function Messages() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       setMessageText('');
+      // Track challenge progress for sending messages
+      if (user?.email) {
+        trackSendMessage(user.email);
+      }
     }
   });
 
