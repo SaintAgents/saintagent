@@ -82,6 +82,15 @@ export default function MiniProfile({
   })();
 
   const handleAvatarClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (userId) {
+      document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
+    }
+  };
+  
+  const handleNameClick = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     if (userId) {
       document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
@@ -133,7 +142,10 @@ export default function MiniProfile({
               <div className="min-w-0 flex-1 pt-1">
                 {showName && (
                   <div className="flex items-center gap-1 min-w-0">
-                    <div className="text-base font-semibold truncate text-slate-900 dark:text-white">
+                    <div 
+                      className="text-base font-semibold truncate text-slate-900 dark:text-white cursor-pointer hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+                      onClick={handleNameClick}
+                    >
                       {displayName}
                     </div>
                     {showHelpHint && (
@@ -173,27 +185,30 @@ export default function MiniProfile({
         </div>
       ) : (
         <div className="flex items-start gap-3 relative">
-          <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
-            <RankedAvatar
-              src={avatar || profile?.avatar_url}
-              name={displayName}
-              size={actualSize}
-              userId={userId}
-              status={profile?.status}
-              leaderTier={profile?.leader_tier}
-              rpRankCode={profile?.rp_rank_code}
-              rpPoints={profile?.rp_points}
-              showPhotoIcon={true}
-              galleryImages={profile?.gallery_images || []}
-            />
-          </div>
-          {(showName || showHandle) && (
-            <div className="min-w-0">
-              {showName && (
-                <div className="flex items-center gap-1 min-w-0">
-                  <div className="text-sm font-medium truncate text-slate-900 dark:text-white">
-                    {displayName}
-                  </div>
+        <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
+          <RankedAvatar
+            src={avatar || profile?.avatar_url}
+            name={displayName}
+            size={actualSize}
+            userId={userId}
+            status={profile?.status}
+            leaderTier={profile?.leader_tier}
+            rpRankCode={profile?.rp_rank_code}
+            rpPoints={profile?.rp_points}
+            showPhotoIcon={true}
+            galleryImages={profile?.gallery_images || []}
+          />
+        </div>
+        {(showName || showHandle) && (
+          <div className="min-w-0">
+            {showName && (
+              <div className="flex items-center gap-1 min-w-0">
+                <div 
+                  className="text-sm font-medium truncate text-slate-900 dark:text-white cursor-pointer hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+                  onClick={handleNameClick}
+                >
+                  {displayName}
+                </div>
                   {showHelpHint && (
                     <HelpHint
                       side="right"

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -370,15 +369,16 @@ export default function Profile() {
             {profile?.hero_image_url ? (
               <img
                 src={profile.hero_image_url}
-                alt=""
-                className="w-full h-full object-cover"
-                data-no-filter="true" />
+                alt="Profile Hero"
+                className="w-full h-full object-cover hero-image"
+                data-no-filter="true"
+                style={{ filter: 'none' }} />
             ) : (
               <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
             )}
             
             {/* Badges & Sigils Bar at Bottom of Hero */}
-            <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
+            <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 z-10">
               <BadgesBar badges={profileBadges} defaultIfEmpty={false} maxDisplay={8} size="sm" />
             </div>
             
