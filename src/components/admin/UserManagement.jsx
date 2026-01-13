@@ -227,8 +227,21 @@ export default function UserManagement() {
 
       {/* Users Table */}
       <Card>
-        <CardHeader className="bg-purple-100 p-6 flex flex-col space-y-1.5">
+        <CardHeader className="bg-purple-100 p-6 flex flex-row items-center justify-between">
           <CardTitle>User Directory</CardTitle>
+          <Tabs value={sortOrder} onValueChange={setSortOrder} className="w-auto">
+            <TabsList className="h-8">
+              <TabsTrigger value="date" className="text-xs px-3 gap-1">
+                <Clock className="w-3 h-3" /> Date
+              </TabsTrigger>
+              <TabsTrigger value="alpha" className="text-xs px-3 gap-1">
+                <ArrowDownAZ className="w-3 h-3" /> A-Z
+              </TabsTrigger>
+              <TabsTrigger value="sa" className="text-xs px-3 gap-1">
+                <Hash className="w-3 h-3" /> SA#
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </CardHeader>
         <CardContent className="bg-purple-100 pt-0 p-6">
           <ScrollArea className="h-[600px]">
