@@ -71,7 +71,7 @@ const ACHIEVEMENT_BADGES = [
 ];
 
 const ALL_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES, ...ACHIEVEMENT_BADGES];
-const TOTAL_BADGE_COUNT = ALL_BADGES.length; // 32 total
+// This will be overridden by database count when available
 
 // Rarity glow effects
 const RARITY_GLOW = {
