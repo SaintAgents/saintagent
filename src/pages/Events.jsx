@@ -9,6 +9,7 @@ import { Calendar, Plus, Search, MapPin, Video, Sparkles } from "lucide-react";
 import CreateEventModal from '@/components/community/CreateEventModal';
 import EventCard from '@/components/community/EventCard';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 import { isPast, parseISO, isToday, isTomorrow, isThisWeek } from 'date-fns';
