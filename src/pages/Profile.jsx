@@ -74,6 +74,8 @@ import QuickBoostButton from '@/components/boost/QuickBoostButton';
 import BoostStatusBadge from '@/components/boost/BoostStatusBadge';
 import CreatorMonetizationTab from '@/components/creator/CreatorMonetizationTab';
 import TipButton from '@/components/creator/TipButton';
+import OptOutSettings from '@/components/profile/OptOutSettings';
+import PerformanceScoreCard from '@/components/merit/PerformanceScoreCard';
 import { createPageUrl } from '@/utils';
 
 export default function Profile() {
@@ -550,6 +552,12 @@ export default function Profile() {
             <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Monetization</span>
                 <Coins className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            }
+            {isOwnProfile &&
+            <TabsTrigger value="privacy" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Privacy</span>
+                <User className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             }
             {showDatingTab &&
@@ -1420,6 +1428,16 @@ export default function Profile() {
            {isOwnProfile &&
           <TabsContent value="monetization" className="space-y-6">
                <CreatorMonetizationTab profile={profile} />
+             </TabsContent>
+          }
+
+          {/* Privacy & Opt-Out Tab */}
+          {isOwnProfile &&
+          <TabsContent value="privacy" className="space-y-6">
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                 <OptOutSettings profile={profile} />
+                 <PerformanceScoreCard profile={profile} showDetailed={true} />
+               </div>
              </TabsContent>
           }
 

@@ -32,6 +32,7 @@ import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import BookingModal from '@/components/matches/BookingModal';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -184,6 +185,7 @@ export default function Matches() {
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
+              <HeroGalleryTrigger startIndex={6} className="text-white/80" />
               <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
               <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
                   style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
