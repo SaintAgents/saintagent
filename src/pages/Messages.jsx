@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedDoc from '@/components/collab/SharedDoc';
 import Whiteboard from '@/components/collab/Whiteboard';
 import CoWatch from '@/components/collab/CoWatch';
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming, Image as ImageIcon } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming, Image as ImageIcon, LogOut } from "lucide-react";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
@@ -443,6 +443,22 @@ export default function Messages() {
                   }}>
                     <Trash2 className="w-4 h-4 mr-2" /> Clear for me
                   </DropdownMenuItem>
+                  {selectedConversation.isGroup && (
+                    <DropdownMenuItem 
+                      className="text-rose-600 focus:text-rose-700"
+                      onClick={async () => {
+                        const convEntity = conversations.find((c) => c.id === selectedConversation.id);
+                        if (convEntity) {
+                          const newParticipants = (convEntity.participant_ids || []).filter((pid) => pid !== user.email);
+                          await base44.entities.Conversation.update(convEntity.id, { participant_ids: newParticipants });
+                          queryClient.invalidateQueries({ queryKey: ['conversations'] });
+                          setSelectedConversation(null);
+                        }
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" /> Leave Group
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
