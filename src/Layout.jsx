@@ -1534,7 +1534,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>
-        {children}
+        {currentPageName === 'CommandDeck' ? 
+          React.cloneElement(children, { theme, onThemeToggle: setTheme }) : 
+          children
+        }
       </main>
 
       {/* Quick Create Modal */}

@@ -305,6 +305,15 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   border-color: #10b981 !important;
 }
 
+/* Dark theme: Avatar card badges should match stats bar style */
+[data-theme='dark'] [data-avatar-card] .bg-gradient-to-l.from-amber-50.to-orange-50,
+[data-theme='dark'] [data-avatar-card] [class*='bg-gradient-to-l'] {
+  background: rgba(5, 5, 5, 0.75) !important;
+  background-color: rgba(5, 5, 5, 0.75) !important;
+  background-image: none !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
+}
+
 /* Dark mode: Brighten subtitle text */
 [data-theme='dark'] .text-slate-600,
 [data-theme='dark'] [class*='text-slate-600'] {
