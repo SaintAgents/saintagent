@@ -712,7 +712,7 @@ export default function CommandDeck() {
       )}>
         {/* Page Header */}
         <div className="px-6 pt-6 pb-4">
-          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50">
+          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-4">
               <div>
@@ -958,17 +958,16 @@ export default function CommandDeck() {
                     </div>
                     
                     {/* Recently Achieved Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-200">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
                       <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b40aecf5e_7-day-streak.png"
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8ad35bc71_Screenshot2026-01-13091449-Picsart-BackgroundRemover.png"
                         alt="7-Day Streak"
                         className="w-12 h-12 object-contain"
                         data-no-filter="true"
-                        onError={(e) => { e.target.style.display = 'none'; }}
                       />
                       <div>
-                        <p className="font-semibold text-slate-900 text-sm">7-Day Streak</p>
-                        <p className="text-xs text-slate-500">Recent</p>
+                        <p className="font-semibold text-amber-900 text-sm">7-Day Streak</p>
+                        <p className="text-xs text-amber-700">Recent</p>
                       </div>
                     </div>
                   </div>

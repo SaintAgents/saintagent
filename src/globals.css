@@ -309,6 +309,12 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   color: #e0e0e0 !important;
 }
 
+/* Dark mode: Fix purple text to emerald green */
+[data-theme='dark'] [class*='text-purple-'],
+[data-theme='dark'] [class*='text-violet-'] {
+  color: #10b981 !important;
+}
+
 /* Progress numbers and labels */
 [data-theme='dark'] .font-medium,
 [data-theme='dark'] .font-semibold,
@@ -436,6 +442,47 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 /* =====================================================
    Z FOLD OPTIMIZATION
    ===================================================== */
+
+/* Detect Z Fold or tablet devices and set optimization flag */
+@media (min-width: 600px) and (max-width: 900px) {
+  :root {
+    --is-tablet: 1;
+    --touch-target-min: 48px;
+  }
+  
+  /* Larger touch targets for tablet */
+  button,
+  [role="button"],
+  a {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+  
+  /* Optimized text sizing for tablet */
+  body {
+    font-size: 16px;
+  }
+  
+  /* Better spacing for tablet */
+  .p-3 {
+    padding: 1rem !important;
+  }
+  
+  .p-4 {
+    padding: 1.25rem !important;
+  }
+  
+  /* Larger sidebar for tablet */
+  aside,
+  [data-sidebar] {
+    width: 280px !important;
+  }
+  
+  /* Better side panel width for tablet */
+  [data-side-panel] {
+    width: 360px !important;
+  }
+}
 
 [data-zfold="true"] {
   --touch-target-min: 48px;
