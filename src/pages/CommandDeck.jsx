@@ -945,7 +945,7 @@ export default function CommandDeck() {
                   {/* Featured: Eternal Flame + Recent Badge */}
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     {/* Eternal Flame Feature Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-amber-50 to-orange-50 border border-amber-200">
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
                         alt="Eternal Flame"
@@ -958,7 +958,7 @@ export default function CommandDeck() {
                     </div>
                     
                     {/* Recently Achieved Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-amber-50 to-orange-50 border border-amber-200">
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8ad35bc71_Screenshot2026-01-13091449-Picsart-BackgroundRemover.png"
                         alt="7-Day Streak"
