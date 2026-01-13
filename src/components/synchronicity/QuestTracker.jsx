@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Target, Zap, Trophy, Star, Gift, Check, Users, Eye, Route, Lock, Sparkles, Key } from 'lucide-react';
+import { Target, Zap, Trophy, Star, Gift, Check, Users, Eye, Route, Lock, Sparkles, Key, ArrowRight, Lightbulb } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const QUEST_TYPE_CONFIG = {
