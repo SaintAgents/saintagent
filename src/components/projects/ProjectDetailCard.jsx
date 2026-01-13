@@ -210,7 +210,7 @@ export default function ProjectDetailCard({ project }) {
           {/* Derived Tags from Evaluation */}
           {project.derived_tags?.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-slate-500 mb-2">Evaluation Tags</h4>
+              <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Evaluation Tags</h4>
               <div className="flex flex-wrap gap-2">
                 {project.derived_tags.map((tag, i) => (
                   <Badge key={i} className="bg-violet-100 text-violet-700">
