@@ -344,7 +344,7 @@ export default function CommunityFeed() {
               const showComments = expandedComments[post.id];
 
               return (
-                <Card key={post.id}>
+                <Card key={post.id} className="bg-white/[0.04] backdrop-blur-sm">
                   <CardContent className="pt-6 space-y-4">
                     {/* Post Header */}
                     <div className="flex items-center justify-between gap-3">
