@@ -69,7 +69,7 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="flex flex-wrap gap-1 bg-white/[0.88] dark:bg-black/[0.88] backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg p-2 h-auto">
+          <TabsList className="grid grid-cols-7 w-full bg-white/[0.88] dark:bg-black/[0.88] backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg p-2 h-auto">
             <TabsTrigger value="users" className="gap-2 px-3 py-2">
               <Users className="w-4 h-4" />
               Users
