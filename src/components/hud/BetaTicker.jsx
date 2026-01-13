@@ -25,7 +25,7 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
   // Don't render if dismissed
   if (isDismissed) return null;
   
-  // Beta Ticker - show full version when topbar is expanded
+  // Beta Ticker - only show when topbar is not collapsed
   if (!topbarCollapsed) {
     return (
       <div 
@@ -52,28 +52,29 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
     );
   }
   
-  // Beta Ticker when topbar is collapsed - show thin bar (regardless of sidebar state)
-  return (
-    <div 
-      className={cn(
-        "fixed right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300",
-        sidebarCollapsed ? "left-20" : "left-64"
-      )}
-      style={{ top: '32px' }}
-    >
-      <div className="flex items-center justify-center relative">
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
-          🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+  // Beta Ticker when BOTH topbar AND sidebar are collapsed - shows thin bar
+  if (topbarCollapsed && sidebarCollapsed) {
+    return (
+      <div 
+        className="fixed left-20 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300"
+        style={{ top: '32px' }}
+      >
+        <div className="flex items-center justify-center relative">
+          <div className="animate-marquee whitespace-nowrap inline-block">
+            🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+            🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+          <button
+            onClick={handleDismiss}
+            className="absolute right-2 p-0.5 rounded-full hover:bg-white/20 transition-colors"
+            title="Dismiss until next session"
+          >
+            <X className="w-3 h-3" />
+          </button>
         </div>
-        <button
-          onClick={handleDismiss}
-          className="absolute right-2 p-0.5 rounded-full hover:bg-white/20 transition-colors"
-          title="Dismiss until next session"
-        >
-          <X className="w-3 h-3" />
-        </button>
       </div>
-    </div>
-  );
+    );
+  }
+  
+  return null;
 }
