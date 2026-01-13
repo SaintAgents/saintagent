@@ -105,24 +105,28 @@ export default function Studio() {
             value={`$${profile?.total_earnings || 0}`}
             icon={DollarSign}
             color="emerald"
+            valueClassName="text-emerald-500"
           />
           <MetricTile
             label="Views"
             value={totalViews}
             icon={Eye}
             color="blue"
+            valueClassName="text-emerald-500"
           />
           <MetricTile
             label="Bookings"
             value={totalBookings}
             icon={Calendar}
             color="violet"
+            valueClassName="text-emerald-500"
           />
           <MetricTile
             label="Conversion"
             value={`${conversionRate}%`}
             icon={TrendingUp}
             color="amber"
+            valueClassName="text-emerald-500"
           />
         </div>
 
