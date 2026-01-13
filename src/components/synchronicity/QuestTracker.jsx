@@ -144,11 +144,46 @@ function QuestItem({ quest }) {
   );
 }
 
+// What's Next guidance suggestions based on quest state
+const WHATS_NEXT_SUGGESTIONS = [
+  { trigger: 'no_quests', icon: Target, text: 'Check the Discovery tab for hidden quests', action: 'discovery' },
+  { trigger: 'no_quests', icon: Sparkles, text: 'Generate a personalized quest in AI Suggests', action: 'suggestions' },
+  { trigger: 'has_incomplete', icon: Zap, text: 'Complete a meeting to progress your quest', action: 'meetings' },
+  { trigger: 'has_incomplete', icon: Users, text: 'Collaborate with others on a mission', action: 'missions' },
+  { trigger: 'all_complete', icon: Trophy, text: 'Claim your rewards and start new quests!', action: 'claim' },
+  { trigger: 'low_progress', icon: Route, text: 'Post a Daily Field Update to earn progress', action: 'feed' },
+];
+
 export default function QuestTracker({ quests, onClaimRewards, hasClaimable, isClaimPending }) {
   const activeQuests = quests.filter(q => q.status === 'active' || q.status === 'completed');
   const dailyQuests = activeQuests.filter(q => q.quest_type === 'daily');
   const weeklyQuests = activeQuests.filter(q => q.quest_type === 'weekly');
   const epicQuests = activeQuests.filter(q => q.quest_type === 'epic' || q.quest_type === 'pathway');
+  
+  // Determine what's next suggestion
+  const getWhatsNextSuggestion = () => {
+    if (activeQuests.length === 0) {
+      return WHATS_NEXT_SUGGESTIONS.filter(s => s.trigger === 'no_quests')[Math.floor(Math.random() * 2)];
+    }
+    if (hasClaimable) {
+      return WHATS_NEXT_SUGGESTIONS.find(s => s.trigger === 'all_complete');
+    }
+    const incompleteQuests = activeQuests.filter(q => q.status === 'active');
+    if (incompleteQuests.length > 0) {
+      const avgProgress = incompleteQuests.reduce((sum, q) => {
+        const progress = q.target_count > 0 ? (q.current_count || 0) / q.target_count * 100 : 0;
+        return sum + progress;
+      }, 0) / incompleteQuests.length;
+      
+      if (avgProgress < 30) {
+        return WHATS_NEXT_SUGGESTIONS.find(s => s.trigger === 'low_progress');
+      }
+      return WHATS_NEXT_SUGGESTIONS.filter(s => s.trigger === 'has_incomplete')[Math.floor(Math.random() * 2)];
+    }
+    return null;
+  };
+  
+  const whatsNext = getWhatsNextSuggestion();
 
   return (
     <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-10">
