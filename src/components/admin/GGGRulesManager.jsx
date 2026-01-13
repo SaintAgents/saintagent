@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Coins, Plus, Edit, Trash2, Zap, Gift, Lock, Unlock } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
+import { ACTIONS, TIERS, MATRIX_SECTIONS, GGG_TO_USD, formatGGGSmart, INTERACTION_BONUS_GGG, INTERACTION_THRESHOLD, INTERACTION_CONTINUED_BONUS_GGG, INTERACTION_CONTINUED_THRESHOLD } from '@/components/earnings/gggMatrix';
 
 // Rule Card Component (extracted for proper state management)
 function RuleCard({ rule, onUpdate, onToggle, onDelete, onToggleLock }) {
@@ -410,6 +410,23 @@ export default function GGGRulesManager() {
                   })}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          {/* Posting Interaction Bonus Info */}
+          <div className="p-4 rounded-lg bg-amber-50 border border-amber-200">
+            <div className="text-sm font-semibold text-amber-800 mb-2">📊 Posting Interaction Bonuses</div>
+            <div className="grid md:grid-cols-2 gap-3 text-sm">
+              <div className="p-3 bg-white rounded border">
+                <div className="font-medium text-slate-700">Initial Bonus ({INTERACTION_THRESHOLD}+ interactions)</div>
+                <div className="font-mono text-amber-600">{formatGGGSmart(INTERACTION_BONUS_GGG)} GGG</div>
+                <div className="text-emerald-600">${(INTERACTION_BONUS_GGG * GGG_TO_USD).toFixed(2)} USD</div>
+              </div>
+              <div className="p-3 bg-white rounded border">
+                <div className="font-medium text-slate-700">Continued Bonus (every {INTERACTION_CONTINUED_THRESHOLD} after)</div>
+                <div className="font-mono text-amber-600">{formatGGGSmart(INTERACTION_CONTINUED_BONUS_GGG)} GGG</div>
+                <div className="text-emerald-600">${(INTERACTION_CONTINUED_BONUS_GGG * GGG_TO_USD).toFixed(2)} USD</div>
+              </div>
             </div>
           </div>
 
