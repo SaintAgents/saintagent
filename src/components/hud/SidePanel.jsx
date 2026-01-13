@@ -958,7 +958,7 @@ export default function SidePanel({
       {/* Nudge handle when collapsed - only show if NOT on CommandDeck (GlobalSidePanelNudge handles it there) */}
       <div
         className={cn(
-          "fixed h-screen bg-white border-slate-200 shadow-xl z-[55] transition-all duration-300 flex flex-col",
+          "fixed h-screen bg-[#050505] border-[rgba(0,255,136,0.2)] shadow-xl z-[55] transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "" : "w-0 overflow-hidden"
         )}
@@ -988,23 +988,23 @@ export default function SidePanel({
       {/* Drag Handle with Nav Popout */}
       <div
           onMouseDown={onDragStart}
-          className="h-8 cursor-move bg-slate-100 border-b border-slate-200 flex items-center justify-between px-3"
+          className="h-8 cursor-move bg-[#0a0a0a] border-b border-[rgba(0,255,136,0.2)] flex items-center justify-between px-3"
           title="Drag to move. Drag toward an edge to dock.">
-        <span className="text-[10px] text-slate-400">Drag</span>
+        <span className="text-[10px] text-[rgba(0,255,136,0.6)]">Drag</span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setNavPopupOpen(true)}
-            className="p-1 rounded hover:bg-slate-200 transition-colors"
+            className="p-1 rounded hover:bg-[rgba(0,255,136,0.1)] transition-colors"
             title="Pop out navigation"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#00ff88]" />
           </button>
           <button
             onClick={() => setIsPoppedOff(true)}
-            className="p-1 rounded hover:bg-slate-200 transition-colors"
+            className="p-1 rounded hover:bg-[rgba(0,255,136,0.1)] transition-colors"
             title="Pop off panel"
           >
-            <Maximize2 className="w-3.5 h-3.5 text-slate-500" />
+            <Maximize2 className="w-3.5 h-3.5 text-[#00ff88]" />
           </button>
         </div>
       </div>
@@ -1091,21 +1091,21 @@ export default function SidePanel({
           )}
 
           {/* Control Panel */}
-          <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between flex-wrap gap-2">
+          <div data-ggg-controls className="p-3 rounded-xl bg-[#0a0a0a] border border-[rgba(0,255,136,0.2)] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggAuditOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggAuditOpen(true)}>
                 <Activity className="w-4 h-4 mr-1" />
                 Audit
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggPopupOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggPopupOpen(true)}>
                 <TrendingUp className="w-4 h-4 mr-1" />
                 Rank
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => setGggTxOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggTxOpen(true)}>
                 <List className="w-4 h-4 mr-1" />
                 Transactions
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
                 <Calendar className="w-4 h-4 mr-1" />
                 Daily Ops
               </Button>
