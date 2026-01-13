@@ -201,7 +201,10 @@ export default function UserManagement() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-slate-900">{profile.display_name}</p>
+                      <p className="font-medium text-slate-900">
+                        {profile.display_name}
+                        {profile.sa_number && <span className="text-slate-400 font-normal ml-1.5">SA#{profile.sa_number}</span>}
+                      </p>
                       {profile.leader_tier === 'verified144k' &&
                     <Badge className="bg-amber-100 text-amber-700">144K Leader</Badge>
                     }
