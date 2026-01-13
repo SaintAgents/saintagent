@@ -219,6 +219,22 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       <ScrollArea className="flex-1">
         {/* Hero Background */}
         <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
+          {/* Rank Badge - Top Left */}
+          <div className="absolute top-2 left-2 z-10">
+            <img
+              src={RANK_BADGE_IMAGES[profile.rp_rank_code] || RANK_BADGE_IMAGES.seeker}
+              alt={profile.rp_rank_code || 'seeker'}
+              className="w-20 h-20 object-contain drop-shadow-lg"
+              data-no-filter="true" />
+
+          </div>
+          {/* SA Shield Badge - Top Right */}
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/42cf00ae0_5650186ed_SA_shield.png"
+            alt="Saint Agent"
+            className="absolute top-2 right-3 w-20 h-20 object-contain z-10 drop-shadow-lg"
+            data-no-filter="true" />
+
           {/* Hero Image - always show, use default if none */}
           <img
             src={profile.hero_image_url || DEFAULT_HERO_IMAGE}
@@ -246,7 +262,6 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                 leaderTier={profile.leader_tier}
                 rpRankCode={profile.rp_rank_code}
                 rpPoints={profile.rp_points}
-                saNumber={profile.sa_number}
                 showPhotoIcon={false}
                 galleryImages={profile.gallery_images || []} />
 
