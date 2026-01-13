@@ -1152,12 +1152,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
                     min-height: 160px !important;
                     max-height: 160px !important;
                     padding-top: 0 !important;
+                    margin-top: -64px !important;
                   }
                   [data-theme='hacker'] .page-hero {
                     height: 320px !important;
                     min-height: 320px !important;
                     max-height: 320px !important;
                     padding-top: 0 !important;
+                    margin-top: -64px !important;
                   }
                   [data-theme='dark'] .page-hero h1 {
                                   padding-top: 0 !important;

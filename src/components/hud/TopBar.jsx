@@ -130,7 +130,7 @@ function DailyAffirmationTicker() {
   React.useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % ULTRANET_SAYINGS.length);
-    }, 3330); // 3.33 seconds
+    }, 133200); // 2.22 minutes (133.2 seconds)
     return () => clearInterval(interval);
   }, []);
   
