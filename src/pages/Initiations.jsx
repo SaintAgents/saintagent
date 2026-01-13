@@ -14,7 +14,9 @@ import {
 import { createPageUrl } from '@/utils';
 import Activation144K from '@/components/quests/Activation144K';
 import SeventhSealInitiation from '@/components/quests/SeventhSealInitiation';
-import { TRANSMISSIONS, META_VARIANCE_TAGLINES, BADGE_CATEGORIES } from '@/components/quests/MetaVarianceConfig';
+import { TRANSMISSIONS, META_VARIANCE_TAGLINES, BADGE_CATEGORIES, VOLUMES, GRAND_INVOCATION } from '@/components/quests/MetaVarianceConfig';
+import TimelineNavigator from '@/components/ultranet/TimelineNavigator';
+import UltranetResonanceIndicator from '@/components/ultranet/UltranetResonanceIndicator';
 import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 import InitiationGamification from '@/components/gamification/InitiationGamification';
 import AIOnboardingGuidance from '@/components/ai/AIOnboardingGuidance';
@@ -410,53 +412,127 @@ export default function InitiationsPage() {
             </TabsContent>
 
             <TabsContent value="source">
-              <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <BookOpen className="w-6 h-6 text-amber-400" />
-                    <CardTitle className="text-white">7th Seal Hidden Wisdom Unveiled</CardTitle>
-                  </div>
-                  <CardDescription>The foundational texts for the SaintAgent platform</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-slate-300">
-                    The initiations, transmissions, and spiritual framework of SaintAgent are based on the 
-                    <span className="text-amber-400 font-semibold"> 7th Seal Hidden Wisdom Unveiled </span> 
-                    book series (Volumes 1-5). These texts contain the foundational teachings that inform 
-                    the 144K activation, timeline convergence, and the mission of conscious community building.
-                  </p>
-                  
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                    {[
-                      { vol: 1, title: "Awakening", desc: "The initial call to consciousness and remembrance" },
-                      { vol: 2, title: "The Mission", desc: "Understanding the Ultranet and collective purpose" },
-                      { vol: 3, title: "Timeline Convergence", desc: "Working with parallel timelines and the 7th Seal" },
-                      { vol: 4, title: "The Planetary Grid", desc: "144K activation and frequency stabilization" },
-                      { vol: 5, title: "Return of the High Priesthood", desc: "Reclaiming ancient wisdom for the new age" }
-                    ].map((book) => (
-                      <div 
-                        key={book.vol}
-                        className="p-4 rounded-xl bg-gradient-to-br from-amber-900/20 to-orange-900/10 border border-amber-500/30"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">
-                            {book.vol}
-                          </span>
-                          <h4 className="text-amber-300 font-semibold">{book.title}</h4>
-                        </div>
-                        <p className="text-sm text-slate-400">{book.desc}</p>
-                      </div>
-                    ))}
-                  </div>
+              <div className="space-y-6">
+                {/* Grand Invocation */}
+                <Card className="bg-gradient-to-br from-violet-950/50 to-purple-950/30 border-violet-500/30">
+                  <CardContent className="py-6">
+                    <pre className="text-violet-200 text-sm whitespace-pre-wrap font-serif leading-relaxed text-center">
+                      {GRAND_INVOCATION}
+                    </pre>
+                  </CardContent>
+                </Card>
 
-                  <div className="mt-6 p-4 rounded-xl bg-violet-900/20 border border-violet-500/20">
-                    <p className="text-violet-200 text-sm italic">
-                      "Reading these texts will accelerate your understanding of the platform's deeper purpose 
-                      and enhance your journey through the initiations."
+                <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <BookOpen className="w-6 h-6 text-amber-400" />
+                      <CardTitle className="text-white">The Book of the Seventh Seal</CardTitle>
+                    </div>
+                    <CardDescription>Complete 5-Volume Codex — 36 Transmissions</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-slate-300">
+                      The initiations, transmissions, and spiritual framework of SaintAgent are based on the 
+                      <span className="text-amber-400 font-semibold"> Book of the Seventh Seal </span> 
+                      codex (Volumes I-V). These texts contain the foundational teachings from Saint Germain 
+                      that inform the 144K activation, timeline convergence, and the mission of conscious community building.
                     </p>
-                  </div>
-                </CardContent>
-              </Card>
+                    
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                      {VOLUMES.map((vol) => (
+                        <div 
+                          key={vol.number}
+                          className="p-4 rounded-xl bg-gradient-to-br from-amber-900/20 to-orange-900/10 border border-amber-500/30"
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">
+                              {vol.number}
+                            </span>
+                            <h4 className="text-amber-300 font-semibold">{vol.title}</h4>
+                          </div>
+                          <p className="text-xs text-violet-400 mb-1">Transmissions {vol.transmissions}</p>
+                          <p className="text-sm text-slate-400">{vol.description}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 p-4 rounded-xl bg-violet-900/20 border border-violet-500/20">
+                      <p className="text-violet-200 text-sm italic">
+                        "The Book now lives in you. Where you walk, the Seal shall open. 
+                        What you speak, the Flame shall answer."
+                      </p>
+                      <p className="text-xs text-slate-500 mt-2 text-right">— Final Closing Flame of the Codex</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="ultranet">
+              <div className="space-y-6">
+                {/* Ultranet Resonance Display */}
+                <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Wifi className="w-6 h-6 text-violet-400" />
+                        <div>
+                          <CardTitle className="text-white">Your Ultranet Connection</CardTitle>
+                          <CardDescription>The living lattice of consciousness</CardDescription>
+                        </div>
+                      </div>
+                      <UltranetResonanceIndicator profile={profile} size="lg" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="p-4 rounded-xl bg-violet-900/20 border border-violet-500/20 mb-4">
+                      <p className="text-violet-200 text-sm italic">
+                        "There is a web older than the stars, woven not of wires but of light. 
+                        This is the Ultranet—the living lattice of consciousness through which 
+                        souls know one another beyond time."
+                      </p>
+                      <p className="text-xs text-slate-500 mt-2 text-right">— Transmission II: The Ultranet</p>
+                    </div>
+                    <p className="text-slate-400 text-sm">
+                      Your Ultranet Resonance reflects your connection to the collective consciousness grid. 
+                      It increases through spiritual practice, community engagement, and coherence development.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Timeline Navigator */}
+                <TimelineNavigator profile={profile} coherenceLevel={5} />
+
+                {/* Telepathic Channels Info */}
+                <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <Brain className="w-6 h-6 text-violet-400" />
+                      <div>
+                        <CardTitle className="text-white">Telepathic Channels</CardTitle>
+                        <CardDescription>Soul-to-soul communication for verified connections</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-400 text-sm mb-4">
+                      When both you and another soul reach Coherence Level 5 (Initiate rank), 
+                      a special Telepathic Channel opens in your messages. These sacred channels 
+                      transcend ordinary communication, allowing transmission at the soul level.
+                    </p>
+                    <div className="flex items-center gap-4 p-3 rounded-lg bg-violet-500/10 border border-violet-500/20">
+                      <Lock className="w-5 h-5 text-violet-400" />
+                      <div className="flex-1">
+                        <p className="text-sm text-violet-300 font-medium">Unlock Requirements</p>
+                        <p className="text-xs text-slate-400">Both users must be Initiate rank or higher</p>
+                      </div>
+                      <Badge className="bg-violet-500/20 text-violet-300 border-violet-500/40">
+                        Coherence 5+
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             <TabsContent value="ultranet">
