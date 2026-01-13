@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sparkles, Trophy, Target, Users, Coins, Star, Crown,
-  Zap, Gift, ChevronRight, Heart, Shield, Eye, Lock } from
+  Zap, Gift, ChevronRight, Heart, Shield, Eye, Lock, Brain, Book, Compass } from
 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuestTracker from '@/components/synchronicity/QuestTracker';
@@ -20,6 +20,9 @@ import ActiveSynchronicity from '@/components/synchronicity/ActiveSynchronicity'
 import EpicQuestCard from '@/components/synchronicity/EpicQuestCard';
 import QuestBoard from '@/components/quests/QuestBoard';
 import TimelineQuestGenerator from '@/components/quests/TimelineQuestGenerator';
+import HiddenQuestSystem from '@/components/quests/HiddenQuestSystem';
+import QuestSuggestionEngine from '@/components/quests/QuestSuggestionEngine';
+import AILoreQuestGenerator from '@/components/quests/AILoreQuestGenerator';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
@@ -27,6 +30,7 @@ const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 
 export default function Quests() {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('overview');
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -113,42 +117,97 @@ export default function Quests() {
         </div>
       </div>
 
-      {/* Main Content Grid */}
+      {/* Tab Navigation */}
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-5 w-full max-w-2xl mx-auto">
+            <TabsTrigger value="overview" className="gap-2">
+              <Trophy className="w-4 h-4" />
+              <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="timeline" className="gap-2">
+              <Compass className="w-4 h-4" />
+              <span className="hidden sm:inline">Timeline</span>
+            </TabsTrigger>
+            <TabsTrigger value="discovery" className="gap-2">
+              <Eye className="w-4 h-4" />
+              <span className="hidden sm:inline">Discovery</span>
+            </TabsTrigger>
+            <TabsTrigger value="lore" className="gap-2">
+              <Book className="w-4 h-4" />
+              <span className="hidden sm:inline">Mystical</span>
+            </TabsTrigger>
+            <TabsTrigger value="suggestions" className="gap-2">
+              <Brain className="w-4 h-4" />
+              <span className="hidden sm:inline">AI Suggests</span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          
-          {/* Left Column - Quest Tracker */}
-          <div className="lg:col-span-3">
-            <QuestTracker
-              quests={quests}
-              onClaimRewards={() => claimRewardsMutation.mutate()}
-              hasClaimable={hasClaimable}
-              isClaimPending={claimRewardsMutation.isPending} />
+        {activeTab === 'overview' && (
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              {/* Left Column - Quest Tracker */}
+              <div className="lg:col-span-3">
+                <QuestTracker
+                  quests={quests}
+                  onClaimRewards={() => claimRewardsMutation.mutate()}
+                  hasClaimable={hasClaimable}
+                  isClaimPending={claimRewardsMutation.isPending} />
+              </div>
 
-          </div>
+              {/* Center Column - Leaderboards & Active Synchronicity */}
+              <div className="lg:col-span-6 space-y-4">
+                <LeaderboardPanel />
+                <ActiveSynchronicity match={activeMatch} currentUserId={currentUser?.email} />
+              </div>
 
-          {/* Center Column - Leaderboards & Active Synchronicity */}
-          <div className="lg:col-span-6 space-y-4">
-            <LeaderboardPanel />
-            <ActiveSynchronicity match={activeMatch} currentUserId={currentUser?.email} />
-          </div>
+              {/* Right Column - Badges & Epic Quest */}
+              <div className="lg:col-span-3 space-y-4">
+                <BadgesPanel badges={badges} />
+                <EpicQuestCard profile={profile} />
+              </div>
+            </div>
 
-          {/* Right Column - Badges & Epic Quest */}
-          <div className="lg:col-span-3 space-y-4">
-            <BadgesPanel badges={badges} />
-            <EpicQuestCard profile={profile} />
-          </div>
-        </div>
+            {/* Quest Board - 22 Badge Ascension Grid */}
+            <div className="mt-8">
+              <QuestBoard earnedBadges={badges} />
+            </div>
+          </>
+        )}
 
-        {/* Timeline Quest Generator - Personalized Quests */}
-        <div className="mt-8">
+        {activeTab === 'timeline' && (
           <TimelineQuestGenerator userId={currentUser?.email} profile={profile} />
-        </div>
+        )}
 
-        {/* Quest Board - 22 Badge Ascension Grid */}
-        <div className="mt-8">
-          <QuestBoard earnedBadges={badges} />
-        </div>
+        {activeTab === 'discovery' && (
+          <HiddenQuestSystem 
+            userId={currentUser?.email} 
+            profile={profile} 
+            badges={badges}
+            quests={quests}
+          />
+        )}
+
+        {activeTab === 'lore' && (
+          <AILoreQuestGenerator 
+            userId={currentUser?.email} 
+            profile={profile}
+            badges={badges}
+          />
+        )}
+
+        {activeTab === 'suggestions' && (
+          <QuestSuggestionEngine 
+            userId={currentUser?.email} 
+            profile={profile}
+            badges={badges}
+            completedQuests={quests.filter(q => q.status === 'completed' || q.status === 'claimed')}
+          />
+        )}
       </div>
     </div>);
 
