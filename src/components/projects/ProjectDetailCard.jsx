@@ -52,7 +52,7 @@ export default function ProjectDetailCard({ project }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 rounded-xl">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
