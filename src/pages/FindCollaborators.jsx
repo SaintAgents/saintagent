@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import CollaboratorFinder from "@/components/collaboration/CollaboratorFinder";
-import { Users, Sparkles } from "lucide-react";
+import AICollaboratorHub from "@/components/ai/AICollaboratorHub";
+import { Users, Sparkles, Brain } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
 export default function FindCollaborators() {
+  const [activeTab, setActiveTab] = useState('finder');
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const profile = profiles?.[0];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
       {/* Hero Section */}
@@ -35,7 +53,29 @@ export default function FindCollaborators() {
       </div>
 
       <div className="max-w-6xl mx-auto p-6 space-y-6">
-        <CollaboratorFinder />
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-2 w-full max-w-md">
+            <TabsTrigger value="finder" className="gap-2">
+              <Users className="w-4 h-4" />
+              Browse & Filter
+            </TabsTrigger>
+            <TabsTrigger value="ai" className="gap-2">
+              <Brain className="w-4 h-4" />
+              AI Collaboration Hub
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="finder">
+            <CollaboratorFinder />
+          </TabsContent>
+
+          <TabsContent value="ai">
+            <AICollaboratorHub 
+              userId={currentUser?.email} 
+              profile={profile}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
