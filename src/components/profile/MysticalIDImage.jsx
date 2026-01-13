@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
-import { Sparkles, RefreshCw, Download } from 'lucide-react';
+import { Sparkles, RefreshCw, Download, Upload } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function MysticalIDImage({ profile, size = 'medium' }) {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
   
   const sizeClasses = {
@@ -97,6 +99,27 @@ Name: ${profile?.display_name || 'Seeker'}`;
       console.error('Download failed', e);
     }
   };
+
+  const handleUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile?.id) return;
+    
+    setIsUploading(true);
+    setError(null);
+    
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.entities.UserProfile.update(profile.id, {
+        mystical_id_image: file_url
+      });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    } catch (err) {
+      setError('Upload failed');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
   
   // If no image exists and no mystical data, show placeholder
   const hasMysticalData = profile?.astrological_sign || profile?.numerology_life_path || 
@@ -143,6 +166,22 @@ Name: ${profile?.display_name || 'Seeker'}`;
               >
                 <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
               </Button>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                className="text-white hover:bg-white/20"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+              >
+                <Upload className={`w-4 h-4 ${isUploading ? 'animate-pulse' : ''}`} />
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleUpload}
+              />
             </div>
           </>
         ) : (
