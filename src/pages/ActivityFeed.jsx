@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User, FileText, Calendar, UserPlus, Share2 } from 'lucide-react';
+import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSquare, Users, Briefcase, Globe, Heart, User, FileText, Calendar, UserPlus, Share2, Megaphone } from 'lucide-react';
 import ShareContentModal from '@/components/share/ShareContentModal';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
@@ -16,6 +16,7 @@ import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 
 const TYPE_META = {
+  announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-blue-100 text-blue-700' },
   listings: { label: 'Listings', icon: ShoppingBag, color: 'bg-emerald-100 text-emerald-700' },
   missions: { label: 'Missions', icon: Target, color: 'bg-violet-100 text-violet-700' },
   testimonials: { label: 'Testimonials', icon: Star, color: 'bg-amber-100 text-amber-700' },
@@ -65,6 +66,7 @@ function ActivityItem({ ev, onOpen, onShare }) {
           {/* Actor / Target context - removed MiniProfile to avoid hook issues */}
           <div className="flex items-center gap-3">
             <div className="text-xs font-medium text-slate-500 dark:text-[#00ff88]">
+              {ev.type === 'announcements' && 'System Announcement'}
               {ev.type === 'listings' && 'Marketplace'}
               {ev.type === 'missions' && 'Mission update'}
               {ev.type === 'testimonials' && 'Feedback'}
@@ -82,7 +84,7 @@ function ActivityItem({ ev, onOpen, onShare }) {
 }
 
 export default function ActivityFeed() {
-  const [filters, setFilters] = useState({ listings: true, missions: true, testimonials: true, reputation: true, posts: true, meetings: true, follows: true, events: true });
+  const [filters, setFilters] = useState({ announcements: true, listings: true, missions: true, testimonials: true, reputation: true, posts: true, meetings: true, follows: true, events: true });
   const [scope, setScope] = useState('me'); // 'me', 'friends', or 'everyone'
   const [shareModal, setShareModal] = useState({ open: false, content: null });
 
