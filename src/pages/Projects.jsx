@@ -76,7 +76,7 @@ export default function Projects() {
               </h1>
               <ForwardButton currentPage="Projects" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <div className="p-4 rounded-2xl bg-[rgba(10,25,50,0.44)] backdrop-blur-sm border border-cyan-400/30 mt-4">
+            <div className="p-4 rounded-2xl bg-[rgba(10,25,50,0.22)] backdrop-blur-sm border border-cyan-400/30 mt-4">
               <p className="text-cyan-100/[0.92] text-lg tracking-wider drop-shadow-lg">
                 You Are Steering the Shift of the World
               </p>
