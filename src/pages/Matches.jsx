@@ -182,7 +182,7 @@ export default function Matches() {
         />
         <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
-          <div className="text-center">
+          <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Matches

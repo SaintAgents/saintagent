@@ -79,7 +79,7 @@ export default function Teams() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
+          <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
             <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide flex items-center justify-center gap-3"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               <Shield className="w-10 h-10 text-amber-300 drop-shadow-lg" />

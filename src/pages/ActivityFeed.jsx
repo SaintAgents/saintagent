@@ -138,9 +138,11 @@ export default function ActivityFeed() {
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
         <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-          <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-            Activity Feed
-          </h1>
+          <div className="bg-black/80 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20 inline-block">
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+              Activity Feed
+            </h1>
+          </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
               <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
