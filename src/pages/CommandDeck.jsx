@@ -1351,7 +1351,7 @@ export default function CommandDeck() {
           </div>
 
           <div className="block space-y-6 mt-6">
-            <CollapsibleCard title="AI Discover" cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
+            <CollapsibleCard title={<span className="flex items-center gap-1">AI Discover <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
               <AIDiscoverMatches profile={profile} />
             </CollapsibleCard>
 
