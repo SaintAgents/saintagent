@@ -10,7 +10,8 @@ export default function MetricTile({
   trendValue,
   color = "slate",
   size = "default",
-  onClick
+  onClick,
+  valueClassName
 }) {
   const colorClasses = {
     slate: "bg-slate-50 border-slate-200 text-slate-900",
