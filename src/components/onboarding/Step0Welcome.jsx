@@ -98,7 +98,7 @@ export default function Step0Welcome({ data, onComplete }) {
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link to={createPageUrl('Terms')} className="text-violet-600 hover:underline" target="_blank">
+          <Link to={createPageUrl('Terms') + '?tab=privacy'} className="text-violet-600 hover:underline" target="_blank">
             Privacy Policy
           </Link>
         </label>

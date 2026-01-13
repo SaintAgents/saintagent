@@ -134,8 +134,8 @@ export default function ActivityFeed() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
-        <div className="absolute top-3 left-3">
-          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        <div className="absolute top-3 left-3 z-10">
+          <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg p-2" />
         </div>
         <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
           <div className="bg-black/80 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20 inline-block">
