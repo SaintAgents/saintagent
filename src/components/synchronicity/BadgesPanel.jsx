@@ -339,8 +339,8 @@ export default function BadgesPanel({ badges = [] }) {
                 <Crown className="w-5 h-5 text-white" />
               </div>
               <div>
-                <DialogTitle className="text-amber-100">32-Badge Ascension Grid</DialogTitle>
-                <p className="text-xs text-amber-400/70">Soul Resonance • Quest Families • Verification</p>
+                <DialogTitle className="text-amber-100">{totalBadges}-Badge Ascension Grid</DialogTitle>
+                <p className="text-xs text-amber-400/70">Soul Resonance • Quest Families • Verification Tracks</p>
               </div>
             </div>
             <div className="mt-3">
