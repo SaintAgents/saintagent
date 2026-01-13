@@ -16,6 +16,7 @@ import Activation144K from '@/components/quests/Activation144K';
 import SeventhSealInitiation from '@/components/quests/SeventhSealInitiation';
 import { TRANSMISSIONS, META_VARIANCE_TAGLINES, BADGE_CATEGORIES } from '@/components/quests/MetaVarianceConfig';
 import BackButton from '@/components/hud/BackButton';
+import ForwardButton from '@/components/hud/ForwardButton';
 import InitiationGamification from '@/components/gamification/InitiationGamification';
 import AIOnboardingGuidance from '@/components/ai/AIOnboardingGuidance';
 
@@ -267,6 +268,7 @@ export default function InitiationsPage() {
             <div className="flex items-center justify-center gap-3 mb-2">
               <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
               <Sparkles className="w-8 h-8 text-violet-400" />
+              <ForwardButton currentPage="Initiations" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
               <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
                   style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
                 Initiations

@@ -40,6 +40,9 @@ const QUEST_PATHS = {
   
   // Profile page goes to Matches
   'Profile': 'Matches',
+  
+  // Initiations → Gamification
+  'Initiations': 'Gamification',
 };
 
 // Fallback for pages not in a loop - go to CommandDeck
