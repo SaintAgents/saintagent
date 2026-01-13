@@ -275,19 +275,19 @@ export default function BadgesPanel({ badges = [] }) {
 
   return (
     <>
-      <Card className="bg-gradient-to-b from-[#1a2f1a] to-[#0d1a0d] border-amber-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-10">
+      <Card className="bg-[#050505] border-[rgba(0,255,136,0.3)] shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-10">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base flex items-center gap-2 text-amber-100">
-              <div className="p-1.5 rounded-lg bg-amber-500/20">
-                <Crown className="w-4 h-4 text-amber-400" />
+            <CardTitle className="text-base flex items-center gap-2 text-[#00ff88]">
+              <div className="p-1.5 rounded-lg bg-[rgba(0,255,136,0.2)]">
+                <Crown className="w-4 h-4 text-[#00ff88]" />
               </div>
               32-Badge Ascension Grid
             </CardTitle>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-xs text-amber-400/70 hover:text-amber-300 h-auto py-1"
+              className="text-xs text-[rgba(0,255,136,0.7)] hover:text-[#00ff88] h-auto py-1"
               onClick={() => setViewAllOpen(true)}
             >
               View All <ChevronDown className="w-3 h-3 ml-1" />
@@ -316,15 +316,15 @@ export default function BadgesPanel({ badges = [] }) {
           </div>
 
           {/* Progress */}
-          <div className="border-t border-amber-900/30 pt-3">
-            <div className="flex justify-between text-xs text-amber-400/70 mb-1">
+          <div className="border-t border-[rgba(0,255,136,0.2)] pt-3">
+            <div className="flex justify-between text-xs text-[rgba(0,255,136,0.7)] mb-1">
               <span>Ascension Progress</span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-1.5 bg-amber-900/30" />
-            <p className="text-center text-sm text-amber-300 mt-2">
+            <Progress value={progress} className="h-1.5 bg-[rgba(0,255,136,0.2)]" />
+            <p className="text-center text-sm text-[#00ff88] mt-2">
               <span className="font-bold">{earnedFromGrid}</span>
-              <span className="text-amber-400/50"> / {totalBadges} COLLECTED</span>
+              <span className="text-[rgba(0,255,136,0.5)]"> / {totalBadges} COLLECTED</span>
             </p>
           </div>
         </CardContent>
