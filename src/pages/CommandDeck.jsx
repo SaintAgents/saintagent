@@ -55,6 +55,7 @@ import GoldPriceTicker from '@/components/hud/GoldPriceTicker';
 import MBTIPromptBanner from '@/components/profile/MBTIPromptBanner';
 import CommandDeckTour, { CommandDeckLoadingScreen } from '@/components/tour/CommandDeckTour';
 import CommunityFeedCard from '@/components/community/CommunityFeedCard';
+import MysticalIDImage from '@/components/profile/MysticalIDImage';
 
 export default function CommandDeck() {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -982,7 +983,12 @@ export default function CommandDeck() {
                 {/* Mystical Profile */}
                 <div>
                   <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    {/* Mystical ID Badge Image */}
+                    <div className="md:row-span-2">
+                      <MysticalIDImage profile={profile} size="medium" />
+                    </div>
+                    
                     {profile?.mystical_identifier &&
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
