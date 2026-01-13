@@ -133,7 +133,7 @@ export default function ActivityFeed() {
           className="w-full h-full object-cover hero-image"
           data-no-filter="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" style={{ opacity: '0.96' }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" style={{ opacity: '0.50' }} />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
@@ -143,7 +143,7 @@ export default function ActivityFeed() {
               </h1>
               <ForwardButton currentPage="ActivityFeed" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="flex items-center justify-center gap-2 mt-4 p-4 rounded-2xl bg-black/[0.94] backdrop-blur-sm border border-white/20">
               <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
                 <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
               </Button>

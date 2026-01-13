@@ -262,7 +262,7 @@ export default function InitiationsPage() {
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
         />
-        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.96' }} />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
@@ -274,9 +274,11 @@ export default function InitiationsPage() {
               </h1>
               <ForwardButton currentPage="Initiations" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
-              Sacred Pathways · Saint Germain Transmissions
-            </p>
+            <div className="p-4 rounded-2xl bg-black/[0.94] backdrop-blur-sm border border-white/20 mt-4">
+              <p className="text-violet-200/90 text-base tracking-wider drop-shadow-lg">
+                Sacred Pathways · Saint Germain Transmissions
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -180,27 +180,52 @@ export default function Matches() {
           className="hero-image w-full h-full object-cover object-center"
           data-no-filter="true"
         />
-        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
-          <div className="bg-black/[0.96] backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide text-center"
-                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-              Matches
-            </h1>
-            <p className="text-lg font-semibold text-emerald-300 mt-1 drop-shadow-lg flex items-center justify-center gap-2">
-              Synchronicity Engine
-              <SynchronicityHelpHint className="text-emerald-200/80" />
-            </p>
-            <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg text-center">
-              AI-Powered Connections Based on Values, Skills & Intentions
-            </p>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+                  style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+                Matches
+              </h1>
+              <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+            </div>
+            <div className="p-4 rounded-2xl bg-black/[0.94] backdrop-blur-sm border border-white/20 mt-4">
+              <p className="text-lg font-semibold text-emerald-300 drop-shadow-lg flex items-center justify-center gap-2">
+                Synchronicity Engine
+                <SynchronicityHelpHint className="text-emerald-200/80" />
+              </p>
+              <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg">
+                AI-Powered Connections Based on Values, Skills & Intentions
+              </p>
+              <div className="mt-4 flex justify-center gap-2 flex-wrap">
+                <a
+                  href={createPageUrl('DatingMatches')}
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg cursor-pointer"
+                  title="View Dating Matches"
+                >
+                  <Heart className="w-5 h-5 text-white fill-white" />
+                </a>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  AI Assistant
+                </Button>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={async () => { await base44.functions.invoke('computeMatches', {}); refetch(); }}
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Refresh
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="absolute top-3 left-3 z-10">
-          <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg p-2" />
-        </div>
-        <div className="absolute top-3 right-3 z-10">
-          <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg p-2" />
         </div>
       </div>
 

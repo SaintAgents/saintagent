@@ -184,23 +184,23 @@ export default function Missions() {
           className="hero-image w-full h-full object-cover object-center"
           data-no-filter="true"
         />
-        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
-          <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
-                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-              Missions
-            </h1>
-            <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg">
-              Join Collaborative Missions to Earn GGG, Rank Points & Boosts
-            </p>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+                  style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+                Missions
+              </h1>
+              <ForwardButton currentPage="Missions" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+            </div>
+            <div className="p-4 rounded-2xl bg-black/[0.94] backdrop-blur-sm border border-white/20 mt-4">
+              <p className="text-emerald-200/[0.92] text-base tracking-wider drop-shadow-lg">
+                Join Collaborative Missions to Earn GGG, Rank Points & Boosts
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="absolute top-3 left-3">
-          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
-        </div>
-        <div className="absolute top-3 right-3">
-          <ForwardButton currentPage="Missions" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 
