@@ -174,10 +174,7 @@ export default function Quests() {
               </div>
             </div>
 
-            {/* Quest Board - 22 Badge Ascension Grid */}
-            <div className="mt-8">
-              <QuestBoard earnedBadges={badges} />
-            </div>
+
           </>
         )}
 
