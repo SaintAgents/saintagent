@@ -27,6 +27,7 @@ import { formatDistanceToNow } from 'date-fns';
 export default function UserManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
+  const [sortOrder, setSortOrder] = useState('date'); // 'date', 'alpha', 'sa'
   const queryClient = useQueryClient();
 
   const { data: profiles = [] } = useQuery({
