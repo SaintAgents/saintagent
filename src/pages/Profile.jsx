@@ -51,7 +51,8 @@ import {
   Heart,
   Compass,
   BadgeCheck,
-  MessageSquare
+  MessageSquare,
+  Shield
 } from
 "lucide-react";
 
