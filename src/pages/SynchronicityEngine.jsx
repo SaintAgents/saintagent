@@ -359,8 +359,7 @@ export default function SynchronicityEngine() {
             <BackButton className="text-white/80 hover:text-white" />
             <Orbit className="w-8 h-8 text-violet-400" />
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-2">
-              Synchronicity Engine
-              <SynchronicityHelpHint className="text-white/80" />
+              Synchronicity Engine <SynchronicityHelpHint className="text-white/70 hover:text-white" />
             </h1>
             <ForwardButton currentPage="SynchronicityEngine" className="text-white/80 hover:text-white" />
           </div>
