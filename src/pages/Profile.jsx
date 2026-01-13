@@ -14,6 +14,7 @@ import SocialLinksEditor from '@/components/profile/SocialLinksEditor';
 import SocialLinksDisplay from '@/components/profile/SocialLinksDisplay';
 import DetailedBioEditor from '@/components/profile/DetailedBioEditor';
 import FeaturedShowcase from '@/components/profile/FeaturedShowcase';
+import TrustNetworkGraph from '@/components/reputation/TrustNetworkGraph';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -530,13 +531,17 @@ export default function Profile() {
               <span className="hidden sm:inline">Stats</span>
               <Target className="sm:hidden w-4 h-4" />
             </TabsTrigger>
+            <TabsTrigger value="trust-network" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">Trust Network</span>
+              <Users className="sm:hidden w-4 h-4" />
+            </TabsTrigger>
             <TabsTrigger value="roles" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Roles</span>
               <Crown className="sm:hidden w-4 h-4" />
             </TabsTrigger>
             <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Friends</span>
-              <Users className="sm:hidden w-4 h-4" />
+              <Heart className="sm:hidden w-4 h-4" />
               {following.length > 0 &&
               <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
               }
@@ -1378,6 +1383,13 @@ export default function Profile() {
             </Card>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="trust-network" className="space-y-6">
+            <TrustNetworkGraph 
+              userId={profile?.user_id} 
+              profile={profile}
+            />
           </TabsContent>
 
           <TabsContent value="roles" className="space-y-6">
