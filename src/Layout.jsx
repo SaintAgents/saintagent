@@ -1490,6 +1490,19 @@ function AuthenticatedLayout({ children, currentPageName }) {
         </div>
         )}
 
+      {/* Beta Ticker when BOTH topbar AND sidebar are collapsed - shows thin bar */}
+      {topbarCollapsed && sidebarCollapsed && (
+      <div 
+        className="fixed left-20 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300"
+        style={{ top: '32px' }}
+      >
+        <div className="animate-marquee whitespace-nowrap inline-block">
+          🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+          🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </div>
+        )}
+
       {/* System-wide Announcement Banner */}
       <AnnouncementBanner 
         sidebarCollapsed={sidebarCollapsed} 
