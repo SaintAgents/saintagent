@@ -358,7 +358,7 @@ Return an array of 3 quest objects.`;
 
           <div className="flex flex-wrap gap-2 mb-4">
             {timelineConfig.themes.map((theme, idx) => (
-              <Badge key={idx} variant="outline" className="text-xs">
+              <Badge key={idx} variant="outline" className="text-xs text-slate-800 border-slate-400">
                 {theme}
               </Badge>
             ))}
