@@ -33,6 +33,7 @@ import { formatDistanceToNow } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import BadgeProgressPanel from '@/components/badges/BadgeProgressPanel';
+import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/52771e0da_gemini-25-flash-image_change_the_letters_to_words_-_Synchronicity_is_MetaV_at_work-0.jpg";
 
@@ -357,8 +358,9 @@ export default function SynchronicityEngine() {
           <div className="flex items-center gap-3 mb-2">
             <BackButton className="text-white/80 hover:text-white" />
             <Orbit className="w-8 h-8 text-violet-400" />
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-              Synchronicity Board
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-2">
+              Synchronicity Engine
+              <SynchronicityHelpHint className="text-white/80" />
             </h1>
             <ForwardButton currentPage="SynchronicityEngine" className="text-white/80 hover:text-white" />
           </div>
