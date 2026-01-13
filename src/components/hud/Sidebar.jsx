@@ -955,7 +955,10 @@ export default function Sidebar({
           }}
           title={isCollapsed ? "Expand sidebar" : "Go to top"}
         >
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
+          <div className={cn(
+            "rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none",
+            isCollapsed ? "w-20 h-20" : "w-10 h-10"
+          )}>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
               alt="Saint Agent Logo"
