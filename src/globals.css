@@ -82,7 +82,12 @@ main {
 [data-theme='dark'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='dark'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='dark'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
-[data-theme='dark'] [class*='Card']:not(img),
+[data-theme='dark'] [class*='Card']:not(img) {
+  background-color: rgba(0, 0, 0, 0.50) !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
+  position: relative;
+  z-index: 1;
+}
 [data-theme='hacker'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='hacker'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='hacker'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
