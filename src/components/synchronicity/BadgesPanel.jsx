@@ -71,7 +71,7 @@ const ACHIEVEMENT_BADGES = [
 ];
 
 const ALL_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES, ...ACHIEVEMENT_BADGES];
-// This will be overridden by database count when available
+// Total hardcoded badges: 10 + 5 + 7 + 10 = 32
 
 // Rarity glow effects
 const RARITY_GLOW = {
