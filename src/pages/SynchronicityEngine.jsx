@@ -30,8 +30,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatDistanceToNow } from 'date-fns';
-import BackButton from '@/components/hud/BackButton';
-import ForwardButton from '@/components/hud/ForwardButton';
+import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 import BadgeProgressPanel from '@/components/badges/BadgeProgressPanel';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 
@@ -356,7 +355,7 @@ export default function SynchronicityEngine() {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <div className="flex items-center gap-3 mb-2">
-            <BackButton className="text-white/80 hover:text-white" />
+            <LoopStartIndicator currentPage="SynchronicityEngine" className="text-white/80 hover:text-emerald-300" />
             <Orbit className="w-8 h-8 text-violet-400" />
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg flex items-center gap-2">
               Synchronicity Engine <SynchronicityHelpHint className="text-white/70 hover:text-white" />
