@@ -492,6 +492,47 @@ export default function Sidebar({
               </div>
             </div>
           </div>
+          {/* Collapsed: show avatars only in a row */}
+          {!leaderboardOpen && (
+            <div className="flex flex-wrap gap-1 px-2 py-1">
+              <TooltipProvider delayDuration={200}>
+                {resolvedLeaders.slice(0, 10).map((leader, index) => (
+                  <Tooltip key={leader.id}>
+                    <TooltipTrigger asChild>
+                      <button
+                        className="relative"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: leader.user_id } }));
+                        }}
+                      >
+                        <Avatar className="w-7 h-7 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={leader.user_id}>
+                          <AvatarImage src={leader.avatar_url} />
+                          <AvatarFallback className="text-[10px]">{leader.display_name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        {index < 3 && (
+                          <div className={cn(
+                            "absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full flex items-center justify-center text-[8px] font-bold",
+                            index === 0 && "bg-amber-400 text-white",
+                            index === 1 && "bg-slate-300 text-slate-700",
+                            index === 2 && "bg-orange-400 text-white"
+                          )}>
+                            {index + 1}
+                          </div>
+                        )}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[180px]">
+                      <p className="text-xs font-medium">{leader.display_name}</p>
+                      <p className="text-[10px] text-slate-500">{leader.rank_points?.toLocaleString() || 0} RP</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </TooltipProvider>
+            </div>
+          )}
+
+          {/* Expanded: show full list */}
           <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}>
             <ScrollArea className="h-48">
               <TooltipProvider delayDuration={200}>
