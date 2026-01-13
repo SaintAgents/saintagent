@@ -196,11 +196,11 @@ export default function Matches() {
             </p>
           </div>
         </div>
-        <div className="absolute top-3 left-3">
-          <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        <div className="absolute top-3 left-3 z-10">
+          <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg p-2" />
         </div>
-        <div className="absolute top-3 right-3">
-          <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        <div className="absolute top-3 right-3 z-10">
+          <ForwardButton currentPage="Matches" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg p-2" />
         </div>
       </div>
 
@@ -423,7 +423,7 @@ export default function Matches() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-24">
                 {sortedMatches.map((match) => (
                   <MatchCard
                     key={match.id}
