@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   Sparkles, 
   Plus, 
@@ -15,7 +16,13 @@ import {
   Upload,
   Wand2,
   Loader2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Users,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  Clock,
+  XCircle
 } from 'lucide-react';
 import {
   Dialog,
@@ -23,6 +30,141 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from '@/components/ui/collapsible';
+
+function ChallengeCard({ template, userChallenges, users, completedCount, activeCount, expiredCount, onEdit, onDelete }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getUserProfile = (userId) => users.find(u => u.user_id === userId);
+
+  return (
+    <Card className="overflow-hidden">
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-base">{template.title}</CardTitle>
+                <div className="flex gap-1">
+                  <Badge variant="outline" className="text-xs">{template.category}</Badge>
+                  <Badge variant="outline" className="text-xs">{template.challenge_type}</Badge>
+                </div>
+              </div>
+              <p className="text-sm text-slate-500 mt-1">{template.description}</p>
+              <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                <span>Action: <code className="bg-slate-100 px-1 rounded">{template.target_action}</code></span>
+                <span>Target: {template.target_count}</span>
+                <span>Reward: {template.reward_points} pts</span>
+                {template.reward_ggg > 0 && <span>+{template.reward_ggg} GGG</span>}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7"
+                onClick={() => onEdit(template)}
+              >
+                <Edit className="w-3.5 h-3.5" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7 text-rose-500 hover:text-rose-600"
+                onClick={() => onDelete(template.id)}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Summary Stats */}
+          {userChallenges.length > 0 && (
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" className="w-full mt-3 justify-between hover:bg-slate-50">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <Users className="w-4 h-4 text-slate-400" />
+                    <span className="font-medium">{userChallenges.length}</span>
+                    <span className="text-slate-500">users assigned</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs">
+                    <span className="flex items-center gap-1 text-emerald-600">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      {completedCount} completed
+                    </span>
+                    <span className="flex items-center gap-1 text-blue-600">
+                      <Clock className="w-3.5 h-3.5" />
+                      {activeCount} active
+                    </span>
+                    {expiredCount > 0 && (
+                      <span className="flex items-center gap-1 text-slate-400">
+                        <XCircle className="w-3.5 h-3.5" />
+                        {expiredCount} expired
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </Button>
+            </CollapsibleTrigger>
+          )}
+        </CardHeader>
+
+        <CollapsibleContent>
+          <CardContent className="pt-0 border-t">
+            <div className="space-y-2 mt-3">
+              <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">User Progress</div>
+              {userChallenges.map(challenge => {
+                const userProfile = getUserProfile(challenge.user_id);
+                const progress = Math.min(100, ((challenge.current_count || 0) / (challenge.target_count || 1)) * 100);
+                
+                return (
+                  <div key={challenge.id} className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg">
+                    <img 
+                      src={userProfile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile?.display_name || challenge.user_id)}`}
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium truncate">
+                          {userProfile?.display_name || challenge.user_id}
+                        </span>
+                        <Badge 
+                          variant="outline" 
+                          className={
+                            challenge.status === 'completed' || challenge.status === 'claimed' 
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                              : challenge.status === 'active'
+                              ? 'bg-blue-50 text-blue-700 border-blue-200'
+                              : 'bg-slate-100 text-slate-500'
+                          }
+                        >
+                          {challenge.status}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Progress value={progress} className="h-1.5 flex-1" />
+                        <span className="text-xs text-slate-500 whitespace-nowrap">
+                          {challenge.current_count || 0}/{challenge.target_count}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </CollapsibleContent>
+      </Collapsible>
+    </Card>
+  );
+}
 
 export default function AdminChallenges() {
   const queryClient = useQueryClient();
@@ -211,65 +353,39 @@ export default function AdminChallenges() {
         </div>
       </div>
 
-      {/* Challenges List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {challenges.map(challenge => (
-          <Card key={challenge.id} className="overflow-hidden">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-base">{challenge.title}</CardTitle>
-                <div className="flex gap-1">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-7 w-7"
-                    onClick={() => handleEdit(challenge)}
-                  >
-                    <Edit className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-7 w-7 text-rose-500 hover:text-rose-600"
-                    onClick={() => deleteMutation.mutate(challenge.id)}
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {challenge.image_url && (
-                <img 
-                  src={challenge.image_url} 
-                  alt={challenge.title}
-                  className="w-full h-32 object-cover rounded-lg"
-                />
-              )}
-              <p className="text-sm text-slate-600">{challenge.description}</p>
-              <div className="flex flex-wrap gap-1">
-                <Badge variant="outline" className="text-xs">{challenge.category}</Badge>
-                <Badge variant="outline" className="text-xs">{challenge.challenge_type}</Badge>
-                {challenge.download_url && (
-                  <Badge className="bg-blue-100 text-blue-700 text-xs gap-1">
-                    <Download className="w-3 h-3" />
-                    Downloadable
-                  </Badge>
-                )}
-              </div>
-              <div className="flex items-center gap-3 text-xs text-slate-500">
-                <span>Target: {challenge.target_count}</span>
-                <span>Reward: {challenge.reward_points} pts</span>
-                {challenge.reward_ggg > 0 && <span>+{challenge.reward_ggg} GGG</span>}
-              </div>
-              {challenge.user_notes && (
-                <div className="text-xs text-violet-600 bg-violet-50 p-2 rounded">
-                  Has user notes
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+      {/* Challenges List with User Progress */}
+      <div className="space-y-4">
+        {/* Group challenges by target_action for template view */}
+        {(() => {
+          // Group challenges by title to show as templates with user progress
+          const challengesByTitle = challenges.reduce((acc, c) => {
+            if (!acc[c.title]) acc[c.title] = [];
+            acc[c.title].push(c);
+            return acc;
+          }, {});
+
+          return Object.entries(challengesByTitle).map(([title, challengeGroup]) => {
+            const template = challengeGroup[0];
+            const userChallenges = challengeGroup.filter(c => c.user_id);
+            const completedCount = userChallenges.filter(c => c.status === 'completed' || c.status === 'claimed').length;
+            const activeCount = userChallenges.filter(c => c.status === 'active').length;
+            const expiredCount = userChallenges.filter(c => c.status === 'expired').length;
+
+            return (
+              <ChallengeCard 
+                key={title}
+                template={template}
+                userChallenges={userChallenges}
+                users={users}
+                completedCount={completedCount}
+                activeCount={activeCount}
+                expiredCount={expiredCount}
+                onEdit={handleEdit}
+                onDelete={(id) => deleteMutation.mutate(id)}
+              />
+            );
+          });
+        })()}
       </div>
 
       {/* AI Generate Modal */}
