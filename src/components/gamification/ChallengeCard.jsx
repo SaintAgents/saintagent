@@ -108,7 +108,7 @@ export default function ChallengeCard({ challenge, onClaim, compact = false }) {
         {canClaim ? (
           <Button 
             size="sm" 
-            className="h-7 bg-emerald-600 hover:bg-emerald-700"
+            className="h-7 bg-emerald-600 hover:bg-emerald-700 text-white"
             onClick={() => claimMutation.mutate()}
             disabled={claimMutation.isPending}
           >
@@ -116,7 +116,7 @@ export default function ChallengeCard({ challenge, onClaim, compact = false }) {
             Claim
           </Button>
         ) : (
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className="text-xs bg-slate-800 text-white border-slate-600">
             +{challenge.reward_points} pts
           </Badge>
         )}

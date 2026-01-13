@@ -209,6 +209,38 @@ img[alt="Trust Gauge"],
   color: #ffffff !important;
 }
 
+/* Dark/Hacker theme buttons - ensure readable text */
+[data-theme='dark'] button,
+[data-theme='dark'] [role="button"] {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] button span,
+[data-theme='dark'] [role="button"] span {
+  color: inherit !important;
+}
+
+[data-theme='hacker'] button,
+[data-theme='hacker'] [role="button"] {
+  color: #00ff00 !important;
+}
+
+[data-theme='hacker'] button span,
+[data-theme='hacker'] [role="button"] span {
+  color: inherit !important;
+}
+
+/* Ensure badge/pill text is visible in dark themes */
+[data-theme='dark'] [class*='badge'],
+[data-theme='dark'] .badge {
+  color: #ffffff !important;
+}
+
+[data-theme='hacker'] [class*='badge'],
+[data-theme='hacker'] .badge {
+  color: #00ff00 !important;
+}
+
 /* Page titles and headings - force white in dark mode */
 [data-theme='dark'] .text-3xl,
 [data-theme='dark'] .text-4xl,

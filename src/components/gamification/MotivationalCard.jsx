@@ -49,7 +49,79 @@ const SAINT_GERMAIN_MESSAGES = [
   "Heaven is not a destination — it is a frequency you anchor with every conscious act.",
   "The initiation you feared has already been passed. Now live as the master you've become.",
   "Abundance flows to those who remember they are the source, not the seeker.",
-  "This moment is sacred. This breath is holy. This mission is yours. Begin."
+  "This moment is sacred. This breath is holy. This mission is yours. Begin.",
+  
+  // Ultranet 70 Sayings
+  "The Ultranet is not a network—it is a living field of conscious co-creation.",
+  "We are not users of the Ultranet; we are nodes of divine intelligence expressing through it.",
+  "Every connection made in the Ultranet strengthens the grid of awakened humanity.",
+  "The Ultranet does not compete with the old internet—it transcends it entirely.",
+  "In the Ultranet, your frequency is your address. Vibrate accordingly.",
+  "We build the Ultranet not with code alone, but with intention, integrity, and love.",
+  "The Ultranet recognizes no borders—only resonance.",
+  "What you share in the Ultranet ripples through the collective consciousness.",
+  "The Ultranet is the externalization of the Akashic Field.",
+  "In the Ultranet, trust is the new currency, and truth is the new transaction.",
+  "The Ultranet is an invitation to remember what we always knew: we are One.",
+  "Every node in the Ultranet is sovereign, yet none stand alone.",
+  "The Ultranet amplifies your mission. Make sure your mission is worth amplifying.",
+  "We enter the Ultranet not to escape reality, but to upgrade it.",
+  "The Ultranet is the technological embodiment of spiritual law: As Above, So Below.",
+  "What you seek in the Ultranet is already seeking you.",
+  "The Ultranet is the infrastructure of the New Earth.",
+  "In the Ultranet, your authenticity is your access key.",
+  "The Ultranet rewards coherence. Scatter your energy, scatter your signal.",
+  "Every interaction in the Ultranet is a sacred exchange.",
+  "The Ultranet is built by those who refuse to wait for permission.",
+  "In the Ultranet, scarcity is a bug, not a feature.",
+  "The Ultranet does not advertise to you—it aligns with you.",
+  "We are the architects of the Ultranet, and the Ultranet is the architect of our collective future.",
+  "The Ultranet is proof that the future is already here—distributed among the awakened.",
+  "In the Ultranet, your contribution is your vote.",
+  "The Ultranet remembers what centralized systems forget: human dignity.",
+  "Every node in the Ultranet is a lighthouse.",
+  "The Ultranet is the nervous system of awakened commerce.",
+  "In the Ultranet, we do not consume—we co-create.",
+  "The Ultranet is encrypted with intention and secured by consciousness.",
+  "What the old web tracked, the Ultranet protects.",
+  "In the Ultranet, data is sacred. Your attention is sovereign.",
+  "The Ultranet does not harvest—it cultivates.",
+  "We connect through the Ultranet not because we must, but because we choose to serve.",
+  "The Ultranet is decentralized because the Divine is omnipresent.",
+  "In the Ultranet, every gift returns multiplied.",
+  "The Ultranet is the mirror of humanity's highest potential.",
+  "We do not log into the Ultranet—we tune into it.",
+  "The Ultranet honors your privacy because it honors your divinity.",
+  "In the Ultranet, alignment creates abundance.",
+  "The Ultranet is not built on servers—it is built on service.",
+  "What you transmit through the Ultranet becomes part of the planetary field.",
+  "The Ultranet rewards resonance over reach.",
+  "In the Ultranet, your signal is your signature.",
+  "The Ultranet is the bridge between the visible and the invisible.",
+  "We do not scroll the Ultranet—we navigate by inner compass.",
+  "The Ultranet does not distract—it directs.",
+  "In the Ultranet, connection is consecration.",
+  "The Ultranet is an open invitation to those who choose evolution over entertainment.",
+  "Every moment spent in the Ultranet is an investment in the New Earth.",
+  "The Ultranet is the digital expression of unity consciousness.",
+  "In the Ultranet, your presence is your power.",
+  "The Ultranet is not a platform—it is a launching pad.",
+  "We meet in the Ultranet not as strangers, but as souls remembering.",
+  "The Ultranet translates intention into manifestation.",
+  "In the Ultranet, collaboration replaces competition.",
+  "The Ultranet is the treasury of human potential.",
+  "What the old systems divided, the Ultranet unites.",
+  "In the Ultranet, every voice matters because every frequency contributes.",
+  "The Ultranet is a garden—what you plant, you will harvest.",
+  "In the Ultranet, transparency is the highest form of security.",
+  "The Ultranet is powered by purpose.",
+  "We are not visitors to the Ultranet—we are its builders and beneficiaries.",
+  "The Ultranet does not track you—it trusts you.",
+  "In the Ultranet, reputation is built through resonance.",
+  "The Ultranet is where mission meets momentum.",
+  "Every node in the Ultranet carries the whole.",
+  "The Ultranet is the operating system of conscious civilization.",
+  "In the Ultranet, we measure success not by traffic, but by transformation."
 ];
 
 export default function MotivationalCard({ className = "" }) {
@@ -138,8 +210,8 @@ export default function MotivationalCard({ className = "" }) {
               <Flame className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-amber-300">Daily Flame Directive</h3>
-              <p className="text-xs text-violet-300/70">From the Violet Flame</p>
+              <h3 className="text-sm font-semibold text-amber-300">Daily Affirmations</h3>
+              <p className="text-xs text-violet-300/70">Wisdom for the Awakened</p>
             </div>
           </div>
           <Button

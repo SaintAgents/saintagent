@@ -319,12 +319,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
       if (!currentUser || currentPageName === 'Onboarding') return;
       if (onboardingRecords === undefined || onboardingLoading) return; // wait until loaded to avoid flicker/loop
 
-      // If justCompleted flag is set, show tour then clear flag
+      // Only show tour for brand new users who JUST completed onboarding
+      // If justCompleted flag is set AND tour not dismissed, show tour then clear flag
       if (justCompleted && !tourDismissed && !userTourOpen) {
         try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
         setUserTourOpen(true);
         return;
       }
+
+      // For returning users (no justCompleted flag), never show tour
+      // Skip tour entirely for existing users
 
       // Redirect to onboarding if:
       // 1. No record exists (brand new user)
