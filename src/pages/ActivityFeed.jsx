@@ -12,8 +12,7 @@ import { ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, MessageSqu
 import ShareContentModal from '@/components/share/ShareContentModal';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
-import BackButton from '@/components/hud/BackButton';
-import ForwardButton from '@/components/hud/ForwardButton';
+import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-blue-100 text-blue-700' },
@@ -137,7 +136,7 @@ export default function ActivityFeed() {
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
-              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <LoopStartIndicator currentPage="ActivityFeed" className="text-white/80 hover:text-emerald-300 bg-black/30 hover:bg-black/40 rounded-lg" />
               <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
                 Activity Feed
               </h1>

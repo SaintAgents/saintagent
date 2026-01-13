@@ -38,8 +38,7 @@ import SeasonalLeaderboard from '@/components/gamification/SeasonalLeaderboard';
 import BadgesBar from '@/components/badges/BadgesBar';
 import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import StreakTracker from '@/components/gamification/StreakTracker';
-import BackButton from '@/components/hud/BackButton';
-import ForwardButton from '@/components/hud/ForwardButton';
+import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 import AvailableQuestsPanel from '@/components/quests/AvailableQuestsPanel';
 
 
@@ -158,7 +157,7 @@ export default function Gamification() {
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
-              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <LoopStartIndicator currentPage="Gamification" className="text-white/80 hover:text-emerald-300 bg-black/30 hover:bg-black/40 rounded-lg" />
               <Trophy className="w-8 h-8 text-amber-400" />
               <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide"
                   style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
