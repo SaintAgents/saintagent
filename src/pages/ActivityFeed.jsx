@@ -133,21 +133,21 @@ export default function ActivityFeed() {
           className="w-full h-full object-cover hero-image"
           data-no-filter="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
-        <div className="absolute top-3 left-3 z-10">
-          <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/50 rounded-lg p-2" />
-        </div>
-        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-          <div className="bg-black/80 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20 inline-block">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-              Activity Feed
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
-              <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
-            </Button>
-<ForwardButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" style={{ opacity: '0.96' }} />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+                Activity Feed
+              </h1>
+              <ForwardButton currentPage="ActivityFeed" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+            </div>
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <Button variant="outline" className="rounded-xl bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => refetch()} disabled={isFetching}>
+                <RefreshCcw className="w-4 h-4 mr-2" /> {isFetching ? 'Refreshing…' : 'Refresh'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

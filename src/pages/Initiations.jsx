@@ -262,17 +262,17 @@ export default function InitiationsPage() {
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
         />
-        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ backgroundColor: 'transparent', opacity: '0.96' }} />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.96' }} />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
-              <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
               <Sparkles className="w-8 h-8 text-violet-400" />
-              <ForwardButton currentPage="Initiations" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
               <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
                   style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(139,92,246,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
                 Initiations
               </h1>
+              <ForwardButton currentPage="Initiations" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
             <p className="text-violet-200/90 mt-1 text-base tracking-wider drop-shadow-lg">
               Sacred Pathways · Saint Germain Transmissions
