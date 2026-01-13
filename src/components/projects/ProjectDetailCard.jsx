@@ -187,8 +187,8 @@ export default function ProjectDetailCard({ project }) {
           {/* Strategic Intent */}
           {project.strategic_intent && (
             <div>
-              <h4 className="text-sm font-medium text-slate-500 mb-1">Strategic Intent</h4>
-              <p className="text-slate-700">{project.strategic_intent}</p>
+              <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Strategic Intent</h4>
+              <p className="text-slate-700 dark:text-slate-300">{project.strategic_intent}</p>
             </div>
           )}
 
