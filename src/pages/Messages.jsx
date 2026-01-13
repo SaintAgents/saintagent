@@ -371,20 +371,31 @@ export default function Messages() {
               </div>
               </div>
               <button
-                className="absolute top-2 right-2 p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-2 right-2 p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 onClick={async (e) => {
                   e.stopPropagation();
+                  e.preventDefault();
+                  // Get all messages for this conversation
                   const msgs = allMessages.filter((m) => {
-                    const convId = m.conversation_id || [m.from_user_id, m.to_user_id].sort().join('_');
-                    return convId === conv.id || (m.from_user_id === conv.otherUser.id || m.to_user_id === conv.otherUser.id);
+                    const msgConvId = m.conversation_id || [m.from_user_id, m.to_user_id].sort().join('_');
+                    // Match by conversation ID or by other user ID for direct messages
+                    return msgConvId === conv.id || 
+                      (!conv.isGroup && (m.from_user_id === conv.otherUser.id || m.to_user_id === conv.otherUser.id));
                   });
-                  for (const m of msgs) {
+                  // Delete all messages for this user
+                  await Promise.all(msgs.map((m) => {
                     const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                    if (!list.includes(user?.email)) {
-                      await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
-                    }
+                    if (list.includes(user?.email)) return Promise.resolve();
+                    return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
+                  }));
+                  // Also try to remove from Conversation entity if it exists
+                  const convEntity = conversations.find((c) => c.id === conv.id);
+                  if (convEntity) {
+                    const newParticipants = (convEntity.participant_ids || []).filter((pid) => pid !== user?.email);
+                    await base44.entities.Conversation.update(convEntity.id, { participant_ids: newParticipants });
                   }
                   queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  queryClient.invalidateQueries({ queryKey: ['conversations'] });
                   if (selectedConversation?.id === conv.id) setSelectedConversation(null);
                 }}
               >
