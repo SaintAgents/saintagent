@@ -156,6 +156,24 @@ export default function Gamification() {
         />
         <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="bg-black/[0.96] backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20">
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-[0_0_30px_rgba(251,191,36,0.5)] tracking-wide flex items-center gap-2 justify-center"
+                style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(251,191,36,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+              <Trophy className="w-6 h-6 text-amber-300" />
+              Gamification Hub
+            </h1>
+            <p className="text-amber-100/[0.92] mt-1 text-base tracking-wider drop-shadow-lg text-center">
+              Challenges, Achievements & Leaderboards
+            </p>
+          </div>
+        </div>
+        <div className="absolute top-3 left-3">
+          <BackButton className="text-white hover:bg-white/20" />
+        </div>
+        <div className="absolute top-3 right-3">
+          <ForwardButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
               <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
