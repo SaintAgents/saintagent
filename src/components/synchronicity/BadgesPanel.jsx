@@ -281,8 +281,8 @@ export default function BadgesPanel({ badges = [] }) {
             <CardTitle className="text-base flex items-center gap-2 text-[#00ff88]">
               <div className="p-1.5 rounded-lg bg-[rgba(0,255,136,0.2)]">
                 <Crown className="w-4 h-4 text-[#00ff88]" />
-              </div>
-              32-Badge Ascension Grid
+                </div>
+                Soul Resonance Path • Quest Families • Verification Tracks
             </CardTitle>
             <Button 
               variant="ghost" 
