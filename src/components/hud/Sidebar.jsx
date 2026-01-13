@@ -980,7 +980,7 @@ export default function Sidebar({
                     to={isLocked ? '#' : createPageUrl(item.page)}
                     onClick={(e) => {
                       if (isLocked) e.preventDefault();
-                      else setNavPopupOpen(false);
+                      // Don't close popup on navigation - keep it open until user closes it
                     }}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
