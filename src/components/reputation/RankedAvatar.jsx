@@ -289,36 +289,28 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-      {/* SA# Badge (top-right) - positioned to touch avatar circle */}
-      {saNumberFinal && (
+      {/* Affiliate Badge (adjusts position vertically if Trust is present) */}
+      {showAffiliateBadge && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <div 
                 className="absolute flex items-center justify-center cursor-help z-20 hover:scale-110 transition-transform drop-shadow-lg" 
                 style={{ 
-                  width: symbolPx * 1.8, 
-                  height: symbolPx * 1.8,
-                  top: 0,
-                  right: 0,
+                  width: symbolPx * 2, 
+                  height: symbolPx * 2,
+                  top: showTrustSigil ? '20%' : 0,
+                  right: showTrustSigil ? '-5%' : 0,
                   transform: 'translate(30%, -30%)'
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div 
-                  className="w-full h-full rounded-lg bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-lg border-2 border-white"
-                  style={{ fontSize: Math.max(7, symbolPx * 0.4) }}
-                >
-                  <Shield className="text-white/80 absolute" style={{ width: symbolPx * 1.2, height: symbolPx * 1.2 }} />
-                  <span className="text-white font-bold z-10 text-center leading-none" style={{ fontSize: Math.max(6, symbolPx * 0.35) }}>
-                    {saNumberFinal.replace(/^0+/, '').slice(0, 4) || saNumberFinal}
-                  </span>
-                </div>
+                <AffiliateBadge tier={affiliateTier} size={symbolPx * 2} />
               </div>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[200px] z-[9999]">
-              <p className="font-semibold text-sm">SA#{saNumberFinal}</p>
-              <p className="text-xs text-slate-500">Saint Agent ID</p>
+              <p className="font-semibold text-sm capitalize">{affiliateTier} Affiliate</p>
+              <p className="text-xs text-slate-500">{affiliatePaidFinal} paid referrals</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
