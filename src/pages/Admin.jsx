@@ -69,56 +69,56 @@ export default function Admin() {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full max-w-7xl grid-cols-13 bg-white/[0.88] dark:bg-black/[0.88] backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg p-1">
-            <TabsTrigger value="users" className="gap-2">
+          <TabsList className="flex flex-wrap gap-1 bg-white/[0.88] dark:bg-black/[0.88] backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg p-2 h-auto">
+            <TabsTrigger value="users" className="gap-2 px-3 py-2">
               <Users className="w-4 h-4" />
               Users
             </TabsTrigger>
-            <TabsTrigger value="ggg" className="gap-2">
+            <TabsTrigger value="ggg" className="gap-2 px-3 py-2">
               <Coins className="w-4 h-4" />
               GGG Rules
             </TabsTrigger>
-            <TabsTrigger value="badges" className="gap-2">
+            <TabsTrigger value="badges" className="gap-2 px-3 py-2">
               <Award className="w-4 h-4" />
               Badges
             </TabsTrigger>
-            <TabsTrigger value="rp" className="gap-2">
+            <TabsTrigger value="rp" className="gap-2 px-3 py-2">
               <TrendingUp className="w-4 h-4" />
               RP
             </TabsTrigger>
-            <TabsTrigger value="leaders" className="gap-2">
+            <TabsTrigger value="leaders" className="gap-2 px-3 py-2">
               <Crown className="w-4 h-4" />
               Leaders
             </TabsTrigger>
-            <TabsTrigger value="referrals" className="gap-2">
+            <TabsTrigger value="referrals" className="gap-2 px-3 py-2">
               <Share2 className="w-4 h-4" />
               Referrals
             </TabsTrigger>
-            <TabsTrigger value="affiliate" className="gap-2">
+            <TabsTrigger value="affiliate" className="gap-2 px-3 py-2">
               <Percent className="w-4 h-4" />
               Affiliate
             </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
+            <TabsTrigger value="settings" className="gap-2 px-3 py-2">
               <Settings className="w-4 h-4" />
               Settings
             </TabsTrigger>
-            <TabsTrigger value="stats" className="gap-2">
+            <TabsTrigger value="stats" className="gap-2 px-3 py-2">
               <BarChart3 className="w-4 h-4" />
               Stats
             </TabsTrigger>
-            <TabsTrigger value="projects" className="gap-2">
+            <TabsTrigger value="projects" className="gap-2 px-3 py-2">
               <Folder className="w-4 h-4" />
               Projects
             </TabsTrigger>
-            <TabsTrigger value="crm" className="gap-2">
+            <TabsTrigger value="crm" className="gap-2 px-3 py-2">
               <Network className="w-4 h-4" />
               CRM
             </TabsTrigger>
-            <TabsTrigger value="feedback" className="gap-2">
+            <TabsTrigger value="feedback" className="gap-2 px-3 py-2">
               <MessageSquare className="w-4 h-4" />
               Feedback
             </TabsTrigger>
-            <TabsTrigger value="challenges" className="gap-2">
+            <TabsTrigger value="challenges" className="gap-2 px-3 py-2">
               <Target className="w-4 h-4" />
               Challenges
             </TabsTrigger>
