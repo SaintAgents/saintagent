@@ -281,7 +281,7 @@ export default function AffiliateCenter() {
               <ForwardButton currentPage="AffiliateCenter" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
             <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
-              <p className="text-violet-200/90 text-base tracking-wider drop-shadow-lg">
+              <p className="text-white text-base tracking-wider drop-shadow-lg">
                 Invite people who would genuinely benefit
               </p>
             </div>
