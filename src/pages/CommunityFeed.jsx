@@ -266,7 +266,7 @@ export default function CommunityFeed() {
         </Tabs>
 
         {/* Create Post Card */}
-        <Card className="mb-6">
+        <Card className="mb-6 bg-white/[0.04] backdrop-blur-sm">
           <CardContent className="pt-6 space-y-4">
             <div className="flex items-start gap-3">
               <Avatar className="w-10 h-10 cursor-pointer" data-user-id={profile?.user_id}>
