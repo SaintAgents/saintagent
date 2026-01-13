@@ -3,17 +3,14 @@ import { cn } from "@/lib/utils";
 import { X } from 'lucide-react';
 
 export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
-  const [isDismissed, setIsDismissed] = useState(false);
-  
-  // Check localStorage on mount for dismissed state this session
-  useEffect(() => {
+  const [isDismissed, setIsDismissed] = useState(() => {
+    // Initialize from sessionStorage
     try {
-      const dismissed = sessionStorage.getItem('betaTickerDismissed');
-      if (dismissed === 'true') {
-        setIsDismissed(true);
-      }
-    } catch {}
-  }, []);
+      return sessionStorage.getItem('betaTickerDismissed') === 'true';
+    } catch {
+      return false;
+    }
+  });
   
   const handleDismiss = () => {
     setIsDismissed(true);
