@@ -101,7 +101,9 @@ export default function Marketplace() {
             </h1>
             <ForwardButton className="text-white/80 hover:text-white" />
           </div>
-          <p className="text-white/80 mb-4">Offer your skills, find mentors, and grow together</p>
+          <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
+            <p className="text-white/80 text-base tracking-wider">Offer your skills, find mentors, and grow together</p>
+          </div>
           <div className="flex items-center justify-center gap-2">
             <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
               <Plus className="w-4 h-4" />
