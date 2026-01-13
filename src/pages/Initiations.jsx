@@ -401,6 +401,56 @@ export default function InitiationsPage() {
                 ))}
               </div>
             </TabsContent>
+
+            <TabsContent value="source">
+              <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <BookOpen className="w-6 h-6 text-amber-400" />
+                    <CardTitle className="text-white">7th Seal Hidden Wisdom Unveiled</CardTitle>
+                  </div>
+                  <CardDescription>The foundational texts for the SaintAgent platform</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-slate-300">
+                    The initiations, transmissions, and spiritual framework of SaintAgent are based on the 
+                    <span className="text-amber-400 font-semibold"> 7th Seal Hidden Wisdom Unveiled </span> 
+                    book series (Volumes 1-5). These texts contain the foundational teachings that inform 
+                    the 144K activation, timeline convergence, and the mission of conscious community building.
+                  </p>
+                  
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                    {[
+                      { vol: 1, title: "Awakening", desc: "The initial call to consciousness and remembrance" },
+                      { vol: 2, title: "The Mission", desc: "Understanding the Ultranet and collective purpose" },
+                      { vol: 3, title: "Timeline Convergence", desc: "Working with parallel timelines and the 7th Seal" },
+                      { vol: 4, title: "The Planetary Grid", desc: "144K activation and frequency stabilization" },
+                      { vol: 5, title: "Return of the High Priesthood", desc: "Reclaiming ancient wisdom for the new age" }
+                    ].map((book) => (
+                      <div 
+                        key={book.vol}
+                        className="p-4 rounded-xl bg-gradient-to-br from-amber-900/20 to-orange-900/10 border border-amber-500/30"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">
+                            {book.vol}
+                          </span>
+                          <h4 className="text-amber-300 font-semibold">{book.title}</h4>
+                        </div>
+                        <p className="text-sm text-slate-400">{book.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 p-4 rounded-xl bg-violet-900/20 border border-violet-500/20">
+                    <p className="text-violet-200 text-sm italic">
+                      "Reading these texts will accelerate your understanding of the platform's deeper purpose 
+                      and enhance your journey through the initiations."
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
         </div>
       </div>
