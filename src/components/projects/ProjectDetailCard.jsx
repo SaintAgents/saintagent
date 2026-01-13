@@ -222,8 +222,8 @@ export default function ProjectDetailCard({ project }) {
           )}
 
           {/* Ownership Info */}
-          <div className="p-3 rounded-lg bg-slate-50 border">
-            <h4 className="text-sm font-medium text-slate-500 mb-2">Ownership</h4>
+          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border dark:border-slate-700">
+            <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Ownership</h4>
             <div className="text-sm">
               <span className="font-medium">Status:</span>{' '}
               <span className="capitalize">{project.claim_status || 'Unclaimed'}</span>
