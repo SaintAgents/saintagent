@@ -108,12 +108,12 @@ export default function Meetings() {
         />
         <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
-          <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide"
+          <div className="bg-black/[0.96] backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] tracking-wide text-center"
                 style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
               Meetings
             </h1>
-            <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg">
+            <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg text-center">
               Schedule, Attend & Verify Meetings to Earn GGG
             </p>
           </div>
@@ -121,11 +121,12 @@ export default function Meetings() {
         <div className="absolute top-3 left-3">
           <BackButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3 flex items-center gap-2">
           <Button size="sm" className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
             <Plus className="w-4 h-4" />
             Request Meeting
           </Button>
+          <ForwardButton className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
         </div>
       </div>
 
