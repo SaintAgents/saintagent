@@ -77,6 +77,7 @@ import TipButton from '@/components/creator/TipButton';
 import OptOutSettings from '@/components/profile/OptOutSettings';
 import PerformanceScoreCard from '@/components/merit/PerformanceScoreCard';
 import { createPageUrl } from '@/utils';
+import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -249,6 +250,10 @@ export default function Profile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       setIsEditing(false);
+      // Track challenge progress for updating profile
+      if (profile?.user_id) {
+        trackUpdateProfile(profile.user_id);
+      }
     }
   });
 
