@@ -81,6 +81,7 @@ const QUICK_QUESTIONS = [
   { icon: TrendingUp, label: 'How do Rank Points work?', question: 'Explain the rank system and how I can level up from Seeker to Guardian.' },
   { icon: Heart, label: 'Dating features', question: 'How do I use the dating and compatibility features?' },
   { icon: Users, label: 'Finding collaborators', question: 'How can I find people to collaborate with on projects or missions?' },
+  { icon: HelpCircle, label: 'About this page', question: 'What can I do on this page and how do I use its features?' },
 ];
 
 const SYSTEM_CONTEXT = `You are Saint Support, the helpful AI assistant for the SaintAgent platform - a conscious community for spiritual seekers, lightworkers, and builders.
