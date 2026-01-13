@@ -4,18 +4,9 @@ function padSix(n) {
   return String(n).padStart(6, '0');
 }
 
-// Demo emails that should get "Demo" instead of a number
-const DEMO_EMAILS = [
-  'demo@saintagent.io',
-  'sarah.moon@example.com'
-];
-
 function isDemoUser(email) {
   if (!email) return false;
-  const lower = email.toLowerCase();
-  return DEMO_EMAILS.some(d => lower === d.toLowerCase()) || 
-         lower.includes('example.com') || 
-         lower.includes('demo@');
+  return email.toLowerCase().includes('demo');
 }
 
 Deno.serve(async (req) => {
