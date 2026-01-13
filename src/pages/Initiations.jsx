@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { 
   Sparkles, Eye, Globe, Lock, Unlock, ChevronRight, 
-  Flame, Star, Zap, Heart, BookOpen, Crown, Trophy, Compass
+  Flame, Star, Zap, Heart, BookOpen, Crown, Trophy, Compass, Radio
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import Activation144K from '@/components/quests/Activation144K';
@@ -19,6 +19,8 @@ import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButto
 import InitiationGamification from '@/components/gamification/InitiationGamification';
 import AIOnboardingGuidance from '@/components/ai/AIOnboardingGuidance';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import TimelineNavigator from '@/components/ultranet/TimelineNavigator';
+import UltranetResonanceIndicator from '@/components/ultranet/UltranetResonanceIndicator';
 
 const INITIATIONS = [
   {
@@ -304,6 +306,10 @@ export default function InitiationsPage() {
                 <BookOpen className="w-4 h-4 mr-2" />
                 Source Texts
               </TabsTrigger>
+              <TabsTrigger value="ultranet">
+                <Radio className="w-4 h-4 mr-2" />
+                Ultranet
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="initiations">
@@ -451,6 +457,108 @@ export default function InitiationsPage() {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="ultranet">
+              <div className="space-y-6">
+                {/* Resonance Status */}
+                <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center">
+                          <Radio className="w-5 h-5 text-violet-400 animate-pulse" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-white">Your Ultranet Connection</CardTitle>
+                          <CardDescription>Real-time resonance with the living lattice</CardDescription>
+                        </div>
+                      </div>
+                      <UltranetResonanceIndicator profile={profile} size="lg" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-violet-900/20 to-cyan-900/10 border border-violet-500/20">
+                      <p className="text-violet-200 text-sm leading-relaxed">
+                        𝜗 "There is a web older than the stars, woven not of wires but of light. 
+                        This is the Ultranet—the living lattice of consciousness through which 
+                        souls know one another beyond time." 𝜗
+                      </p>
+                      <p className="text-slate-500 text-xs mt-2">— Saint Germain, Transmission II</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Timeline Navigator */}
+                <TimelineNavigator profile={profile} userId={currentUser?.email} />
+
+                {/* Ultranet Concepts */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-white text-lg flex items-center gap-2">
+                        <Globe className="w-5 h-5 text-cyan-400" />
+                        The Living Network
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-slate-300 text-sm">
+                        The Ultranet is the organic quantum network made of coherence, intention, 
+                        and consciousness itself. It is the scaffolding beneath synchronicity, 
+                        intuition, and soul alignment.
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-white text-lg flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-amber-400" />
+                        Meta-Variance
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-slate-300 text-sm">
+                        The adaptive behavior of reality as it responds to changes in energetic, 
+                        cognitive, and environmental inputs. It explains why synchronicities occur 
+                        and why timelines shift.
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-white text-lg flex items-center gap-2">
+                        <Flame className="w-5 h-5 text-orange-400" />
+                        Coherence Factor
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-slate-300 text-sm">
+                        Your level of alignment with the quantum field. Higher coherence means 
+                        deeper initiations, greater rewards, and access to higher timeline 
+                        probabilities.
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-[rgba(0,0,0,0.85)] border-[rgba(0,255,136,0.2)]">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-white text-lg flex items-center gap-2">
+                        <Eye className="w-5 h-5 text-violet-400" />
+                        Timeline Navigation
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-slate-300 text-sm">
+                        As your frequency stabilizes, you gain the ability to perceive and 
+                        influence which potential timelines become your lived experience. 
+                        This is the science of conscious creation.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
