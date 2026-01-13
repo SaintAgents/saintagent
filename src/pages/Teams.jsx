@@ -134,36 +134,52 @@ export default function Teams() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-4 border">
-            <div className="flex items-center gap-2 mb-1">
-              <Users className="w-4 h-4 text-violet-500" />
-              <span className="text-sm text-slate-500">My Teams</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-violet-100">
+                <Users className="w-5 h-5 text-violet-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{myTeams.length}</p>
+                <p className="text-sm text-slate-500">My Teams</p>
+              </div>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{myTeams.length}</p>
           </div>
           <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-4 border">
-            <div className="flex items-center gap-2 mb-1">
-              <Shield className="w-4 h-4 text-amber-500" />
-              <span className="text-sm text-slate-500">Total Teams</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-amber-100">
+                <Shield className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{teams.length}</p>
+                <p className="text-sm text-slate-500">Total Teams</p>
+              </div>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{teams.length}</p>
           </div>
           <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-4 border">
-            <div className="flex items-center gap-2 mb-1">
-              <Target className="w-4 h-4 text-emerald-500" />
-              <span className="text-sm text-slate-500">Recruiting</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-emerald-100">
+                <Target className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {teams.filter(t => t.status === 'recruiting').length}
+                </p>
+                <p className="text-sm text-slate-500">Recruiting</p>
+              </div>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">
-              {teams.filter(t => t.status === 'recruiting').length}
-            </p>
           </div>
           <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-4 border">
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles className="w-4 h-4 text-rose-500" />
-              <span className="text-sm text-slate-500">Total Members</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-rose-100">
+                <Sparkles className="w-5 h-5 text-rose-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {teams.reduce((sum, t) => sum + (t.member_count || 0), 0)}
+                </p>
+                <p className="text-sm text-slate-500">Total Members</p>
+              </div>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">
-              {teams.reduce((sum, t) => sum + (t.member_count || 0), 0)}
-            </p>
           </div>
         </div>
 
