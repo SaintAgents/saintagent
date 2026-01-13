@@ -236,6 +236,25 @@ export default function QuestTracker({ quests, onClaimRewards, hasClaimable, isC
           )}
         </ScrollArea>
         
+        {/* What's Next Guidance */}
+        {whatsNext && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 p-3 rounded-lg bg-gradient-to-r from-violet-900/30 to-purple-900/30 border border-violet-500/30"
+          >
+            <div className="flex items-center gap-2 mb-1.5">
+              <Lightbulb className="w-3.5 h-3.5 text-violet-400" />
+              <span className="text-xs font-semibold text-violet-300">What's Next?</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <whatsNext.icon className="w-4 h-4 text-amber-400 shrink-0" />
+              <p className="text-xs text-amber-200/90 flex-1">{whatsNext.text}</p>
+              <ArrowRight className="w-3.5 h-3.5 text-violet-400" />
+            </div>
+          </motion.div>
+        )}
+
         <Button
           onClick={onClaimRewards}
           disabled={!hasClaimable || isClaimPending}
