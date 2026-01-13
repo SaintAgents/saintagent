@@ -89,13 +89,16 @@ export default function Events() {
         <HeroGalleryTrigger startIndex={18} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 hero-content">
           <div className="flex items-center gap-3 mb-2">
-            <BackButton className="text-white/80 hover:text-white" />
+            <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             <Calendar className="w-8 h-8 text-white" />
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
+              Events & Meetups
+            </h1>
+            <ForwardButton currentPage="Events" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            Events & Meetups
-          </h1>
-          <p className="text-white/80 text-lg max-w-md">Discover and create gatherings with conscious community</p>
+          <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
+            <p className="text-white/80 text-base tracking-wider drop-shadow-lg">Discover and create gatherings with conscious community</p>
+          </div>
           <Button onClick={() => setCreateOpen(true)} className="mt-4 bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
             <Plus className="w-4 h-4" />
             Create Event
