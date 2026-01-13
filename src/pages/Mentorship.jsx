@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { Users } from 'lucide-react';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 function useUserAndProfiles() {
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
@@ -74,6 +75,7 @@ export default function Mentorship() {
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
+              <HeroGalleryTrigger startIndex={0} className="text-white/80" />
               <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
               <Users className="w-8 h-8 text-violet-400" />
               <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] tracking-wide"
