@@ -13,6 +13,7 @@ import ShareContentModal from '@/components/share/ShareContentModal';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-blue-100 text-blue-700' },
@@ -133,6 +134,7 @@ export default function ActivityFeed() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" style={{ opacity: '0.50' }} />
+        <HeroGalleryTrigger startIndex={14} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">

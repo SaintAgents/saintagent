@@ -21,6 +21,7 @@ import CreateTeamModal from '@/components/teams/CreateTeamModal';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import HelpHint from '@/components/hud/HelpHint';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 export default function Teams() {
   const queryClient = useQueryClient();
@@ -78,6 +79,7 @@ export default function Teams() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
+        <HeroGalleryTrigger startIndex={9} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">

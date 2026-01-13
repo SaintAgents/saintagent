@@ -25,6 +25,7 @@ import QuestSuggestionEngine from '@/components/quests/QuestSuggestionEngine';
 import AILoreQuestGenerator from '@/components/quests/AILoreQuestGenerator';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/eda418711_universal_upscale_0_0b3501a9-62c0-4df4-978e-6bf4e8cb3953_0.jpg";
 
@@ -102,6 +103,7 @@ export default function Quests() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <HeroGalleryTrigger startIndex={10} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <div className="flex items-center gap-3 mb-2">
             <BackButton className="text-white/80 hover:text-white" />
