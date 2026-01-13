@@ -195,7 +195,7 @@ export default function Missions() {
               </h1>
               <ForwardButton currentPage="Missions" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <div className="p-4 rounded-2xl bg-black/[0.88] backdrop-blur-sm border border-white/20 mt-4">
+            <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
               <p className="text-emerald-200/[0.92] text-base tracking-wider drop-shadow-lg">
                 Join Collaborative Missions to Earn GGG, Rank Points & Boosts
               </p>

@@ -90,6 +90,26 @@ export default function Studio() {
                     <li><span className="text-emerald-400 font-semibold">The ULTRANET Advantage:</span> <span className="text-slate-300">Leverage AI-driven discovery to find the exact collaborators and students who are already Grid Aligned with your specific mission.</span></li>
                     <li><span className="text-emerald-400 font-semibold">Scale Your Influence:</span> <span className="text-slate-300">This is more than a profile; it is your launchpad for planetary-scale growth, designed to reward your integrity as much as your output.</span></li>
                   </ul>
+                  <div className="mt-3 pt-3 border-t border-slate-600">
+                    <div className="text-cyan-400 font-bold text-xs mb-2">✨ First Steps Checklist</div>
+                    <ul className="space-y-1.5 text-xs text-slate-300">
+                      <li className="flex items-center gap-2">
+                        <span className="text-emerald-400">1.</span> Create your first Listing in the Marketplace
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-emerald-400">2.</span> Set up your Mentorship Tiers below
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-emerald-400">3.</span> Review your Conversion Funnel metrics
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-emerald-400">4.</span> Explore the Earnings Matrix to understand GGG flows
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-emerald-400">5.</span> Connect with collaborators via the Synchronicity Engine
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               }
             />
