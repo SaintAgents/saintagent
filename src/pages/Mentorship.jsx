@@ -82,7 +82,7 @@ export default function Mentorship() {
               </h1>
               <ForwardButton currentPage="Mentorship" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
             </div>
-            <div className="p-4 rounded-2xl bg-black/[0.47] backdrop-blur-sm border border-white/20 mt-4">
+            <div className="p-4 rounded-2xl bg-black/[0.88] backdrop-blur-sm border border-white/20 mt-4">
               <p className="text-violet-200/90 text-base tracking-wider drop-shadow-lg">
                 Find Mentors · Share Knowledge · Grow Together
               </p>
