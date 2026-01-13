@@ -1480,33 +1480,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
       />
 
       {/* Beta Ticker - only show when topbar is not collapsed */}
-      {!topbarCollapsed && (
-      <div 
-        className={cn(
-          "fixed left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
-          sidebarCollapsed ? "pl-20" : "pl-64"
-        )}
-        style={{ top: '64px' }}
-      >
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn 2x GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-        </div>
-        )}
-
-      {/* Beta Ticker when BOTH topbar AND sidebar are collapsed - shows thin bar */}
-      {topbarCollapsed && sidebarCollapsed && (
-      <div 
-        className="fixed left-20 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300"
-        style={{ top: '32px' }}
-      >
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
-          🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-        </div>
-        )}
+      <BetaTicker 
+        topbarCollapsed={topbarCollapsed} 
+        sidebarCollapsed={sidebarCollapsed} 
+      />
 
       {/* System-wide Announcement Banner */}
       <AnnouncementBanner 
