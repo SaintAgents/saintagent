@@ -131,8 +131,8 @@ export default function ProjectDetailCard({ project }) {
           {/* Description */}
           {project.description && (
             <div>
-              <h4 className="text-sm font-medium text-slate-500 mb-1">Description</h4>
-              <p className="text-slate-700">{project.description}</p>
+              <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Description</h4>
+              <p className="text-slate-700 dark:text-slate-300">{project.description}</p>
             </div>
           )}
 
