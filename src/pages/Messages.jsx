@@ -322,17 +322,6 @@ export default function Messages() {
               <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-xs"
-                  onClick={async () => {
-                    const unread = (allMessages || []).filter((m) => m.to_user_id === user?.email && !m.is_read);
-                    await Promise.all(unread.map((m) => base44.entities.Message.update(m.id, { is_read: true })));
-                    queryClient.invalidateQueries({ queryKey: ['messages'] });
-                  }}>
-                Mark all read
-              </Button>
-              <Button
-                  variant="ghost"
-                  size="sm"
                   className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
                   onClick={async () => {
                     const mine = allMessages || [];
@@ -381,6 +370,26 @@ export default function Messages() {
                 </div>
               </div>
               </div>
+              <button
+                className="absolute top-2 right-2 p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  const msgs = allMessages.filter((m) => {
+                    const convId = m.conversation_id || [m.from_user_id, m.to_user_id].sort().join('_');
+                    return convId === conv.id || (m.from_user_id === conv.otherUser.id || m.to_user_id === conv.otherUser.id);
+                  });
+                  for (const m of msgs) {
+                    const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                    if (!list.includes(user?.email)) {
+                      await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
+                    }
+                  }
+                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  if (selectedConversation?.id === conv.id) setSelectedConversation(null);
+                }}
+              >
+                <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-500" />
+              </button>
                 </div>
               )}
               </div>
