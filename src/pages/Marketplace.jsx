@@ -27,6 +27,7 @@ import CreateListingModal from '@/components/marketplace/CreateListingModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 const MARKETPLACE_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7fc6cc632_mp2.png";
 
@@ -92,6 +93,7 @@ export default function Marketplace() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        <HeroGalleryTrigger startIndex={4} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
           <div className="flex items-center gap-2 mb-2">
             <BackButton className="text-white/80 hover:text-white" />

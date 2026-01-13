@@ -40,6 +40,7 @@ import BadgesGlossaryModal from '@/components/badges/BadgesGlossaryModal';
 import StreakTracker from '@/components/gamification/StreakTracker';
 import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 import AvailableQuestsPanel from '@/components/quests/AvailableQuestsPanel';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 
 const ACHIEVEMENT_BADGES = [
@@ -154,6 +155,7 @@ export default function Gamification() {
           data-no-filter="true"
         />
         <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
+        <HeroGalleryTrigger startIndex={7} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">

@@ -67,9 +67,9 @@ export default function Studio() {
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        <HeroGalleryTrigger startIndex={1} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 hero-content">
           <div className="flex items-center gap-3 mb-2">
-            <HeroGalleryTrigger startIndex={1} className="text-white/80" />
             <LoopStartIndicator currentPage="Studio" className="text-white/80 hover:text-emerald-300" />
             <BarChart3 className="w-7 h-7 text-violet-400" />
             <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
