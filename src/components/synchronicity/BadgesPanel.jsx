@@ -257,16 +257,17 @@ export default function BadgesPanel({ badges = [] }) {
   const earnedBadgeCodes = badges.map(b => b.badge_code || b.code);
   const earnedBadgeIds = badges.map(b => b.badge_code || b.code || b.id);
   
-  // Combine hardcoded badges with database badge definitions
-  const dbBadgeCodes = badgeDefinitions.map(bd => bd.badge_code);
-  const allBadgeCodes = new Set([
-    ...ALL_BADGES.map(b => b.id || b.code),
-    ...dbBadgeCodes
-  ]);
-  const totalBadges = allBadgeCodes.size;
+  // Total badges = hardcoded (Soul:10 + Quest:5 + Verify:7) = 22 + database definitions
+  // But we only count the 22 ascension badges in the main grid, DB badges shown separately
+  const totalBadges = SOUL_RESONANCE_BADGES.length + QUEST_FAMILY_BADGES.length + VERIFICATION_BADGES.length; // 22
   
-  // Count earned from all badges (hardcoded + database)
-  const earnedFromGrid = [...allBadgeCodes].filter(code => 
+  // Count earned from the 22-badge ascension grid only
+  const ascensionBadgeIds = [
+    ...SOUL_RESONANCE_BADGES.map(b => b.id),
+    ...QUEST_FAMILY_BADGES.map(b => b.id),
+    ...VERIFICATION_BADGES.map(b => b.id)
+  ];
+  const earnedFromGrid = ascensionBadgeIds.filter(code => 
     earnedBadgeIds.includes(code) || earnedBadgeCodes.includes(code)
   ).length;
   const progress = (earnedFromGrid / totalBadges) * 100;
