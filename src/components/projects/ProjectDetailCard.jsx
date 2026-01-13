@@ -195,7 +195,7 @@ export default function ProjectDetailCard({ project }) {
           {/* Impact Tags */}
           {project.impact_tags?.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-slate-500 mb-2 flex items-center gap-1">
+              <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
                 <Tag className="w-4 h-4" />
                 Impact Tags
               </h4>
