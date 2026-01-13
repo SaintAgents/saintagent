@@ -46,10 +46,7 @@ export default function MetricTile({
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-800 mb-1 truncate">
             {label}
           </p>
-          <p className={cn(
-            "text-2xl font-extrabold tracking-tight",
-            valueClassName || "text-neutral-950"
-          )}>
+          <p className={cn("text-2xl font-extrabold tracking-tight", valueClassName || "text-neutral-950")}>
             {value}
           </p>
           {trend &&
