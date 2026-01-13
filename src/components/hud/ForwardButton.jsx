@@ -1,8 +1,37 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, RefreshCw } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
+
+// Loop definitions with metadata
+const LOOP_INFO = {
+  community: {
+    name: 'Community Loop',
+    pages: ['ActivityFeed', 'Forum', 'CommunityFeed', 'Missions', 'FindCollaborators'],
+    description: 'Community: Activity → Forum → Feed → Missions → Collaborators'
+  },
+  gamification: {
+    name: 'Gamification Loop',
+    pages: ['Gamification', 'Quests', 'Teams', 'Circles'],
+    description: 'Gamification: Hub → Quests → Teams → Groups'
+  },
+  connection: {
+    name: 'Connection Loop',
+    pages: ['SynchronicityEngine', 'Matches', 'Meetings'],
+    description: 'Connection: Synchronicity → Matches → Meetings'
+  },
+  creator: {
+    name: 'Creator Loop',
+    pages: ['Studio', 'Marketplace', 'CRM'],
+    description: 'Creator: Studio → Marketplace → CRM'
+  },
+  spiritual: {
+    name: 'Spiritual Loop',
+    pages: ['Initiations', 'Mentorship'],
+    description: 'Spiritual: Initiations → Mentorship'
+  }
+};
 
 // Quest navigation loops - each page maps to its "next" destination
 const QUEST_PATHS = {
@@ -42,9 +71,26 @@ const QUEST_PATHS = {
   // Profile page goes to Matches
   'Profile': 'Matches',
   
-  // Initiations → Gamification
-  'Initiations': 'Gamification',
+  // Spiritual Loop
+  'Initiations': 'Mentorship',
+  'Mentorship': 'Initiations',
 };
+
+// Get loop info for a page
+export function getLoopInfo(pageName) {
+  for (const [key, loop] of Object.entries(LOOP_INFO)) {
+    if (loop.pages.includes(pageName)) {
+      const idx = loop.pages.indexOf(pageName);
+      return {
+        ...loop,
+        isStart: idx === 0,
+        position: idx + 1,
+        total: loop.pages.length
+      };
+    }
+  }
+  return null;
+}
 
 // Fallback for pages not in a loop - go to CommandDeck
 const DEFAULT_DESTINATION = 'CommandDeck';
@@ -73,5 +119,27 @@ export default function ForwardButton({ currentPage, className }) {
   );
 }
 
+// Loop Start Indicator - shows refresh icon for loop starting points
+export function LoopStartIndicator({ currentPage, className }) {
+  const loopInfo = getLoopInfo(currentPage);
+  
+  if (!loopInfo?.isStart) return null;
+  
+  return (
+    <div
+      className={cn(
+        "p-2 rounded-lg transition-all duration-200 inline-flex items-center justify-center cursor-help",
+        "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50",
+        "dark:text-[#00ff88]/70 dark:hover:text-[#00ff88] dark:hover:bg-[rgba(0,255,136,0.1)]",
+        "dark:hover:shadow-[0_0_12px_rgba(0,255,136,0.3)]",
+        className
+      )}
+      title={`🔄 ${loopInfo.name} Start\n${loopInfo.description}\nCommand Deck is primary home`}
+    >
+      <RefreshCw className="w-5 h-5" />
+    </div>
+  );
+}
+
 // Export the paths for reference
-export { QUEST_PATHS, DEFAULT_DESTINATION };
+export { QUEST_PATHS, DEFAULT_DESTINATION, LOOP_INFO };
