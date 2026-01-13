@@ -65,12 +65,14 @@ export default function Messages() {
 
   const sendMutation = useMutation({
     mutationFn: (data) => base44.entities.Message.create(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       setMessageText('');
       // Track challenge progress for sending messages
       if (user?.email) {
-        trackSendMessage(user.email);
+        console.log('Messages: Tracking send_message for', user.email);
+        await trackSendMessage(user.email);
+        queryClient.invalidateQueries({ queryKey: ['challenges'] });
       }
     }
   });

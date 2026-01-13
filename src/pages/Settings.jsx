@@ -89,7 +89,9 @@ export default function Settings() {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       // Track challenge progress for updating profile
       if (profile?.user_id) {
-        trackUpdateProfile(profile.user_id);
+        console.log('Settings: Tracking update_profile for', profile.user_id);
+        await trackUpdateProfile(profile.user_id);
+        queryClient.invalidateQueries({ queryKey: ['challenges'] });
       }
     }
   });

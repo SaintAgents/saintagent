@@ -6,22 +6,36 @@ import { base44 } from '@/api/base44Client';
  * @param {string} userId - The user's email
  */
 export async function trackChallengeAction(actionType, userId) {
-  if (!userId) return;
+  if (!userId) {
+    console.log('trackChallengeAction: No userId provided');
+    return;
+  }
+  
+  console.log(`trackChallengeAction: Tracking "${actionType}" for user "${userId}"`);
   
   try {
     // Find active challenges for this user with matching target_action
     const challenges = await base44.entities.Challenge.filter({
       user_id: userId,
-      target_action: actionType,
       status: 'active'
     });
     
+    console.log(`trackChallengeAction: Found ${challenges.length} active challenges for user`);
+    
+    // Filter to matching action type and increment
+    const matchingChallenges = challenges.filter(c => c.target_action === actionType);
+    console.log(`trackChallengeAction: ${matchingChallenges.length} challenges match action "${actionType}"`);
+    
     // Increment current_count for each matching challenge
-    for (const challenge of challenges) {
+    for (const challenge of matchingChallenges) {
       if (challenge.current_count < challenge.target_count) {
+        const newCount = (challenge.current_count || 0) + 1;
+        console.log(`trackChallengeAction: Updating challenge "${challenge.title}" from ${challenge.current_count} to ${newCount}`);
         await base44.entities.Challenge.update(challenge.id, {
-          current_count: challenge.current_count + 1
+          current_count: newCount
         });
+      } else {
+        console.log(`trackChallengeAction: Challenge "${challenge.title}" already at target (${challenge.current_count}/${challenge.target_count})`);
       }
     }
   } catch (error) {
