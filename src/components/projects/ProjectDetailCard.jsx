@@ -272,3 +272,36 @@ function DetailItem({ icon: Icon, label, value }) {
     </div>
   );
 }
+
+function ClaimButton({ project, currentUser, onUpdate }) {
+  const [claiming, setClaiming] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleClaim = async () => {
+    if (!currentUser?.email) return;
+    setClaiming(true);
+    try {
+      await base44.entities.Project.update(project.id, {
+        claim_status: 'claimed',
+        claimed_by: currentUser.email
+      });
+      queryClient.invalidateQueries({ queryKey: ['projects_all'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      onUpdate?.();
+    } catch (e) {
+      console.error('Failed to claim project:', e);
+    }
+    setClaiming(false);
+  };
+
+  return (
+    <Button 
+      size="sm" 
+      className="mt-3 w-full bg-violet-600 hover:bg-violet-700"
+      onClick={handleClaim}
+      disabled={claiming}
+    >
+      {claiming ? 'Claiming...' : 'Claim Ownership'}
+    </Button>
+  );
+}
