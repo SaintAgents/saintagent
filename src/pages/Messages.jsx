@@ -465,7 +465,11 @@ export default function Messages() {
                   </DropdownMenuItem>
                   {(() => {
                     const convEntity = conversations.find((c) => c.id === selectedConversation.id);
-                    const isGroupConv = convEntity?.type === 'group' || selectedConversation.isGroup;
+                    // Show Leave Group if: type is group OR name contains "Group" OR more than 2 participants
+                    const isGroupConv = convEntity?.type === 'group' || 
+                      selectedConversation.isGroup || 
+                      (convEntity?.participant_ids?.length > 2) ||
+                      selectedConversation.otherUser?.name?.toLowerCase().includes('group');
                     if (!isGroupConv) return null;
                     return (
                       <DropdownMenuItem 
