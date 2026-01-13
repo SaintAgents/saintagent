@@ -329,7 +329,7 @@ Return an array of 3 quest objects.`;
                 {timelineConfig.icon}
               </div>
               <div>
-                <CardTitle className="text-lg">Your Timeline Resonance</CardTitle>
+                <CardTitle className="text-lg text-slate-900">Your Timeline Resonance</CardTitle>
                 <p className="text-sm text-slate-700 font-medium">
                   {timelineConfig.name} • {approachConfig.name} Approach • Coherence {userChoices.avgCoherence}/10
                 </p>
