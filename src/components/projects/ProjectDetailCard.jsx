@@ -222,21 +222,23 @@ export default function ProjectDetailCard({ project }) {
           )}
 
           {/* Ownership Info */}
-          {(project.claim_status || project.claimed_by) && (
-            <div className="p-3 rounded-lg bg-slate-50 border">
-              <h4 className="text-sm font-medium text-slate-500 mb-2">Ownership</h4>
-              <div className="text-sm">
-                <span className="font-medium">Status:</span>{' '}
-                <span className="capitalize">{project.claim_status || 'Unclaimed'}</span>
-                {project.claimed_by && (
-                  <>
-                    <br />
-                    <span className="font-medium">Claimed by:</span> {project.claimed_by}
-                  </>
-                )}
-              </div>
+          <div className="p-3 rounded-lg bg-slate-50 border">
+            <h4 className="text-sm font-medium text-slate-500 mb-2">Ownership</h4>
+            <div className="text-sm">
+              <span className="font-medium">Status:</span>{' '}
+              <span className="capitalize">{project.claim_status || 'Unclaimed'}</span>
+              {project.claimed_by && (
+                <>
+                  <br />
+                  <span className="font-medium">Claimed by:</span> {project.claimed_by}
+                </>
+              )}
             </div>
-          )}
+            {/* Claim button for unclaimed projects */}
+            {(!project.claim_status || project.claim_status === 'unclaimed') && !project.claimed_by && (
+              <ClaimButton project={project} currentUser={currentUser} onUpdate={handleProjectUpdate} />
+            )}
+          </div>
 
           {/* Metadata */}
           {project.metadata && Object.keys(project.metadata).length > 0 && (
