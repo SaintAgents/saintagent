@@ -19,7 +19,8 @@ import {
   GraduationCap,
   RefreshCw,
   Heart,
-  ChevronLeft
+  ChevronLeft,
+  TrendingUp
 } from "lucide-react";
 
 import { createPageUrl } from '@/utils';
