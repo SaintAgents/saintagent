@@ -258,6 +258,7 @@ export default function SynchronicityEngine() {
   const [submitOpen, setSubmitOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('feed'); // 'feed' or 'deepdive'
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
