@@ -333,16 +333,45 @@ export default function DeepDiveDashboard({ userId }) {
   const queryClient = useQueryClient();
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [viewAllOpen, setViewAllOpen] = useState(false);
+  const [scoreFilter, setScoreFilter] = useState([5, 100]);
+  const [isRunningAI, setIsRunningAI] = useState(false);
+  const [aiInsights, setAiInsights] = useState(null);
   
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
   
-  const { data: matches = [] } = useQuery({
-    queryKey: ['myMatches', currentUser?.email],
-    queryFn: () => base44.entities.Match.filter({ user_id: currentUser.email, status: 'active' }, '-match_score', 20),
+  const { data: profile } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
+      return profiles?.[0];
+    },
     enabled: !!currentUser?.email
+  });
+  
+  const { data: matches = [], refetch: refetchMatches } = useQuery({
+    queryKey: ['myMatches', currentUser?.email],
+    queryFn: () => base44.entities.Match.filter({ user_id: currentUser.email, status: 'active' }, '-match_score', 100),
+    enabled: !!currentUser?.email
+  });
+  
+  const { data: synchronicities = [] } = useQuery({
+    queryKey: ['userSynchs', currentUser?.email],
+    queryFn: () => base44.entities.Synchronicity.filter({ user_id: currentUser.email }, '-created_date', 20),
+    enabled: !!currentUser?.email
+  });
+  
+  const { data: communityPosts = [] } = useQuery({
+    queryKey: ['communityFeed'],
+    queryFn: () => base44.entities.Post.filter({}, '-created_date', 30)
+  });
+  
+  const { data: forumPosts = [] } = useQuery({
+    queryKey: ['forumPosts'],
+    queryFn: () => base44.entities.ForumPost.filter({}, '-created_date', 20)
   });
   
   const { data: preferences } = useQuery({
@@ -365,12 +394,70 @@ export default function DeepDiveDashboard({ userId }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['enginePrefs'] })
   });
   
+  // Run AI Deep Analysis
+  const runAIAnalysis = async () => {
+    setIsRunningAI(true);
+    const userContext = {
+      profile_summary: profile ? `${profile.display_name || 'User'} - ${profile.bio || 'No bio'}. Values: ${profile.values_tags?.join(', ') || 'Not set'}. Skills: ${profile.skills?.join(', ') || 'Not set'}. Practices: ${profile.spiritual_practices?.join(', ') || 'Not set'}.` : 'User profile not available',
+      synchronicities: synchronicities.slice(0, 10).map(s => `${s.category}: ${s.title} - ${s.description}`).join('; '),
+      community_activity: communityPosts.slice(0, 5).map(p => p.content?.slice(0, 100)).join('; '),
+      forum_activity: forumPosts.slice(0, 5).map(p => `${p.title}: ${p.content?.slice(0, 50)}`).join('; '),
+      matches_summary: matches.slice(0, 10).map(m => `${m.target_name} (${m.match_score}%): ${m.explanation || 'No explanation'}`).join('; ')
+    };
+    
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are a Synchronicity Engine AI analyzing patterns for a user on a spiritual/community platform. Based on the following data, provide deep insights:
+
+USER PROFILE:
+${userContext.profile_summary}
+
+RECENT SYNCHRONICITIES LOGGED:
+${userContext.synchronicities || 'None logged yet'}
+
+COMMUNITY FEED ACTIVITY:
+${userContext.community_activity || 'No recent activity'}
+
+FORUM DISCUSSIONS:
+${userContext.forum_activity || 'No forum activity'}
+
+CURRENT MATCHES:
+${userContext.matches_summary || 'No matches yet'}
+
+Analyze this data and provide:
+1. KEY PATTERNS: What recurring themes, symbols, or synchronicities do you see across their experiences?
+2. DEEPER CONNECTIONS: What hidden connections exist between their synchronicities and community interactions?
+3. PERSONALIZED GUIDANCE: Based on their profile and experiences, what spiritual/personal growth guidance would you offer?
+4. RELATED SYNCHRONICITIES: What types of synchronicities should they watch for based on their patterns?
+5. COMMUNITY CONNECTIONS: Who in the community (based on posts/forum) might be experiencing similar patterns?
+
+Be specific, insightful, and spiritually-aware in your analysis.`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          key_patterns: { type: 'array', items: { type: 'string' } },
+          deeper_connections: { type: 'string' },
+          personalized_guidance: { type: 'string' },
+          watch_for: { type: 'array', items: { type: 'string' } },
+          community_connections: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, reason: { type: 'string' } } } }
+        }
+      }
+    });
+    
+    setAiInsights(result);
+    setIsRunningAI(false);
+  };
+  
+  // Filter matches by score range
+  const filteredMatches = matches.filter(m => 
+    m.match_score >= scoreFilter[0] && m.match_score <= scoreFilter[1]
+  );
+  
   // High score matches (90%+)
-  const highScoreMatches = matches.filter(m => m.match_score >= 90);
+  const highScoreMatches = filteredMatches.filter(m => m.match_score >= 90);
   
   // Group by type
-  const missionMatches = matches.filter(m => m.target_type === 'mission' || m.target_type === 'person');
-  const datingMatches = matches.filter(m => m.target_type === 'person');
+  const missionMatches = filteredMatches.filter(m => m.target_type === 'mission' || m.target_type === 'person');
+  const datingMatches = filteredMatches.filter(m => m.target_type === 'person');
   
   // Simulated match history for selected match
   const matchHistory = selectedMatch ? [
