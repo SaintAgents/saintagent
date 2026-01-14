@@ -222,18 +222,22 @@ export default function Onboarding() {
                 await base44.entities.Badge.create({ user_id: user.email, code: 'profile_complete', status: 'active' });
               }
               
-              // Award GGG tokens for completing onboarding (100 GGG welcome bonus)
+              // Award GGG tokens for completing onboarding - fetch amount from GGGRewardRule
               try {
-                await base44.functions.invoke('walletEngine', {
-                  action: 'credit',
-                  payload: {
-                    user_id: user.email,
-                    amount: 100,
-                    tx_type: 'EARN_REWARD',
-                    memo: 'Welcome bonus for completing profile setup',
-                    event_id: `onboarding_${user.email}_${Date.now()}`
-                  }
-                });
+                const rules = await base44.entities.GGGRewardRule.filter({ action_type: 'finish_onboard', is_active: true });
+                const gggAmount = rules?.[0]?.ggg_amount || 0.1;
+                if (gggAmount > 0) {
+                  await base44.functions.invoke('walletEngine', {
+                    action: 'credit',
+                    payload: {
+                      user_id: user.email,
+                      amount: gggAmount,
+                      tx_type: 'EARN_REWARD',
+                      memo: 'Welcome bonus for completing profile setup',
+                      event_id: `finish_onboard_${user.email}_${Date.now()}`
+                    }
+                  });
+                }
               } catch (walletErr) {
                 console.error('GGG token award failed:', walletErr);
               }
