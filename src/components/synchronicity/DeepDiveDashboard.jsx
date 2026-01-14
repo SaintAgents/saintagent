@@ -286,14 +286,14 @@ function HighScoreMatchCard({ match, onClick }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 hover:border-amber-400/50 cursor-pointer transition-all"
+      className="p-4 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-amber-300 hover:border-amber-400 cursor-pointer transition-all shadow-sm"
       onClick={onClick}
     >
       <div className="flex items-center gap-3">
         <div className="relative">
-          <Avatar className="w-12 h-12 border-2 border-amber-500/50">
+          <Avatar className="w-12 h-12 border-2 border-amber-400">
             <AvatarImage src={match.target_avatar} />
-            <AvatarFallback className="bg-amber-900 text-amber-200">
+            <AvatarFallback className="bg-amber-600 text-white">
               {match.target_name?.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -303,24 +303,24 @@ function HighScoreMatchCard({ match, onClick }) {
         </div>
         
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-white truncate">{match.target_name}</p>
-          <p className="text-xs text-slate-400 truncate">{match.target_subtitle}</p>
+          <p className="font-semibold text-slate-900 truncate">{match.target_name}</p>
+          <p className="text-xs text-slate-600 truncate">{match.target_subtitle}</p>
         </div>
         
         <div className="text-right">
-          <div className="text-2xl font-bold text-amber-400">{match.match_score}%</div>
-          <p className="text-[10px] text-amber-400/70">ELITE MATCH</p>
+          <div className="text-2xl font-bold text-amber-600">{match.match_score}%</div>
+          <p className="text-[10px] font-semibold text-amber-700 uppercase tracking-wide">Elite Match</p>
         </div>
       </div>
       
       <div className="mt-3 flex gap-2">
         {match.shared_values?.slice(0, 2).map((v, i) => (
-          <Badge key={i} className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-xs">
+          <Badge key={i} className="bg-amber-200 text-amber-800 border-amber-400 text-xs font-medium">
             {v}
           </Badge>
         ))}
         {match.shared_values?.length > 2 && (
-          <Badge className="bg-slate-500/20 text-slate-300 border-slate-500/30 text-xs">
+          <Badge className="bg-slate-200 text-slate-700 border-slate-400 text-xs font-medium">
             +{match.shared_values.length - 2} more
           </Badge>
         )}
