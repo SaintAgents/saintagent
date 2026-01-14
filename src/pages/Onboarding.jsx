@@ -229,13 +229,10 @@ export default function Onboarding() {
                   payload: {
                     user_id: user.email,
                     amount: 100,
-                    reason_code: 'onboarding_complete',
-                    description: 'Welcome bonus for completing profile setup'
+                    tx_type: 'EARN_REWARD',
+                    memo: 'Welcome bonus for completing profile setup',
+                    event_id: `onboarding_${user.email}_${Date.now()}`
                   }
-                });
-                // Also update ggg_balance on profile directly for immediate display
-                await base44.entities.UserProfile.update(profileToUpdate.id, {
-                  ggg_balance: (profileToUpdate.ggg_balance || 0) + 100
                 });
               } catch (walletErr) {
                 console.error('GGG token award failed:', walletErr);
