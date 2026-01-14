@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -17,7 +18,8 @@ import {
 } from "@/components/ui/dialog";
 import {
   Sparkles, Heart, Target, Users, Zap, TrendingUp, Bell, BellOff,
-  ChevronRight, Star, Compass, Lightbulb, HandHeart, Clock, History
+  ChevronRight, Star, Compass, Lightbulb, HandHeart, Clock, History,
+  Brain, RefreshCw, Loader2, MessageSquare, Network
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
