@@ -201,31 +201,7 @@ export default function Matches() {
               <p className="text-emerald-200/[0.92] mt-1 text-base tracking-wider drop-shadow-lg">
                 AI-Powered Connections Based on Values, Skills & Intentions
               </p>
-              <div className="mt-4 flex justify-center gap-2 flex-wrap">
-                <a
-                  href={createPageUrl('DatingMatches')}
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg cursor-pointer"
-                  title="View Dating Matches"
-                >
-                  <Heart className="w-5 h-5 text-white fill-white" />
-                </a>
-                <Button
-                  variant="outline"
-                  className="gap-2"
-                  onClick={() => { setSelectedMatchForAI(null); setAiAssistantOpen(true); }}
-                >
-                  <Sparkles className="w-4 h-4" />
-                  AI Assistant
-                </Button>
-                <Button
-                  variant="outline"
-                  className="gap-2"
-                  onClick={async () => { await base44.functions.invoke('computeMatches', {}); refetch(); }}
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  Refresh
-                </Button>
-              </div>
+
             </div>
           </div>
         </div>
