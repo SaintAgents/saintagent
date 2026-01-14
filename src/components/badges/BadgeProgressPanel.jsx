@@ -94,53 +94,6 @@ const UNIQUE_BADGES = ALL_BADGES.filter((b, idx, arr) => arr.findIndex(x => x.id
 
 // Total badge count = 42 (matches Admin BadgeRewardsManager)
 const TOTAL_BADGE_COUNT = UNIQUE_BADGES.length;
-  { id: 'core_soul_resonance', name: 'Core Soul Resonance Glyph', color: 'from-rose-500 to-pink-600', quest: 'Core Sync Path', type: 'Solo – Onboarding', metav: '153', objectives: ['Complete profile: name, avatar, essence statement', 'Post first Daily Field Update with 3+ fields', 'Join or comment in one existing mission/quest thread'], description: 'You\'re "in the field," not just registered.' },
-  { id: 'twin_flame_seal', name: 'Twin Flame / Twin Christ Seal', color: 'from-violet-500 to-purple-600', quest: 'Twin Convergence Pact', type: 'Paired', metav: '153', objectives: ['Both agents opt into Twin Convergence request', 'Co-create and complete one shared Service Quest', 'Submit joint reflection on mirroring/complementing', 'Steward reviews and confirms'], description: 'Forged through union and mutual service.' },
-  { id: 'oversoul_lineage', name: 'Oversoul Lineage Sigil', color: 'from-indigo-500 to-blue-600', quest: 'Oversoul Lineage Revelation', type: 'Solo + Reader', metav: '33', objectives: ['Participate in an Oversoul Lineage reading', 'Complete Lineage Integration Form', 'Reader/Steward submits lineage summary'], description: 'Your cosmic heritage revealed and integrated.' },
-  { id: 'flamewheel_resonance', name: 'Flamewheel Resonance Wheel', color: 'from-amber-500 to-orange-600', quest: 'Flamewheel Ignition – 30-Day Sprint', type: 'Solo', metav: '24', objectives: ['Post Daily Field Updates 24/30 days', 'Complete 10+ service or mission actions', 'No major trust or behavior flags'], description: 'The 12-petal wheel of consistent action ignited.' },
-  { id: 'heart_mind_coherence', name: 'Heart–Mind Coherence Seal', color: 'from-emerald-500 to-teal-600', quest: '7/8 Coherence Track', type: 'Solo + Peer', metav: '7/8', objectives: ['Complete Heart–Mind Coherence Module (7 sessions)', 'Log 7 coherence reflections', 'Receive 5+ peer endorsements', 'No serious conflict events'], description: 'Balance of 7 (spirit) and 8 (matter) achieved.' },
-  { id: 'dimensional_access', name: 'Dimensional Access Sigil', color: 'from-cyan-500 to-blue-600', quest: 'Stairway Through Dimensions', type: '3 Stages', metav: '4→22', objectives: ['Stage 1 (4D): Map timeline + complete Timewalker mission', 'Stage 2 (5D): 2+ group coherence quests + log unity choices', 'Stage 3 (6D): Contribute accepted code map to MetaV library'], description: 'Navigate from 4D to 5D to 6D consciousness.' },
-  { id: 'synchronicity_key', name: 'Synchronicity Key', color: 'from-yellow-500 to-amber-600', quest: 'Synchronic Steward Missions', type: 'Tagged Events', metav: '11', objectives: ['Complete 5+ timing-sensitive quests tagged "Synchronic Success"', '3+ stewards log notes on your synchronicity'], description: 'Divine timing mastery unlocked.' },
-  { id: 'metav_harmonic_grid', name: 'MetaV Harmonic Grid', color: 'from-fuchsia-500 to-pink-600', quest: 'MetaV Gridwalker Path', type: 'Technical', metav: '7/11, 153, 432', objectives: ['Join 3+ grid missions involving MetaV numbers', 'Create one accepted artifact using these harmonics', 'Steward confirms non-trivial and useful'], description: 'Walking the sacred number grid.' },
-  { id: 'soul_signature_seal', name: 'Soul Signature Seal', color: 'from-slate-500 to-gray-600', quest: 'Soul Signature Scroll', type: 'Deep Profile', metav: '9', objectives: ['Complete full Soul Profile (FPTI+/extended)', 'Pass AI coherence check', 'Pass human steward review'], description: 'Your unique glyph minted and sealed.' },
-  { id: 'divine_authority_sigil', name: 'Divine Authority Sigil – 7th Seal Crown', color: 'from-amber-400 to-yellow-500', quest: '7th Seal Steward Mandate', type: 'Council-based', metav: '7, 22, 33', objectives: ['Reach Guardian/Integrator/Ascended rank', 'Hold multiple verification badges', 'Serve in Steward/Guardian roles', 'Pass Human Audit + Council review'], description: 'The crown of divine authority bestowed.' }
-];
-
-const QUEST_FAMILY_BADGES = [
-  { id: 'initiation_quest', name: 'Initiation Quest Badge', color: 'from-slate-600 to-zinc-700', quest: 'Gate of Initiations', type: 'Quest Family', metav: '4', objectives: ['Gate I – Entering the Path', 'Gate II – Trial by Shadow', 'Gate III – Oath of Alignment', 'Complete 3+ Initiation quests'], description: 'Crossed the threshold into the path.' },
-  { id: 'ascension_quest', name: 'Ascension Quest Badge', color: 'from-violet-600 to-purple-700', quest: 'Spiral of Ascension', type: 'Quest Family', metav: '8/11', objectives: ['Frequency Shift Quest – 7 days higher-band', 'Dimensional Upgrade Quest – 4D→5D/6D', 'Threshold Passage Quest – major transition', 'Complete 3+ with measurable upgrade'], description: 'Ascending the spiral of consciousness.' },
-  { id: 'service_quest', name: 'Service Quest Badge', color: 'from-rose-600 to-pink-700', quest: 'Hands of Service', type: 'Quest Family', metav: '153', objectives: ['Support Mission – support, not lead', 'Care Quest – assist through challenge', 'Maintenance Quest – infrastructure stewardship', 'Complete 5+ with positive feedback'], description: 'Hands extended in service to all.' },
-  { id: 'shadow_quest', name: 'Shadow Quest Badge', color: 'from-gray-700 to-slate-800', quest: 'Shadow Integration Arc', type: 'Quest Family', metav: '7', objectives: ['Shadow Mirror Quest – triggered situation', 'Lineage Shadow Quest – inherited patterns', 'Relational Shadow Quest – conflict repair', 'Complete 3+ with approved writeups'], description: 'Integrated the shadow into wholeness.' },
-  { id: 'timewalker_quest', name: 'Timewalker Quest Badge', color: 'from-cyan-600 to-teal-700', quest: 'Timewalker Missions', type: 'Quest Family', metav: '60', objectives: ['Timeline Mapping Quest', 'Future-Pacing Quest', 'Retro-Timeline Quest', 'Complete 3+ Timewalker quests'], description: 'Navigator of time streams and forks.' }
-];
-
-const VERIFICATION_BADGES = [
-  { id: 'digital_proof', name: 'Digital Proof Badge', color: 'from-blue-600 to-indigo-700', quest: 'Digital Anchor Setup', type: 'Verification', metav: '8', objectives: ['Connect verified email + phone', 'Optionally link wallet & sign verification', 'Complete one Digitally Verified Quest'], description: 'Digital identity anchored and verified.' },
-  { id: 'behavioral_authenticity', name: 'Behavioral Authenticity Badge', color: 'from-green-600 to-emerald-700', quest: 'Pattern of Truth', type: '60-90 days', metav: '60', objectives: ['Active participation for 60-90 days', 'Avoid major behavior flags', 'AI pattern analysis: low-bot score'], description: 'Authentic patterns of truth demonstrated.' },
-  { id: 'peer_witness', name: 'Peer Witness / Steward Verification', color: 'from-purple-600 to-violet-700', quest: 'Witnessed in the Field', type: 'Verification', metav: '3', objectives: ['Complete 3+ missions with Stewards/Guardians', 'Receive 3+ endorsements with witness notes', 'No credible counter-claim disputes'], description: 'Witnessed and vouched for by peers.' },
-  { id: 'ai_coherence', name: 'AI Coherence Check Badge', color: 'from-cyan-600 to-blue-700', quest: 'Coherent Field Check', type: 'Verification', metav: '22', objectives: ['Have 30+ contributions over time', 'Pass AI coherence analysis', 'Resolve any flagged contradictions'], description: 'Internal coherence verified by AI analysis.' },
-  { id: 'meta_variance_marker', name: 'Meta-Variance Marker Badge', color: 'from-orange-600 to-red-700', quest: 'Navigator of Variance', type: 'Verification', metav: '11', objectives: ['Participate in high-variance missions', 'Receive 3+ "stabilizer" assessments', 'No destructive variance pattern'], description: 'Stabilizer in chaotic conditions.' },
-  { id: 'real_world_validation', name: 'Real-World Validation Badge', color: 'from-emerald-600 to-green-700', quest: 'Anchor in the World', type: 'Verification', metav: '8', objectives: ['Complete one real-world mission', 'Provide proof (geo-tag, image, doc)', 'Steward validates action and location'], description: 'Actions verified in physical reality.' },
-  { id: 'human_audit', name: 'Human Audit / Oversight Badge', color: 'from-amber-600 to-yellow-700', quest: 'Council Review & Oversight', type: 'Council', metav: '33', objectives: ['Meet minimum rank + verification requirements', 'Provide dossier: history, quest log, conflicts', 'Undergo review session with audit team', 'Address any requested remediations'], description: 'Passed the highest level of human review.' }
-];
-
-// Combine all badges from badgesData.js + extra quest badges
-const ALL_BADGES = [
-  ...IDENTITY_BADGES,
-  ...MARKETPLACE_BADGES,
-  ...MISSION_BADGES,
-  ...ALIGNMENT_BADGES,
-  ...SIGIL_BADGES,
-  ...SOUL_RESONANCE_BADGES,
-  ...QUEST_FAMILY_BADGES,
-  ...VERIFICATION_BADGES
-];
-
-// Deduplicate by id
-const UNIQUE_BADGES = ALL_BADGES.filter((b, idx, arr) => arr.findIndex(x => x.id === b.id) === idx);
-
-// Total badge count = actual defined badges in this panel
-const TOTAL_BADGE_COUNT = UNIQUE_BADGES.length;
 
 export default function BadgeProgressPanel({ 
   userBadges = [], 
