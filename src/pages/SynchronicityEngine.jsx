@@ -365,7 +365,7 @@ export default function SynchronicityEngine() {
             <ForwardButton currentPage="SynchronicityEngine" className="text-white/80 hover:text-white" />
           </div>
           <p className="text-white/80 text-lg max-w-xl">
-            Share and discover meaningful coincidences
+            Follow the signs and accelerate your path and purpose
           </p>
         </div>
       </div>
