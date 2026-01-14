@@ -439,117 +439,121 @@ export default function SynchronicityEngine() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Main Feed */}
-          <div className="lg:col-span-3 space-y-4">
-            {isLoading ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-48 bg-slate-800/50 rounded-xl animate-pulse" />
-                ))}
-              </div>
-            ) : filteredSyncs.length === 0 ? (
-              <div className="text-center py-16">
-                <Sparkles className="w-16 h-16 text-violet-500/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">No synchronicities found</h3>
-                <p className="text-slate-400 mb-6">Be the first to share your experience</p>
-                <Button onClick={() => setSubmitOpen(true)} className="bg-violet-600 hover:bg-violet-500">
-                  Share Synchronicity
-                </Button>
-              </div>
-            ) : (
-              <AnimatePresence>
-                {filteredSyncs.map(sync => (
-                  <SynchronicityCard 
-                    key={sync.id} 
-                    sync={sync}
-                    onLike={() => likeMutation.mutate(sync)}
-                    onResonate={() => resonateMutation.mutate(sync)}
-                  />
-                ))}
-              </AnimatePresence>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-4">
-            {/* Badge Progress Panel */}
-            <BadgeProgressPanel 
-              userBadges={userBadges} 
-              userProgress={{}} 
-              onStartQuest={(badge) => console.log('Start quest:', badge)}
-            />
-
-            {/* Trending Symbols */}
-            <Card className="bg-slate-900/80 border-violet-500/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base text-white flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-violet-400" />
-                  Trending Symbols
-                  <HelpTooltip>Symbols and patterns most frequently appearing in recent synchronicity reports. Click any symbol to filter the feed.</HelpTooltip>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {trendingSymbols.map(({ symbol, count }) => (
-                    <button
-                      key={symbol}
-                      onClick={() => setSearchQuery(symbol)}
-                      className="px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm hover:bg-violet-500/20 transition-colors"
-                    >
-                      {symbol}
-                      <span className="ml-1.5 text-violet-400/60">{count}</span>
-                    </button>
+        {viewMode === 'deepdive' ? (
+          <DeepDiveDashboard userId={currentUser?.email} />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Main Feed */}
+            <div className="lg:col-span-3 space-y-4">
+              {isLoading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="h-48 bg-slate-800/50 rounded-xl animate-pulse" />
                   ))}
-                  {trendingSymbols.length === 0 && (
-                    <p className="text-slate-500 text-sm">No trending symbols yet</p>
-                  )}
                 </div>
-              </CardContent>
-            </Card>
+              ) : filteredSyncs.length === 0 ? (
+                <div className="text-center py-16">
+                  <Sparkles className="w-16 h-16 text-violet-500/30 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-white mb-2">No synchronicities found</h3>
+                  <p className="text-slate-400 mb-6">Be the first to share your experience</p>
+                  <Button onClick={() => setSubmitOpen(true)} className="bg-violet-600 hover:bg-violet-500">
+                    Share Synchronicity
+                  </Button>
+                </div>
+              ) : (
+                <AnimatePresence>
+                  {filteredSyncs.map(sync => (
+                    <SynchronicityCard 
+                      key={sync.id} 
+                      sync={sync}
+                      onLike={() => likeMutation.mutate(sync)}
+                      onResonate={() => resonateMutation.mutate(sync)}
+                    />
+                  ))}
+                </AnimatePresence>
+              )}
+            </div>
 
-            {/* Stats */}
-            <Card className="bg-slate-900/80 border-violet-500/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base text-white flex items-center gap-2">
-                  Community Stats
-                  <HelpTooltip>Real-time metrics showing how the community is experiencing synchronicities together.</HelpTooltip>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
-                    Total Shared
-                    <HelpTooltip>All synchronicities ever shared by the community</HelpTooltip>
-                  </span>
-                  <span className="text-white font-semibold">{synchronicities.length}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
-                    This Week
-                    <HelpTooltip>Synchronicities shared in the last 7 days</HelpTooltip>
-                  </span>
-                  <span className="text-white font-semibold">
-                    {synchronicities.filter(s => {
-                      const d = new Date(s.created_date);
-                      const now = new Date();
-                      return (now - d) < 7 * 24 * 60 * 60 * 1000;
-                    }).length}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
-                    Total Resonances
-                    <HelpTooltip>When others click "resonate" to acknowledge experiencing similar synchronicities</HelpTooltip>
-                  </span>
-                  <span className="text-white font-semibold">
-                    {synchronicities.reduce((acc, s) => acc + (s.resonance_count || 0), 0)}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Sidebar */}
+            <div className="space-y-4">
+              {/* Badge Progress Panel */}
+              <BadgeProgressPanel 
+                userBadges={userBadges} 
+                userProgress={{}} 
+                onStartQuest={(badge) => console.log('Start quest:', badge)}
+              />
+
+              {/* Trending Symbols */}
+              <Card className="bg-slate-900/80 border-violet-500/20">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base text-white flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-violet-400" />
+                    Trending Symbols
+                    <HelpTooltip>Symbols and patterns most frequently appearing in recent synchronicity reports. Click any symbol to filter the feed.</HelpTooltip>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {trendingSymbols.map(({ symbol, count }) => (
+                      <button
+                        key={symbol}
+                        onClick={() => setSearchQuery(symbol)}
+                        className="px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm hover:bg-violet-500/20 transition-colors"
+                      >
+                        {symbol}
+                        <span className="ml-1.5 text-violet-400/60">{count}</span>
+                      </button>
+                    ))}
+                    {trendingSymbols.length === 0 && (
+                      <p className="text-slate-500 text-sm">No trending symbols yet</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Stats */}
+              <Card className="bg-slate-900/80 border-violet-500/20">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base text-white flex items-center gap-2">
+                    Community Stats
+                    <HelpTooltip>Real-time metrics showing how the community is experiencing synchronicities together.</HelpTooltip>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                      Total Shared
+                      <HelpTooltip>All synchronicities ever shared by the community</HelpTooltip>
+                    </span>
+                    <span className="text-white font-semibold">{synchronicities.length}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                      This Week
+                      <HelpTooltip>Synchronicities shared in the last 7 days</HelpTooltip>
+                    </span>
+                    <span className="text-white font-semibold">
+                      {synchronicities.filter(s => {
+                        const d = new Date(s.created_date);
+                        const now = new Date();
+                        return (now - d) < 7 * 24 * 60 * 60 * 1000;
+                      }).length}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                      Total Resonances
+                      <HelpTooltip>When others click "resonate" to acknowledge experiencing similar synchronicities</HelpTooltip>
+                    </span>
+                    <span className="text-white font-semibold">
+                      {synchronicities.reduce((acc, s) => acc + (s.resonance_count || 0), 0)}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <SubmitSynchronicityDialog
