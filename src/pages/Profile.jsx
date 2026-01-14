@@ -327,7 +327,7 @@ export default function Profile() {
   const affiliatePaidCount = affiliateCode?.total_paid || 0;
   const affiliateTier = getAffiliateTier(affiliatePaidCount);
 
-  // Wallet query - only run if profile exists
+  // Wallet query - only run if profile exists and is not a demo profile
   const { data: walletRes } = useQuery({
     queryKey: ['wallet', profile?.user_id],
     queryFn: async () => {
@@ -341,7 +341,7 @@ export default function Profile() {
         return null;
       }
     },
-    enabled: !!profile?.user_id,
+    enabled: !!profile?.user_id && !profile?.is_demo_dating_profile && !profile?.user_id?.includes('demo'),
     retry: false
   });
 
