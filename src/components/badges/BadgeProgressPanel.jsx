@@ -234,7 +234,7 @@ export default function BadgeProgressPanel({
           <div className="mt-3 pt-3 border-t border-amber-900/30">
             <p className="text-[10px] text-amber-400/60 mb-2">CLOSEST TO EARNING</p>
             <div className="flex gap-2 overflow-x-auto pb-1">
-              {ALL_BADGES
+              {UNIQUE_BADGES
                 .filter(b => {
                   const isEarned = earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code);
                   if (isEarned) return false;
