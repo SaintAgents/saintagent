@@ -133,8 +133,8 @@ export default function BadgeProgressPanel({
   
   // Calculate stats
   const totalBadges = TOTAL_BADGE_COUNT;
-  const earnedCount = ALL_BADGES.filter(b => earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code)).length;
-  const inProgressCount = ALL_BADGES.filter(b => {
+  const earnedCount = UNIQUE_BADGES.filter(b => earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code)).length;
+  const inProgressCount = UNIQUE_BADGES.filter(b => {
     const isEarned = earnedBadgeIds.includes(b.id) || earnedBadgeIds.includes(b.code);
     if (isEarned) return false;
     const prog = userProgress[b.id] || {};
