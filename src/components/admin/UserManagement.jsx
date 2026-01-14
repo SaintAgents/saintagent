@@ -223,6 +223,32 @@ export default function UserManagement() {
             </Button>
           </CardContent>
         </Card>
+        <Card className="col-span-4">
+          <CardContent className="bg-amber-50 pt-4 p-4 flex items-center justify-between">
+            <div>
+              <p className="font-medium text-slate-900">Demo SA# Assignment</p>
+              <p className="text-xs text-slate-500">Assign sequential Demo-001, Demo-002, etc. to all demo profiles</p>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={async () => {
+                if (!confirm('Assign Demo-XXX SA numbers to all demo profiles?')) return;
+                try {
+                  const { data } = await base44.functions.invoke('assignDemoSaNumbers', {});
+                  alert(`Done! Assigned ${data.updates?.length || 0} demo SA numbers.`);
+                  queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+                } catch (e) {
+                  alert('Error: ' + (e.message || 'Failed'));
+                }
+              }}
+              className="gap-2"
+            >
+              <Hash className="w-4 h-4" />
+              Assign Demo SA#
+            </Button>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Users Table */}
