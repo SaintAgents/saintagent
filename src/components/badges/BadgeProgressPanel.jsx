@@ -349,32 +349,21 @@ export default function BadgeProgressPanel({
               <TabsTrigger value="all" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
                 All ({filteredAll.length})
               </TabsTrigger>
-              <TabsTrigger value="identity" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
-                Identity ({filteredIdentity.length})
-              </TabsTrigger>
-              <TabsTrigger value="marketplace" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
-                Market ({filteredMarketplace.length})
-              </TabsTrigger>
-              <TabsTrigger value="mission" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
-                <Target className="w-3 h-3 mr-1" />
-                Mission ({filteredMission.length})
-              </TabsTrigger>
-              <TabsTrigger value="alignment" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
-                Alignment ({filteredAlignment.length})
-              </TabsTrigger>
-              <TabsTrigger value="sigils" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
-                Sigils ({filteredSigils.length})
-              </TabsTrigger>
               <TabsTrigger value="soul" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
                 <Heart className="w-3 h-3 mr-1" />
                 Soul ({filteredSoul.length})
               </TabsTrigger>
               <TabsTrigger value="quest" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
+                <Target className="w-3 h-3 mr-1" />
                 Quest ({filteredQuest.length})
               </TabsTrigger>
               <TabsTrigger value="verify" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
                 <Shield className="w-3 h-3 mr-1" />
                 Verify ({filteredVerification.length})
+              </TabsTrigger>
+              <TabsTrigger value="achieve" className="text-xs data-[state=active]:bg-amber-900/30 data-[state=active]:text-amber-200 text-amber-400/70">
+                <Award className="w-3 h-3 mr-1" />
+                Achieve ({filteredAchievement.length})
               </TabsTrigger>
             </TabsList>
             
@@ -391,78 +380,13 @@ export default function BadgeProgressPanel({
                 ))}
               </TabsContent>
               
-              <TabsContent value="identity" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Identity badges marking your unique presence and credentials.</p>
-                {filteredIdentity.map(badge => (
-                  <BadgeProgressCard
-                    key={badge.id}
-                    badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
-                    userProgress={userProgress[badge.id] || {}}
-                    onStartQuest={onStartQuest}
-                  />
-                ))}
-              </TabsContent>
-              
-              <TabsContent value="marketplace" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Marketplace badges for trading and economic activity.</p>
-                {filteredMarketplace.map(badge => (
-                  <BadgeProgressCard
-                    key={badge.id}
-                    badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
-                    userProgress={userProgress[badge.id] || {}}
-                    onStartQuest={onStartQuest}
-                  />
-                ))}
-              </TabsContent>
-              
-              <TabsContent value="mission" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Mission badges earned through service and collaboration.</p>
-                {filteredMission.map(badge => (
-                  <BadgeProgressCard
-                    key={badge.id}
-                    badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
-                    userProgress={userProgress[badge.id] || {}}
-                    onStartQuest={onStartQuest}
-                  />
-                ))}
-              </TabsContent>
-              
-              <TabsContent value="alignment" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Alignment badges showing your spiritual orientation and coherence.</p>
-                {filteredAlignment.map(badge => (
-                  <BadgeProgressCard
-                    key={badge.id}
-                    badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
-                    userProgress={userProgress[badge.id] || {}}
-                    onStartQuest={onStartQuest}
-                  />
-                ))}
-              </TabsContent>
-              
-              <TabsContent value="sigils" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Sigils and special markers for trust and affiliate status.</p>
-                {filteredSigils.map(badge => (
-                  <BadgeProgressCard
-                    key={badge.id}
-                    badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
-                    userProgress={userProgress[badge.id] || {}}
-                    onStartQuest={onStartQuest}
-                  />
-                ))}
-              </TabsContent>
-              
               <TabsContent value="soul" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Soul-level badges representing your resonance and spiritual development.</p>
+                <p className="text-xs text-amber-300/70 mb-3">Soul-level badges representing your resonance and spiritual development. (11 badges)</p>
                 {filteredSoul.map(badge => (
                   <BadgeProgressCard
                     key={badge.id}
                     badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id)}
+                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
                     userProgress={userProgress[badge.id] || {}}
                     onStartQuest={onStartQuest}
                   />
@@ -470,12 +394,12 @@ export default function BadgeProgressPanel({
               </TabsContent>
               
               <TabsContent value="quest" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Badges earned by completing families of related quests.</p>
+                <p className="text-xs text-amber-300/70 mb-3">Badges earned by completing families of related quests. (10 badges)</p>
                 {filteredQuest.map(badge => (
                   <BadgeProgressCard
                     key={badge.id}
                     badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id)}
+                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
                     userProgress={userProgress[badge.id] || {}}
                     onStartQuest={onStartQuest}
                   />
@@ -483,12 +407,25 @@ export default function BadgeProgressPanel({
               </TabsContent>
               
               <TabsContent value="verify" className="mt-0 space-y-2">
-                <p className="text-xs text-amber-300/70 mb-3">Trust and authentication badges for the verification layer.</p>
+                <p className="text-xs text-amber-300/70 mb-3">Trust and authentication badges for the verification layer. (8 badges)</p>
                 {filteredVerification.map(badge => (
                   <BadgeProgressCard
                     key={badge.id}
                     badge={badge}
-                    isEarned={earnedBadgeIds.includes(badge.id)}
+                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
+                    userProgress={userProgress[badge.id] || {}}
+                    onStartQuest={onStartQuest}
+                  />
+                ))}
+              </TabsContent>
+              
+              <TabsContent value="achieve" className="mt-0 space-y-2">
+                <p className="text-xs text-amber-300/70 mb-3">Achievement badges earned through platform activity and milestones. (10+ badges)</p>
+                {filteredAchievement.map(badge => (
+                  <BadgeProgressCard
+                    key={badge.id}
+                    badge={badge}
+                    isEarned={earnedBadgeIds.includes(badge.id) || earnedBadgeIds.includes(badge.code)}
                     userProgress={userProgress[badge.id] || {}}
                     onStartQuest={onStartQuest}
                   />
