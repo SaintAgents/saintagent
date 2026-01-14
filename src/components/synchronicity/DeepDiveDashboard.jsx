@@ -600,12 +600,12 @@ Be specific, insightful, and spiritually-aware in your analysis.`,
       
       {/* High Score Alerts */}
       {highScoreMatches.length > 0 && (
-        <Card className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/30">
+        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-300 shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-400" />
+            <CardTitle className="text-base text-slate-900 flex items-center gap-2 font-semibold">
+              <Sparkles className="w-5 h-5 text-amber-500" />
               Elite Matches ({highScoreMatches.length})
-              <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 ml-2">
+              <Badge className="bg-amber-200 text-amber-800 border-amber-400 ml-2 font-medium">
                 90%+ Compatibility
               </Badge>
             </CardTitle>
