@@ -468,6 +468,136 @@ Be specific, insightful, and spiritually-aware in your analysis.`,
   
   return (
     <div className="space-y-6">
+      {/* Run Deep Dive Button */}
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <Button
+          onClick={runAIAnalysis}
+          disabled={isRunningAI}
+          className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white gap-2"
+        >
+          {isRunningAI ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Running Deep Analysis...
+            </>
+          ) : (
+            <>
+              <Brain className="w-4 h-4" />
+              Run Synchro Deep Dive Now
+            </>
+          )}
+        </Button>
+        
+        <Button
+          variant="outline"
+          onClick={async () => {
+            await base44.functions.invoke('computeMatches', {});
+            refetchMatches();
+          }}
+          className="gap-2 border-violet-500/30 text-violet-300"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Refresh Matches
+        </Button>
+      </div>
+      
+      {/* AI Insights Panel */}
+      {aiInsights && (
+        <Card className="bg-gradient-to-br from-violet-500/10 to-purple-500/10 border-violet-500/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base text-white flex items-center gap-2">
+              <Brain className="w-5 h-5 text-violet-400" />
+              AI Deep Dive Insights
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Key Patterns */}
+            {aiInsights.key_patterns?.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-violet-300 mb-2 flex items-center gap-2">
+                  <Network className="w-4 h-4" />
+                  Key Patterns Detected
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {aiInsights.key_patterns.map((p, i) => (
+                    <Badge key={i} className="bg-violet-500/20 text-violet-200 border-violet-500/30">
+                      {p}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Deeper Connections */}
+            {aiInsights.deeper_connections && (
+              <div>
+                <h4 className="text-sm font-semibold text-amber-300 mb-2 flex items-center gap-2">
+                  <Compass className="w-4 h-4" />
+                  Deeper Connections
+                </h4>
+                <p className="text-sm text-slate-300 bg-slate-800/50 p-3 rounded-lg">
+                  {aiInsights.deeper_connections}
+                </p>
+              </div>
+            )}
+            
+            {/* Personalized Guidance */}
+            {aiInsights.personalized_guidance && (
+              <div>
+                <h4 className="text-sm font-semibold text-emerald-300 mb-2 flex items-center gap-2">
+                  <Lightbulb className="w-4 h-4" />
+                  Personalized Guidance
+                </h4>
+                <p className="text-sm text-slate-300 bg-slate-800/50 p-3 rounded-lg">
+                  {aiInsights.personalized_guidance}
+                </p>
+              </div>
+            )}
+            
+            {/* Watch For */}
+            {aiInsights.watch_for?.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-cyan-300 mb-2 flex items-center gap-2">
+                  <Star className="w-4 h-4" />
+                  Synchronicities to Watch For
+                </h4>
+                <ul className="space-y-1">
+                  {aiInsights.watch_for.map((w, i) => (
+                    <li key={i} className="text-sm text-slate-300 flex items-start gap-2">
+                      <span className="text-cyan-400 mt-1">•</span>
+                      {w}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {/* Community Connections */}
+            {aiInsights.community_connections?.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-rose-300 mb-2 flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Potential Community Connections
+                </h4>
+                <div className="space-y-2">
+                  {aiInsights.community_connections.map((c, i) => (
+                    <div key={i} className="p-2 rounded-lg bg-slate-800/50 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <Users className="w-4 h-4 text-rose-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{c.name}</p>
+                        <p className="text-xs text-slate-400">{c.reason}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+      
       {/* High Score Alerts */}
       {highScoreMatches.length > 0 && (
         <Card className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/30">
