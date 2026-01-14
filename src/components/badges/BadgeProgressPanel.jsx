@@ -188,14 +188,10 @@ export default function BadgeProgressPanel({
     });
   };
   
-  const filteredIdentity = getFilteredBadges(IDENTITY_BADGES);
-  const filteredMarketplace = getFilteredBadges(MARKETPLACE_BADGES);
-  const filteredMission = getFilteredBadges(MISSION_BADGES);
-  const filteredAlignment = getFilteredBadges(ALIGNMENT_BADGES);
-  const filteredSigils = getFilteredBadges(SIGIL_BADGES);
   const filteredSoul = getFilteredBadges(SOUL_RESONANCE_BADGES);
   const filteredQuest = getFilteredBadges(QUEST_FAMILY_BADGES);
   const filteredVerification = getFilteredBadges(VERIFICATION_BADGES);
+  const filteredAchievement = getFilteredBadges(ACHIEVEMENT_BADGES);
   const filteredAll = getFilteredBadges(UNIQUE_BADGES);
 
   return (
