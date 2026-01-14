@@ -687,8 +687,13 @@ Be specific, insightful, and spiritually-aware in your analysis.`,
           <Card className="bg-slate-900/80 border-violet-500/20 mt-4">
             <CardHeader className="pb-2">
               <CardTitle className="text-base text-white flex items-center justify-between">
-                <span>Recent Matches</span>
-                <Button variant="ghost" size="sm" className="text-violet-400 hover:text-violet-300">
+                <span>Recent Matches ({filteredMatches.length})</span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-violet-400 hover:text-violet-300"
+                  onClick={() => setViewAllOpen(true)}
+                >
                   View All <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </CardTitle>
@@ -696,27 +701,31 @@ Be specific, insightful, and spiritually-aware in your analysis.`,
             <CardContent>
               <ScrollArea className="max-h-72">
                 <div className="space-y-3">
-                  {matches.slice(0, 5).map(match => (
-                    <div 
-                      key={match.id}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50 hover:bg-slate-800 cursor-pointer transition-colors"
-                      onClick={() => setSelectedMatch(match)}
-                    >
-                      <Avatar className="w-10 h-10 border border-violet-500/30">
-                        <AvatarImage src={match.target_avatar} />
-                        <AvatarFallback className="bg-violet-900 text-violet-200 text-sm">
-                          {match.target_name?.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{match.target_name}</p>
-                        <p className="text-xs text-slate-400 truncate">{match.explanation}</p>
+                  {filteredMatches.length === 0 ? (
+                    <p className="text-center text-slate-400 py-8">No matches in selected range</p>
+                  ) : (
+                    filteredMatches.slice(0, 5).map(match => (
+                      <div 
+                        key={match.id}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50 hover:bg-slate-800 cursor-pointer transition-colors"
+                        onClick={() => setSelectedMatch(match)}
+                      >
+                        <Avatar className="w-10 h-10 border border-violet-500/30">
+                          <AvatarImage src={match.target_avatar} />
+                          <AvatarFallback className="bg-violet-900 text-violet-200 text-sm">
+                            {match.target_name?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white truncate">{match.target_name}</p>
+                          <p className="text-xs text-slate-400 truncate">{match.explanation}</p>
+                        </div>
+                        <div className={`text-lg font-bold ${match.match_score >= 90 ? 'text-amber-400' : match.match_score >= 80 ? 'text-emerald-400' : 'text-violet-400'}`}>
+                          {match.match_score}%
+                        </div>
                       </div>
-                      <div className={`text-lg font-bold ${match.match_score >= 90 ? 'text-amber-400' : match.match_score >= 80 ? 'text-emerald-400' : 'text-violet-400'}`}>
-                        {match.match_score}%
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </ScrollArea>
             </CardContent>
