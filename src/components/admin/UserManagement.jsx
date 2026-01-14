@@ -343,12 +343,13 @@ export default function UserManagement() {
 
       {/* User Management Modal */}
       <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>Manage User: {selectedUser?.display_name}</DialogTitle>
           </DialogHeader>
 
           {selectedUser &&
+          <ScrollArea className="flex-1 pr-4">
           <div className="space-y-6">
               {/* User Info */}
               <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50">
@@ -526,6 +527,7 @@ export default function UserManagement() {
                 </div>
               </div>
             </div>
+          </ScrollArea>
           }
         </DialogContent>
       </Dialog>
