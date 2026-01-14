@@ -833,6 +833,91 @@ Be specific, insightful, and spiritually-aware in your analysis.`,
         onClose={() => setSelectedMatch(null)}
         matchHistory={matchHistory}
       />
+      
+      {/* View All Matches Dialog */}
+      <Dialog open={viewAllOpen} onOpenChange={setViewAllOpen}>
+        <DialogContent className="bg-gradient-to-b from-slate-900 to-slate-800 border-violet-500/30 max-w-2xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <Users className="w-5 h-5 text-violet-400" />
+              All Matches ({filteredMatches.length})
+            </DialogTitle>
+          </DialogHeader>
+          
+          {/* Score Filter Slider */}
+          <div className="space-y-3 py-4 border-b border-slate-700">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-300">Filter by Score</span>
+              <span className="text-sm font-mono text-violet-400">
+                {scoreFilter[0]}% – {scoreFilter[1]}%
+              </span>
+            </div>
+            <div className="relative pt-2">
+              {/* Center line marker */}
+              <div className="absolute top-1/2 left-1/2 w-px h-4 bg-violet-400/50 -translate-x-1/2 -translate-y-1/2 z-10" />
+              <Slider
+                value={scoreFilter}
+                min={5}
+                max={100}
+                step={5}
+                onValueChange={setScoreFilter}
+                className="relative"
+              />
+              {/* Tick marks */}
+              <div className="flex justify-between mt-1 px-1">
+                <span className="text-[10px] text-slate-500">5%</span>
+                <span className="text-[10px] text-slate-500">25%</span>
+                <span className="text-[10px] text-slate-500">50%</span>
+                <span className="text-[10px] text-slate-500">75%</span>
+                <span className="text-[10px] text-slate-500">100%</span>
+              </div>
+            </div>
+          </div>
+          
+          <ScrollArea className="max-h-[60vh]">
+            <div className="space-y-3 pr-4">
+              {filteredMatches.length === 0 ? (
+                <div className="text-center py-12">
+                  <Users className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+                  <p className="text-slate-400">No matches found in the {scoreFilter[0]}% – {scoreFilter[1]}% range</p>
+                  <p className="text-xs text-slate-500 mt-2">Try adjusting the score filter</p>
+                </div>
+              ) : (
+                filteredMatches.map(match => (
+                  <div 
+                    key={match.id}
+                    className="flex items-center gap-3 p-4 rounded-lg bg-slate-800/50 hover:bg-slate-800 cursor-pointer transition-colors"
+                    onClick={() => { setSelectedMatch(match); setViewAllOpen(false); }}
+                  >
+                    <Avatar className="w-12 h-12 border-2 border-violet-500/30">
+                      <AvatarImage src={match.target_avatar} />
+                      <AvatarFallback className="bg-violet-900 text-violet-200">
+                        {match.target_name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-white truncate">{match.target_name}</p>
+                      <p className="text-xs text-slate-400 truncate">{match.target_subtitle || match.explanation}</p>
+                      {match.shared_values?.length > 0 && (
+                        <div className="flex gap-1 mt-1">
+                          {match.shared_values.slice(0, 3).map((v, i) => (
+                            <Badge key={i} className="bg-rose-500/20 text-rose-300 border-rose-500/30 text-[10px] px-1.5 py-0">
+                              {v}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className={`text-xl font-bold ${match.match_score >= 90 ? 'text-amber-400' : match.match_score >= 80 ? 'text-emerald-400' : match.match_score >= 70 ? 'text-violet-400' : 'text-slate-400'}`}>
+                      {match.match_score}%
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
