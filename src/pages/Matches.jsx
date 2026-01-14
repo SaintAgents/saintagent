@@ -232,6 +232,13 @@ export default function Matches() {
               <RefreshCw className="w-4 h-4" />
               Refresh
             </Button>
+            <a
+              href={createPageUrl('SynchronicityEngine') + '?view=deepdive'}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium hover:from-violet-500 hover:to-purple-500 transition-all"
+            >
+              <TrendingUp className="w-4 h-4" />
+              Run Deep Dive
+            </a>
           </div>
 
         {/* Search */}
