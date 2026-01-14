@@ -376,38 +376,64 @@ export default function SynchronicityEngine() {
       <div className="border-b border-violet-500/20 bg-slate-900/50 backdrop-blur-sm sticky top-16 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="relative flex-1 max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search symbols, experiences..."
-                className="pl-9 bg-slate-800/50 border-slate-700 text-white"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-40 bg-slate-800/50 border-slate-700 text-white">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="all" className="text-white">All Categories</SelectItem>
-                  {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
-                    <SelectItem key={key} value={key} className="text-white">
-                      {config.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button 
-                onClick={() => setSubmitOpen(true)}
-                className="bg-violet-600 hover:bg-violet-500 text-white"
+            {/* View Toggle */}
+            <div className="flex items-center gap-1 bg-slate-800/50 border border-slate-700 rounded-lg p-1">
+              <Button
+                size="sm"
+                variant={viewMode === 'feed' ? 'default' : 'ghost'}
+                className={viewMode === 'feed' ? 'bg-violet-600' : 'text-slate-400'}
+                onClick={() => setViewMode('feed')}
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Share
+                <Flame className="w-4 h-4 mr-1" />
+                Feed
+              </Button>
+              <Button
+                size="sm"
+                variant={viewMode === 'deepdive' ? 'default' : 'ghost'}
+                className={viewMode === 'deepdive' ? 'bg-violet-600' : 'text-slate-400'}
+                onClick={() => setViewMode('deepdive')}
+              >
+                <TrendingUp className="w-4 h-4 mr-1" />
+                Deep Dive
               </Button>
             </div>
+            
+            {viewMode === 'feed' && (
+              <>
+                <div className="relative flex-1 max-w-xs">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search symbols, experiences..."
+                    className="pl-9 bg-slate-800/50 border-slate-700 text-white"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="w-40 bg-slate-800/50 border-slate-700 text-white">
+                      <Filter className="w-4 h-4 mr-2" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectItem value="all" className="text-white">All Categories</SelectItem>
+                      {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
+                        <SelectItem key={key} value={key} className="text-white">
+                          {config.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button 
+                    onClick={() => setSubmitOpen(true)}
+                    className="bg-violet-600 hover:bg-violet-500 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Share
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
