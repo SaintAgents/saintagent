@@ -168,6 +168,7 @@ export default function UserManagement() {
   };
 
   const [resettingSA, setResettingSA] = useState(false);
+  const [customGGGAmount, setCustomGGGAmount] = useState('');
   const handleResetSANumbers = async () => {
     if (!confirm('Reset and reassign ALL SA numbers in order by join date? This cannot be undone.')) return;
     setResettingSA(true);
@@ -365,11 +366,11 @@ export default function UserManagement() {
               {/* GGG Balance Controls */}
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">GGG Balance</h3>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <p className="text-2xl font-bold text-slate-900">
-                    {walletAvailable?.toFixed?.(2) || 0}
+                    {walletAvailable?.toFixed?.(6) || 0}
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -1)}>
                       -1
                     </Button>
@@ -386,6 +387,30 @@ export default function UserManagement() {
                       +10
                     </Button>
                   </div>
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                  <Input
+                    type="number"
+                    step="0.000001"
+                    placeholder="Custom amount (e.g. 0.1)"
+                    value={customGGGAmount}
+                    onChange={(e) => setCustomGGGAmount(e.target.value)}
+                    className="w-48"
+                  />
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      const amt = parseFloat(customGGGAmount);
+                      if (!isNaN(amt) && amt !== 0) {
+                        handleAdjustGGG(selectedUser, amt);
+                        setCustomGGGAmount('');
+                      }
+                    }}
+                    disabled={!customGGGAmount || isNaN(parseFloat(customGGGAmount))}
+                  >
+                    Apply
+                  </Button>
                 </div>
               </div>
 
