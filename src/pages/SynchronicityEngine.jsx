@@ -34,6 +34,7 @@ import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButto
 import BadgeProgressPanel from '@/components/badges/BadgeProgressPanel';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import DeepDiveDashboard from '@/components/synchronicity/DeepDiveDashboard';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/52771e0da_gemini-25-flash-image_change_the_letters_to_words_-_Synchronicity_is_MetaV_at_work-0.jpg";
 
