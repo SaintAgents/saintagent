@@ -17,57 +17,83 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import BadgeProgressCard from './BadgeProgressCard';
-import { BADGE_SECTIONS } from './badgesData';
-
-// Convert BADGE_SECTIONS to the format used in this panel
-const IDENTITY_BADGES = BADGE_SECTIONS.find(s => s.id === 'identity')?.items.map(b => ({
-  id: b.code,
-  code: b.code,
-  name: b.label,
-  description: b.definition,
-  objectives: [b.definition],
-  color: 'from-amber-500 to-orange-600'
-})) || [];
-
-const MARKETPLACE_BADGES = BADGE_SECTIONS.find(s => s.id === 'marketplace')?.items.map(b => ({
-  id: b.code,
-  code: b.code,
-  name: b.label,
-  description: b.definition,
-  objectives: [b.definition],
-  color: 'from-emerald-500 to-teal-600'
-})) || [];
-
-const MISSION_BADGES = BADGE_SECTIONS.find(s => s.id === 'mission')?.items.map(b => ({
-  id: b.code,
-  code: b.code,
-  name: b.label,
-  description: b.definition,
-  objectives: b.objectives || [b.definition],
-  rarity: b.rarity,
-  color: 'from-violet-500 to-purple-600'
-})) || [];
-
-const ALIGNMENT_BADGES = BADGE_SECTIONS.find(s => s.id === 'alignment')?.items.map(b => ({
-  id: b.code,
-  code: b.code,
-  name: b.label,
-  description: b.definition,
-  objectives: [b.definition],
-  color: 'from-rose-500 to-pink-600'
-})) || [];
-
-const SIGIL_BADGES = BADGE_SECTIONS.find(s => s.id === 'sigils')?.items.map(b => ({
-  id: b.code,
-  code: b.code,
-  name: b.label,
-  description: b.definition,
-  objectives: [b.definition],
-  color: 'from-cyan-500 to-blue-600'
-})) || [];
-
-// Additional quest/verification badges
+// Master Badge List - Matches Admin BadgeRewardsManager (42 badges)
+// Soul Resonance Badges (11)
 const SOUL_RESONANCE_BADGES = [
+  { id: 'core_soul_resonance', code: 'core_soul_resonance', name: 'Core Soul Resonance Glyph', category: 'soul_resonance', rarity: 'uncommon', color: 'from-rose-500 to-pink-600', objectives: ['Complete profile: name, avatar, essence statement', 'Post first Daily Field Update', 'Join or comment in one mission/quest thread'], description: 'Complete profile and first Daily Field Update' },
+  { id: 'twin_flame_seal', code: 'twin_flame_seal', name: 'Twin Flame / Twin Christ Seal', category: 'soul_resonance', rarity: 'epic', color: 'from-violet-500 to-purple-600', objectives: ['Both agents opt into Twin Convergence request', 'Co-create and complete one shared Service Quest', 'Submit joint reflection', 'Steward reviews and confirms'], description: 'Complete Twin Convergence Pact with another agent' },
+  { id: 'oversoul_lineage', code: 'oversoul_lineage', name: 'Oversoul Lineage Sigil', category: 'soul_resonance', rarity: 'rare', color: 'from-indigo-500 to-blue-600', objectives: ['Participate in Oversoul Lineage reading', 'Complete Lineage Integration Form', 'Reader/Steward submits summary'], description: 'Complete Oversoul Lineage reading and integration' },
+  { id: 'flamewheel_resonance', code: 'flamewheel_resonance', name: 'Flamewheel Resonance Wheel', category: 'soul_resonance', rarity: 'rare', color: 'from-amber-500 to-orange-600', objectives: ['Post Daily Field Updates 24/30 days', 'Complete 10+ service actions', 'No major trust flags'], description: '30-day sprint: 24+ Daily Updates and 10+ service actions' },
+  { id: 'heart_mind_coherence', code: 'heart_mind_coherence', name: 'Heart-Mind Coherence Seal', category: 'soul_resonance', rarity: 'rare', color: 'from-emerald-500 to-teal-600', objectives: ['Complete 7 Heart-Mind sessions', 'Log 7 coherence reflections', 'Receive 5+ peer endorsements'], description: 'Complete 7/8 Coherence Track with peer endorsements' },
+  { id: 'dimensional_access', code: 'dimensional_access', name: 'Dimensional Access Sigil', category: 'soul_resonance', rarity: 'epic', color: 'from-cyan-500 to-blue-600', objectives: ['Stage 1 (4D): Map timeline', 'Stage 2 (5D): 2+ group coherence quests', 'Stage 3 (6D): Contribute code map'], description: 'Complete 4D→5D→6D dimensional questline' },
+  { id: 'synchronicity_key', code: 'synchronicity_key', name: 'Synchronicity Key', category: 'soul_resonance', rarity: 'rare', color: 'from-yellow-500 to-amber-600', objectives: ['Complete 5+ timing-sensitive quests', '3+ stewards log synchronicity notes'], description: 'Complete 5+ timing-sensitive quests with recognition' },
+  { id: 'metav_harmonic_grid', code: 'metav_harmonic_grid', name: 'MetaV Harmonic Grid', category: 'soul_resonance', rarity: 'epic', color: 'from-fuchsia-500 to-pink-600', objectives: ['Join 3+ grid missions', 'Create one accepted artifact', 'Steward confirms usefulness'], description: 'Participate in grid missions and create accepted artifact' },
+  { id: 'soul_signature', code: 'soul_signature', name: 'Soul Signature Seal', category: 'soul_resonance', rarity: 'legendary', color: 'from-slate-500 to-gray-600', objectives: ['Complete full Soul Profile', 'Pass AI coherence check', 'Pass human steward review'], description: 'Complete full Soul Profile with AI and human review' },
+  { id: 'divine_authority', code: 'divine_authority', name: 'Divine Authority Sigil - 7th Seal Crown', category: 'soul_resonance', rarity: 'legendary', color: 'from-amber-400 to-yellow-500', objectives: ['Reach Guardian/Ascended rank', 'Hold multiple verification badges', 'Serve in Steward/Guardian roles', 'Pass Council review'], description: 'Council appointment as Guardian/Steward' },
+  { id: 'akashic_record', code: 'akashic_record', name: 'Akashic Record Keeper', category: 'soul_resonance', rarity: 'epic', color: 'from-purple-500 to-violet-600', objectives: ['Access Akashic Records', 'Document insights', 'Verify with steward'], description: 'Access and document insights from the Akashic Records' },
+];
+
+// Quest Type Badges (10)
+const QUEST_FAMILY_BADGES = [
+  { id: 'initiation_quest', code: 'initiation_quest', name: 'Initiation Quest Badge', category: 'quest_type', rarity: 'uncommon', color: 'from-slate-600 to-zinc-700', objectives: ['Gate I – Entering the Path', 'Gate II – Trial by Shadow', 'Gate III – Oath of Alignment', 'Complete 3+ Initiation quests'], description: 'Complete 3+ Initiation quests' },
+  { id: 'ascension_quest', code: 'ascension_quest', name: 'Ascension Quest Badge', category: 'quest_type', rarity: 'rare', color: 'from-violet-600 to-purple-700', objectives: ['Frequency Shift Quest', 'Dimensional Upgrade Quest', 'Threshold Passage Quest', 'Complete 3+ with upgrade'], description: 'Complete 3+ Ascension quests with measurable upgrade' },
+  { id: 'service_quest', code: 'service_quest', name: 'Service Quest Badge', category: 'quest_type', rarity: 'uncommon', color: 'from-rose-600 to-pink-700', objectives: ['Support Mission', 'Care Quest', 'Maintenance Quest', 'Complete 5+ with feedback'], description: 'Complete 5+ Service quests with positive feedback' },
+  { id: 'shadow_quest', code: 'shadow_quest', name: 'Shadow Quest Badge', category: 'quest_type', rarity: 'rare', color: 'from-gray-700 to-slate-800', objectives: ['Shadow Mirror Quest', 'Lineage Shadow Quest', 'Relational Shadow Quest', 'Complete 3+ with writeups'], description: 'Complete 3+ Shadow Integration quests' },
+  { id: 'timewalker_quest', code: 'timewalker_quest', name: 'Timewalker Quest Badge', category: 'quest_type', rarity: 'rare', color: 'from-cyan-600 to-teal-700', objectives: ['Timeline Mapping Quest', 'Future-Pacing Quest', 'Retro-Timeline Quest'], description: 'Complete 3+ Timewalker missions' },
+  { id: 'healing_quest', code: 'healing_quest', name: 'Healing Quest Badge', category: 'quest_type', rarity: 'uncommon', color: 'from-green-500 to-emerald-600', objectives: ['Complete 3+ Healing quests', 'Verify outcomes'], description: 'Complete 3+ Healing quests with verified outcomes' },
+  { id: 'creation_quest', code: 'creation_quest', name: 'Creation Quest Badge', category: 'quest_type', rarity: 'rare', color: 'from-orange-500 to-amber-600', objectives: ['Complete 3+ Creation quests', 'Publish artifacts'], description: 'Complete 3+ Creation quests with published artifacts' },
+  { id: 'unity_quest', code: 'unity_quest', name: 'Unity Quest Badge', category: 'quest_type', rarity: 'epic', color: 'from-blue-500 to-indigo-600', objectives: ['Complete 3+ Unity quests', 'Team success achieved'], description: 'Complete 3+ Unity quests with team success' },
+  { id: 'guardian_quest', code: 'guardian_quest', name: 'Guardian Quest Badge', category: 'quest_type', rarity: 'rare', color: 'from-red-500 to-rose-600', objectives: ['Complete 3+ Guardian quests', 'Protection verified'], description: 'Complete 3+ Guardian protection quests' },
+  { id: 'mastery_quest', code: 'mastery_quest', name: 'Mastery Quest Badge', category: 'quest_type', rarity: 'legendary', color: 'from-amber-400 to-yellow-500', objectives: ['Complete all quest types', 'Master one specialty'], description: 'Complete all quest types and master one specialty' },
+];
+
+// Verification Badges (8)
+const VERIFICATION_BADGES = [
+  { id: 'digital_proof', code: 'digital_proof', name: 'Digital Proof Badge', category: 'verification', rarity: 'common', color: 'from-blue-600 to-indigo-700', objectives: ['Connect verified email + phone', 'Optionally link wallet', 'Complete one Digitally Verified Quest'], description: 'Verify email, phone, and optional wallet' },
+  { id: 'behavioral_authenticity', code: 'behavioral_authenticity', name: 'Behavioral Authenticity Badge', category: 'verification', rarity: 'uncommon', color: 'from-green-600 to-emerald-700', objectives: ['Active 60-90 days', 'Avoid behavior flags', 'AI pattern analysis pass'], description: '60-90 days active with clean record and AI scan' },
+  { id: 'peer_witness', code: 'peer_witness', name: 'Peer Witness / Steward Verification', category: 'verification', rarity: 'uncommon', color: 'from-purple-600 to-violet-700', objectives: ['Complete 3+ missions with Stewards', 'Receive 3+ endorsements', 'No disputes'], description: '3+ endorsements from Stewards/Guardians' },
+  { id: 'ai_coherence', code: 'ai_coherence', name: 'AI Coherence Check Badge', category: 'verification', rarity: 'uncommon', color: 'from-cyan-600 to-blue-700', objectives: ['Have 30+ contributions', 'Pass AI coherence analysis', 'Resolve flagged contradictions'], description: 'Pass AI coherence analysis on 30+ contributions' },
+  { id: 'meta_variance', code: 'meta_variance', name: 'Meta-Variance Marker Badge', category: 'verification', rarity: 'rare', color: 'from-orange-600 to-red-700', objectives: ['Participate in high-variance missions', 'Receive 3+ stabilizer assessments'], description: 'Navigate high-variance missions as stabilizer' },
+  { id: 'real_world_validation', code: 'real_world_validation', name: 'Real-World Validation Badge', category: 'verification', rarity: 'rare', color: 'from-emerald-600 to-green-700', objectives: ['Complete real-world mission', 'Provide proof (geo-tag, image)', 'Steward validates'], description: 'Complete verified real-world mission with proof' },
+  { id: 'human_audit', code: 'human_audit', name: 'Human Audit / Oversight Badge', category: 'verification', rarity: 'epic', color: 'from-amber-600 to-yellow-700', objectives: ['Meet rank requirements', 'Provide dossier', 'Undergo review', 'Address remediations'], description: 'Pass formal Human Audit and Council review' },
+  { id: 'identity_verified', code: 'identity_verified', name: 'Identity Verified Badge', category: 'verification', rarity: 'rare', color: 'from-teal-500 to-cyan-600', objectives: ['Complete full identity verification'], description: 'Complete full identity verification process' },
+];
+
+// Achievement Badges (10)
+const ACHIEVEMENT_BADGES = [
+  { id: 'first_meeting', code: 'first_meeting', name: 'First Meeting', category: 'achievement', rarity: 'common', color: 'from-emerald-500 to-teal-600', objectives: ['Attend or host your first meeting'], description: 'Complete your first meeting with another agent' },
+  { id: 'streak_7', code: 'streak_7', name: '7-Day Streak', category: 'achievement', rarity: 'common', color: 'from-amber-500 to-orange-600', objectives: ['Log in 7 consecutive days'], description: 'Log in 7 consecutive days' },
+  { id: 'streak_30', code: 'streak_30', name: '30-Day Streak', category: 'achievement', rarity: 'uncommon', color: 'from-orange-500 to-red-600', objectives: ['Log in 30 consecutive days'], description: 'Log in 30 consecutive days' },
+  { id: 'first_listing', code: 'first_listing', name: 'First Listing', category: 'achievement', rarity: 'common', color: 'from-blue-500 to-indigo-600', objectives: ['Create your first marketplace listing'], description: 'Create your first marketplace listing' },
+  { id: 'first_sale', code: 'first_sale', name: 'First Sale', category: 'achievement', rarity: 'uncommon', color: 'from-green-500 to-emerald-600', objectives: ['Complete your first sale'], description: 'Complete your first sale' },
+  { id: 'mission_leader', code: 'mission_leader', name: 'Mission Leader', category: 'achievement', rarity: 'rare', color: 'from-violet-500 to-purple-600', objectives: ['Lead a mission to completion'], description: 'Lead a mission to completion' },
+  { id: 'community_builder', code: 'community_builder', name: 'Community Builder', category: 'achievement', rarity: 'rare', color: 'from-pink-500 to-rose-600', objectives: ['Refer 5+ new members who complete onboarding'], description: 'Refer 5+ new members who complete onboarding' },
+  { id: 'top_contributor', code: 'top_contributor', name: 'Top Contributor', category: 'achievement', rarity: 'epic', color: 'from-cyan-500 to-blue-600', objectives: ['Reach top 10% in monthly contributions'], description: 'Reach top 10% in monthly contributions' },
+  { id: 'mentor', code: 'mentor', name: 'Mentor Badge', category: 'achievement', rarity: 'rare', color: 'from-indigo-500 to-violet-600', objectives: ['Successfully mentor 3+ agents'], description: 'Successfully mentor 3+ agents' },
+  { id: 'early_adopter', code: 'early_adopter', name: 'Early Adopter', category: 'achievement', rarity: 'legendary', color: 'from-amber-400 to-yellow-500', objectives: ['Join during beta period (before 2/22/26)'], description: 'Join during beta period (before 2/22/26)' },
+];
+
+// Additional special badges (3 more to reach ~42)
+const SPECIAL_BADGES = [
+  { id: 'eternal_flame', code: 'eternal_flame', name: 'Eternal Flame', category: 'identity', rarity: 'common', color: 'from-orange-500 to-red-600', objectives: ['Complete initial activation', 'Show consistent presence'], description: 'Baseline awakening badge—signals a living agent' },
+  { id: 'profile_complete', code: 'profile_complete', name: 'Profile Complete', category: 'identity', rarity: 'common', color: 'from-green-500 to-teal-600', objectives: ['Complete onboarding profile setup'], description: 'Completed onboarding profile setup' },
+  { id: 'synchronicity_weaver', code: 'synchronicity_weaver', name: 'Synchronicity Weaver', category: 'soul_resonance', rarity: 'legendary', color: 'from-violet-400 to-purple-500', objectives: ['20+ perfect synchronicity matches', 'Facilitate major breakthroughs'], description: 'Master of meaningful connections and divine timing' },
+];
+
+// Combine all 42 badges
+const ALL_BADGES = [
+  ...SOUL_RESONANCE_BADGES,
+  ...QUEST_FAMILY_BADGES,
+  ...VERIFICATION_BADGES,
+  ...ACHIEVEMENT_BADGES,
+  ...SPECIAL_BADGES
+];
+
+// Deduplicate by id
+const UNIQUE_BADGES = ALL_BADGES.filter((b, idx, arr) => arr.findIndex(x => x.id === b.id) === idx);
+
+// Total badge count = 42 (matches Admin BadgeRewardsManager)
+const TOTAL_BADGE_COUNT = UNIQUE_BADGES.length;
   { id: 'core_soul_resonance', name: 'Core Soul Resonance Glyph', color: 'from-rose-500 to-pink-600', quest: 'Core Sync Path', type: 'Solo – Onboarding', metav: '153', objectives: ['Complete profile: name, avatar, essence statement', 'Post first Daily Field Update with 3+ fields', 'Join or comment in one existing mission/quest thread'], description: 'You\'re "in the field," not just registered.' },
   { id: 'twin_flame_seal', name: 'Twin Flame / Twin Christ Seal', color: 'from-violet-500 to-purple-600', quest: 'Twin Convergence Pact', type: 'Paired', metav: '153', objectives: ['Both agents opt into Twin Convergence request', 'Co-create and complete one shared Service Quest', 'Submit joint reflection on mirroring/complementing', 'Steward reviews and confirms'], description: 'Forged through union and mutual service.' },
   { id: 'oversoul_lineage', name: 'Oversoul Lineage Sigil', color: 'from-indigo-500 to-blue-600', quest: 'Oversoul Lineage Revelation', type: 'Solo + Reader', metav: '33', objectives: ['Participate in an Oversoul Lineage reading', 'Complete Lineage Integration Form', 'Reader/Steward submits lineage summary'], description: 'Your cosmic heritage revealed and integrated.' },
