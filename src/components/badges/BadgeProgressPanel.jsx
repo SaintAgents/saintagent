@@ -17,8 +17,56 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import BadgeProgressCard from './BadgeProgressCard';
+import { BADGE_SECTIONS } from './badgesData';
 
-// All badge definitions with objectives
+// Convert BADGE_SECTIONS to the format used in this panel
+const IDENTITY_BADGES = BADGE_SECTIONS.find(s => s.id === 'identity')?.items.map(b => ({
+  id: b.code,
+  code: b.code,
+  name: b.label,
+  description: b.definition,
+  objectives: [b.definition],
+  color: 'from-amber-500 to-orange-600'
+})) || [];
+
+const MARKETPLACE_BADGES = BADGE_SECTIONS.find(s => s.id === 'marketplace')?.items.map(b => ({
+  id: b.code,
+  code: b.code,
+  name: b.label,
+  description: b.definition,
+  objectives: [b.definition],
+  color: 'from-emerald-500 to-teal-600'
+})) || [];
+
+const MISSION_BADGES = BADGE_SECTIONS.find(s => s.id === 'mission')?.items.map(b => ({
+  id: b.code,
+  code: b.code,
+  name: b.label,
+  description: b.definition,
+  objectives: b.objectives || [b.definition],
+  rarity: b.rarity,
+  color: 'from-violet-500 to-purple-600'
+})) || [];
+
+const ALIGNMENT_BADGES = BADGE_SECTIONS.find(s => s.id === 'alignment')?.items.map(b => ({
+  id: b.code,
+  code: b.code,
+  name: b.label,
+  description: b.definition,
+  objectives: [b.definition],
+  color: 'from-rose-500 to-pink-600'
+})) || [];
+
+const SIGIL_BADGES = BADGE_SECTIONS.find(s => s.id === 'sigils')?.items.map(b => ({
+  id: b.code,
+  code: b.code,
+  name: b.label,
+  description: b.definition,
+  objectives: [b.definition],
+  color: 'from-cyan-500 to-blue-600'
+})) || [];
+
+// Additional quest/verification badges
 const SOUL_RESONANCE_BADGES = [
   { id: 'core_soul_resonance', name: 'Core Soul Resonance Glyph', color: 'from-rose-500 to-pink-600', quest: 'Core Sync Path', type: 'Solo – Onboarding', metav: '153', objectives: ['Complete profile: name, avatar, essence statement', 'Post first Daily Field Update with 3+ fields', 'Join or comment in one existing mission/quest thread'], description: 'You\'re "in the field," not just registered.' },
   { id: 'twin_flame_seal', name: 'Twin Flame / Twin Christ Seal', color: 'from-violet-500 to-purple-600', quest: 'Twin Convergence Pact', type: 'Paired', metav: '153', objectives: ['Both agents opt into Twin Convergence request', 'Co-create and complete one shared Service Quest', 'Submit joint reflection on mirroring/complementing', 'Steward reviews and confirms'], description: 'Forged through union and mutual service.' },
@@ -50,23 +98,23 @@ const VERIFICATION_BADGES = [
   { id: 'human_audit', name: 'Human Audit / Oversight Badge', color: 'from-amber-600 to-yellow-700', quest: 'Council Review & Oversight', type: 'Council', metav: '33', objectives: ['Meet minimum rank + verification requirements', 'Provide dossier: history, quest log, conflicts', 'Undergo review session with audit team', 'Address any requested remediations'], description: 'Passed the highest level of human review.' }
 ];
 
-const ACHIEVEMENT_BADGES = [
-  { id: 'first_meeting', code: 'first_meeting', name: 'First Meeting', rarity: 'common', objectives: ['Attend or host your first meeting'], description: 'Took the first step into connection.' },
-  { id: 'audit_expert', code: 'audit_expert', name: 'Audit Expert', rarity: 'rare', objectives: ['Complete 50+ audits', 'Maintain high accuracy'], description: 'Master of verification and quality assurance.' },
-  { id: 'streak_7', code: 'streak_7', name: '7-Day Streak', rarity: 'common', objectives: ['Log in 7 consecutive days', 'Complete activities each day'], description: 'Consistency and dedication to daily practice.' },
-  { id: 'top_mentor', code: 'top_mentor', name: 'Top Mentor', rarity: 'epic', objectives: ['Mentor 10+ members', 'Receive positive testimonials'], description: 'Guide and teacher who uplifts others.' },
-  { id: 'ascended_tier', code: 'ascended_tier', name: 'Ascended Tier', rarity: 'epic', objectives: ['Achieve 5,000+ RP', 'Maintain Trust Score 60+'], description: 'Reached elevated rank status.' },
-  { id: 'social_butterfly', code: 'social_butterfly', name: 'Social Butterfly', rarity: 'rare', objectives: ['Make 50+ meaningful connections', 'Send 100+ DMs', 'Be active in Global Chat'], description: 'Community connector and relationship builder.' },
-  { id: 'mission_master', code: 'mission_master', name: 'Mission Master', rarity: 'epic', objectives: ['Complete 25+ quests', 'Cover all categories'], description: 'Completed major platform objectives.' },
-  { id: 'trust_anchor', code: 'trust_anchor', name: 'Trust Anchor', rarity: 'epic', objectives: ['Maintain 90+ Trust Score for 90 days', 'Complete 100+ verified transactions'], description: 'Pillar of reliability and integrity.' },
-  { id: 'synchronicity_weaver', code: 'synchronicity_weaver', name: 'Synchronicity Weaver', rarity: 'legendary', objectives: ['20+ perfect synchronicity matches', 'Facilitate major collaborative breakthroughs'], description: 'Master of meaningful connections and divine timing.' },
-  { id: 'eternal_flame', code: 'eternal_flame', name: 'Eternal Flame', rarity: 'common', objectives: ['Complete initial activation', 'Show consistent presence'], description: 'Baseline awakening badge—signals a living agent.' },
+// Combine all badges from badgesData.js + extra quest badges
+const ALL_BADGES = [
+  ...IDENTITY_BADGES,
+  ...MARKETPLACE_BADGES,
+  ...MISSION_BADGES,
+  ...ALIGNMENT_BADGES,
+  ...SIGIL_BADGES,
+  ...SOUL_RESONANCE_BADGES,
+  ...QUEST_FAMILY_BADGES,
+  ...VERIFICATION_BADGES
 ];
 
-const ALL_BADGES = [...SOUL_RESONANCE_BADGES, ...QUEST_FAMILY_BADGES, ...VERIFICATION_BADGES, ...ACHIEVEMENT_BADGES];
+// Deduplicate by id
+const UNIQUE_BADGES = ALL_BADGES.filter((b, idx, arr) => arr.findIndex(x => x.id === b.id) === idx);
 
 // Total badge count = actual defined badges in this panel
-const TOTAL_BADGE_COUNT = ALL_BADGES.length;
+const TOTAL_BADGE_COUNT = UNIQUE_BADGES.length;
 
 export default function BadgeProgressPanel({ 
   userBadges = [], 
