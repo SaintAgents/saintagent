@@ -338,7 +338,7 @@ export const BADGE_INDEX = Object.fromEntries(
 export const QUEST_BADGE_IMAGES = {
   first_meeting: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2a0b1a50c_Screenshot2026-01-07044449-Picsart-BackgroundRemover.png',
   audit_expert: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/211bccd26_audit-Picsart-BackgroundRemover.png',
-  streak_7: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png',
+  streak_7: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8ad35bc71_Screenshot2026-01-13091449-Picsart-BackgroundRemover.png',
   top_mentor: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cb85d913_Screenshot2026-01-07044531-Picsart-BackgroundRemover.png',
   ascended_tier: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1df65c199_Screenshot2026-01-07044338-Picsart-BackgroundRemover.png',
   social_butterfly: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png',
