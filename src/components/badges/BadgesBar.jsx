@@ -23,7 +23,11 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
       .map(b => (b.badge_code || b.code || '').toLowerCase())
       .filter(Boolean);
     const items = codes
-      .map(code => BADGE_INDEX[code])
+      .map(code => {
+        // Normalize streak badge codes
+        const normalizedCode = code.replace(/[-_]?day[-_]?/gi, '_').replace(/_+/g, '_');
+        return BADGE_INDEX[code] || BADGE_INDEX[normalizedCode] || BADGE_INDEX['streak_7'];
+      })
       .filter(Boolean);
     
     // Always add Eternal Flame badge at the beginning if provided
