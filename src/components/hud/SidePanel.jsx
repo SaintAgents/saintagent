@@ -1138,10 +1138,15 @@ export default function SidePanel({
                       strokeLinecap="round"
                     />
                   </svg>
-                  {/* Badge image centered */}
+                  {/* Badge image centered - show NEXT rank badge */}
                   <img 
-                    src={RANK_BADGE_IMAGES[rpInfo.nextTitle?.toLowerCase()] || RANK_BADGE_IMAGES.initiate}
-                    alt={rpInfo.nextTitle}
+                    src={(() => {
+                      // Find the next tier's code based on current rank
+                      const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
+                      const nextTier = RP_LADDER[currentIdx + 1];
+                      return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
+                    })()}
+                    alt={rpInfo.nextTitle || 'Next Rank'}
                     className="absolute inset-0 w-full h-full object-contain p-2"
                     data-no-filter="true"
                   />
