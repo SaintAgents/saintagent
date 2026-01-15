@@ -20,6 +20,7 @@ import MobileTabBar from '@/components/hud/MobileTabBar';
 import MobileWalletSheet from '@/components/hud/MobileWalletSheet';
 import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 import FullscreenMatchesSwiper from '@/components/hud/FullscreenMatchesSwiper';
+import MobileCloseButton from '@/components/hud/MobileCloseButton';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
@@ -1601,6 +1602,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Meeting Reminder Service */}
               {currentUser && <MeetingReminderService />}
+
+              {/* Mobile Close Button - shows X on secondary pages */}
+              <MobileCloseButton currentPageName={currentPageName} />
 
               {/* Mobile Bottom Tab Bar */}
               <MobileTabBar 
