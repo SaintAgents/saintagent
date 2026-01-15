@@ -30,7 +30,13 @@ const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms'
 
 // Authenticated layout with all the hooks - only used for protected pages
 function AuthenticatedLayout({ children, currentPageName }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // On mobile, sidebar starts collapsed
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        return true;
+      }
+      return false;
+    });
   const [topbarCollapsed, setTopbarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);

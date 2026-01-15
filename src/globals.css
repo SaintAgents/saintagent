@@ -492,10 +492,11 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 
 /* Mobile: Single column card stack */
 @media (max-width: 767px) {
-  /* Hide desktop sidebar on mobile */
-  aside[data-sidebar],
-  [data-sidebar] {
-    display: none !important;
+  /* Hide desktop sidebar on mobile - handled by Tailwind hidden md:flex */
+  
+  /* Ensure topbar starts from left edge on mobile */
+  header {
+    left: 0 !important;
   }
   
   /* Remove sidebar padding on mobile */

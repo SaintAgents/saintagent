@@ -61,6 +61,10 @@ import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
+    // On mobile, side panel starts closed
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return false;
+    }
     // Initialize from localStorage if available
     try {
       const saved = localStorage.getItem('sidePanelOpen');
