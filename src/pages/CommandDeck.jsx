@@ -382,7 +382,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Fetch user badges
   const { data: badges = [] } = useQuery({
     queryKey: ['userBadges', profile?.user_id],
-    queryFn: () => base44.entities.Badge.filter({ user_id: profile.user_id, status: 'active' }),
+    queryFn: async () => {
+      const allBadges = await base44.entities.Badge.list('-created_date', 500);
+      return allBadges.filter(b => b.user_id === profile.user_id && (b.status === 'active' || !b.status));
+    },
     enabled: !!profile?.user_id
   });
 
