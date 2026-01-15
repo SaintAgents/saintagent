@@ -10,6 +10,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ChallengeCard from './ChallengeCard';
 import Leaderboard from './Leaderboard';
 import MotivationalCard from './MotivationalCard';
+import { getRPRank } from '@/components/reputation/rpUtils';
+import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import {
   Dialog,
   DialogContent,
@@ -21,18 +23,20 @@ import GamificationHub from './GamificationHub';
 export default function GamificationWidget({ profile, compact = false }) {
   const [hubOpen, setHubOpen] = useState(false);
 
+  const userIdentifier = profile?.sa_number || profile?.user_id;
+
   const { data: challenges = [] } = useQuery({
-    queryKey: ['challenges', profile?.user_id],
-    queryFn: () => base44.entities.Challenge.filter({ user_id: profile.user_id, status: 'active' }, '-created_date', 5),
-    enabled: !!profile?.user_id
+    queryKey: ['challenges', userIdentifier],
+    queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 5),
+    enabled: !!userIdentifier
   });
 
   const activeChallenges = challenges.filter(c => c.status === 'active');
   const pendingRewards = challenges.filter(c => c.current_count >= c.target_count && c.status === 'active');
   
-  const engagementPoints = profile?.engagement_points || 0;
-  const level = Math.floor(engagementPoints / 1000) + 1;
-  const levelProgress = (engagementPoints % 1000) / 10;
+  const rpPoints = profile?.rp_points || 0;
+  const rpInfo = getRPRank(rpPoints);
+  const rankProgress = ((rpPoints - rpInfo.currentMin) / (rpInfo.nextMin - rpInfo.currentMin)) * 100;
 
   if (compact) {
     return (
@@ -43,12 +47,15 @@ export default function GamificationWidget({ profile, compact = false }) {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-100">
-                <Trophy className="w-4 h-4 text-amber-600" />
-              </div>
+              <img
+                src={RANK_BADGE_IMAGES[rpInfo.code]}
+                alt={rpInfo.title}
+                className="w-10 h-10 object-contain"
+                data-no-filter="true"
+              />
               <div>
-                <p className="text-sm font-medium text-amber-900">Level {level}</p>
-                <p className="text-xs text-amber-600">{engagementPoints.toLocaleString()} pts</p>
+                <p className="text-sm font-medium text-amber-900 capitalize">{rpInfo.title}</p>
+                <p className="text-xs text-amber-600">{rpPoints.toLocaleString()} RP</p>
               </div>
             </div>
             {pendingRewards.length > 0 && (
@@ -59,7 +66,7 @@ export default function GamificationWidget({ profile, compact = false }) {
             )}
             <ChevronRight className="w-4 h-4 text-amber-400" />
           </div>
-          <Progress value={levelProgress} className="h-1 mt-2" />
+          <Progress value={rankProgress} className="h-1 mt-2" />
         </button>
 
         <Dialog open={hubOpen} onOpenChange={setHubOpen}>
@@ -79,19 +86,22 @@ export default function GamificationWidget({ profile, compact = false }) {
 
   return (
     <div className="space-y-4">
-      {/* Level & Points */}
+      {/* Rank & Points */}
       <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center">
-                <span className="text-lg font-bold text-white">{level}</span>
-              </div>
+              <img
+                src={RANK_BADGE_IMAGES[rpInfo.code]}
+                alt={rpInfo.title}
+                className="w-14 h-14 object-contain"
+                data-no-filter="true"
+              />
               <Flame className="absolute -bottom-1 -right-1 w-5 h-5 text-orange-500" />
             </div>
             <div>
-              <p className="font-semibold text-amber-900">Level {level}</p>
-              <p className="text-sm text-amber-600">{engagementPoints.toLocaleString()} points</p>
+              <p className="font-semibold text-amber-900 capitalize">{rpInfo.title}</p>
+              <p className="text-sm text-amber-600">{rpPoints.toLocaleString()} RP</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={() => setHubOpen(true)} className="gap-1">
@@ -101,10 +111,10 @@ export default function GamificationWidget({ profile, compact = false }) {
         </div>
         <div>
           <div className="flex justify-between text-xs text-amber-600 mb-1">
-            <span>Progress to Level {level + 1}</span>
-            <span>{1000 - (engagementPoints % 1000)} pts to go</span>
+            <span>Progress to {rpInfo.nextTitle || 'Max Rank'}</span>
+            <span>{rpInfo.nextMin ? `${rpInfo.nextMin - rpPoints} RP to go` : 'Max'}</span>
           </div>
-          <Progress value={levelProgress} className="h-2" />
+          <Progress value={rankProgress} className="h-2" />
         </div>
       </div>
 
