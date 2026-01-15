@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { LayoutDashboard, Sparkles, Wallet, MessageSquare, Menu } from 'lucide-react';
+import { LayoutDashboard, Sparkles, Wallet, MessageSquare, Menu, HelpCircle, Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function MobileTabBar({ currentPage, onWalletOpen, onMenuOpen }) {
   const tabs = [
     { id: 'command', label: 'Deck', icon: LayoutDashboard, page: 'CommandDeck' },
     { id: 'sync', label: 'Sync', icon: Sparkles, page: 'SynchronicityEngine' },
-    { id: 'wallet', label: 'Wallet', icon: Wallet, action: 'wallet' },
-    { id: 'messages', label: 'Messages', icon: MessageSquare, page: 'Messages' },
+    { id: 'chat', label: 'Chat', icon: Radio, action: 'chat' },
+    { id: 'help', label: 'Help', icon: HelpCircle, action: 'help' },
     { id: 'menu', label: 'More', icon: Menu, action: 'menu' },
   ];
 
@@ -20,11 +20,33 @@ export default function MobileTabBar({ currentPage, onWalletOpen, onMenuOpen }) 
           const isActive = tab.page && currentPage === tab.page;
           const Icon = tab.icon;
           
-          if (tab.action === 'wallet') {
+          if (tab.action === 'chat') {
             return (
               <button
                 key={tab.id}
-                onClick={onWalletOpen}
+                onClick={() => {
+                  // Trigger global chat tab on right side tabs
+                  document.dispatchEvent(new CustomEvent('openGlobalChat'));
+                }}
+                className={cn(
+                  "flex flex-col items-center justify-center flex-1 h-full gap-1 transition-colors",
+                  "text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-[#00ff88]"
+                )}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="text-[10px] font-medium">{tab.label}</span>
+              </button>
+            );
+          }
+          
+          if (tab.action === 'help') {
+            return (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  // Trigger global help tab on right side tabs
+                  document.dispatchEvent(new CustomEvent('openGlobalHelp'));
+                }}
                 className={cn(
                   "flex flex-col items-center justify-center flex-1 h-full gap-1 transition-colors",
                   "text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-[#00ff88]"
