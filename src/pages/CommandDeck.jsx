@@ -722,7 +722,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         sidePanelOpen ? "pr-80" : "pr-0"
       )}>
         {/* Page Header */}
-        <div className="px-6 pt-6 pb-4">
+        <div className="px-2 md:px-6 pt-6 pb-4">
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-4">
@@ -743,7 +743,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-4 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-3 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
@@ -1254,7 +1254,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         </div>
 
         {/* Mode Cards Grid */}
-        <div className="px-6 mb-6">
+        <div className="px-2 md:px-6 mb-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <ModeCard mode="earn" title="Earn" icon={DollarSign} stats={`$${profile?.total_earnings || 0}`} onClick={() => window.location.href = createPageUrl('Marketplace')} />
             <ModeCard mode="learn" title="Learn" icon={TrendingUp} stats={`${meetings.filter((m) => m.meeting_type === 'mentorship').length} sessions`} onClick={() => window.location.href = createPageUrl('Marketplace')} />
@@ -1266,7 +1266,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         </div>
 
         {/* Control Area */}
-        <div className="px-6 mb-6">
+        <div className="px-2 md:px-6 mb-6">
           <div className="relative p-4 rounded-2xl">
             <div className="absolute inset-0 rounded-2xl bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(255,255,255,0.22)] backdrop-blur-sm pointer-events-none" />
             <div className="relative z-10">
@@ -1367,7 +1367,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         </div>
 
         {/* Main Grid - Collapsible Cards */}
-        <div className="px-6 relative min-h-[1200px]">
+        <div className="px-2 md:px-6 relative min-h-[1200px]">
           <div className="block space-y-6">
             <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">

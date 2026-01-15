@@ -529,10 +529,16 @@ html[data-theme='hacker'] img[alt*="Badge"] {
     /* Allow 2-col for small tiles */
   }
   
-  /* Mobile padding adjustments */
+  /* Mobile padding adjustments - tighter for more space */
   .px-6 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  /* Command Deck specific - even tighter */
+  main[data-page='CommandDeck'] .px-6 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
   
   /* Hide side panel on mobile */
