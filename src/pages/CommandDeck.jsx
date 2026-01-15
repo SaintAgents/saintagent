@@ -734,7 +734,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         sidePanelOpen ? "pr-80" : "pr-0"
       )}>
         {/* Page Header */}
-        <div className="px-2 md:px-6 pt-6 pb-4">
+        <div className="px-1 md:px-6 pt-6 pb-4">
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-4">
@@ -754,7 +754,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-3 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-2 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 mx-0" data-avatar-card>
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
@@ -963,7 +963,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{profile?.rp_points || rpPoints || 0}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{rpPoints}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">

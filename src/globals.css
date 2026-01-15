@@ -545,19 +545,28 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   
   main[data-page='CommandDeck'] .px-6,
   main[data-page='CommandDeck'] .px-4,
-  main[data-page='CommandDeck'] .px-2 {
+  main[data-page='CommandDeck'] .px-2,
+  main[data-page='CommandDeck'] .px-1 {
     padding-left: 0.125rem !important;
     padding-right: 0.125rem !important;
   }
   
   /* Cards rounded corners smaller on mobile for more space */
   main[data-page='CommandDeck'] .rounded-2xl {
-    border-radius: 0.75rem !important;
+    border-radius: 0.5rem !important;
   }
   
   /* Card internal padding tighter */
   main[data-page='CommandDeck'] [data-avatar-card] {
-    padding: 0.5rem !important;
+    padding: 0.375rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Avatar card full width on mobile */
+  main[data-page='CommandDeck'] [data-avatar-card].mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   
   /* Hide side panel on mobile */
