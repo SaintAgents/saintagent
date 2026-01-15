@@ -180,8 +180,8 @@ function DailyAffirmationTicker() {
   }, []);
   
   return (
-    <div className="flex-1 overflow-hidden mx-4">
-      <div className="text-xs text-slate-600 dark:text-violet-300 italic truncate">
+    <div className="flex-1 overflow-hidden mx-2 md:mx-4 min-w-0">
+      <div className="text-xs text-slate-600 dark:text-violet-300 italic overflow-x-auto whitespace-nowrap scrollbar-hide md:truncate" style={{ WebkitOverflowScrolling: 'touch' }}>
         "{ULTRANET_SAYINGS[currentIndex]}"
       </div>
     </div>

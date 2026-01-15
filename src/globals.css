@@ -1,5 +1,48 @@
 css
 /* =====================================================
+   SCROLLBAR HIDE UTILITY
+   ===================================================== */
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* =====================================================
+   MOBILE CLOSE BUTTON
+   ===================================================== */
+
+.mobile-close-btn {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-close-btn {
+    display: flex !important;
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10002;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    pointer-events: auto;
+  }
+  
+  .mobile-close-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* =====================================================
    CANVAS & LAYERING - CRITICAL FOR BACKGROUND EFFECTS
    ===================================================== */
 
