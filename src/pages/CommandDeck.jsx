@@ -286,22 +286,26 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: profiles } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
-      return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+      const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+      return byEmail;
     },
     enabled: !!currentUser?.email,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000 // 10 minutes
   });
   const profile = profiles?.[0];
+  
+  // Use SA# for all database queries if available, fallback to email
+  const userIdentifier = profile?.sa_number || currentUser?.email;
 
   // Wallet (authoritative GGG balance)
   const { data: walletRes } = useQuery({
-    queryKey: ['wallet', profile?.user_id],
+    queryKey: ['wallet', userIdentifier],
     queryFn: async () => {
       try {
         const { data } = await base44.functions.invoke('walletEngine', {
           action: 'getWallet',
-          payload: { user_id: profile.user_id }
+          payload: { user_id: userIdentifier }
         });
         return data;
       } catch (e) {
@@ -309,7 +313,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         return { wallet: { available_balance: profile?.ggg_balance || 0 } };
       }
     },
-    enabled: !!profile?.user_id,
+    enabled: !!userIdentifier,
     refetchInterval: 60000, // Reduced frequency to avoid excessive API calls
     retry: 0, // Don't retry on failure
     staleTime: 30000
@@ -379,19 +383,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const ONBOARDING_STEPS = 10;
   const setupPercent = onboarding ? Math.round(((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS * 100) : 0;
 
-  // Fetch user badges by SA# (preferred) or user_id fallback
+  // Fetch user badges by SA# (preferred identifier)
   const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', profile?.sa_number || profile?.user_id],
+    queryKey: ['userBadges', userIdentifier],
     queryFn: async () => {
-      const allBadges = await base44.entities.Badge.list('-created_date', 500);
-      // Match by SA# first, then fallback to user_id
-      return allBadges.filter(b => {
-        const matchesSA = profile?.sa_number && b.user_id === profile.sa_number;
-        const matchesEmail = b.user_id === profile.user_id;
-        return (matchesSA || matchesEmail) && (b.status === 'active' || !b.status);
-      });
+      return base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 500);
     },
-    enabled: !!(profile?.sa_number || profile?.user_id)
+    enabled: !!userIdentifier
   });
 
   // Fetch matches
@@ -432,17 +430,17 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Fetch challenges
   const { data: challenges = [] } = useQuery({
-    queryKey: ['challenges', profile?.user_id],
-    queryFn: () => base44.entities.Challenge.filter({ user_id: profile.user_id, status: 'active' }, '-created_date', 10),
-    enabled: !!profile?.user_id
+    queryKey: ['challenges', userIdentifier],
+    queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 10),
+    enabled: !!userIdentifier
   });
 
   // Daily Ops data (today)
   const todayStr = new Date().toISOString().slice(0, 10);
   const { data: dailyLogToday = [] } = useQuery({
-    queryKey: ['dailyLog', profile?.user_id, todayStr],
-    queryFn: () => base44.entities.DailyLog.filter({ user_id: profile.user_id, date: todayStr }),
-    enabled: !!profile?.user_id
+    queryKey: ['dailyLog', userIdentifier, todayStr],
+    queryFn: () => base44.entities.DailyLog.filter({ user_id: userIdentifier, date: todayStr }),
+    enabled: !!userIdentifier
   });
   const dailyLog = dailyLogToday?.[0];
   const dailyCompleted = dailyLog?.completed?.length || 0;
@@ -562,7 +560,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } else if (action === 'confirm') {
       updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'completed', guest_confirmed: true, ggg_earned: 0.03 } });
       await base44.entities.GGGTransaction.create({
-        user_id: profile.user_id,
+        user_id: userIdentifier,
         source_type: 'meeting',
         source_id: meeting.id,
         delta: 0.03,
@@ -575,9 +573,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         await base44.entities.UserProfile.update(profile.id, {
           engagement_points: (profile.engagement_points || 0) + 25
         });
-        const hasBadge = await base44.entities.Badge.filter({ user_id: profile.user_id, code: 'first_meeting' });
+        const hasBadge = await base44.entities.Badge.filter({ user_id: userIdentifier, code: 'first_meeting' });
         if (!(hasBadge && hasBadge.length)) {
-          await base44.entities.Badge.create({ user_id: profile.user_id, code: 'first_meeting', status: 'active' });
+          await base44.entities.Badge.create({ user_id: userIdentifier, code: 'first_meeting', status: 'active' });
         }
       } catch (e) {
         console.error('Gamification meeting award failed', e);
@@ -592,7 +590,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   const handleMissionAction = async (action, mission) => {
     if (action === 'join') {
-      const newParticipants = [...(mission.participant_ids || []), profile.user_id];
+      const newParticipants = [...(mission.participant_ids || []), userIdentifier];
       await base44.entities.Mission.update(mission.id, {
         participant_ids: newParticipants,
         participant_count: newParticipants.length
@@ -613,7 +611,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     try {
       if (type === 'post') {
         await base44.entities.Post.create({
-          author_id: profile.user_id,
+          author_id: userIdentifier,
           author_name: profile.display_name,
           author_avatar: profile.avatar_url,
           content: data.content,
@@ -623,7 +621,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         await createMutation.mutateAsync({
           entity: 'Listing',
           data: {
-            owner_id: profile.user_id,
+            owner_id: userIdentifier,
             owner_name: profile.display_name,
             owner_avatar: profile.avatar_url,
             listing_type: 'offer',
@@ -642,7 +640,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           entity: 'Meeting',
           data: {
             title: data.title,
-            host_id: profile.user_id,
+            host_id: userIdentifier,
             guest_id: data.recipient,
             host_name: profile.display_name,
             guest_name: data.recipient,
@@ -658,7 +656,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           data: {
             title: data.title,
             objective: data.objective || data.description,
-            creator_id: profile.user_id,
+            creator_id: userIdentifier,
             creator_name: profile.display_name,
             mission_type: 'personal',
             status: 'active'

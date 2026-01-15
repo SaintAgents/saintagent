@@ -317,23 +317,26 @@ export default function SidePanel({
     queryFn: () => base44.entities.PostComment.list('-created_date')
   });
 
+  // Use SA# for queries if available, fallback to user_id
+  const userIdentifier = profile?.sa_number || profile?.user_id;
+
   // Audit trail data (GGG + Reputation)
   const { data: gggTx = [] } = useQuery({
-    queryKey: ['gggTx', profile?.user_id],
-    queryFn: () => base44.entities.GGGTransaction.filter({ user_id: profile.user_id }, '-created_date', 100),
-    enabled: !!profile?.user_id
+    queryKey: ['gggTx', userIdentifier],
+    queryFn: () => base44.entities.GGGTransaction.filter({ user_id: userIdentifier }, '-created_date', 100),
+    enabled: !!userIdentifier
   });
 
   const { data: rpEvents = [] } = useQuery({
-    queryKey: ['rpEvents', profile?.user_id],
-    queryFn: () => base44.entities.ReputationEvent.filter({ user_id: profile.user_id }, '-created_date', 100),
-    enabled: !!profile?.user_id
+    queryKey: ['rpEvents', userIdentifier],
+    queryFn: () => base44.entities.ReputationEvent.filter({ user_id: userIdentifier }, '-created_date', 100),
+    enabled: !!userIdentifier
   });
 
   const { data: trustEvents = [] } = useQuery({
-    queryKey: ['trustEvents', profile?.user_id],
-    queryFn: () => base44.entities.TrustEvent.filter({ user_id: profile.user_id }, '-created_date', 100),
-    enabled: !!profile?.user_id
+    queryKey: ['trustEvents', userIdentifier],
+    queryFn: () => base44.entities.TrustEvent.filter({ user_id: userIdentifier }, '-created_date', 100),
+    enabled: !!userIdentifier
   });
 
   const auditItems = React.useMemo(() => {
@@ -357,7 +360,7 @@ export default function SidePanel({
         const post = posts.find((p) => p.id === postId);
         if (post) {
           await base44.entities.Post.update(postId, { likes_count: (post.likes_count || 0) + 1 });
-          if (post.author_id && post.author_id !== profile?.user_id) {
+          if (post.author_id && post.author_id !== userIdentifier) {
             await base44.entities.Notification.create({
               user_id: post.author_id,
               type: 'system',
@@ -379,7 +382,7 @@ export default function SidePanel({
     mutationFn: async ({ postId, content }) => {
       await base44.entities.PostComment.create({
         post_id: postId,
-        author_id: profile.user_id,
+        author_id: userIdentifier,
         author_name: profile.display_name,
         author_avatar: profile.avatar_url,
         content
@@ -398,7 +401,7 @@ export default function SidePanel({
   const createPostMutation = useMutation({
     mutationFn: async (payload) => {
       await base44.entities.Post.create({
-        author_id: profile.user_id,
+        author_id: userIdentifier,
         author_name: profile.display_name,
         author_avatar: profile.avatar_url,
         content: payload.content || '',
@@ -423,7 +426,7 @@ export default function SidePanel({
   });
 
   const handleLike = (postId) => {
-    likeMutation.mutate({ postId, userId: profile?.user_id });
+    likeMutation.mutate({ postId, userId: userIdentifier });
   };
 
   const handleComment = (postId) => {
@@ -463,7 +466,7 @@ export default function SidePanel({
   };
 
   const isLikedByUser = (postId) => {
-    return allLikes.some((l) => l.post_id === postId && l.user_id === profile?.user_id);
+    return allLikes.some((l) => l.post_id === postId && l.user_id === userIdentifier);
   };
 
   // Rank milestones from RP events
@@ -516,15 +519,15 @@ export default function SidePanel({
   };
 
   const { data: walletRes } = useQuery({
-    queryKey: ['wallet', profile?.user_id],
+    queryKey: ['wallet', userIdentifier],
     queryFn: async () => {
       const { data } = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: profile.user_id }
+        payload: { user_id: userIdentifier }
       });
       return data;
     },
-    enabled: !!profile?.user_id
+    enabled: !!userIdentifier
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpInfo = getRPRank(profile?.rp_points || 0);
@@ -572,19 +575,19 @@ export default function SidePanel({
     (async () => {
       try {
         const key = 'rankDemoSeeded_v1';
-        if (!profile?.user_id) return;
+        if (!userIdentifier) return;
         if (typeof window !== 'undefined' && localStorage.getItem(key)) return;
         const me = await base44.auth.me();
         if (!me || (me.email || '').toLowerCase() !== 'germaintrust@gmail.com') return;
         await base44.functions.invoke('seedRankDemo', { target_email: me.email });
         try { localStorage.setItem(key, '1'); } catch {}
-        queryClient.invalidateQueries({ queryKey: ['rpEvents', profile.user_id] });
-        queryClient.invalidateQueries({ queryKey: ['trustEvents', profile.user_id] });
+        queryClient.invalidateQueries({ queryKey: ['rpEvents', userIdentifier] });
+        queryClient.invalidateQueries({ queryKey: ['trustEvents', userIdentifier] });
       } catch (e) {
         console.warn('Seed demo failed', e);
       }
     })();
-  }, [profile?.user_id]);
+  }, [userIdentifier]);
 
   // Popped-off panel render
   if (isPoppedOff && isOpen) {

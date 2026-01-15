@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function StreakTracker({ userId, compact = false }) {
   // Get daily logs for the last 30 days
+  // userId can be either SA# or email - query supports both
   const { data: dailyLogs = [] } = useQuery({
     queryKey: ['dailyLogs', userId],
     queryFn: async () => {

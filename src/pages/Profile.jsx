@@ -115,6 +115,9 @@ export default function Profile() {
     queryKey: ['userProfile', targetUserId],
     queryFn: async () => {
       if (viewingUserId) {
+        // Try SA# first, then email
+        const bySA = await base44.entities.UserProfile.filter({ sa_number: viewingUserId }, '-updated_date', 1);
+        if (bySA.length > 0) return bySA;
         return base44.entities.UserProfile.filter({ user_id: viewingUserId }, '-updated_date', 1);
       }
       const user = await base44.auth.me();
@@ -142,6 +145,9 @@ export default function Profile() {
     region: datingProfile.location,
     is_demo_dating_profile: true
   } : null);
+  
+  // Use SA# for all database queries if available, fallback to user_id
+  const userIdentifier = profile?.sa_number || profile?.user_id;
 
   const [datingData, setDatingData] = useState(null);
   const showDatingTab = !!(profile && (
@@ -177,73 +183,65 @@ export default function Profile() {
 
   // Fetch user skills
   const { data: skills = [] } = useQuery({
-    queryKey: ['skills', profile?.user_id],
-    queryFn: () => base44.entities.Skill.filter({ user_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['skills', userIdentifier],
+    queryFn: () => base44.entities.Skill.filter({ user_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
   // Fetch desires
   const { data: desires = [] } = useQuery({
-    queryKey: ['desires', profile?.user_id],
-    queryFn: () => base44.entities.UserDesire.filter({ user_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['desires', userIdentifier],
+    queryFn: () => base44.entities.UserDesire.filter({ user_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
   // Fetch hopes
   const { data: hopes = [] } = useQuery({
-    queryKey: ['hopes', profile?.user_id],
-    queryFn: () => base44.entities.UserHope.filter({ user_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['hopes', userIdentifier],
+    queryFn: () => base44.entities.UserHope.filter({ user_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
   // Fetch intentions
   const { data: intentions = [] } = useQuery({
-    queryKey: ['intentions', profile?.user_id],
-    queryFn: () => base44.entities.UserIntention.filter({ user_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['intentions', userIdentifier],
+    queryFn: () => base44.entities.UserIntention.filter({ user_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
-  // Fetch badges by SA# (preferred) or user_id fallback
+  // Fetch badges by SA# (preferred identifier)
   const { data: profileBadges = [] } = useQuery({
-    queryKey: ['userBadges', profile?.sa_number || profile?.user_id],
-    queryFn: async () => {
-      const allBadges = await base44.entities.Badge.list('-created_date', 500);
-      // Match by SA# first, then fallback to user_id
-      return allBadges.filter(b => {
-        const matchesSA = profile?.sa_number && b.user_id === profile.sa_number;
-        const matchesEmail = b.user_id === profile.user_id;
-        return (matchesSA || matchesEmail) && (b.status === 'active' || !b.status);
-      });
-    },
-    enabled: !!(profile?.sa_number || profile?.user_id)
+    queryKey: ['userBadges', userIdentifier],
+    queryFn: () => base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 500),
+    enabled: !!userIdentifier
   });
 
   // Active roles (for Founder badge)
   const { data: activeRoles = [] } = useQuery({
-    queryKey: ['userRoles', profile?.user_id],
-    queryFn: () => base44.entities.UserRole.filter({ user_id: profile.user_id, status: 'active' }),
-    enabled: !!profile?.user_id
+    queryKey: ['userRoles', userIdentifier],
+    queryFn: () => base44.entities.UserRole.filter({ user_id: userIdentifier, status: 'active' }),
+    enabled: !!userIdentifier
   });
 
   // Fetch testimonials
   const { data: testimonials = [] } = useQuery({
-    queryKey: ['userTestimonials', profile?.user_id],
-    queryFn: () => base44.entities.Testimonial.filter({ to_user_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['userTestimonials', userIdentifier],
+    queryFn: () => base44.entities.Testimonial.filter({ to_user_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
   // Fetch followers
   const { data: followers = [] } = useQuery({
-    queryKey: ['followers', profile?.user_id],
-    queryFn: () => base44.entities.Follow.filter({ following_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['followers', userIdentifier],
+    queryFn: () => base44.entities.Follow.filter({ following_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
   // Fetch following
   const { data: following = [] } = useQuery({
-    queryKey: ['following', profile?.user_id],
-    queryFn: () => base44.entities.Follow.filter({ follower_id: profile?.user_id }),
-    enabled: !!profile?.user_id
+    queryKey: ['following', userIdentifier],
+    queryFn: () => base44.entities.Follow.filter({ follower_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
 
   // Unfollow mutation
@@ -260,8 +258,8 @@ export default function Profile() {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       setIsEditing(false);
       // Track challenge progress for updating profile
-      if (profile?.user_id) {
-        trackUpdateProfile(profile.user_id);
+      if (userIdentifier) {
+        trackUpdateProfile(userIdentifier);
       }
     }
   });
@@ -327,9 +325,9 @@ export default function Profile() {
 
   // Fetch affiliate code for the target user
   const { data: affiliateCodes = [] } = useQuery({
-    queryKey: ['affiliateCodes', targetUserId],
-    queryFn: () => base44.entities.AffiliateCode.filter({ user_id: targetUserId }),
-    enabled: !!targetUserId
+    queryKey: ['affiliateCodes', userIdentifier],
+    queryFn: () => base44.entities.AffiliateCode.filter({ user_id: userIdentifier }),
+    enabled: !!userIdentifier
   });
   const affiliateCode = affiliateCodes?.[0];
   const affiliatePaidCount = affiliateCode?.total_paid || 0;
@@ -337,19 +335,19 @@ export default function Profile() {
 
   // Wallet query - only run if profile exists and is not a demo profile
   const { data: walletRes } = useQuery({
-    queryKey: ['wallet', profile?.user_id],
+    queryKey: ['wallet', userIdentifier],
     queryFn: async () => {
       try {
         const { data } = await base44.functions.invoke('walletEngine', {
           action: 'getWallet',
-          payload: { user_id: profile.user_id }
+          payload: { user_id: userIdentifier }
         });
         return data;
       } catch {
         return null;
       }
     },
-    enabled: !!profile?.user_id && !profile?.is_demo_dating_profile && !profile?.user_id?.includes('demo'),
+    enabled: !!userIdentifier && !profile?.is_demo_dating_profile && !userIdentifier?.includes('demo'),
     retry: false
   });
 
