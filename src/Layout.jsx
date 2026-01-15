@@ -16,6 +16,9 @@ import SidePanel from '@/components/hud/SidePanel';
 import GlobalPhotoViewer from '@/components/profile/GlobalPhotoViewer';
 import HeroGalleryViewer from '@/components/hud/HeroGalleryViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
+import MobileTabBar from '@/components/hud/MobileTabBar';
+import MobileWalletSheet from '@/components/hud/MobileWalletSheet';
+import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
@@ -40,7 +43,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
   });
   const [floatingSidePanelOpen, setFloatingSidePanelOpen] = useState(false);
   const [userTourOpen, setUserTourOpen] = useState(false);
-  const queryClient = useQueryClient();
+      const [mobileWalletOpen, setMobileWalletOpen] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const queryClient = useQueryClient();
 
   // Listen for background effect changes from Sidebar
   useEffect(() => {
@@ -1582,7 +1587,26 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
 
       {/* Meeting Reminder Service */}
-      {currentUser && <MeetingReminderService />}
+              {currentUser && <MeetingReminderService />}
+
+              {/* Mobile Bottom Tab Bar */}
+              <MobileTabBar 
+                currentPage={currentPageName}
+                onWalletOpen={() => setMobileWalletOpen(true)}
+                onMenuOpen={() => setMobileMenuOpen(true)}
+              />
+
+              {/* Mobile Wallet Sheet */}
+              <MobileWalletSheet 
+                open={mobileWalletOpen} 
+                onOpenChange={setMobileWalletOpen} 
+              />
+
+              {/* Mobile Menu Sheet */}
+              <MobileMenuSheet 
+                open={mobileMenuOpen} 
+                onOpenChange={setMobileMenuOpen} 
+              />
 
       {/* User Tour Modal */}
       {userTourOpen && (

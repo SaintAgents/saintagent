@@ -128,6 +128,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                     alt={`${item.label} Badge`}
                     className={size === 'sm' ? 'w-4 h-4 object-contain' : 'w-5 h-5 object-contain'}
                     data-no-filter="true"
+                    loading="lazy"
                   />
                 ) : QUEST_BADGE_IMAGES[item.code] ? (
                   <img 
@@ -135,6 +136,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                     alt={`${item.label} Badge`}
                     className={size === 'sm' ? 'w-4 h-4 object-contain' : 'w-5 h-5 object-contain'}
                     data-no-filter="true"
+                    loading="lazy"
                   />
                 ) : (
                   <BadgeIcon iconKey={item.iconKey} section={item.section} size={size === 'sm' ? 12 : 14} />
@@ -211,6 +213,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                             alt={`${item.label} Badge`}
                             className="w-5 h-5 object-contain"
                             data-no-filter="true"
+                            loading="lazy"
                           />
                         ) : QUEST_BADGE_IMAGES[item.code] ? (
                           <img 
@@ -218,6 +221,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
                             alt={`${item.label} Badge`}
                             className="w-5 h-5 object-contain"
                             data-no-filter="true"
+                            loading="lazy"
                           />
                         ) : (
                           <BadgeIcon iconKey={item.iconKey} section={item.section} size={14} />
