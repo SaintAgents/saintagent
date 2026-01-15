@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { isMobileDevice, DATA_LIMITS } from '@/components/services/dataService';
 import { createPageUrl } from '@/utils';
 import VideoMeetingModal from '@/components/VideoMeetingModal';
 import BoostModal from '@/components/BoostModal';
@@ -387,55 +388,66 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const ONBOARDING_STEPS = 10;
   const setupPercent = onboarding ? Math.round(((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS * 100) : 0;
 
-  // Fetch user badges by SA# (preferred identifier)
+  // Mobile-optimized limits
+  const isMobile = useMemo(() => isMobileDevice(), []);
+  const badgeLimit = isMobile ? DATA_LIMITS.badges.mobile : DATA_LIMITS.badges.desktop;
+  const matchLimit = isMobile ? DATA_LIMITS.matches.mobile : DATA_LIMITS.matches.desktop;
+  const meetingLimit = isMobile ? DATA_LIMITS.meetings.mobile : DATA_LIMITS.meetings.desktop;
+  const missionLimit = isMobile ? DATA_LIMITS.missions.mobile : DATA_LIMITS.missions.desktop;
+  const listingLimit = isMobile ? DATA_LIMITS.listings.mobile : DATA_LIMITS.listings.desktop;
+  const notificationLimit = isMobile ? DATA_LIMITS.notifications.mobile : DATA_LIMITS.notifications.desktop;
+  const challengeLimit = isMobile ? DATA_LIMITS.challenges.mobile : DATA_LIMITS.challenges.desktop;
+  const projectLimit = isMobile ? DATA_LIMITS.projects.mobile : DATA_LIMITS.projects.desktop;
+
+  // Fetch user badges by SA# (preferred identifier) - mobile-optimized
   const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', userIdentifier],
+    queryKey: ['userBadges', userIdentifier, badgeLimit],
     queryFn: async () => {
-      return base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 500);
+      return base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', badgeLimit);
     },
     enabled: !!userIdentifier
   });
 
-  // Fetch matches
+  // Fetch matches - mobile-optimized
   const { data: matches = [] } = useQuery({
-    queryKey: ['matches'],
-    queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', 20)
+    queryKey: ['matches', matchLimit],
+    queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit)
   });
 
-  // Fetch meetings
+  // Fetch meetings - mobile-optimized
   const { data: meetings = [] } = useQuery({
-    queryKey: ['meetings'],
-    queryFn: () => base44.entities.Meeting.list('-scheduled_time', 10)
+    queryKey: ['meetings', meetingLimit],
+    queryFn: () => base44.entities.Meeting.list('-scheduled_time', meetingLimit)
   });
 
-  // Fetch missions
+  // Fetch missions - mobile-optimized
   const { data: missions = [] } = useQuery({
-    queryKey: ['missions'],
-    queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', 10)
+    queryKey: ['missions', missionLimit],
+    queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit)
   });
 
-  // Fetch listings
+  // Fetch listings - mobile-optimized
   const { data: listings = [] } = useQuery({
-    queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 10)
+    queryKey: ['listings', listingLimit],
+    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', listingLimit)
   });
 
-  // Fetch projects
+  // Fetch projects - mobile-optimized
   const { data: projects = [] } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => base44.entities.Project.list('-created_date', 50)
+    queryKey: ['projects', projectLimit],
+    queryFn: () => base44.entities.Project.list('-created_date', projectLimit)
   });
 
-  // Fetch notifications
+  // Fetch notifications - mobile-optimized
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications'],
-    queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20)
+    queryKey: ['notifications', notificationLimit],
+    queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', notificationLimit)
   });
 
-  // Fetch challenges
+  // Fetch challenges - mobile-optimized
   const { data: challenges = [] } = useQuery({
-    queryKey: ['challenges', userIdentifier],
-    queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 10),
+    queryKey: ['challenges', userIdentifier, challengeLimit],
+    queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', challengeLimit),
     enabled: !!userIdentifier
   });
 
