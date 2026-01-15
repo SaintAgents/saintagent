@@ -326,8 +326,20 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
   const walletAvailable = walletBalance != null && walletBalance > 0 ? walletBalance : profile?.ggg_balance ?? 0;
-  const rpPoints = profile?.rp_points || 0;
+  const rpPoints = profile?.rp_points ?? 0;
   const rpInfo = getRPRank(rpPoints);
+  
+  // Debug: Log profile data to verify it's loading
+  useEffect(() => {
+    if (profile) {
+      console.log('Profile loaded:', { 
+        rp_points: profile.rp_points, 
+        ggg_balance: profile.ggg_balance,
+        trust_score: profile.trust_score,
+        follower_count: profile.follower_count 
+      });
+    }
+  }, [profile]);
 
   // Rank definitions for hover tooltips
   const RANK_DEFS = {
