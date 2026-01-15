@@ -25,7 +25,14 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
         if (!code) return null;
         
         // Direct lookup first
-        if (BADGE_INDEX[code]) return BADGE_INDEX[code];
+        if (BADGE_INDEX[code]) {
+          const badgeData = BADGE_INDEX[code];
+          // If badge has custom icon_url from database, use it
+          if (b.icon_url) {
+            return { ...badgeData, customIcon: b.icon_url };
+          }
+          return badgeData;
+        }
         
         // Handle streak badge variations (7-day_streak, 7_day_streak, streak_7, etc.)
         if (code.includes('streak') || code.includes('7')) {
@@ -34,10 +41,22 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
             const num = streakMatch[1];
             // Try various formats
             const streakKey = `streak_${num}`;
-            if (BADGE_INDEX[streakKey]) return { ...BADGE_INDEX[streakKey], code: streakKey };
+            if (BADGE_INDEX[streakKey]) {
+              const badgeData = { ...BADGE_INDEX[streakKey], code: streakKey };
+              if (b.icon_url) {
+                return { ...badgeData, customIcon: b.icon_url };
+              }
+              return badgeData;
+            }
           }
           // Default to streak_7 for any streak-related badge
-          if (code.includes('streak')) return { ...BADGE_INDEX['streak_7'], code: 'streak_7' };
+          if (code.includes('streak')) {
+            const badgeData = { ...BADGE_INDEX['streak_7'], code: 'streak_7' };
+            if (b.icon_url) {
+              return { ...badgeData, customIcon: b.icon_url };
+            }
+            return badgeData;
+          }
         }
         
         return null;
