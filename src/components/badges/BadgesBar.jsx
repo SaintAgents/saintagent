@@ -24,12 +24,18 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
         const code = (b.badge_code || b.code || '').toLowerCase();
         if (!code) return null;
         
+        // Check QUEST_BADGE_IMAGES first for image URL
+        const imageUrl = QUEST_BADGE_IMAGES[code];
+        
         // Direct lookup first
         if (BADGE_INDEX[code]) {
-          const badgeData = BADGE_INDEX[code];
-          // If badge has custom icon_url from database, use it
+          const badgeData = { ...BADGE_INDEX[code], code };
+          // If badge has custom icon_url from database, use it; otherwise use QUEST_BADGE_IMAGES
           if (b.icon_url) {
             return { ...badgeData, customIcon: b.icon_url };
+          }
+          if (imageUrl) {
+            return { ...badgeData, customIcon: imageUrl };
           }
           return badgeData;
         }
@@ -42,18 +48,26 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
             // Try various formats
             const streakKey = `streak_${num}`;
             if (BADGE_INDEX[streakKey]) {
+              const streakImage = QUEST_BADGE_IMAGES[streakKey] || QUEST_BADGE_IMAGES[code];
               const badgeData = { ...BADGE_INDEX[streakKey], code: streakKey };
               if (b.icon_url) {
                 return { ...badgeData, customIcon: b.icon_url };
+              }
+              if (streakImage) {
+                return { ...badgeData, customIcon: streakImage };
               }
               return badgeData;
             }
           }
           // Default to streak_7 for any streak-related badge
           if (code.includes('streak')) {
+            const streakImage = QUEST_BADGE_IMAGES['streak_7'];
             const badgeData = { ...BADGE_INDEX['streak_7'], code: 'streak_7' };
             if (b.icon_url) {
               return { ...badgeData, customIcon: b.icon_url };
+            }
+            if (streakImage) {
+              return { ...badgeData, customIcon: streakImage };
             }
             return badgeData;
           }
