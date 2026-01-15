@@ -1398,7 +1398,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               isHidden={hiddenCards.has('challenges')} 
               onToggleHide={() => toggleCardVisibility('challenges')} 
               onTossToSidePanel={handleTossToSidePanel}
-              badgeImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f62b8608a_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
             >
               <GamificationWidget profile={profile} />
             </CollapsibleCard>
