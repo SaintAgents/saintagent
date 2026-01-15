@@ -63,16 +63,16 @@ export default function NotificationBell({ notifications = [], onAction }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="w-5 h-5 text-slate-600" />
+        <Button variant="ghost" size="icon" className="relative w-8 h-8 md:w-9 md:h-9" style={{ zIndex: 10001, pointerEvents: 'auto' }}>
+          <Bell className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-5 h-5 flex items-center justify-center text-xs font-bold text-white bg-rose-500 rounded-full">
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-[10px] md:text-xs font-bold text-white bg-rose-500 rounded-full">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-96 p-0 dark:bg-slate-800 dark:border-slate-700">
+      <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100">Notifications</h3>
           {notifications.length > 0 && (

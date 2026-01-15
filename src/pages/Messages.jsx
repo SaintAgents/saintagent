@@ -293,23 +293,23 @@ export default function Messages() {
         "w-full md:w-80 shrink-0",
         selectedConversation ? "hidden md:flex" : "flex"
       )}>
-        <div className="p-4 border-b dark:border-[rgba(0,255,136,0.2)] space-y-3 sticky top-0 z-20 bg-white dark:bg-[#0a0a0a]">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-slate-900 dark:text-white shrink-0 flex items-center gap-2">
-            <BackButton className="p-1.5" />
+        <div className="p-2 md:p-4 border-b dark:border-[rgba(0,255,136,0.2)] space-y-2 md:space-y-3 sticky top-0 z-20 bg-white dark:bg-[#0a0a0a]">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-1 text-sm md:text-base">
+            <BackButton className="p-1" />
             Messages
           </h2>
-          <div className="flex items-center gap-2 flex-wrap gap-y-2 ml-2">
-            <Button variant="outline" size="sm" className="bg-violet-100 text-stone-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-1.5" onClick={() => setDMOpen(true)}>
-              <Plus className="w-3.5 h-3.5" /> New Message
+          <div className="flex items-center gap-1 md:gap-2 flex-wrap">
+            <Button variant="outline" size="sm" className="bg-violet-100 text-stone-950 px-2 md:px-3 text-xs font-medium rounded-lg h-7 md:h-8 gap-1" onClick={() => setDMOpen(true)}>
+              <Plus className="w-3 h-3" /> <span className="hidden sm:inline">New</span>
             </Button>
-            <Button variant="outline" size="sm" className="bg-violet-100 text-neutral-950 px-3 text-xs font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8 gap-1.5" onClick={() => setGroupOpen(true)}>
-              <Users className="w-3.5 h-3.5" /> New Group
+            <Button variant="outline" size="sm" className="bg-violet-100 text-neutral-950 px-2 md:px-3 text-xs font-medium rounded-lg h-7 md:h-8 gap-1" onClick={() => setGroupOpen(true)}>
+              <Users className="w-3 h-3" /> <span className="hidden sm:inline">Group</span>
             </Button>
             <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-lg"
+                  className="rounded-lg w-7 h-7 md:w-8 md:h-8 hidden md:flex"
                   onClick={() => {
                     const conv = selectedConversation || (convList.length > 0 ? convList[0] : null);
                     if (conv) {
