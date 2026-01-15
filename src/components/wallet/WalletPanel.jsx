@@ -75,11 +75,11 @@ export default function WalletPanel() {
             <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Locked</p>
             <HoverCard>
               <HoverCardTrigger asChild>
-                <button className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300">
+                <button className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-500">
                   <HelpCircle className="w-3 h-3" />
                 </button>
               </HoverCardTrigger>
-              <HoverCardContent className="w-80 text-slate-700 text-sm">
+              <HoverCardContent className="w-80 text-slate-700 dark:text-slate-200 text-sm bg-white dark:bg-slate-800">
                 <p className="font-semibold mb-1">Locked GGG = money in ceremony</p>
                 <p className="mb-2">It’s your GGG, reserved so it can’t be double‑spent. Used for missions, orders, disputes, or stakes until released.</p>
                 <ul className="list-disc ml-4 space-y-1 text-xs">
