@@ -222,13 +222,31 @@ export default function RightSideTabs() {
   const showHelpPanel = helpOpen || helpHovered;
   const showChatPanel = chatOpen || chatHovered;
 
+  // Listen for mobile tab bar events
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setChatOpen(true);
+      setChatHovered(true);
+    };
+    const handleOpenHelp = () => {
+      setHelpOpen(true);
+      setHelpHovered(true);
+    };
+    document.addEventListener('openGlobalChat', handleOpenChat);
+    document.addEventListener('openGlobalHelp', handleOpenHelp);
+    return () => {
+      document.removeEventListener('openGlobalChat', handleOpenChat);
+      document.removeEventListener('openGlobalHelp', handleOpenHelp);
+    };
+  }, []);
+
   return (
     <>
       <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       
       {/* Help Tab */}
       <div 
-        className="fixed right-0 z-[60] transition-all duration-300 ease-out"
+        className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
         style={{ bottom: '120px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
@@ -249,7 +267,7 @@ export default function RightSideTabs() {
         {/* Sliding Panel */}
         <div 
           className={cn(
-            "absolute right-0 bottom-0 w-[380px] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-l-xl overflow-hidden transition-all duration-300 ease-out",
+            "absolute right-0 bottom-0 w-[380px] md:w-[380px] w-[calc(100vw-1rem)] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-l-xl overflow-hidden transition-all duration-300 ease-out",
             showHelpPanel ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           style={{ maxHeight: 'calc(100vh - 200px)' }}
@@ -364,7 +382,7 @@ export default function RightSideTabs() {
 
       {/* Chat Tab */}
       <div 
-        className="fixed right-0 z-[60] transition-all duration-300 ease-out"
+        className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
         style={{ bottom: '60px' }}
         onMouseEnter={handleChatMouseEnter}
         onMouseLeave={handleChatMouseLeave}
@@ -390,7 +408,7 @@ export default function RightSideTabs() {
         {/* Sliding Panel */}
         <div 
           className={cn(
-            "absolute right-0 bottom-0 w-[380px] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-l-xl overflow-hidden transition-all duration-300 ease-out flex flex-col",
+            "absolute right-0 bottom-0 w-[380px] md:w-[380px] w-[calc(100vw-1rem)] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-l-xl overflow-hidden transition-all duration-300 ease-out flex flex-col",
             showChatPanel ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           style={{ height: 'calc(100vh - 260px)', maxHeight: '500px' }}
