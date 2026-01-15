@@ -988,7 +988,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 {/* Badges & Sigils */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-teal-200 text-xs">Badges & Sigils</p>
+                    <p className="text-purple-600 dark:text-purple-400 text-xs font-medium">Badges & Sigils</p>
                     <button className="text-xs text-violet-600 hover:underline" onClick={() => setBadgeGlossaryOpen(true)}>
                       View Glossary
                     </button>
