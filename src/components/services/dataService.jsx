@@ -10,6 +10,29 @@
 
 import { base44 } from '@/api/base44Client';
 
+// Detect mobile for reduced data fetching
+const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
+
+// Mobile-optimized limits
+const LIMITS = {
+  badges: { mobile: 5, desktop: 100 },
+  matches: { mobile: 5, desktop: 20 },
+  meetings: { mobile: 5, desktop: 10 },
+  missions: { mobile: 3, desktop: 10 },
+  listings: { mobile: 5, desktop: 10 },
+  notifications: { mobile: 10, desktop: 20 },
+  challenges: { mobile: 5, desktop: 10 },
+  projects: { mobile: 10, desktop: 50 },
+  posts: { mobile: 10, desktop: 20 },
+};
+
+const getLimit = (type, override) => {
+  if (override !== undefined) return override;
+  const limits = LIMITS[type];
+  if (!limits) return 20;
+  return isMobile() ? limits.mobile : limits.desktop;
+};
+
 export const dataService = {
   // ==========================================
   // USER PROFILE
@@ -58,10 +81,10 @@ export const dataService = {
   // BADGES
   // ==========================================
   
-  async getBadgesByUser(identifier) {
+  async getBadgesByUser(identifier, limit) {
     const isSA = identifier?.startsWith?.('SA') || /^\d{6}$/.test(identifier);
     const filter = isSA ? { user_id: identifier } : { user_id: identifier };
-    return await base44.entities.Badge.filter(filter, '-created_date', 100);
+    return await base44.entities.Badge.filter(filter, '-created_date', getLimit('badges', limit));
     
     // FUTURE: Supabase
     // const { data } = await supabase.from('badges').select().eq('user_id', identifier);
@@ -123,9 +146,9 @@ export const dataService = {
   // CHALLENGES
   // ==========================================
   
-  async getChallenges(identifier, status = 'active', limit = 10) {
+  async getChallenges(identifier, status = 'active', limit) {
     const filter = status ? { user_id: identifier, status } : { user_id: identifier };
-    return await base44.entities.Challenge.filter(filter, '-created_date', limit);
+    return await base44.entities.Challenge.filter(filter, '-created_date', getLimit('challenges', limit));
     
     // FUTURE: Supabase
     // let query = supabase.from('challenges').select().eq('user_id', identifier);
@@ -142,9 +165,9 @@ export const dataService = {
   // MATCHES
   // ==========================================
   
-  async getMatches(identifier, status = 'active', limit = 20) {
+  async getMatches(identifier, status = 'active', limit) {
     const filter = status ? { user_id: identifier, status } : { user_id: identifier };
-    return await base44.entities.Match.filter(filter, '-match_score', limit);
+    return await base44.entities.Match.filter(filter, '-match_score', getLimit('matches', limit));
     
     // FUTURE: Supabase
     // let query = supabase.from('matches').select().eq('user_id', identifier);
@@ -165,15 +188,16 @@ export const dataService = {
   // MEETINGS
   // ==========================================
   
-  async getMeetings(identifier, filters = {}, limit = 20) {
+  async getMeetings(identifier, filters = {}, limit) {
+    const effectiveLimit = getLimit('meetings', limit);
     // Get meetings where user is host or guest
-    const asHost = await base44.entities.Meeting.filter({ host_id: identifier, ...filters }, '-scheduled_time', limit);
-    const asGuest = await base44.entities.Meeting.filter({ guest_id: identifier, ...filters }, '-scheduled_time', limit);
+    const asHost = await base44.entities.Meeting.filter({ host_id: identifier, ...filters }, '-scheduled_time', effectiveLimit);
+    const asGuest = await base44.entities.Meeting.filter({ guest_id: identifier, ...filters }, '-scheduled_time', effectiveLimit);
     
     // Combine and dedupe
     const all = [...asHost, ...asGuest];
     const unique = all.filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
-    return unique.sort((a, b) => new Date(b.scheduled_time) - new Date(a.scheduled_time)).slice(0, limit);
+    return unique.sort((a, b) => new Date(b.scheduled_time) - new Date(a.scheduled_time)).slice(0, effectiveLimit);
     
     // FUTURE: Supabase
     // const { data } = await supabase.from('meetings').select().or(`host_id.eq.${identifier},guest_id.eq.${identifier}`).order('scheduled_time', { ascending: false }).limit(limit);
@@ -192,8 +216,8 @@ export const dataService = {
   // MISSIONS
   // ==========================================
   
-  async getMissions(filters = {}, limit = 20) {
-    return await base44.entities.Mission.filter(filters, '-created_date', limit);
+  async getMissions(filters = {}, limit) {
+    return await base44.entities.Mission.filter(filters, '-created_date', getLimit('missions', limit));
     
     // FUTURE: Supabase
     // let query = supabase.from('missions').select();
@@ -218,8 +242,8 @@ export const dataService = {
   // LISTINGS (MARKETPLACE)
   // ==========================================
   
-  async getListings(filters = {}, limit = 20) {
-    return await base44.entities.Listing.filter(filters, '-created_date', limit);
+  async getListings(filters = {}, limit) {
+    return await base44.entities.Listing.filter(filters, '-created_date', getLimit('listings', limit));
   },
 
   async getListingById(id) {
@@ -258,9 +282,9 @@ export const dataService = {
   // NOTIFICATIONS
   // ==========================================
   
-  async getNotifications(identifier, unreadOnly = false, limit = 20) {
+  async getNotifications(identifier, unreadOnly = false, limit) {
     const filter = unreadOnly ? { user_id: identifier, is_read: false } : { user_id: identifier };
-    return await base44.entities.Notification.filter(filter, '-created_date', limit);
+    return await base44.entities.Notification.filter(filter, '-created_date', getLimit('notifications', limit));
   },
 
   async createNotification(notificationData) {
@@ -295,8 +319,8 @@ export const dataService = {
   // POSTS (COMMUNITY FEED)
   // ==========================================
   
-  async getPosts(filters = {}, limit = 20) {
-    return await base44.entities.Post.filter(filters, '-created_date', limit);
+  async getPosts(filters = {}, limit) {
+    return await base44.entities.Post.filter(filters, '-created_date', getLimit('posts', limit));
   },
 
   async createPost(postData) {
@@ -441,8 +465,8 @@ export const dataService = {
   // PROJECTS
   // ==========================================
   
-  async getProjects(filters = {}, limit = 20) {
-    return await base44.entities.Project.filter(filters, '-created_date', limit);
+  async getProjects(filters = {}, limit) {
+    return await base44.entities.Project.filter(filters, '-created_date', getLimit('projects', limit));
   },
 
   async getProjectById(id) {
@@ -617,5 +641,9 @@ export const dataService = {
     return await base44.entities[entityName].bulkCreate(dataArray);
   }
 };
+
+// Export mobile detection and limits for components that need them
+export const isMobileDevice = isMobile;
+export const DATA_LIMITS = LIMITS;
 
 export default dataService;
