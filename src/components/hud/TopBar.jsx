@@ -328,7 +328,7 @@ export default function TopBar({
 
   return (
     <header className={cn(
-      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-4 md:px-6 transition-all duration-300",
+      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-[100] flex items-center gap-2 md:gap-4 px-2 md:px-6 transition-all duration-300",
       "left-0",
       sidebarCollapsed ? "md:left-20" : "md:left-64",
       isCollapsed ? "h-10" : "h-14 md:h-16"
@@ -527,16 +527,16 @@ export default function TopBar({
         )}
       </div>
 
-      {/* Actions - always visible, just smaller when collapsed */}
+      {/* Actions - always visible, compact on mobile */}
       <div className={cn(
-        "flex items-center gap-2 transition-all duration-300 ml-auto",
-        isCollapsed && "gap-1"
+        "flex items-center transition-all duration-300 ml-auto flex-shrink-0",
+        isCollapsed ? "gap-0.5" : "gap-1 md:gap-2"
       )} data-no-top>
-        {/* Language */}
+        {/* Language - hidden on mobile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Language">
-              <Globe className="w-5 h-5 text-slate-600" />
+            <Button variant="ghost" size="icon" className="rounded-xl relative group hidden md:flex w-8 h-8 md:w-9 md:h-9" title="Language">
+              <Globe className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 Language
               </span>
@@ -556,23 +556,23 @@ export default function TopBar({
         <Button 
           variant="ghost" 
           size="icon" 
-          className="rounded-xl relative group" 
+          className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9 p-0" 
           title="Dating Matches"
           onClick={() => {
             document.dispatchEvent(new CustomEvent('openDatingPopup'));
           }}
         >
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
-            <Heart className="w-3.5 h-3.5 text-white fill-white" />
+          <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+            <Heart className="w-3 h-3 md:w-3.5 md:h-3.5 text-white fill-white" />
           </div>
-          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
             Dating
           </span>
         </Button>
 
-        <Link to={createPageUrl('DailyOps')}>
-          <Button variant="ghost" size="icon" className="rounded-xl relative group" title="Calendar">
-            <Calendar className="w-5 h-5 text-slate-600" />
+        <Link to={createPageUrl('DailyOps')} className="hidden md:block">
+          <Button variant="ghost" size="icon" className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9" title="Calendar">
+            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
               Calendar
             </span>
@@ -580,14 +580,14 @@ export default function TopBar({
         </Link>
         {/* Messages */}
         <Link to={createPageUrl('Messages')}>
-          <Button variant="ghost" size="icon" className="relative group" title="Messages">
-            <MessageCircle className="w-5 h-5 text-slate-600" />
+          <Button variant="ghost" size="icon" className="relative group w-8 h-8 md:w-9 md:h-9" title="Messages">
+            <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
             {unreadMessages.length > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-rose-500 rounded-full">
                 {unreadMessages.length}
               </span>
             )}
-            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
               Messages
             </span>
           </Button>
@@ -606,7 +606,7 @@ export default function TopBar({
         {currentUser ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-10 px-2 gap-2 rounded-xl">
+              <Button variant="ghost" className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl">
                 <div className={cn(
                   "relative",
                   isBoostActive && "animate-pulse"
@@ -616,7 +616,7 @@ export default function TopBar({
                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-400 opacity-75 blur-sm animate-spin-slow" style={{ animationDuration: '3s' }} />
                   )}
                   <Avatar className={cn(
-                    "w-8 h-8 relative",
+                    "w-7 h-7 md:w-8 md:h-8 relative",
                     isBoostActive && "ring-2 ring-amber-400 ring-offset-2 ring-offset-white"
                   )} data-user-id={profile?.user_id || currentUser?.email}>
                     <AvatarImage src={profile?.avatar_url} />
