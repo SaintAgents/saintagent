@@ -1159,7 +1159,7 @@ export default function SidePanel({
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600 dark:text-slate-400">To {rpInfo.nextTitle || 'next rank'}</span>
-                <span className="font-medium text-violet-700 dark:text-[#00ff88]">{Math.max(0, (rpInfo.nextMin || 0) - (profile?.rp_points || 0))} pts</span>
+                <span className="font-medium text-violet-700 dark:text-[#00ff88]">{Math.max(0, (rpInfo.nextMin || 0) - (profile?.rp_points || 0))} RP</span>
               </div>
               <div className="flex justify-between mt-3">
                 <Button variant="outline" size="sm" className="bg-white dark:bg-black border-violet-300 dark:border-[#00ff88]/40 text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setWalletPopupOpen(true)}>
