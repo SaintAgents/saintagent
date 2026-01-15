@@ -1,3 +1,4 @@
+css
 /* =====================================================
    CANVAS & LAYERING - CRITICAL FOR BACKGROUND EFFECTS
    ===================================================== */
@@ -636,11 +637,6 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   header {
     height: auto !important;
     min-height: 48px;
-  }
-
-  /* Hide collapsed topbar on mobile - it just takes up space */
-  header.h-8 {
-    display: none !important;
   }
 }
 
