@@ -956,7 +956,7 @@ export default function Profile() {
             {/* Badges & Sigils */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+                <CardTitle className="flex items-center justify-between text-violet-700">
                   <span>Badges & Sigils</span>
                   {isOwnProfile &&
                       <Button
