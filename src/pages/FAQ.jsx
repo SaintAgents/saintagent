@@ -1,12 +1,24 @@
 import React from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function FAQ() {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-3xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Help / FAQ</h1>
-          <p className="text-slate-600 mt-1">Answers to the most common questions about Saint Agents</p>
+        <header className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Help / FAQ</h1>
+            <p className="text-slate-600 mt-1">Answers to the most common questions about Saint Agents</p>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-full hover:bg-slate-200"
+            onClick={() => window.history.back()}
+          >
+            <X className="w-5 h-5 text-slate-600" />
+          </Button>
         </header>
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
