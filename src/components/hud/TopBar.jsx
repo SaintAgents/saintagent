@@ -331,7 +331,7 @@ export default function TopBar({
       "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-4 md:px-6 transition-all duration-300 overflow-x-auto",
       "left-0",
       sidebarCollapsed ? "md:left-20" : "md:left-64",
-      isCollapsed ? "h-8" : "h-14 md:h-16"
+      isCollapsed ? "h-8 hidden md:flex" : "h-14 md:h-16"
     )}>
       {/* Collapse/Expand Toggle */}
       <button

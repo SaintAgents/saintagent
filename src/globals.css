@@ -618,15 +618,20 @@ html[data-theme='hacker'] img[alt*="Badge"] {
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
   
-  /* Mobile topbar adjustments */
+  /* Mobile topbar adjustments - less padding since topbar is smaller */
   .pt-28 {
-    padding-top: 4rem !important;
+    padding-top: 3.5rem !important;
   }
-  
+
   /* Compact topbar on mobile */
   header {
     height: auto !important;
-    min-height: 56px;
+    min-height: 48px;
+  }
+
+  /* Hide collapsed topbar on mobile - it just takes up space */
+  header.h-8 {
+    display: none !important;
   }
 }
 
