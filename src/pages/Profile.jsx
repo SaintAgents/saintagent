@@ -203,11 +203,19 @@ export default function Profile() {
     enabled: !!profile?.user_id
   });
 
-  // Fetch badges
+  // Fetch badges by SA# (preferred) or user_id fallback
   const { data: profileBadges = [] } = useQuery({
-    queryKey: ['userBadges', profile?.user_id],
-    queryFn: () => base44.entities.Badge.filter({ user_id: profile.user_id, status: 'active' }),
-    enabled: !!profile?.user_id
+    queryKey: ['userBadges', profile?.sa_number || profile?.user_id],
+    queryFn: async () => {
+      const allBadges = await base44.entities.Badge.list('-created_date', 500);
+      // Match by SA# first, then fallback to user_id
+      return allBadges.filter(b => {
+        const matchesSA = profile?.sa_number && b.user_id === profile.sa_number;
+        const matchesEmail = b.user_id === profile.user_id;
+        return (matchesSA || matchesEmail) && (b.status === 'active' || !b.status);
+      });
+    },
+    enabled: !!(profile?.sa_number || profile?.user_id)
   });
 
   // Active roles (for Founder badge)

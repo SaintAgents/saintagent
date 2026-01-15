@@ -379,14 +379,19 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const ONBOARDING_STEPS = 10;
   const setupPercent = onboarding ? Math.round(((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS * 100) : 0;
 
-  // Fetch user badges
+  // Fetch user badges by SA# (preferred) or user_id fallback
   const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', profile?.user_id],
+    queryKey: ['userBadges', profile?.sa_number || profile?.user_id],
     queryFn: async () => {
       const allBadges = await base44.entities.Badge.list('-created_date', 500);
-      return allBadges.filter(b => b.user_id === profile.user_id && (b.status === 'active' || !b.status));
+      // Match by SA# first, then fallback to user_id
+      return allBadges.filter(b => {
+        const matchesSA = profile?.sa_number && b.user_id === profile.sa_number;
+        const matchesEmail = b.user_id === profile.user_id;
+        return (matchesSA || matchesEmail) && (b.status === 'active' || !b.status);
+      });
     },
-    enabled: !!profile?.user_id
+    enabled: !!(profile?.sa_number || profile?.user_id)
   });
 
   // Fetch matches
