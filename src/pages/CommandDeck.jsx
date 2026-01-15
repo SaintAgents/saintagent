@@ -747,17 +747,17 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           </div>
 
           {/* Profile Identifiers */}
-          <div className="relative mb-6 p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
+          <div className="relative mb-6 p-4 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" data-avatar-card>
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
-            <div className="relative z-10 flex items-start gap-6">
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
               {/* Left column: Avatar only */}
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
                 {profile ? (
                   <RankedAvatar
                     src={profile?.avatar_url}
                     name={profile?.display_name || currentUser?.full_name}
-                    size={140}
+                    size={120}
                     leaderTier={profile?.leader_tier}
                     rpRankCode={profile?.rp_rank_code}
                     rpPoints={profile?.rp_points || 0}
@@ -767,15 +767,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     affiliatePaidCount={profile?.activated_referral_count}
                     status={profile?.status || 'online'} />
                 ) : (
-                  <div className="w-[140px] h-[140px] rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                  <div className="w-[120px] h-[120px] rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
                 )}
               </div>
 
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 w-full">
                 {/* Header: Name, Title, Trust Score */}
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                <div className="flex flex-col md:flex-row items-center md:items-start justify-between mb-4 gap-4">
+                  <div className="text-center md:text-left">
+                    <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">
                       {profile?.display_name || currentUser?.full_name || 'User'}
                     </h2>
                     <div className="flex items-center gap-1">
@@ -850,8 +850,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </div>
                   
                   {/* Trust Score Gauge - top right corner */}
-                  <div className="flex flex-col items-center shrink-0" data-no-filter="true" style={{ marginTop: '-25px', marginRight: '-3px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
-                    <div className="relative" data-no-filter="true" style={{ width: '170px', height: '170px', transform: 'translateY(-8px)', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+                  <div className="flex flex-col items-center shrink-0 mt-0 md:mt-[-25px] md:mr-[-3px]" data-no-filter="true" style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}>
+                    <div className="relative" data-no-filter="true" style={{ width: '120px', height: '120px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
                       {/* Gauge dial - 170px base */}
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/36e5f08f7_gemini-25-flash-image_a_brass_serving_tray_that_is_actually_a_control_panel_with_interesting_meters_an-3_inPixio.png"
@@ -861,7 +861,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         data-no-filter="true" />
                       {/* Trust score number centered in gauge */}
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ background: 'transparent' }}>
-                        <span className="text-3xl font-bold text-emerald-400 dark:text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]">{profile?.trust_score || 0}</span>
+                        <span className="text-2xl md:text-3xl font-bold text-emerald-400 dark:text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]">{profile?.trust_score || 0}</span>
                       </div>
                       {/* Cyan trust ring - shows actual percentage (not full) */}
                       <svg 
@@ -896,7 +896,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       </svg>
                     </div>
                     {/* Trust Score label - moved up to nearly touch gauge */}
-                    <div className="flex items-center gap-1.5" style={{ marginTop: '-32px' }}>
+                    <div className="flex items-center gap-1.5 mt-[-20px] md:mt-[-32px]">
                       <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-0.5">
                         Trust
                         <HelpHint
@@ -950,7 +950,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-4 gap-3" data-stats-bar>
+                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-2 md:grid-cols-4 gap-3" data-stats-bar>
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable != null ? walletAvailable.toLocaleString() : profile?.ggg_balance?.toLocaleString?.() || "0"}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
