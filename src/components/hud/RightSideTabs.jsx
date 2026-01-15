@@ -270,7 +270,7 @@ export default function RightSideTabs() {
             "absolute right-0 bottom-0 w-[380px] md:w-[380px] w-[calc(100vw-1rem)] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-l-xl overflow-hidden transition-all duration-300 ease-out",
             showHelpPanel ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
-          style={{ maxHeight: 'calc(100vh - 200px)' }}
+          style={{ maxHeight: 'calc(100vh - 200px)', bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px) + 20px)' }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-violet-500 to-purple-600">
@@ -411,7 +411,7 @@ export default function RightSideTabs() {
             "absolute right-0 bottom-0 w-[380px] md:w-[380px] w-[calc(100vw-1rem)] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-l-xl overflow-hidden transition-all duration-300 ease-out flex flex-col",
             showChatPanel ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
-          style={{ height: 'calc(100vh - 260px)', maxHeight: '500px' }}
+          style={{ height: 'calc(100vh - 260px)', maxHeight: '500px', bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px) + 20px)' }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">
