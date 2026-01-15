@@ -247,7 +247,7 @@ export default function RightSideTabs() {
       {/* Help Tab */}
       <div 
         className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
-        style={{ bottom: '120px' }}
+        style={{ bottom: '140px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
@@ -383,7 +383,7 @@ export default function RightSideTabs() {
       {/* Chat Tab */}
       <div 
         className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
-        style={{ bottom: '60px' }}
+        style={{ bottom: '80px' }}
         onMouseEnter={handleChatMouseEnter}
         onMouseLeave={handleChatMouseLeave}
       >
