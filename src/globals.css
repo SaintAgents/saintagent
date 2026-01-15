@@ -433,16 +433,12 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 }
 
 /* =====================================================
-   WALLET PANEL - FORCE DARK
+   WALLET PANEL - THEME AWARE
    ===================================================== */
-
-[data-wallet-panel] {
-  background-color: #0a1f0a !important;
-}
 
 [data-theme='dark'] [data-wallet-panel],
 [data-theme='hacker'] [data-wallet-panel] {
-  background-color: #000000 !important;
+  background-color: #0a1f0a !important;
 }
 
 /* =====================================================
