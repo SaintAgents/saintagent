@@ -753,18 +753,25 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <div className="relative z-10 flex items-start gap-6">
               {/* Left column: Avatar only */}
               <div className="relative shrink-0" data-user-id={profile?.user_id}>
-                <RankedAvatar
-                  src={profile?.avatar_url}
-                  name={profile?.display_name}
-                  size={140}
-                  leaderTier={profile?.leader_tier}
-                  rpRankCode={profile?.rp_rank_code}
-                  rpPoints={rpPoints}
-                  userId={profile?.user_id}
-                  status={profile?.status || 'offline'} />
+                {profile ? (
+                  <RankedAvatar
+                    src={profile?.avatar_url}
+                    name={profile?.display_name || currentUser?.full_name}
+                    size={140}
+                    leaderTier={profile?.leader_tier}
+                    rpRankCode={profile?.rp_rank_code}
+                    rpPoints={profile?.rp_points || 0}
+                    trustScore={profile?.trust_score}
+                    userId={profile?.user_id}
+                    saNumber={profile?.sa_number}
+                    affiliatePaidCount={profile?.activated_referral_count}
+                    status={profile?.status || 'online'} />
+                ) : (
+                  <div className="w-[140px] h-[140px] rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                )}
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
