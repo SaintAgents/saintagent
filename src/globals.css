@@ -540,16 +540,16 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   
   /* Command Deck specific - edge to edge on mobile */
   main[data-page='CommandDeck'] {
-    padding-left: 0.25rem !important;
-    padding-right: 0.25rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   
   main[data-page='CommandDeck'] .px-6,
   main[data-page='CommandDeck'] .px-4,
   main[data-page='CommandDeck'] .px-2,
   main[data-page='CommandDeck'] .px-1 {
-    padding-left: 0.25rem !important;
-    padding-right: 0.25rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
   
   /* Cards rounded corners smaller on mobile for more space */
@@ -560,14 +560,21 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   /* Card internal padding tighter */
   main[data-page='CommandDeck'] [data-avatar-card] {
     padding: 0.5rem !important;
-    margin-left: 0.25rem !important;
-    margin-right: 0.25rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   
   /* All cards edge to edge */
   main[data-page='CommandDeck'] > div > div {
-    margin-left: 0.25rem !important;
-    margin-right: 0.25rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Max width container should be full width on mobile */
+  main[data-page='CommandDeck'] .max-w-7xl {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   
   /* Hide side panel on mobile */

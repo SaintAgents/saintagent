@@ -14,7 +14,7 @@ export default function MobileTabBar({ currentPage, onWalletOpen, onMenuOpen }) 
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-[100] bg-white dark:bg-[#0a0a0a] border-t border-slate-200 dark:border-[#00ff88]/20 md:hidden safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-[50] bg-white dark:bg-[#0a0a0a] border-t border-slate-200 dark:border-[#00ff88]/20 md:hidden safe-area-bottom">
       <div className="flex items-center justify-around h-16 px-2">
         {tabs.map((tab) => {
           const isActive = tab.page && currentPage === tab.page;
