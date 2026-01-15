@@ -733,14 +733,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             </div>
             <div className="flex items-center gap-3 relative z-10">
               <Button
-                variant="outline" className="bg-purple-200 text-fuchsia-950 px-4 py-2 text-sm font-medium rounded-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 inline-flex items-center justify-center whitespace-nowrap transition-colors border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2"
-
-                onClick={() => setSidePanelOpen(!sidePanelOpen)}>
-
-                <BarChart3 className="w-4 h-4" />
-                {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
-              </Button>
-              <Button
                 className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
                 onClick={() => setQuickCreateOpen(true)}>
 
@@ -1380,10 +1372,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
-                  <Button variant="outline" className="bg-zinc-200 text-green-800 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 gap-2" onClick={() => setSidePanelOpen(!sidePanelOpen)}>
-                    <BarChart3 className="w-4 h-4" />
-                    {sidePanelOpen ? 'Hide Panel' : 'Show Panel'}
-                  </Button>
                   <Button className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2" onClick={() => setQuickCreateOpen(true)}>
                     <Plus className="w-4 h-4" />
                     Quick Create
