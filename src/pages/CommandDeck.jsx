@@ -287,7 +287,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   });
 
-  // Fetch user profile (only when authenticated)
+  // Fetch user profile (only when authenticated) - refetch on every mount
   const { data: profiles } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
@@ -295,8 +295,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000 // 10 minutes
+    staleTime: 0, // Always refetch
+    gcTime: 0, // Don't cache
+    refetchOnMount: 'always'
   });
   const profile = profiles?.[0];
   
@@ -740,13 +741,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   }
 
   return (
-    <div className="min-h-screen cmd-deck-bg pb-20">
-      <div className={cn(
-        "transition-all duration-300 pb-8",
-        sidePanelOpen ? "pr-80" : "pr-0"
-      )}>
-        {/* Page Header */}
-        <div className="px-1 md:px-6 pt-6 pb-4">
+  <div className="min-h-screen cmd-deck-bg pb-20">
+    <div className={cn(
+      "transition-all duration-300 pb-8 max-w-7xl mx-auto",
+      sidePanelOpen ? "md:pr-80" : "pr-0"
+    )}>
+      {/* Page Header */}
+      <div className="px-1 md:px-6 pt-6 pb-4">
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-4">
