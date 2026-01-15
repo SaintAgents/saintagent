@@ -19,6 +19,7 @@ import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 import MobileTabBar from '@/components/hud/MobileTabBar';
 import MobileWalletSheet from '@/components/hud/MobileWalletSheet';
 import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
+import FullscreenMatchesSwiper from '@/components/hud/FullscreenMatchesSwiper';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
@@ -51,6 +52,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [userTourOpen, setUserTourOpen] = useState(false);
       const [mobileWalletOpen, setMobileWalletOpen] = useState(false);
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [fullscreenMatchesOpen, setFullscreenMatchesOpen] = useState(false);
       const queryClient = useQueryClient();
 
   // Listen for background effect changes from Sidebar
@@ -109,15 +111,20 @@ function AuthenticatedLayout({ children, currentPageName }) {
     const handleOpenFloatingSidePanel = () => {
       setFloatingSidePanelOpen(true);
     };
+    const handleOpenFullscreenMatches = () => {
+      setFullscreenMatchesOpen(true);
+    };
     document.addEventListener('click', handleProfileClick);
     document.addEventListener('openProfile', handleOpenProfile);
     document.addEventListener('openFloatingChat', handleOpenChat);
     document.addEventListener('openFloatingSidePanel', handleOpenFloatingSidePanel);
+    document.addEventListener('openFullscreenMatches', handleOpenFullscreenMatches);
     return () => {
       document.removeEventListener('click', handleProfileClick);
       document.removeEventListener('openProfile', handleOpenProfile);
       document.removeEventListener('openFloatingChat', handleOpenChat);
       document.removeEventListener('openFloatingSidePanel', handleOpenFloatingSidePanel);
+      document.removeEventListener('openFullscreenMatches', handleOpenFullscreenMatches);
     };
     }, []);
 
@@ -1612,6 +1619,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
               <MobileMenuSheet 
                 open={mobileMenuOpen} 
                 onOpenChange={setMobileMenuOpen} 
+              />
+
+              {/* Fullscreen Matches Swiper */}
+              <FullscreenMatchesSwiper
+                open={fullscreenMatchesOpen}
+                onClose={() => setFullscreenMatchesOpen(false)}
               />
 
       {/* User Tour Modal */}
