@@ -15,14 +15,6 @@ const MIN_WITHDRAWAL_USD = 350.00;
 
 export default function WalletPanel() {
   const [withdrawOpen, setWithdrawOpen] = useState(false);
-
-  // Force dark green background for this panel
-  React.useEffect(() => {
-    const panel = document.querySelector('[data-wallet-panel]');
-    if (panel) {
-      panel.style.backgroundColor = '#0a1f0a';
-    }
-  }, []);
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -72,15 +64,15 @@ export default function WalletPanel() {
   const canWithdraw = availableUSD >= MIN_WITHDRAWAL_USD;
 
   return (
-    <div className="space-y-4 p-4 rounded-xl" data-wallet-panel style={{ backgroundColor: '#0a1f0a' }}>
+    <div className="space-y-4 p-4 rounded-xl bg-slate-50 dark:bg-[#0a1f0a]" data-wallet-panel>
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-3 rounded-xl border border-[rgba(0,255,136,0.3)]" style={{ backgroundColor: '#0d2a0d' }}>
-          <p className="text-xs text-[#00ff88] font-medium">Available</p>
-          <p className="text-xl font-bold text-white">{(available ?? 0).toLocaleString?.()} GGG</p>
+        <div className="p-3 rounded-xl border border-violet-200 dark:border-[rgba(0,255,136,0.3)] bg-white dark:bg-[#0d2a0d]">
+          <p className="text-xs text-violet-600 dark:text-[#00ff88] font-medium">Available</p>
+          <p className="text-xl font-bold text-slate-900 dark:text-white">{(available ?? 0).toLocaleString?.()} GGG</p>
         </div>
-        <div className="p-3 rounded-xl border border-[rgba(0,255,136,0.2)]" style={{ backgroundColor: '#0d2a0d' }}>
+        <div className="p-3 rounded-xl border border-slate-200 dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0d2a0d]">
           <div className="flex items-center gap-1">
-            <p className="text-xs text-slate-400 font-medium">Locked</p>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Locked</p>
             <HoverCard>
               <HoverCardTrigger asChild>
                 <button className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300">
@@ -102,58 +94,58 @@ export default function WalletPanel() {
               </HoverCardContent>
             </HoverCard>
           </div>
-          <p className="text-white text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
+          <p className="text-slate-900 dark:text-white text-xl font-bold">{(locked ?? 0).toLocaleString?.()} GGG</p>
         </div>
       </div>
 
       <div className="mt-2">
-        <div className="p-3 rounded-xl border border-[rgba(0,255,136,0.3)]" style={{ backgroundColor: '#0d2a0d' }}>
-          <p className="text-xs font-medium text-[#00ff88]">Total GGG</p>
-          <p className="text-lg font-bold text-white">{(total ?? 0).toLocaleString?.()}</p>
+        <div className="p-3 rounded-xl border border-violet-200 dark:border-[rgba(0,255,136,0.3)] bg-white dark:bg-[#0d2a0d]">
+          <p className="text-xs font-medium text-violet-600 dark:text-[#00ff88]">Total GGG</p>
+          <p className="text-lg font-bold text-slate-900 dark:text-white">{(total ?? 0).toLocaleString?.()}</p>
         </div>
-        <div className="text-xs text-slate-400 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
+        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">≈ ${(total * GGG_TO_USD).toFixed(2)} USD</div>
       </div>
 
       {/* Withdraw Section */}
-      <div className="p-3 rounded-xl border border-[#00ff88]/40" style={{ backgroundColor: '#0d2a0d' }}>
+      <div className="p-3 rounded-xl border border-violet-200 dark:border-[#00ff88]/40 bg-white dark:bg-[#0d2a0d]">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Wallet className="w-4 h-4 text-[#00ff88]" />
-            <span className="text-sm font-medium text-[#00ff88]">Withdraw to USDT</span>
+            <Wallet className="w-4 h-4 text-violet-600 dark:text-[#00ff88]" />
+            <span className="text-sm font-medium text-violet-600 dark:text-[#00ff88]">Withdraw to USDT</span>
           </div>
-          <Badge className="bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]/40 text-xs">
+          <Badge className="bg-violet-100 dark:bg-[#00ff88]/20 text-violet-600 dark:text-[#00ff88] border-violet-200 dark:border-[#00ff88]/40 text-xs">
             1 GGG = ${GGG_TO_USD}
           </Badge>
         </div>
         {canWithdraw ? (
           <Button 
             size="sm" 
-            className="w-full bg-[#00ff88] hover:bg-[#00ff88]/80 text-black gap-2"
+            className="w-full bg-violet-600 dark:bg-[#00ff88] hover:bg-violet-700 dark:hover:bg-[#00ff88]/80 text-white dark:text-black gap-2"
             onClick={() => setWithdrawOpen(true)}
           >
             <ArrowUpRight className="w-4 h-4" />
             Withdraw (${availableUSD.toFixed(2)} available)
           </Button>
         ) : (
-          <div className="text-xs text-[#00ff88]">
+          <div className="text-xs text-violet-600 dark:text-[#00ff88]">
             <p className="font-medium">Min. withdrawal: ${MIN_WITHDRAWAL_USD}</p>
-            <p className="text-[#00ff88]/70">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
+            <p className="text-violet-500 dark:text-[#00ff88]/70">You need ${(MIN_WITHDRAWAL_USD - availableUSD).toFixed(2)} more</p>
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-3 gap-3 mt-2">
-        <div className="p-3 rounded-xl border border-emerald-500/40" style={{ backgroundColor: '#0d2a0d' }}>
-          <p className="text-xs font-medium text-emerald-400">Total Earned</p>
-          <p className="text-lg font-bold text-white">{(wallet?.total_earned ?? 0).toLocaleString?.()}</p>
+        <div className="p-3 rounded-xl border border-emerald-200 dark:border-emerald-500/40 bg-emerald-50 dark:bg-[#0d2a0d]">
+          <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">Total Earned</p>
+          <p className="text-lg font-bold text-slate-900 dark:text-white">{(wallet?.total_earned ?? 0).toLocaleString?.()}</p>
         </div>
-        <div className="p-3 rounded-xl border border-rose-500/40" style={{ backgroundColor: '#0d2a0d' }}>
-          <p className="text-xs font-medium text-rose-400">Total Spent</p>
-          <p className="text-lg font-bold text-white">{(wallet?.total_spent ?? 0).toLocaleString?.()}</p>
+        <div className="p-3 rounded-xl border border-rose-200 dark:border-rose-500/40 bg-rose-50 dark:bg-[#0d2a0d]">
+          <p className="text-xs font-medium text-rose-600 dark:text-rose-400">Total Spent</p>
+          <p className="text-lg font-bold text-slate-900 dark:text-white">{(wallet?.total_spent ?? 0).toLocaleString?.()}</p>
         </div>
-        <div className="p-3 rounded-xl border border-amber-500/40" style={{ backgroundColor: '#0d2a0d' }}>
-          <p className="text-xs font-medium text-amber-400">Rewards</p>
-          <p className="text-lg font-bold text-white">{(wallet?.total_rewards ?? 0).toLocaleString?.()}</p>
+        <div className="p-3 rounded-xl border border-amber-200 dark:border-amber-500/40 bg-amber-50 dark:bg-[#0d2a0d]">
+          <p className="text-xs font-medium text-amber-600 dark:text-amber-400">Rewards</p>
+          <p className="text-lg font-bold text-slate-900 dark:text-white">{(wallet?.total_rewards ?? 0).toLocaleString?.()}</p>
         </div>
       </div>
 
@@ -162,13 +154,13 @@ export default function WalletPanel() {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-[#00ff88]">Recent Transactions</p>
-          <Badge variant="outline" className="text-xs border-[#00ff88]/40 text-[#00ff88]">{txs.length}</Badge>
+          <p className="text-sm font-medium text-violet-600 dark:text-[#00ff88]">Recent Transactions</p>
+          <Badge variant="outline" className="text-xs border-violet-300 dark:border-[#00ff88]/40 text-violet-600 dark:text-[#00ff88]">{txs.length}</Badge>
         </div>
         <ScrollArea className="h-64 pr-2">
           <div className="space-y-2">
             {txs.length === 0 ?
-            <p className="text-sm text-slate-500 py-6 text-center">No transactions yet</p> :
+            <p className="text-sm text-slate-500 dark:text-slate-500 py-6 text-center">No transactions yet</p> :
 
             txs.slice(0, 50).map((t) =>
             <TxRow key={t.id} tx={t} />
@@ -208,16 +200,16 @@ function TxRow({ tx }) {
   const isCredit = tx.direction === 'CREDIT';
   const sign = isCredit ? '+' : '-';
   const amount = `${sign}${tx.amount_ggg} GGG`;
-  const color = isCredit ? 'text-emerald-400' : 'text-rose-400';
+  const color = isCredit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
   const date = tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '';
 
   return (
-    <div className="p-3 rounded-lg border border-[#00ff88]/20" style={{ backgroundColor: '#0d2a0d' }}>
+    <div className="p-3 rounded-lg border border-slate-200 dark:border-[#00ff88]/20 bg-white dark:bg-[#0d2a0d]">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-white truncate">{tx.tx_type}</p>
-          {tx.memo && <p className="text-xs text-slate-400 truncate">{tx.memo}</p>}
-          <p className="text-[11px] text-slate-500 mt-0.5">{date}</p>
+          <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{tx.tx_type}</p>
+          {tx.memo && <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{tx.memo}</p>}
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">{date}</p>
         </div>
         <div className={cn('text-sm font-semibold whitespace-nowrap', color)}>{amount}</div>
       </div>
