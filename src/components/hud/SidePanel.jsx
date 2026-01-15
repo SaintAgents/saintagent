@@ -961,7 +961,7 @@ export default function SidePanel({
       {/* Nudge handle when collapsed - only show if NOT on CommandDeck (GlobalSidePanelNudge handles it there) */}
       <div
         className={cn(
-          "fixed h-screen bg-[#050505] border-[rgba(0,255,136,0.2)] shadow-xl z-[55] transition-all duration-300 flex flex-col",
+          "fixed h-screen bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.2)] shadow-xl z-[55] transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "" : "w-0 overflow-hidden"
         )}
@@ -991,23 +991,23 @@ export default function SidePanel({
       {/* Drag Handle with Nav Popout */}
       <div
           onMouseDown={onDragStart}
-          className="h-8 cursor-move bg-[#0a0a0a] border-b border-[rgba(0,255,136,0.2)] flex items-center justify-between px-3"
+          className="h-8 cursor-move bg-slate-100 dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-[rgba(0,255,136,0.2)] flex items-center justify-between px-3"
           title="Drag to move. Drag toward an edge to dock.">
-        <span className="text-[10px] text-[rgba(0,255,136,0.6)]">Drag</span>
+        <span className="text-[10px] text-slate-500 dark:text-[rgba(0,255,136,0.6)]">Drag</span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setNavPopupOpen(true)}
-            className="p-1 rounded hover:bg-[rgba(0,255,136,0.1)] transition-colors"
+            className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[rgba(0,255,136,0.1)] transition-colors"
             title="Pop out navigation"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-[#00ff88]" />
+            <ExternalLink className="w-3.5 h-3.5 text-slate-600 dark:text-[#00ff88]" />
           </button>
           <button
             onClick={() => setIsPoppedOff(true)}
-            className="p-1 rounded hover:bg-[rgba(0,255,136,0.1)] transition-colors"
+            className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[rgba(0,255,136,0.1)] transition-colors"
             title="Pop off panel"
           >
-            <Maximize2 className="w-3.5 h-3.5 text-[#00ff88]" />
+            <Maximize2 className="w-3.5 h-3.5 text-slate-600 dark:text-[#00ff88]" />
           </button>
         </div>
       </div>
@@ -1037,12 +1037,12 @@ export default function SidePanel({
         <div className="p-4 space-y-6">
           {/* Stored Cards Section */}
           {storedCards && storedCards.length > 0 && (
-            <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[rgba(0,255,136,0.3)]">
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.3)]">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Archive className="w-4 h-4 text-[#00ff88]" />
-                  <span className="text-sm font-semibold text-[#00ff88]">Stored Cards</span>
-                  <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-[rgba(0,255,136,0.2)] text-[#00ff88]">
+                  <Archive className="w-4 h-4 text-violet-600 dark:text-[#00ff88]" />
+                  <span className="text-sm font-semibold text-violet-600 dark:text-[#00ff88]">Stored Cards</span>
+                  <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-violet-100 dark:bg-[rgba(0,255,136,0.2)] text-violet-600 dark:text-[#00ff88]">
                     {storedCards.length}
                   </span>
                 </div>
@@ -1053,23 +1053,23 @@ export default function SidePanel({
                   return (
                     <div
                       key={card.id}
-                      className="flex items-center justify-between p-2 rounded-lg bg-[#050505] border border-[rgba(0,255,136,0.2)] hover:border-[rgba(0,255,136,0.4)] transition-colors group"
+                      className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] hover:border-violet-300 dark:hover:border-[rgba(0,255,136,0.4)] transition-colors group"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        {CardIcon && <CardIcon className="w-4 h-4 text-[#00ff88] shrink-0" />}
-                        <span className="text-sm font-medium text-white truncate">{card.title}</span>
+                        {CardIcon && <CardIcon className="w-4 h-4 text-violet-600 dark:text-[#00ff88] shrink-0" />}
+                        <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{card.title}</span>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={() => onRestoreCard?.(card.id)}
-                          className="p-1.5 rounded-lg hover:bg-[rgba(0,255,136,0.1)] transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-violet-100 dark:hover:bg-[rgba(0,255,136,0.1)] transition-colors"
                           title="Restore to deck"
                         >
-                          <Undo2 className="w-3.5 h-3.5 text-[#00ff88]" />
+                          <Undo2 className="w-3.5 h-3.5 text-violet-600 dark:text-[#00ff88]" />
                         </button>
                         <button
                           onClick={() => onRemoveStoredCard?.(card.id)}
-                          className="p-1.5 rounded-lg hover:bg-[rgba(255,100,100,0.1)] transition-colors opacity-0 group-hover:opacity-100"
+                          className="p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-[rgba(255,100,100,0.1)] transition-colors opacity-0 group-hover:opacity-100"
                           title="Remove"
                         >
                           <X className="w-3.5 h-3.5 text-rose-400" />
@@ -1083,7 +1083,7 @@ export default function SidePanel({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full mt-2 text-[#00ff88] hover:text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]"
+                  className="w-full mt-2 text-violet-600 dark:text-[#00ff88] hover:text-violet-700 dark:hover:text-[#00ff88] hover:bg-violet-100 dark:hover:bg-[rgba(0,255,136,0.1)]"
                   onClick={() => storedCards.forEach(card => onRestoreCard(card.id))}
                 >
                   <Inbox className="w-3.5 h-3.5 mr-1.5" />
@@ -1094,21 +1094,21 @@ export default function SidePanel({
           )}
 
           {/* Control Panel */}
-          <div data-ggg-controls className="p-3 rounded-xl bg-[#0a0a0a] border border-[rgba(0,255,136,0.2)] flex items-center justify-between flex-wrap gap-2">
+          <div data-ggg-controls className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggAuditOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggAuditOpen(true)}>
                 <Activity className="w-4 h-4 mr-1" />
                 Audit
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggPopupOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggPopupOpen(true)}>
                 <TrendingUp className="w-4 h-4 mr-1" />
                 Rank
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggTxOpen(true)}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggTxOpen(true)}>
                 <List className="w-4 h-4 mr-1" />
                 Transactions
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-[#050505] border-[rgba(0,255,136,0.3)] text-[#00ff88] hover:bg-[rgba(0,255,136,0.1)]" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
                 <Calendar className="w-4 h-4 mr-1" />
                 Daily Ops
               </Button>
@@ -1117,11 +1117,11 @@ export default function SidePanel({
 
           {/* GGG & Rank */}
           <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
-            <div data-wallet-panel>
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a1f0a] dark:to-[#051505] border border-violet-100 dark:border-[rgba(0,255,136,0.2)]" data-wallet-panel>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-xs font-medium text-[#00ff88] uppercase tracking-wider">GGG BALANCE</p>
-                  <p className="text-2xl font-bold text-white flex items-center gap-1.5">
+                  <p className="text-xs font-medium text-violet-600 dark:text-[#00ff88] uppercase tracking-wider">GGG BALANCE</p>
+                  <p className="text-2xl font-bold text-violet-900 dark:text-white flex items-center gap-1.5">
                     <Coins className="w-5 h-5 text-amber-500" />
                     {walletAvailable?.toLocaleString?.() || 0}
                   </p>
@@ -1129,15 +1129,16 @@ export default function SidePanel({
                 <div className="relative w-16 h-16">
                   {/* Background ring */}
                   <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                    <circle cx="32" cy="32" r="28" stroke="rgba(0,255,136,0.2)" strokeWidth="5" fill="none" />
+                    <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200 dark:text-[rgba(0,255,136,0.2)]" />
                     <circle 
                       cx="32" cy="32" r="28" 
-                      stroke="#00ff88" 
+                      stroke="currentColor"
+                      className="text-violet-600 dark:text-[#00ff88]"
                       strokeWidth="5" 
                       fill="none" 
                       strokeDasharray={`${2 * Math.PI * 28}`} 
                       strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
-                      className="transition-all duration-700"
+                      style={{ transition: 'all 0.7s' }}
                       strokeLinecap="round"
                     />
                   </svg>
@@ -1157,14 +1158,14 @@ export default function SidePanel({
 
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-400">To {rpInfo.nextTitle || 'next rank'}</span>
-                <span className="font-medium text-[#00ff88]">{Math.max(0, (rpInfo.nextMin || 0) - (profile?.rp_points || 0))} pts</span>
+                <span className="text-slate-600 dark:text-slate-400">To {rpInfo.nextTitle || 'next rank'}</span>
+                <span className="font-medium text-violet-700 dark:text-[#00ff88]">{Math.max(0, (rpInfo.nextMin || 0) - (profile?.rp_points || 0))} pts</span>
               </div>
               <div className="flex justify-between mt-3">
-                <Button variant="outline" size="sm" className="bg-black border-[#00ff88]/40 text-[#00ff88] hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setWalletPopupOpen(true)}>
+                <Button variant="outline" size="sm" className="bg-white dark:bg-black border-violet-300 dark:border-[#00ff88]/40 text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setWalletPopupOpen(true)}>
                   Open Wallet
                 </Button>
-                <Button variant="outline" size="sm" className="bg-black border-[#00ff88]/40 text-[#00ff88] hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setGggAuditOpen(true)}>
+                <Button variant="outline" size="sm" className="bg-white dark:bg-black border-violet-300 dark:border-[#00ff88]/40 text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setGggAuditOpen(true)}>
                   View audit trail
                 </Button>
               </div>
