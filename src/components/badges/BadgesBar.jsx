@@ -19,14 +19,28 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
   const [popoverOpen, setPopoverOpen] = useState(false);
   
   const derived = React.useMemo(() => {
-    const codes = badges
-      .map(b => (b.badge_code || b.code || '').toLowerCase())
-      .filter(Boolean);
-    const items = codes
-      .map(code => {
-        // Normalize streak badge codes
-        const normalizedCode = code.replace(/[-_]?day[-_]?/gi, '_').replace(/_+/g, '_');
-        return BADGE_INDEX[code] || BADGE_INDEX[normalizedCode] || BADGE_INDEX['streak_7'];
+    const items = badges
+      .map(b => {
+        const code = (b.badge_code || b.code || '').toLowerCase();
+        if (!code) return null;
+        
+        // Direct lookup first
+        if (BADGE_INDEX[code]) return BADGE_INDEX[code];
+        
+        // Handle streak badge variations (7-day_streak, 7_day_streak, streak_7, etc.)
+        if (code.includes('streak') || code.includes('7')) {
+          const streakMatch = code.match(/(\d+)/);
+          if (streakMatch) {
+            const num = streakMatch[1];
+            // Try various formats
+            const streakKey = `streak_${num}`;
+            if (BADGE_INDEX[streakKey]) return { ...BADGE_INDEX[streakKey], code: streakKey };
+          }
+          // Default to streak_7 for any streak-related badge
+          if (code.includes('streak')) return { ...BADGE_INDEX['streak_7'], code: 'streak_7' };
+        }
+        
+        return null;
       })
       .filter(Boolean);
     
