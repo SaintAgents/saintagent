@@ -328,10 +328,10 @@ export default function TopBar({
 
   return (
     <header className={cn(
-      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-4 md:px-6 transition-all duration-300 overflow-x-auto",
+      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-40 flex items-center gap-4 px-4 md:px-6 transition-all duration-300",
       "left-0",
       sidebarCollapsed ? "md:left-20" : "md:left-64",
-      isCollapsed ? "h-8" : "h-14 md:h-16"
+      isCollapsed ? "h-10" : "h-14 md:h-16"
     )}>
       {/* Collapse/Expand Toggle */}
       <button
@@ -350,8 +350,8 @@ export default function TopBar({
       {isCollapsed && sidebarCollapsed && <DailyAffirmationTicker />}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
-        "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300",
-        isCollapsed && "hidden"
+        "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300 hidden md:flex",
+        isCollapsed && "!hidden"
       )} data-no-top>
         {MODE_TABS.map((tab) => (
           <div key={tab.id} className="flex items-center">
@@ -397,8 +397,8 @@ export default function TopBar({
 
       {/* Search - hidden when collapsed */}
       <div ref={searchRef} className={cn(
-        "flex-1 max-w-xl mx-auto relative transition-all duration-300",
-        isCollapsed && "hidden"
+        "flex-1 max-w-xl mx-auto relative transition-all duration-300 hidden md:block",
+        isCollapsed && "!hidden"
       )} data-no-top>
         <form onSubmit={handleSearch}>
           <div className={cn(
@@ -527,10 +527,10 @@ export default function TopBar({
         )}
       </div>
 
-      {/* Actions - hidden when collapsed */}
+      {/* Actions - always visible, just smaller when collapsed */}
       <div className={cn(
-        "flex items-center gap-2 transition-all duration-300",
-        isCollapsed && "hidden"
+        "flex items-center gap-2 transition-all duration-300 ml-auto",
+        isCollapsed && "gap-1"
       )} data-no-top>
         {/* Language */}
         <DropdownMenu>

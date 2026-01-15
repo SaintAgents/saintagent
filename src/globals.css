@@ -534,8 +534,20 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   .px-6,
   .px-4,
   .px-2 {
-    padding-left: 0.25rem !important;
-    padding-right: 0.25rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  /* Main content full width on mobile */
+  main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Sidebar padding removed on mobile */
+  .pl-64,
+  .pl-20 {
+    padding-left: 0 !important;
   }
   
   /* Command Deck specific - edge to edge on mobile */
