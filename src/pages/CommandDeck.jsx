@@ -747,9 +747,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <Button
                 className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
                 onClick={() => setQuickCreateOpen(true)}>
-
                 <Plus className="w-4 h-4" />
-                Quick Create
+                <span className="hidden md:inline">Quick Create</span>
               </Button>
             </div>
           </div>

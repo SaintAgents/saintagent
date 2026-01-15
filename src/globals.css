@@ -529,14 +529,22 @@ html[data-theme='hacker'] img[alt*="Badge"] {
     /* Allow 2-col for small tiles */
   }
   
-  /* Mobile padding adjustments - tighter for more space */
+  /* Mobile padding adjustments - nearly edge to edge */
   .px-6 {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
   
-  /* Command Deck specific - even tighter */
-  main[data-page='CommandDeck'] .px-6 {
+  /* Command Deck specific - minimal padding */
+  main[data-page='CommandDeck'] .px-6,
+  main[data-page='CommandDeck'] .px-2 {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+  
+  /* Cards and containers on mobile - full width */
+  main[data-page='CommandDeck'] .p-3,
+  main[data-page='CommandDeck'] .p-4 {
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
   }
