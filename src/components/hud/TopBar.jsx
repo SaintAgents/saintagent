@@ -552,14 +552,19 @@ export default function TopBar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Dating Heart Button - triggers global popup */}
+        {/* Dating Heart Button - triggers fullscreen matches on mobile, popup on desktop */}
         <Button 
           variant="ghost" 
           size="icon" 
           className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9 p-0" 
           title="Dating Matches"
           onClick={() => {
-            document.dispatchEvent(new CustomEvent('openDatingPopup'));
+            // On mobile, open fullscreen matches swiper
+            if (window.innerWidth < 768) {
+              document.dispatchEvent(new CustomEvent('openFullscreenMatches'));
+            } else {
+              document.dispatchEvent(new CustomEvent('openDatingPopup'));
+            }
           }}
         >
           <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>

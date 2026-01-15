@@ -286,9 +286,13 @@ export default function Messages() {
 
   return (
     <>
-    <div className="h-[calc(100vh-4rem)] bg-slate-50 dark:bg-[#050505] flex">
+    <div className="h-[calc(100vh-4rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
       {/* Conversations List */}
-      <div className="w-80 shrink-0 border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col">
+      <div className={cn(
+        "border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col",
+        "w-full md:w-80 shrink-0",
+        selectedConversation ? "hidden md:flex" : "flex"
+      )}>
         <div className="p-4 border-b dark:border-[rgba(0,255,136,0.2)] space-y-3 sticky top-0 z-20 bg-white dark:bg-[#0a0a0a]">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-slate-900 dark:text-white shrink-0 flex items-center gap-2">
@@ -418,9 +422,21 @@ export default function Messages() {
 
       {/* Messages Area */}
       {selectedConversation ?
-        <div className="flex-1 flex flex-col">
+        <div className={cn(
+          "flex-1 flex flex-col min-w-0",
+          selectedConversation ? "flex" : "hidden md:flex"
+        )}>
           {/* Header */}
-          <div className="p-4 border-b dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] flex items-center gap-3">
+          <div className="p-2 md:p-4 border-b dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] flex items-center gap-2 md:gap-3">
+            {/* Back button on mobile */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden shrink-0 w-8 h-8"
+              onClick={() => setSelectedConversation(null)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </Button>
             <MiniProfile userId={selectedConversation.otherUser.id} name={selectedConversation.otherUser.name} avatar={selectedConversation.otherUser.avatar} size={36} showRankBadge={false} />
             {typingUsers.length > 0 && (
               <div className="flex items-center gap-1 ml-2">
@@ -552,8 +568,8 @@ export default function Messages() {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a]">
-            <div className="flex gap-2 items-center flex-wrap">
+          <div className="p-2 md:p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a]">
+            <div className="flex gap-1 md:gap-2 items-center flex-wrap">
               {/* Media Attachment */}
               <MediaAttachment 
                 onAttach={async (attachment) => {
@@ -587,7 +603,7 @@ export default function Messages() {
                 value={messageText}
                 onChange={async (e) => {setMessageText(e.target.value);await sendTypingPing();}}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 rounded-xl min-w-[150px]" />
+                className="flex-1 rounded-xl min-w-0" />
 
               {/* Icebreaker Prompts - next to input */}
               <IcebreakerPrompts
