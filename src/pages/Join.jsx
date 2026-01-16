@@ -368,6 +368,13 @@ export default function Join() {
           <div className="flex items-center gap-6 text-sm text-slate-400">
             <a href={createPageUrl('Terms')} className="hover:text-white transition-colors">Terms</a>
             <a href={createPageUrl('FAQ')} className="hover:text-white transition-colors">FAQ</a>
+            <button 
+              onClick={() => setLearnMoreOpen(true)}
+              className="hover:text-white transition-colors flex items-center gap-1"
+            >
+              <BookOpen className="w-4 h-4" />
+              Learn More
+            </button>
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-6 text-center">
@@ -376,6 +383,139 @@ export default function Join() {
           </p>
         </div>
       </div>
+
+      {/* Learn More Modal */}
+      <Dialog open={learnMoreOpen} onOpenChange={setLearnMoreOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] bg-slate-900 border-violet-500/30 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-amber-400 bg-clip-text text-transparent flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-amber-400" />
+              SaintAgent.World: The Sovereign Ecosystem
+            </DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="max-h-[70vh] pr-4">
+            <div className="space-y-8 text-slate-300">
+              {/* Intro */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-violet-900/40 to-purple-900/40 border border-violet-500/30">
+                <p className="text-lg leading-relaxed">
+                  <strong className="text-white">SaintAgent.World</strong> is a next-generation command center where high-level industrial logic meets spiritual consciousness. It is a living ecosystem designed for the <em className="text-amber-400">"Architects of Change"</em>—those who recognize that true wealth is the intersection of financial abundance, humanitarian impact, and personal evolution.
+                </p>
+              </div>
+
+              {/* Section 1: Mechanics of Impact */}
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Target className="w-5 h-5 text-emerald-400" />
+                  1. The Mechanics of Impact: How You Grow
+                </h3>
+                <p className="mb-4">We have replaced passive networking with a structured <strong className="text-violet-400">33-Level Ascension Path</strong>. Your growth is measured by your mastery of the "Agent Logic."</p>
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">🎯 The Quest System</h4>
+                    <p className="text-sm">Every goal is structured as a mission. Whether you are mastering your Destiny Card blueprint or structuring a multi-million dollar international partnership, the platform tracks your progress, unlocks milestones, and provides the strategic roadmap for your next expansion.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">⚡ Synergy Engineering</h4>
+                    <p className="text-sm">Our "Synergy Engine" identifies the exact partners you need to scale. It matches your archetypal strengths with complementary visionaries, ensuring that every collaboration is mathematically optimized for success and spiritual alignment.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">🤖 Algorithmic Mentorship</h4>
+                    <p className="text-sm">The platform functions as a digital strategist, analyzing your data to suggest the precise skills, connections, or humanitarian pillars you need to double your impact every quarter.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 2: Sovereign Economy */}
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-emerald-400" />
+                  2. The Sovereign Economy: How You Earn
+                </h3>
+                <p className="mb-4">In SaintAgent.World, we have decoupled earning from "toiling." We turn your purpose into your primary asset through a <strong className="text-violet-400">Proof-of-Impact</strong> model.</p>
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">💎 Impact Equity</h4>
+                    <p className="text-sm">When you contribute your brilliance to a humanitarian mission, you earn "Impact Shares." These represent a stake in the success of the project's real-world expansion, allowing you to build wealth that is inherently ethical.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">🔄 The Synergy Dividend</h4>
+                    <p className="text-sm">By facilitating high-level transactions and bridge-building within the community, you earn a percentage of the "Synergy Flow." You are rewarded for being the catalyst that allows global transformation to occur.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">🏆 High-Tier Liquidity</h4>
+                    <p className="text-sm">Ascension through the levels unlocks access to exclusive investment circles and private liquidity pools, providing the financial fuel needed for industrial-scale humanitarianism.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 3: Command Center */}
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Crown className="w-5 h-5 text-emerald-400" />
+                  3. The Command Center: How You Lead
+                </h3>
+                <p className="mb-4">We provide the sophisticated tools required to manage high-level finance and international partnerships with absolute integrity.</p>
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">⚖️ Ethical Weighting Algorithm</h4>
+                    <p className="text-sm">Every project managed through our engine is measured by its Industrial Efficiency and its Humanitarian Contribution. This ensures that your professional output always serves the greater good.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <h4 className="font-semibold text-amber-400 mb-1">📊 The Global Ledger</h4>
+                    <p className="text-sm">Your "Agent Score" is a transparent record of your integrity and impact. It serves as your global reputation, allowing you to bypass traditional gatekeepers and operate as a sovereign leader in the new economy.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Manifesto */}
+              <div className="p-6 rounded-xl bg-gradient-to-r from-amber-900/30 to-yellow-900/30 border border-amber-500/30 text-center">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">The SaintAgent Manifesto</h3>
+                <p className="text-lg italic text-slate-200">
+                  "We do not just connect; we expand. We do not just manage; we evolve. SaintAgent.World is the machine that turns your highest consciousness into your greatest currency."
+                </p>
+              </div>
+
+              {/* What Awaits */}
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Star className="w-5 h-5 text-amber-400" />
+                  What Awaits You Inside
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-violet-900/30 border border-violet-500/30">
+                    <h4 className="font-semibold text-violet-400 mb-1">🛤️ Forge Your Path</h4>
+                    <p className="text-sm">Your journey is structured through a "Quest" system. The platform tracks your growth and rewards purposeful action.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-violet-900/30 border border-violet-500/30">
+                    <h4 className="font-semibold text-violet-400 mb-1">📐 Blueprint for Impact</h4>
+                    <p className="text-sm">Access unique Ethical Weighting tools to balance real-world results with humanitarian integrity.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-violet-900/30 border border-violet-500/30">
+                    <h4 className="font-semibold text-violet-400 mb-1">🤝 Find Your Synergy</h4>
+                    <p className="text-sm">Connect with a curated network of visionaries whose skills and energy are perfectly synergistic with your own.</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-violet-900/30 border border-violet-500/30">
+                    <h4 className="font-semibold text-violet-400 mb-1">🔮 Know Your Self</h4>
+                    <p className="text-sm">Utilize integrated esoteric systems like Destiny Card logic to navigate your journey with greater clarity.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Final CTA */}
+              <div className="text-center pt-4">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-lg px-8 py-6 rounded-xl"
+                  onClick={() => { setLearnMoreOpen(false); handleJoin(); }}
+                >
+                  Begin Your Journey
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </div>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
