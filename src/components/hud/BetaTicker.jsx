@@ -27,7 +27,8 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
     return (
       <div 
         className={cn(
-          "fixed left-0 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
+          "fixed z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
+          "left-0 right-0", // Full width on mobile
           "md:pl-20", // Only apply sidebar offset on desktop
           !sidebarCollapsed && "md:pl-64"
         )}
