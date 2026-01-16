@@ -59,6 +59,7 @@ import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import MysticalIDImage from '@/components/profile/MysticalIDImage';
 import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
+import StGermainAffirmations from '@/components/hud/StGermainAffirmations';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
