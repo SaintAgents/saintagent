@@ -336,13 +336,14 @@ export default function TopBar({
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => onToggleCollapse?.()}
-        className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-slate-200/60 transition-colors"
+        className="flex items-center justify-center w-6 h-6 md:w-7 md:h-7 rounded-md hover:bg-slate-200/60 transition-colors shrink-0"
+        style={{ zIndex: 10001, position: 'relative' }}
         title={isCollapsed ? "Expand top bar" : "Collapse top bar"}
       >
         {isCollapsed ? (
-          <ChevronDown className="w-4 h-4 text-slate-500" />
+          <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-slate-500" />
         ) : (
-          <ChevronUp className="w-4 h-4 text-slate-500" />
+          <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-slate-500" />
         )}
       </button>
       
