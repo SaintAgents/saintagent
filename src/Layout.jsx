@@ -1527,7 +1527,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           data-cmd-view={cmdViewMode || 'standard'}
           className={cn(
               "min-h-screen transition-all duration-300",
-              sidebarCollapsed ? "pl-20" : "pl-64",
+              "pl-0 md:pl-20 lg:pl-64",
+              "pr-0",
               topbarCollapsed ? "pt-8" : "pt-28",
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
