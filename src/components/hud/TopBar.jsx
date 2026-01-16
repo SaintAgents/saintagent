@@ -210,8 +210,8 @@ export default function TopBar({
         )}
       </button>
       
-      {/* Daily Affirmation in collapsed space - only shows when both topbar and sidebar collapsed */}
-      {isCollapsed && sidebarCollapsed && <DailyAffirmationTicker />}
+      {/* Masters Messages - shows when both topbar and sidebar collapsed */}
+      {isCollapsed && sidebarCollapsed && <MastersMessagesTicker />}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
         "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300 flex",
