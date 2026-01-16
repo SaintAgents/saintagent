@@ -60,7 +60,7 @@ import MysticalIDImage from '@/components/profile/MysticalIDImage';
 import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import StGermainAffirmations from '@/components/hud/StGermainAffirmations';
-import GGGBalanceCard from '@/components/hud/GGGBalanceCard';
+import GGGBalanceCard from '@/components/hud/GGGBalanceCard.jsx';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
