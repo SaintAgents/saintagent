@@ -267,7 +267,12 @@ export default function Profile() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
+    mutationFn: (data) => {
+      if (!profile?.id) {
+        return Promise.reject(new Error('Profile not loaded'));
+      }
+      return base44.entities.UserProfile.update(profile.id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       setIsEditing(false);
