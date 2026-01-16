@@ -50,6 +50,7 @@ import { createPageUrl } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import MastersMessagesTicker from './MastersMessagesTicker';
+import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
 
 const MODE_TABS = [
   { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
@@ -78,6 +79,7 @@ export default function TopBar({
   const [helpMode, setHelpMode] = useState(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+  const [quickStartOpen, setQuickStartOpen] = useState(false);
   const [isBoostActive, setIsBoostActive] = useState(false);
   const searchRef = useRef(null);
   
@@ -523,6 +525,10 @@ export default function TopBar({
                   User Guide
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setQuickStartOpen(true)} className="flex items-center gap-2 text-violet-600 font-medium">
+                <Sparkles className="w-4 h-4" />
+                🚀 Quick Start Guide
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setWalkthroughOpen(true)} className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4" />
                 Walkthrough
@@ -654,6 +660,9 @@ export default function TopBar({
       
       {/* Walkthrough Modal */}
       <WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />
+      
+      {/* Quick Start Guide Modal */}
+      <QuickStartGuideModal open={quickStartOpen} onOpenChange={setQuickStartOpen} />
     </header>
   );
 }
