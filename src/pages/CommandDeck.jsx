@@ -759,12 +759,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </div>
             <div className="flex items-center gap-3 relative z-10">
-              <Button
-                className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
-                onClick={() => setQuickCreateOpen(true)}>
-                <Plus className="w-4 h-4" />
-                <span className="hidden md:inline">Quick Create</span>
-              </Button>
+              <button
+                className="p-2 hover:bg-violet-100 dark:hover:bg-violet-900/30 rounded-lg transition-colors"
+                onClick={() => setQuickCreateOpen(true)}
+                title="Quick Create"
+              >
+                <Zap className="w-6 h-6 text-violet-600 dark:text-violet-400" />
+              </button>
             </div>
           </div>
 
