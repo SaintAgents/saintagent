@@ -796,7 +796,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 )}
               </div>
 
-              <div className="flex-1 min-w-0 w-full">
+              <div className="flex-1 min-w-0 w-full" style={{ display: profile ? 'block' : 'none' }}>
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-between mb-4 gap-4">
                   <div className="text-center md:text-left">
