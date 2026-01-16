@@ -55,9 +55,16 @@ export default function DatingMatches() {
   });
   const myDP = myDatingProfiles?.[0];
 
-  const { data: allDatingProfiles = [], isLoading, refetch } = useQuery({
+  const { data: allDatingProfiles = [], isLoading, refetch, isError } = useQuery({
     queryKey: ['allDatingProfilesForMatching'],
-    queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }),
+    queryFn: async () => {
+      try {
+        return await base44.entities.DatingProfile.filter({ opt_in: true, visible: true });
+      } catch (e) {
+        console.error('Failed to fetch dating profiles:', e);
+        return [];
+      }
+    },
     enabled: !!currentUser?.email
   });
 
