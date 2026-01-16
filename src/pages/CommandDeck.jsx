@@ -421,7 +421,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryFn: async () => {
       return base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', badgeLimit);
     },
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 300000, // 5 minutes for badges
+    refetchOnWindowFocus: false
   });
 
   // Fetch matches - mobile-optimized
