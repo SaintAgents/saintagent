@@ -46,10 +46,15 @@ export default function MastersMessagesTicker() {
   
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex(Math.floor(Math.random() * ST_GERMAIN_MESSAGES.length));
-    }, 133200); // 2.22 minutes (133.2 seconds)
+      // Pick a truly random index different from current
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * ST_GERMAIN_MESSAGES.length);
+      } while (newIndex === currentIndex && ST_GERMAIN_MESSAGES.length > 1);
+      setCurrentIndex(newIndex);
+    }, 133200); // 2.22 minutes (133.2 seconds = 133200ms)
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]);
   
   return (
     <div className="flex-1 overflow-hidden mx-2 md:mx-4 min-w-0">
