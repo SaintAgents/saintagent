@@ -337,13 +337,13 @@ export default function TopBar({
       <button
         onClick={() => onToggleCollapse?.()}
         className="flex items-center justify-center w-6 h-6 md:w-7 md:h-7 rounded-md hover:bg-slate-200/60 transition-colors shrink-0"
-        style={{ zIndex: 10001, position: 'relative' }}
+        style={{ zIndex: 10001, position: 'relative', pointerEvents: 'auto' }}
         title={isCollapsed ? "Expand top bar" : "Collapse top bar"}
       >
         {isCollapsed ? (
-          <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-slate-500" />
+          <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-slate-500" style={{ pointerEvents: 'none' }} />
         ) : (
-          <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-slate-500" />
+          <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-slate-500" style={{ pointerEvents: 'none' }} />
         )}
       </button>
       
@@ -351,7 +351,7 @@ export default function TopBar({
       {isCollapsed && sidebarCollapsed && <DailyAffirmationTicker />}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
-        "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300 hidden md:flex",
+        "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300 flex",
         isCollapsed && "!hidden"
       )} data-no-top>
         {MODE_TABS.map((tab) => (
