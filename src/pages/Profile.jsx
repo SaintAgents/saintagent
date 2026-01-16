@@ -79,6 +79,9 @@ import OptOutSettings from '@/components/profile/OptOutSettings';
 import PerformanceScoreCard from '@/components/merit/PerformanceScoreCard';
 import { createPageUrl } from '@/utils';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
+import FriendRequestButton from '@/components/friends/FriendRequestButton';
+import FriendRequestsPanel from '@/components/friends/FriendRequestsPanel';
+import FriendsList from '@/components/friends/FriendsList';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -105,6 +108,17 @@ export default function Profile() {
       try { return await base44.auth.me(); } catch { return null; }
     }
   });
+
+  // Current user's profile (for friend requests)
+  const { data: currentUserProfiles } = useQuery({
+    queryKey: ['myProfile'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.UserProfile.filter({ user_id: user.email });
+    },
+    enabled: !!currentUser
+  });
+  const currentUserProfile = currentUserProfiles?.[0];
 
   // If viewing another user's profile via ?id=, fetch that user's profile
   // Otherwise fetch the current user's own profile
@@ -520,11 +534,18 @@ export default function Profile() {
                                         </div> :
 
               <div className="flex items-center gap-2">
+                                          <FriendRequestButton
+                    targetUserId={profile?.user_id}
+                    targetUserName={profile?.display_name}
+                    targetUserAvatar={profile?.avatar_url}
+                    currentUser={currentUser}
+                    currentUserProfile={currentUserProfile}
+                  />
                                           <TipButton
-                  toUserId={profile?.user_id}
-                  toUserName={profile?.display_name}
-                  contextType="profile"
-                  contextId={profile?.id} />
+                    toUserId={profile?.user_id}
+                    toUserName={profile?.display_name}
+                    contextType="profile"
+                    contextId={profile?.id} />
 
                                         </div>
               }
@@ -1469,6 +1490,22 @@ export default function Profile() {
           }
 
             <TabsContent value="friends" className="space-y-6">
+            {/* Friend Requests - only show on own profile */}
+            {isOwnProfile && <FriendRequestsPanel currentUser={currentUser} />}
+
+            {/* Friends List */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-violet-500" />
+                  Friends
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FriendsList userId={profile?.user_id} />
+              </CardContent>
+            </Card>
+
             {/* Followers - People who follow you */}
             <Card>
               <CardHeader>

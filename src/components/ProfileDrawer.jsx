@@ -28,6 +28,8 @@ import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
 import TestimonialButton from '@/components/TestimonialButton';
 import TipButton from '@/components/creator/TipButton';
+import FriendRequestButton from '@/components/friends/FriendRequestButton';
+import FriendsList from '@/components/friends/FriendsList';
 import SubscriptionCard from '@/components/creator/SubscriptionCard';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
@@ -87,6 +89,16 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
+
+  const { data: currentUserProfiles } = useQuery({
+    queryKey: ['currentUserProfile'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.UserProfile.filter({ user_id: user.email });
+    },
+    enabled: !!currentUser
+  });
+  const currentUserProfile = currentUserProfiles?.[0];
 
   const { data: subscriptions = [] } = useQuery({
     queryKey: ['subscriptions', currentUser?.email || 'none', userId || 'none'],
@@ -313,7 +325,14 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                     Book
                   </Button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <FriendRequestButton
+                  targetUserId={userId}
+                  targetUserName={profile?.display_name}
+                  targetUserAvatar={profile?.avatar_url}
+                  currentUser={currentUser}
+                  currentUserProfile={currentUserProfile}
+                />
+                <div className="flex flex-wrap gap-2 mt-2">
                   <FollowButton targetUserId={userId} className="rounded-xl text-xs px-3 h-8" />
                   <TestimonialButton
                     toUserId={userId}
@@ -600,6 +619,15 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               </div>
             </div>
           }
+
+          {/* Friends */}
+          <div className="mb-6">
+            <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Friends
+            </h3>
+            <FriendsList userId={userId} compact={true} />
+          </div>
 
           {/* Community Stats & Achievements */}
           <div className="mb-6">
