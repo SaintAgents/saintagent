@@ -63,6 +63,8 @@ const TRUST_FEATURES = [
 ];
 
 export default function Join() {
+  const [learnMoreOpen, setLearnMoreOpen] = React.useState(false);
+
   const handleJoin = () => {
     base44.auth.redirectToLogin(createPageUrl('Onboarding'));
   };
