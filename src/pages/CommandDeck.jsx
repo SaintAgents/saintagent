@@ -1447,13 +1447,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <LeaderboardMiniCard />
             </CollapsibleCard>
 
-            <CollapsibleCard title="Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
-              <div className="p-4 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-200 dark:border-violet-700">
-                <p className="text-lg font-medium text-violet-900 dark:text-violet-200 italic text-center">
-                  "Your frequency is your invitation to the universe."
-                </p>
-                <p className="text-xs text-violet-600 dark:text-violet-400 text-center mt-2">— Daily Affirmation</p>
-              </div>
+            <CollapsibleCard title="St. Germain Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+              <StGermainAffirmations />
             </CollapsibleCard>
 
             <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
