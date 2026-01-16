@@ -132,8 +132,8 @@ Deno.serve(async (req) => {
       demoProfiles.push(profile);
     }
     
-    // 2. Create community posts
-    const postsToCreate = Math.floor(Math.random() * 5) + 3;
+    // 2. Create community posts (limited to avoid rate limits)
+    const postsToCreate = Math.floor(Math.random() * 2) + 1;
     for (let i = 0; i < postsToCreate; i++) {
       const author = randomItem(DEMO_USERS);
       const authorProfile = demoProfiles.find(p => p.user_id === author.email);
@@ -150,11 +150,13 @@ Deno.serve(async (req) => {
       results.posts_created++;
     }
     
-    // 3. Create matches between users (cross-checking variables)
-    const allProfiles = await base44.asServiceRole.entities.UserProfile.list('-created_date', 50);
-    const existingMatches = await base44.asServiceRole.entities.Match.list('-created_date', 200);
+    // 3. Create matches between users (cross-checking variables) - limited to avoid rate limits
+    const allProfiles = await base44.asServiceRole.entities.UserProfile.list('-created_date', 20);
+    const existingMatches = await base44.asServiceRole.entities.Match.list('-created_date', 100);
     
-    for (const profile of allProfiles.slice(0, 20)) {
+    // Only process a few profiles per run to avoid rate limits
+    const profilesToProcess = allProfiles.slice(0, 3);
+    for (const profile of profilesToProcess) {
       // Find potential matches based on overlapping criteria
       const potentialMatches = allProfiles.filter(p => {
         if (p.user_id === profile.user_id) return false;
@@ -177,8 +179,8 @@ Deno.serve(async (req) => {
         return overlapCount >= 2;
       });
       
-      // Create matches for top candidates
-      for (const target of potentialMatches.slice(0, 2)) {
+      // Create matches for top candidates (limit to 1 per profile per run)
+      for (const target of potentialMatches.slice(0, 1)) {
         const score = calculateMatchScore(profile, target);
         
         // Generate conversation starters based on shared interests
@@ -214,8 +216,8 @@ Deno.serve(async (req) => {
       }
     }
     
-    // 4. Create some meetings between demo users
-    const meetingsToCreate = Math.floor(Math.random() * 3) + 2;
+    // 4. Create some meetings between demo users (limited)
+    const meetingsToCreate = Math.floor(Math.random() * 2) + 1;
     for (let i = 0; i < meetingsToCreate; i++) {
       const [host, guest] = randomItems(DEMO_USERS, 2);
       const hostProfile = demoProfiles.find(p => p.user_id === host.email);
@@ -237,8 +239,8 @@ Deno.serve(async (req) => {
       results.meetings_created++;
     }
     
-    // 5. Create some messages/conversations
-    const messagesToCreate = Math.floor(Math.random() * 4) + 2;
+    // 5. Create some messages/conversations (limited)
+    const messagesToCreate = Math.floor(Math.random() * 2) + 1;
     for (let i = 0; i < messagesToCreate; i++) {
       const [sender, receiver] = randomItems(DEMO_USERS, 2);
       const senderProfile = demoProfiles.find(p => p.user_id === sender.email);
@@ -263,9 +265,9 @@ Deno.serve(async (req) => {
       results.messages_created++;
     }
     
-    // 6. Create notifications for real users
+    // 6. Create notifications for real users (limited)
     const realUsers = allProfiles.filter(p => !p.user_id?.includes('@demo.'));
-    for (const user of realUsers.slice(0, 5)) {
+    for (const user of realUsers.slice(0, 2)) {
       const demoUser = randomItem(DEMO_USERS);
       
       // Random notification type
@@ -295,8 +297,8 @@ Deno.serve(async (req) => {
       results.notifications_created++;
     }
     
-    // 7. Create some GGG transactions for activity
-    for (const demo of DEMO_USERS.slice(0, 4)) {
+    // 7. Create some GGG transactions for activity (limited)
+    for (const demo of DEMO_USERS.slice(0, 2)) {
       const profile = demoProfiles.find(p => p.user_id === demo.email);
       if (!profile) continue;
       
