@@ -1389,7 +1389,25 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>
 
-            <CollapsibleCard title="Quick Start Checklist" cardId="quickStart" icon={CheckCircle} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" onPopout={() => setQuickStartPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickStart')} onToggleHide={() => toggleCardVisibility('quickStart')} onTossToSidePanel={handleTossToSidePanel}>
+            <CollapsibleCard 
+              title={
+                <span className="flex items-center gap-2">
+                  Quick Start Checklist
+                  <span className="relative flex items-center justify-center w-5 h-5 rounded-full bg-amber-500 text-white animate-pulse" title="New users: Complete your quick start!">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                  </span>
+                </span>
+              } 
+              cardId="quickStart" 
+              icon={CheckCircle} 
+              defaultOpen={false} 
+              backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" 
+              onPopout={() => setQuickStartPopupOpen(true)} 
+              forceOpen={cardsForceOpen} 
+              isHidden={hiddenCards.has('quickStart')} 
+              onToggleHide={() => toggleCardVisibility('quickStart')} 
+              onTossToSidePanel={handleTossToSidePanel}
+            >
               <QuickStartChecklist />
             </CollapsibleCard>
 
