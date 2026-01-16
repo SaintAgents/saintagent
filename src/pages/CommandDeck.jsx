@@ -741,14 +741,14 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   }
 
   return (
-  <div className="min-h-screen cmd-deck-bg pb-20">
+  <div className="min-h-screen cmd-deck-bg pb-20 w-full max-w-[100vw] overflow-x-hidden">
     <div className={cn(
-      "transition-all duration-300 pb-8",
+      "transition-all duration-300 pb-8 w-full",
       sidePanelOpen ? "md:pr-80" : "md:pr-0",
-      "w-full md:max-w-7xl md:mx-auto"
+      "md:max-w-7xl md:mx-auto"
     )}>
       {/* Page Header */}
-      <div className="px-1 sm:px-2 md:px-6 pt-6 pb-4">
+      <div className="px-1 sm:px-2 md:px-6 pt-6 pb-4 w-full">
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-4">
@@ -1392,7 +1392,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         </div>
 
         {/* Main Grid - Collapsible Cards */}
-        <div className="px-1 sm:px-2 md:px-6 relative min-h-[1200px]">
+        <div className="px-1 sm:px-2 md:px-6 relative min-h-[1200px] w-full max-w-[100vw] overflow-x-hidden">
           <div className="block space-y-6">
             <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">
