@@ -32,7 +32,7 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
           "md:pl-20", // Only apply sidebar offset on desktop
           !sidebarCollapsed && "md:pl-64"
         )}
-        style={{ top: '44px' }}
+        style={{ top: '64px' }}
       >
         <div className="flex items-center justify-center relative">
           <div className="animate-marquee whitespace-nowrap inline-block">
