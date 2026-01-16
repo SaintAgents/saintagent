@@ -203,12 +203,17 @@ export default function StGermainAffirmations() {
         </div>
       </div>
       
-      {/* Coming Soon - Other Masters */}
-      <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
-        <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-          ✨ Mary Magdalene affirmations coming soon
+      {/* Book Link */}
+      <a 
+        href="https://a.co/d/h8ozO6I" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 border border-amber-200 dark:border-amber-700 hover:border-amber-300 dark:hover:border-amber-600 transition-colors"
+      >
+        <p className="text-xs text-amber-700 dark:text-amber-300 text-center font-medium">
+          📖 Based on <span className="underline">7th Seal Hidden Wisdom Unveiled</span>
         </p>
-      </div>
+      </a>
     </div>
   );
 }
