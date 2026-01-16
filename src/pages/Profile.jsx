@@ -297,8 +297,12 @@ export default function Profile() {
   };
 
   const handleSpiritualProfileSave = async (spiritualData) => {
-    await updateMutation.mutateAsync(spiritualData);
-    setEditingSpiritualProfile(false);
+    try {
+      await updateMutation.mutateAsync(spiritualData);
+      setEditingSpiritualProfile(false);
+    } catch (err) {
+      console.error('Failed to save spiritual profile:', err);
+    }
   };
 
   const handleMysticalProfileSave = async (data) => {
