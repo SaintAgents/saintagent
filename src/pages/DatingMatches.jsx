@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { createPageUrl } from '@/utils';
 import { DEMO_AVATARS_MALE, DEMO_AVATARS_FEMALE } from '@/components/demoAvatars';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
 const DEMO_NAMES_FEMALE = ['Sophia', 'Maya', 'Luna', 'Aurora', 'Elena', 'Aria', 'Serena', 'Willow', 'Iris', 'Nova'];
 const DEMO_NAMES_MALE = ['Marcus', 'Ethan', 'Leo', 'Kai', 'Julian', 'Adrian', 'Ezra', 'Felix', 'Orion', 'Silas'];
