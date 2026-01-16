@@ -184,25 +184,32 @@ export default function DatingMatchesPopup({ currentUser }) {
   const myInterestedIn = myProfile?.interested_in || [];
   const myGender = myProfile?.gender;
 
-  // Filter matches based on gender preferences (both ways)
+  // Filter matches based on gender preferences (both ways) - same logic as DatingMatches page
+  const genderToInterest = { 'man': 'men', 'woman': 'women', 'non_binary': 'non_binary' };
+  
   const otherProfiles = isDatingOptedIn ? datingProfiles.filter((p) => {
     if (p.user_id === currentUser?.email) return false;
     
-    // Check if I'm interested in their gender
-    const theirGender = p.gender;
-    const theyMatch = !theirGender || myInterestedIn.length === 0 || myInterestedIn.includes('all') ||
-      (theirGender === 'woman' && myInterestedIn.includes('women')) ||
-      (theirGender === 'man' && myInterestedIn.includes('men')) ||
-      (theirGender === 'non_binary' && myInterestedIn.includes('non_binary'));
+    // I must be interested in their gender
+    if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
+      const candidateGender = p.gender;
+      if (!candidateGender) return false;
+      const candidateInterestKey = genderToInterest[candidateGender];
+      if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
+        return false;
+      }
+    }
     
-    // Check if they're interested in my gender
+    // They must be interested in my gender (bidirectional check)
     const theirInterestedIn = p.interested_in || [];
-    const iMatch = !myGender || theirInterestedIn.length === 0 || theirInterestedIn.includes('all') ||
-      (myGender === 'woman' && theirInterestedIn.includes('women')) ||
-      (myGender === 'man' && theirInterestedIn.includes('men')) ||
-      (myGender === 'non_binary' && theirInterestedIn.includes('non_binary'));
+    if (myGender && theirInterestedIn.length > 0 && !theirInterestedIn.includes('all')) {
+      const myInterestKey = genderToInterest[myGender];
+      if (!myInterestKey || !theirInterestedIn.includes(myInterestKey)) {
+        return false;
+      }
+    }
     
-    return theyMatch && iMatch;
+    return true;
   }) : [];
 
   // Enrich with user profile data and assign unique demo avatars
