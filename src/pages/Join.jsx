@@ -21,8 +21,16 @@ import {
   Target,
   Heart,
   Crown,
-  HelpCircle
+  HelpCircle,
+  BookOpen
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
