@@ -50,7 +50,14 @@ export default function DatingMatches() {
 
   const { data: myDatingProfiles = [] } = useQuery({
     queryKey: ['myDatingProfile', currentUser?.email],
-    queryFn: () => base44.entities.DatingProfile.filter({ user_id: currentUser?.email }),
+    queryFn: async () => {
+      try {
+        return await base44.entities.DatingProfile.filter({ user_id: currentUser?.email });
+      } catch (e) {
+        console.error('Failed to fetch my dating profile:', e);
+        return [];
+      }
+    },
     enabled: !!currentUser?.email
   });
   const myDP = myDatingProfiles?.[0];
