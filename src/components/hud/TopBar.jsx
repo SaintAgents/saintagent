@@ -419,19 +419,20 @@ export default function TopBar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Dating Heart Button - triggers AI match generation */}
+        {/* Dating Heart Button - opens dating popup */}
         <Button 
           variant="ghost" 
           size="icon" 
           className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9 p-0" 
-          title="Find Dating Matches"
+          title="Dating Matches"
           disabled={datingSearching}
-          onClick={async () => {
+          onClick={() => {
             setDatingSearching(true);
-            // Short delay to show animation, then navigate
+            // Show loading briefly then open popup
             setTimeout(() => {
-              window.location.href = createPageUrl('DatingMatches');
-            }, 800);
+              setDatingSearching(false);
+              document.dispatchEvent(new CustomEvent('openDatingPopup'));
+            }, 600);
           }}
         >
           {datingSearching ? (
@@ -444,7 +445,7 @@ export default function TopBar({
             </div>
           )}
           <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
-            {datingSearching ? 'Searching...' : 'Find Matches'}
+            {datingSearching ? 'Searching...' : 'Dating Matches'}
           </span>
         </Button>
 
