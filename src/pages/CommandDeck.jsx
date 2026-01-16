@@ -769,6 +769,41 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               >
                 <Zap className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className="p-2 hover:bg-amber-100 dark:hover:bg-amber-900/30 rounded-lg transition-colors relative"
+                    title="Quick Start Guide"
+                  >
+                    <AlertCircle className="w-6 h-6 text-amber-500" />
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-72 p-4" align="end">
+                  <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 text-amber-500" />
+                    Quick Start Guide
+                  </h4>
+                  <ol className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">1</span>
+                      <span className="text-slate-700 dark:text-slate-300">Complete your profile with avatar & bio</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">2</span>
+                      <span className="text-slate-700 dark:text-slate-300">Join a Circle or create your own</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">3</span>
+                      <span className="text-slate-700 dark:text-slate-300">Book your first meeting with a match</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">4</span>
+                      <span className="text-slate-700 dark:text-slate-300">Create an offer or join a mission</span>
+                    </li>
+                  </ol>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 
