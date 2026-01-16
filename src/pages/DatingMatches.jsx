@@ -325,8 +325,15 @@ export default function DatingMatches() {
 
         {/* Matches Grid */}
         {isLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="relative mb-4">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center" style={{ boxShadow: '0 0 30px rgba(236, 72, 153, 0.5)' }}>
+                <Heart className="w-8 h-8 text-white fill-white animate-pulse" />
+              </div>
+              <div className="absolute inset-0 rounded-full border-4 border-pink-300 border-t-transparent animate-spin" />
+            </div>
+            <p className="text-lg font-medium text-pink-600 mb-1">Finding Your Matches...</p>
+            <p className="text-sm text-slate-500">Analyzing compatibility based on your preferences</p>
           </div>
         ) : filteredProfiles.length === 0 ? (
           <div className="text-center py-16">
