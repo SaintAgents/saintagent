@@ -122,21 +122,12 @@ export default function DatingMatches() {
       const isFemale = dp.gender === 'woman';
       const isMale = dp.gender === 'man';
       
-      // Assign demo name if needed
-      let displayName = up?.display_name || dp.display_name;
-      if (!displayName || displayName.includes('demo') || displayName.includes('anonymous')) {
-        if (isFemale) {
-          displayName = DEMO_NAMES_FEMALE[idx % DEMO_NAMES_FEMALE.length];
-        } else if (isMale) {
-          displayName = DEMO_NAMES_MALE[idx % DEMO_NAMES_MALE.length];
-        } else {
-          displayName = 'User';
-        }
-      }
+      // Use display name from dating profile or user profile
+      let displayName = dp.display_name || up?.display_name;
       
-      // Assign demo avatar if needed
+      // Assign demo avatar if needed - ALWAYS use gender-appropriate avatars for demo profiles
       let avatar = up?.avatar_url || dp.avatar_url;
-      if (!avatar) {
+      if (!avatar || dp.is_demo) {
         if (isFemale) {
           avatar = DEMO_AVATARS_FEMALE[idx % DEMO_AVATARS_FEMALE.length];
         } else if (isMale) {
