@@ -398,7 +398,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: onboardingRecords } = useQuery({
     queryKey: ['onboardingProgress', currentUser?.email],
     queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 300000, // 5 minutes
+    refetchOnWindowFocus: false
   });
   const onboarding = onboardingRecords?.[0];
   const ONBOARDING_STEPS = 10;
