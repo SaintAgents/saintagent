@@ -490,7 +490,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: dailyLogToday = [] } = useQuery({
     queryKey: ['dailyLog', userIdentifier, todayStr],
     queryFn: () => base44.entities.DailyLog.filter({ user_id: userIdentifier, date: todayStr }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 120000,
+    refetchOnWindowFocus: false
   });
   const dailyLog = dailyLogToday?.[0];
   const dailyCompleted = dailyLog?.completed?.length || 0;
