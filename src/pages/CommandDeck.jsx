@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Folder, Search } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import MetricTile from '@/components/hud/MetricTile';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
