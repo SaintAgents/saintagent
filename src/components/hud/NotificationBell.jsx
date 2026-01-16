@@ -107,11 +107,32 @@ export default function NotificationBell({ notifications = [], onAction }) {
                       !notif.is_read && "bg-violet-50/30 dark:bg-violet-900/20"
                     )}
                     onClick={() => {
-                      // Navigate to action_url if available
+                      // Navigate to action_url if available, otherwise use smart routing based on type
                       if (notif.action_url) {
                         window.location.href = notif.action_url;
+                      } else {
+                        // Smart routing based on notification type
+                        const routes = {
+                          match: createPageUrl('Matches'),
+                          meeting: createPageUrl('Meetings'),
+                          mission: createPageUrl('Missions'),
+                          booking: createPageUrl('Meetings'),
+                          message: createPageUrl('Messages'),
+                          follow: notif.source_user_id ? createPageUrl('Profile') + `?id=${notif.source_user_id}` : createPageUrl('Profiles'),
+                          ggg: createPageUrl('CommandDeck'),
+                          rank: createPageUrl('Gamification'),
+                          collaboration: createPageUrl('FindCollaborators'),
+                          post: createPageUrl('CommunityFeed'),
+                          event: createPageUrl('Events'),
+                          system: createPageUrl('CommandDeck'),
+                        };
+                        const targetUrl = routes[notif.type];
+                        if (targetUrl) {
+                          window.location.href = targetUrl;
+                        }
                       }
                       onAction?.('click', notif);
+                      setOpen(false);
                     }}
                   >
                     {notif.source_user_avatar ? (
