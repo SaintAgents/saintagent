@@ -290,7 +290,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   });
 
-  // Fetch user profile (only when authenticated) - refetch on every mount
+  // Fetch user profile (only when authenticated)
   const { data: profiles } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
@@ -298,9 +298,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 0, // Always refetch
-    gcTime: 0, // Don't cache
-    refetchOnMount: 'always'
+    staleTime: 60000, // Cache for 1 minute
+    gcTime: 300000, // Keep in cache for 5 minutes
+    refetchOnWindowFocus: false
   });
   const profile = profiles?.[0];
   
