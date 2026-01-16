@@ -133,7 +133,7 @@ export default function Circles() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="w-full md:max-w-6xl md:mx-auto p-0 md:p-6">
         {/* Header */}
         <div className="flex items-center justify-end mb-6">
           <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-500 [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl gap-2">
