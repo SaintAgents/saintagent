@@ -70,7 +70,14 @@ export default function DatingMatches() {
 
   const { data: allUserProfiles = [] } = useQuery({
     queryKey: ['allUserProfilesForMatching'],
-    queryFn: () => base44.entities.UserProfile.list('-updated_date', 200)
+    queryFn: async () => {
+      try {
+        return await base44.entities.UserProfile.list('-updated_date', 200);
+      } catch (e) {
+        console.error('Failed to fetch user profiles:', e);
+        return [];
+      }
+    }
   });
 
   // Filter based on gender preferences (bidirectional)
