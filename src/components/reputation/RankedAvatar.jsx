@@ -90,9 +90,10 @@ export default function RankedAvatar({
   const propsGallery = galleryImages || [];
   const combinedGallery = fetchedGallery.length > 0 ? fetchedGallery : propsGallery;
   
+  // Debug: Log avatar URL sources
   const avatarUrl = src || fetchedProfile?.avatar_url;
-  const finalAvatarUrl = avatarUrl || DEFAULT_AVATAR;
-  const allImages = [avatarUrl || finalAvatarUrl, ...combinedGallery].filter(Boolean).slice(0, 6);
+  const finalAvatarUrl = (avatarUrl && avatarUrl.trim() !== '') ? avatarUrl : DEFAULT_AVATAR;
+  const allImages = [finalAvatarUrl, ...combinedGallery].filter(Boolean).slice(0, 6);
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
