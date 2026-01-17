@@ -337,14 +337,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   
   // Debug: Log profile data to verify it's loading
   useEffect(() => {
-    if (profile) {
-      console.log('Profile loaded:', { 
-        rp_points: profile.rp_points, 
-        ggg_balance: profile.ggg_balance,
-        trust_score: profile.trust_score,
-        follower_count: profile.follower_count 
-      });
-    }
+    console.log('CommandDeck profile state:', { 
+      profileExists: !!profile,
+      rp_points: profile?.rp_points, 
+      ggg_balance: profile?.ggg_balance,
+      trust_score: profile?.trust_score,
+      follower_count: profile?.follower_count,
+      display_name: profile?.display_name,
+      avatar_url: profile?.avatar_url
+    });
   }, [profile]);
 
   // Rank definitions for hover tooltips
