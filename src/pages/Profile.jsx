@@ -1235,12 +1235,24 @@ export default function Profile() {
                           <div className="font-medium text-slate-900">{profile?.numerology_life_path ?? 'Not set'}</div>
                         </div>
                         <div>
+                          <span className="text-slate-500">Destiny (Expression)</span>
+                          <div className="font-medium text-slate-900">{profile?.numerology_destiny ?? 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Soul Urge</span>
+                          <div className="font-medium text-slate-900">{profile?.numerology_soul_urge ?? 'Not set'}</div>
+                        </div>
+                        <div>
                           <span className="text-slate-500">Personality</span>
                           <div className="font-medium text-slate-900">{profile?.numerology_personality ?? 'Not set'}</div>
                         </div>
                         <div>
                           <span className="text-slate-500">Birth Card</span>
                           <div className="font-medium text-slate-900">{profile?.birth_card || 'Not set'}</div>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Planetary Ruling Card</span>
+                          <div className="font-medium text-slate-900">{profile?.planetary_ruling_card || 'Not set'}</div>
                         </div>
                         <div>
                           <span className="text-slate-500">Sun Card</span>
