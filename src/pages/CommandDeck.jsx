@@ -871,17 +871,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
           {/* Profile Identifiers */}
           <div className="relative mb-6 p-2 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 mx-0" data-avatar-card>
-            {/* Refresh Button - More Visible */}
-            <button
-              onClick={() => {
-                queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-                queryClient.invalidateQueries({ queryKey: ['wallet'] });
-              }}
-              className="absolute top-4 right-4 z-20 p-2.5 rounded-xl bg-violet-100 dark:bg-violet-900/60 border-2 border-violet-300 dark:border-violet-600 hover:bg-violet-200 dark:hover:bg-violet-800/80 transition-all shadow-md hover:shadow-lg group"
-              title="Refresh profile data"
-            >
-              <RefreshCw className="w-5 h-5 text-violet-600 dark:text-violet-400 group-hover:rotate-180 transition-transform duration-500" />
-            </button>
+
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
@@ -1080,7 +1070,19 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-2 md:grid-cols-4 gap-3" data-stats-bar>
+                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-2 md:grid-cols-5 gap-3" data-stats-bar>
+                  {/* Refresh Button */}
+                  <button
+                    onClick={() => {
+                      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+                      queryClient.invalidateQueries({ queryKey: ['wallet'] });
+                    }}
+                    className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group"
+                    title="Refresh profile data"
+                  >
+                    <RefreshCw className="w-5 h-5 text-violet-600 dark:text-violet-400 group-hover:rotate-180 transition-transform duration-500 mb-1" />
+                    <p className="text-slate-600 dark:text-slate-300 text-xs">Refresh</p>
+                  </button>
                   <div className="text-center">
                     <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable != null ? walletAvailable.toLocaleString() : profile?.ggg_balance?.toLocaleString?.() || "0"}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
