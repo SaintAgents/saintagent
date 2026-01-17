@@ -62,6 +62,7 @@ import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import StGermainAffirmations from '@/components/hud/StGermainAffirmations';
 import GGGBalanceCard from '@/components/hud/GGGBalanceCard.jsx';
+import BookingRequestModal from '@/components/matches/BookingRequestModal';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -121,6 +122,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const [collaboratorsPopupOpen, setCollaboratorsPopupOpen] = useState(false);
   const [aiDiscoverPopupOpen, setAiDiscoverPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
+  const [bookingModal, setBookingModal] = useState({ open: false, targetUser: null, match: null, listing: null });
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
@@ -598,9 +600,27 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } else if (action === 'decline') {
       updateMatchMutation.mutate({ id: match.id, data: { status: 'declined' } });
     } else if (action === 'message') {
-      window.location.href = createPageUrl('Messages');
+      // Open floating chat with the matched user
+      document.dispatchEvent(new CustomEvent('openFloatingChat', {
+        detail: {
+          recipientId: match.target_id,
+          recipientName: match.target_name,
+          recipientAvatar: match.target_avatar
+        }
+      }));
     } else if (action === 'book') {
-      window.location.href = createPageUrl('Meetings');
+      // Open booking modal with target user info
+      setBookingModal({
+        open: true,
+        targetUser: {
+          id: match.target_id,
+          email: match.target_id,
+          name: match.target_name,
+          avatar: match.target_avatar
+        },
+        match: match,
+        listing: null
+      });
     }
   };
 
@@ -655,7 +675,18 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   const handleListingAction = async (action, listing) => {
     if (action === 'book') {
-      window.location.href = createPageUrl('Marketplace');
+      // Open booking modal with listing owner info
+      setBookingModal({
+        open: true,
+        targetUser: {
+          id: listing.owner_id,
+          email: listing.owner_id,
+          name: listing.owner_name,
+          avatar: listing.owner_avatar
+        },
+        match: null,
+        listing: listing
+      });
     }
   };
 
@@ -1777,6 +1808,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         <QuickCreateModal open={quickCreateOpen} initialType={quickCreateType} onClose={() => {setQuickCreateOpen(false);setQuickCreateType(null);}} onCreate={handleCreate} />
         {videoMeeting && <VideoMeetingModal meeting={videoMeeting} open={!!videoMeeting} onClose={() => setVideoMeeting(null)} />}
         {boostTarget && <BoostModal open={!!boostTarget} onClose={() => setBoostTarget(null)} targetType={boostTarget.type} targetId={boostTarget.id} />}
+        <BookingRequestModal 
+          open={bookingModal.open} 
+          onOpenChange={(open) => setBookingModal(prev => ({ ...prev, open }))}
+          targetUser={bookingModal.targetUser}
+          match={bookingModal.match}
+          listing={bookingModal.listing}
+        />
         <TuneEngineModal open={tuneEngineOpen} onClose={() => setTuneEngineOpen(false)} />
         <OnlineUsersModal open={onlineUsersOpen} onClose={() => setOnlineUsersOpen(false)} />
         
