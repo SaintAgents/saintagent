@@ -846,9 +846,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   saNumber={profile?.sa_number}
                   affiliatePaidCount={profile?.activated_referral_count}
                   status={profile?.status || 'online'} />
-              </div>
+                  </div>
 
-              <div className="flex-1 min-w-0 w-full">
+                  <div className="flex-1 min-w-0 w-full" style={{ visibility: profile ? 'visible' : 'hidden' }}>
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-between mb-4 gap-4">
                   <div className="text-center md:text-left">
