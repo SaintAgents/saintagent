@@ -1219,7 +1219,7 @@ export default function Profile() {
                           <div className="font-medium text-slate-900">{profile?.birthday || 'Not set'}</div>
                         </div>
                         <div>
-                          <span className="text-slate-500">Sun</span>
+                          <span className="text-slate-500">Sun Sign</span>
                           <div className="font-medium text-slate-900">{profile?.astrological_sign || 'Not set'}</div>
                         </div>
                         <div>
