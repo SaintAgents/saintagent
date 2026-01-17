@@ -772,7 +772,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       "px-0 md:px-0"
     )}>
       {/* Page Header */}
-      <div className="px-0 md:px-6 pt-6 pb-4 w-full" style={{ marginTop: '22px' }}>
+      <div className="px-0 md:px-6 pt-6 pb-4 w-full" style={{ marginTop: '32px' }}>
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-4">
