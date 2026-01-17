@@ -54,7 +54,7 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
                 variant="outline"
                 size="sm"
                 onClick={toggleLeftSidebar}
-                className="gap-1.5 text-xs"
+                className="gap-1.5 text-xs mr-6"
               >
                 <PanelLeft className="w-4 h-4" />
                 Side Nav
