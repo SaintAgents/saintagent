@@ -17,7 +17,18 @@ import { cn } from "@/lib/utils";
 export default function BookingRequestModal({ open, onClose, preSelectedUser = null }) {
   const [step, setStep] = useState(preSelectedUser ? 2 : 1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState(preSelectedUser);
+  const [selectedUser, setSelectedUser] = useState(null);
+  
+  // Sync selectedUser when preSelectedUser changes
+  React.useEffect(() => {
+    if (preSelectedUser) {
+      setSelectedUser(preSelectedUser);
+      setStep(2);
+    } else {
+      setSelectedUser(null);
+      setStep(1);
+    }
+  }, [preSelectedUser]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState('10:00');
   const [meetingType, setMeetingType] = useState('casual');
@@ -69,6 +80,13 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   const handleSubmit = async () => {
     if (!selectedUser || !selectedDate || !currentUser) return;
     
+    // Get guest user_id - handle both direct user_id and email fallbacks
+    const guestUserId = selectedUser.user_id || selectedUser.email || selectedUser.id;
+    if (!guestUserId) {
+      console.error('No valid user_id for guest');
+      return;
+    }
+    
     setSubmitting(true);
     try {
       const [hours, minutes] = selectedTime.split(':');
@@ -76,16 +94,17 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
       scheduledTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
       const me = myProfile?.[0];
+      const guestName = selectedUser.display_name || selectedUser.name || 'User';
 
       // Create the meeting request
       await base44.entities.Meeting.create({
-        title: title || `Meeting with ${selectedUser.display_name}`,
+        title: title || `Meeting with ${guestName}`,
         host_id: currentUser.email,
-        guest_id: selectedUser.user_id,
+        guest_id: guestUserId,
         host_name: currentUser.full_name || me?.display_name,
-        guest_name: selectedUser.display_name,
+        guest_name: guestName,
         host_avatar: me?.avatar_url,
-        guest_avatar: selectedUser.avatar_url,
+        guest_avatar: selectedUser.avatar_url || selectedUser.avatar,
         scheduled_time: scheduledTime.toISOString(),
         duration_minutes: duration,
         meeting_type: meetingType,
@@ -96,7 +115,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
 
       // Send notification to the recipient
       await base44.entities.Notification.create({
-        user_id: selectedUser.user_id,
+        user_id: guestUserId,
         type: 'meeting',
         title: 'New Meeting Request',
         message: `${currentUser.full_name || me?.display_name} wants to schedule a ${meetingType} meeting with you on ${format(scheduledTime, 'MMM d')} at ${format(scheduledTime, 'h:mm a')}`,
