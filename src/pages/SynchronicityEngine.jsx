@@ -35,6 +35,10 @@ import BadgeProgressPanel from '@/components/badges/BadgeProgressPanel';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import DeepDiveDashboard from '@/components/synchronicity/DeepDiveDashboard';
+import AIInsightsPanel from '@/components/synchronicity/AIInsightsPanel';
+import PersonalTrendReport from '@/components/synchronicity/PersonalTrendReport';
+import SynchronicityChallenges from '@/components/synchronicity/SynchronicityChallenges';
+import PersonalizedFeed from '@/components/synchronicity/PersonalizedFeed';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/52771e0da_gemini-25-flash-image_change_the_letters_to_words_-_Synchronicity_is_MetaV_at_work-0.jpg";
 
@@ -258,7 +262,7 @@ export default function SynchronicityEngine() {
   const [submitOpen, setSubmitOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState('feed'); // 'feed' or 'deepdive'
+  const [viewMode, setViewMode] = useState('feed'); // 'feed', 'deepdive', 'challenges'
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -389,6 +393,15 @@ export default function SynchronicityEngine() {
               </Button>
               <Button
                 size="sm"
+                variant={viewMode === 'challenges' ? 'default' : 'ghost'}
+                className={viewMode === 'challenges' ? 'bg-violet-600' : 'text-slate-400'}
+                onClick={() => setViewMode('challenges')}
+              >
+                <Users className="w-4 h-4 mr-1" />
+                Challenges
+              </Button>
+              <Button
+                size="sm"
                 variant={viewMode === 'deepdive' ? 'default' : 'ghost'}
                 className={viewMode === 'deepdive' ? 'bg-violet-600' : 'text-slate-400'}
                 onClick={() => setViewMode('deepdive')}
@@ -441,9 +454,11 @@ export default function SynchronicityEngine() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         {viewMode === 'deepdive' ? (
           <DeepDiveDashboard userId={currentUser?.email} />
+        ) : viewMode === 'challenges' ? (
+          <SynchronicityChallenges userId={currentUser?.email} profile={profile} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Main Feed */}
+            {/* Main Feed - Now Personalized */}
             <div className="lg:col-span-3 space-y-4">
               {isLoading ? (
                 <div className="space-y-4">
@@ -451,7 +466,7 @@ export default function SynchronicityEngine() {
                     <div key={i} className="h-48 bg-slate-800/50 rounded-xl animate-pulse" />
                   ))}
                 </div>
-              ) : filteredSyncs.length === 0 ? (
+              ) : synchronicities.length === 0 ? (
                 <div className="text-center py-16">
                   <Sparkles className="w-16 h-16 text-violet-500/30 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-white mb-2">No synchronicities found</h3>
@@ -460,7 +475,8 @@ export default function SynchronicityEngine() {
                     Share Synchronicity
                   </Button>
                 </div>
-              ) : (
+              ) : searchQuery || categoryFilter !== 'all' ? (
+                // Filtered view - show original cards
                 <AnimatePresence>
                   {filteredSyncs.map(sync => (
                     <SynchronicityCard 
@@ -471,11 +487,20 @@ export default function SynchronicityEngine() {
                     />
                   ))}
                 </AnimatePresence>
+              ) : (
+                // Personalized feed
+                <PersonalizedFeed userId={currentUser?.email} profile={profile} />
               )}
             </div>
 
             {/* Sidebar */}
             <div className="space-y-4">
+              {/* Personal Trend Report */}
+              <PersonalTrendReport userId={currentUser?.email} profile={profile} />
+
+              {/* AI Insights Panel */}
+              <AIInsightsPanel userId={currentUser?.email} synchronicities={synchronicities} />
+
               {/* Badge Progress Panel */}
               <BadgeProgressPanel 
                 userBadges={userBadges} 
