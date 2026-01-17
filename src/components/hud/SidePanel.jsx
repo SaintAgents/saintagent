@@ -1100,7 +1100,8 @@ export default function SidePanel({
               </div>
               <div className="space-y-2">
                 {storedCards.map((card) => {
-                  const CardIcon = card.icon;
+                  // Resolve icon from CARD_ICONS using card.id, fallback to Sparkles
+                  const CardIcon = CARD_ICONS[card.id] || Sparkles;
                   return (
                     <div
                       key={card.id}
