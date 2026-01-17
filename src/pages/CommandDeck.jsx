@@ -293,16 +293,17 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   });
 
   // Fetch user profile (only when authenticated)
-  const { data: profiles } = useQuery({
+  const { data: profiles, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
       const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+      console.log('Fetched profile:', byEmail?.[0]?.rp_points, byEmail?.[0]?.rp_rank_code, byEmail?.[0]?.mystical_identifier);
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 60000, // Cache for 1 minute
-    gcTime: 300000, // Keep in cache for 5 minutes
-    refetchOnWindowFocus: false
+    staleTime: 30000, // Cache for 30 seconds
+    gcTime: 60000, // Keep in cache for 1 minute
+    refetchOnWindowFocus: true // Refetch when window regains focus
   });
   const profile = profiles?.[0];
   
