@@ -37,8 +37,37 @@ import {
   Undo2,
   X,
   Archive,
-  Inbox } from
+  Inbox,
+  Target,
+  ShoppingBag,
+  Radio,
+  Trophy,
+  CheckCircle,
+  Folder } from
   "lucide-react";
+
+// Card icon mapping - must be defined here to resolve icons from stored card data
+const CARD_ICONS = {
+  quickActions: Zap,
+  quickStart: CheckCircle,
+  challenges: Trophy,
+  inbox: Radio,
+  collaborators: Users,
+  circles: Users,
+  leaderPathway: Sparkles,
+  aiDiscover: Sparkles,
+  syncEngine: Sparkles,
+  meetings: Calendar,
+  missions: Target,
+  projects: Folder,
+  market: ShoppingBag,
+  influence: TrendingUp,
+  leader: Radio,
+  dailyops: Calendar,
+  communityFeed: Sparkles,
+  leaderboard: Trophy,
+  affirmations: Sparkles
+};
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
