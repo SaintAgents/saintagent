@@ -45,7 +45,7 @@ import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
 import MiniProfile from '@/components/profile/MiniProfile';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
-import { RP_LADDER, getRPRank } from '@/components/reputation/rpUtils.js';
+import { RP_LADDER, getRPRank } from '@/components/reputation/rpUtils';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { createPageUrl } from '@/utils';
 import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
