@@ -9,6 +9,7 @@ import { Calendar, Clock, Check, Plus, Users, Video, MapPin } from "lucide-react
 import { format, parseISO, isAfter } from "date-fns";
 
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
+import BookingRequestModal from '@/components/meetings/BookingRequestModal';
 import MeetingCard from '@/components/hud/MeetingCard';
 import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import HelpHint from '@/components/hud/HelpHint';
@@ -20,6 +21,7 @@ export default function Meetings() {
   const [tab, setTab] = useState('upcoming');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [rescheduleMeeting, setRescheduleMeeting] = useState(null);
+  const [bookingRequestOpen, setBookingRequestOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -133,7 +135,7 @@ export default function Meetings() {
                 Schedule, Attend & Verify Meetings to Earn GGG
               </p>
               <div className="flex items-center justify-center gap-2 mt-4">
-                <Button size="sm" className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setQuickCreateOpen(true)}>
+                <Button size="sm" className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setBookingRequestOpen(true)}>
                   <Plus className="w-4 h-4" />
                   Request Meeting
                 </Button>
@@ -328,6 +330,11 @@ export default function Meetings() {
           updateMutation.mutate({ id: rescheduleMeeting.id, data: { scheduled_time: iso, status: 'scheduled' } });
           setRescheduleMeeting(null);
         }}
+      />
+
+      <BookingRequestModal
+        open={bookingRequestOpen}
+        onClose={() => setBookingRequestOpen(false)}
       />
     </div>
   );
