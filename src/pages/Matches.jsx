@@ -31,7 +31,7 @@ import HelpHint from '@/components/hud/HelpHint';
 import AIMatchAssistant from '@/components/dating/AIMatchAssistant';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
-import BookingModal from '@/components/matches/BookingModal';
+import BookingRequestModal from '@/components/meetings/BookingRequestModal';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 
@@ -454,10 +454,15 @@ export default function Matches() {
           selectedMatch={selectedMatchForAI}
         />
 
-        <BookingModal
+        <BookingRequestModal
           open={bookingModalOpen}
           onClose={() => { setBookingModalOpen(false); setSelectedMatchForBooking(null); }}
-          match={selectedMatchForBooking}
+          preSelectedUser={selectedMatchForBooking ? {
+            user_id: selectedMatchForBooking.target_id,
+            display_name: selectedMatchForBooking.target_name,
+            avatar_url: selectedMatchForBooking.target_avatar,
+            handle: selectedMatchForBooking.target_subtitle?.replace('@', '') || selectedMatchForBooking.target_id?.split('@')[0]
+          } : null}
         />
       </div>
     </div>
