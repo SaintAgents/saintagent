@@ -332,8 +332,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
   const walletAvailable = walletBalance != null && walletBalance > 0 ? walletBalance : profile?.ggg_balance ?? 0;
-  const rpPoints = profile?.rp_points ?? 0;
+  // Use rp_points for calculation, but also check rank_points as fallback
+  const rpPoints = profile?.rp_points || profile?.rank_points || 0;
   const rpInfo = getRPRank(rpPoints);
+  
+  // Use stored rp_rank_code if available, otherwise calculate
+  const effectiveRpRankCode = profile?.rp_rank_code || rpInfo.code;
   
   // Debug: Log profile data to verify it's loading
   useEffect(() => {
@@ -894,7 +898,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     </h2>
                     <div className="flex items-center gap-1">
                       <p className="text-purple-500 text-sm capitalize">
-                        {rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
+                        {profile?.rp_rank_code ? profile.rp_rank_code.charAt(0).toUpperCase() + profile.rp_rank_code.slice(1) : rpInfo.title} • @{profile?.handle} {profile?.sa_number ? ` - SA#${profile.sa_number}` : ''}
                       </p>
                       <HelpHint
                         content={
@@ -1070,7 +1074,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{rpPoints}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{profile?.rp_points?.toLocaleString() || profile?.rank_points?.toLocaleString() || 0}</p>
                     <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
                   </div>
                   <div className="text-center">
