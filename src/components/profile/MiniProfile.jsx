@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
-import { getRPRank } from '@/components/reputation/rpUtils';
+import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import BadgesBar from '@/components/badges/BadgesBar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
