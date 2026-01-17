@@ -834,22 +834,18 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
               {/* Left column: Avatar only */}
               <div className="relative shrink-0" data-user-id={profile?.user_id || currentUser?.email}>
-                {profile ? (
-                  <RankedAvatar
-                    src={profile.avatar_url}
-                    name={profile.display_name || currentUser?.full_name || 'User'}
-                    size={120}
-                    leaderTier={profile.leader_tier}
-                    rpRankCode={profile.rp_rank_code}
-                    rpPoints={profile.rp_points || 0}
-                    trustScore={profile.trust_score}
-                    userId={profile.user_id || currentUser?.email}
-                    saNumber={profile.sa_number}
-                    affiliatePaidCount={profile.activated_referral_count}
-                    status={profile.status || 'online'} />
-                ) : (
-                  <div className="w-[120px] h-[120px] rounded-full bg-slate-200 animate-pulse" />
-                )}
+                <RankedAvatar
+                  src={profile?.avatar_url}
+                  name={profile?.display_name || currentUser?.full_name || 'User'}
+                  size={120}
+                  leaderTier={profile?.leader_tier}
+                  rpRankCode={profile?.rp_rank_code}
+                  rpPoints={profile?.rp_points || 0}
+                  trustScore={profile?.trust_score}
+                  userId={profile?.user_id || currentUser?.email}
+                  saNumber={profile?.sa_number}
+                  affiliatePaidCount={profile?.activated_referral_count}
+                  status={profile?.status || 'online'} />
               </div>
 
               <div className="flex-1 min-w-0 w-full">
