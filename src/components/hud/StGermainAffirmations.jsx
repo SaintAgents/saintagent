@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, RefreshCw } from 'lucide-react';
+import { Sparkles, RefreshCw, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 // St. Germain Affirmations for the Affirmations Card
@@ -167,53 +167,60 @@ export default function StGermainAffirmations() {
   const current = ST_GERMAIN_AFFIRMATIONS[currentIndex];
   
   return (
-    <div className="space-y-4">
-      {/* Main Affirmation Card */}
-      <div className={`p-6 rounded-xl bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-900/40 dark:via-purple-900/30 dark:to-indigo-900/40 border border-violet-200 dark:border-violet-700 transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <p className="font-semibold text-violet-900 dark:text-violet-200">St. Germain</p>
-            <p className="text-xs text-violet-600 dark:text-violet-400">Master of the Violet Flame</p>
-          </div>
-        </div>
-        
-        {/* Affirmation */}
-        <p className="text-lg md:text-xl font-medium text-violet-900 dark:text-violet-100 italic leading-relaxed">
-          "{current.text}"
-        </p>
-        
-        {/* Category Badge */}
-        <div className="mt-4 flex items-center justify-between">
-          <span className="px-3 py-1 rounded-full bg-violet-100 dark:bg-violet-800/50 text-violet-700 dark:text-violet-300 text-xs font-medium">
-            {current.category}
-          </span>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={getNextAffirmation}
-            className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 gap-1.5"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span className="text-xs">Next</span>
-          </Button>
-        </div>
+    <div className="relative min-h-[280px] rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 dark:from-amber-900/40 dark:via-orange-900/30 dark:to-rose-900/40 border-2 border-amber-300 dark:border-amber-600 shadow-lg">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-4 left-4 w-16 h-16 border-2 border-amber-400 rounded-full" />
+        <div className="absolute bottom-4 right-4 w-24 h-24 border-2 border-orange-400 rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-rose-300 rounded-full" />
       </div>
       
-      {/* Book Link */}
-      <a 
-        href="https://a.co/d/h8ozO6I" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="block p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 border border-amber-200 dark:border-amber-700 hover:border-amber-300 dark:hover:border-amber-600 transition-colors"
-      >
-        <p className="text-xs text-amber-700 dark:text-amber-300 text-center font-medium">
-          📖 Based on <span className="underline">7th Seal Hidden Wisdom Unveiled</span>
-        </p>
-      </a>
+      <div className={`relative z-10 p-6 transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 flex items-center justify-center shadow-xl ring-2 ring-white/50">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="text-lg font-bold text-amber-800 dark:text-amber-200">Daily Affirmations</p>
+              <p className="text-sm text-amber-600 dark:text-amber-400">Wisdom for the Awakened</p>
+            </div>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={getNextAffirmation}
+            className="text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-800/50 h-10 w-10 rounded-full"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </Button>
+        </div>
+        
+        {/* Large Quote Mark */}
+        <div className="absolute left-4 top-20 text-7xl text-amber-300/40 dark:text-amber-500/30 font-serif leading-none">"</div>
+        
+        {/* Affirmation - LARGE AND PROMINENT */}
+        <div className="pl-8 pr-4 py-4">
+          <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-amber-900 dark:text-amber-100 italic leading-relaxed tracking-wide">
+            {current.text}
+          </p>
+        </div>
+        
+        {/* Closing Quote */}
+        <div className="absolute right-6 bottom-16 text-7xl text-amber-300/40 dark:text-amber-500/30 font-serif leading-none rotate-180">"</div>
+        
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-amber-200 dark:border-amber-700">
+          <span className="px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300 text-sm font-medium">
+            {current.category}
+          </span>
+          <div className="flex items-center gap-2">
+            <Heart className="w-4 h-4 text-rose-400" />
+            <span className="text-sm font-medium text-amber-700 dark:text-amber-300">— SAINT GERMAIN</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
