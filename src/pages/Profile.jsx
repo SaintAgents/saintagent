@@ -1217,35 +1217,6 @@ export default function Profile() {
                         <div>
                           <span className="text-slate-500">Birthday</span>
                           <div className="font-medium text-slate-900">{profile?.birthday || 'Not set'}</div>
-                          {profile?.birthday && isOwnProfile && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-xs text-violet-600 mt-1 h-6 px-2"
-                              onClick={async () => {
-                                const { mystical_data } = await base44.integrations.Core.InvokeLLM({
-                                  prompt: `Calculate mystical profile data for birthday: ${profile.birthday}. 
-                                  Return the zodiac sun sign, and numerology life path number.
-                                  Life path is calculated by reducing the full birth date to a single digit (or master number 11, 22, 33).`,
-                                  response_json_schema: {
-                                    type: "object",
-                                    properties: {
-                                      sun_sign: { type: "string" },
-                                      life_path: { type: "number" }
-                                    }
-                                  }
-                                });
-                                if (mystical_data?.sun_sign || mystical_data?.life_path) {
-                                  await updateMutation.mutateAsync({
-                                    astrological_sign: mystical_data.sun_sign,
-                                    numerology_life_path: mystical_data.life_path
-                                  });
-                                }
-                              }}
-                            >
-                              Recalculate from birthday
-                            </Button>
-                          )}
                         </div>
                         <div>
                           <span className="text-slate-500">Sun</span>
