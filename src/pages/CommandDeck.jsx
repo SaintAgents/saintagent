@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy, Eye, EyeOff, AlertCircle, RefreshCw } from "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
@@ -871,6 +871,17 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
           {/* Profile Identifiers */}
           <div className="relative mb-6 p-2 md:p-6 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 mx-0" data-avatar-card>
+            {/* Refresh Button */}
+            <button
+              onClick={() => {
+                queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+                queryClient.invalidateQueries({ queryKey: ['wallet'] });
+              }}
+              className="absolute top-3 right-3 z-20 p-2 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors group"
+              title="Refresh profile data"
+            >
+              <RefreshCw className="w-4 h-4 text-slate-500 group-hover:text-violet-600 dark:text-slate-400 dark:group-hover:text-violet-400" />
+            </button>
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-bg style={{ display: 'none' }} />
             <div className="absolute inset-0 rounded-2xl pointer-events-none" data-avatar-overlay />
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
