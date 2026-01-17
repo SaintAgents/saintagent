@@ -208,7 +208,7 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
               >
                 <div 
                   className="relative cursor-pointer"
-                  onClick={() => handleViewProfile(s.user_id)}
+                  data-user-id={s.user_id}
                 >
                   <Avatar className="w-12 h-12">
                     <AvatarImage src={s.avatar_url} />
@@ -224,7 +224,7 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
                   <div className="flex items-center gap-2">
                     <p 
                       className="font-medium text-slate-900 truncate cursor-pointer hover:text-violet-600"
-                      onClick={() => handleViewProfile(s.user_id)}
+                      data-user-id={s.user_id}
                     >
                       {s.display_name}
                     </p>
