@@ -18,6 +18,7 @@ const PLAYING_CARDS = RANKS.flatMap(r => SUITS.map(s => `${r} of ${s}`));
 export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     mystical_identifier: profile?.mystical_identifier || '',
+    birthday: profile?.birthday || '',
     astrological_sign: profile?.astrological_sign || '',
     rising_sign: profile?.rising_sign || '',
     moon_sign: profile?.moon_sign || '',
@@ -55,6 +56,17 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
               value={formData.mystical_identifier}
               onChange={(e) => setFormData({ ...formData, mystical_identifier: e.target.value })}
             />
+          </div>
+
+          <div>
+            <Label>Birthday</Label>
+            <Input
+              type="date"
+              className="mt-2"
+              value={formData.birthday}
+              onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
+            />
+            <p className="text-xs text-slate-500 mt-1">Used for mystical calculations</p>
           </div>
 
           <div>
