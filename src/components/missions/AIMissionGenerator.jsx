@@ -50,6 +50,8 @@ export default function AIMissionGenerator({ open, onClose, onUseMission }) {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a mission design expert for a conscious community platform focused on spiritual growth, sustainability, and positive impact.
 
+IMPORTANT: GGG is a gold-backed currency where 1 GGG = $145 USD (1 gram of gold).
+
 Generate 3 creative and actionable mission ideas based on this topic/goal: "${topic}"
 
 For each mission, provide:
@@ -57,8 +59,11 @@ For each mission, provide:
 2. A clear objective (1-2 sentences)
 3. A detailed description (2-3 sentences explaining the mission and its impact)
 4. 3-5 specific tasks that participants should complete
-5. Suggested rewards:
-   - GGG tokens (platform currency, 10-100 range based on effort)
+5. Suggested rewards (scale appropriately - most missions should be $80-200 USD worth):
+   - GGG tokens: Use these ranges based on effort level:
+     * Simple tasks (1-2 hours): 0.1-0.3 GGG ($14.50-$43.50)
+     * Medium tasks (half day): 0.3-0.7 GGG ($43.50-$101.50)
+     * Large missions (full day+): 0.7-1.4 GGG ($101.50-$203)
    - Rank Points (5-50 based on impact)
    - Boost multiplier (1.5x-3x for exceptional missions, or 0 for none)
 6. Recommended mission type: platform, circle, region, or leader
