@@ -344,9 +344,14 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       trust_score: profile?.trust_score,
       follower_count: profile?.follower_count,
       display_name: profile?.display_name,
-      avatar_url: profile?.avatar_url
+      avatar_url: profile?.avatar_url,
+      reach_score: profile?.reach_score,
+      total_earnings: profile?.total_earnings,
+      meetings_completed: profile?.meetings_completed,
+      rpInfo: rpInfo,
+      walletAvailable: walletAvailable
     });
-  }, [profile]);
+  }, [profile, rpInfo, walletAvailable]);
 
   // Rank definitions for hover tooltips
   const RANK_DEFS = {
@@ -880,7 +885,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   status={profile?.status || 'online'} />
                   </div>
 
-                  <div className="flex-1 min-w-0 w-full" style={{ visibility: profile ? 'visible' : 'hidden' }}>
+                  <div className="flex-1 min-w-0 w-full">
                 {/* Header: Name, Title, Trust Score */}
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-between mb-4 gap-4">
                   <div className="text-center md:text-left">
