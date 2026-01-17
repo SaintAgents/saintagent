@@ -1215,6 +1215,10 @@ export default function Profile() {
                           <div className="font-medium text-slate-900">{profile?.mystical_identifier || 'Not set'}</div>
                         </div>
                         <div>
+                          <span className="text-slate-500">Birthday</span>
+                          <div className="font-medium text-slate-900">{profile?.birthday || 'Not set'}</div>
+                        </div>
+                        <div>
                           <span className="text-slate-500">Sun</span>
                           <div className="font-medium text-slate-900">{profile?.astrological_sign || 'Not set'}</div>
                         </div>
