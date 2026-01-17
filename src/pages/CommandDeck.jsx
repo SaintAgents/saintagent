@@ -62,7 +62,7 @@ import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import StGermainAffirmations from '@/components/hud/StGermainAffirmations';
 import GGGBalanceCard from '@/components/hud/GGGBalanceCard.jsx';
-import BookingRequestModal from '@/components/matches/BookingRequestModal';
+import BookingRequestModal from '@/components/meetings/BookingRequestModal';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -1821,10 +1821,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         {boostTarget && <BoostModal open={!!boostTarget} onClose={() => setBoostTarget(null)} targetType={boostTarget.type} targetId={boostTarget.id} />}
         <BookingRequestModal 
           open={bookingModal.open} 
-          onOpenChange={(open) => setBookingModal(prev => ({ ...prev, open }))}
-          targetUser={bookingModal.targetUser}
-          match={bookingModal.match}
-          listing={bookingModal.listing}
+          onClose={() => setBookingModal({ open: false, targetUser: null, match: null, listing: null })}
+          preSelectedUser={bookingModal.targetUser ? {
+            user_id: bookingModal.targetUser.email || bookingModal.targetUser.id,
+            display_name: bookingModal.targetUser.name,
+            avatar_url: bookingModal.targetUser.avatar,
+            handle: bookingModal.targetUser.name?.toLowerCase().replace(/\s+/g, '') || 'user'
+          } : null}
         />
         <TuneEngineModal open={tuneEngineOpen} onClose={() => setTuneEngineOpen(false)} />
         <OnlineUsersModal open={onlineUsersOpen} onClose={() => setOnlineUsersOpen(false)} />
