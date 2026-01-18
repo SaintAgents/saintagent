@@ -34,9 +34,24 @@ export const getDefaultCustomCards = () => {
 };
 
 export default function DeckViewModeSelector({ viewMode, onViewModeChange, className = '' }) {
-  const handleCustomClick = () => {
-    // Navigate to settings page with hash to indicate deck settings
-    window.location.href = createPageUrl('Settings') + '?tab=deck';
+  // Check if custom cards have been configured
+  const hasCustomConfig = () => {
+    try {
+      return !!localStorage.getItem('deckCustomCards');
+    } catch { return false; }
+  };
+
+  const handleCustomClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // If user has already configured custom cards, just switch to custom mode
+    if (hasCustomConfig()) {
+      onViewModeChange('custom');
+    } else {
+      // First time - navigate to settings to configure
+      window.location.href = createPageUrl('Settings') + '?tab=deck';
+    }
   };
 
   return (
@@ -49,7 +64,10 @@ export default function DeckViewModeSelector({ viewMode, onViewModeChange, class
           name="deckViewMode"
           value="simple"
           checked={viewMode === 'simple'}
-          onChange={() => onViewModeChange('simple')}
+          onChange={(e) => {
+            e.stopPropagation();
+            onViewModeChange('simple');
+          }}
           className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
         />
         <span className="text-xs text-slate-700 dark:text-slate-300">Simple</span>
@@ -61,24 +79,28 @@ export default function DeckViewModeSelector({ viewMode, onViewModeChange, class
           name="deckViewMode"
           value="advanced"
           checked={viewMode === 'advanced'}
-          onChange={() => onViewModeChange('advanced')}
+          onChange={(e) => {
+            e.stopPropagation();
+            onViewModeChange('advanced');
+          }}
           className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
         />
         <span className="text-xs text-slate-700 dark:text-slate-300">Advanced</span>
       </label>
       
-      <label className="flex items-center gap-1.5 cursor-pointer">
+      <label className="flex items-center gap-1.5 cursor-pointer" onClick={handleCustomClick}>
         <input
           type="radio"
           name="deckViewMode"
           value="custom"
           checked={viewMode === 'custom'}
-          onChange={handleCustomClick}
+          onChange={(e) => e.stopPropagation()}
+          onClick={handleCustomClick}
           className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
         />
         <span className="text-xs text-slate-700 dark:text-slate-300 flex items-center gap-1">
           Custom
-          <Settings className="w-3 h-3 text-slate-400" />
+          {!hasCustomConfig() && <Settings className="w-3 h-3 text-slate-400" />}
         </span>
       </label>
     </div>
