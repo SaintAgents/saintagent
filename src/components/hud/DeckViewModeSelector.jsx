@@ -8,9 +8,9 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions'],
+    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu)
-    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'communityfeed', 'marketplace', 'settings']
+    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'settings']
   },
   advanced: {
     label: 'Advanced',

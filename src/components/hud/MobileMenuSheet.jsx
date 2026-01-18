@@ -59,10 +59,41 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
     };
   }, []);
 
-  // Filter menu items based on view mode
+  // Filter menu items based on view mode and custom settings
   const filteredMenuItems = menuItems.filter(item => {
     const config = VIEW_MODE_CONFIG[viewMode];
-    if (!config || !config.navIds) return true; // Show all if no filter
+    if (!config) return true;
+    
+    // For custom mode, check localStorage for custom nav items
+    if (viewMode === 'custom') {
+      try {
+        const customCards = JSON.parse(localStorage.getItem('deckCustomCards') || '[]');
+        // Map card IDs to nav IDs where applicable
+        const cardToNavMap = {
+          'circles': 'circles',
+          'missions': 'missions',
+          'meetings': 'meetings',
+          'inbox': 'messages',
+          'syncEngine': 'synchronicity',
+          'projects': 'projects',
+          'market': 'marketplace',
+          'collaborators': 'collaborators',
+          'leader': 'leader',
+          'dailyops': 'dailyops',
+          'communityFeed': 'communityfeed',
+          'leaderboard': 'activity',
+        };
+        // Always show these core items
+        const alwaysShow = ['command', 'profile', 'settings', 'faq'];
+        if (alwaysShow.includes(item.id)) return true;
+        // Check if this nav item's corresponding card is enabled
+        return customCards.some(cardId => cardToNavMap[cardId] === item.id);
+      } catch {
+        return true;
+      }
+    }
+    
+    if (!config.navIds) return true; // Show all if no filter
     return config.navIds.includes(item.id);
   });
 
