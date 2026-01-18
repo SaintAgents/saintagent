@@ -63,6 +63,7 @@ import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import StGermainAffirmations from '@/components/hud/StGermainAffirmations';
 import GGGBalanceCard from '@/components/hud/GGGBalanceCard.jsx';
 import BookingRequestModal from '@/components/meetings/BookingRequestModal';
+import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -123,6 +124,38 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const [aiDiscoverPopupOpen, setAiDiscoverPopupOpen] = useState(false);
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const [bookingModal, setBookingModal] = useState({ open: false, targetUser: null, match: null, listing: null });
+  
+  // Deck view mode (simple/advanced/custom)
+  const [deckViewMode, setDeckViewMode] = useState(() => {
+    try {
+      return localStorage.getItem('deckViewMode') || 'simple';
+    } catch { return 'simple'; }
+  });
+  
+  // Custom cards selection (for custom mode)
+  const [customCards, setCustomCards] = useState(() => {
+    try {
+      const saved = localStorage.getItem('deckCustomCards');
+      return saved ? JSON.parse(saved) : getDefaultCustomCards();
+    } catch { return getDefaultCustomCards(); }
+  });
+  
+  // Persist deck view mode
+  useEffect(() => {
+    try { localStorage.setItem('deckViewMode', deckViewMode); } catch {}
+  }, [deckViewMode]);
+  
+  // Get visible cards based on view mode
+  const visibleCards = React.useMemo(() => {
+    if (deckViewMode === 'simple') return new Set(VIEW_MODE_CONFIG.simple.cards);
+    if (deckViewMode === 'advanced') return new Set(VIEW_MODE_CONFIG.advanced.cards);
+    return new Set(customCards);
+  }, [deckViewMode, customCards]);
+  
+  // Check if a card should be visible (combines view mode + hidden cards)
+  const isCardVisible = (cardId) => {
+    return visibleCards.has(cardId) && !hiddenCards.has(cardId);
+  };
   const [projectSearch, setProjectSearch] = useState('');
   const [projectStatus, setProjectStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
@@ -1031,42 +1064,53 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </div>
                 </div>
 
-                {/* Theme Radio Buttons */}
-                <div className="mb-4 flex items-center gap-4">
-                  <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Theme:</span>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="themeSelect"
-                      value="light"
-                      checked={theme === 'light'}
-                      onChange={() => onThemeToggle?.('light')}
-                      className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
-                    />
-                    <span className="text-xs text-slate-700 dark:text-slate-300">Light</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="themeSelect"
-                      value="dark"
-                      checked={theme === 'dark'}
-                      onChange={() => onThemeToggle?.('dark')}
-                      className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
-                    />
-                    <span className="text-xs text-slate-700 dark:text-slate-300">Dark</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="themeSelect"
-                      value="hacker"
-                      checked={theme === 'hacker'}
-                      onChange={() => onThemeToggle?.('hacker')}
-                      className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
-                    />
-                    <span className="text-xs text-slate-700 dark:text-slate-300">Hacker</span>
-                  </label>
+                {/* View Mode + Theme Radio Buttons */}
+                <div className="mb-4 flex flex-wrap items-center gap-4">
+                  {/* Deck View Mode Selector */}
+                  <DeckViewModeSelector 
+                    viewMode={deckViewMode} 
+                    onViewModeChange={setDeckViewMode}
+                  />
+                  
+                  <div className="w-px h-4 bg-slate-300 dark:bg-slate-600 hidden md:block" />
+                  
+                  {/* Theme Radio Buttons */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Theme:</span>
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="themeSelect"
+                        value="light"
+                        checked={theme === 'light'}
+                        onChange={() => onThemeToggle?.('light')}
+                        className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
+                      />
+                      <span className="text-xs text-slate-700 dark:text-slate-300">Light</span>
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="themeSelect"
+                        value="dark"
+                        checked={theme === 'dark'}
+                        onChange={() => onThemeToggle?.('dark')}
+                        className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
+                      />
+                      <span className="text-xs text-slate-700 dark:text-slate-300">Dark</span>
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="themeSelect"
+                        value="hacker"
+                        checked={theme === 'hacker'}
+                        onChange={() => onThemeToggle?.('hacker')}
+                        className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
+                      />
+                      <span className="text-xs text-slate-700 dark:text-slate-300">Hacker</span>
+                    </label>
+                  </div>
                 </div>
 
                 {/* Stats Bar */}
@@ -1489,7 +1533,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         {/* Main Grid - Collapsible Cards */}
         <div className="px-0 md:px-6 relative min-h-[1200px] w-full max-w-full overflow-x-hidden">
           <div className="block space-y-6">
-            <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('quickActions') && <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
                   <Button className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2" onClick={() => setQuickCreateOpen(true)}>
@@ -1498,9 +1542,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </Button>
                 </div>
               </div>
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard 
+            {isCardVisible('quickStart') && <CollapsibleCard 
               title={
                 <span className="flex items-center gap-2">
                   Quick Start Checklist
@@ -1520,9 +1564,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               onTossToSidePanel={handleTossToSidePanel}
             >
               <QuickStartChecklist />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard 
+            {isCardVisible('challenges') && <CollapsibleCard 
               title="Challenges & Rewards" 
               cardId="challenges" 
               icon={Trophy} 
@@ -1537,43 +1581,43 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               onTossToSidePanel={handleTossToSidePanel}
             >
               <GamificationWidget profile={profile} />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('inbox')} onToggleHide={() => toggleCardVisibility('inbox')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('inbox') && <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('inbox')} onToggleHide={() => toggleCardVisibility('inbox')} onTossToSidePanel={handleTossToSidePanel}>
               <InboxSignals notifications={notifications} />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Potential Collaborators" cardId="collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} onPopout={() => setCollaboratorsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('collaborators')} onToggleHide={() => toggleCardVisibility('collaborators')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('collaborators') && <CollapsibleCard title="Potential Collaborators" cardId="collaborators" icon={Users} badge="AI" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" defaultOpen={true} onPopout={() => setCollaboratorsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('collaborators')} onToggleHide={() => toggleCardVisibility('collaborators')} onTossToSidePanel={handleTossToSidePanel}>
               <CollaborationSuggestions profile={profile} compact={false} />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+            {isCardVisible('communityFeed') && <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <CommunityFeedCard maxHeight="400px" />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('circles') && <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')} onTossToSidePanel={handleTossToSidePanel}>
               <CirclesRegions />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+            {isCardVisible('leaderboard') && <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <LeaderboardMiniCard />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="St. Germain Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+            {isCardVisible('affirmations') && <CollapsibleCard title="St. Germain Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <StGermainAffirmations />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
               <LeaderPathway profile={profile} />
-            </CollapsibleCard>
+            </CollapsibleCard>}
           </div>
 
           <div className="block space-y-6 mt-6">
-            <CollapsibleCard title={<span className="flex items-center gap-1">AI Discover <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('aiDiscover') && <CollapsibleCard title={<span className="flex items-center gap-1">AI Discover <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
               <AIDiscoverMatches profile={profile} />
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -1605,9 +1649,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   }
                 </div>
               </Tabs>
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('meetings') && <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
                 <div className="text-center py-6">
@@ -1623,9 +1667,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 )
                 }
               </div>
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('missions') && <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="space-y-3">
                 {missions.length === 0 ?
                 <div className="text-center py-6">
@@ -1641,9 +1685,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 )
                 }
               </div>
-            </CollapsibleCard>
+            </CollapsibleCard>}
 
-            <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('projects') && <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                 <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{totalProjects}</div></div>
                 <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submittedCount}</div></div>
@@ -1678,7 +1722,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               {filteredProjects.length > 4 &&
               <Button variant="ghost" className="w-full mt-3 text-violet-600" onClick={() => window.location.href = createPageUrl('Projects')}>View more</Button>
               }
-            </CollapsibleCard>
+            </CollapsibleCard>}
           </div>
 
           {/* Column C: Draggable */}
@@ -1687,7 +1731,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <Droppable droppableId="colC">
                 {(provided) =>
                 <div className="space-y-6" ref={provided.innerRef} {...provided.droppableProps}>
-                    {colCOrder.map((id, index) =>
+                    {colCOrder.filter(id => isCardVisible(id)).map((id, index) =>
                   <Draggable draggableId={id} index={index} key={id}>
                         {(dragProvided) =>
                     <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
