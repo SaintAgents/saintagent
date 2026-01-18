@@ -449,9 +449,9 @@ export default function Sidebar({
                       <TooltipTrigger asChild>
                         {navLink}
                       </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs">
-                        <p className="text-sm font-medium">{item.label}</p>
-                        {item.hint && <p className="text-xs text-slate-500">{item.hint}</p>}
+                      <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
+                        <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                        {item.hint && <p className="text-xs text-slate-600">{item.hint}</p>}
                       </TooltipContent>
                     </Tooltip>
                   );
@@ -463,10 +463,10 @@ export default function Sidebar({
                       <TooltipTrigger asChild>
                         {navLink}
                       </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs">
+                      <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
                         <div className="space-y-1">
-                          <p className="font-medium text-sm">Leader Channel Locked</p>
-                          <p className="text-xs text-slate-500">
+                          <p className="font-medium text-sm text-slate-900">Leader Channel Locked</p>
+                          <p className="text-xs text-slate-600">
                             Become a Verified 144k Leader to unlock.
                           </p>
                         </div>

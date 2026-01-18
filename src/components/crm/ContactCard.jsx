@@ -124,7 +124,10 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
               <DropdownMenuSeparator />
               <DropdownMenuItem 
                 className="text-rose-600"
-                onClick={() => deleteMutation.mutate()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteMutation.mutate();
+                }}
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete
               </DropdownMenuItem>
@@ -174,7 +177,10 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
               <DropdownMenuSeparator />
               <DropdownMenuItem 
                 className="text-rose-600"
-                onClick={() => deleteMutation.mutate()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteMutation.mutate();
+                }}
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete
               </DropdownMenuItem>
