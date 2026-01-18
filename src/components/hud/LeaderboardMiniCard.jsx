@@ -57,6 +57,7 @@ function MiniRow({ idx, profile, valueLabel, metric }) {
 }
 
 export default function LeaderboardMiniCard() {
+  // Don't show affirmations - this is a leaderboard card
   const { data: profiles = [] } = useQuery({
     queryKey: ['leaderboard_profiles_mini'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 100),

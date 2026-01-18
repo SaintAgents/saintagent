@@ -87,6 +87,7 @@ export default function ProjectMiniCard({ project, onClick }) {
                     claimed_by: me.email,
                     claimed_at: new Date().toISOString()
                   });
+                  window.location.reload();
                 }}
               >
                 Claim Project
