@@ -701,11 +701,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   };
 
+  const [rescheduleModal, setRescheduleModal] = useState({ open: false, meeting: null });
+
   const handleMeetingAction = async (action, meeting) => {
     if (action === 'accept') {
       updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'scheduled' } });
     } else if (action === 'decline') {
       updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'declined' } });
+    } else if (action === 'reschedule') {
+      setRescheduleModal({ open: true, meeting });
     } else if (action === 'confirm') {
       updateMeetingMutation.mutate({ id: meeting.id, data: { status: 'completed', guest_confirmed: true, ggg_earned: 0.03 } });
       await base44.entities.GGGTransaction.create({
