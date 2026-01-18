@@ -74,7 +74,7 @@ import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
 import MiniProfile from '@/components/profile/MiniProfile';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
-import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
+import { RANK_BADGE_IMAGES, RANK_TITLES } from '@/components/reputation/rankBadges';
 
 // RP ladder utilities - inlined to avoid import issues
 const RP_LADDER = [
@@ -1194,15 +1194,10 @@ export default function SidePanel({
                       strokeLinecap="round"
                     />
                   </svg>
-                  {/* Badge image centered - show NEXT rank badge */}
+                  {/* Badge image centered - show CURRENT rank badge */}
                   <img 
-                    src={(() => {
-                      // Find the next tier's code based on current rank
-                      const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
-                      const nextTier = RP_LADDER[currentIdx + 1];
-                      return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
-                    })()}
-                    alt={rpInfo.nextTitle || 'Next Rank'}
+                    src={RANK_BADGE_IMAGES[profile?.rp_rank_code || rpInfo.code] || RANK_BADGE_IMAGES.seeker}
+                    alt={RANK_TITLES[profile?.rp_rank_code || rpInfo.code] || 'Rank'}
                     className="absolute inset-0 w-full h-full object-contain p-2"
                     data-no-filter="true"
                   />
