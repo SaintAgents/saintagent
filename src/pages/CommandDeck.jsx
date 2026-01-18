@@ -471,55 +471,69 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     },
     enabled: !!userIdentifier,
     staleTime: 300000, // 5 minutes for badges
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch matches - mobile-optimized
   const { data: matches = [] } = useQuery({
     queryKey: ['matches', matchLimit],
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit),
-    staleTime: 120000, // 2 minutes
-    refetchOnWindowFocus: false
+    staleTime: 300000, // Increased to 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch meetings - mobile-optimized
   const { data: meetings = [] } = useQuery({
     queryKey: ['meetings', meetingLimit],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', meetingLimit),
-    staleTime: 120000,
-    refetchOnWindowFocus: false
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch missions - mobile-optimized
   const { data: missions = [] } = useQuery({
     queryKey: ['missions', missionLimit],
     queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit),
-    staleTime: 120000,
-    refetchOnWindowFocus: false
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch listings - mobile-optimized
   const { data: listings = [] } = useQuery({
     queryKey: ['listings', listingLimit],
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', listingLimit),
-    staleTime: 120000,
-    refetchOnWindowFocus: false
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch projects - mobile-optimized
   const { data: projects = [] } = useQuery({
     queryKey: ['projects', projectLimit],
     queryFn: () => base44.entities.Project.list('-created_date', projectLimit),
-    staleTime: 120000,
-    refetchOnWindowFocus: false
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch notifications - mobile-optimized
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', notificationLimit],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', notificationLimit),
-    staleTime: 60000, // 1 minute for notifications
-    refetchOnWindowFocus: false
+    staleTime: 180000, // 3 minutes for notifications
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Fetch challenges - mobile-optimized
@@ -527,8 +541,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryKey: ['challenges', userIdentifier, challengeLimit],
     queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', challengeLimit),
     enabled: !!userIdentifier,
-    staleTime: 120000,
-    refetchOnWindowFocus: false
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1
   });
 
   // Daily Ops data (today)
