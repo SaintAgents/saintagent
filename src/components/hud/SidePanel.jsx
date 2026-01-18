@@ -166,12 +166,12 @@ export default function SidePanel({
       
       if (savedPos) {
         const pos = JSON.parse(savedPos);
-        // Validate position is within viewport
+        // Validate position is within viewport - minimum 64px from top to stay below topbar
         const maxX = Math.max(0, (window.innerWidth || 1200) - 380);
         const maxY = Math.max(0, (window.innerHeight || 800) - 100);
         setPopPosition({
           x: Math.min(Math.max(0, pos.x || 0), maxX),
-          y: Math.min(Math.max(0, pos.y || 0), maxY)
+          y: Math.min(Math.max(64, pos.y || 64), maxY)
         });
       }
       if (savedSize) {
@@ -221,7 +221,7 @@ export default function SidePanel({
     const dy = e.clientY - popDragRef.current.startY;
     setPopPosition({
       x: Math.max(0, Math.min(window.innerWidth - popSize.width, popDragRef.current.startPosX + dx)),
-      y: Math.max(0, Math.min(window.innerHeight - 50, popDragRef.current.startPosY + dy))
+      y: Math.max(64, Math.min(window.innerHeight - 50, popDragRef.current.startPosY + dy))
     });
   };
   const onPopDragEnd = () => {
