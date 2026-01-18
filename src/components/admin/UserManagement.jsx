@@ -349,8 +349,8 @@ export default function UserManagement() {
           </DialogHeader>
 
           {selectedUser &&
-          <ScrollArea className="flex-1 pr-4">
-          <div className="space-y-6">
+          <ScrollArea className="flex-1 max-h-[70vh] pr-4">
+          <div className="space-y-6 pb-4">
               {/* User Info */}
               <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50">
                 <Avatar className="w-16 h-16">
