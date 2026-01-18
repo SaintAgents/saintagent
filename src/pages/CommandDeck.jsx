@@ -140,9 +140,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } catch { return getDefaultCustomCards(); }
   });
   
-  // Persist deck view mode
+  // Persist deck view mode and notify other components
   useEffect(() => {
     try { localStorage.setItem('deckViewMode', deckViewMode); } catch {}
+    // Dispatch event for Sidebar and MobileMenu to sync
+    document.dispatchEvent(new CustomEvent('viewModeChange', { detail: { viewMode: deckViewMode } }));
   }, [deckViewMode]);
   
   // Get visible cards based on view mode

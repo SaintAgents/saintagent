@@ -6,36 +6,65 @@ import {
   Users, Target, ShoppingBag, Calendar, Settings, 
   Trophy, Folder, Radio, UserCircle, HelpCircle,
   Heart, Zap, LayoutDashboard, MessageSquare, Compass,
-  UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft
+  UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft, Orbit
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { getStoredViewMode, VIEW_MODE_CONFIG } from './DeckViewModeSelector';
 
+// Full menu items with nav IDs for filtering
 const menuItems = [
-  { label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck' },
-  { label: 'Matches', icon: Heart, page: 'Matches' },
-  { label: 'Messages', icon: MessageSquare, page: 'Messages' },
-  { label: 'Meetings', icon: Calendar, page: 'Meetings' },
-  { label: 'Missions', icon: Target, page: 'Missions' },
-  { label: 'Projects', icon: Folder, page: 'Projects' },
-  { label: 'Collaborators', icon: UserPlus, page: 'FindCollaborators' },
-  { label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
-  { label: 'Studio', icon: Briefcase, page: 'Studio' },
-  { label: 'Circles', icon: Users, page: 'Circles' },
-  { label: 'Events', icon: Globe, page: 'Events' },
-  { label: 'Gamification', icon: Trophy, page: 'Gamification' },
-  { label: 'Quests', icon: Zap, page: 'Quests' },
-  { label: 'Leaderboards', icon: Activity, page: 'Leaderboards' },
-  { label: 'Community', icon: Compass, page: 'CommunityFeed' },
-  { label: 'Leader Channel', icon: Radio, page: 'LeaderChannel' },
-  { label: 'Daily Ops', icon: BookOpen, page: 'DailyOps' },
-  { label: 'Profile', icon: UserCircle, page: 'Profile' },
-  { label: 'Settings', icon: Settings, page: 'Settings' },
-  { label: 'Help & FAQ', icon: HelpCircle, page: 'FAQ' },
+  { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck' },
+  { id: 'matches', label: 'Matches', icon: Heart, page: 'Matches' },
+  { id: 'messages', label: 'Messages', icon: MessageSquare, page: 'Messages' },
+  { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings' },
+  { id: 'synchronicity', label: 'Synchronicity', icon: Orbit, page: 'SynchronicityEngine' },
+  { id: 'missions', label: 'Missions', icon: Target, page: 'Missions' },
+  { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects' },
+  { id: 'collaborators', label: 'Collaborators', icon: UserPlus, page: 'FindCollaborators' },
+  { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, page: 'Marketplace' },
+  { id: 'studio', label: 'Studio', icon: Briefcase, page: 'Studio' },
+  { id: 'circles', label: 'Circles', icon: Users, page: 'Circles' },
+  { id: 'events', label: 'Events', icon: Globe, page: 'Events' },
+  { id: 'gamification', label: 'Gamification', icon: Trophy, page: 'Gamification' },
+  { id: 'quests', label: 'Quests', icon: Zap, page: 'Quests' },
+  { id: 'activity', label: 'Leaderboards', icon: Activity, page: 'Leaderboards' },
+  { id: 'communityfeed', label: 'Community', icon: Compass, page: 'CommunityFeed' },
+  { id: 'leader', label: 'Leader Channel', icon: Radio, page: 'LeaderChannel' },
+  { id: 'dailyops', label: 'Daily Ops', icon: BookOpen, page: 'DailyOps' },
+  { id: 'profile', label: 'Profile', icon: UserCircle, page: 'Profile' },
+  { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },
+  { id: 'faq', label: 'Help & FAQ', icon: HelpCircle, page: 'FAQ' },
 ];
 
 export default function MobileMenuSheet({ open, onOpenChange }) {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
+  const [viewMode, setViewMode] = useState(getStoredViewMode);
+
+  // Listen for view mode changes
+  useEffect(() => {
+    const handleViewModeChange = (e) => {
+      if (e.detail?.viewMode) {
+        setViewMode(e.detail.viewMode);
+      }
+    };
+    const handleStorage = () => {
+      setViewMode(getStoredViewMode());
+    };
+    document.addEventListener('viewModeChange', handleViewModeChange);
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      document.removeEventListener('viewModeChange', handleViewModeChange);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  // Filter menu items based on view mode
+  const filteredMenuItems = menuItems.filter(item => {
+    const config = VIEW_MODE_CONFIG[viewMode];
+    if (!config || !config.navIds) return true; // Show all if no filter
+    return config.navIds.includes(item.id);
+  });
 
   // Toggle left sidebar (icons only)
   const toggleLeftSidebar = () => {
@@ -63,7 +92,7 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
           </SheetHeader>
           <div className="overflow-y-auto h-[calc(60vh-56px)] p-3 pb-20">
             <div className="grid grid-cols-4 gap-2">
-              {menuItems.map((item) => {
+              {filteredMenuItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link
@@ -98,7 +127,7 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
             className="absolute left-0 top-0 bottom-0 w-16 bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-[#00ff88]/20 overflow-y-auto py-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {menuItems.map((item) => {
+            {filteredMenuItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
