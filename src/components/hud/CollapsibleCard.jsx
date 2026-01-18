@@ -122,15 +122,28 @@ export default function CollapsibleCard({
           }
         </div>
         <div className="flex items-center gap-1">
-          {onTossToSidePanel && (
+          {onTossToSidePanel && cardId && (
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 hover:bg-violet-100"
               onClick={(e) => {
                 e.stopPropagation();
-                // Extract string title if it's a JSX element
-                const titleStr = typeof title === 'string' ? title : cardId;
+                // Extract string title - handle JSX elements
+                let titleStr = cardId; // fallback to cardId
+                if (typeof title === 'string') {
+                  titleStr = title;
+                } else if (title?.props?.children) {
+                  // Try to extract text from JSX
+                  const extractText = (node) => {
+                    if (typeof node === 'string') return node;
+                    if (Array.isArray(node)) return node.map(extractText).join(' ');
+                    if (node?.props?.children) return extractText(node.props.children);
+                    return '';
+                  };
+                  titleStr = extractText(title.props.children).trim() || cardId;
+                }
+                console.log('Tossing to side panel:', cardId, titleStr);
                 onTossToSidePanel(cardId, titleStr);
               }}
               title="Send to side panel"
