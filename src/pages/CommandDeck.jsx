@@ -1926,6 +1926,20 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         />
         <TuneEngineModal open={tuneEngineOpen} onClose={() => setTuneEngineOpen(false)} />
         <OnlineUsersModal open={onlineUsersOpen} onClose={() => setOnlineUsersOpen(false)} />
+        <RescheduleDialog 
+          open={rescheduleModal.open} 
+          onOpenChange={(open) => setRescheduleModal({ open, meeting: open ? rescheduleModal.meeting : null })}
+          meeting={rescheduleModal.meeting}
+          onReschedule={async (newTime) => {
+            if (rescheduleModal.meeting) {
+              await updateMeetingMutation.mutateAsync({ 
+                id: rescheduleModal.meeting.id, 
+                data: { scheduled_time: newTime } 
+              });
+              setRescheduleModal({ open: false, meeting: null });
+            }
+          }}
+        />
         
         {/* Command Deck Tour */}
         <CommandDeckTour autoStart={showTour} onComplete={handleTourComplete} />
