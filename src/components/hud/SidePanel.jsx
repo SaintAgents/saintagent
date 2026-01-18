@@ -1102,8 +1102,8 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
-          {/* Stored Cards Section */}
-          {storedCards && storedCards.length > 0 && (
+          {/* Stored Cards Section - Always show if there are stored cards */}
+          {Array.isArray(storedCards) && storedCards.length > 0 && (
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.3)]">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -1210,10 +1210,10 @@ export default function SidePanel({
                       strokeLinecap="round"
                     />
                   </svg>
-                  {/* Badge image centered - show user's CURRENT rank badge */}
+                  {/* Badge image centered - show user's CURRENT rank shield */}
                   <img 
-                    src={RANK_BADGE_IMAGES[profile?.rp_rank_code] || RANK_BADGE_IMAGES[rpInfo.code] || RANK_BADGE_IMAGES.seeker}
-                    alt={RANK_TITLES[profile?.rp_rank_code] || RANK_TITLES[rpInfo.code] || 'Rank'}
+                    src={RANK_BADGE_IMAGES[profile?.rp_rank_code || 'guardian']}
+                    alt={RANK_TITLES[profile?.rp_rank_code || 'guardian']}
                     className="absolute inset-0 w-full h-full object-contain p-2"
                     data-no-filter="true"
                   />
