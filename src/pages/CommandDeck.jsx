@@ -179,8 +179,24 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const [storedCards, setStoredCards] = useState(() => {
     try {
       const saved = localStorage.getItem('cmdStoredCards');
-      return saved ? JSON.parse(saved) : [];
-    } catch {return [];}
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      // Validate and sanitize: only keep objects with valid id and title strings
+      if (Array.isArray(parsed)) {
+        return parsed.filter(card => 
+          card && typeof card === 'object' && 
+          typeof card.id === 'string' && 
+          typeof card.title === 'string'
+        ).map(card => ({ id: card.id, title: card.title })); // Strip any invalid properties like icon
+      }
+      // If corrupted, clear and return empty
+      localStorage.removeItem('cmdStoredCards');
+      return [];
+    } catch {
+      // If parse fails, clear corrupted data
+      try { localStorage.removeItem('cmdStoredCards'); } catch {}
+      return [];
+    }
   });
 
   // Persist hidden cards
@@ -190,11 +206,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } catch {}
   }, [hiddenCards]);
 
-  // Persist stored cards
+  // Persist stored cards (only id and title - never store icons)
   useEffect(() => {
-    console.log('Storing cards to localStorage:', storedCards);
     try {
-      localStorage.setItem('cmdStoredCards', JSON.stringify(storedCards));
+      // Ensure we only save serializable data (id and title only)
+      const cleanCards = storedCards.map(card => ({ id: card.id, title: card.title }));
+      localStorage.setItem('cmdStoredCards', JSON.stringify(cleanCards));
     } catch {}
   }, [storedCards]);
 
