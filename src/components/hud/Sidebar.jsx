@@ -74,6 +74,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { getStoredViewMode, isNavItemVisible } from './DeckViewModeSelector';
 
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
@@ -150,7 +151,27 @@ export default function Sidebar({
   const [matrixVariance, setMatrixVariance] = useState(() => {
     try { return parseFloat(localStorage.getItem('matrixVariance')) || 0.5; } catch { return 0.5; }
   });
+  const [viewMode, setViewMode] = useState(getStoredViewMode);
   const isDark = theme === 'dark';
+
+  // Listen for view mode changes from Command Deck
+  React.useEffect(() => {
+    const handleViewModeChange = (e) => {
+      if (e.detail?.viewMode) {
+        setViewMode(e.detail.viewMode);
+      }
+    };
+    // Also check localStorage on storage events
+    const handleStorage = () => {
+      setViewMode(getStoredViewMode());
+    };
+    document.addEventListener('viewModeChange', handleViewModeChange);
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      document.removeEventListener('viewModeChange', handleViewModeChange);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
 
   // Persist background effect and dispatch event for Layout
   React.useEffect(() => {
@@ -359,7 +380,13 @@ export default function Sidebar({
         {navOpen && (
           <nav className={cn("p-3 pt-0 space-y-1", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
             <TooltipProvider delayDuration={200}>
-              {NAV_ITEMS.filter(item => !item.adminOnly || currentUser?.role === 'admin').map((item) => {
+              {NAV_ITEMS.filter(item => {
+                // Admin check
+                if (item.adminOnly && currentUser?.role !== 'admin') return false;
+                // View mode filtering
+                if (!isNavItemVisible(item.id, viewMode)) return false;
+                return true;
+              }).map((item) => {
                 const isActive = currentPage === item.id;
                 const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
