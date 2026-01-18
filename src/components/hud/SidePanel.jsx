@@ -74,7 +74,7 @@ import FloatingPanel from '@/components/hud/FloatingPanel';
 import WalletPanel from '@/components/wallet/WalletPanel';
 import MiniProfile from '@/components/profile/MiniProfile';
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
-import { RANK_BADGE_IMAGES, RANK_TITLES } from '@/components/reputation/rankBadges';
+import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 
 // RP ladder utilities - inlined to avoid import issues
 const RP_LADDER = [
@@ -716,30 +716,14 @@ export default function SidePanel({
                         {walletAvailable?.toLocaleString?.() || 0}
                       </p>
                     </div>
-                    <div className="relative w-16 h-16">
-                      {/* Background ring */}
-                      <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
-                        <circle 
-                          cx="32" cy="32" r="28" 
-                          stroke="currentColor"
-                          className="text-violet-600"
-                          strokeWidth="5" 
-                          fill="none" 
-                          strokeDasharray={`${2 * Math.PI * 28}`} 
-                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
-                          style={{ transition: 'all 0.7s' }}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      {/* Badge image centered - show CURRENT rank badge */}
-                      <img 
-                        src={RANK_BADGE_IMAGES[profile?.rp_rank_code || rpInfo.code] || RANK_BADGE_IMAGES.seeker}
-                        alt={RANK_TITLES[profile?.rp_rank_code || rpInfo.code] || 'Rank'}
-                        className="absolute inset-0 w-full h-full object-contain p-2"
-                        data-no-filter="true"
-                      />
-                    </div>
+                    <ProgressRing
+                      value={rankProgress}
+                      max={nextRankAt}
+                      size={64}
+                      strokeWidth={5}
+                      label={profile?.rank_code?.charAt(0).toUpperCase()}
+                      sublabel="Rank"
+                    />
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-600">To next rank</span>
@@ -1033,8 +1017,8 @@ export default function SidePanel({
           isOpen ? "" : "w-0 overflow-hidden"
         )}
         style={{ 
-          top: '80px',
-          height: `calc(100vh - 80px)`, 
+          top: '64px',
+          height: `calc(100vh - 64px)`, 
           right: dockSide === 'right' ? 0 : 'auto', 
           left: dockSide === 'left' ? 0 : 'auto',
           width: isOpen ? `${panelWidth}px` : '0'
@@ -1102,8 +1086,8 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
-          {/* Stored Cards Section - Always show if there are stored cards */}
-          {Array.isArray(storedCards) && storedCards.length > 0 && (
+          {/* Stored Cards Section */}
+          {storedCards && storedCards.length > 0 && (
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.3)]">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -1210,10 +1194,15 @@ export default function SidePanel({
                       strokeLinecap="round"
                     />
                   </svg>
-                  {/* Badge image centered - show user's CURRENT rank shield */}
+                  {/* Badge image centered - show NEXT rank badge */}
                   <img 
-                    src={RANK_BADGE_IMAGES[profile?.rp_rank_code || 'guardian']}
-                    alt={RANK_TITLES[profile?.rp_rank_code || 'guardian']}
+                    src={(() => {
+                      // Find the next tier's code based on current rank
+                      const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
+                      const nextTier = RP_LADDER[currentIdx + 1];
+                      return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
+                    })()}
+                    alt={rpInfo.nextTitle || 'Next Rank'}
                     className="absolute inset-0 w-full h-full object-contain p-2"
                     data-no-filter="true"
                   />
@@ -1632,30 +1621,13 @@ export default function SidePanel({
                   {walletAvailable?.toLocaleString?.() || 0}
                 </p>
               </div>
-              <div className="relative w-16 h-16">
-                {/* Background ring */}
-                <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                  <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
-                  <circle 
-                    cx="32" cy="32" r="28" 
-                    stroke="currentColor"
-                    className="text-violet-600"
-                    strokeWidth="5" 
-                    fill="none" 
-                    strokeDasharray={`${2 * Math.PI * 28}`} 
-                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
-                    style={{ transition: 'all 0.7s' }}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {/* Badge image centered - show CURRENT rank badge */}
-                <img 
-                  src={RANK_BADGE_IMAGES[profile?.rp_rank_code || rpInfo.code] || RANK_BADGE_IMAGES.seeker}
-                  alt={RANK_TITLES[profile?.rp_rank_code || rpInfo.code] || 'Rank'}
-                  className="absolute inset-0 w-full h-full object-contain p-2"
-                  data-no-filter="true"
-                />
-              </div>
+              <ProgressRing
+                  value={rankProgress}
+                  max={nextRankAt}
+                  size={64}
+                  strokeWidth={5}
+                  label={profile?.rank_code?.charAt(0).toUpperCase()}
+                  sublabel="Rank" />
 
             </div>
             <div className="flex items-center justify-between text-sm">
