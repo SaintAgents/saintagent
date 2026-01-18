@@ -86,11 +86,11 @@ export default function CollapsibleCard({
             className="h-8 w-8 -ml-2 hover:bg-slate-100"
             onClick={(e) => {
               e.stopPropagation();
-              onPopout();
-              // Auto-toss to side panel when popping out
+              // Auto-toss to side panel when popping out (only if toss handler exists)
               if (onTossToSidePanel && cardId && title) {
                 onTossToSidePanel(cardId, typeof title === 'string' ? title : cardId);
               }
+              onPopout();
             }}
             aria-label="Pop out"
             title="Pop out">

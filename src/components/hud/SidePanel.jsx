@@ -1443,14 +1443,7 @@ export default function SidePanel({
           </CollapsibleCard>
 
           {/* Community Feed */}
-          <CollapsibleCard title="Community Feed" icon={MessageCircle} defaultOpen={true} onPopout={() => {
-            setFeedPopupOpen(true);
-            // Find and restore communityFeed card to main deck
-            const communityCard = storedCards.find(c => c.id === 'communityFeed');
-            if (communityCard) {
-              onRestoreCard?.('communityFeed');
-            }
-          }}>
+          <CollapsibleCard title="Community Feed" icon={MessageCircle} defaultOpen={true} onPopout={() => setFeedPopupOpen(true)}>
             {/* Create Post */}
             <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
               <div className="flex items-start gap-3">
