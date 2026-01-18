@@ -214,10 +214,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Store all cards to side panel
   const storeAllCards = () => {
     const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations'];
-    const newStoredCards = allCardIds
-      .filter(id => !storedCards.some(c => c.id === id))
-      .map(id => ({ id, title: getCardTitle(id), icon: CARD_ICONS[id] }));
-    setStoredCards(prev => [...prev, ...newStoredCards]);
+    // Create fresh array with all cards (icons will be resolved when rendering)
+    const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
+    setStoredCards(newStoredCards);
     setHiddenCards(new Set(allCardIds));
     if (!sidePanelOpen) setSidePanelOpen(true);
   };
