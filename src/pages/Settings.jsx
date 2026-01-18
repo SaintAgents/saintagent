@@ -28,6 +28,8 @@ import {
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import BackButton from '@/components/hud/BackButton';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
+import { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Settings() {
   const queryClient = useQueryClient();
@@ -72,6 +74,46 @@ export default function Settings() {
     command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true },
     zfold_mode: typeof window !== 'undefined' ? localStorage.getItem('zfold_mode') === 'true' : false
   });
+  
+  // Custom deck cards selection
+  const [customDeckCards, setCustomDeckCards] = useState(() => {
+    try {
+      const saved = localStorage.getItem('deckCustomCards');
+      return saved ? JSON.parse(saved) : getDefaultCustomCards();
+    } catch { return getDefaultCustomCards(); }
+  });
+  
+  // All available cards
+  const allCards = VIEW_MODE_CONFIG.advanced.cards;
+  
+  const cardLabels = {
+    quickActions: 'Quick Actions',
+    quickStart: 'Quick Start Checklist',
+    challenges: 'Challenges & Rewards',
+    inbox: 'Inbox & Signals',
+    collaborators: 'Potential Collaborators',
+    communityFeed: 'Community Feed',
+    circles: 'Circles & Regions',
+    leaderboard: 'Leaderboard',
+    affirmations: 'St. Germain Affirmations',
+    leaderPathway: 'Leader Pathway',
+    aiDiscover: 'AI Discover',
+    syncEngine: 'Synchronicity Engine',
+    meetings: 'Meetings & Momentum',
+    missions: 'Missions',
+    projects: 'Projects',
+    market: 'Marketplace',
+    influence: 'Influence & Reach',
+    leader: '144K Leader Channel',
+    dailyops: 'Daily Ops'
+  };
+  
+  // Persist custom deck cards
+  useEffect(() => {
+    try {
+      localStorage.setItem('deckCustomCards', JSON.stringify(customDeckCards));
+    } catch {}
+  }, [customDeckCards]);
 
   // Initialize Z Fold mode on mount
   React.useEffect(() => {
@@ -159,7 +201,7 @@ export default function Settings() {
       <div className="max-w-3xl mx-auto p-6">
 
         <Tabs defaultValue="account" className="space-y-6">
-          <TabsList className="w-full grid grid-cols-4 h-11 bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
+          <TabsList className="w-full grid grid-cols-5 h-11 bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
             <TabsTrigger value="account" className="rounded-lg gap-2">
               <User className="w-4 h-4" />
               Account
@@ -175,6 +217,10 @@ export default function Settings() {
             <TabsTrigger value="preferences" className="rounded-lg gap-2">
               <Eye className="w-4 h-4" />
               Preferences
+            </TabsTrigger>
+            <TabsTrigger value="deck" className="rounded-lg gap-2">
+              <SettingsIcon className="w-4 h-4" />
+              Deck
             </TabsTrigger>
           </TabsList>
 
@@ -515,6 +561,51 @@ export default function Settings() {
                     <p className="text-sm text-slate-500">Display optimal timing for connections</p>
                   </div>
                   <Switch defaultChecked className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300" />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Deck Settings */}
+          <TabsContent value="deck" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Custom Deck Cards</CardTitle>
+                <CardDescription>Select which cards to show on your Command Deck (used in Custom view mode)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {allCards.map(cardId => (
+                    <div key={cardId} className="flex items-center gap-2">
+                      <Checkbox
+                        id={cardId}
+                        checked={customDeckCards.includes(cardId)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setCustomDeckCards([...customDeckCards, cardId]);
+                          } else {
+                            setCustomDeckCards(customDeckCards.filter(c => c !== cardId));
+                          }
+                        }}
+                      />
+                      <Label htmlFor={cardId} className="cursor-pointer text-sm">
+                        {cardLabels[cardId] || cardId}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-3 border-t">
+                  <p className="text-xs text-slate-500">
+                    {customDeckCards.length} of {allCards.length} cards selected
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setCustomDeckCards(getDefaultCustomCards())}
+                    className="mt-2"
+                  >
+                    Reset to Defaults
+                  </Button>
                 </div>
               </CardContent>
             </Card>
