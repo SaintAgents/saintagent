@@ -216,9 +216,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations'];
     // Create fresh array with all cards (icons will be resolved when rendering)
     const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
+    console.log('Stowing all cards:', newStoredCards);
     setStoredCards(newStoredCards);
     setHiddenCards(new Set(allCardIds));
-    if (!sidePanelOpen) setSidePanelOpen(true);
+    // Open side panel
+    setSidePanelOpen(true);
   };
 
   // Restore all cards from side panel
