@@ -8,7 +8,9 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions']
+    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions'],
+    // Nav items that correspond to simple mode (used by Sidebar and MobileMenu)
+    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'settings']
   },
   advanced: {
     label: 'Advanced',
@@ -18,13 +20,29 @@ export const VIEW_MODE_CONFIG = {
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
       'market', 'influence', 'leader', 'dailyops'
-    ]
+    ],
+    navIds: null // null means show all nav items
   },
   custom: {
     label: 'Custom',
     description: 'Choose your features',
-    cards: [] // Determined by user settings
+    cards: [], // Determined by user settings
+    navIds: null // null means show all nav items
   }
+};
+
+// Helper to get current view mode from localStorage
+export const getStoredViewMode = () => {
+  try {
+    return localStorage.getItem('deckViewMode') || 'advanced';
+  } catch { return 'advanced'; }
+};
+
+// Helper to check if nav item should be visible based on view mode
+export const isNavItemVisible = (navId, viewMode) => {
+  const config = VIEW_MODE_CONFIG[viewMode];
+  if (!config || !config.navIds) return true; // Show all if no filter
+  return config.navIds.includes(navId);
 };
 
 // Get default custom cards (half of all)
