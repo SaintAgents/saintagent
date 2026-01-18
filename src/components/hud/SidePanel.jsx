@@ -1210,10 +1210,10 @@ export default function SidePanel({
                       strokeLinecap="round"
                     />
                   </svg>
-                  {/* Badge image centered - show CURRENT rank badge */}
+                  {/* Badge image centered - Guardian rank */}
                   <img 
-                    src={RANK_BADGE_IMAGES[profile?.rp_rank_code || rpInfo.code] || RANK_BADGE_IMAGES.seeker}
-                    alt={RANK_TITLES[profile?.rp_rank_code || rpInfo.code] || 'Rank'}
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/735be8e27_gemini-25-flash-image_create_art_from_all-02-Picsart-BackgroundRemover.jpg"
+                    alt="Guardian"
                     className="absolute inset-0 w-full h-full object-contain p-2"
                     data-no-filter="true"
                   />
