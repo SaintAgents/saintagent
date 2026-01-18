@@ -64,10 +64,11 @@ export default function GlobalSidePanelNudge() {
     <div
       onClick={handleClick}
       className={cn(
-        "fixed top-20 z-[9998] cursor-pointer transition-all duration-300",
+        "fixed z-[9998] cursor-pointer transition-all duration-300",
         "hover:scale-105 group",
         dockSide === 'right' ? "right-0" : "left-0"
       )}
+      style={{ top: 'calc(50% + 100px)', transform: 'translateY(-50%)' }}
       title="Open Side Panel"
       data-side-panel-handle
     >
