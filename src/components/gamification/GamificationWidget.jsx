@@ -102,6 +102,9 @@ export default function GamificationWidget({ profile, compact = false }) {
             <div>
               <p className="font-semibold text-amber-900 capitalize">{rpInfo.title}</p>
               <p className="text-sm text-amber-600">{rpPoints.toLocaleString()} RP</p>
+              {rpInfo.nextTitle && (
+                <p className="text-xs text-orange-500">Progress to {rpInfo.nextTitle}</p>
+              )}
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={() => setHubOpen(true)} className="gap-1">
