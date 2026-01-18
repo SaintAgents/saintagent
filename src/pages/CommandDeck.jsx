@@ -192,6 +192,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Persist stored cards
   useEffect(() => {
+    console.log('Storing cards to localStorage:', storedCards);
     try {
       localStorage.setItem('cmdStoredCards', JSON.stringify(storedCards));
     } catch {}
