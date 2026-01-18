@@ -94,7 +94,8 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
               className="h-7 w-7 text-violet-600 dark:text-[#00ff88] hover:bg-violet-100 dark:hover:bg-[rgba(0,255,136,0.1)]"
               onClick={(e) => {
                 e.stopPropagation();
-                onTossToSidePanel(cardId, title);
+                const titleStr = typeof title === 'string' ? title : (typeof title === 'object' && title.props?.children ? String(title.props.children) : cardId);
+                onTossToSidePanel(cardId, titleStr);
                 onClose();
               }}
               title="Send to side panel"

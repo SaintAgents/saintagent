@@ -716,14 +716,30 @@ export default function SidePanel({
                         {walletAvailable?.toLocaleString?.() || 0}
                       </p>
                     </div>
-                    <ProgressRing
-                      value={rankProgress}
-                      max={nextRankAt}
-                      size={64}
-                      strokeWidth={5}
-                      label={profile?.rank_code?.charAt(0).toUpperCase()}
-                      sublabel="Rank"
-                    />
+                    <div className="relative w-16 h-16">
+                      {/* Background ring */}
+                      <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
+                        <circle 
+                          cx="32" cy="32" r="28" 
+                          stroke="currentColor"
+                          className="text-violet-600"
+                          strokeWidth="5" 
+                          fill="none" 
+                          strokeDasharray={`${2 * Math.PI * 28}`} 
+                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
+                          style={{ transition: 'all 0.7s' }}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      {/* Badge image centered - show CURRENT rank badge */}
+                      <img 
+                        src={RANK_BADGE_IMAGES[profile?.rp_rank_code || rpInfo.code] || RANK_BADGE_IMAGES.seeker}
+                        alt={RANK_TITLES[profile?.rp_rank_code || rpInfo.code] || 'Rank'}
+                        className="absolute inset-0 w-full h-full object-contain p-2"
+                        data-no-filter="true"
+                      />
+                    </div>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-600">To next rank</span>
