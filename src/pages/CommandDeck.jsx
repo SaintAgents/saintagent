@@ -1865,7 +1865,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           onToggle={() => setSidePanelOpen(!sidePanelOpen)}
           onMatchAction={handleMatchAction}
           onMeetingAction={handleMeetingAction}
-          storedCards={storedCardsWithIcons}
+          storedCards={storedCards}
           onRestoreCard={handleRestoreCard}
           onRemoveStoredCard={handleRemoveStoredCard} />
 
