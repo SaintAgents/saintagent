@@ -284,8 +284,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     // Don't add duplicates
     if (storedCards.some(c => c.id === cardId)) return;
     
-    // Store cardId, title, and icon
-    setStoredCards(prev => [...prev, { id: cardId, title, icon: CARD_ICONS[cardId] }]);
+    // Store cardId and title only (icons resolved by SidePanel)
+    setStoredCards(prev => [...prev, { id: cardId, title }]);
     // Also hide it from main deck
     setHiddenCards(prev => new Set([...prev, cardId]));
     
@@ -295,12 +295,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   };
 
-  // Get stored cards with icons resolved (backwards compatibility - icon may already be stored)
-  // Note: Icons cannot be serialized to localStorage, so we always resolve from CARD_ICONS
-  const storedCardsWithIcons = storedCards.map(card => ({
-    ...card,
-    icon: CARD_ICONS[card.id] || Sparkles
-  }));
+
 
   // Restore card from side panel to main deck
   const handleRestoreCard = (cardId) => {
