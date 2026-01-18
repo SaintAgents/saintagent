@@ -294,9 +294,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   };
 
   // Get stored cards with icons resolved (backwards compatibility - icon may already be stored)
+  // Note: Icons cannot be serialized to localStorage, so we always resolve from CARD_ICONS
   const storedCardsWithIcons = storedCards.map(card => ({
     ...card,
-    icon: card.icon || CARD_ICONS[card.id]
+    icon: CARD_ICONS[card.id] || Sparkles
   }));
 
   // Restore card from side panel to main deck
