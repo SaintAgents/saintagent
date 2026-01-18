@@ -1121,7 +1121,8 @@ export default function SidePanel({
         </div>
       </div>
 
-      {/* Toggle Button */}
+      {/* Toggle Button - hidden when popped off */}
+      {!isPoppedOff && (
       <button
           onClick={onToggle}
           data-side-panel-handle
@@ -1142,6 +1143,7 @@ export default function SidePanel({
           }
         </div>
       </button>
+      )}
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
