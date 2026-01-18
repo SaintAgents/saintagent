@@ -100,6 +100,7 @@ function getRPRank(points = 0) {
 }
 import { createPageUrl } from '@/utils';
 import CollaborationSuggestions from '@/components/notifications/CollaborationSuggestions';
+import ProjectUpdatesFeed from '@/components/projects/ProjectUpdatesFeed';
 
 export default function SidePanel({
   matches = [],
@@ -840,6 +841,11 @@ export default function SidePanel({
 
               <CollapsibleCard title="Potential Collaborators" icon={Users} badge="AI" badgeColor="emerald" onPopout={() => setRecentJoinsPopupOpen(true)}>
                 <CollaborationSuggestions profile={profile} compact={true} />
+              </CollapsibleCard>
+
+              {/* Project Updates */}
+              <CollapsibleCard title="Project Updates" icon={Folder} badge="New" badgeColor="violet" defaultOpen={false}>
+                <ProjectUpdatesFeed limit={3} showProjectLink={true} />
               </CollapsibleCard>
 
               {/* Today's Schedule */}
