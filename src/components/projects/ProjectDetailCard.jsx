@@ -7,10 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   DollarSign, MapPin, Users, Calendar, Building2, Globe, 
   FileText, Tag, ExternalLink, CheckCircle, XCircle, HelpCircle,
-  Clock, AlertTriangle, Shield, Brain, TrendingUp
+  Clock, AlertTriangle, Shield, Brain, TrendingUp, MessageSquare, Megaphone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ProjectEvaluationPanel from '@/components/evaluation/ProjectEvaluationPanel';
+import ProjectTeamPanel from '@/components/projects/ProjectTeamPanel';
+import ProjectDiscussionPanel from '@/components/projects/ProjectDiscussionPanel';
+import ProjectUpdatePanel from '@/components/projects/ProjectUpdatePanel';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', color: 'slate', icon: FileText },
@@ -119,8 +122,20 @@ export default function ProjectDetailCard({ project }) {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        <TabsList className="flex-wrap h-auto gap-1">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="team" className="gap-1">
+            <Users className="w-4 h-4" />
+            Team
+          </TabsTrigger>
+          <TabsTrigger value="discussions" className="gap-1">
+            <MessageSquare className="w-4 h-4" />
+            Discussions
+          </TabsTrigger>
+          <TabsTrigger value="updates" className="gap-1">
+            <Megaphone className="w-4 h-4" />
+            Updates
+          </TabsTrigger>
           <TabsTrigger value="evaluation" className="gap-1">
             <Brain className="w-4 h-4" />
             Evaluation
@@ -251,6 +266,25 @@ export default function ProjectDetailCard({ project }) {
               </div>
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="team" className="mt-4">
+          <ProjectTeamPanel 
+            projectId={project.id} 
+            isOwner={project.claimed_by === currentUser?.email || project.created_by === currentUser?.email}
+          />
+        </TabsContent>
+
+        <TabsContent value="discussions" className="mt-4">
+          <ProjectDiscussionPanel projectId={project.id} />
+        </TabsContent>
+
+        <TabsContent value="updates" className="mt-4">
+          <ProjectUpdatePanel 
+            projectId={project.id} 
+            projectTitle={project.title}
+            isTeamMember={project.claimed_by === currentUser?.email || project.created_by === currentUser?.email}
+          />
         </TabsContent>
 
         <TabsContent value="evaluation" className="mt-4">
