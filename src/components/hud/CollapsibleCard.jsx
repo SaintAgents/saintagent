@@ -87,6 +87,10 @@ export default function CollapsibleCard({
             onClick={(e) => {
               e.stopPropagation();
               onPopout();
+              // Auto-toss to side panel when popping out
+              if (onTossToSidePanel && cardId && title) {
+                onTossToSidePanel(cardId, typeof title === 'string' ? title : cardId);
+              }
             }}
             aria-label="Pop out"
             title="Pop out">
