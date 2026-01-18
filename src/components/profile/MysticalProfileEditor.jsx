@@ -213,8 +213,8 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
               <SelectTrigger className="mt-2">
                 <SelectValue placeholder="Select number" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={null}>None</SelectItem>
+              <SelectContent className="max-h-64">
+                <SelectItem value="none">None</SelectItem>
                 {LIFE_PATH_OPTIONS.map((n) => (
                   <SelectItem key={n} value={n}>{n}</SelectItem>
                 ))}
@@ -225,14 +225,14 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
           <div>
             <Label>Soul Urge (Heart's Desire)</Label>
             <Select
-              value={formData.numerology_soul_urge || ''}
-              onValueChange={(v) => setFormData({ ...formData, numerology_soul_urge: v })}
+              value={formData.numerology_soul_urge || 'none'}
+              onValueChange={(v) => setFormData({ ...formData, numerology_soul_urge: v === 'none' ? '' : v })}
             >
               <SelectTrigger className="mt-2">
                 <SelectValue placeholder="Select number" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={null}>None</SelectItem>
+              <SelectContent className="max-h-64">
+                <SelectItem value="none">None</SelectItem>
                 {LIFE_PATH_OPTIONS.map((n) => (
                   <SelectItem key={n} value={n}>{n}</SelectItem>
                 ))}
