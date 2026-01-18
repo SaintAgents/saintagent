@@ -143,9 +143,6 @@ export default function GamificationWidget({ profile, compact = false }) {
       {/* Mini Leaderboard */}
       <Leaderboard compact />
 
-      {/* Daily Flame Directive */}
-      <MotivationalCard className="mt-4" />
-
       {/* Source Text Reference */}
       <div className="p-3 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-200 dark:border-violet-700">
         <div className="flex items-center gap-2 mb-1">
