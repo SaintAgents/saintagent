@@ -129,7 +129,9 @@ export default function CollapsibleCard({
               className="h-8 w-8 hover:bg-violet-100"
               onClick={(e) => {
                 e.stopPropagation();
-                onTossToSidePanel(cardId, title);
+                // Extract string title if it's a JSX element
+                const titleStr = typeof title === 'string' ? title : cardId;
+                onTossToSidePanel(cardId, titleStr);
               }}
               title="Send to side panel"
             >
