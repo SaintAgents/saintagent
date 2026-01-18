@@ -207,8 +207,8 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
           <div>
             <Label>Destiny (Expression)</Label>
             <Select
-              value={formData.numerology_destiny || ''}
-              onValueChange={(v) => setFormData({ ...formData, numerology_destiny: v })}
+              value={formData.numerology_destiny || 'none'}
+              onValueChange={(v) => setFormData({ ...formData, numerology_destiny: v === 'none' ? '' : v })}
             >
               <SelectTrigger className="mt-2">
                 <SelectValue placeholder="Select number" />
