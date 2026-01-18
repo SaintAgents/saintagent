@@ -63,6 +63,7 @@ import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import StGermainAffirmations from '@/components/hud/StGermainAffirmations';
 import GGGBalanceCard from '@/components/hud/GGGBalanceCard.jsx';
 import BookingRequestModal from '@/components/meetings/BookingRequestModal';
+import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
