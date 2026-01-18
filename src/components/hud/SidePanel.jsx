@@ -683,6 +683,64 @@ export default function SidePanel({
           {/* Content */}
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-6">
+              {/* Stored Cards Section */}
+              {storedCards && storedCards.length > 0 && (
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Archive className="w-4 h-4 text-violet-600" />
+                      <span className="text-sm font-semibold text-violet-600">Stored Cards</span>
+                      <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-violet-100 text-violet-600">
+                        {storedCards.length}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {storedCards.map((card) => {
+                      const CardIcon = CARD_ICONS[card.id] || Sparkles;
+                      return (
+                        <div
+                          key={card.id}
+                          className="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200 hover:border-violet-300 transition-colors group"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            {CardIcon && <CardIcon className="w-4 h-4 text-violet-600 shrink-0" />}
+                            <span className="text-sm font-medium text-slate-900 truncate">{card.title}</span>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              onClick={() => onRestoreCard?.(card.id)}
+                              className="p-1.5 rounded-lg hover:bg-violet-100 transition-colors"
+                              title="Restore to deck"
+                            >
+                              <Undo2 className="w-3.5 h-3.5 text-violet-600" />
+                            </button>
+                            <button
+                              onClick={() => onRemoveStoredCard?.(card.id)}
+                              className="p-1.5 rounded-lg hover:bg-rose-100 transition-colors opacity-0 group-hover:opacity-100"
+                              title="Remove"
+                            >
+                              <X className="w-3.5 h-3.5 text-rose-400" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {onRestoreCard && storedCards.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full mt-2 text-violet-600 hover:text-violet-700 hover:bg-violet-100"
+                      onClick={() => storedCards.forEach(card => onRestoreCard(card.id))}
+                    >
+                      <Inbox className="w-3.5 h-3.5 mr-1.5" />
+                      Restore All
+                    </Button>
+                  )}
+                </div>
+              )}
+
               {/* Control Panel */}
               <div data-ggg-controls className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2 flex-wrap">
