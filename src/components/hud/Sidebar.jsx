@@ -1043,7 +1043,13 @@ export default function Sidebar({
         >
           <div className={cn("space-y-1 p-2", navPopupCollapsed && "p-1")}>
             <TooltipProvider delayDuration={100}>
-              {NAV_ITEMS.filter(item => !item.adminOnly || currentUser?.role === 'admin').slice(0, 12).map((item) => {
+              {NAV_ITEMS.filter(item => {
+                // Admin check
+                if (item.adminOnly && currentUser?.role !== 'admin') return false;
+                // View mode filtering (same as sidebar)
+                if (!isNavItemVisible(item.id, viewMode)) return false;
+                return true;
+              }).map((item) => {
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
                 const isLocked = item.locked || isLeaderLocked;
                 const ItemIcon = item.Icon;
