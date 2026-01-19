@@ -82,6 +82,8 @@ import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
 import FriendRequestButton from '@/components/friends/FriendRequestButton';
 import FriendRequestsPanel from '@/components/friends/FriendRequestsPanel';
 import FriendsList from '@/components/friends/FriendsList';
+import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
+import { getDestinyCardMeaning } from '@/components/destiny/destinyCardsData';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -1248,15 +1250,54 @@ export default function Profile() {
                         </div>
                         <div>
                           <span className="text-slate-500">Birth Card</span>
-                          <div className="font-medium text-slate-900">{profile?.birth_card || 'Not set'}</div>
+                          {profile?.birth_card ? (
+                            <div>
+                              <DestinyCardTooltip card={profile.birth_card}>
+                                <div className="font-medium text-slate-900 inline-block">{profile.birth_card}</div>
+                              </DestinyCardTooltip>
+                              {getDestinyCardMeaning(profile.birth_card) && (
+                                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                                  {getDestinyCardMeaning(profile.birth_card).meaning}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="font-medium text-slate-900">Not set</div>
+                          )}
                         </div>
                         <div>
                           <span className="text-slate-500">Planetary Ruling Card</span>
-                          <div className="font-medium text-slate-900">{profile?.planetary_ruling_card || 'Not set'}</div>
+                          {profile?.planetary_ruling_card ? (
+                            <div>
+                              <DestinyCardTooltip card={profile.planetary_ruling_card}>
+                                <div className="font-medium text-slate-900 inline-block">{profile.planetary_ruling_card}</div>
+                              </DestinyCardTooltip>
+                              {getDestinyCardMeaning(profile.planetary_ruling_card) && (
+                                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                                  {getDestinyCardMeaning(profile.planetary_ruling_card).meaning}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="font-medium text-slate-900">Not set</div>
+                          )}
                         </div>
                         <div>
                           <span className="text-slate-500">Sun Card</span>
-                          <div className="font-medium text-slate-900">{profile?.sun_card || 'Not set'}</div>
+                          {profile?.sun_card ? (
+                            <div>
+                              <DestinyCardTooltip card={profile.sun_card}>
+                                <div className="font-medium text-slate-900 inline-block">{profile.sun_card}</div>
+                              </DestinyCardTooltip>
+                              {getDestinyCardMeaning(profile.sun_card) && (
+                                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                                  {getDestinyCardMeaning(profile.sun_card).meaning}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="font-medium text-slate-900">Not set</div>
+                          )}
                         </div>
                       </div>
                     </CardContent>

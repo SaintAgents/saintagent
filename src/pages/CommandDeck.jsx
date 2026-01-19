@@ -65,6 +65,7 @@ import GGGBalanceCard from '@/components/hud/GGGBalanceCard.jsx';
 import BookingRequestModal from '@/components/meetings/BookingRequestModal';
 import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
+import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -1321,7 +1322,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">🃏</div>
                         <div>
                           <p className="text-cyan-400 text-xs">Birth Card</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
+                          <DestinyCardTooltip card={profile.birth_card}>
+                            <p className="text-sm font-semibold text-slate-900">{profile.birth_card}</p>
+                          </DestinyCardTooltip>
                         </div>
                       </div>
                     }
@@ -1330,7 +1333,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center shrink-0">☀️</div>
                         <div>
                           <p className="text-cyan-400 text-xs">Sun Card</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
+                          <DestinyCardTooltip card={profile.sun_card}>
+                            <p className="text-sm font-semibold text-slate-900">{profile.sun_card}</p>
+                          </DestinyCardTooltip>
                         </div>
                       </div>
                     }
