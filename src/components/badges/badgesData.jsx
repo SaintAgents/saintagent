@@ -1,4 +1,3 @@
-
 // Badge definitions grouped by section
 // Badges can be earned via Quest completion, Challenge milestones, or both (Hybrid)
 
@@ -534,5 +533,19 @@ export const BADGE_RULES = {
     how: '12+ transformative missions over 180+ days; rep 550+, trust 88%+.',
     non_transferable: true,
     requires_manual_approval: false
+  },
+  social_butterfly: {
+    badge_id: 'mission_social_butterfly',
+    name: 'Social Butterfly',
+    icon: 'Ornate butterfly with cosmic patterns',
+    when: 'Community connector and relationship builder.',
+    how: '50+ meaningful connections (follows/friends), 100+ DMs sent, active participation in Global Chat (20+ messages).',
+    non_transferable: true,
+    requires_manual_approval: false,
+    criteria: {
+      min_connections: 50,
+      min_dms_sent: 100,
+      min_global_chat_messages: 20
+    }
   }
 };
