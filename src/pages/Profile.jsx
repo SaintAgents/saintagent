@@ -1519,12 +1519,14 @@ export default function Profile() {
             </div>
           </TabsContent>
 
-          <TabsContent value="trust-network" className="space-y-6">
-            <TrustNetworkGraph 
-              userId={profile?.user_id} 
-              profile={profile}
-            />
-          </TabsContent>
+          {isOwnProfile && (
+            <TabsContent value="trust-network" className="space-y-6">
+              <TrustNetworkGraph 
+                userId={profile?.user_id} 
+                profile={profile}
+              />
+            </TabsContent>
+          )}
 
           <TabsContent value="roles" className="space-y-6">
             <UserRolesPanel profile={profile} />
