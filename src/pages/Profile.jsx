@@ -1407,7 +1407,7 @@ export default function Profile() {
             }
           </TabsContent>
 
-          {showDatingTab &&
+          {isOwnProfile && showDatingTab &&
           <TabsContent value="dating" className="space-y-6">
               <Step7Dating
               data={datingData || {}}
