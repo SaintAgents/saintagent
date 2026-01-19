@@ -464,3 +464,79 @@ export const SUIT_MEANINGS = {
   '♣': { name: 'Clubs', meaning: 'Knowledge, communication, mental pursuits' },
   '♦': { name: 'Diamonds', meaning: 'Values, finances, material world' }
 };
+
+// Full destiny card meanings
+export const DESTINY_CARD_MEANINGS = {
+  // Hearts
+  'A♥': { title: 'Ace of Hearts', meaning: 'A deep desire for love and affection. New emotional beginnings and a strong urge to express feelings.' },
+  '2♥': { title: 'Two of Hearts', meaning: 'The card of lovers and deep partnerships. Fulfillment through one-on-one connections and mutual support.' },
+  '3♥': { title: 'Three of Hearts', meaning: 'Emotional variety. Creative but may struggle with indecision or worry in relationships.' },
+  '4♥': { title: 'Four of Hearts', meaning: 'Emotional protection and stability. Seeks a secure home life and is protective of loved ones.' },
+  '5♥': { title: 'Five of Hearts', meaning: 'Restlessness in love. Seeks change or adventure to avoid feeling trapped emotionally.' },
+  '6♥': { title: 'Six of Hearts', meaning: 'The "Law of Love". Karmic responsibility; reaping exactly what is sown emotionally.' },
+  '7♥': { title: 'Seven of Hearts', meaning: 'Spiritual love. Challenge to move from personal attachment to universal, detached love.' },
+  '8♥': { title: 'Eight of Hearts', meaning: 'Emotional power. Natural charm and magnetism used to lead others through feelings.' },
+  '9♥': { title: 'Nine of Hearts', meaning: 'The card of universal love. Humanitarian; learning to let go of personal desires for the greater good.' },
+  '10♥': { title: 'Ten of Hearts', meaning: 'Social success. Recognition through large social circles and emotional intelligence.' },
+  'J♥': { title: 'Jack of Hearts', meaning: 'The "Sacrifice for Love". Creative/playful; gives up personal desires for higher romantic or family ideals.' },
+  'Q♥': { title: 'Queen of Hearts', meaning: 'The "Mother of Love". Mastery of the emotional realm with great kindness and nurturing ability.' },
+  'K♥': { title: 'King of Hearts', meaning: 'The "Father of Love". Rules the emotional world with authority and natural leadership.' },
+
+  // Clubs
+  'A♣': { title: 'Ace of Clubs', meaning: 'Hunger for knowledge and new ideas. Independent thinker always searching for a mental spark.' },
+  '2♣': { title: 'Two of Clubs', meaning: 'Conversation and shared ideas. Excels in business partnerships where communication is key.' },
+  '3♣': { title: 'Three of Clubs', meaning: 'Creative intelligence. Highly active mind; must avoid letting mental chatter turn into worry.' },
+  '4♣': { title: 'Four of Clubs', meaning: 'Mental stability. Fixed ideas; provides a solid foundation for intellectual projects.' },
+  '5♣': { title: 'Five of Clubs', meaning: 'Change of mind. Restless thinker; loves travel and new cultures or studies.' },
+  '6♣': { title: 'Six of Clubs', meaning: 'Responsibility for truth. "Guardian of intuition"; must stay true to the inner voice.' },
+  '7♣': { title: 'Seven of Clubs', meaning: 'Spiritual knowledge. Overcoming negative thinking and skepticism to find higher truths.' },
+  '8♣': { title: 'Eight of Clubs', meaning: 'Mental power. Focus and concentration to achieve any goal.' },
+  '9♣': { title: 'Nine of Clubs', meaning: 'Universal truth. Completes large mental projects that benefit humanity.' },
+  '10♣': { title: 'Ten of Clubs', meaning: 'Intellectual success. Public recognition for writing, teaching, or speaking.' },
+  'J♣': { title: 'Jack of Clubs', meaning: 'Creative intelligence. "Eternal youth"; playful, inventive, and sometimes crafty with ideas.' },
+  'Q♣': { title: 'Queen of Clubs', meaning: 'The "Teacher". Mastery of information; born to share wisdom.' },
+  'K♣': { title: 'King of Clubs', meaning: 'The "Master of Knowledge". Ultimate mental authority; leads through command and insight.' },
+
+  // Diamonds
+  'A♦': { title: 'Ace of Diamonds', meaning: 'Desire for money or worth. Independent and ambitious; starts new financial ventures.' },
+  '2♦': { title: 'Two of Diamonds', meaning: 'Business partnerships. Financial success through cooperation and shared resources.' },
+  '3♦': { title: 'Three of Diamonds', meaning: 'Financial variety. Multiple income streams but prone to worry about security.' },
+  '4♦': { title: 'Four of Diamonds', meaning: 'Financial protection. Practical and grounded; builds secure material foundations.' },
+  '5♦': { title: 'Five of Diamonds', meaning: 'Change in values. Financial shifts or frequent travel for business.' },
+  '6♦': { title: 'Six of Diamonds', meaning: 'Financial karma. Learning the balance between giving and receiving; dealing with past-life debts.' },
+  '7♦': { title: 'Seven of Diamonds', meaning: 'Spiritual values. Trusting in providence; overcoming fear of material lack.' },
+  '8♦': { title: 'Eight of Diamonds', meaning: 'Financial power. Competent and visionary management of money and resources.' },
+  '9♦': { title: 'Nine of Diamonds', meaning: 'Universal giving. Fulfillment through charity and letting go of material accumulation.' },
+  '10♦': { title: 'Ten of Diamonds', meaning: 'Material success. Career-oriented and determined; often reaches great wealth.' },
+  'J♦': { title: 'Jack of Diamonds', meaning: 'The "Merchant". Clever and creative in business; must avoid immaturity.' },
+  'Q♦': { title: 'Queen of Diamonds', meaning: 'The "Philanthropist". Mastery of values; uses wealth to serve humanity.' },
+  'K♦': { title: 'King of Diamonds', meaning: 'The "Master of Values". Ultimate business authority; rules through firm command.' },
+
+  // Spades
+  'A♠': { title: 'Ace of Spades', meaning: 'Spiritual initiation. Deep desire for wisdom; transformative "deaths and rebirths".' },
+  '2♠': { title: 'Two of Spades', meaning: 'Cooperation in work. Success through partnerships in career or health.' },
+  '3♠': { title: 'Three of Spades', meaning: 'Artistic work. Creative labor; may struggle with indecision about life path.' },
+  '4♠': { title: 'Four of Spades', meaning: 'Solid work foundations. Disciplined and practical; builds a lasting career.' },
+  '5♠': { title: 'Five of Spades', meaning: 'Change in work. Adventurous; changes jobs or locations to find true purpose.' },
+  '6♠': { title: 'Six of Spades', meaning: 'Responsibility in work. Lifestyle and health are direct results of past actions.' },
+  '7♠': { title: 'Seven of Spades', meaning: 'Spiritual challenge. Maintaining faith in the face of work or health obstacles.' },
+  '8♠': { title: 'Eight of Spades', meaning: 'Power through work. High willpower and labor to achieve mastery.' },
+  '9♠': { title: 'Nine of Spades', meaning: 'Universal work. Completion through a career serving a higher spiritual purpose.' },
+  '10♠': { title: 'Ten of Spades', meaning: 'Success in work. Intensely determined; reaches the top of the field through labor.' },
+  'J♠': { title: 'Jack of Spades', meaning: 'Creative "Initiate". Playful yet spiritual; path through arts or ancient wisdom.' },
+  'Q♠': { title: 'Queen of Spades', meaning: 'The "Master of Labor". Masters the physical world to organize and nurture others.' },
+  'K♠': { title: 'King of Spades', meaning: 'The Crown Authority. Highest card; represents ultimate spiritual mastery and leadership.' },
+
+  // Special
+  'Joker': { title: 'The Joker', meaning: 'Born Dec 31st. "God energy"; can take on any card\'s characteristics.' }
+};
+
+/**
+ * Get the full meaning for a destiny card
+ * @param {string} card - Card string like "A♠" or "K♥"
+ * @returns {{ title: string, meaning: string } | null}
+ */
+export function getDestinyCardMeaning(card) {
+  if (!card) return null;
+  return DESTINY_CARD_MEANINGS[card] || null;
+}
