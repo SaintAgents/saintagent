@@ -1180,7 +1180,7 @@ export default function Profile() {
           )}
 
           <TabsContent value="spiritual" className="space-y-6">
-            {editingSpiritualProfile ?
+            {isOwnProfile && editingSpiritualProfile ?
             <SpiritualProfileEditor
               profile={profile}
               onSave={handleSpiritualProfileSave}
@@ -1191,15 +1191,17 @@ export default function Profile() {
                 <div className="flex justify-between items-center mb-6">
                   <div>
                     <h2 className="text-2xl font-bold text-slate-900">Spiritual Profile</h2>
-                    <p className="text-slate-500 mt-1">Your mystical identifiers and practices</p>
+                    <p className="text-slate-500 mt-1">{isOwnProfile ? 'Your mystical identifiers and practices' : 'Mystical identifiers and practices'}</p>
                   </div>
-                  <Button
-                  onClick={() => setEditingSpiritualProfile(true)}
-                  className="bg-violet-600 hover:bg-violet-700 gap-2">
+                  {isOwnProfile && (
+                    <Button
+                    onClick={() => setEditingSpiritualProfile(true)}
+                    className="bg-violet-600 hover:bg-violet-700 gap-2">
 
-                    <Edit className="w-4 h-4" />
-                    Edit Spiritual Profile
-                  </Button>
+                      <Edit className="w-4 h-4" />
+                      Edit Spiritual Profile
+                    </Button>
+                  )}
                 </div>
 
                 {/* Mystical Profile */}
