@@ -576,37 +576,45 @@ export default function Profile() {
               <span className="hidden sm:inline">Showcase</span>
               <Star className="sm:hidden w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="onboarding" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
-              <span className="hidden sm:inline">Details</span>
-              <Compass className="sm:hidden w-4 h-4" />
-            </TabsTrigger>
+            {isOwnProfile && (
+              <TabsTrigger value="onboarding" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Details</span>
+                <Compass className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            )}
             <TabsTrigger value="spiritual" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Spiritual</span>
               <Star className="sm:hidden w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="metrics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
-              <span className="hidden sm:inline">Metrics</span>
-              <TrendingUp className="sm:hidden w-4 h-4" />
-            </TabsTrigger>
+            {isOwnProfile && (
+              <TabsTrigger value="metrics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Metrics</span>
+                <TrendingUp className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            )}
             <TabsTrigger value="stats" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Stats</span>
               <Target className="sm:hidden w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="trust-network" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
-              <span className="hidden sm:inline">Trust Network</span>
-              <Users className="sm:hidden w-4 h-4" />
-            </TabsTrigger>
+            {isOwnProfile && (
+              <TabsTrigger value="trust-network" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Trust Network</span>
+                <Users className="sm:hidden w-4 h-4" />
+              </TabsTrigger>
+            )}
             <TabsTrigger value="roles" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
               <span className="hidden sm:inline">Roles</span>
               <Crown className="sm:hidden w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
-              <span className="hidden sm:inline">Friends</span>
-              <Heart className="sm:hidden w-4 h-4" />
-              {following.length > 0 &&
-              <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
-              }
-            </TabsTrigger>
+            {isOwnProfile && (
+              <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+                <span className="hidden sm:inline">Friends</span>
+                <Heart className="sm:hidden w-4 h-4" />
+                {following.length > 0 &&
+                <Badge className="ml-1 bg-violet-600 text-white h-4 px-1.5 text-[10px]">{following.length}</Badge>
+                }
+              </TabsTrigger>
+            )}
             {isOwnProfile &&
             <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Monetization</span>
@@ -619,7 +627,7 @@ export default function Profile() {
                 <User className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             }
-            {showDatingTab &&
+            {isOwnProfile && showDatingTab &&
             <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
                 <span className="hidden sm:inline">Dating</span>
                 <Heart className="sm:hidden w-4 h-4" />
