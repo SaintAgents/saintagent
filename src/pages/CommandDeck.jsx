@@ -1209,7 +1209,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     </button>
                   </div>
                   
-                  {/* Featured: Eternal Flame + Recent Badge */}
+                  {/* Featured: Eternal Flame + Social Butterfly */}
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     {/* Eternal Flame Feature Badge */}
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-amber-50 to-orange-50 border border-amber-200">
@@ -1224,17 +1224,18 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       </div>
                     </div>
                     
-                    {/* Recently Achieved Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-amber-50 to-orange-50 border border-amber-200">
+                    {/* Social Butterfly Badge */}
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-violet-50 to-purple-50 border border-violet-200">
                       <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/e9af8b0e8_7day.png"
-                        alt="7-Day Streak"
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png"
+                        alt="Social Butterfly"
                         className="w-12 h-12 object-contain"
                         data-no-filter="true"
+                        title="Earned by: 50+ connections, 100+ messages sent, active in Global Chat"
                       />
                       <div>
-                        <p className="font-semibold text-amber-900 text-sm">7-Day Streak</p>
-                        <p className="text-xs text-amber-700">Recent</p>
+                        <p className="font-semibold text-violet-900 text-sm">Social Butterfly</p>
+                        <p className="text-xs text-violet-700">Connector</p>
                       </div>
                     </div>
                   </div>

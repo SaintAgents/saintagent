@@ -31,6 +31,7 @@ import { Shield, TrendingUp, BadgeCheck, Users, Coins } from 'lucide-react';
 import HelpHint from '@/components/hud/HelpHint';
 import TipButton from '@/components/creator/TipButton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 
 
 // Default fallback hero image
@@ -367,6 +368,23 @@ export default function MiniProfile({
                   )}
                 </div>
               </TooltipProvider>
+              {/* Birth Card & Sun Card with tooltips */}
+              {(profile?.birth_card || profile?.sun_card) && (
+                <div className="flex items-center gap-2 mt-1.5 text-xs">
+                  {profile?.birth_card && (
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-500 dark:text-slate-400">Birth:</span>
+                      <DestinyCardTooltip card={profile.birth_card} className="text-slate-900 dark:text-white font-medium" />
+                    </div>
+                  )}
+                  {profile?.sun_card && (
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-500 dark:text-slate-400">Sun:</span>
+                      <DestinyCardTooltip card={profile.sun_card} className="text-slate-900 dark:text-white font-medium" />
+                    </div>
+                  )}
+                </div>
+              )}
               {miniBadges?.length > 0 && (
                 <div className="mt-1">
                   <BadgesBar badges={miniBadges} max={4} defaultIfEmpty={false} />
