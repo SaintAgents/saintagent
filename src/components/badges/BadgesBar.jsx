@@ -73,7 +73,17 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
           }
         }
         
-        return null;
+        // Fallback: If badge not in index, create entry from database record
+        // This ensures badges like social_butterfly display even if not in BADGE_INDEX
+        const fallbackImage = imageUrl || b.icon_url;
+        return {
+          code,
+          label: b.title || b.badge_name || code.replace(/_/g, ' '),
+          definition: b.description || b.awarded_for || `Badge: ${code}`,
+          section: 'mission',
+          iconKey: 'award',
+          customIcon: fallbackImage
+        };
       })
       .filter(Boolean);
     
