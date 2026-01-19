@@ -1,11 +1,31 @@
 import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  // Immediate redirect preserving query params (like ?ref=CODE)
-  if (typeof window !== 'undefined') {
-    const queryString = window.location.search;
-    window.location.replace(createPageUrl('Join') + queryString);
-  }
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    const redirect = async () => {
+      try {
+        const isAuthenticated = await base44.auth.isAuthenticated();
+        const queryString = window.location.search;
+        
+        if (isAuthenticated) {
+          // Authenticated users go to Command Deck
+          window.location.replace(createPageUrl('CommandDeck') + queryString);
+        } else {
+          // Unauthenticated users go to Join page
+          window.location.replace(createPageUrl('Join') + queryString);
+        }
+      } catch {
+        // If check fails, default to Join page
+        const queryString = window.location.search;
+        window.location.replace(createPageUrl('Join') + queryString);
+      }
+    };
+    redirect();
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900">

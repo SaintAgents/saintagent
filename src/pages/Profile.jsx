@@ -1267,15 +1267,8 @@ export default function Profile() {
                         <div>
                           <span className="text-slate-500">Birth Card</span>
                           {profile?.birth_card ? (
-                            <div>
-                              <DestinyCardTooltip card={profile.birth_card}>
-                                <div className="font-medium text-slate-900 inline-block">{profile.birth_card}</div>
-                              </DestinyCardTooltip>
-                              {getDestinyCardMeaning(profile.birth_card) && (
-                                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                                  {getDestinyCardMeaning(profile.birth_card).meaning}
-                                </p>
-                              )}
+                            <div className="font-medium text-slate-900">
+                              <DestinyCardTooltip card={profile.birth_card} />
                             </div>
                           ) : (
                             <div className="font-medium text-slate-900">Not set</div>
@@ -1284,15 +1277,8 @@ export default function Profile() {
                         <div>
                           <span className="text-slate-500">Planetary Ruling Card</span>
                           {profile?.planetary_ruling_card ? (
-                            <div>
-                              <DestinyCardTooltip card={profile.planetary_ruling_card}>
-                                <div className="font-medium text-slate-900 inline-block">{profile.planetary_ruling_card}</div>
-                              </DestinyCardTooltip>
-                              {getDestinyCardMeaning(profile.planetary_ruling_card) && (
-                                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                                  {getDestinyCardMeaning(profile.planetary_ruling_card).meaning}
-                                </p>
-                              )}
+                            <div className="font-medium text-slate-900">
+                              <DestinyCardTooltip card={profile.planetary_ruling_card} />
                             </div>
                           ) : (
                             <div className="font-medium text-slate-900">Not set</div>
@@ -1301,15 +1287,8 @@ export default function Profile() {
                         <div>
                           <span className="text-slate-500">Sun Card</span>
                           {profile?.sun_card ? (
-                            <div>
-                              <DestinyCardTooltip card={profile.sun_card}>
-                                <div className="font-medium text-slate-900 inline-block">{profile.sun_card}</div>
-                              </DestinyCardTooltip>
-                              {getDestinyCardMeaning(profile.sun_card) && (
-                                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                                  {getDestinyCardMeaning(profile.sun_card).meaning}
-                                </p>
-                              )}
+                            <div className="font-medium text-slate-900">
+                              <DestinyCardTooltip card={profile.sun_card} />
                             </div>
                           ) : (
                             <div className="font-medium text-slate-900">Not set</div>
