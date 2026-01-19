@@ -1205,7 +1205,7 @@ export default function Profile() {
                 </div>
 
                 {/* Mystical Profile */}
-                {editingMysticalProfile ?
+                {isOwnProfile && editingMysticalProfile ?
               <MysticalProfileEditor
                 profile={profile}
                 onSave={handleMysticalProfileSave}
@@ -1215,14 +1215,16 @@ export default function Profile() {
               <Card>
                     <CardHeader className="flex items-center justify-between">
                       <CardTitle className="text-base">Mystical Profile</CardTitle>
-                      <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-violet-600"
-                    onClick={() => setEditingMysticalProfile(true)}>
+                      {isOwnProfile && (
+                        <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-violet-600"
+                      onClick={() => setEditingMysticalProfile(true)}>
 
-                        Edit
-                      </Button>
+                          Edit
+                        </Button>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
