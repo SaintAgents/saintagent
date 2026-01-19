@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Search, Globe, Lock, Eye, Share2, 
-  TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle, Sparkles
+  TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle, Sparkles,
+  BarChart3
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
@@ -20,6 +21,7 @@ import ContactDetailModal from '@/components/crm/ContactDetailModal';
 import ContactSummaryHeader from '@/components/crm/ContactSummaryHeader';
 import ContactCleanupModal from '@/components/crm/ContactCleanupModal';
 import ContactEnrichModal from '@/components/crm/ContactEnrichModal';
+import CRMAnalyticsDashboard from '@/components/crm/CRMAnalyticsDashboard';
 import { cn } from '@/lib/utils';
 
 const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
@@ -203,6 +205,10 @@ export default function CRM() {
                   <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
                 )}
               </TabsTrigger>
+              <TabsTrigger value="analytics" className="gap-2">
+                <BarChart3 className="w-4 h-4" />
+                Analytics
+              </TabsTrigger>
             </TabsList>
 
             <div className="flex items-center gap-2">
@@ -310,6 +316,13 @@ export default function CRM() {
             <AccessRequestsPanel 
               requests={accessRequests}
               currentUserId={currentUser?.email}
+            />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <CRMAnalyticsDashboard 
+              contacts={myContacts}
+              contributions={myContribution ? [myContribution] : []}
             />
           </TabsContent>
         </Tabs>
