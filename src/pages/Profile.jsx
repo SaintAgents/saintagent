@@ -1161,15 +1161,17 @@ export default function Profile() {
 
                   </TabsContent>
 
-          <TabsContent value="onboarding" className="space-y-6">
-            <OnboardingDataEditor
-              profile={profile}
-              desires={desires}
-              hopes={hopes}
-              intentions={intentions} />
+          {isOwnProfile && (
+            <TabsContent value="onboarding" className="space-y-6">
+              <OnboardingDataEditor
+                profile={profile}
+                desires={desires}
+                hopes={hopes}
+                intentions={intentions} />
 
-            <ConnectionPreferencesEditor profile={profile} />
-          </TabsContent>
+              <ConnectionPreferencesEditor profile={profile} />
+            </TabsContent>
+          )}
 
           <TabsContent value="metrics" className="space-y-6">
             <ProfileMetrics profile={profile} />
