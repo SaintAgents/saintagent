@@ -1173,9 +1173,11 @@ export default function Profile() {
             </TabsContent>
           )}
 
-          <TabsContent value="metrics" className="space-y-6">
-            <ProfileMetrics profile={profile} />
-          </TabsContent>
+          {isOwnProfile && (
+            <TabsContent value="metrics" className="space-y-6">
+              <ProfileMetrics profile={profile} />
+            </TabsContent>
+          )}
 
           <TabsContent value="spiritual" className="space-y-6">
             {editingSpiritualProfile ?
