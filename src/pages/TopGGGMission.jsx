@@ -135,56 +135,63 @@ const FeatureCard = ({ image, title, description, features, reverse = false, sec
 );
 
 // Technology Sections
-const TechnologySections = () => {
+const TechnologySections = ({ onLearnMore }) => {
   const technologies = [
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759374410272_b3323cb5.jpeg",
       title: "The Ultranet",
       description: "The Ultranet is the next evolutionary leap beyond the internet — a living network of light and intelligence designed to liberate communications from the toxic confines of microwave frequencies.",
-      features: ["Quantum-safe channels", "Non-microwave 6G+", "Natural resonances", "Beyond military encryption"]
+      features: ["Quantum-safe channels", "Non-microwave 6G+", "Natural resonances", "Beyond military encryption"],
+      sectionId: "ultranet"
     },
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759379644843_02b71bc3.jpg",
       title: "Smart StarChain",
       description: "The Smart StarChain redefines blockchain as we know it. Beyond decentralization, it operates as a celestial lattice of trust, linking transactions in radiant star patterns across infinite nodes of light.",
-      features: ["Instant settlement", "Infinite scalability", "Eco-conscious", "Sacred geometry"]
+      features: ["Instant settlement", "Infinite scalability", "Eco-conscious", "Sacred geometry"],
+      sectionId: "starchain"
     },
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759377792549_b7f528c0.jpg",
       title: "Smart Card & Super Smart Phone",
       description: "At the heart of user access lies the GGE Smart Card — a sovereign digital identity that fuses personal authentication, gold-backed assets, and encrypted communications into one portable key.",
-      features: ["Biometric authentication", "Holographic display", "Quantum wallet", "Non-radiative telecom"]
+      features: ["Biometric authentication", "Holographic display", "Quantum wallet", "Non-radiative telecom"],
+      sectionId: "smartcard"
     },
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759380918978_2c5a3abf.jpg",
       title: "Global Digital Commodity Exchange",
       description: "The GDex is the sovereign marketplace for the New Era, where assets are not just traded but transformed.",
-      features: ["Resource-backed trading", "Transparent protocols", "Real-time settlement", "Gold integration"]
+      features: ["Resource-backed trading", "Transparent protocols", "Real-time settlement", "Gold integration"],
+      sectionId: "gdex"
     },
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759380560730_20367960.png",
       title: "Neo-NFTs",
       description: "Beyond digital art and speculation, the Neo-NFT is a living digital asset, tethered directly to real-world resources and sovereign guarantees.",
-      features: ["Resource-backed assets", "Perpetual authenticity", "Gold-anchored value", "Sacred-digital bridge"]
+      features: ["Resource-backed assets", "Perpetual authenticity", "Gold-anchored value", "Sacred-digital bridge"],
+      sectionId: "neonft"
     },
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759382484006_3cd7f4af.jpg",
       title: "New Banking",
       description: "GGE Banking is not a reform of the old — it is a rebirth. Operating under Divine Law and sovereign charter, it returns wealth to its rightful foundation: gold, trust, and human dignity.",
-      features: ["Gold-backed accounts", "Sovereign lending", "Zero fractional reserves", "Divine Law compliance"]
+      features: ["Gold-backed accounts", "Sovereign lending", "Zero fractional reserves", "Divine Law compliance"],
+      sectionId: "banking"
     },
     {
       image: "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759382489512_aceb0c13.jpg",
       title: "Sovereign Gold Vaults & GGRT",
       description: "At the foundation of the GGE ecosystem lie the Sovereign Gold Vaults, protected under divine decree and secured beyond the reach of corporate powers.",
-      features: ["Divine decree protection", "Multi-generational trust", "Corporate-proof security", "Integrity allocation"]
+      features: ["Divine decree protection", "Multi-generational trust", "Corporate-proof security", "Integrity allocation"],
+      sectionId: "goldvaults"
     }
   ];
 
   return (
     <section id="technology" className="py-20 px-4 max-w-7xl mx-auto">
       {technologies.map((tech, i) => (
-        <FeatureCard key={i} {...tech} reverse={i % 2 !== 0} />
+        <FeatureCard key={i} {...tech} reverse={i % 2 !== 0} onLearnMore={onLearnMore} />
       ))}
     </section>
   );
