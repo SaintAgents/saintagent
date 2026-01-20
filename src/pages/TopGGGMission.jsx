@@ -198,7 +198,7 @@ const TechnologySections = ({ onLearnMore }) => {
 };
 
 // GaiaPay Section
-const GaiaPaySection = () => (
+const GaiaPaySection = ({ onLearnMore }) => (
   <section className="py-20 px-4 bg-gradient-to-b from-purple-900/50 to-black/50">
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-12">
