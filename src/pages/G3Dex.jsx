@@ -259,7 +259,7 @@ export default function G3Dex() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 w-full px-4 py-4 md:pl-28 lg:pl-80">
+      <div className="relative z-10 w-full px-4 py-4 pl-6 md:pl-32 lg:pl-[340px]">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           
           {/* Left Sidebar - Chart & Portfolio */}
@@ -423,15 +423,7 @@ export default function G3Dex() {
         theme={currentTheme.accent}
       />
 
-      {/* Floating Action Button - Mobile */}
-      <div className="fixed bottom-20 right-4 xl:hidden z-50">
-        <Button
-          onClick={() => setShowPortfolio(!showPortfolio)}
-          className={`rounded-full w-12 h-12 bg-gradient-to-r from-${currentTheme.accent}-500 to-emerald-500 shadow-lg shadow-${currentTheme.accent}-500/30`}
-        >
-          <Wallet className="w-5 h-5 text-black" />
-        </Button>
-      </div>
+
     </div>
   );
 }
