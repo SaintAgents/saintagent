@@ -169,6 +169,13 @@ export const HERO_IMAGES = [
     url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c8670516_activity.jpg',
     title: 'Activity Feed',
     description: 'Track community updates and engagement'
+  },
+  {
+    id: 'news',
+    page: 'News',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b85f8b778_c187ff4c-c910-4f5d-aed1-62a6e76b4751.png',
+    title: 'News & Updates',
+    description: 'Breaking news and platform announcements'
   }
 ];
 
