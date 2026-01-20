@@ -274,7 +274,7 @@ export default function TopBar({
           )}>
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
-              placeholder="Search people, offers, missions..."
+              placeholder={searchFocused || searchQuery ? "Search people, offers, missions..." : "Enter deep search..."}
               className="w-full pl-10 pr-10 h-10 bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
               value={searchQuery}
               onChange={(e) => {
