@@ -65,7 +65,8 @@ import {
   Eye,
   Orbit,
   Smile,
-  Newspaper
+  Newspaper,
+  BookOpen
 } from "lucide-react";
 import {
   Tooltip,
