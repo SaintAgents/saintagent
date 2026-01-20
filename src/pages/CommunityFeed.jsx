@@ -7,8 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import MiniProfile from '@/components/profile/MiniProfile';
@@ -29,6 +30,29 @@ export default function CommunityFeed() {
   const [commentText, setCommentText] = useState({});
   const [expandedComments, setExpandedComments] = useState({});
   const [filterTab, setFilterTab] = useState('all');
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const openLightbox = (images, index) => {
+    setLightboxImages(images);
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    setLightboxImages([]);
+    setLightboxIndex(0);
+  };
+
+  const nextImage = () => {
+    setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+  };
+
+  const prevImage = () => {
+    setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+  };
   
   const queryClient = useQueryClient();
 
