@@ -1,6 +1,7 @@
 import ActivityFeed from './pages/ActivityFeed';
 import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
+import Authority144 from './pages/Authority144';
 import BetaFeedback from './pages/BetaFeedback';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
@@ -25,6 +26,7 @@ import Landing from './pages/Landing';
 import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
 import ListingDetail from './pages/ListingDetail';
+import Lottery from './pages/Lottery';
 import Marketplace from './pages/Marketplace';
 import MatchSettings from './pages/MatchSettings';
 import Matches from './pages/Matches';
@@ -51,8 +53,7 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Authority144 from './pages/Authority144';
-import Lottery from './pages/Lottery';
+import TopGGGMission from './pages/TopGGGMission';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "ActivityFeed": ActivityFeed,
     "Admin": Admin,
     "AffiliateCenter": AffiliateCenter,
+    "Authority144": Authority144,
     "BetaFeedback": BetaFeedback,
     "CRM": CRM,
     "Circles": Circles,
@@ -84,6 +86,7 @@ export const PAGES = {
     "LeaderChannel": LeaderChannel,
     "Leaderboards": Leaderboards,
     "ListingDetail": ListingDetail,
+    "Lottery": Lottery,
     "Marketplace": Marketplace,
     "MatchSettings": MatchSettings,
     "Matches": Matches,
@@ -110,8 +113,7 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Authority144": Authority144,
-    "Lottery": Lottery,
+    "TopGGGMission": TopGGGMission,
 }
 
 export const pagesConfig = {
