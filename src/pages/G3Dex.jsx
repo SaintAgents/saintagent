@@ -27,6 +27,8 @@ import StatsBar from '@/components/dex/StatsBar';
 import NeoNFTMarketplace from '@/components/dex/NeoNFTMarketplace';
 import EscrowManager from '@/components/dex/EscrowManager';
 import ResourceBridge from '@/components/dex/ResourceBridge';
+import StakePoolsModal from '@/components/dex/StakePoolsModal';
+import BridgeModal from '@/components/dex/BridgeModal';
 
 export default function G3Dex() {
   const [activeTab, setActiveTab] = useState('swap');
@@ -38,6 +40,9 @@ export default function G3Dex() {
   const [selectedPair, setSelectedPair] = useState({ from: 'ETH', to: 'USDC' });
   const [showPortfolio, setShowPortfolio] = useState(false);
   const [theme, setTheme] = useState('cyber'); // cyber, midnight, matrix
+  const [stakeModalOpen, setStakeModalOpen] = useState(false);
+  const [poolsModalOpen, setPoolsModalOpen] = useState(false);
+  const [bridgeModalOpen, setBridgeModalOpen] = useState(false);
 
   // Check for existing wallet connection
   useEffect(() => {
@@ -159,7 +164,7 @@ export default function G3Dex() {
                 variant="ghost" 
                 size="sm" 
                 className="text-gray-400 hover:text-white text-xs h-7"
-                onClick={() => setActiveTab('bridge')}
+                onClick={() => setBridgeModalOpen(true)}
               >
                 <Globe className="w-3 h-3 mr-1" />
                 Bridge
@@ -168,7 +173,7 @@ export default function G3Dex() {
                 variant="ghost" 
                 size="sm" 
                 className="text-gray-400 hover:text-white text-xs h-7"
-                onClick={() => toast.info('Staking pools coming soon! Stay tuned for G3DEX V3.', { duration: 3000 })}
+                onClick={() => setStakeModalOpen(true)}
               >
                 <Shield className="w-3 h-3 mr-1" />
                 Stake
@@ -177,7 +182,7 @@ export default function G3Dex() {
                 variant="ghost" 
                 size="sm" 
                 className="text-gray-400 hover:text-white text-xs h-7"
-                onClick={() => toast.info('Liquidity pools coming soon! Stay tuned for G3DEX V3.', { duration: 3000 })}
+                onClick={() => setPoolsModalOpen(true)}
               >
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
@@ -376,6 +381,26 @@ export default function G3Dex() {
           </div>
         </div>
       </div>
+
+      {/* Stake Modal */}
+      <StakePoolsModal
+        open={stakeModalOpen}
+        onClose={() => setStakeModalOpen(false)}
+        type="stake"
+      />
+
+      {/* Pools Modal */}
+      <StakePoolsModal
+        open={poolsModalOpen}
+        onClose={() => setPoolsModalOpen(false)}
+        type="pools"
+      />
+
+      {/* Bridge Modal */}
+      <BridgeModal
+        open={bridgeModalOpen}
+        onClose={() => setBridgeModalOpen(false)}
+      />
 
       {/* Settings Modal */}
       <SettingsModal
