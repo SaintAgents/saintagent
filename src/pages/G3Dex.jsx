@@ -91,28 +91,36 @@ export default function G3Dex() {
       accent: 'lime',
       glow: 'rgba(0,255,100,0.03)',
       border: 'lime-500/20',
-      text: 'text-white'
+      text: 'text-white',
+      cardBg: 'bg-black/60',
+      subtext: 'text-gray-400'
     },
     midnight: {
       bg: 'bg-[#0d1117]',
       accent: 'blue',
       glow: 'rgba(59,130,246,0.03)',
       border: 'blue-500/20',
-      text: 'text-white'
+      text: 'text-white',
+      cardBg: 'bg-black/60',
+      subtext: 'text-gray-400'
     },
     matrix: {
       bg: 'bg-black',
       accent: 'emerald',
       glow: 'rgba(16,185,129,0.05)',
       border: 'emerald-500/30',
-      text: 'text-white'
+      text: 'text-white',
+      cardBg: 'bg-black/60',
+      subtext: 'text-gray-400'
     },
     light: {
-      bg: 'bg-gray-50',
+      bg: 'bg-gray-100',
       accent: 'violet',
       glow: 'rgba(139,92,246,0.03)',
-      border: 'violet-500/20',
-      text: 'text-gray-900'
+      border: 'violet-300',
+      text: 'text-gray-900',
+      cardBg: 'bg-white',
+      subtext: 'text-gray-700'
     }
   };
 
