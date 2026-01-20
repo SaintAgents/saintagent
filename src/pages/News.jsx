@@ -206,7 +206,10 @@ export default function News() {
 
   const { data: articles = [], refetch } = useQuery({
     queryKey: ['newsArticles'],
-    queryFn: () => base44.entities.NewsArticle.filter({ is_published: true }, '-published_date', 100)
+    queryFn: async () => {
+      const all = await base44.entities.NewsArticle.list('-published_date', 100);
+      return all.filter(a => a.is_published === true);
+    }
   });
 
   const featured = articles.filter(a => a.is_featured);
