@@ -22,6 +22,7 @@ import NewsAdminPanel from '@/components/news/NewsAdminPanel';
 import GlobalAlertManager from '@/components/admin/GlobalAlertManager';
 import PressReleaseManager from '@/components/news/PressReleaseManager';
 import InsightsAdminPanel from '@/components/admin/InsightsAdminPanel';
+import ProjectClaimsManager from '@/components/admin/ProjectClaimsManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -181,7 +182,12 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="projects">
-            <AdminProjects />
+            <div className="space-y-8">
+              <ProjectClaimsManager />
+              <div className="border-t pt-8">
+                <AdminProjects />
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="crm">
