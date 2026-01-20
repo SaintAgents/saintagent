@@ -154,45 +154,168 @@ export default function PriceChart({ pair, theme = 'lime' }) {
       {/* Chart */}
       <div className="h-[280px] p-2">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData}>
-            <defs>
-              <linearGradient id={`gradient-${theme}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={themeColor} stopOpacity={0.3} />
-                <stop offset="100%" stopColor={themeColor} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis 
-              dataKey="time" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#6b7280', fontSize: 10 }}
-            />
-            <YAxis 
-              domain={['auto', 'auto']} 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#6b7280', fontSize: 10 }}
-              orientation="right"
-              tickFormatter={(val) => `$${val.toFixed(0)}`}
-            />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: '#0a0a0f', 
-                border: `1px solid ${themeColor}30`,
-                borderRadius: '8px',
-                fontSize: '12px'
-              }}
-              formatter={(value) => [`$${value.toFixed(2)}`, 'Price']}
-              labelFormatter={() => ''}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="price" 
-              stroke={themeColor} 
-              strokeWidth={2}
-              fill={`url(#gradient-${theme})`}
-            />
-          </AreaChart>
+          {chartType === 'area' ? (
+            <AreaChart data={chartData}>
+              <defs>
+                <linearGradient id={`gradient-${theme}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={themeColor} stopOpacity={0.3} />
+                  <stop offset="100%" stopColor={themeColor} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis 
+                dataKey="time" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+              />
+              <YAxis 
+                domain={['auto', 'auto']} 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+                orientation="right"
+                tickFormatter={(val) => `$${val.toFixed(0)}`}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#0a0a0f', 
+                  border: `1px solid ${themeColor}30`,
+                  borderRadius: '8px',
+                  fontSize: '12px'
+                }}
+                formatter={(value) => [`$${value.toFixed(2)}`, 'Price']}
+                labelFormatter={() => ''}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="price" 
+                stroke={themeColor} 
+                strokeWidth={2}
+                fill={`url(#gradient-${theme})`}
+              />
+            </AreaChart>
+          ) : chartType === 'candle' ? (
+            <ComposedChart data={chartData}>
+              <XAxis 
+                dataKey="time" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+              />
+              <YAxis 
+                domain={['auto', 'auto']} 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+                orientation="right"
+                tickFormatter={(val) => `$${val.toFixed(0)}`}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#0a0a0f', 
+                  border: `1px solid ${themeColor}30`,
+                  borderRadius: '8px',
+                  fontSize: '12px'
+                }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const d = payload[0].payload;
+                    return (
+                      <div className="bg-black/90 border border-gray-700 rounded-lg p-2 text-xs">
+                        <div className="text-gray-400">O: <span className="text-white">${d.open?.toFixed(2)}</span></div>
+                        <div className="text-gray-400">H: <span className="text-white">${d.high?.toFixed(2)}</span></div>
+                        <div className="text-gray-400">L: <span className="text-white">${d.low?.toFixed(2)}</span></div>
+                        <div className="text-gray-400">C: <span className={d.isUp ? 'text-green-400' : 'text-red-400'}>${d.close?.toFixed(2)}</span></div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              {/* Wick lines */}
+              {chartData.map((entry, index) => (
+                <ReferenceLine
+                  key={`wick-${index}`}
+                  segment={[
+                    { x: entry.time, y: entry.low },
+                    { x: entry.time, y: entry.high }
+                  ]}
+                  stroke={entry.isUp ? '#22c55e' : '#ef4444'}
+                  strokeWidth={1}
+                />
+              ))}
+              {/* Candle bodies */}
+              <Bar dataKey="close" barSize={8}>
+                {chartData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`}
+                    fill={entry.isUp ? '#22c55e' : '#ef4444'}
+                  />
+                ))}
+              </Bar>
+            </ComposedChart>
+          ) : (
+            /* Manhattan Chart - 3D-style bar chart */
+            <BarChart data={chartData} barGap={0}>
+              <defs>
+                <linearGradient id="manhattanGreen" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#4ade80" stopOpacity={1} />
+                  <stop offset="50%" stopColor="#22c55e" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#166534" stopOpacity={0.8} />
+                </linearGradient>
+                <linearGradient id="manhattanRed" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f87171" stopOpacity={1} />
+                  <stop offset="50%" stopColor="#ef4444" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#991b1b" stopOpacity={0.8} />
+                </linearGradient>
+              </defs>
+              <XAxis 
+                dataKey="time" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+              />
+              <YAxis 
+                domain={['auto', 'auto']} 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+                orientation="right"
+                tickFormatter={(val) => `$${val.toFixed(0)}`}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#0a0a0f', 
+                  border: `1px solid ${themeColor}30`,
+                  borderRadius: '8px',
+                  fontSize: '12px'
+                }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const d = payload[0].payload;
+                    return (
+                      <div className="bg-black/90 border border-gray-700 rounded-lg p-2 text-xs">
+                        <div className="text-gray-400">Price: <span className={d.isUp ? 'text-green-400' : 'text-red-400'}>${d.close?.toFixed(2)}</span></div>
+                        <div className="text-gray-400">Change: <span className={d.isUp ? 'text-green-400' : 'text-red-400'}>{d.isUp ? '+' : ''}{(d.close - d.open).toFixed(2)}</span></div>
+                        <div className="text-gray-400">Vol: <span className="text-white">{(d.volume / 1000).toFixed(0)}K</span></div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar dataKey="close" radius={[2, 2, 0, 0]}>
+                {chartData.map((entry, index) => (
+                  <Cell 
+                    key={`manhattan-${index}`}
+                    fill={entry.isUp ? 'url(#manhattanGreen)' : 'url(#manhattanRed)'}
+                    stroke={entry.isUp ? '#22c55e' : '#ef4444'}
+                    strokeWidth={1}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          )}
         </ResponsiveContainer>
       </div>
 
