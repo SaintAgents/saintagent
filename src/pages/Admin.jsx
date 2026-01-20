@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -21,6 +21,7 @@ import AffiliateSettings from '@/components/admin/AffiliateSettings';
 import NewsAdminPanel from '@/components/news/NewsAdminPanel';
 import GlobalAlertManager from '@/components/admin/GlobalAlertManager';
 import PressReleaseManager from '@/components/news/PressReleaseManager';
+import InsightsAdminPanel from '@/components/admin/InsightsAdminPanel';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -137,6 +138,10 @@ export default function Admin() {
               <Radio className="w-4 h-4" />
               Press
             </TabsTrigger>
+            <TabsTrigger value="insights" className="gap-2 px-3 py-2">
+              <BookOpen className="w-4 h-4" />
+              Insights
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -201,6 +206,10 @@ export default function Admin() {
 
           <TabsContent value="press">
             <PressReleaseManager />
+          </TabsContent>
+
+          <TabsContent value="insights">
+            <InsightsAdminPanel />
           </TabsContent>
         </Tabs>
       </div>
