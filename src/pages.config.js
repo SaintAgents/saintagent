@@ -36,7 +36,6 @@ import Missions from './pages/Missions';
 import News from './pages/News';
 import Onboarding from './pages/Onboarding';
 import Planner from './pages/Planner';
-import Profile from './pages/Profile';
 import Profiles from './pages/Profiles';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
@@ -49,6 +48,7 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
+import Profile from './pages/Profile';
 import __Layout from './Layout.jsx';
 
 
@@ -91,7 +91,6 @@ export const PAGES = {
     "News": News,
     "Onboarding": Onboarding,
     "Planner": Planner,
-    "Profile": Profile,
     "Profiles": Profiles,
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
@@ -104,6 +103,7 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
+    "Profile": Profile,
 }
 
 export const pagesConfig = {

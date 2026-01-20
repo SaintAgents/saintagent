@@ -432,9 +432,35 @@ export default function Profile() {
               </div>
             )}
             
-            {/* Badges & Sigils Bar at Bottom of Hero */}
+            {/* Recent & Current Badges - Large Display at Bottom of Hero */}
             <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 z-10">
-              <BadgesBar badges={profileBadges} defaultIfEmpty={false} maxDisplay={8} size="sm" />
+              <div className="flex items-center gap-3 bg-black/40 backdrop-blur-sm rounded-xl px-4 py-2">
+                <span className="text-white/80 text-xs font-medium shrink-0">Recent Badges:</span>
+                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                  {profileBadges.slice(0, 6).map((badge) => (
+                    <div key={badge.id} className="shrink-0 group relative">
+                      {badge.image_url ? (
+                        <img 
+                          src={badge.image_url} 
+                          alt={badge.badge_type || 'Badge'} 
+                          className="w-14 h-14 object-contain drop-shadow-lg hover:scale-110 transition-transform cursor-pointer"
+                          title={badge.badge_type?.replace(/_/g, ' ')}
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-lg">
+                          {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                        </div>
+                      )}
+                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap z-20">
+                        {badge.badge_type?.replace(/_/g, ' ')}
+                      </div>
+                    </div>
+                  ))}
+                  {profileBadges.length === 0 && (
+                    <span className="text-white/60 text-xs italic">No badges earned yet</span>
+                  )}
+                </div>
+              </div>
             </div>
             
             {isOwnProfile &&
