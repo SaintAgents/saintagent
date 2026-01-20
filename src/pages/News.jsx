@@ -144,7 +144,7 @@ export default function News() {
           data-no-filter="true"
         />
         <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
-        <HeroGalleryTrigger startIndex={0} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
+        <HeroGalleryTrigger startIndex={0} className="absolute bottom-4 left-4 text-white/80 !p-2 [&_svg]:w-4 [&_svg]:h-4 z-10 bg-black/50 hover:bg-black/70 rounded-lg" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-2">
