@@ -474,7 +474,7 @@ const MissionSection = () => (
 );
 
 // CTA Section
-const CTASection = () => (
+const CTASection = ({ onWhitepaper }) => (
   <section className="py-20 px-4 bg-gradient-to-b from-black/50 to-purple-900/50">
     <div className="max-w-4xl mx-auto text-center">
       <h2 className="text-4xl font-bold text-white mb-6">Join the Golden Age</h2>
@@ -485,14 +485,18 @@ const CTASection = () => (
         <Button className="bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold rounded-full px-8 py-6 text-lg">
           Access the Ultranet
         </Button>
-        <Button variant="outline" className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full px-8 py-6 text-lg">
-          Interactive Whitepaper
+        <Button 
+          variant="outline" 
+          className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full px-8 py-6 text-lg"
+          onClick={onWhitepaper}
+        >
+          <BookOpen className="mr-2" size={20} /> Interactive Whitepaper
         </Button>
-        <Link to="https://gaiaglobal.gold/" target="_blank">
+        <a href="https://gaiaglobal.gold/" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full px-8 py-6 text-lg">
             <Coins className="mr-2" size={20} /> Gold Coin Page
           </Button>
-        </Link>
+        </a>
       </div>
       
       {/* Status Indicators */}
