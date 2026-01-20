@@ -96,9 +96,9 @@ export default function DatingMatches() {
     .filter((dp) => {
       if (dp.user_id === currentUser?.email) return false;
       
-      // I must be interested in their gender
+      // STRICT: I must be interested in their gender
+      const candidateGender = dp.gender;
       if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
-        const candidateGender = dp.gender;
         if (!candidateGender) return false;
         const candidateInterestKey = genderToInterest[candidateGender];
         if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
@@ -106,12 +106,15 @@ export default function DatingMatches() {
         }
       }
       
-      // They must be interested in my gender (bidirectional check)
+      // STRICT: They must be interested in my gender (bidirectional check)
       const theirInterestedIn = dp.interested_in || [];
-      if (myGender && theirInterestedIn.length > 0 && !theirInterestedIn.includes('all')) {
-        const myInterestKey = genderToInterest[myGender];
-        if (!myInterestKey || !theirInterestedIn.includes(myInterestKey)) {
-          return false;
+      if (myGender) {
+        // If they have preferences set and it's not "all", they must include my gender
+        if (theirInterestedIn.length > 0 && !theirInterestedIn.includes('all')) {
+          const myInterestKey = genderToInterest[myGender];
+          if (!myInterestKey || !theirInterestedIn.includes(myInterestKey)) {
+            return false;
+          }
         }
       }
       

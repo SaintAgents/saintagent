@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, Star, ChevronRight } from 'lucide-react';
+import { Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, Star, ChevronRight, Clock, BookOpen } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
-import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import NewsAdminPanel from '@/components/news/NewsAdminPanel';
+import NewsViewerModal from '@/components/news/NewsViewerModal';
 
 const CATEGORY_COLORS = {
-  announcements: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  updates: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  community: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  missions: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  events: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  tech: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
-  spiritual: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  announcements: 'bg-[#051C2C] text-white',
+  updates: 'bg-blue-900 text-white',
+  community: 'bg-emerald-900 text-white',
+  missions: 'bg-violet-900 text-white',
+  events: 'bg-amber-700 text-white',
+  tech: 'bg-cyan-900 text-white',
+  spiritual: 'bg-purple-900 text-white',
 };
 
 const TYPE_ICONS = {
@@ -29,172 +27,240 @@ const TYPE_ICONS = {
   link: Link2,
 };
 
-function NewsCard({ article, onClick }) {
+// McKinsey-style Article Card
+function InsightCard({ article, onClick, isFeatured }) {
   const Icon = TYPE_ICONS[article.type] || Newspaper;
+  const readingTime = Math.max(1, Math.ceil((article.content?.length || 500) / 1000));
   
   return (
-    <Card 
-      className="cursor-pointer hover:shadow-lg transition-all dark:bg-[rgba(0,0,0,0.75)] dark:border-[rgba(0,255,136,0.2)] dark:hover:border-[rgba(0,255,136,0.4)]"
+    <article 
+      className={`group cursor-pointer transition-all duration-300 ${isFeatured ? 'col-span-2' : ''}`}
       onClick={onClick}
     >
-      {article.image_url && (
-        <div className="relative h-48 overflow-hidden rounded-t-lg">
-          <img 
-            src={article.image_url} 
-            alt={article.title}
-            className="w-full h-full object-cover"
-          />
-          {article.is_featured && (
-            <div className="absolute top-2 left-2">
-              <Badge className="bg-amber-500 text-white gap-1">
-                <Star className="w-3 h-3" /> Featured
-              </Badge>
-            </div>
-          )}
-          <div className="absolute top-2 right-2">
-            <Badge className={CATEGORY_COLORS[article.category] || CATEGORY_COLORS.announcements}>
-              {article.category}
-            </Badge>
-          </div>
-        </div>
-      )}
-      <CardHeader className="pb-2">
-        <div className="flex items-start gap-2">
-          <Icon className="w-5 h-5 text-violet-500 mt-0.5 shrink-0" />
-          <CardTitle className="text-lg line-clamp-2">{article.title}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {article.summary && (
-          <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 mb-3">
-            {article.summary}
-          </p>
-        )}
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-3">
-            {article.published_date && (
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {format(parseISO(article.published_date), 'MMM d, yyyy')}
-              </span>
-            )}
-            {article.author_name && (
-              <span className="flex items-center gap-1">
-                <User className="w-3 h-3" />
-                {article.author_name}
-              </span>
-            )}
-          </div>
-          <span className="flex items-center gap-1">
-            <Eye className="w-3 h-3" />
-            {article.view_count || 0}
-          </span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function ArticleDetail({ article, onBack }) {
-  const Icon = TYPE_ICONS[article.type] || Newspaper;
-  
-  return (
-    <div className="max-w-4xl mx-auto">
-      <Button variant="ghost" onClick={onBack} className="mb-4 gap-2">
-        <ChevronRight className="w-4 h-4 rotate-180" /> Back to News
-      </Button>
-      
-      <Card className="dark:bg-[rgba(0,0,0,0.75)] dark:border-[rgba(0,255,136,0.2)]">
+      <div className={`bg-white border border-slate-200 hover:border-[#051C2C] hover:shadow-xl transition-all duration-300 ${isFeatured ? 'flex flex-col md:flex-row' : ''}`}>
         {article.image_url && (
-          <div className="relative h-64 md:h-80 overflow-hidden rounded-t-lg">
+          <div className={`relative overflow-hidden ${isFeatured ? 'md:w-1/2 h-64 md:h-auto' : 'h-48'}`}>
             <img 
               src={article.image_url} 
               alt={article.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            {article.is_featured && (
+              <div className="absolute top-4 left-4">
+                <Badge className="bg-amber-500 text-white gap-1 font-semibold tracking-wide">
+                  <Star className="w-3 h-3" /> FEATURED
+                </Badge>
+              </div>
+            )}
           </div>
         )}
-        
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Badge className={CATEGORY_COLORS[article.category] || CATEGORY_COLORS.announcements}>
+        <div className={`p-6 ${isFeatured ? 'md:w-1/2 flex flex-col justify-center' : ''}`}>
+          {/* Category & Type */}
+          <div className="flex items-center gap-3 mb-4">
+            <Badge className={`${CATEGORY_COLORS[article.category] || CATEGORY_COLORS.announcements} text-xs font-semibold tracking-widest uppercase`}>
               {article.category}
             </Badge>
-            <Badge variant="outline" className="gap-1">
+            <span className="text-xs text-slate-400 uppercase tracking-wider flex items-center gap-1">
               <Icon className="w-3 h-3" /> {article.type}
+            </span>
+          </div>
+          
+          {/* Title - Serif font for McKinsey feel */}
+          <h2 className={`font-serif font-bold text-[#051C2C] group-hover:text-blue-900 transition-colors leading-tight mb-3 ${isFeatured ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
+            {article.title}
+          </h2>
+          
+          {/* Summary */}
+          {article.summary && (
+            <p className={`text-slate-600 leading-relaxed mb-4 ${isFeatured ? 'text-base line-clamp-4' : 'text-sm line-clamp-2'}`}>
+              {article.summary}
+            </p>
+          )}
+          
+          {/* Meta */}
+          <div className="flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-100">
+            <div className="flex items-center gap-4">
+              {article.published_date && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {format(parseISO(article.published_date), 'MMM d, yyyy')}
+                </span>
+              )}
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {readingTime} min read
+              </span>
+            </div>
+            <span className="flex items-center gap-1 text-slate-400">
+              <Eye className="w-3 h-3" />
+              {article.view_count || 0}
+            </span>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// McKinsey-style Article Detail View
+function ArticleDetail({ article, onBack, articles, onNavigate }) {
+  const Icon = TYPE_ICONS[article.type] || Newspaper;
+  const readingTime = Math.max(1, Math.ceil((article.content?.length || 500) / 1000));
+  const currentIndex = articles.findIndex(a => a.id === article.id);
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < articles.length - 1;
+  
+  return (
+    <div className="bg-[#F0F2F5] min-h-screen -mx-6 -mb-12 px-6 pb-12">
+      <div className="max-w-4xl mx-auto">
+        {/* Navigation */}
+        <div className="flex items-center justify-between py-6 border-b border-slate-300">
+          <Button variant="ghost" onClick={onBack} className="gap-2 text-[#051C2C] hover:bg-white">
+            <ChevronRight className="w-4 h-4 rotate-180" /> Back to Insights
+          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              disabled={!hasPrev}
+              onClick={() => hasPrev && onNavigate(articles[currentIndex - 1])}
+              className="border-slate-300"
+            >
+              <ChevronRight className="w-4 h-4 rotate-180" /> Previous
+            </Button>
+            <span className="text-xs text-slate-500 px-2">{currentIndex + 1} / {articles.length}</span>
+            <Button 
+              variant="outline" 
+              size="sm"
+              disabled={!hasNext}
+              onClick={() => hasNext && onNavigate(articles[currentIndex + 1])}
+              className="border-slate-300"
+            >
+              Next <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Article Header */}
+        <header className="py-12">
+          <div className="flex items-center gap-3 mb-6">
+            <Badge className={`${CATEGORY_COLORS[article.category] || CATEGORY_COLORS.announcements} text-xs font-semibold tracking-widest uppercase`}>
+              {article.category}
             </Badge>
           </div>
           
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#051C2C] leading-tight mb-6">
             {article.title}
           </h1>
           
-          <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-6 pb-6 border-b dark:border-slate-700">
+          <div className="flex flex-wrap items-center gap-6 text-sm text-slate-600 pb-6 border-b border-slate-300">
+            {article.author_name && (
+              <span className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                <span className="font-medium">{article.author_name}</span>
+              </span>
+            )}
             {article.published_date && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 {format(parseISO(article.published_date), 'MMMM d, yyyy')}
               </span>
             )}
-            {article.author_name && (
-              <span className="flex items-center gap-1">
-                <User className="w-4 h-4" />
-                {article.author_name}
-              </span>
-            )}
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              {readingTime} min read
+            </span>
+            <span className="flex items-center gap-2">
               <Eye className="w-4 h-4" />
               {article.view_count || 0} views
             </span>
           </div>
-          
-          {article.video_url && (
-            <div className="mb-6 aspect-video rounded-lg overflow-hidden bg-black">
-              <iframe
-                src={article.video_url}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+        </header>
+
+        {/* Featured Image */}
+        {article.image_url && (
+          <div className="mb-12">
+            <img 
+              src={article.image_url} 
+              alt={article.title}
+              className="w-full h-auto"
+            />
+          </div>
+        )}
+
+        {/* Content Area with Sidebar Layout */}
+        <div className="flex gap-12">
+          {/* Main Content */}
+          <div className="flex-1 max-w-[700px]">
+            {article.video_url && (
+              <div className="mb-8 aspect-video overflow-hidden bg-black">
+                <iframe
+                  src={article.video_url}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            )}
+            
+            {article.external_link && (
+              <a 
+                href={article.external_link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-[#051C2C] text-white hover:bg-blue-900 transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open External Link
+              </a>
+            )}
+            
+            {article.content && (
+              <div className="prose prose-lg prose-slate max-w-none 
+                prose-headings:font-serif prose-headings:text-[#051C2C] 
+                prose-p:text-slate-700 prose-p:leading-relaxed
+                prose-a:text-blue-900 prose-a:no-underline hover:prose-a:underline
+                prose-blockquote:border-l-[#051C2C] prose-blockquote:bg-slate-100 prose-blockquote:py-4 prose-blockquote:px-6
+                prose-strong:text-[#051C2C]">
+                <ReactMarkdown>{article.content}</ReactMarkdown>
+              </div>
+            )}
+            
+            {article.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-slate-300">
+                <span className="text-xs text-slate-500 uppercase tracking-wider mr-2">Topics:</span>
+                {article.tags.map((tag, i) => (
+                  <Badge key={i} variant="outline" className="text-xs border-slate-400 text-slate-600">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar - Key Takeaways */}
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-24">
+              {article.summary && (
+                <div className="bg-white p-6 border-l-4 border-[#051C2C] mb-6">
+                  <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" /> At a Glance
+                  </h4>
+                  <p className="text-sm text-slate-700 leading-relaxed">{article.summary}</p>
+                </div>
+              )}
             </div>
-          )}
-          
-          {article.external_link && (
-            <a 
-              href={article.external_link} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-lg bg-violet-100 text-violet-700 hover:bg-violet-200 dark:bg-violet-900/30 dark:text-violet-400"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open External Link
-            </a>
-          )}
-          
-          {article.content && (
-            <div className="prose prose-slate dark:prose-invert max-w-none">
-              <ReactMarkdown>{article.content}</ReactMarkdown>
-            </div>
-          )}
-          
-          {article.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t dark:border-slate-700">
-              {article.tags.map((tag, i) => (
-                <Badge key={i} variant="outline" className="text-xs">
-                  #{tag}
-                </Badge>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </aside>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function News() {
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('all');
   const [showAdmin, setShowAdmin] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const articleIdFromUrl = urlParams.get('articleId');
@@ -215,14 +281,12 @@ export default function News() {
   });
 
   const featured = articles.filter(a => a.is_featured);
-  const nonFeatured = articles.filter(a => !a.is_featured);
-  const filtered = activeTab === 'all' 
-    ? nonFeatured 
-    : nonFeatured.filter(a => a.type === activeTab);
+  const filtered = activeFilter === 'all' 
+    ? articles 
+    : articles.filter(a => a.category === activeFilter);
 
   const handleArticleClick = async (article) => {
     setSelectedArticle(article);
-    // Increment view count
     await base44.entities.NewsArticle.update(article.id, { 
       view_count: (article.view_count || 0) + 1 
     });
@@ -242,108 +306,107 @@ export default function News() {
     return <NewsAdminPanel onBack={() => { setShowAdmin(false); refetch(); }} />;
   }
 
+  // Get unique categories
+  const categories = [...new Set(articles.map(a => a.category).filter(Boolean))];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
-      {/* Hero Section */}
-      <div className="page-hero relative overflow-hidden">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b85f8b778_c187ff4c-c910-4f5d-aed1-62a6e76b4751.png"
-          alt="News"
-          className="w-full h-full object-cover object-center hero-image"
-          data-no-filter="true"
-        />
-        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
-        <HeroGalleryTrigger startIndex={0} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
-        <div className="absolute inset-0 flex items-center justify-center hero-content">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
-              <Newspaper className="w-8 h-8 text-red-400" />
-              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-[0_0_30px_rgba(239,68,68,0.5)] tracking-wide"
-                  style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(239,68,68,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
-                News & Updates
-              </h1>
-              <ForwardButton currentPage="News" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
-            </div>
-            <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
-              <p className="text-red-200/90 text-base tracking-wider drop-shadow-lg">
-                Breaking News · Community Updates · Platform Announcements
-              </p>
-            </div>
+    <div className="min-h-screen bg-[#F0F2F5]">
+      {/* Hero Section - McKinsey Style */}
+      <div className="bg-[#051C2C] text-white">
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="flex items-center gap-4 mb-4">
+            <BackButton className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
+            <ForwardButton currentPage="News" className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
           </div>
+          <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4">
+            Insights & Analysis
+          </h1>
+          <p className="text-lg text-slate-300 max-w-2xl">
+            Strategic perspectives, platform updates, and community intelligence to guide your journey.
+          </p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-12">
+      <div className="max-w-6xl mx-auto px-6 py-8">
         {selectedArticle ? (
           <ArticleDetail 
             article={selectedArticle} 
-            onBack={() => setSelectedArticle(null)} 
+            onBack={() => setSelectedArticle(null)}
+            articles={filtered}
+            onNavigate={handleArticleClick}
           />
         ) : (
           <>
             {/* Admin Button */}
             {isAdmin && (
-              <div className="flex justify-end mb-4">
-                <Button onClick={() => setShowAdmin(true)} className="gap-2 bg-violet-600 hover:bg-violet-700">
+              <div className="flex justify-end mb-6">
+                <Button onClick={() => setShowAdmin(true)} className="gap-2 bg-[#051C2C] hover:bg-blue-900">
                   <Newspaper className="w-4 h-4" /> Manage News
                 </Button>
               </div>
             )}
 
+            {/* Filter Tabs - McKinsey Style */}
+            <div className="flex items-center gap-1 mb-8 border-b border-slate-300 overflow-x-auto">
+              <button
+                onClick={() => setActiveFilter('all')}
+                className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
+                  activeFilter === 'all' 
+                    ? 'border-[#051C2C] text-[#051C2C]' 
+                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                All Insights
+              </button>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveFilter(cat)}
+                  className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 whitespace-nowrap capitalize ${
+                    activeFilter === cat 
+                      ? 'border-[#051C2C] text-[#051C2C]' 
+                      : 'border-transparent text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
             {/* Featured Section */}
-            {featured.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Star className="w-5 h-5 text-amber-500" /> Featured
-                </h2>
+            {activeFilter === 'all' && featured.length > 0 && (
+              <div className="mb-12">
                 <div className="grid md:grid-cols-2 gap-6">
-                  {featured.slice(0, 2).map(article => (
-                    <NewsCard 
+                  {featured.slice(0, 1).map(article => (
+                    <InsightCard 
                       key={article.id} 
                       article={article} 
                       onClick={() => handleArticleClick(article)}
+                      isFeatured
                     />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Tabs & Articles */}
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="mb-6">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="article" className="gap-1">
-                  <Newspaper className="w-4 h-4" /> Articles
-                </TabsTrigger>
-                <TabsTrigger value="video" className="gap-1">
-                  <Video className="w-4 h-4" /> Videos
-                </TabsTrigger>
-                <TabsTrigger value="link" className="gap-1">
-                  <Link2 className="w-4 h-4" /> Links
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value={activeTab}>
-                {filtered.length === 0 ? (
-                  <div className="text-center py-16">
-                    <Newspaper className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">No news yet</h3>
-                    <p className="text-slate-500 dark:text-slate-400">Check back soon for updates!</p>
-                  </div>
-                ) : (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filtered.map(article => (
-                      <NewsCard 
-                        key={article.id} 
-                        article={article} 
-                        onClick={() => handleArticleClick(article)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+            {/* Articles Grid */}
+            {filtered.length === 0 ? (
+              <div className="text-center py-20 bg-white">
+                <Newspaper className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-xl font-serif font-semibold text-[#051C2C] mb-2">No insights yet</h3>
+                <p className="text-slate-500">Check back soon for strategic updates.</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filtered.filter(a => activeFilter !== 'all' || !a.is_featured).map(article => (
+                  <InsightCard 
+                    key={article.id} 
+                    article={article} 
+                    onClick={() => handleArticleClick(article)}
+                  />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
