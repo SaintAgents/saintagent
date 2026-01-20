@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, 
-  ChevronLeft, ChevronRight, X 
+  ChevronLeft, ChevronRight, X, Image as ImageIcon 
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
@@ -98,12 +98,24 @@ export default function NewsViewerModal({
         {/* Content */}
         <div className="overflow-y-auto max-h-[calc(90vh-60px)]">
           {currentArticle.image_url && (
-            <div className="relative h-48 md:h-64 overflow-hidden">
+            <div className="relative h-48 md:h-64 overflow-hidden group">
               <img 
                 src={currentArticle.image_url} 
                 alt={currentArticle.title}
                 className="w-full h-full object-cover"
               />
+              {/* Image viewer trigger */}
+              <button
+                onClick={() => {
+                  document.dispatchEvent(new CustomEvent('openGlobalPhotoViewer', { 
+                    detail: { imageUrl: currentArticle.image_url, title: currentArticle.title } 
+                  }));
+                }}
+                className="absolute bottom-3 right-3 p-2 bg-black/60 hover:bg-black/80 rounded-lg text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                title="View full image"
+              >
+                <ImageIcon className="w-4 h-4" />
+              </button>
             </div>
           )}
           
