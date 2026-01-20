@@ -8,9 +8,9 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles'],
+    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu)
-    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'settings']
+    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'settings']
   },
   advanced: {
     label: 'Advanced',
@@ -19,7 +19,7 @@ export const VIEW_MODE_CONFIG = {
       'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators',
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
-      'market', 'influence', 'leader', 'dailyops'
+      'market', 'influence', 'leader', 'dailyops', 'news'
     ],
     navIds: null // null means show all nav items
   },
