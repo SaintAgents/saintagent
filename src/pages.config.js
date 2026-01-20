@@ -50,6 +50,7 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
+import PressAnalytics from './pages/PressAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -106,6 +107,7 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
+    "PressAnalytics": PressAnalytics,
 }
 
 export const pagesConfig = {
