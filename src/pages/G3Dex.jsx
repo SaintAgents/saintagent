@@ -39,7 +39,7 @@ export default function G3Dex() {
   const [gasPriority, setGasPriority] = useState('medium');
   const [selectedPair, setSelectedPair] = useState({ from: 'ETH', to: 'USDC' });
   const [showPortfolio, setShowPortfolio] = useState(false);
-  const [theme, setTheme] = useState('cyber'); // cyber, midnight, matrix
+  const [theme, setTheme] = useState('cyber'); // cyber, midnight, matrix, light
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
   const [poolsModalOpen, setPoolsModalOpen] = useState(false);
   const [bridgeModalOpen, setBridgeModalOpen] = useState(false);
@@ -90,26 +90,36 @@ export default function G3Dex() {
       bg: 'bg-[#0a0a0f]',
       accent: 'lime',
       glow: 'rgba(0,255,100,0.03)',
-      border: 'lime-500/20'
+      border: 'lime-500/20',
+      text: 'text-white'
     },
     midnight: {
       bg: 'bg-[#0d1117]',
       accent: 'blue',
       glow: 'rgba(59,130,246,0.03)',
-      border: 'blue-500/20'
+      border: 'blue-500/20',
+      text: 'text-white'
     },
     matrix: {
       bg: 'bg-black',
       accent: 'emerald',
       glow: 'rgba(16,185,129,0.05)',
-      border: 'emerald-500/30'
+      border: 'emerald-500/30',
+      text: 'text-white'
+    },
+    light: {
+      bg: 'bg-gray-50',
+      accent: 'violet',
+      glow: 'rgba(139,92,246,0.03)',
+      border: 'violet-500/20',
+      text: 'text-gray-900'
     }
   };
 
   const currentTheme = themeStyles[theme];
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} text-white`}>
+    <div className={`min-h-screen ${currentTheme.bg} ${currentTheme.text}`}>
       {/* Animated Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div 
@@ -193,15 +203,15 @@ export default function G3Dex() {
           {/* Right Section */}
           <div className="flex items-center gap-2">
             {/* Theme Toggle */}
-            <div className="hidden sm:flex items-center gap-1 bg-black/40 rounded-lg p-0.5 border border-gray-800">
-              {['cyber', 'midnight', 'matrix'].map((t) => (
+            <div className={`hidden sm:flex items-center gap-1 ${theme === 'light' ? 'bg-gray-200' : 'bg-black/40'} rounded-lg p-0.5 border ${theme === 'light' ? 'border-gray-300' : 'border-gray-800'}`}>
+              {['cyber', 'midnight', 'matrix', 'light'].map((t) => (
                 <button
                   key={t}
                   onClick={() => setTheme(t)}
                   className={`px-2 py-1 rounded-md text-[10px] capitalize transition-all ${
                     theme === t 
-                      ? `bg-${t === 'cyber' ? 'lime' : t === 'midnight' ? 'blue' : 'emerald'}-500/20 text-white` 
-                      : 'text-gray-500 hover:text-gray-300'
+                      ? `bg-${t === 'cyber' ? 'lime' : t === 'midnight' ? 'blue' : t === 'matrix' ? 'emerald' : 'violet'}-500/20 ${t === 'light' ? 'text-violet-700' : 'text-white'}` 
+                      : `${theme === 'light' ? 'text-gray-600 hover:text-gray-800' : 'text-gray-500 hover:text-gray-300'}`
                   }`}
                 >
                   {t}
@@ -249,7 +259,7 @@ export default function G3Dex() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 w-full px-4 py-4 md:pl-24 lg:pl-72">
+      <div className="relative z-10 w-full px-4 py-4 md:pl-28 lg:pl-80">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           
           {/* Left Sidebar - Chart & Portfolio */}
