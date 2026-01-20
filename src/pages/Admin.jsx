@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -20,6 +20,7 @@ import AdminChallenges from '@/components/admin/AdminChallenges';
 import AffiliateSettings from '@/components/admin/AffiliateSettings';
 import NewsAdminPanel from '@/components/news/NewsAdminPanel';
 import GlobalAlertManager from '@/components/admin/GlobalAlertManager';
+import PressReleaseManager from '@/components/news/PressReleaseManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -132,6 +133,10 @@ export default function Admin() {
               <Bell className="w-4 h-4" />
               Alerts
             </TabsTrigger>
+            <TabsTrigger value="press" className="gap-2 px-3 py-2">
+              <Radio className="w-4 h-4" />
+              Press
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -192,6 +197,10 @@ export default function Admin() {
 
           <TabsContent value="alerts">
             <GlobalAlertManager />
+          </TabsContent>
+
+          <TabsContent value="press">
+            <PressReleaseManager />
           </TabsContent>
         </Tabs>
       </div>
