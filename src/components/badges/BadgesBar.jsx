@@ -109,12 +109,12 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
     return items;
   }, [badges, defaultIfEmpty, eternalFlameBadge]);
 
-  // Sort badges by earned_date (most recent first) to ensure newest badges appear first
+  // Sort badges by earned_date/created_date (most recent first) to ensure newest badges appear first
   const sortedDerived = React.useMemo(() => {
     return [...derived].sort((a, b) => {
-      // If badge has earned_date, use it for sorting (newest first)
-      const dateA = a.earned_date ? new Date(a.earned_date).getTime() : 0;
-      const dateB = b.earned_date ? new Date(b.earned_date).getTime() : 0;
+      // Use earned_date if available, fallback to created_date, fallback to 0
+      const dateA = a.earned_date ? new Date(a.earned_date).getTime() : (a.created_date ? new Date(a.created_date).getTime() : 0);
+      const dateB = b.earned_date ? new Date(b.earned_date).getTime() : (b.created_date ? new Date(b.created_date).getTime() : 0);
       return dateB - dateA;
     });
   }, [derived]);
