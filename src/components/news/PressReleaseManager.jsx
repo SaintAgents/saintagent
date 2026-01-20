@@ -532,7 +532,7 @@ Return ONLY the press release content, no additional commentary.`,
                         isSelected ? 'bg-violet-50 border-violet-300' : 'hover:bg-slate-50'
                       }`}
                     >
-                      <Checkbox checked={isSelected} />
+                      <Checkbox checked={isSelected} onCheckedChange={() => toggleChannel(channel.value)} />
                       <Icon className="w-4 h-4" />
                       <span className="text-sm">{channel.label}</span>
                     </div>
