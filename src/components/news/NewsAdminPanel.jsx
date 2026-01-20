@@ -177,7 +177,7 @@ function ArticleForm({ article, onSave, onCancel, isSaving }) {
       
       <div className="flex justify-end gap-2 pt-4 border-t">
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button onClick={handleSubmit} disabled={!form.title || isSaving} className="gap-2">
+        <Button onClick={handleSubmit} disabled={!form.title || isSaving} className="gap-2 bg-[#051C2C] hover:bg-blue-900 text-white">
           <Save className="w-4 h-4" /> {isSaving ? 'Saving...' : 'Save Article'}
         </Button>
       </div>
