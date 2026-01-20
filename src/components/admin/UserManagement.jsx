@@ -132,9 +132,15 @@ export default function UserManagement() {
 
   const handleDeleteProfile = async () => {
     if (!selectedUser) return;
-    if (confirm('Delete this UserProfile? This cannot be undone.')) {
+    const freedSA = selectedUser.sa_number;
+    if (confirm('Delete this UserProfile? This cannot be undone.' + (freedSA ? ` SA#${freedSA} will be returned to the unassigned pool.` : ''))) {
+      // Clear SA number before delete to track it as unassigned
+      if (freedSA && !freedSA.startsWith('Demo')) {
+        await base44.entities.UserProfile.update(selectedUser.id, { sa_number: null });
+      }
       await base44.entities.UserProfile.delete(selectedUser.id);
       await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['unassignedSAPool'] });
       await queryClient.refetchQueries({ queryKey: ['allProfiles'] });
       setSelectedUser(null);
     }
@@ -142,15 +148,42 @@ export default function UserManagement() {
 
   const handleDeleteUser = async () => {
     if (!userRecord) return;
-    if (confirm('Delete this user account? This will remove login access and their directory profile.')) {
+    const freedSA = selectedUser?.sa_number;
+    if (confirm('Delete this user account? This will remove login access and their directory profile.' + (freedSA ? ` SA#${freedSA} will be returned to the unassigned pool.` : ''))) {
       await base44.entities.User.delete(userRecord.id);
       // Also remove from the directory by deleting their UserProfile if present
       if (selectedUser?.id) {
         try {await base44.entities.UserProfile.delete(selectedUser.id);} catch {}
       }
       await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['unassignedSAPool'] });
       await queryClient.refetchQueries({ queryKey: ['allProfiles'] });
       setSelectedUser(null);
+    }
+  };
+
+  const handleAssignSAFromPool = async (profileId, saNumber) => {
+    if (!profileId || !saNumber) return;
+    setAssigningSA(true);
+    try {
+      await base44.entities.UserProfile.update(profileId, { sa_number: saNumber });
+      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['unassignedSAPool'] });
+      setSelectedSAToAssign('');
+      alert(`SA#${saNumber} assigned successfully!`);
+    } catch (e) {
+      alert('Error: ' + (e.message || 'Failed to assign SA number'));
+    } finally {
+      setAssigningSA(false);
+    }
+  };
+
+  const handleRemoveSA = async (profile) => {
+    if (!profile?.id || !profile?.sa_number) return;
+    if (confirm(`Remove SA#${profile.sa_number} from ${profile.display_name}? It will return to the unassigned pool.`)) {
+      await base44.entities.UserProfile.update(profile.id, { sa_number: null });
+      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['unassignedSAPool'] });
     }
   };
 
