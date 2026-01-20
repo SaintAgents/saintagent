@@ -67,7 +67,8 @@ import {
   Smile,
   Newspaper,
   BookOpen,
-  Coins
+  Coins,
+  Ticket
 } from "lucide-react";
 import {
   Tooltip,
