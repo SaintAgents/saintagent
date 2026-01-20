@@ -64,6 +64,90 @@ export const HERO_IMAGES = [
     url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7e50f7bf_universal_upscale_0_616bb1f7-8a11-4de2-bec2-b326e9e4b195_0.jpg',
     title: 'Initiations',
     description: 'Sacred pathways of transformation'
+  },
+  {
+    id: 'circles',
+    page: 'Circles',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg',
+    title: 'Circles & Regions',
+    description: 'Join your soul tribe'
+  },
+  {
+    id: 'projects',
+    page: 'Projects',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/834e5195f_image_2025-12-27_132011008.png',
+    title: 'Projects',
+    description: 'Build the new earth together'
+  },
+  {
+    id: 'teams',
+    page: 'Teams',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2d901fa27_Leonardo_Lightning_XL_Global_Digital_Commodity_Exchange_0.jpg',
+    title: 'Teams',
+    description: 'Collaborate with purpose'
+  },
+  {
+    id: 'quests',
+    page: 'Quests',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/a2f4b87c3_ChatGPTImageDec27202501_27_46PM.png',
+    title: 'Quests',
+    description: 'Epic journeys await'
+  },
+  {
+    id: 'leaderboards',
+    page: 'Leaderboards',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8cc962c0c_ChatGPTImageDec27202501_25_18PM.png',
+    title: 'Leaderboards',
+    description: 'Rise among the titans'
+  },
+  {
+    id: 'events',
+    page: 'Events',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/def3a92a7_image_2025-12-27_111942719.png',
+    title: 'Events',
+    description: 'Gather in sacred space'
+  },
+  {
+    id: 'command-deck',
+    page: 'CommandDeck',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6fc853590_gemini-25-flash-image_place_into_the_circuit_board_coin_in_most_clear_space_and_the_shield_lower_left-01.jpg',
+    title: 'Command Deck',
+    description: 'Your mission control center'
+  },
+  {
+    id: 'affiliate',
+    page: 'AffiliateCenter',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f95689693_Screenshot2026-01-04192526.png',
+    title: 'Affiliate Center',
+    description: 'Grow your network'
+  },
+  {
+    id: 'leader-channel',
+    page: 'LeaderChannel',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7e50f7bf_universal_upscale_0_616bb1f7-8a11-4de2-bec2-b326e9e4b195_0.jpg',
+    title: '144K Leader Channel',
+    description: 'Broadcast to the collective'
+  },
+  {
+    id: 'crm',
+    page: 'CRM',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/834e5195f_image_2025-12-27_132011008.png',
+    title: 'Contact Network',
+    description: 'Manage your sacred connections'
+  },
+  {
+    id: 'forum',
+    page: 'Forum',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg',
+    title: 'Forum',
+    description: 'Community discussions'
+  },
+  {
+    id: 'dating',
+    page: 'DatingMatches',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/46b1af7b6_synchro.jpg',
+    title: 'Soul Connections',
+    description: 'Find your divine counterpart'
   }
 ];
 
