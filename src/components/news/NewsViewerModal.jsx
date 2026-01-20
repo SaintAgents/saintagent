@@ -182,9 +182,21 @@ export default function NewsViewerModal({
             )}
             
             {currentArticle.content && (
-              <div className="prose prose-slate dark:prose-invert max-w-none">
-                <ReactMarkdown>{currentArticle.content}</ReactMarkdown>
-              </div>
+              <div 
+                className="prose prose-slate dark:prose-invert max-w-none
+                  [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3
+                  [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-5 [&_h3]:mb-2
+                  [&_p]:mb-4 [&_p]:leading-relaxed
+                  [&_strong]:font-semibold [&_strong]:text-slate-900 dark:[&_strong]:text-white
+                  [&_em]:italic [&_em]:text-slate-600 dark:[&_em]:text-slate-300
+                  [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-2
+                  [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-2
+                  [&_li]:text-slate-700 dark:[&_li]:text-slate-300
+                  [&_blockquote]:border-l-4 [&_blockquote]:border-violet-400 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 dark:[&_blockquote]:text-slate-400
+                  [&_hr]:my-6 [&_hr]:border-slate-200 dark:[&_hr]:border-slate-700
+                  [&_a]:text-violet-600 [&_a]:underline hover:[&_a]:text-violet-800 dark:[&_a]:text-violet-400"
+                dangerouslySetInnerHTML={{ __html: currentArticle.content }}
+              />
             )}
             
             {currentArticle.tags?.length > 0 && (
