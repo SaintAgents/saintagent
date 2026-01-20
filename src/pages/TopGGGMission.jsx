@@ -5,10 +5,13 @@ import {
   Shield, Gem, Heart, Crown, Zap, Star, Lock, Globe, Smartphone, 
   CreditCard, Building2, Vault, Coins, ArrowRight, Check, X, 
   Infinity, Clock, Sparkles, Radio, Cpu, Network, Database,
-  ChevronDown, Menu, Play, ExternalLink
+  ChevronDown, Menu, Play, ExternalLink, BookOpen, ChevronRight
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 // In-page Navigation (sticky within content area)
