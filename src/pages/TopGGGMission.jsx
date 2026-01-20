@@ -507,21 +507,686 @@ const Footer = () => (
   </footer>
 );
 
+// Interactive Whitepaper Modal
+const WhitepaperModal = ({ open, onClose, initialSection = 'overview' }) => {
+  const [activeSection, setActiveSection] = useState(initialSection);
+
+  const sections = [
+    { id: 'overview', label: 'Overview', icon: Globe },
+    { id: 'ultranet', label: 'The Ultranet', icon: Network },
+    { id: 'starchain', label: 'Smart StarChain', icon: Star },
+    { id: 'smartcard', label: 'Smart Card', icon: CreditCard },
+    { id: 'gdex', label: 'GDex Exchange', icon: Building2 },
+    { id: 'neonft', label: 'Neo-NFTs', icon: Sparkles },
+    { id: 'banking', label: 'New Banking', icon: Vault },
+    { id: 'gaiapay', label: 'GaiaPay', icon: CreditCard },
+    { id: 'goldvaults', label: 'Gold Vaults', icon: Shield },
+    { id: 'roadmap', label: 'Roadmap', icon: ChevronRight },
+  ];
+
+  const sectionContent = {
+    overview: {
+      title: "The Ultranet Vision",
+      subtitle: "Sovereign Digital Infrastructure for Humanity's Golden Age",
+      content: `The Ultranet represents the most significant technological leap in human history — a complete reimagining of digital infrastructure designed to serve humanity rather than exploit it.
+
+**Our Core Principles:**
+
+1. **Sovereignty First**: Every individual owns their data, identity, and digital assets absolutely.
+
+2. **Health-Conscious Technology**: Non-microwave communications that work in harmony with human biology and the natural world.
+
+3. **Gold-Backed Value**: All digital assets anchored to real-world resources, eliminating speculative volatility.
+
+4. **Divine Law Compliance**: Operations structured under natural law, ensuring fairness and integrity.
+
+5. **Infinite Scalability**: Architecture designed to serve all of humanity without degradation.
+
+**The Problem We Solve:**
+
+The current internet infrastructure is fundamentally flawed:
+- Built on harmful microwave radiation
+- Controlled by corporate interests
+- Vulnerable to surveillance and manipulation
+- Based on speculative, unbacked digital currencies
+- Designed to extract value rather than create it
+
+**Our Solution:**
+
+The Ultranet creates a parallel infrastructure that:
+- Uses quantum-safe, non-radiative communications
+- Returns control to sovereign individuals
+- Backs all value with physical gold reserves
+- Operates transparently under divine law
+- Empowers every participant to thrive`
+    },
+    ultranet: {
+      title: "The Ultranet Network",
+      subtitle: "Beyond the Internet — A Living Network of Light",
+      content: `The Ultranet is the next evolutionary leap beyond the internet — a living network of light and intelligence designed to liberate communications from the toxic confines of microwave frequencies.
+
+**Technical Architecture:**
+
+**6G+ Non-Microwave Protocol**
+Unlike conventional wireless that bathes humanity in harmful radiation, the Ultranet operates on natural resonance frequencies that harmonize with biological systems:
+- Schumann resonance integration (7.83 Hz carrier waves)
+- Scalar wave propagation for unlimited range
+- Zero electromagnetic pollution
+
+**Quantum-Safe Encryption**
+Every packet is protected by encryption that cannot be broken by any computer — including quantum computers:
+- Post-quantum cryptographic algorithms
+- Entanglement-based key distribution
+- Zero-knowledge proof authentication
+
+**Sacred Geometry Architecture**
+The network topology follows natural patterns found throughout creation:
+- Phi-ratio node distribution
+- Fibonacci scaling algorithms
+- Merkaba-structured data centers
+
+**Performance Specifications:**
+- Latency: Sub-millisecond global
+- Bandwidth: Unlimited per user
+- Security: Beyond military grade
+- Coverage: Global + orbital
+- Energy: Zero-point powered nodes
+
+**Deployment Timeline:**
+- Phase 1: Major cities (Complete)
+- Phase 2: Regional expansion (2025)
+- Phase 3: Global coverage (2026)
+- Phase 4: Space integration (2027)`
+    },
+    starchain: {
+      title: "Smart StarChain",
+      subtitle: "The Celestial Lattice of Trust",
+      content: `The Smart StarChain redefines blockchain as we know it. Beyond decentralization, it operates as a celestial lattice of trust, linking transactions in radiant star patterns across infinite nodes of light.
+
+**Revolutionary Features:**
+
+**Star Pattern Consensus**
+Unlike linear blockchain structures, StarChain uses a radiant topology:
+- Each transaction validates in multiple simultaneous patterns
+- Zero confirmation wait times
+- Infinite parallel processing capacity
+
+**Instant Settlement**
+Traditional blockchains suffer from confirmation delays. StarChain achieves:
+- Immediate finality (< 0.001 seconds)
+- No pending transactions
+- Real-time global synchronization
+
+**Infinite Scalability**
+The star pattern allows unlimited growth:
+- No block size limitations
+- Automatic load distribution
+- Zero network congestion possible
+
+**Eco-Conscious Design**
+Unlike proof-of-work systems:
+- Zero energy waste consensus
+- Powered by ambient field energy
+- Actually generates more energy than it uses
+
+**Sacred Geometry Integration:**
+- Golden ratio transaction ordering
+- Platonic solid data structures
+- Harmonic frequency validation
+
+**Token Economics:**
+- GGRT (Gaia Gold Reserve Token): Primary unit
+- GGG (Gaia Global Gold): Utility token
+- All tokens backed 1:1 by physical gold`
+    },
+    smartcard: {
+      title: "Smart Card & Super Smart Phone",
+      subtitle: "Your Sovereign Digital Identity",
+      content: `At the heart of user access lies the GGE Smart Card — a sovereign digital identity that fuses personal authentication, gold-backed assets, and encrypted communications into one portable key.
+
+**GGE Smart Card Features:**
+
+**Biometric Authentication**
+- Multi-factor biometric fusion
+- Heartbeat pattern recognition
+- Consciousness signature verification
+- Impossible to forge or steal
+
+**Holographic Display**
+- 3D augmented reality interface
+- Dynamic balance visualization
+- Real-time market data
+- Personalized AI assistant
+
+**Quantum Wallet**
+- Unlimited asset storage
+- Instant cross-border transfers
+- Multi-currency support
+- Gold-backed stability
+
+**Physical Security:**
+- Indestructible nano-carbon composite
+- Self-destruct on tampering
+- GPS recovery system
+- 100-year operational lifespan
+
+---
+
+**Super Smart Phone:**
+
+The companion device that replaces harmful smartphones:
+
+**Non-Radiative Communications**
+- Zero microwave emissions
+- Crystal-clear quantum calls
+- Telepresence holography
+- Global instant connectivity
+
+**Holographic Interface**
+- 3D projected display
+- Gesture and thought control
+- Ambient light powered
+- Indestructible housing
+
+**Integrated Features:**
+- StarChain node capability
+- Local gold reserve verification
+- Health monitoring suite
+- Divine law reference library`
+    },
+    gdex: {
+      title: "Global Digital Commodity Exchange",
+      subtitle: "The Sovereign Marketplace",
+      content: `The GDex is the sovereign marketplace for the New Era, where assets are not just traded but transformed into instruments of abundance.
+
+**Exchange Architecture:**
+
+**Resource-Backed Trading**
+Every asset on GDex is backed by real resources:
+- Physical gold reserves
+- Commodity inventories
+- Land and property rights
+- Intellectual property pools
+
+**Transparent Protocols**
+Complete visibility into all operations:
+- Real-time reserve auditing
+- Open-source algorithms
+- Public transaction ledger
+- Zero hidden mechanisms
+
+**Real-Time Settlement**
+Trades complete instantly:
+- No clearing house delays
+- Direct peer-to-peer exchange
+- Automatic compliance verification
+- Instant ownership transfer
+
+**Available Markets:**
+
+**Precious Metals:**
+- Gold (GGRT, GGG)
+- Silver (GST)
+- Platinum (GPT)
+- Palladium (GPD)
+
+**Commodities:**
+- Agricultural products
+- Energy certificates
+- Water rights
+- Carbon credits
+
+**Real Assets:**
+- Tokenized real estate
+- Equipment shares
+- Infrastructure bonds
+- Community currencies
+
+**Trading Features:**
+- Zero trading fees (0%)
+- Instant liquidity
+- AI-assisted portfolio management
+- Risk-free escrow system`
+    },
+    neonft: {
+      title: "Neo-NFTs",
+      subtitle: "Living Digital Assets",
+      content: `Beyond digital art and speculation, the Neo-NFT is a living digital asset, tethered directly to real-world resources and sovereign guarantees.
+
+**What Makes Neo-NFTs Different:**
+
+**Resource-Backed Value**
+Every Neo-NFT is backed by physical assets:
+- Minimum gold reserve requirement
+- Auditable backing certificates
+- Redemption guarantee
+- Appreciating floor value
+
+**Perpetual Authenticity**
+Verification that never expires:
+- Quantum-encrypted provenance
+- Immutable ownership history
+- Cross-platform verification
+- Physical world linkage
+
+**Living Asset Properties**
+Neo-NFTs evolve and generate value:
+- Dividend distributions
+- Governance rights
+- Utility unlocks over time
+- Community benefits
+
+**Categories:**
+
+**Sovereign Identity:**
+- Personal sovereignty certificates
+- Professional credentials
+- Achievement records
+- Reputation scores
+
+**Property Rights:**
+- Land title deeds
+- Resource extraction rights
+- Intellectual property
+- Revenue shares
+
+**Access Tokens:**
+- Community memberships
+- Service subscriptions
+- Event access
+- Educational programs
+
+**Collectibles:**
+- Artist collaborations
+- Historical artifacts
+- Cultural preservation
+- Generative art with utility`
+    },
+    banking: {
+      title: "New Banking System",
+      subtitle: "Wealth Restored to Its Rightful Foundation",
+      content: `GGE Banking is not a reform of the old — it is a rebirth. Operating under Divine Law and sovereign charter, it returns wealth to its rightful foundation: gold, trust, and human dignity.
+
+**Core Principles:**
+
+**Gold-Backed Accounts**
+Every unit of currency fully backed:
+- 1:1 gold reserve ratio
+- Daily reserve verification
+- Instant redemption rights
+- No fractional reserve lending
+
+**Sovereign Lending**
+Loans that empower rather than enslave:
+- Zero interest financing available
+- Profit-sharing models
+- Community-backed guarantees
+- No predatory terms
+
+**Zero Fractional Reserves**
+What you deposit is what exists:
+- Full reserve banking
+- No money creation from nothing
+- Transparent balance sheets
+- Depositor-first priorities
+
+**Divine Law Compliance**
+Operations structured under natural law:
+- Fair dealing requirements
+- Transparent fee structures
+- Dispute resolution courts
+- Community accountability
+
+**Account Types:**
+
+**Personal Sovereign Account:**
+- Gold-backed checking
+- Multi-currency savings
+- Investment portfolio
+- Credit facilities
+
+**Business Sovereign Account:**
+- Payroll integration
+- Invoice financing
+- Trade credit
+- Treasury management
+
+**Community Account:**
+- Shared savings pools
+- Group investments
+- Local currency issuance
+- Cooperative lending
+
+**Benefits:**
+- No account fees
+- Instant global transfers
+- Privacy protection
+- Inheritance planning`
+    },
+    gaiapay: {
+      title: "GaiaPay System",
+      subtitle: "The Future of Money Has Arrived",
+      content: `GaiaPay isn't an accessory to legacy systems — it replaces them entirely. This is the world's first sovereign payment system that merges fiat, crypto, and digital identity into one seamless experience.
+
+**Revolutionary Features:**
+
+**Unified Smart Card + Wallet**
+One card does everything:
+- Preloaded and auto-activated
+- Eliminates Apple Pay, Google Pay
+- No centralized intermediaries
+- Your wallet IS your bank
+
+**Instant Exchange & Conversion**
+Seamless currency translation:
+- Auto-detects merchant currency
+- Bitcoin, USDC, fiat — all accepted
+- Clears in under 1 second
+- Zero third-party fees
+
+**Quantum-Level Security**
+Unbreakable protection:
+- Quantum-grade encryption
+- Biometric validation required
+- Every transaction tokenized
+- Complete anonymity option
+
+**Technical Specifications:**
+
+**Supported Currencies:**
+- All world fiat currencies
+- Major cryptocurrencies
+- GGRT/GGG tokens
+- Local community currencies
+
+**Transaction Speed:**
+- Point of sale: < 0.5 seconds
+- Online: < 0.1 seconds
+- Cross-border: < 1 second
+
+**Security Features:**
+- Multi-signature authorization
+- Fraud impossible by design
+- Instant freeze capability
+- Recovery protocols
+
+**Merchant Benefits:**
+- Zero processing fees
+- Instant settlement
+- Chargeback protection
+- Global customer base`
+    },
+    goldvaults: {
+      title: "Sovereign Gold Vaults & GGRT",
+      subtitle: "The Foundation of Real Wealth",
+      content: `At the foundation of the GGE ecosystem lie the Sovereign Gold Vaults, protected under divine decree and secured beyond the reach of corporate powers.
+
+**Vault Network:**
+
+**Divine Decree Protection**
+Vaults operate under sovereign immunity:
+- Beyond government jurisdiction
+- Protected by natural law
+- Community-verified security
+- Multi-signature access only
+
+**Physical Security:**
+- Deep underground facilities
+- Quantum-locked chambers
+- Biometric + consciousness access
+- Real-time monitoring globally
+
+**Multi-Generational Trust**
+Designed for centuries:
+- 1000-year vault architecture
+- Automatic inheritance protocols
+- Family dynasty support
+- Legacy preservation
+
+**GGRT Token:**
+
+**Gaia Gold Reserve Token (GGRT)**
+The primary digital representation of physical gold:
+
+**1:1 Gold Backing:**
+- Each GGRT = 1 gram of gold
+- Instantly redeemable
+- Audited continuously
+- Physical delivery available
+
+**Token Utility:**
+- Store of value
+- Medium of exchange
+- Collateral for loans
+- Governance rights
+
+**Redemption Process:**
+1. Request redemption in app
+2. Select physical or transfer
+3. Verify identity
+4. Receive gold within 48 hours
+
+**Storage Options:**
+
+**Vault Allocation:**
+- Personal allocated storage
+- Pooled community vaults
+- Family trust vaults
+- Business treasury vaults
+
+**Home Storage Program:**
+- Certified home safes
+- Insurance included
+- Verification technology
+- Reintegration easy`
+    },
+    roadmap: {
+      title: "Development Roadmap",
+      subtitle: "Building the Golden Age Infrastructure",
+      content: `The Ultranet development follows a carefully orchestrated timeline designed to ensure stability, security, and global accessibility.
+
+**Phase 1: Foundation (2024) ✓ COMPLETE**
+- Core StarChain deployment
+- Initial vault network activation
+- Smart Card pilot program
+- GDex beta launch
+
+**Phase 2: Expansion (2025) 🔄 IN PROGRESS**
+- Global vault network completion
+- GaiaPay merchant integration
+- Super Smart Phone release
+- Neo-NFT marketplace launch
+- 100+ country coverage
+
+**Phase 3: Integration (2026)**
+- Full Ultranet network activation
+- Legacy system bridges
+- Universal basic income pilot
+- Space-based node deployment
+- 1 billion user capacity
+
+**Phase 4: Transformation (2027)**
+- Complete sovereignty toolkit
+- AI assistant integration
+- Telepresence networks
+- Planetary coordination systems
+- Full Golden Age infrastructure
+
+**Current Status:**
+
+✅ **Live Systems:**
+- StarChain mainnet
+- GDex trading platform
+- Smart Card issuance
+- Vault network (12 locations)
+
+🔄 **In Development:**
+- GaiaPay global rollout
+- Super Smart Phone
+- Ultranet 6G+ nodes
+- Neo-NFT marketplace
+
+📋 **Planned:**
+- Space infrastructure
+- AI sovereignty tools
+- Community currencies
+- Universal services
+
+**How to Participate:**
+
+1. **Get Your Smart Card**: Apply through authorized centers
+2. **Open Sovereign Account**: Begin gold accumulation
+3. **Join Community**: Connect with local chapters
+4. **Spread Awareness**: Share the vision
+5. **Build Together**: Contribute your skills`
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-6xl h-[85vh] p-0 bg-gradient-to-b from-purple-950 to-black border-purple-700/50">
+        <div className="flex h-full">
+          {/* Sidebar Navigation */}
+          <div className="w-64 bg-purple-900/50 border-r border-purple-700/50 p-4 hidden md:block">
+            <div className="flex items-center gap-2 mb-6">
+              <BookOpen className="text-yellow-400" size={24} />
+              <h3 className="text-yellow-400 font-bold">Whitepaper</h3>
+            </div>
+            <nav className="space-y-1">
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(section.id)}
+                  className={cn(
+                    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-all",
+                    activeSection === section.id
+                      ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                      : "text-gray-300 hover:bg-purple-800/50 hover:text-white"
+                  )}
+                >
+                  <section.icon size={16} />
+                  {section.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          {/* Content Area */}
+          <div className="flex-1 flex flex-col">
+            <DialogHeader className="px-6 py-4 border-b border-purple-700/50">
+              <div className="flex items-center justify-between">
+                <div>
+                  <DialogTitle className="text-2xl text-yellow-400">
+                    {sectionContent[activeSection]?.title}
+                  </DialogTitle>
+                  <p className="text-gray-400 text-sm mt-1">
+                    {sectionContent[activeSection]?.subtitle}
+                  </p>
+                </div>
+                {/* Mobile Section Selector */}
+                <select
+                  value={activeSection}
+                  onChange={(e) => setActiveSection(e.target.value)}
+                  className="md:hidden bg-purple-800 text-white border border-purple-600 rounded-lg px-3 py-2 text-sm"
+                >
+                  {sections.map((section) => (
+                    <option key={section.id} value={section.id}>
+                      {section.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </DialogHeader>
+
+            <ScrollArea className="flex-1 p-6">
+              <div className="prose prose-invert prose-yellow max-w-none">
+                <div className="whitespace-pre-wrap text-gray-200 leading-relaxed">
+                  {sectionContent[activeSection]?.content.split('\n').map((line, i) => {
+                    if (line.startsWith('**') && line.endsWith('**')) {
+                      return <h3 key={i} className="text-yellow-400 font-bold text-lg mt-6 mb-2">{line.replace(/\*\*/g, '')}</h3>;
+                    }
+                    if (line.startsWith('- ')) {
+                      return <li key={i} className="text-gray-300 ml-4">{line.substring(2)}</li>;
+                    }
+                    if (line.startsWith('✅') || line.startsWith('🔄') || line.startsWith('📋')) {
+                      return <p key={i} className="text-gray-200 font-medium mt-4">{line}</p>;
+                    }
+                    if (line.trim() === '---') {
+                      return <hr key={i} className="border-purple-700 my-6" />;
+                    }
+                    if (line.trim() === '') {
+                      return <br key={i} />;
+                    }
+                    return <p key={i} className="text-gray-300 mb-2">{line}</p>;
+                  })}
+                </div>
+              </div>
+            </ScrollArea>
+
+            {/* Navigation Footer */}
+            <div className="px-6 py-4 border-t border-purple-700/50 flex items-center justify-between">
+              <Button
+                variant="outline"
+                className="border-purple-600 text-purple-300 hover:bg-purple-800"
+                onClick={() => {
+                  const idx = sections.findIndex(s => s.id === activeSection);
+                  if (idx > 0) setActiveSection(sections[idx - 1].id);
+                }}
+                disabled={activeSection === sections[0].id}
+              >
+                ← Previous
+              </Button>
+              <span className="text-gray-500 text-sm">
+                {sections.findIndex(s => s.id === activeSection) + 1} / {sections.length}
+              </span>
+              <Button
+                className="bg-yellow-500 hover:bg-yellow-400 text-purple-900"
+                onClick={() => {
+                  const idx = sections.findIndex(s => s.id === activeSection);
+                  if (idx < sections.length - 1) setActiveSection(sections[idx + 1].id);
+                }}
+                disabled={activeSection === sections[sections.length - 1].id}
+              >
+                Next →
+              </Button>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 // Main Page Component
 export default function TopGGGMission() {
+  const [whitepaperOpen, setWhitepaperOpen] = useState(false);
+  const [whitepaperSection, setWhitepaperSection] = useState('overview');
+
+  const openWhitepaper = (section = 'overview') => {
+    setWhitepaperSection(section);
+    setWhitepaperOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-950 via-purple-900 to-black text-white">
       <InPageNavigation />
-      <HeroSection />
-      <TechnologySections />
-      <GaiaPaySection />
+      <HeroSection onLearnMore={() => openWhitepaper('overview')} />
+      <TechnologySections onLearnMore={openWhitepaper} />
+      <GaiaPaySection onLearnMore={() => openWhitepaper('gaiapay')} />
       <RevolutionaryFeatures />
       <ComparisonSection />
       <PowerStatsSection />
-      <EcosystemGrid />
+      <EcosystemGrid onExplore={openWhitepaper} />
       <MissionSection />
-      <CTASection />
+      <CTASection onWhitepaper={() => openWhitepaper('overview')} />
       <Footer />
+      
+      {/* Interactive Whitepaper Modal */}
+      <WhitepaperModal 
+        open={whitepaperOpen} 
+        onClose={() => setWhitepaperOpen(false)}
+        initialSection={whitepaperSection}
+      />
     </div>
   );
 }
