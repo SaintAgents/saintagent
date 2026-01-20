@@ -2,10 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Maximize2, RefreshCw, BarChart2, CandlestickChart } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { TrendingUp, TrendingDown, Maximize2, RefreshCw, BarChart2, CandlestickChart, Building2 } from 'lucide-react';
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarChart, Cell, ComposedChart, ReferenceLine } from 'recharts';
 
 const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M'];
+const CHART_TYPES = ['area', 'candle', 'manhattan'];
 
 export default function PriceChart({ pair, theme = 'lime' }) {
   const [timeframe, setTimeframe] = useState('1D');
