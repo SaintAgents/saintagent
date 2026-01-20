@@ -120,7 +120,13 @@ export default function PriceChart({ pair, theme = 'lime' }) {
             >
               <Building2 className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-white">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-7 w-7 text-gray-400 hover:text-white"
+              onClick={() => setIsExpanded(true)}
+              title="Expand Chart"
+            >
               <Maximize2 className="w-4 h-4" />
             </Button>
             <Button 
