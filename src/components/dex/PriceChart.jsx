@@ -225,10 +225,29 @@ export default function PriceChart({ pair, theme = 'lime' }) {
     </ResponsiveContainer>
   );
 
+  // Handle escape key to close expanded view
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isExpanded) {
+        setIsExpanded(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isExpanded]);
+
   // Expanded fullscreen modal
   if (isExpanded) {
     return (
-      <div className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-sm flex flex-col">
+      <div 
+        className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-sm flex flex-col"
+        onClick={(e) => {
+          // Close when clicking the backdrop (outside the main content)
+          if (e.target === e.currentTarget) {
+            setIsExpanded(false);
+          }
+        }}
+      >
         {/* Header */}
         <div className="p-4 border-b border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
