@@ -51,6 +51,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import MastersMessagesTicker from './MastersMessagesTicker';
 import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
+import SaintBrowser from '../browser/SaintBrowser';
 
 const MODE_TABS = [
   { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
