@@ -154,15 +154,30 @@ export default function G3Dex() {
 
             {/* Quick Links */}
             <div className="hidden md:flex items-center gap-1 ml-4">
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs h-7">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-gray-400 hover:text-white text-xs h-7"
+                onClick={() => setActiveTab('bridge')}
+              >
                 <Globe className="w-3 h-3 mr-1" />
                 Bridge
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs h-7">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-gray-400 hover:text-white text-xs h-7"
+                onClick={() => alert('Staking pools coming soon! Stay tuned for G3DEX V3.')}
+              >
                 <Shield className="w-3 h-3 mr-1" />
                 Stake
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs h-7">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-gray-400 hover:text-white text-xs h-7"
+                onClick={() => alert('Liquidity pools coming soon! Stay tuned for G3DEX V3.')}
+              >
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
               </Button>
