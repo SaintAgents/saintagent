@@ -376,7 +376,7 @@ export default function Gamification() {
                 <CardTitle className="text-lg flex items-center justify-between">
                   <span className="flex items-center gap-2">
                     <Medal className="w-5 h-5 text-amber-500" />
-                    Your Badges
+                    Badges & Sigils
                   </span>
                   <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)}>
                     View All
