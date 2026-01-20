@@ -217,12 +217,12 @@ export default function GlobalAlertManager() {
 
         {/* Actions */}
         <div className="flex items-center gap-3 pt-4 border-t">
-          <Button onClick={handleSave} disabled={saveMutation.isPending} className="gap-2">
+          <Button onClick={handleSave} disabled={saveMutation.isPending} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
             <Save className="w-4 h-4" />
             {saveMutation.isPending ? 'Saving...' : 'Save Alert Settings'}
           </Button>
           {form.global_alert_enabled && (
-            <Button variant="outline" onClick={handleQuickDisable} className="gap-2 text-red-600 border-red-200 hover:bg-red-50">
+            <Button variant="outline" onClick={handleQuickDisable} className="gap-2 text-red-600 border-red-300 hover:bg-red-50 bg-white">
               <EyeOff className="w-4 h-4" />
               Disable Now
             </Button>
