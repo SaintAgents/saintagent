@@ -146,7 +146,7 @@ export default function G3Dex() {
       <StatsBar />
 
       {/* Header */}
-      <header className={`relative z-10 border-b border-${currentTheme.border} bg-black/60 backdrop-blur-xl sticky top-0`}>
+      <header className={`relative z-10 border-b border-${currentTheme.border} ${theme === 'light' ? 'bg-white/90' : 'bg-black/60'} backdrop-blur-xl sticky top-0`}
         <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
           {/* Left Section */}
           <div className="flex items-center gap-4">
@@ -272,7 +272,7 @@ export default function G3Dex() {
           
           {/* Left Sidebar - Chart & Portfolio */}
           <div className="xl:col-span-4 space-y-4">
-            <PriceChart pair={selectedPair} theme={currentTheme.accent} />
+            <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
             {showPortfolio && walletConnected && (
               <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
             )}
@@ -348,6 +348,7 @@ export default function G3Dex() {
                   gasPriority={gasPriority}
                   onPairChange={setSelectedPair}
                   theme={currentTheme.accent}
+                  isLightTheme={theme === 'light'}
                 />
               </TabsContent>
 
@@ -395,7 +396,7 @@ export default function G3Dex() {
 
           {/* Right Sidebar - Trending & Info */}
           <div className="xl:col-span-3 space-y-4">
-            <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} />
+            <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
           </div>
         </div>
       </div>
