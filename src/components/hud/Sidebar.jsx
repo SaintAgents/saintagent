@@ -68,7 +68,8 @@ import {
   Newspaper,
   BookOpen,
   Coins,
-  Ticket
+  Ticket,
+  Globe
 } from "lucide-react";
 import {
   Tooltip,
