@@ -409,16 +409,16 @@ const PowerStatsSection = () => {
 };
 
 // Ecosystem Grid
-const EcosystemGrid = () => {
+const EcosystemGrid = ({ onExplore }) => {
   const items = [
-    { icon: Globe, title: "Ultranet", desc: "Non-microwave 6G+ network harmonized with nature" },
-    { icon: Star, title: "Smart StarChain", desc: "Celestial lattice of trust with infinite scalability" },
-    { icon: CreditCard, title: "Smart Card", desc: "Sovereign digital identity with biometric security" },
-    { icon: Smartphone, title: "Super Smart Phone", desc: "Quantum-secure device with holographic display" },
-    { icon: Building2, title: "GDex", desc: "Global exchange backed by sovereign wealth" },
-    { icon: Sparkles, title: "Neo-NFTs", desc: "Living digital assets backed by real resources" },
-    { icon: Building2, title: "New Banking", desc: "Gold-backed accounts under Divine Law" },
-    { icon: Vault, title: "Gold Vaults/Coins", desc: "Sovereign storage beyond corporate reach" }
+    { icon: Globe, title: "Ultranet", desc: "Non-microwave 6G+ network harmonized with nature", sectionId: "ultranet" },
+    { icon: Star, title: "Smart StarChain", desc: "Celestial lattice of trust with infinite scalability", sectionId: "starchain" },
+    { icon: CreditCard, title: "Smart Card", desc: "Sovereign digital identity with biometric security", sectionId: "smartcard" },
+    { icon: Smartphone, title: "Super Smart Phone", desc: "Quantum-secure device with holographic display", sectionId: "smartcard" },
+    { icon: Building2, title: "GDex", desc: "Global exchange backed by sovereign wealth", sectionId: "gdex" },
+    { icon: Sparkles, title: "Neo-NFTs", desc: "Living digital assets backed by real resources", sectionId: "neonft" },
+    { icon: Building2, title: "New Banking", desc: "Gold-backed accounts under Divine Law", sectionId: "banking" },
+    { icon: Vault, title: "Gold Vaults/Coins", desc: "Sovereign storage beyond corporate reach", sectionId: "goldvaults" }
   ];
 
   return (
@@ -427,7 +427,11 @@ const EcosystemGrid = () => {
         <h2 className="text-4xl font-bold text-white text-center mb-12">The Complete Ecosystem</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((item, i) => (
-            <Card key={i} className="bg-purple-900/30 border-purple-700/50 text-white hover:border-yellow-400/50 transition-all cursor-pointer group">
+            <Card 
+              key={i} 
+              className="bg-purple-900/30 border-purple-700/50 text-white hover:border-yellow-400/50 transition-all cursor-pointer group"
+              onClick={() => onExplore?.(item.sectionId)}
+            >
               <CardContent className="p-6">
                 <item.icon className="text-yellow-400 mb-4" size={32} />
                 <h3 className="text-lg font-bold text-yellow-400 mb-2">{item.title}</h3>
@@ -438,7 +442,11 @@ const EcosystemGrid = () => {
           ))}
         </div>
         <div className="text-center mt-8">
-          <Button variant="outline" className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full">
+          <Button 
+            variant="outline" 
+            className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full"
+            onClick={() => onExplore?.('overview')}
+          >
             View All 12 Technologies
           </Button>
         </div>
