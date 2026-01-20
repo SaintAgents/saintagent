@@ -736,6 +736,9 @@ export default function TopBar({
       
       {/* Quick Start Guide Modal */}
       <QuickStartGuideModal open={quickStartOpen} onOpenChange={setQuickStartOpen} />
+      
+      {/* SaintBrowser Modal */}
+      <SaintBrowser open={browserOpen} onClose={() => setBrowserOpen(false)} />
     </header>
   );
 }
