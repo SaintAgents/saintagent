@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import SwapInterface from '@/components/dex/SwapInterface';
 import LimitOrderTab from '@/components/dex/LimitOrderTab';
@@ -167,7 +168,7 @@ export default function G3Dex() {
                 variant="ghost" 
                 size="sm" 
                 className="text-gray-400 hover:text-white text-xs h-7"
-                onClick={() => alert('Staking pools coming soon! Stay tuned for G3DEX V3.')}
+                onClick={() => toast.info('Staking pools coming soon! Stay tuned for G3DEX V3.', { duration: 3000 })}
               >
                 <Shield className="w-3 h-3 mr-1" />
                 Stake
@@ -176,7 +177,7 @@ export default function G3Dex() {
                 variant="ghost" 
                 size="sm" 
                 className="text-gray-400 hover:text-white text-xs h-7"
-                onClick={() => alert('Liquidity pools coming soon! Stay tuned for G3DEX V3.')}
+                onClick={() => toast.info('Liquidity pools coming soon! Stay tuned for G3DEX V3.', { duration: 3000 })}
               >
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
