@@ -311,6 +311,61 @@ export default function UserManagement() {
             </Button>
           </CardContent>
         </Card>
+        <Card className="col-span-4">
+          <CardContent className="bg-emerald-50 pt-4 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="font-medium text-slate-900">Unassigned SA# Pool</p>
+                <p className="text-xs text-slate-500">
+                  {unassignedPool.length} SA numbers available for reassignment from deleted users
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => refetchPool()}
+                  className="gap-2"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Refresh
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowUnassignedPool(!showUnassignedPool)}
+                  className="gap-2"
+                >
+                  <Package className="w-4 h-4" />
+                  {showUnassignedPool ? 'Hide Pool' : 'View Pool'}
+                </Button>
+              </div>
+            </div>
+            {showUnassignedPool && (
+              <div className="mt-3 p-3 bg-white rounded-lg border border-emerald-200">
+                {unassignedPool.length === 0 ? (
+                  <p className="text-sm text-slate-500 text-center py-4">No unassigned SA numbers available</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {unassignedPool.map(saNum => (
+                      <Badge 
+                        key={saNum} 
+                        variant="outline" 
+                        className="bg-emerald-100 text-emerald-700 cursor-pointer hover:bg-emerald-200"
+                        onClick={() => {
+                          setSelectedSAToAssign(saNum);
+                          alert(`SA#${saNum} selected. Open a user's Manage panel to assign it.`);
+                        }}
+                      >
+                        SA#{saNum}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Users Table */}
