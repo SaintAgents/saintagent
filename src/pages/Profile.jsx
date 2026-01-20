@@ -1015,8 +1015,24 @@ export default function Profile() {
                       }
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <BadgesBar badges={profileBadges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
+              <CardContent className="space-y-4">
+                {/* Recent Badges Section */}
+                {profileBadges.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 mb-2">Recent & Current Badges</p>
+                    <BadgesBar 
+                      badges={profileBadges.slice(0, 5)} 
+                      defaultIfEmpty={false} 
+                      maxDisplay={5}
+                    />
+                  </div>
+                )}
+                
+                {/* All Badges */}
+                <div>
+                  <p className="text-xs font-medium text-slate-500 mb-2">All Badges ({profileBadges.length})</p>
+                  <BadgesBar badges={profileBadges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
+                </div>
               </CardContent>
             </Card>
 
