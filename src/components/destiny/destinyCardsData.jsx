@@ -531,12 +531,50 @@ export const DESTINY_CARD_MEANINGS = {
   'Joker': { title: 'The Joker', meaning: 'Born Dec 31st. "God energy"; can take on any card\'s characteristics.' }
 };
 
+// Map written-out card names to symbol format
+const CARD_NAME_TO_SYMBOL = {
+  // Hearts
+  'ace of hearts': 'A♥', 'two of hearts': '2♥', 'three of hearts': '3♥', 'four of hearts': '4♥',
+  'five of hearts': '5♥', 'six of hearts': '6♥', 'seven of hearts': '7♥', 'eight of hearts': '8♥',
+  'nine of hearts': '9♥', 'ten of hearts': '10♥', 'jack of hearts': 'J♥', 'queen of hearts': 'Q♥', 'king of hearts': 'K♥',
+  // Clubs
+  'ace of clubs': 'A♣', 'two of clubs': '2♣', 'three of clubs': '3♣', 'four of clubs': '4♣',
+  'five of clubs': '5♣', 'six of clubs': '6♣', 'seven of clubs': '7♣', 'eight of clubs': '8♣',
+  'nine of clubs': '9♣', 'ten of clubs': '10♣', 'jack of clubs': 'J♣', 'queen of clubs': 'Q♣', 'king of clubs': 'K♣',
+  // Diamonds
+  'ace of diamonds': 'A♦', 'two of diamonds': '2♦', 'three of diamonds': '3♦', 'four of diamonds': '4♦',
+  'five of diamonds': '5♦', 'six of diamonds': '6♦', 'seven of diamonds': '7♦', 'eight of diamonds': '8♦',
+  'nine of diamonds': '9♦', 'ten of diamonds': '10♦', 'jack of diamonds': 'J♦', 'queen of diamonds': 'Q♦', 'king of diamonds': 'K♦',
+  // Spades
+  'ace of spades': 'A♠', 'two of spades': '2♠', 'three of spades': '3♠', 'four of spades': '4♠',
+  'five of spades': '5♠', 'six of spades': '6♠', 'seven of spades': '7♠', 'eight of spades': '8♠',
+  'nine of spades': '9♠', 'ten of spades': '10♠', 'jack of spades': 'J♠', 'queen of spades': 'Q♠', 'king of spades': 'K♠',
+  // Joker
+  'joker': 'Joker'
+};
+
+/**
+ * Normalize card name to symbol format
+ * @param {string} card - Card string in any format
+ * @returns {string} - Normalized card symbol like "10♣"
+ */
+export function normalizeCardName(card) {
+  if (!card) return '';
+  // If already in symbol format, return as-is
+  if (card.includes('♠') || card.includes('♥') || card.includes('♣') || card.includes('♦') || card === 'Joker') {
+    return card;
+  }
+  // Try to convert from written format
+  return CARD_NAME_TO_SYMBOL[card.toLowerCase()] || card;
+}
+
 /**
  * Get the full meaning for a destiny card
- * @param {string} card - Card string like "A♠" or "K♥"
+ * @param {string} card - Card string like "A♠", "K♥", or "Ten of Clubs"
  * @returns {{ title: string, meaning: string } | null}
  */
 export function getDestinyCardMeaning(card) {
   if (!card) return null;
-  return DESTINY_CARD_MEANINGS[card] || null;
+  const normalized = normalizeCardName(card);
+  return DESTINY_CARD_MEANINGS[normalized] || null;
 }
