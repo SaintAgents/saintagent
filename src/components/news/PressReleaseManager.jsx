@@ -435,6 +435,18 @@ Return ONLY the press release content, no additional commentary.`,
               </div>
             </div>
 
+            {/* Scheduled Date - only show when status is scheduled */}
+            {formData.status === 'scheduled' && (
+              <div className="space-y-2">
+                <Label>Scheduled Publish Date</Label>
+                <Input
+                  type="datetime-local"
+                  value={formData.publish_date ? formData.publish_date.slice(0, 16) : ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, publish_date: e.target.value ? new Date(e.target.value).toISOString() : '' }))}
+                />
+              </div>
+            )}
+
             {/* Image Upload */}
             <div className="space-y-2">
               <Label>Featured Image</Label>
