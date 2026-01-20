@@ -15,7 +15,7 @@ export default function PriceChart({ pair, theme = 'lime' }) {
   const [currentPrice, setCurrentPrice] = useState(3247.82);
   const [priceChange, setPriceChange] = useState(2.4);
 
-  // Generate mock price data
+  // Generate mock price data with OHLC for candlestick
   const chartData = useMemo(() => {
     const points = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 7 : 30;
     const basePrice = 3200;
@@ -23,12 +23,23 @@ export default function PriceChart({ pair, theme = 'lime' }) {
     let price = basePrice;
     
     for (let i = 0; i < points; i++) {
-      price = price + (Math.random() - 0.48) * 20;
+      const open = price;
+      const volatility = 15 + Math.random() * 25;
+      const close = open + (Math.random() - 0.48) * volatility;
+      const high = Math.max(open, close) + Math.random() * 10;
+      const low = Math.min(open, close) - Math.random() * 10;
+      
       data.push({
         time: i,
-        price: price,
-        volume: Math.random() * 1000000
+        price: close,
+        open,
+        close,
+        high,
+        low,
+        volume: Math.random() * 1000000,
+        isUp: close >= open
       });
+      price = close;
     }
     return data;
   }, [timeframe, pair]);
