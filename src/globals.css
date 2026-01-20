@@ -451,6 +451,46 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   border-color: rgba(16, 185, 129, 0.3) !important;
 }
 
+/* =====================================================
+   DARK MODE - GLOBAL BUTTON TEXT VISIBILITY FIX
+   ===================================================== */
+
+/* All buttons in dark mode must have white/bright text */
+[data-theme='dark'] button,
+[data-theme='dark'] [role="button"],
+[data-theme='dark'] a[class*='Button'],
+[data-theme='dark'] [class*='Button'] {
+  color: #ffffff !important;
+}
+
+/* Button text inside - including nested spans and text */
+[data-theme='dark'] button *,
+[data-theme='dark'] [role="button"] *,
+[data-theme='dark'] [class*='Button'] * {
+  color: inherit !important;
+}
+
+/* Specific button variants - ensure all have visible text */
+[data-theme='dark'] [class*='variant-outline'],
+[data-theme='dark'] [class*='variant-ghost'],
+[data-theme='dark'] [class*='variant-secondary'],
+[data-theme='dark'] [class*='variant-default'] {
+  color: #ffffff !important;
+}
+
+/* Modal/Dialog buttons */
+[data-theme='dark'] [role="dialog"] button,
+[data-theme='dark'] [data-radix-dialog-content] button {
+  color: #ffffff !important;
+  border-color: rgba(0, 255, 136, 0.3) !important;
+}
+
+[data-theme='dark'] [role="dialog"] button:hover,
+[data-theme='dark'] [data-radix-dialog-content] button:hover {
+  background-color: rgba(0, 255, 136, 0.1) !important;
+  color: #00ff88 !important;
+}
+
 /* Progress numbers and labels */
 [data-theme='dark'] .font-medium,
 [data-theme='dark'] .font-semibold,
