@@ -8,6 +8,7 @@ import { format, parseISO } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
+import AIRecommendationEngine from '@/components/ai/AIRecommendationEngine';
 
 const CATEGORY_COLORS = {
   announcements: 'bg-[#051C2C] text-white',
@@ -246,6 +247,18 @@ export default function Insights() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const profile = profiles?.[0];
+
   const { data: articles = [] } = useQuery({
     queryKey: ['newsArticles'],
     queryFn: async () => {
@@ -306,6 +319,13 @@ export default function Insights() {
           />
         ) : (
           <>
+            {/* AI Recommendations */}
+            {profile && (
+              <div className="mb-8">
+                <AIRecommendationEngine profile={profile} context="insights" />
+              </div>
+            )}
+
             {/* Filter Tabs */}
             <div className="flex items-center gap-1 mb-8 border-b border-slate-300 overflow-x-auto">
               <button

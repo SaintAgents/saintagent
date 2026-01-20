@@ -24,6 +24,7 @@ import StepRelationshipValues from '@/components/onboarding/StepRelationshipValu
 import StepCompatibilityTutorial from '@/components/onboarding/StepCompatibilityTutorial';
 import StepPartnerPreferences from '@/components/onboarding/StepPartnerPreferences';
 import { attachAffiliateToUser, activateReferral } from '@/components/affiliate/AffiliateTracker';
+import AIOnboardingAssistant from '@/components/ai/AIOnboardingAssistant';
 
 const STEPS = [
   { id: 0, title: "Welcome", component: Step0Welcome, skippable: false },
@@ -389,6 +390,13 @@ export default function Onboarding() {
           </Button>
         </div>
       </div>
+
+      {/* AI Onboarding Assistant */}
+      <AIOnboardingAssistant 
+        currentStep={currentStep}
+        stepTitle={STEPS[currentStep]?.title}
+        userGoals={stepData[6]?.desires || stepData[4]?.values || []}
+      />
     </div>
   );
 }

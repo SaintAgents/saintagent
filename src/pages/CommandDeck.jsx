@@ -68,6 +68,7 @@ import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import NewsCard from '@/components/news/NewsCard';
 import { Newspaper } from 'lucide-react';
+import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
@@ -1561,6 +1562,21 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     <div className="text-xs text-emerald-600 dark:text-emerald-400">Restore all cards</div>
                   </div>
                 </button>
+              </div>
+              
+              {/* AI Dashboard Customizer */}
+              <div className="mt-4">
+                <AIDashboardCustomizer 
+                  profile={profile}
+                  currentCards={[...visibleCards]}
+                  onApplySuggestions={(suggestions) => {
+                    const highPriority = new Set(suggestions.high_priority || []);
+                    const lowPriority = new Set(suggestions.low_priority || []);
+                    setHiddenCards(lowPriority);
+                    setCustomCards([...highPriority, ...(suggestions.medium_priority || [])]);
+                    setDeckViewMode('custom');
+                  }}
+                />
               </div>
               
               {/* Theme Toggle Buttons */}
