@@ -1579,6 +1579,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         {/* Main Grid - Collapsible Cards */}
         <div className="px-0 md:px-6 relative min-h-[1200px] w-full max-w-full overflow-x-hidden">
           <div className="block space-y-6">
+            {isCardVisible('news') && <CollapsibleCard title="News & Updates" cardId="news" icon={Newspaper} badge="New" badgeColor="violet" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/news_hero.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('news')} onToggleHide={() => toggleCardVisibility('news')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('News')}>
+              <NewsCard />
+            </CollapsibleCard>}
+
             {isCardVisible('quickActions') && <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
