@@ -32,7 +32,7 @@ const WALLETS = [
   }
 ];
 
-export default function WalletConnect({ connected, address, onConnect, onDisconnect }) {
+export default function WalletConnect({ connected, address, onConnect, onDisconnect, theme = 'lime' }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [connecting, setConnecting] = useState(null);
   const [copied, setCopied] = useState(false);
