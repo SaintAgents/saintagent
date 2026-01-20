@@ -14,6 +14,7 @@ import ProjectEvaluationPanel from '@/components/evaluation/ProjectEvaluationPan
 import ProjectTeamPanel from '@/components/projects/ProjectTeamPanel';
 import ProjectDiscussionPanel from '@/components/projects/ProjectDiscussionPanel';
 import ProjectUpdatePanel from '@/components/projects/ProjectUpdatePanel';
+import ClaimProjectModal from '@/components/projects/ClaimProjectModal';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', color: 'slate', icon: FileText },
@@ -308,34 +309,63 @@ function DetailItem({ icon: Icon, label, value }) {
 }
 
 function ClaimButton({ project, currentUser, onUpdate }) {
-  const [claiming, setClaiming] = useState(false);
-  const queryClient = useQueryClient();
+  const [showClaimModal, setShowClaimModal] = useState(false);
 
-  const handleClaim = async () => {
-    if (!currentUser?.email) return;
-    setClaiming(true);
-    try {
-      await base44.entities.Project.update(project.id, {
-        claim_status: 'claimed',
-        claimed_by: currentUser.email
-      });
-      queryClient.invalidateQueries({ queryKey: ['projects_all'] });
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      onUpdate?.();
-    } catch (e) {
-      console.error('Failed to claim project:', e);
+  // Determine button text based on status
+  const getButtonText = () => {
+    if (project.claim_status === 'pending' && project.claimed_by === currentUser?.email) {
+      return 'Claim pending approval';
     }
-    setClaiming(false);
+    if (project.claim_status === 'approved') {
+      return 'Already Claimed';
+    }
+    return 'Claim Project';
   };
 
+  const isDisabled = project.claim_status === 'approved' || 
+    (project.claim_status === 'pending' && project.claimed_by !== currentUser?.email);
+
   return (
-    <Button 
-      size="sm" 
-      className="mt-3 w-full bg-violet-600 hover:bg-violet-700"
-      onClick={handleClaim}
-      disabled={claiming}
-    >
-      {claiming ? 'Claiming...' : 'Claim Ownership'}
-    </Button>
+    <>
+      <Button 
+        size="sm" 
+        className="mt-3 w-full bg-violet-600 hover:bg-violet-700"
+        onClick={() => setShowClaimModal(true)}
+        disabled={isDisabled}
+      >
+        {getButtonText()}
+      </Button>
+      
+      {showClaimModal && (
+        <ClaimProjectDrawer
+          project={project}
+          currentUser={currentUser}
+          onClose={() => setShowClaimModal(false)}
+          onUpdate={onUpdate}
+        />
+      )}
+    </>
+  );
+}
+
+function ClaimProjectDrawer({ project, currentUser, onClose, onUpdate }) {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white dark:bg-slate-900 border-b dark:border-slate-700 p-4 flex items-center justify-between">
+          <h3 className="font-semibold text-slate-900 dark:text-white">Claim Project</h3>
+          <button onClick={onClose} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded">
+            <XCircle className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
+        <ClaimProjectModal 
+          project={project} 
+          currentUser={currentUser} 
+          onClose={onClose} 
+          onUpdate={onUpdate}
+        />
+      </div>
+    </div>
   );
 }
