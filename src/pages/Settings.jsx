@@ -105,7 +105,8 @@ export default function Settings() {
     market: 'Marketplace',
     influence: 'Influence & Reach',
     leader: '144K Leader Channel',
-    dailyops: 'Daily Ops'
+    dailyops: 'Daily Ops',
+    news: 'News & Updates'
   };
   
   // Persist custom deck cards
