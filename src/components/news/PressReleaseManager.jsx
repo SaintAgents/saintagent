@@ -288,15 +288,33 @@ Return ONLY the press release content, no additional commentary.`,
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <Badge className={STATUS_COLORS[release.status]}>
                         {release.status}
                       </Badge>
                       <Badge variant="outline">{release.category}</Badge>
                       {release.distribution_channels?.length > 0 && (
-                        <span className="text-xs text-slate-500">
-                          → {release.distribution_channels.length} channels
-                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-slate-500">→</span>
+                          {release.distribution_channels.map(channel => {
+                            const channelStatus = release.distribution_status?.find(s => s.channel === channel);
+                            const status = channelStatus?.status || 'pending';
+                            const StatusIcon = DISTRIBUTION_STATUS_ICONS[status]?.icon || Clock;
+                            const statusColor = DISTRIBUTION_STATUS_ICONS[status]?.color || 'text-slate-400';
+                            const channelInfo = DISTRIBUTION_CHANNELS.find(c => c.value === channel);
+                            const ChannelIcon = channelInfo?.icon || Radio;
+                            return (
+                              <span 
+                                key={channel} 
+                                className="flex items-center gap-0.5 text-xs"
+                                title={`${channelInfo?.label || channel}: ${status}${channelStatus?.sent_at ? ` at ${format(new Date(channelStatus.sent_at), 'MMM d, h:mm a')}` : ''}${channelStatus?.error_message ? ` - ${channelStatus.error_message}` : ''}`}
+                              >
+                                <ChannelIcon className="w-3 h-3 text-slate-400" />
+                                <StatusIcon className={`w-3 h-3 ${statusColor}`} />
+                              </span>
+                            );
+                          })}
+                        </div>
                       )}
                     </div>
                     <h3 className="font-semibold text-slate-900 truncate">{release.title}</h3>
