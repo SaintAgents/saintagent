@@ -271,19 +271,28 @@ export default function Insights() {
 
   return (
     <div className="min-h-screen bg-[#F0F2F5]">
-      {/* Hero Section - McKinsey Style */}
-      <div className="bg-[#051C2C] text-white">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="flex items-center gap-4 mb-4">
-            <BackButton className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
-            <ForwardButton currentPage="Insights" className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
+      {/* Hero Section with Image */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/d5cfb3f3a_universal_upscale_0_67b4f4ac-1a26-41b4-953c-b950fb28d875_0.jpg"
+          alt="Insights"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#051C2C]/70 via-[#051C2C]/50 to-[#F0F2F5]" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center max-w-4xl mx-auto px-6">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <h1 className="font-serif text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+                Insights & Analysis
+              </h1>
+              <ForwardButton currentPage="Insights" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+            </div>
+            <p className="text-lg text-white/90 max-w-2xl mx-auto drop-shadow-md">
+              Deep-dive analyses, strategic frameworks, and thought leadership to elevate your understanding and impact.
+            </p>
           </div>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4">
-            Insights & Analysis
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl">
-            Deep-dive analyses, strategic frameworks, and thought leadership to elevate your understanding and impact.
-          </p>
         </div>
       </div>
 
