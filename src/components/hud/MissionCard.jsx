@@ -59,7 +59,7 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
           <Target className="w-4 h-4 text-violet-600" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-yellow-400 text-sm font-medium truncate">{mission.title}</p>
+          <p className="text-amber-600 dark:text-yellow-400 text-sm font-medium truncate">{mission.title}</p>
           <div className="flex items-center gap-2 mt-1">
             <Progress value={progressPercent} className="h-1.5 flex-1" />
             <span className="text-xs text-slate-500">{completedTasks}/{totalTasks}</span>
