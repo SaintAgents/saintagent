@@ -417,9 +417,9 @@ export default function Profile() {
               <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
             )}
             
-            {/* Rank Badge - Top Left */}
+            {/* Rank Badge - Top Left - 3x Bigger */}
             <div className="absolute top-3 left-3 z-10">
-              <RankBadge code={profile?.rp_rank_code || 'seeker'} size={48} className="drop-shadow-lg" />
+              <RankBadge code={profile?.rp_rank_code || 'seeker'} size={144} className="drop-shadow-lg" />
             </div>
             
             {/* SA# Badge - Top Right */}
@@ -433,31 +433,31 @@ export default function Profile() {
             )}
             
             {/* Recent & Current Badges - Large Display at Bottom of Hero */}
-            <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 z-10">
-              <div className="flex items-center gap-3 bg-black/40 backdrop-blur-sm rounded-xl px-4 py-2">
-                <span className="text-white/80 text-xs font-medium shrink-0">Recent Badges:</span>
-                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+            <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 z-10">
+              <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm rounded-xl px-5 py-3">
+                <span className="text-white/90 text-sm font-semibold shrink-0">Recent Badges:</span>
+                <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
                   {profileBadges.slice(0, 6).map((badge) => (
                     <div key={badge.id} className="shrink-0 group relative">
                       {badge.image_url ? (
                         <img 
                           src={badge.image_url} 
                           alt={badge.badge_type || 'Badge'} 
-                          className="w-14 h-14 object-contain drop-shadow-lg hover:scale-110 transition-transform cursor-pointer"
+                          className="w-20 h-20 object-contain drop-shadow-lg hover:scale-110 transition-transform cursor-pointer"
                           title={badge.badge_type?.replace(/_/g, ' ')}
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-lg">
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                           {badge.badge_type?.[0]?.toUpperCase() || '★'}
                         </div>
                       )}
-                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap z-20">
+                      <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-20">
                         {badge.badge_type?.replace(/_/g, ' ')}
                       </div>
                     </div>
                   ))}
                   {profileBadges.length === 0 && (
-                    <span className="text-white/60 text-xs italic">No badges earned yet</span>
+                    <span className="text-white/70 text-sm italic">No badges earned yet</span>
                   )}
                 </div>
               </div>
