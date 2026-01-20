@@ -12,9 +12,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   Plus, Edit2, Trash2, Send, FileText, Calendar, 
-  Twitter, Linkedin, MessageCircle, Mail, Radio, Eye
+  Twitter, Linkedin, MessageCircle, Mail, Radio, Eye, Sparkles, Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
+import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
 
 const CATEGORIES = [
   { value: 'announcement', label: 'Announcement' },
@@ -55,6 +56,7 @@ export default function PressReleaseManager() {
     distribution_channels: []
   });
   const [tagInput, setTagInput] = useState('');
+  const [aiGenerating, setAiGenerating] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -171,6 +173,41 @@ export default function PressReleaseManager() {
         ? prev.distribution_channels.filter(c => c !== channel)
         : [...prev.distribution_channels, channel]
     }));
+  };
+
+  const generateWithAI = async () => {
+    if (!formData.title?.trim()) return;
+    setAiGenerating(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a professional PR writer. Write a compelling press release for the following headline:
+
+"${formData.title}"
+
+Category: ${formData.category}
+
+Write a professional press release with:
+1. A strong opening paragraph (the "lead") that summarizes the key news
+2. 2-3 body paragraphs with supporting details, quotes, and context
+3. A brief "About" section at the end
+
+Use a professional, authoritative tone. Make it newsworthy and quotable.
+Return ONLY the press release content, no additional commentary.`,
+      });
+      setFormData(prev => ({ ...prev, content: result }));
+      
+      // Also generate a summary if empty
+      if (!formData.summary?.trim()) {
+        const summaryResult = await base44.integrations.Core.InvokeLLM({
+          prompt: `Summarize this press release in 1-2 sentences for a preview:\n\n${result}\n\nReturn ONLY the summary.`,
+        });
+        setFormData(prev => ({ ...prev, summary: summaryResult }));
+      }
+    } catch (err) {
+      console.error('AI generation failed:', err);
+    } finally {
+      setAiGenerating(false);
+    }
   };
 
   return (
@@ -296,7 +333,14 @@ export default function PressReleaseManager() {
 
             {/* Summary */}
             <div className="space-y-2">
-              <Label>Summary</Label>
+              <div className="flex items-center justify-between">
+                <Label>Summary</Label>
+                <AIWritingAssistant
+                  text={formData.summary}
+                  onApply={(text) => setFormData(prev => ({ ...prev, summary: text }))}
+                  disabled={!formData.summary?.trim()}
+                />
+              </div>
               <Textarea
                 value={formData.summary}
                 onChange={(e) => setFormData(prev => ({ ...prev, summary: e.target.value }))}
@@ -307,7 +351,31 @@ export default function PressReleaseManager() {
 
             {/* Content */}
             <div className="space-y-2">
-              <Label>Content *</Label>
+              <div className="flex items-center justify-between">
+                <Label>Content *</Label>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={generateWithAI}
+                    disabled={!formData.title?.trim() || aiGenerating}
+                    className="text-violet-600 hover:text-violet-700 hover:bg-violet-50 gap-1.5"
+                  >
+                    {aiGenerating ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-3.5 h-3.5" />
+                    )}
+                    <span className="text-xs">Generate with AI</span>
+                  </Button>
+                  <AIWritingAssistant
+                    text={formData.content}
+                    onApply={(text) => setFormData(prev => ({ ...prev, content: text }))}
+                    disabled={!formData.content?.trim()}
+                  />
+                </div>
+              </div>
               <Textarea
                 value={formData.content}
                 onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
