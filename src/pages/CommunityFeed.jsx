@@ -385,7 +385,13 @@ export default function CommunityFeed() {
                     {post.image_urls && post.image_urls.length > 0 && (
                       <div className={cn("grid gap-2", post.image_urls.length === 1 ? "grid-cols-1" : "grid-cols-2")}>
                         {post.image_urls.map((url, i) => (
-                          <img key={i} src={url} alt="" className="w-full rounded-lg object-cover" />
+                          <img 
+                            key={i} 
+                            src={url} 
+                            alt="" 
+                            className="w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => openLightbox(post.image_urls, i)}
+                          />
                         ))}
                       </div>
                     )}
