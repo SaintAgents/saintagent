@@ -1600,7 +1600,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Global Dating Matches Popup */}
       <DatingMatchesPopup currentUser={currentUser} />
 
-
+      {/* Global Alert Popup */}
+      <GlobalAlertPopup />
 
       {/* Meeting Reminder Service */}
               {currentUser && <MeetingReminderService />}
