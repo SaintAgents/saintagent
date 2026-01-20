@@ -474,6 +474,12 @@ Return ONLY the press release content, no additional commentary.`,
                   )}
                 </label>
               )}
+              <Input
+                value={formData.image_url}
+                onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
+                placeholder="Or paste image URL..."
+                className="mt-2"
+              />
             </div>
 
             {/* Tags */}
