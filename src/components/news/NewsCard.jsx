@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Newspaper, ArrowRight, Video, Link as LinkIcon, Calendar } from 'lucide-react';
@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
+import NewsViewerModal from './NewsViewerModal';
 
 export default function NewsCard() {
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  
   const { data: articles = [] } = useQuery({
     queryKey: ['newsArticles', 'published'],
     queryFn: () => base44.entities.NewsArticle.filter({ is_published: true }, '-published_date', 5),
@@ -52,7 +55,7 @@ export default function NewsCard() {
             if (article.type === 'link' && article.external_link) {
               window.open(article.external_link, '_blank');
             } else {
-              window.location.href = createPageUrl(`News?articleId=${article.id}`);
+              setSelectedArticle(article);
             }
           }}
         >
@@ -103,6 +106,14 @@ export default function NewsCard() {
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       )}
+
+      <NewsViewerModal
+        open={!!selectedArticle}
+        onClose={() => setSelectedArticle(null)}
+        article={selectedArticle}
+        articles={articles}
+        onNavigate={(article) => setSelectedArticle(article)}
+      />
     </div>
   );
 }
