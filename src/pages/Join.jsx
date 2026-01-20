@@ -370,11 +370,32 @@ export default function Join() {
             <a href={createPageUrl('FAQ')} className="hover:text-white transition-colors">FAQ</a>
             <button 
               onClick={() => setLearnMoreOpen(true)}
-              className="hover:text-white transition-colors flex items-center gap-1"
+              className="hover:text-white transition-colors flex items-center gap-1 gold-flash-text"
             >
               <BookOpen className="w-4 h-4" />
               Learn More
             </button>
+            <style>{`
+              @keyframes goldFlash {
+                0%, 90% {
+                  color: #9ca3af;
+                }
+                92%, 96% {
+                  color: #ffd700;
+                  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5);
+                }
+                98%, 100% {
+                  color: #9ca3af;
+                }
+              }
+              .gold-flash-text {
+                animation: goldFlash 3s ease-in-out infinite;
+              }
+              .gold-flash-text:hover {
+                color: #ffd700 !important;
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5);
+              }
+            `}</style>
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-6 text-center">
