@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Sparkles, Wand2, CheckCircle, Loader2, Type, Smile, Zap, BookOpen } from 'lucide-react';
+import { Sparkles, Wand2, CheckCircle, Loader2, Type, Smile, Zap, BookOpen, Bold, List, Newspaper } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const ENHANCE_OPTIONS = [
@@ -10,6 +10,9 @@ const ENHANCE_OPTIONS = [
   { id: 'friendly', label: 'Make Friendly', icon: Smile, prompt: 'Rewrite this text to be warm, friendly, and approachable while keeping the same meaning:' },
   { id: 'concise', label: 'Make Concise', icon: Zap, prompt: 'Shorten and tighten this text while keeping all important points:' },
   { id: 'expand', label: 'Expand & Elaborate', icon: BookOpen, prompt: 'Expand this text with more detail and elaboration while maintaining the original tone:' },
+  { id: 'newsletter', label: 'Newsletter Format', icon: Newspaper, prompt: 'Format this text as a professional newsletter with HTML formatting. Use <strong> for key terms and headlines, <em> for emphasis, proper paragraph breaks with <p> tags, and bullet points with <ul><li> where appropriate. Make it visually scannable and engaging:' },
+  { id: 'bold_key', label: 'Bold Key Points', icon: Bold, prompt: 'Identify and wrap the most important words, phrases, and key takeaways in <strong> tags for emphasis. Keep the rest of the text unchanged:' },
+  { id: 'add_structure', label: 'Add Structure', icon: List, prompt: 'Add structure to this text using HTML formatting: use <h3> for section headers, <p> for paragraphs, <ul><li> for lists, and <strong> for important terms. Make it well-organized and easy to scan:' },
 ];
 
 export default function AIWritingAssistant({ text, onApply, disabled = false, buttonSize = 'sm' }) {

@@ -66,7 +66,8 @@ import {
   Orbit,
   Smile,
   Newspaper,
-  BookOpen
+  BookOpen,
+  Coins
 } from "lucide-react";
 import {
   Tooltip,
@@ -106,6 +107,7 @@ const NAV_ITEMS = [
   { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
   { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
   { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
+  { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
