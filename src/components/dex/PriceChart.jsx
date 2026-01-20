@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Maximize2, RefreshCw, BarChart2, CandlestickChart, Building2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Maximize2, Minimize2, RefreshCw, BarChart2, CandlestickChart, Building2, X } from 'lucide-react';
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarChart, Cell, ComposedChart, ReferenceLine } from 'recharts';
 
 const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M'];
