@@ -1,78 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import { 
+  Crown, 
   Shield, 
-  Globe, 
   Coins, 
   Users, 
-  TrendingUp, 
-  Lock, 
-  Zap, 
-  Crown,
-  Building,
-  BarChart3,
-  ArrowUpRight,
-  ExternalLink,
-  CheckCircle,
-  Star,
+  Star, 
+  Sparkles, 
+  ExternalLink, 
+  Globe,
+  Scale,
+  Zap,
+  Heart,
+  Eye,
+  Lock,
+  ChevronDown,
+  Clock,
   Target,
-  Sparkles
+  Award
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createPageUrl } from '@/utils';
+import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
-import BackButton from '@/components/hud/BackButton';
 
-const TREASURY_STATS = [
-  { label: 'Total Supply', value: '1T GGT', icon: Coins, color: 'amber' },
-  { label: 'Circulating', value: '144M GGT', icon: TrendingUp, color: 'emerald' },
-  { label: 'Holders', value: '254+', icon: Users, color: 'violet' },
-  { label: 'Backed Assets', value: '$2.4B', icon: Building, color: 'blue' },
+// Jubilee countdown calculator
+const useJubileeCountdown = () => {
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  
+  useEffect(() => {
+    const jubileeDate = new Date('2026-02-22T00:00:00');
+    
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = jubileeDate - now;
+      
+      if (diff > 0) {
+        setCountdown({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000)
+        });
+      }
+    };
+    
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  
+  return countdown;
+};
+
+const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/authority_hero.jpg";
+
+const MISSION_PILLARS = [
+  { icon: Crown, title: 'Councils of Governance', description: 'Form sacred councils to guide humanity\'s transition into the Golden Age with wisdom, integrity, and divine alignment.' },
+  { icon: Globe, title: 'Stewards of Gaia', description: 'Become guardians of Mother Earth, restoring balance to ecosystems and honoring the sacred bond between humanity and nature.' },
+  { icon: Zap, title: 'Agents of Change', description: 'Catalyze positive transformation in communities worldwide, bringing light where there is darkness and hope where there is despair.' },
+  { icon: Heart, title: 'Hearts of Service', description: 'Lead with love and compassion, serving humanity\'s highest good through selfless dedication to the divine mission.' },
 ];
 
-const AUTHORITY_PILLARS = [
-  {
-    title: 'Sovereign Governance',
-    description: 'Decentralized decision-making through the 144,000 verified leaders network.',
-    icon: Crown,
-    color: 'from-amber-500 to-yellow-600',
-  },
-  {
-    title: 'Treasury Security',
-    description: 'Multi-signature vaults with quantum-resistant encryption protocols.',
-    icon: Shield,
-    color: 'from-violet-500 to-purple-600',
-  },
-  {
-    title: 'Global Distribution',
-    description: 'Equitable resource allocation across all bioregions and communities.',
-    icon: Globe,
-    color: 'from-emerald-500 to-teal-600',
-  },
-  {
-    title: 'Value Alignment',
-    description: 'Gold-backed digital assets ensuring real-world stability.',
-    icon: Coins,
-    color: 'from-blue-500 to-cyan-600',
-  },
+const TREASURY_FEATURES = [
+  { icon: Shield, title: 'Vaulting System', description: 'Securing physical gold reserves, land vaults, and heritage trust assets from sacred holdings.' },
+  { icon: Scale, title: 'Legal Sovereignty', description: 'Operating under Ecclesiastical Trust Authority, backed by the 7th Seal Temple and Council of Nine.' },
+  { icon: Coins, title: 'Currency Control', description: 'Partnered with Office of Currency Control for Global Settlements, forming the backbone of the new economic model.' },
 ];
 
-const GOVERNANCE_TIERS = [
-  { tier: 'Observer', requirement: '0 GGG', voting: 'View Only', benefits: 'Access to public proposals' },
-  { tier: 'Delegate', requirement: '100 GGG', voting: 'Signal Vote', benefits: 'Participate in sentiment polls' },
-  { tier: 'Council', requirement: '1,000 GGG', voting: 'Weighted Vote', benefits: 'Propose community initiatives' },
-  { tier: 'Guardian', requirement: '10,000 GGG', voting: 'Veto Power', benefits: 'Multi-sig treasury access' },
-  { tier: 'Architect', requirement: '100,000 GGG', voting: 'Protocol Vote', benefits: 'Core governance rights' },
+const WHO_WE_SEEK = [
+  'Visionaries who see beyond the veil of illusion',
+  'Healers of body, mind, and spirit',
+  'Leaders who serve with humility and grace',
+  'Creators building the new paradigm',
+  'Guardians protecting sacred knowledge',
+  'Ambassadors bridging worlds and cultures',
 ];
 
 export default function Authority144() {
   const [activeTab, setActiveTab] = useState('overview');
-
+  const countdown = useJubileeCountdown();
+  
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -85,366 +100,453 @@ export default function Authority144() {
   });
   const profile = profiles?.[0];
 
-  const userGGG = profile?.ggg_balance || 0;
-  const userTier = userGGG >= 100000 ? 'Architect' : 
-                   userGGG >= 10000 ? 'Guardian' : 
-                   userGGG >= 1000 ? 'Council' : 
-                   userGGG >= 100 ? 'Delegate' : 'Observer';
+  // Count verified leaders
+  const { data: verifiedLeaders = [] } = useQuery({
+    queryKey: ['verifiedLeaders'],
+    queryFn: () => base44.entities.UserProfile.filter({ leader_tier: 'verified144k' }),
+  });
+
+  const foundingSoulsCount = verifiedLeaders.length;
+  const seatsRemaining = Math.max(0, 144 - foundingSoulsCount);
+  const totalSoulsProgress = Math.min(100, (foundingSoulsCount / 144000) * 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-violet-950">
+    <div className="min-h-screen bg-gradient-to-br from-violet-950 via-purple-900 to-indigo-950 dark:bg-transparent dark:bg-none relative">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1639322537228-f710d846310a?w=1600')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-slate-900" />
+      <div className="relative h-[400px] md:h-[500px] overflow-hidden">
+        {/* Mystical Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-900/90 via-purple-800/80 to-indigo-900/90" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80')] bg-cover bg-center opacity-30" />
         
-        {/* Cyber Grid Overlay */}
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `
-            linear-gradient(rgba(0,255,136,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,255,136,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px'
-        }} />
+        {/* Sacred Geometry Overlay */}
+        <div className="absolute inset-0 opacity-20">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="sacred-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="0.5" fill="rgba(255,215,0,0.3)" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#sacred-grid)" />
+          </svg>
+        </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-16">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <BackButton className="text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg" />
-            <LoopStartIndicator currentPage="Authority144" className="text-white/70 hover:text-emerald-400 bg-white/10 hover:bg-white/20 rounded-lg" />
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+          {/* Golden Coin/Seal */}
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="mb-6"
+          >
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 p-1 shadow-2xl shadow-amber-500/50">
+              <div className="w-full h-full rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center">
+                <div className="text-amber-900">
+                  <Crown className="w-16 h-16 md:w-20 md:h-20" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-amber-100 drop-shadow-2xl mb-4"
+            style={{ textShadow: '0 0 40px rgba(251,191,36,0.5)' }}
+          >
+            144 Authority
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="text-xl md:text-2xl text-amber-200/90 font-light tracking-wide mb-2"
+          >
+            Welcome to the Vault of Earth's Divine Treasury
+          </motion.p>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+            className="text-base md:text-lg text-purple-200/80 max-w-2xl"
+          >
+            Where Sovereign Trust Meets Quantum Integrity
+          </motion.p>
+          
+          {/* CTA Buttons */}
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-4 mt-8"
+          >
+            <Button 
+              className="bg-amber-500 hover:bg-amber-600 text-amber-950 font-semibold px-6 py-3 rounded-xl shadow-lg shadow-amber-500/30"
+              onClick={() => setActiveTab('treasury')}
+            >
+              Enter the Treasury
+            </Button>
+            <Button 
+              variant="outline"
+              className="border-amber-400/50 text-amber-200 hover:bg-amber-500/20 px-6 py-3 rounded-xl"
+              onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Visit Gaia Treasury
+            </Button>
+          </motion.div>
+        </div>
+        
+        {/* Scroll Indicator */}
+        <motion.div 
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2"
+        >
+          <ChevronDown className="w-8 h-8 text-amber-300/60" />
+        </motion.div>
+      </div>
+
+      {/* Jubilee Countdown */}
+      <div className="bg-gradient-to-r from-purple-900/50 via-violet-800/50 to-purple-900/50 border-y border-amber-500/30 py-8">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-4">
+            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-2">
+              <Clock className="w-3 h-3 mr-1" />
+              The Jubilee
+            </Badge>
+            <h2 className="text-2xl font-serif text-amber-100">February 22nd, 2026</h2>
+            <p className="text-purple-200/70 text-sm mt-1">The moment when divine wealth flows freely to humanity</p>
           </div>
           
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Shield className="w-12 h-12 text-emerald-400 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight"
-                style={{ 
-                  fontFamily: 'serif',
-                  textShadow: '0 0 60px rgba(16,185,129,0.4), 0 4px 8px rgba(0,0,0,0.8)'
-                }}>
-              144 Authority
-            </h1>
-            <p className="text-xl text-emerald-300/90 mb-2 tracking-wide">
-              Gaia Global Treasury Governance
-            </p>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Sovereign governance infrastructure for the 144,000 verified leaders. 
-              Participate in treasury management, protocol decisions, and global resource allocation.
-            </p>
-            
-            {/* User Tier Badge */}
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mt-8 inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/10 border border-emerald-500/30 backdrop-blur-sm"
-            >
-              <Crown className="w-5 h-5 text-amber-400" />
-              <span className="text-white font-medium">Your Tier: </span>
-              <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/50">
-                {userTier}
-              </Badge>
-              <span className="text-slate-400">|</span>
-              <span className="text-amber-400 font-bold">{userGGG.toLocaleString()} GGG</span>
-            </motion.div>
-          </motion.div>
+          <div className="grid grid-cols-4 gap-4 max-w-lg mx-auto">
+            {[
+              { value: countdown.days, label: 'Days' },
+              { value: countdown.hours, label: 'Hours' },
+              { value: countdown.minutes, label: 'Minutes' },
+              { value: countdown.seconds, label: 'Seconds' },
+            ].map((item, i) => (
+              <div key={i} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-amber-400 drop-shadow-lg">
+                  {item.value}
+                </div>
+                <div className="text-xs text-purple-300/70 uppercase tracking-wider">{item.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pb-12 -mt-8 relative z-20">
-        {/* Treasury Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {TREASURY_STATS.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm hover:border-emerald-500/30 transition-all">
-                <CardContent className="pt-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg bg-${stat.color}-500/20`}>
-                      <stat.icon className={`w-5 h-5 text-${stat.color}-400`} />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-400">{stat.label}</p>
-                      <p className="text-xl font-bold text-white">{stat.value}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Main Tabs */}
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-4 bg-slate-800/50 border border-slate-700/50 mb-6">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300">
-              <Globe className="w-4 h-4 mr-2" />
+          <TabsList className="w-full grid grid-cols-4 mb-8 bg-purple-900/50 border border-purple-700/50">
+            <TabsTrigger value="overview" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
               Overview
             </TabsTrigger>
-            <TabsTrigger value="governance" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300">
-              <Crown className="w-4 h-4 mr-2" />
-              Governance
+            <TabsTrigger value="144k" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
+              The 144,000
             </TabsTrigger>
-            <TabsTrigger value="treasury" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300">
-              <Coins className="w-4 h-4 mr-2" />
+            <TabsTrigger value="treasury" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
               Treasury
             </TabsTrigger>
-            <TabsTrigger value="proposals" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300">
-              <Target className="w-4 h-4 mr-2" />
-              Proposals
+            <TabsTrigger value="mission" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
+              Mission
             </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            {/* Authority Pillars */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {AUTHORITY_PILLARS.map((pillar, i) => (
-                <motion.div
-                  key={pillar.title}
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm hover:border-emerald-500/30 transition-all group">
+          <TabsContent value="overview" className="space-y-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50">
+                <CardContent className="pt-6 text-center">
+                  <Users className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+                  <div className="text-3xl font-bold text-amber-300">144,000</div>
+                  <div className="text-purple-200/70 text-sm">Souls Called to Sacred Service</div>
+                  <Badge className="mt-2 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                    Gathering in Progress
+                  </Badge>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50">
+                <CardContent className="pt-6 text-center">
+                  <Star className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+                  <div className="text-3xl font-bold text-amber-300">{foundingSoulsCount}</div>
+                  <div className="text-purple-200/70 text-sm">Founding Souls Recorded</div>
+                  <div className="text-xs text-purple-300/50 mt-1">{seatsRemaining} Sacred Seats Remaining</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50">
+                <CardContent className="pt-6 text-center">
+                  <Shield className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+                  <div className="text-3xl font-bold text-amber-300">2026</div>
+                  <div className="text-purple-200/70 text-sm">The Great Restoration</div>
+                  <Badge className="mt-2 bg-amber-500/20 text-amber-300 border-amber-500/30">
+                    Jubilee Year
+                  </Badge>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Mission Pillars */}
+            <div>
+              <h3 className="text-2xl font-serif text-amber-100 mb-6 text-center">Sacred Calling</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {MISSION_PILLARS.map((pillar, i) => (
+                  <Card key={i} className="bg-purple-900/40 border-purple-700/30 hover:border-amber-500/50 transition-all">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-xl bg-gradient-to-br ${pillar.color} shadow-lg group-hover:scale-110 transition-transform`}>
-                          <pillar.icon className="w-6 h-6 text-white" />
+                        <div className="p-3 rounded-xl bg-amber-500/20">
+                          <pillar.icon className="w-6 h-6 text-amber-400" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-white mb-1">{pillar.title}</h3>
-                          <p className="text-slate-400 text-sm">{pillar.description}</p>
+                          <h4 className="font-semibold text-amber-200 mb-1">{pillar.title}</h4>
+                          <p className="text-sm text-purple-200/70">{pillar.description}</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* Mission Statement */}
-            <Card className="bg-gradient-to-br from-emerald-900/30 to-teal-900/30 border-emerald-500/30">
+            {/* External Link Card */}
+            <Card className="bg-gradient-to-r from-amber-500/10 via-purple-900/40 to-amber-500/10 border-amber-500/30">
               <CardContent className="py-8 text-center">
-                <Sparkles className="w-10 h-10 text-emerald-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-white mb-3">Our Mission</h3>
-                <p className="text-slate-300 max-w-3xl mx-auto leading-relaxed">
-                  To establish a sovereign, decentralized governance infrastructure that empowers the 144,000 
-                  verified leaders to collectively manage global resources, make protocol decisions, and 
-                  allocate treasury funds for the benefit of all beings and the planet.
+                <Globe className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+                <h3 className="text-xl font-serif text-amber-100 mb-2">Gaia Global Treasury</h3>
+                <p className="text-purple-200/70 mb-4 max-w-lg mx-auto">
+                  Divine wealth restoring humanity's inheritance through sacred stewardship and golden age economics.
                 </p>
+                <Button 
+                  className="bg-amber-500 hover:bg-amber-600 text-amber-950 gap-2"
+                  onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Visit Official Site
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Governance Tab */}
-          <TabsContent value="governance" className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700/50">
+          {/* 144,000 Tab */}
+          <TabsContent value="144k" className="space-y-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-serif text-amber-100 mb-4">The 144,000</h2>
+              <p className="text-purple-200/80 max-w-2xl mx-auto">
+                We are seeking the 144,000 awakened souls to serve as Councils of Governance and Agents of Positive Change — the chosen stewards of the New Earth, Gaia.
+              </p>
+            </div>
+
+            {/* Progress */}
+            <Card className="bg-purple-900/40 border-purple-700/30">
+              <CardContent className="py-6">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-amber-200 font-medium">Gathering Progress</span>
+                  <span className="text-amber-400 font-bold">{totalSoulsProgress.toFixed(2)}%</span>
+                </div>
+                <Progress value={totalSoulsProgress} className="h-3 bg-purple-800/50" />
+                <div className="flex justify-between mt-2 text-xs text-purple-300/60">
+                  <span>{foundingSoulsCount} joined</span>
+                  <span>144,000 goal</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Who We Seek */}
+            <Card className="bg-purple-900/40 border-purple-700/30">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Crown className="w-5 h-5 text-amber-400" />
-                  Governance Tiers
+                <CardTitle className="text-amber-100 flex items-center gap-2">
+                  <Eye className="w-5 h-5 text-amber-400" />
+                  Who We Seek
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-slate-700">
-                        <th className="text-left py-3 px-4 text-slate-400 font-medium">Tier</th>
-                        <th className="text-left py-3 px-4 text-slate-400 font-medium">Requirement</th>
-                        <th className="text-left py-3 px-4 text-slate-400 font-medium">Voting Rights</th>
-                        <th className="text-left py-3 px-4 text-slate-400 font-medium">Benefits</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {GOVERNANCE_TIERS.map((tier) => (
-                        <tr 
-                          key={tier.tier} 
-                          className={`border-b border-slate-700/50 ${tier.tier === userTier ? 'bg-emerald-500/10' : ''}`}
-                        >
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              {tier.tier === userTier && <CheckCircle className="w-4 h-4 text-emerald-400" />}
-                              <span className={`font-medium ${tier.tier === userTier ? 'text-emerald-300' : 'text-white'}`}>
-                                {tier.tier}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-3 px-4 text-amber-400">{tier.requirement}</td>
-                          <td className="py-3 px-4 text-slate-300">{tier.voting}</td>
-                          <td className="py-3 px-4 text-slate-400">{tier.benefits}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Your Voting Power */}
-            <Card className="bg-gradient-to-br from-violet-900/30 to-purple-900/30 border-violet-500/30">
-              <CardContent className="py-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-1">Your Voting Power</h3>
-                    <p className="text-slate-400 text-sm">Based on your GGG holdings and tier</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-3xl font-bold text-violet-300">{Math.floor(userGGG * 0.1)}</p>
-                    <p className="text-sm text-violet-400">voting weight</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <div className="flex justify-between text-sm text-slate-400 mb-1">
-                    <span>Progress to next tier</span>
-                    <span>{userGGG} / {userTier === 'Observer' ? 100 : userTier === 'Delegate' ? 1000 : userTier === 'Council' ? 10000 : 100000} GGG</span>
-                  </div>
-                  <Progress value={userTier === 'Architect' ? 100 : (userGGG / (userTier === 'Observer' ? 100 : userTier === 'Delegate' ? 1000 : userTier === 'Council' ? 10000 : 100000)) * 100} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Treasury Tab */}
-          <TabsContent value="treasury" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-slate-800/50 border-slate-700/50">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Lock className="w-5 h-5 text-emerald-400" />
-                    Treasury Vault
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-700">
-                      <p className="text-slate-400 text-sm">Total Value Locked</p>
-                      <p className="text-3xl font-bold text-emerald-400">$2.4B</p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                        <p className="text-amber-400 text-xs">Gold Reserves</p>
-                        <p className="text-lg font-bold text-white">$1.2B</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
-                        <p className="text-blue-400 text-xs">Stablecoins</p>
-                        <p className="text-lg font-bold text-white">$800M</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/30">
-                        <p className="text-violet-400 text-xs">Real Estate</p>
-                        <p className="text-lg font-bold text-white">$300M</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
-                        <p className="text-emerald-400 text-xs">Other Assets</p>
-                        <p className="text-lg font-bold text-white">$100M</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-slate-800/50 border-slate-700/50">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-blue-400" />
-                    GGT Token Metrics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                      <span className="text-slate-400">Token Symbol</span>
-                      <span className="text-white font-medium">GGT</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                      <span className="text-slate-400">Total Supply</span>
-                      <span className="text-white font-medium">1,000,000,000,000,000</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                      <span className="text-slate-400">Holders</span>
-                      <span className="text-white font-medium">254</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-slate-700/50">
-                      <span className="text-slate-400">Network</span>
-                      <span className="text-white font-medium">Ethereum</span>
-                    </div>
-                    <Button variant="outline" className="w-full mt-2 border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View on Ethplorer
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Proposals Tab */}
-          <TabsContent value="proposals" className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700/50">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Target className="w-5 h-5 text-violet-400" />
-                    Active Proposals
-                  </CardTitle>
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-                    <Zap className="w-4 h-4" />
-                    Create Proposal
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Sample Proposals */}
-                  {[
-                    { id: 1, title: 'Increase Staking Rewards', status: 'active', votes: { for: 67, against: 33 }, deadline: '2 days' },
-                    { id: 2, title: 'Fund Regional Hub Expansion', status: 'active', votes: { for: 82, against: 18 }, deadline: '5 days' },
-                    { id: 3, title: 'Protocol Upgrade v2.5', status: 'passed', votes: { for: 91, against: 9 }, deadline: 'Passed' },
-                  ].map((proposal) => (
-                    <div key={proposal.id} className="p-4 rounded-xl bg-slate-900/50 border border-slate-700 hover:border-emerald-500/30 transition-all">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h4 className="text-white font-medium">{proposal.title}</h4>
-                          <p className="text-sm text-slate-400">{proposal.deadline}</p>
-                        </div>
-                        <Badge className={proposal.status === 'active' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-blue-500/20 text-blue-300'}>
-                          {proposal.status === 'active' ? 'Voting' : 'Passed'}
-                        </Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-emerald-400">For: {proposal.votes.for}%</span>
-                          <span className="text-rose-400">Against: {proposal.votes.against}%</span>
-                        </div>
-                        <div className="h-2 rounded-full bg-slate-700 overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400" 
-                            style={{ width: `${proposal.votes.for}%` }}
-                          />
-                        </div>
-                      </div>
-                      {proposal.status === 'active' && userTier !== 'Observer' && (
-                        <div className="flex gap-2 mt-3">
-                          <Button size="sm" className="flex-1 bg-emerald-600 hover:bg-emerald-700">Vote For</Button>
-                          <Button size="sm" variant="outline" className="flex-1 border-rose-500/50 text-rose-300 hover:bg-rose-500/10">Vote Against</Button>
-                        </div>
-                      )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {WHO_WE_SEEK.map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-purple-800/30">
+                      <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span className="text-purple-100 text-sm">{item}</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
+
+            {/* CTA */}
+            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-purple-900/40 border border-amber-500/30">
+              <p className="text-lg text-amber-200/90 mb-4 font-serif italic">
+                "If your soul resonates with this sacred calling, you are being invited to step forward and claim your place among the 144,000."
+              </p>
+              <Button 
+                className="bg-amber-500 hover:bg-amber-600 text-amber-950 font-semibold px-8 py-3"
+                onClick={() => window.location.href = createPageUrl('Initiations')}
+              >
+                Answer the Calling
+              </Button>
+              <p className="text-purple-300/60 text-sm mt-4 italic">
+                "Many are called, few are chosen. Will you answer?"
+              </p>
+            </div>
+          </TabsContent>
+
+          {/* Treasury Tab */}
+          <TabsContent value="treasury" className="space-y-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-serif text-amber-100 mb-4">The Seat of Divine Currency Control</h2>
+              <p className="text-purple-200/80 max-w-3xl mx-auto">
+                Gaia Global Treasury is not merely a financial construct — it is a divinely-seeded planetary trust, formed from ancient covenants and protected lineages, designed to safeguard and redistribute the true wealth of Earth for the ascension of humanity.
+              </p>
+            </div>
+
+            {/* Treasury Features */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {TREASURY_FEATURES.map((feature, i) => (
+                <Card key={i} className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50 hover:border-amber-500/50 transition-all">
+                  <CardContent className="pt-6 text-center">
+                    <div className="p-4 rounded-full bg-amber-500/20 w-fit mx-auto mb-4">
+                      <feature.icon className="w-8 h-8 text-amber-400" />
+                    </div>
+                    <h4 className="font-semibold text-amber-200 mb-2">{feature.title}</h4>
+                    <p className="text-sm text-purple-200/70">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Iframe Embed */}
+            <Card className="bg-purple-900/20 border-purple-700/30 overflow-hidden">
+              <CardHeader>
+                <CardTitle className="text-amber-100 flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-amber-400" />
+                    Live Treasury Portal
+                  </span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-amber-300 hover:text-amber-200"
+                    onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+                  >
+                    <ExternalLink className="w-4 h-4 mr-1" />
+                    Open Full Site
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="relative w-full h-[600px] bg-purple-950">
+                  <iframe
+                    src="https://gaiaglobaltreasury.org/"
+                    className="w-full h-full border-0"
+                    title="Gaia Global Treasury"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Mission Tab */}
+          <TabsContent value="mission" className="space-y-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-serif text-amber-100 mb-4">The Return Mission</h2>
+              <p className="text-purple-200/80 max-w-2xl mx-auto">
+                To Restore What Was Lost & Activate What Was Dormant
+              </p>
+            </div>
+
+            {/* Mission Points */}
+            <Card className="bg-purple-900/40 border-purple-700/30">
+              <CardHeader>
+                <CardTitle className="text-amber-100">The Return Mission exists to:</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    'Restore the original divine blueprint',
+                    'Anchor the Golden Age timeline',
+                    'Re-establish spiritual sovereignty',
+                    'Protect humanity\'s sacred resources',
+                    'Activate the next phase of ascension',
+                    'Guide the transition from old structures',
+                    'Initiate the Jubilee and renewal',
+                    'Prepare humanity for 2026 convergence',
+                    'Uplift those misled and return them to truth',
+                  ].map((point, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-purple-800/30">
+                      <div className="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-xs font-bold text-amber-400">{i + 1}</span>
+                      </div>
+                      <span className="text-purple-100 text-sm">{point}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* The Great Events */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { title: 'The Great Jubilee', desc: 'A cleansing of burdens, debts, karmic cycles, and generational limitations.' },
+                { title: 'The Great Restoration', desc: 'The rebalancing of systems and emergence of higher structures aligned with divine order.' },
+                { title: 'The Great Awakening', desc: 'A global shift in consciousness unlocking spiritual gifts and soul memory.' },
+                { title: 'The Great Reunification', desc: 'The healing of divided timelines, fractured identities, and separated soul-families.' },
+              ].map((event, i) => (
+                <Card key={i} className="bg-gradient-to-br from-amber-500/10 to-purple-900/40 border-amber-500/30">
+                  <CardContent className="pt-6">
+                    <h4 className="font-serif text-xl text-amber-200 mb-2">{event.title}</h4>
+                    <p className="text-purple-200/70 text-sm">{event.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Declaration */}
+            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-purple-900/60 to-violet-900/60 border border-purple-700/50">
+              <h3 className="text-xl font-serif text-amber-200 mb-6">The Declaration of the Return</h3>
+              <div className="space-y-2 text-purple-100/90 font-light">
+                <p>We are here because the cycle has completed.</p>
+                <p>We are here because the lineage has awakened.</p>
+                <p>We are here because the codes have returned.</p>
+                <p className="text-amber-300 font-medium pt-2">We are here because it is time.</p>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
+      </div>
+
+      {/* Partner Sites Footer */}
+      <div className="bg-purple-950/50 border-t border-purple-700/30 py-12">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h3 className="text-xl font-serif text-amber-100 mb-6">Connected Platforms</h3>
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <Button 
+              variant="outline"
+              className="border-amber-500/30 text-amber-200 hover:bg-amber-500/20"
+              onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+            >
+              <Globe className="w-4 h-4 mr-2" />
+              Gaia Global Treasury
+            </Button>
+            <Button 
+              variant="outline"
+              className="border-violet-500/30 text-violet-200 hover:bg-violet-500/20"
+              onClick={() => window.open('https://www.saintagents.com/', '_blank')}
+            >
+              <Shield className="w-4 h-4 mr-2" />
+              Saint Agents
+            </Button>
+          </div>
+          <p className="text-purple-300/50 text-sm mt-6 italic">
+            "We are not here to rule. We are here to restore, to correct, to guide, and to rebuild."
+          </p>
+        </div>
       </div>
     </div>
   );

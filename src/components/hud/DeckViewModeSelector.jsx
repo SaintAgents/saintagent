@@ -21,7 +21,7 @@ export const VIEW_MODE_CONFIG = {
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
       'market', 'influence', 'leader', 'dailyops', 'news', 'insights'
     ],
-    navIds: null // null means show all nav items
+    navIds: null // null means show all nav items (includes authority144)
   },
   custom: {
     label: 'Custom',
