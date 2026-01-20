@@ -13,13 +13,33 @@ import {
 } from 'recharts';
 import { 
   Eye, MousePointer, Newspaper, Send, CheckCircle2, XCircle, Clock,
-  TrendingUp, FileText, Calendar, Filter, ArrowLeft
+  TrendingUp, FileText, Calendar, Filter, ArrowLeft, AlertTriangle,
+  Twitter, Linkedin, Mail, MessageCircle, Radio, BarChart2
 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 import { format, subDays, isWithinInterval, parseISO, startOfDay, endOfDay } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899'];
+
+const CHANNEL_COLORS = {
+  twitter: '#1DA1F2',
+  linkedin: '#0A66C2',
+  telegram: '#0088cc',
+  discord: '#5865F2',
+  email: '#EA4335',
+  newswire: '#6B7280'
+};
+
+const CHANNEL_ICONS = {
+  twitter: Twitter,
+  linkedin: Linkedin,
+  telegram: MessageCircle,
+  discord: MessageCircle,
+  email: Mail,
+  newswire: Radio
+};
 
 const DATE_RANGES = [
   { value: '7', label: 'Last 7 days' },
@@ -155,6 +175,86 @@ export default function PressAnalytics() {
       count: value
     }));
   }, [metrics.channelCounts]);
+
+  // Per-channel success/failure breakdown
+  const channelStatusData = useMemo(() => {
+    const channelStats = {};
+    
+    filteredReleases.forEach(pr => {
+      pr.distribution_channels?.forEach(channel => {
+        if (!channelStats[channel]) {
+          channelStats[channel] = { sent: 0, failed: 0, pending: 0, total: 0 };
+        }
+        channelStats[channel].total++;
+        
+        const status = pr.distribution_status?.find(s => s.channel === channel);
+        if (status?.status === 'sent') channelStats[channel].sent++;
+        else if (status?.status === 'failed') channelStats[channel].failed++;
+        else channelStats[channel].pending++;
+      });
+    });
+
+    return Object.entries(channelStats).map(([channel, stats]) => ({
+      channel: channel.charAt(0).toUpperCase() + channel.slice(1),
+      ...stats,
+      successRate: stats.total > 0 ? Math.round((stats.sent / stats.total) * 100) : 0,
+      failureRate: stats.total > 0 ? Math.round((stats.failed / stats.total) * 100) : 0
+    }));
+  }, [filteredReleases]);
+
+  // Channel error trends over time
+  const channelTrendData = useMemo(() => {
+    const days = dateRange === 'custom' ? 30 : parseInt(dateRange) || 30;
+    const channels = [...new Set(filteredReleases.flatMap(pr => pr.distribution_channels || []))];
+    const data = [];
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const date = subDays(new Date(), i);
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const dayReleases = filteredReleases.filter(pr => 
+        format(parseISO(pr.created_date), 'yyyy-MM-dd') === dateStr
+      );
+      
+      const dayData = { date: format(date, 'MMM d') };
+      
+      channels.forEach(channel => {
+        let sent = 0;
+        let failed = 0;
+        dayReleases.forEach(pr => {
+          if (pr.distribution_channels?.includes(channel)) {
+            const status = pr.distribution_status?.find(s => s.channel === channel);
+            if (status?.status === 'sent') sent++;
+            else if (status?.status === 'failed') failed++;
+          }
+        });
+        dayData[`${channel}_sent`] = sent;
+        dayData[`${channel}_failed`] = failed;
+      });
+      
+      data.push(dayData);
+    }
+    
+    return { data, channels };
+  }, [filteredReleases, dateRange]);
+
+  // Recent errors list
+  const recentErrors = useMemo(() => {
+    const errors = [];
+    filteredReleases.forEach(pr => {
+      pr.distribution_status?.forEach(ds => {
+        if (ds.status === 'failed') {
+          errors.push({
+            releaseId: pr.id,
+            releaseTitle: pr.title,
+            channel: ds.channel,
+            error: ds.error_message || 'Unknown error',
+            date: ds.sent_at || pr.created_date
+          });
+        }
+      });
+    });
+    return errors.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+  }, [filteredReleases]);
 
   if (isLoading) {
     return (
@@ -365,34 +465,173 @@ export default function PressAnalytics() {
               )}
             </CardContent>
           </Card>
+        </div>
 
-          {/* Channels Bar Chart */}
-          <Card className="md:col-span-2">
+        {/* Per-Channel Success Rate Breakdown */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart2 className="w-5 h-5 text-violet-600" />
+              Channel Success Rates
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {channelStatusData.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {channelStatusData.map(channel => {
+                  const IconComponent = CHANNEL_ICONS[channel.channel.toLowerCase()] || Radio;
+                  const color = CHANNEL_COLORS[channel.channel.toLowerCase()] || '#6B7280';
+                  return (
+                    <div key={channel.channel} className="p-4 border rounded-lg bg-slate-50">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 rounded-lg" style={{ backgroundColor: `${color}20` }}>
+                          <IconComponent className="w-5 h-5" style={{ color }} />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-slate-900">{channel.channel}</h4>
+                          <p className="text-xs text-slate-500">{channel.total} distributions</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-green-600 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Sent
+                          </span>
+                          <span className="font-medium">{channel.sent} ({channel.successRate}%)</span>
+                        </div>
+                        <Progress value={channel.successRate} className="h-2 bg-slate-200" />
+                        
+                        <div className="flex items-center justify-between text-sm mt-2">
+                          <span className="text-red-600 flex items-center gap-1">
+                            <XCircle className="w-3 h-3" /> Failed
+                          </span>
+                          <span className="font-medium">{channel.failed} ({channel.failureRate}%)</span>
+                        </div>
+                        <Progress value={channel.failureRate} className="h-2 bg-slate-200 [&>div]:bg-red-500" />
+                        
+                        <div className="flex items-center justify-between text-sm text-slate-500 mt-2">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> Pending
+                          </span>
+                          <span>{channel.pending}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-slate-400">
+                No channel data available
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Channel Error Trends Over Time */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+              Channel Performance Trends
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {channelTrendData.channels.length > 0 ? (
+              <ResponsiveContainer width="100%" height={350}>
+                <BarChart data={channelTrendData.data}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" fontSize={12} />
+                  <YAxis fontSize={12} />
+                  <Tooltip />
+                  <Legend />
+                  {channelTrendData.channels.map((channel, idx) => (
+                    <React.Fragment key={channel}>
+                      <Bar 
+                        dataKey={`${channel}_sent`} 
+                        name={`${channel.charAt(0).toUpperCase() + channel.slice(1)} Sent`}
+                        fill={CHANNEL_COLORS[channel] || COLORS[idx % COLORS.length]}
+                        stackId={channel}
+                        radius={[2, 2, 0, 0]}
+                      />
+                      <Bar 
+                        dataKey={`${channel}_failed`} 
+                        name={`${channel.charAt(0).toUpperCase() + channel.slice(1)} Failed`}
+                        fill="#ef4444"
+                        stackId={channel}
+                        radius={[2, 2, 0, 0]}
+                        opacity={0.7}
+                      />
+                    </React.Fragment>
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-[350px] flex items-center justify-center text-slate-400">
+                No trend data available
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Recent Errors */}
+        {recentErrors.length > 0 && (
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Send className="w-5 h-5 text-violet-600" />
-                Distribution Channels
+                <XCircle className="w-5 h-5 text-red-600" />
+                Recent Distribution Errors
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {channelBarData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={channelBarData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={12} />
-                    <YAxis fontSize={12} />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-[250px] flex items-center justify-center text-slate-400">
-                  No channels configured yet
-                </div>
-              )}
+              <div className="space-y-3">
+                {recentErrors.map((error, idx) => {
+                  const IconComponent = CHANNEL_ICONS[error.channel] || Radio;
+                  return (
+                    <div key={idx} className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-lg">
+                      <IconComponent className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-slate-900 text-sm truncate">{error.releaseTitle}</p>
+                        <p className="text-xs text-red-600 mt-0.5">{error.error}</p>
+                        <p className="text-xs text-slate-500 mt-1">
+                          {error.channel.charAt(0).toUpperCase() + error.channel.slice(1)} • {format(parseISO(error.date), 'MMM d, h:mm a')}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
-        </div>
+        )}
+
+        {/* Original Channels Summary */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Send className="w-5 h-5 text-violet-600" />
+              Distribution Volume by Channel
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {channelBarData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={channelBarData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" fontSize={12} />
+                  <YAxis fontSize={12} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-[250px] flex items-center justify-center text-slate-400">
+                No channels configured yet
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Recent Releases Table */}
         <Card>
