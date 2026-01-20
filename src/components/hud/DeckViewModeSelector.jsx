@@ -19,14 +19,14 @@ export const VIEW_MODE_CONFIG = {
       'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators',
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
-      'market', 'influence', 'leader', 'dailyops', 'news'
+      'market', 'influence', 'leader', 'dailyops', 'news', 'insights'
     ],
     navIds: null // null means show all nav items
   },
   custom: {
     label: 'Custom',
     description: 'Choose your features',
-    cards: [], // Determined by user settings
+    cards: ['insights'], // Default includes insights
     navIds: null // null means show all nav items
   }
 };
