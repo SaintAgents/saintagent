@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   Plus, Edit2, Trash2, Send, FileText, Calendar, 
-  Twitter, Linkedin, MessageCircle, Mail, Radio, Eye, Sparkles, Loader2
+  Twitter, Linkedin, MessageCircle, Mail, Radio, Eye, Sparkles, Loader2, Upload, X, Image
 } from 'lucide-react';
 import { format } from 'date-fns';
 import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
@@ -57,6 +57,7 @@ export default function PressReleaseManager() {
   });
   const [tagInput, setTagInput] = useState('');
   const [aiGenerating, setAiGenerating] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -173,6 +174,20 @@ export default function PressReleaseManager() {
         ? prev.distribution_channels.filter(c => c !== channel)
         : [...prev.distribution_channels, channel]
     }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData(prev => ({ ...prev, image_url: file_url }));
+    } catch (err) {
+      console.error('Image upload failed:', err);
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const generateWithAI = async () => {
@@ -420,14 +435,45 @@ Return ONLY the press release content, no additional commentary.`,
               </div>
             </div>
 
-            {/* Image URL */}
+            {/* Image Upload */}
             <div className="space-y-2">
-              <Label>Featured Image URL</Label>
-              <Input
-                value={formData.image_url}
-                onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                placeholder="https://..."
-              />
+              <Label>Featured Image</Label>
+              {formData.image_url ? (
+                <div className="relative rounded-lg overflow-hidden border">
+                  <img 
+                    src={formData.image_url} 
+                    alt="Featured" 
+                    className="w-full h-40 object-cover"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2 h-8 w-8"
+                    onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={imageUploading}
+                  />
+                  {imageUploading ? (
+                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                  ) : (
+                    <>
+                      <Image className="w-8 h-8 text-slate-400 mb-2" />
+                      <span className="text-sm text-slate-500">Click to upload image</span>
+                    </>
+                  )}
+                </label>
+              )}
             </div>
 
             {/* Tags */}
