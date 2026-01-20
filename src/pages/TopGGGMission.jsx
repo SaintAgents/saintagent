@@ -54,7 +54,7 @@ const InPageNavigation = () => {
 };
 
 // Hero Section
-const HeroSection = () => (
+const HeroSection = ({ onLearnMore }) => (
   <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
     {/* Background Image */}
     <div 
@@ -80,7 +80,10 @@ const HeroSection = () => (
         Securing humanity's future through the Ultranet: sovereign, safe, and limitless.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button className="bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold rounded-full px-8 py-6 text-lg">
+        <Button 
+          onClick={onLearnMore}
+          className="bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold rounded-full px-8 py-6 text-lg"
+        >
           Learn More
         </Button>
         <Button variant="outline" className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full px-8 py-6 text-lg">
