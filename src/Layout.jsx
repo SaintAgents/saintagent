@@ -366,7 +366,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       }
 
       // For returning users with complete onboarding, redirect to Command Deck if on generic pages
-      const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
+      const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
       if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
         window.location.href = createPageUrl('CommandDeck');
         return;
@@ -1648,7 +1648,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               await base44.entities.OnboardingProgress.update(onboarding.id, { tour_completed: true });
               queryClient.invalidateQueries({ queryKey: ['onboardingProgress'] });
             }
-            const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
+            const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
             if (genericPages.includes(currentPageName)) {
               window.location.href = createPageUrl('CommandDeck');
             }
