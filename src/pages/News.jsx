@@ -215,9 +215,10 @@ export default function News() {
   });
 
   const featured = articles.filter(a => a.is_featured);
+  const nonFeatured = articles.filter(a => !a.is_featured);
   const filtered = activeTab === 'all' 
-    ? articles 
-    : articles.filter(a => a.type === activeTab);
+    ? nonFeatured 
+    : nonFeatured.filter(a => a.type === activeTab);
 
   const handleArticleClick = async (article) => {
     setSelectedArticle(article);
