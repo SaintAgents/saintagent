@@ -282,7 +282,7 @@ export default function Insights() {
             Insights & Analysis
           </h1>
           <p className="text-lg text-slate-300 max-w-2xl">
-            Strategic perspectives, platform updates, and community intelligence to guide your journey.
+            Deep-dive analyses, strategic frameworks, and thought leadership to elevate your understanding and impact.
           </p>
         </div>
       </div>
