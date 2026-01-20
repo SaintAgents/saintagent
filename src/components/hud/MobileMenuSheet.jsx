@@ -6,7 +6,7 @@ import {
   Users, Target, ShoppingBag, Calendar, Settings, 
   Trophy, Folder, Radio, UserCircle, HelpCircle,
   Heart, Zap, LayoutDashboard, MessageSquare, Compass,
-  UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft, Orbit
+  UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft, Orbit, Newspaper
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,7 @@ const menuItems = [
   { id: 'circles', label: 'Circles', icon: Users, page: 'Circles' },
   { id: 'studio', label: 'Studio', icon: Briefcase, page: 'Studio' },
   { id: 'affiliate', label: 'Affiliate', icon: Globe, page: 'AffiliateCenter' },
+  { id: 'news', label: 'News', icon: Newspaper, page: 'News' },
   { id: 'profile', label: 'Profile', icon: UserCircle, page: 'Profile' },
   { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },
   { id: 'faq', label: 'Help & FAQ', icon: HelpCircle, page: 'FAQ' },
@@ -89,6 +90,7 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
           'dailyops': 'dailyops',
           'communityFeed': 'communityfeed',
           'leaderboard': 'activity',
+          'news': 'news',
         };
         // Always show these core items
         const alwaysShow = ['command', 'profile', 'settings', 'faq'];
