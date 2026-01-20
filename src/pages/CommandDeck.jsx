@@ -1249,7 +1249,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     badges={badges}
                     defaultIfEmpty={false}
                     showEmptySlots={true}
-                    emptySlotCount={5}
+                    emptySlotCount={Math.max(0, 5 - badges.length)}
                     onMore={() => setBadgeGlossaryOpen(true)} />
 
                 </div>
