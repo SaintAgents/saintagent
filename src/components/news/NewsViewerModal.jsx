@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, 
-  ChevronLeft, ChevronRight, X, Image as ImageIcon 
+  ChevronLeft, ChevronRight, X, Image as ImageIcon, Share2 
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
+import ArticleEngagement from './ArticleEngagement';
+import SocialShareButtons from '@/components/affiliate/SocialShareButtons';
 
 const CATEGORY_COLORS = {
   announcements: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
@@ -208,6 +210,22 @@ export default function NewsViewerModal({
                 ))}
               </div>
             )}
+
+            {/* Engagement Section - Likes, Comments, Share */}
+            <div className="mt-8 pt-6 border-t dark:border-slate-700">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Engage & Share</h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Share:</span>
+                  <SocialShareButtons 
+                    url={window.location.origin + '/News?article=' + currentArticle.id}
+                    text={`Check out "${currentArticle.title}" on SaintAgent!`}
+                    size="sm"
+                  />
+                </div>
+              </div>
+              <ArticleEngagement article={currentArticle} />
+            </div>
           </div>
         </div>
       </DialogContent>

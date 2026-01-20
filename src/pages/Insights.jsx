@@ -3,13 +3,14 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, Star, ChevronRight, Clock, BookOpen } from 'lucide-react';
+import { Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, Star, ChevronRight, Clock, BookOpen, Share2 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import AIRecommendationEngine from '@/components/ai/AIRecommendationEngine';
 import ArticleEngagement from '@/components/news/ArticleEngagement';
+import SocialShareButtons from '@/components/affiliate/SocialShareButtons';
 
 const CATEGORY_COLORS = {
   announcements: 'bg-[#051C2C] text-white',
@@ -227,6 +228,17 @@ function ArticleDetail({ article, onBack, articles, onNavigate }) {
 
             {/* Engagement Section */}
             <div className="mt-12 pt-8 border-t border-slate-300">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-sm font-semibold text-slate-600 uppercase tracking-wider">Engage & Share</h3>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-slate-500">Share this insight:</span>
+                  <SocialShareButtons 
+                    url={window.location.origin + '/Insights?article=' + article.id}
+                    text={`"${article.title}" - A must-read insight on SaintAgent`}
+                    size="default"
+                  />
+                </div>
+              </div>
               <ArticleEngagement article={article} />
             </div>
           </div>

@@ -8,7 +8,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Sparkles, Image as ImageIcon, X } from 'lucide-react';
+import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X } from 'lucide-react';
+import SocialShareButtons from '@/components/affiliate/SocialShareButtons';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { createPageUrl } from '@/utils';
@@ -296,24 +297,32 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                     )}
 
                     {/* Post Actions */}
-                    <div className="flex items-center gap-4 pt-1">
-                      <button
-                        onClick={() => handleLike(post.id)}
-                        className={cn(
-                          "flex items-center gap-1 text-xs transition-colors",
-                          isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600"
-                        )}
-                      >
-                        <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
-                        <span className="font-medium">{post.likes_count || 0}</span>
-                      </button>
-                      <button
-                        onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
-                        className="flex items-center gap-1 text-xs text-slate-500 hover:text-violet-600 transition-colors"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                        <span className="font-medium">{post.comments_count || 0}</span>
-                      </button>
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => handleLike(post.id)}
+                          className={cn(
+                            "flex items-center gap-1 text-xs transition-colors",
+                            isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600"
+                          )}
+                        >
+                          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
+                          <span className="font-medium">{post.likes_count || 0}</span>
+                        </button>
+                        <button
+                          onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
+                          className="flex items-center gap-1 text-xs text-slate-500 hover:text-violet-600 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="font-medium">{post.comments_count || 0}</span>
+                        </button>
+                      </div>
+                      <SocialShareButtons 
+                        url={window.location.origin + '/CommunityFeed?post=' + post.id}
+                        text={post.content?.slice(0, 100) + (post.content?.length > 100 ? '...' : '') + ' - via SaintAgent'}
+                        size="sm"
+                        platforms={['twitter', 'telegram']}
+                      />
                     </div>
 
                     {/* Comments Section */}
