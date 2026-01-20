@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Lock, Unlock, Shield, FileCheck, Clock, AlertTriangle, 
   CheckCircle2, Diamond, Droplet, Zap, ArrowRight, Calendar,
-  User, Building, Scale, Coins
+  User, Building, Scale, Coins, Sparkles
 } from 'lucide-react';
 
 const ESCROW_TYPES = [
