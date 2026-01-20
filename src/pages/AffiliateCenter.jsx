@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import CreateCampaignModal from '@/components/affiliate/CreateCampaignModal';
 import CampaignAnalytics from '@/components/affiliate/CampaignAnalytics';
+import SocialShareButtons, { OfferShareRow } from '@/components/affiliate/SocialShareButtons';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
