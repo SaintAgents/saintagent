@@ -105,6 +105,7 @@ const NAV_ITEMS = [
   { id: 'studio', label: 'Creator Studio', Icon: Star, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
   { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
   { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
+  { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
