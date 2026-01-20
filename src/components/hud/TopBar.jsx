@@ -83,6 +83,7 @@ export default function TopBar({
   const [quickStartOpen, setQuickStartOpen] = useState(false);
   const [isBoostActive, setIsBoostActive] = useState(false);
   const [datingSearching, setDatingSearching] = useState(false);
+  const [browserOpen, setBrowserOpen] = useState(false);
   const searchRef = useRef(null);
   
   // Listen for boost activation event
