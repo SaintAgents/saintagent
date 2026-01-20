@@ -57,6 +57,295 @@ export default function PriceChart({ pair, theme = 'lime' }) {
   const themeColor = theme === 'lime' ? '#84cc16' : theme === 'blue' ? '#3b82f6' : '#10b981';
   const isPositive = priceChange >= 0;
 
+  // Render chart content (reusable for both normal and expanded views)
+  const renderChart = (height = 280) => (
+    <ResponsiveContainer width="100%" height="100%">
+      {chartType === 'area' ? (
+        <AreaChart data={chartData}>
+          <defs>
+            <linearGradient id={`gradient-${theme}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={themeColor} stopOpacity={0.3} />
+              <stop offset="100%" stopColor={themeColor} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis 
+            dataKey="time" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: '#6b7280', fontSize: 10 }}
+          />
+          <YAxis 
+            domain={['auto', 'auto']} 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: '#6b7280', fontSize: 10 }}
+            orientation="right"
+            tickFormatter={(val) => `$${val.toFixed(0)}`}
+          />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#0a0a0f', 
+              border: `1px solid ${themeColor}30`,
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}
+            formatter={(value) => [`$${value.toFixed(2)}`, 'Price']}
+            labelFormatter={() => ''}
+          />
+          <Area 
+            type="monotone" 
+            dataKey="price" 
+            stroke={themeColor} 
+            strokeWidth={2}
+            fill={`url(#gradient-${theme})`}
+          />
+        </AreaChart>
+      ) : chartType === 'candle' ? (
+        <ComposedChart data={chartData}>
+          <XAxis 
+            dataKey="time" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: '#6b7280', fontSize: 10 }}
+          />
+          <YAxis 
+            domain={['auto', 'auto']} 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: '#6b7280', fontSize: 10 }}
+            orientation="right"
+            tickFormatter={(val) => `$${val.toFixed(0)}`}
+          />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#0a0a0f', 
+              border: `1px solid ${themeColor}30`,
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}
+            content={({ active, payload }) => {
+              if (active && payload && payload.length) {
+                const d = payload[0].payload;
+                return (
+                  <div className="bg-black/90 border border-gray-700 rounded-lg p-2 text-xs">
+                    <div className="text-gray-400">O: <span className="text-white">${d.open?.toFixed(2)}</span></div>
+                    <div className="text-gray-400">H: <span className="text-white">${d.high?.toFixed(2)}</span></div>
+                    <div className="text-gray-400">L: <span className="text-white">${d.low?.toFixed(2)}</span></div>
+                    <div className="text-gray-400">C: <span className={d.isUp ? 'text-green-400' : 'text-red-400'}>${d.close?.toFixed(2)}</span></div>
+                  </div>
+                );
+              }
+              return null;
+            }}
+          />
+          {/* Wick lines */}
+          {chartData.map((entry, index) => (
+            <ReferenceLine
+              key={`wick-${index}`}
+              segment={[
+                { x: entry.time, y: entry.low },
+                { x: entry.time, y: entry.high }
+              ]}
+              stroke={entry.isUp ? '#22c55e' : '#ef4444'}
+              strokeWidth={1}
+            />
+          ))}
+          {/* Candle bodies */}
+          <Bar dataKey="close" barSize={8}>
+            {chartData.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`}
+                fill={entry.isUp ? '#22c55e' : '#ef4444'}
+              />
+            ))}
+          </Bar>
+        </ComposedChart>
+      ) : (
+        /* Manhattan Chart - 3D-style bar chart */
+        <BarChart data={chartData} barGap={0}>
+          <defs>
+            <linearGradient id="manhattanGreen" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4ade80" stopOpacity={1} />
+              <stop offset="50%" stopColor="#22c55e" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#166534" stopOpacity={0.8} />
+            </linearGradient>
+            <linearGradient id="manhattanRed" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f87171" stopOpacity={1} />
+              <stop offset="50%" stopColor="#ef4444" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#991b1b" stopOpacity={0.8} />
+            </linearGradient>
+          </defs>
+          <XAxis 
+            dataKey="time" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: '#6b7280', fontSize: 10 }}
+          />
+          <YAxis 
+            domain={['auto', 'auto']} 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: '#6b7280', fontSize: 10 }}
+            orientation="right"
+            tickFormatter={(val) => `$${val.toFixed(0)}`}
+          />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#0a0a0f', 
+              border: `1px solid ${themeColor}30`,
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}
+            content={({ active, payload }) => {
+              if (active && payload && payload.length) {
+                const d = payload[0].payload;
+                return (
+                  <div className="bg-black/90 border border-gray-700 rounded-lg p-2 text-xs">
+                    <div className="text-gray-400">Price: <span className={d.isUp ? 'text-green-400' : 'text-red-400'}>${d.close?.toFixed(2)}</span></div>
+                    <div className="text-gray-400">Change: <span className={d.isUp ? 'text-green-400' : 'text-red-400'}>{d.isUp ? '+' : ''}{(d.close - d.open).toFixed(2)}</span></div>
+                    <div className="text-gray-400">Vol: <span className="text-white">{(d.volume / 1000).toFixed(0)}K</span></div>
+                  </div>
+                );
+              }
+              return null;
+            }}
+          />
+          <Bar dataKey="close" radius={[2, 2, 0, 0]}>
+            {chartData.map((entry, index) => (
+              <Cell 
+                key={`manhattan-${index}`}
+                fill={entry.isUp ? 'url(#manhattanGreen)' : 'url(#manhattanRed)'}
+                stroke={entry.isUp ? '#22c55e' : '#ef4444'}
+                strokeWidth={1}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      )}
+    </ResponsiveContainer>
+  );
+
+  // Expanded fullscreen modal
+  if (isExpanded) {
+    return (
+      <div className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-sm flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex -space-x-2">
+              <img 
+                src="https://assets.coingecko.com/coins/images/279/small/ethereum.png" 
+                alt="ETH" 
+                className="w-10 h-10 rounded-full border-2 border-black"
+              />
+              <img 
+                src="https://assets.coingecko.com/coins/images/6319/small/usdc.png" 
+                alt="USDC" 
+                className="w-10 h-10 rounded-full border-2 border-black"
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-lg">{pair?.from || 'ETH'}/{pair?.to || 'USDC'}</span>
+                <Badge variant="outline" className={`text-${theme}-400 border-${theme}-500/30`}>
+                  Base
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-white font-mono text-2xl">${currentPrice.toFixed(2)}</span>
+                <span className={`flex items-center gap-0.5 text-sm ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                  {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                  {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Chart Type Buttons */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-9 w-9 ${chartType === 'area' ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setChartType('area')}
+            >
+              <BarChart2 className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-9 w-9 ${chartType === 'candle' ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setChartType('candle')}
+            >
+              <CandlestickChart className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-9 w-9 ${chartType === 'manhattan' ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setChartType('manhattan')}
+            >
+              <Building2 className="w-5 h-5" />
+            </Button>
+            
+            <div className="w-px h-6 bg-gray-700 mx-2" />
+            
+            {/* Timeframes */}
+            {TIMEFRAMES.map((tf) => (
+              <button
+                key={tf}
+                onClick={() => setTimeframe(tf)}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
+                  timeframe === tf 
+                    ? `bg-${theme}-500/20 text-${theme}-400 border border-${theme}-500/30` 
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-gray-800/50'
+                }`}
+              >
+                {tf}
+              </button>
+            ))}
+            
+            <div className="w-px h-6 bg-gray-700 mx-2" />
+            
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 text-gray-400 hover:text-white"
+              onClick={() => setIsExpanded(false)}
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Fullscreen Chart */}
+        <div className="flex-1 p-4">
+          {renderChart()}
+        </div>
+
+        {/* Stats Footer */}
+        <div className="px-6 py-4 border-t border-gray-800 grid grid-cols-4 gap-8 text-sm">
+          <div>
+            <div className="text-gray-500">24h High</div>
+            <div className="text-white font-mono text-lg">${(currentPrice * 1.02).toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">24h Low</div>
+            <div className="text-white font-mono text-lg">${(currentPrice * 0.97).toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">24h Volume</div>
+            <div className="text-white font-mono text-lg">$45.2M</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Liquidity</div>
+            <div className="text-white font-mono text-lg">$128.4M</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Card className={`bg-black/40 border border-${theme}-500/20 backdrop-blur-xl overflow-hidden`}>
       {/* Header */}
