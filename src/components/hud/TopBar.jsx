@@ -215,6 +215,48 @@ export default function TopBar({
       
       {/* Masters Messages - shows when topbar is collapsed */}
       {isCollapsed && <MastersMessagesTicker />}
+      
+      {/* Theme dots - shows when collapsed */}
+      {isCollapsed && (
+        <div className="flex items-center gap-1.5 mr-2">
+          <button
+            onClick={() => {
+              localStorage.setItem('theme', 'light');
+              document.documentElement.setAttribute('data-theme', 'light');
+            }}
+            className={cn(
+              "w-3 h-3 rounded-full transition-all",
+              "bg-gradient-to-br from-amber-300 to-orange-400",
+              document.documentElement.getAttribute('data-theme') === 'light' && "ring-2 ring-offset-1 ring-amber-500"
+            )}
+            title="Light theme"
+          />
+          <button
+            onClick={() => {
+              localStorage.setItem('theme', 'dark');
+              document.documentElement.setAttribute('data-theme', 'dark');
+            }}
+            className={cn(
+              "w-3 h-3 rounded-full transition-all",
+              "bg-gradient-to-br from-slate-600 to-slate-900",
+              document.documentElement.getAttribute('data-theme') === 'dark' && "ring-2 ring-offset-1 ring-slate-500"
+            )}
+            title="Dark theme"
+          />
+          <button
+            onClick={() => {
+              localStorage.setItem('theme', 'hacker');
+              document.documentElement.setAttribute('data-theme', 'hacker');
+            }}
+            className={cn(
+              "w-3 h-3 rounded-full transition-all",
+              "bg-gradient-to-br from-green-400 to-emerald-600",
+              document.documentElement.getAttribute('data-theme') === 'hacker' && "ring-2 ring-offset-1 ring-green-500"
+            )}
+            title="Hacker theme"
+          />
+        </div>
+      )}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
         "flex items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300 flex",
