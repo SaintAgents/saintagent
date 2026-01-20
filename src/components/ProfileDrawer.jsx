@@ -38,7 +38,7 @@ import CommunityStatsCard from '@/components/profile/CommunityStatsCard';
 
 
 // Default fallback hero image
-const DEFAULT_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/31742c677_universal_upscale_0_ec38ae88-7005-4eed-a87e-5dd7b72e47dc_0.jpg';
+const DEFAULT_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ba230944b_defaulthero.jpg';
 const MARKETPLACE_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7fc6cc632_mp2.png';
 
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
