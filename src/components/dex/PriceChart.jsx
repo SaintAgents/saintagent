@@ -8,7 +8,7 @@ import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarCh
 const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M'];
 const CHART_TYPES = ['area', 'candle', 'manhattan'];
 
-export default function PriceChart({ pair, theme = 'lime' }) {
+export default function PriceChart({ pair, theme = 'lime', isLightTheme = false }) {
   const [timeframe, setTimeframe] = useState('1D');
   const [chartType, setChartType] = useState('area');
   const [isLoading, setIsLoading] = useState(false);
@@ -365,10 +365,15 @@ export default function PriceChart({ pair, theme = 'lime' }) {
     );
   }
 
+  const cardBg = isLightTheme ? 'bg-white' : 'bg-black/40';
+  const textPrimary = isLightTheme ? 'text-gray-900' : 'text-white';
+  const textSecondary = isLightTheme ? 'text-gray-600' : 'text-gray-500';
+  const borderColor = isLightTheme ? 'border-gray-200' : 'border-gray-800/50';
+
   return (
-    <Card className={`bg-black/40 border border-${theme}-500/20 backdrop-blur-xl overflow-hidden`}>
+    <Card className={`${cardBg} border ${isLightTheme ? 'border-gray-200' : `border-${theme}-500/20`} backdrop-blur-xl overflow-hidden`}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-800/50">
+      <div className={`p-4 border-b ${borderColor}`}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2">
@@ -385,13 +390,13 @@ export default function PriceChart({ pair, theme = 'lime' }) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white">{pair?.from || 'ETH'}/{pair?.to || 'USDC'}</span>
+                <span className={`font-bold ${textPrimary}`}>{pair?.from || 'ETH'}/{pair?.to || 'USDC'}</span>
                 <Badge variant="outline" className={`text-${theme}-400 border-${theme}-500/30 text-[10px]`}>
                   Base
                 </Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-white font-mono text-lg">${currentPrice.toFixed(2)}</span>
+                <span className={`${textPrimary} font-mono text-lg`}>${currentPrice.toFixed(2)}</span>
                 <span className={`flex items-center gap-0.5 ${isPositive ? `text-${theme}-400` : 'text-red-400'}`}>
                   {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                   {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
@@ -457,7 +462,7 @@ export default function PriceChart({ pair, theme = 'lime' }) {
               className={`px-2.5 py-1 rounded text-xs font-medium transition-all ${
                 timeframe === tf 
                   ? `bg-${theme}-500/20 text-${theme}-400 border border-${theme}-500/30` 
-                  : 'text-gray-500 hover:text-gray-300 hover:bg-gray-800/50'
+                  : `${textSecondary} ${isLightTheme ? 'hover:text-gray-800 hover:bg-gray-100' : 'hover:text-gray-300 hover:bg-gray-800/50'}`
               }`}
             >
               {tf}
@@ -472,22 +477,22 @@ export default function PriceChart({ pair, theme = 'lime' }) {
       </div>
 
       {/* Stats Footer */}
-      <div className="px-4 py-3 border-t border-gray-800/50 grid grid-cols-4 gap-4 text-xs">
+      <div className={`px-4 py-3 border-t ${borderColor} grid grid-cols-4 gap-4 text-xs`}>
         <div>
-          <div className="text-gray-500">24h High</div>
-          <div className="text-white font-mono">${(currentPrice * 1.02).toFixed(2)}</div>
+          <div className={textSecondary}>24h High</div>
+          <div className={`${textPrimary} font-mono`}>${(currentPrice * 1.02).toFixed(2)}</div>
         </div>
         <div>
-          <div className="text-gray-500">24h Low</div>
-          <div className="text-white font-mono">${(currentPrice * 0.97).toFixed(2)}</div>
+          <div className={textSecondary}>24h Low</div>
+          <div className={`${textPrimary} font-mono`}>${(currentPrice * 0.97).toFixed(2)}</div>
         </div>
         <div>
-          <div className="text-gray-500">24h Vol</div>
-          <div className="text-white font-mono">$45.2M</div>
+          <div className={textSecondary}>24h Vol</div>
+          <div className={`${textPrimary} font-mono`}>$45.2M</div>
         </div>
         <div>
-          <div className="text-gray-500">Liquidity</div>
-          <div className="text-white font-mono">$128.4M</div>
+          <div className={textSecondary}>Liquidity</div>
+          <div className={`${textPrimary} font-mono`}>$128.4M</div>
         </div>
       </div>
     </Card>

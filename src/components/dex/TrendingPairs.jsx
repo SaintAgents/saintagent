@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, Flame, ExternalLink, RefreshCw, Sparkles, Activity } from 'lucide-react';
 import { TRENDING_PAIRS } from './dexUtils';
 
-export default function TrendingPairs({ onPairSelect, theme = 'lime' }) {
+export default function TrendingPairs({ onPairSelect, theme = 'lime', isLightTheme = false }) {
   const [pairs, setPairs] = useState(TRENDING_PAIRS);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('trending'); // trending, gainers, volume
@@ -33,14 +33,20 @@ export default function TrendingPairs({ onPairSelect, theme = 'lime' }) {
     if (filter === 'volume') return parseFloat(b.volume) - parseFloat(a.volume);
     return 0;
   });
+  const cardBg = isLightTheme ? 'bg-white' : 'bg-black/40';
+  const textPrimary = isLightTheme ? 'text-gray-900' : 'text-white';
+  const textSecondary = isLightTheme ? 'text-gray-600' : 'text-gray-500';
+  const borderColor = isLightTheme ? 'border-gray-200' : 'border-gray-800/50';
+  const hoverBg = isLightTheme ? 'hover:bg-gray-100' : `hover:bg-${theme}-500/10`;
+
   return (
-    <Card className={`bg-black/40 border border-${theme}-500/20 backdrop-blur-xl`}>
+    <Card className={`${cardBg} border ${isLightTheme ? 'border-gray-200' : `border-${theme}-500/20`} backdrop-blur-xl`}>
       {/* Header */}
-      <div className="p-3 border-b border-gray-800/50">
+      <div className={`p-3 border-b ${borderColor}`}>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Flame className="w-4 h-4 text-orange-400" />
-            <h3 className="text-sm font-medium text-white">Trending on Base</h3>
+            <h3 className={`text-sm font-medium ${textPrimary}`}>Trending on Base</h3>
           </div>
           <Button 
             variant="ghost" 
@@ -65,7 +71,7 @@ export default function TrendingPairs({ onPairSelect, theme = 'lime' }) {
               className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] transition-colors ${
                 filter === key
                   ? `bg-${theme}-500/20 text-${theme}-400 border border-${theme}-500/30`
-                  : 'text-gray-500 hover:text-gray-300 hover:bg-gray-800/50'
+                  : `${textSecondary} ${isLightTheme ? 'hover:text-gray-800 hover:bg-gray-100' : 'hover:text-gray-300 hover:bg-gray-800/50'}`
               }`}
             >
               <Icon className="w-2.5 h-2.5" />
@@ -84,21 +90,21 @@ export default function TrendingPairs({ onPairSelect, theme = 'lime' }) {
               const [from, to] = pair.pair.split('/');
               onPairSelect?.({ from, to });
             }}
-            className={`w-full flex items-center justify-between p-2.5 rounded-lg bg-black/30 hover:bg-${theme}-500/10 transition-colors group`}
+            className={`w-full flex items-center justify-between p-2.5 rounded-lg ${isLightTheme ? 'bg-gray-50 hover:bg-gray-100' : `bg-black/30 hover:bg-${theme}-500/10`} transition-colors group`}
           >
             <div className="flex items-center gap-2.5">
               <div className={`w-5 h-5 rounded-full bg-${theme}-500/20 flex items-center justify-center text-[10px] font-bold text-${theme}-400`}>
                 {idx + 1}
               </div>
               <div className="text-left">
-                <div className="text-xs font-medium text-white group-hover:text-${theme}-400 transition-colors">
+                <div className={`text-xs font-medium ${textPrimary} group-hover:text-${theme}-400 transition-colors`}>
                   {pair.pair}
                 </div>
-                <div className="text-[10px] text-gray-500">Vol: ${pair.volume}</div>
+                <div className={`text-[10px] ${textSecondary}`}>Vol: ${pair.volume}</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-xs font-mono text-white">
+              <div className={`text-xs font-mono ${textPrimary}`}>
                 ${typeof pair.price === 'number' ? pair.price.toFixed(pair.price < 1 ? 6 : 2) : pair.price}
               </div>
               <div className={`flex items-center justify-end gap-0.5 text-[10px] ${
@@ -117,7 +123,7 @@ export default function TrendingPairs({ onPairSelect, theme = 'lime' }) {
       </div>
 
       {/* Footer */}
-      <div className="p-2 border-t border-gray-800/50">
+      <div className={`p-2 border-t ${borderColor}`}
         <Button 
           variant="ghost" 
           size="sm" 
