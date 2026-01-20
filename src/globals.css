@@ -219,6 +219,47 @@ img[alt="Trust Gauge"],
 }
 
 /* =====================================================
+   POPOVER/TOOLTIP POSITIONING - NEVER UNDER TOPBAR
+   ===================================================== */
+
+/* All popovers and tooltips must stay within viewport and never go under fixed headers */
+[data-radix-popper-content-wrapper] {
+  z-index: 99999 !important;
+}
+
+/* Ensure popovers have proper top boundary to avoid going under topbar */
+[data-radix-popper-content-wrapper][data-side="top"],
+[data-radix-popper-content-wrapper][data-side="bottom"] {
+  max-height: calc(100vh - 120px) !important;
+  overflow-y: auto !important;
+}
+
+/* Tooltip content should never be clipped by topbar */
+[role="tooltip"] {
+  z-index: 99999 !important;
+}
+
+/* Popover content positioning */
+[data-radix-popover-content] {
+  z-index: 99999 !important;
+  max-height: calc(100vh - 120px) !important;
+}
+
+/* Dropdown menus */
+[data-radix-menu-content],
+[data-radix-dropdown-menu-content] {
+  z-index: 99999 !important;
+  max-height: calc(100vh - 120px) !important;
+  overflow-y: auto !important;
+}
+
+/* Select dropdowns */
+[data-radix-select-content] {
+  z-index: 99999 !important;
+  max-height: calc(100vh - 120px) !important;
+}
+
+/* =====================================================
    DARK THEME - DIALOG/MODAL INPUT VISIBILITY
    ===================================================== */
 
