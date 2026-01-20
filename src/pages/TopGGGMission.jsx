@@ -100,7 +100,7 @@ const HeroSection = ({ onLearnMore }) => (
 );
 
 // Feature Card Component
-const FeatureCard = ({ image, title, description, features, reverse = false }) => (
+const FeatureCard = ({ image, title, description, features, reverse = false, sectionId, onLearnMore }) => (
   <div className={cn(
     "flex flex-col lg:flex-row items-center gap-8 py-16",
     reverse && "lg:flex-row-reverse"
@@ -123,7 +123,11 @@ const FeatureCard = ({ image, title, description, features, reverse = false }) =
           </li>
         ))}
       </ul>
-      <Button variant="outline" className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full">
+      <Button 
+        variant="outline" 
+        className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-full"
+        onClick={() => onLearnMore?.(sectionId)}
+      >
         Learn More <ArrowRight className="ml-2" size={16} />
       </Button>
     </div>
