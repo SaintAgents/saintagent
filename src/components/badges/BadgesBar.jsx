@@ -24,8 +24,9 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
         const code = (b.badge_code || b.code || '').toLowerCase();
         if (!code) return null;
         
-        // Preserve earned_date for sorting
+        // Preserve earned_date and created_date for sorting
         const earnedDate = b.earned_date || b.created_date;
+        const createdDate = b.created_date;
         
         // Check QUEST_BADGE_IMAGES first for image URL
         const imageUrl = QUEST_BADGE_IMAGES[code];
