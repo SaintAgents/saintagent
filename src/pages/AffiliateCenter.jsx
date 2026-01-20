@@ -453,9 +453,17 @@ export default function AffiliateCenter() {
                           <Copy className="w-4 h-4" />
                         </Button>
                       </div>
-                      <p className="text-xs mt-2 text-slate-500">
-                        Share this link anywhere. When someone signs up through it, you'll be credited.
-                      </p>
+                      <div className="flex items-center justify-between mt-3">
+                        <p className="text-xs text-slate-500">
+                          Share this link anywhere. When someone signs up through it, you'll be credited.
+                        </p>
+                        <SocialShareButtons 
+                          url={affiliateUrl}
+                          text="I'm building with conscious creators on SaintAgent. Join me!"
+                          platforms={['twitter', 'telegram', 'warpcast', 'whatsapp']}
+                          size="sm"
+                        />
+                      </div>
                     </div>
 
                     {/* Offer-Specific Links */}
