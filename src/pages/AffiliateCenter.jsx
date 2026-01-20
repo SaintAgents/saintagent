@@ -476,26 +476,35 @@ export default function AffiliateCenter() {
                           Click an offer to generate a trackable link.
                         </p>
                         <div className="space-y-2">
-                          {listings.slice(0, 5).map((listing) => (
-                            <div 
-                              key={listing.id}
-                              className={cn(
-                                "p-3 rounded-lg border cursor-pointer transition-colors",
-                                selectedOffer?.id === listing.id 
-                                  ? "border-violet-300 bg-violet-50" 
-                                  : "border-slate-200 hover:border-slate-300"
-                              )}
-                              onClick={() => setSelectedOffer(listing)}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex-1">
-                                  <p className="font-medium text-sm">{listing.title}</p>
-                                  <p className="text-xs text-slate-500">${listing.price_amount}</p>
+                          {listings.slice(0, 5).map((listing) => {
+                            const listingUrl = `${getBaseUrl()}/ListingDetail?id=${listing.id}&ref=${affiliateCode?.code}`;
+                            return (
+                              <div 
+                                key={listing.id}
+                                className={cn(
+                                  "p-3 rounded-lg border cursor-pointer transition-colors",
+                                  selectedOffer?.id === listing.id 
+                                    ? "border-violet-300 bg-violet-50" 
+                                    : "border-slate-200 hover:border-slate-300"
+                                )}
+                                onClick={() => setSelectedOffer(listing)}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1">
+                                    <p className="font-medium text-sm">{listing.title}</p>
+                                    <p className="text-xs text-slate-500">${listing.price_amount}</p>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <OfferShareRow 
+                                      url={listingUrl}
+                                      offerTitle={listing.title}
+                                    />
+                                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                                  </div>
                                 </div>
-                                <ChevronRight className="w-4 h-4 text-slate-400" />
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
 
                         {selectedOffer && (
