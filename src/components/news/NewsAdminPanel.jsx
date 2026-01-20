@@ -15,6 +15,7 @@ import {
   Newspaper, Video, Link2, Upload, Save, X 
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
 
 const CATEGORIES = ['announcements', 'updates', 'community', 'missions', 'events', 'tech', 'spiritual'];
 const TYPES = ['article', 'video', 'link'];
@@ -86,7 +87,14 @@ function ArticleForm({ article, onSave, onCancel, isSaving }) {
         </div>
         
         <div className="col-span-2">
-          <Label>Summary</Label>
+          <div className="flex items-center justify-between">
+            <Label>Summary</Label>
+            <AIWritingAssistant 
+              text={form.summary} 
+              onApply={(enhanced) => setForm({ ...form, summary: enhanced })} 
+              disabled={!form.summary?.trim()}
+            />
+          </div>
           <Textarea 
             value={form.summary} 
             onChange={(e) => setForm({ ...form, summary: e.target.value })}
@@ -96,7 +104,14 @@ function ArticleForm({ article, onSave, onCancel, isSaving }) {
         </div>
         
         <div className="col-span-2">
-          <Label>Content (Markdown supported)</Label>
+          <div className="flex items-center justify-between">
+            <Label>Content (Markdown supported)</Label>
+            <AIWritingAssistant 
+              text={form.content} 
+              onApply={(enhanced) => setForm({ ...form, content: enhanced })} 
+              disabled={!form.content?.trim()}
+            />
+          </div>
           <Textarea 
             value={form.content} 
             onChange={(e) => setForm({ ...form, content: e.target.value })}
