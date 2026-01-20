@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import AIRecommendationEngine from '@/components/ai/AIRecommendationEngine';
+import ArticleEngagement from '@/components/news/ArticleEngagement';
 
 const CATEGORY_COLORS = {
   announcements: 'bg-[#051C2C] text-white',
@@ -223,6 +224,11 @@ function ArticleDetail({ article, onBack, articles, onNavigate }) {
                 ))}
               </div>
             )}
+
+            {/* Engagement Section */}
+            <div className="mt-12 pt-8 border-t border-slate-300">
+              <ArticleEngagement article={article} />
+            </div>
           </div>
 
           <aside className="hidden lg:block w-64 shrink-0">
