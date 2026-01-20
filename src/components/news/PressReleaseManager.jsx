@@ -43,6 +43,12 @@ const STATUS_COLORS = {
   scheduled: 'bg-blue-100 text-blue-700'
 };
 
+const DISTRIBUTION_STATUS_ICONS = {
+  pending: { icon: Clock, color: 'text-slate-400' },
+  sent: { icon: CheckCircle2, color: 'text-green-500' },
+  failed: { icon: XCircle, color: 'text-red-500' }
+};
+
 export default function PressReleaseManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRelease, setEditingRelease] = useState(null);
