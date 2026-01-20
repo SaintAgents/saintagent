@@ -549,6 +549,60 @@ export default function UserManagement() {
                 </Select>
               </div>
 
+              {/* SA Number Management */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-3">SA# Management</h3>
+                <div className="p-3 rounded-lg bg-slate-50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-600">Current SA#:</p>
+                      <p className="font-semibold text-lg text-slate-900">
+                        {selectedUser.sa_number ? `SA#${selectedUser.sa_number}` : 'Not assigned'}
+                      </p>
+                    </div>
+                    {selectedUser.sa_number && !selectedUser.sa_number.startsWith('Demo') && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="border-rose-300 text-rose-700 hover:bg-rose-100"
+                        onClick={() => handleRemoveSA(selectedUser)}
+                      >
+                        <Recycle className="w-4 h-4 mr-1" />
+                        Return to Pool
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {!selectedUser.sa_number && (
+                    <div className="border-t pt-3">
+                      <p className="text-sm text-slate-600 mb-2">Assign from pool ({unassignedPool.length} available):</p>
+                      <div className="flex gap-2">
+                        <Select
+                          value={selectedSAToAssign}
+                          onValueChange={setSelectedSAToAssign}
+                        >
+                          <SelectTrigger className="w-48">
+                            <SelectValue placeholder="Select SA#" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {unassignedPool.map(saNum => (
+                              <SelectItem key={saNum} value={saNum}>SA#{saNum}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Button 
+                          size="sm" 
+                          disabled={!selectedSAToAssign || assigningSA}
+                          onClick={() => handleAssignSAFromPool(selectedUser.id, selectedSAToAssign)}
+                        >
+                          {assigningSA ? 'Assigning...' : 'Assign'}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Profile Basics */}
               <div>
                 <h3 className="font-semibold text-slate-900 mb-3">Profile Basics</h3>
