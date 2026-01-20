@@ -467,32 +467,24 @@ export default function SaintBrowser({ open, onClose }) {
                   </div>
                 )}
                 
-                {/* Iframe with proxy fallback info */}
-                <div className="w-full h-full flex flex-col">
-                  <iframe
-                    ref={iframeRef}
-                    src={url}
-                    className="w-full flex-1 border-0"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                    title="SaintBrowser"
-                    onError={() => {
-                      toast.error('Some sites block embedding. Try opening in new tab.');
-                    }}
-                  />
-                  
-                  {/* Fallback notice */}
-                  <div className="bg-black/80 border-t border-lime-500/20 px-3 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <AlertTriangle className="w-3 h-3 text-yellow-500" />
-                      Some sites may not display due to security restrictions
+                {/* External link notice - most sites block iframe embedding */}
+                <div className="w-full h-full flex flex-col bg-[#0a0a0f]">
+                  <div className="flex-1 flex flex-col items-center justify-center p-8">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-lime-400/20 to-emerald-500/20 border border-lime-500/30 flex items-center justify-center mb-6">
+                      <ExternalLink className="w-8 h-8 text-lime-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">External Site</h3>
+                    <p className="text-gray-400 text-center max-w-md mb-6">
+                      Most websites block embedded viewing for security. Click below to open in a new tab.
+                    </p>
+                    <div className="p-4 rounded-xl bg-black/40 border border-lime-500/20 mb-6 max-w-lg w-full">
+                      <p className="text-lime-400 text-sm font-mono truncate">{url}</p>
                     </div>
                     <Button
-                      variant="ghost"
-                      size="sm"
                       onClick={() => window.open(url, '_blank')}
-                      className="h-6 text-xs text-lime-400 hover:bg-lime-500/10 gap-1"
+                      className="bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-600 hover:to-emerald-600 text-black font-semibold px-6 py-3 gap-2"
                     >
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-4 h-4" />
                       Open in New Tab
                     </Button>
                   </div>
