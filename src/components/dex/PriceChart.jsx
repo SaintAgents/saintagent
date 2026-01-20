@@ -14,6 +14,7 @@ export default function PriceChart({ pair, theme = 'lime' }) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPrice, setCurrentPrice] = useState(3247.82);
   const [priceChange, setPriceChange] = useState(2.4);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Generate mock price data with OHLC for candlestick
   const chartData = useMemo(() => {
