@@ -1344,6 +1344,37 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         </div>
                       </div>
                     }
+                    {profile?.human_design_type &&
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">⚡</div>
+                        <div>
+                          <p className="text-cyan-400 text-xs">Human Design</p>
+                          <p className="text-sm font-semibold text-slate-900 capitalize">{profile.human_design_type.replace(/_/g, ' ')}</p>
+                        </div>
+                      </div>
+                    }
+                    {profile?.enneagram_type &&
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
+                          <span className="text-sm font-bold text-rose-600">{profile.enneagram_type}</span>
+                        </div>
+                        <div>
+                          <p className="text-cyan-400 text-xs">Enneagram</p>
+                          <p className="text-sm font-semibold text-slate-900">Type {profile.enneagram_type}</p>
+                        </div>
+                      </div>
+                    }
+                    {profile?.mbti_type &&
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-bold text-violet-600">MB</span>
+                        </div>
+                        <div>
+                          <p className="text-cyan-400 text-xs">MBTI</p>
+                          <p className="text-sm font-semibold text-slate-900">{profile.mbti_type}</p>
+                        </div>
+                      </div>
+                    }
                   </div>
                 </div>
               </div>

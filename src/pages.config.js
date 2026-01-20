@@ -15,6 +15,7 @@ import Events from './pages/Events';
 import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
 import Forum from './pages/Forum';
+import G3Dex from './pages/G3Dex';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Initiations from './pages/Initiations';
@@ -49,7 +50,6 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import G3Dex from './pages/G3Dex';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +71,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "FindCollaborators": FindCollaborators,
     "Forum": Forum,
+    "G3Dex": G3Dex,
     "Gamification": Gamification,
     "Home": Home,
     "Initiations": Initiations,
@@ -105,7 +106,6 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "G3Dex": G3Dex,
 }
 
 export const pagesConfig = {
