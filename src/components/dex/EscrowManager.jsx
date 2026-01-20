@@ -94,13 +94,13 @@ export default function EscrowManager({ theme = 'lime' }) {
         <div className="flex items-center gap-2">
           <Label className="text-xs text-gray-400">Asset Type:</Label>
           <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className={`w-48 h-8 text-xs bg-black/40 border-${theme}-500/30`}>
-              <SelectValue />
+            <SelectTrigger className={`w-48 h-8 text-xs bg-black/60 border-${theme}-500/30 text-white`}>
+              <SelectValue placeholder="All Types" />
             </SelectTrigger>
-            <SelectContent className="bg-black border-gray-800">
-              <SelectItem value="all" className="text-white text-xs">All Types</SelectItem>
+            <SelectContent className="bg-[#0a0a0f] border-gray-700">
+              <SelectItem value="all" className="text-white text-xs hover:bg-lime-500/20">All Types</SelectItem>
               {ESCROW_TYPES.map(type => (
-                <SelectItem key={type.id} value={type.id} className="text-white text-xs">
+                <SelectItem key={type.id} value={type.id} className="text-white text-xs hover:bg-lime-500/20">
                   {type.label}
                 </SelectItem>
               ))}
