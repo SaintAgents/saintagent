@@ -16,6 +16,7 @@ import MiniProfile from '@/components/profile/MiniProfile';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
 
 export default function CommunityFeed() {
   const [newPostText, setNewPostText] = useState('');
@@ -340,7 +341,14 @@ export default function CommunityFeed() {
             {audioPreview && <audio src={audioPreview} controls className="w-full" />}
 
             <div className="flex items-center justify-between">
-              <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
+              <div className="flex items-center gap-2">
+                <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
+                <AIWritingAssistant 
+                  text={newPostText} 
+                  onApply={(enhanced) => setNewPostText(enhanced)} 
+                  disabled={!newPostText.trim()}
+                />
+              </div>
               <Button
                 onClick={handleCreatePost}
                 disabled={(!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0) || createPostMutation.isPending}
@@ -448,7 +456,7 @@ export default function CommunityFeed() {
                               {profile?.display_name?.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1 flex items-end gap-2">
+                          <div className="flex-1 space-y-2">
                             <Textarea
                               value={commentText[post.id] || ''}
                               onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
@@ -456,15 +464,25 @@ export default function CommunityFeed() {
                               className="text-sm resize-none"
                               rows={2}
                             />
-                            <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
-                            <Button
-                              size="sm"
-                              onClick={() => handleComment(post.id)}
-                              disabled={!commentText[post.id]?.trim()}
-                              className="bg-violet-600 hover:bg-violet-700"
-                            >
-                              <Send className="w-4 h-4" />
-                            </Button>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-1">
+                                <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
+                                <AIWritingAssistant 
+                                  text={commentText[post.id] || ''} 
+                                  onApply={(enhanced) => setCommentText({ ...commentText, [post.id]: enhanced })} 
+                                  disabled={!commentText[post.id]?.trim()}
+                                  buttonSize="sm"
+                                />
+                              </div>
+                              <Button
+                                size="sm"
+                                onClick={() => handleComment(post.id)}
+                                disabled={!commentText[post.id]?.trim()}
+                                className="bg-violet-600 hover:bg-violet-700"
+                              >
+                                <Send className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </div>

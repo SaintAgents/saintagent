@@ -27,6 +27,7 @@ import {
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
 import { formatDistanceToNow } from 'date-fns';
 
 const CATEGORIES = [
@@ -454,7 +455,14 @@ export default function Forum() {
               </Select>
             </div>
             <div>
-              <label className="text-sm font-medium">Content</label>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">Content</label>
+                <AIWritingAssistant 
+                  text={newPost.content} 
+                  onApply={(enhanced) => setNewPost({ ...newPost, content: enhanced })} 
+                  disabled={!newPost.content?.trim()}
+                />
+              </div>
               <Textarea
                 value={newPost.content}
                 onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
@@ -635,20 +643,27 @@ export default function Forum() {
                     ))
                   )}
                 </div>
-                <div className="flex gap-2">
+                <div className="space-y-2">
                   <Textarea
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
                     placeholder="Write a reply..."
-                    className="flex-1 min-h-[80px]"
+                    className="min-h-[80px]"
                   />
-                  <Button 
-                    onClick={handleReply}
-                    disabled={!replyContent.trim() || createReplyMutation.isPending}
-                    className="bg-violet-600 hover:bg-violet-700"
-                  >
-                    Reply
-                  </Button>
+                  <div className="flex items-center justify-between">
+                    <AIWritingAssistant 
+                      text={replyContent} 
+                      onApply={(enhanced) => setReplyContent(enhanced)} 
+                      disabled={!replyContent.trim()}
+                    />
+                    <Button 
+                      onClick={handleReply}
+                      disabled={!replyContent.trim() || createReplyMutation.isPending}
+                      className="bg-violet-600 hover:bg-violet-700"
+                    >
+                      Reply
+                    </Button>
+                  </div>
                 </div>
               </div>
             </>
