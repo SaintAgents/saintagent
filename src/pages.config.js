@@ -37,6 +37,7 @@ import Missions from './pages/Missions';
 import News from './pages/News';
 import Onboarding from './pages/Onboarding';
 import Planner from './pages/Planner';
+import PressAnalytics from './pages/PressAnalytics';
 import Profile from './pages/Profile';
 import Profiles from './pages/Profiles';
 import ProjectCreate from './pages/ProjectCreate';
@@ -50,7 +51,6 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import PressAnalytics from './pages/PressAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -94,6 +94,7 @@ export const PAGES = {
     "News": News,
     "Onboarding": Onboarding,
     "Planner": Planner,
+    "PressAnalytics": PressAnalytics,
     "Profile": Profile,
     "Profiles": Profiles,
     "ProjectCreate": ProjectCreate,
@@ -107,7 +108,6 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "PressAnalytics": PressAnalytics,
 }
 
 export const pagesConfig = {
