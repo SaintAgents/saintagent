@@ -123,7 +123,7 @@ export default function TrendingPairs({ onPairSelect, theme = 'lime', isLightThe
       </div>
 
       {/* Footer */}
-      <div className={`p-2 border-t ${borderColor}`}
+      <div className={`p-2 border-t ${borderColor}`}>
         <Button 
           variant="ghost" 
           size="sm" 
