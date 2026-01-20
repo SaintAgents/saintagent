@@ -508,7 +508,7 @@ const Footer = () => (
 export default function TopGGGMission() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-950 via-purple-900 to-black text-white">
-      <Navigation />
+      <InPageNavigation />
       <HeroSection />
       <TechnologySections />
       <GaiaPaySection />
