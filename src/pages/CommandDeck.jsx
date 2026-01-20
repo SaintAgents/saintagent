@@ -66,6 +66,8 @@ import BookingRequestModal from '@/components/meetings/BookingRequestModal';
 import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
+import NewsCard from '@/components/news/NewsCard';
+import { Newspaper } from 'lucide-react';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
