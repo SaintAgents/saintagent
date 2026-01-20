@@ -23,6 +23,9 @@ import PriceChart from '@/components/dex/PriceChart';
 import PortfolioPanel from '@/components/dex/PortfolioPanel';
 import PerpsTab from '@/components/dex/PerpsTab';
 import StatsBar from '@/components/dex/StatsBar';
+import NeoNFTMarketplace from '@/components/dex/NeoNFTMarketplace';
+import EscrowManager from '@/components/dex/EscrowManager';
+import ResourceBridge from '@/components/dex/ResourceBridge';
 
 export default function G3Dex() {
   const [activeTab, setActiveTab] = useState('swap');
@@ -239,40 +242,61 @@ export default function G3Dex() {
           {/* Main Trading Area */}
           <div className="xl:col-span-5 space-y-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-5`}>
+              <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-8 gap-0.5`}>
                 <TabsTrigger 
                   value="swap" 
                   className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <Repeat className="w-3 h-3 mr-1.5" />
+                  <Repeat className="w-3 h-3 mr-1" />
                   Swap
                 </TabsTrigger>
                 <TabsTrigger 
                   value="limit" 
                   className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <TrendingUp className="w-3 h-3 mr-1.5" />
+                  <TrendingUp className="w-3 h-3 mr-1" />
                   Limit
                 </TabsTrigger>
                 <TabsTrigger 
                   value="dca" 
                   className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <Clock className="w-3 h-3 mr-1.5" />
+                  <Clock className="w-3 h-3 mr-1" />
                   DCA
                 </TabsTrigger>
                 <TabsTrigger 
                   value="perps" 
                   className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <Activity className="w-3 h-3 mr-1.5" />
+                  <Activity className="w-3 h-3 mr-1" />
                   Perps
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="neonft" 
+                  className={`data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 text-xs`}
+                >
+                  <Shield className="w-3 h-3 mr-1" />
+                  Neo-NFT
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="escrow" 
+                  className={`data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400 text-xs`}
+                >
+                  <Lock className="w-3 h-3 mr-1" />
+                  Escrow
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="bridge" 
+                  className={`data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 text-xs`}
+                >
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  Bridge
                 </TabsTrigger>
                 <TabsTrigger 
                   value="history" 
                   className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <History className="w-3 h-3 mr-1.5" />
+                  <History className="w-3 h-3 mr-1" />
                   History
                 </TabsTrigger>
               </TabsList>
@@ -310,6 +334,18 @@ export default function G3Dex() {
                   walletAddress={walletAddress}
                   theme={currentTheme.accent}
                 />
+              </TabsContent>
+
+              <TabsContent value="neonft" className="mt-4">
+                <NeoNFTMarketplace theme={currentTheme.accent} />
+              </TabsContent>
+
+              <TabsContent value="escrow" className="mt-4">
+                <EscrowManager theme={currentTheme.accent} />
+              </TabsContent>
+
+              <TabsContent value="bridge" className="mt-4">
+                <ResourceBridge theme={currentTheme.accent} />
               </TabsContent>
 
               <TabsContent value="history" className="mt-4">
