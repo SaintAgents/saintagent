@@ -8,15 +8,19 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, Sparkles, Image as ImageIcon, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { createPageUrl } from '@/utils';
+import { toast } from 'sonner';
 
 export default function CommunityFeedCard({ maxHeight = '400px' }) {
   const [newPostText, setNewPostText] = useState('');
   const [commentText, setCommentText] = useState({});
   const [expandedComments, setExpandedComments] = useState({});
+  const [pendingImage, setPendingImage] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef(null);
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -53,14 +57,36 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
         author_id: profile.user_id,
         author_name: profile.display_name,
         author_avatar: profile.avatar_url,
-        content: payload.content || ''
+        content: payload.content || '',
+        image_urls: payload.image_urls || []
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       setNewPostText('');
+      setPendingImage(null);
     }
   });
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setUploadingImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setPendingImage(file_url);
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const removePendingImage = () => {
+    setPendingImage(null);
+  };
 
   const likeMutation = useMutation({
     mutationFn: async ({ postId, userId }) => {
@@ -106,8 +132,11 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   });
 
   const handleCreatePost = async () => {
-    if (!newPostText.trim()) return;
-    createPostMutation.mutate({ content: newPostText.trim() });
+    if (!newPostText.trim() && !pendingImage) return;
+    createPostMutation.mutate({ 
+      content: newPostText.trim(),
+      image_urls: pendingImage ? [pendingImage] : []
+    });
   };
 
   const handleLike = (postId) => {
@@ -167,11 +196,47 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
               className="text-sm"
               onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleCreatePost()}
             />
+            
+            {/* Pending Image Preview */}
+            {pendingImage && (
+              <div className="relative inline-block">
+                <img 
+                  src={pendingImage} 
+                  alt="Pending upload" 
+                  className="h-20 w-auto rounded-lg object-cover border border-slate-200"
+                />
+                <button
+                  onClick={removePendingImage}
+                  className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+                  title="Remove image"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            
             <div className="flex items-center justify-end gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImage}
+              >
+                <ImageIcon className={cn("w-4 h-4", uploadingImage && "animate-pulse")} />
+              </Button>
               <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
               <Button
                 onClick={handleCreatePost}
-                disabled={!newPostText.trim() || createPostMutation.isPending}
+                disabled={(!newPostText.trim() && !pendingImage) || createPostMutation.isPending}
                 size="sm"
                 className="bg-violet-600 hover:bg-violet-700 h-7 text-xs"
               >
@@ -215,6 +280,20 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
 
                     {/* Post Content */}
                     <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{post.content}</p>
+                    
+                    {/* Post Images */}
+                    {post.image_urls?.length > 0 && (
+                      <div className="mt-2">
+                        {post.image_urls.map((url, idx) => (
+                          <img 
+                            key={idx}
+                            src={url} 
+                            alt="Post image" 
+                            className="rounded-lg max-h-48 w-auto object-cover"
+                          />
+                        ))}
+                      </div>
+                    )}
 
                     {/* Post Actions */}
                     <div className="flex items-center gap-4 pt-1">

@@ -247,7 +247,7 @@ export default function RightSideTabs() {
       {/* Help Tab */}
       <div 
         className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
-        style={{ bottom: '140px' }}
+        style={{ bottom: '200px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
@@ -383,7 +383,7 @@ export default function RightSideTabs() {
       {/* Chat Tab */}
       <div 
         className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
-        style={{ bottom: '80px' }}
+        style={{ bottom: '130px' }}
         onMouseEnter={handleChatMouseEnter}
         onMouseLeave={handleChatMouseLeave}
       >
@@ -399,9 +399,9 @@ export default function RightSideTabs() {
         >
           <Globe className="w-5 h-5" />
           {onlineUsers.length > 0 && (
-            <Badge className="absolute -top-1 -left-1 bg-emerald-500 text-white text-[10px] px-1 py-0 h-4 min-w-4">
+            <span className="absolute -top-1 -left-1 bg-emerald-500 text-white text-[10px] px-1.5 rounded-full h-4 min-w-4 flex items-center justify-center font-medium">
               {onlineUsers.length}
-            </Badge>
+            </span>
           )}
         </div>
 
