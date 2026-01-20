@@ -141,7 +141,7 @@ function PhaseVisualization({ phase, timelineChoice, approachChoice, coherence, 
     const cx = w / 2;
     const cy = h / 2;
 
-    ctx.fillStyle = 'rgba(5, 5, 15, 0.1)';
+    ctx.fillStyle = 'rgba(240, 240, 250, 0.1)';
     ctx.fillRect(0, 0, w, h);
 
     const drawStar = (x, y, spikes, outerR, innerR, color, glow = 0) => {
@@ -276,7 +276,7 @@ function PhaseVisualization({ phase, timelineChoice, approachChoice, coherence, 
       ref={canvasRef}
       width={300}
       height={300}
-      className="mx-auto rounded-xl bg-slate-900"
+      className="mx-auto rounded-xl bg-slate-200"
     />
   );
 }
@@ -336,21 +336,21 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
   const canProceed = !phase.choice || choices[phase.id];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-violet-950/50 to-slate-950 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-slate-100 via-violet-100/50 to-slate-100 p-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/20 border border-violet-500/30 mb-4">
-            <Eye className="w-4 h-4 text-violet-400" />
-            <span className="text-violet-300 text-sm font-medium">Sacred Initiation</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-100 border border-violet-300 mb-4">
+            <Eye className="w-4 h-4 text-violet-600" />
+            <span className="text-violet-700 text-sm font-medium">Sacred Initiation</span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">The Seventh Seal</h1>
-          <p className="text-violet-300">Timeline Convergence & Disclosure</p>
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">The Seventh Seal</h1>
+          <p className="text-violet-600">Timeline Convergence & Disclosure</p>
         </div>
 
         {/* Progress */}
         <div className="mb-6">
-          <Progress value={progress} className="h-1.5 bg-slate-800" />
+          <Progress value={progress} className="h-1.5 bg-slate-200" />
           <div className="flex justify-between mt-2">
             {INITIATION_PHASES.map((p, i) => (
               <div 
@@ -358,8 +358,8 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
                 className={cn(
                   "w-2 h-2 rounded-full",
                   i < currentPhase ? "bg-violet-500" :
-                  i === currentPhase ? "bg-amber-400" :
-                  "bg-slate-700"
+                  i === currentPhase ? "bg-amber-500" :
+                  "bg-slate-300"
                 )}
               />
             ))}
@@ -377,21 +377,21 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
         </div>
 
         {/* Phase Content */}
-        <Card className="bg-slate-800/30 border-violet-500/20 mb-6">
+        <Card className="bg-white/80 border-violet-200 mb-6 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-3">
+            <CardTitle className="text-slate-800 flex items-center gap-3">
               {currentPhase < INITIATION_PHASES.length - 1 ? (
-                <Lock className="w-5 h-5 text-violet-400" />
+                <Lock className="w-5 h-5 text-violet-500" />
               ) : (
-                <Unlock className="w-5 h-5 text-amber-400" />
+                <Unlock className="w-5 h-5 text-amber-500" />
               )}
               {phase.title}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Transmission text */}
-            <div className="p-4 rounded-xl bg-violet-900/20 border border-violet-500/10">
-              <p className="text-violet-100 whitespace-pre-line leading-relaxed italic">
+            <div className="p-4 rounded-xl bg-violet-50 border border-violet-200">
+              <p className="text-slate-700 whitespace-pre-line leading-relaxed italic">
                 {phase.content}
               </p>
             </div>
@@ -409,7 +409,7 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
             {/* Choice options */}
             {phase.choice && (
               <div className="space-y-3">
-                <p className="text-slate-300 font-medium">{phase.choice.question}</p>
+                <p className="text-slate-700 font-medium">{phase.choice.question}</p>
                 <div className="grid gap-2">
                   {phase.choice.options.map(option => (
                     <button
@@ -418,8 +418,8 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
                       className={cn(
                         "p-4 rounded-xl border text-left transition-all",
                         choices[phase.id] === option.id
-                          ? "bg-violet-600/30 border-violet-400 text-white"
-                          : "bg-slate-800/50 border-slate-700 text-slate-300 hover:border-violet-500/50"
+                          ? "bg-violet-100 border-violet-400 text-violet-800"
+                          : "bg-white border-slate-200 text-slate-600 hover:border-violet-300"
                       )}
                     >
                       <span className="font-medium">{option.label}</span>
@@ -437,7 +437,7 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
             variant="outline"
             onClick={() => setCurrentPhase(p => Math.max(0, p - 1))}
             disabled={currentPhase === 0}
-            className="border-slate-600 text-slate-300"
+            className="border-slate-300 text-slate-600 hover:bg-slate-100"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
             Back
@@ -447,7 +447,7 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
             <Button
               onClick={() => badgeMutation.mutate()}
               disabled={badgeMutation.isPending}
-              className="bg-gradient-to-r from-violet-600 to-amber-500 px-8"
+              className="bg-gradient-to-r from-violet-600 to-amber-500 px-8 text-white"
             >
               {badgeMutation.isPending ? 'Integrating...' : 'Complete Initiation'}
             </Button>
@@ -455,7 +455,7 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
             <Button
               onClick={() => setCurrentPhase(p => p + 1)}
               disabled={!canProceed}
-              className="bg-violet-600 hover:bg-violet-700"
+              className="bg-violet-600 hover:bg-violet-700 text-white"
             >
               Continue
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -464,15 +464,15 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
         </div>
 
         {/* Rewards */}
-        <div className="mt-8 p-4 rounded-xl bg-slate-800/30 border border-slate-700">
+        <div className="mt-8 p-4 rounded-xl bg-white/80 border border-slate-200 shadow">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm text-slate-400">Completion Reward</p>
-              <p className="text-white font-semibold">7th Seal Initiated Badge</p>
+              <p className="text-sm text-slate-500">Completion Reward</p>
+              <p className="text-slate-800 font-semibold">7th Seal Initiated Badge</p>
             </div>
             <div className="text-right">
-              <p className="text-violet-400 font-bold">{rewards.rp} RP</p>
-              <p className="text-amber-400 text-sm">{rewards.ggg} GGG</p>
+              <p className="text-violet-600 font-bold">{rewards.rp} RP</p>
+              <p className="text-amber-600 text-sm">{rewards.ggg} GGG</p>
             </div>
           </div>
         </div>
