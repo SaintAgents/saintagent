@@ -52,8 +52,8 @@ import Studio from './pages/Studio';
 import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
-import UserGuide from './pages/UserGuide';
 import TopGGGMission from './pages/TopGGGMission';
+import UserGuide from './pages/UserGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -112,8 +112,8 @@ export const PAGES = {
     "SynchronicityEngine": SynchronicityEngine,
     "Teams": Teams,
     "Terms": Terms,
-    "UserGuide": UserGuide,
     "TopGGGMission": TopGGGMission,
+    "UserGuide": UserGuide,
 }
 
 export const pagesConfig = {

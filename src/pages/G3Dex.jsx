@@ -267,11 +267,11 @@ export default function G3Dex() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 w-full px-4 py-4 pl-6 md:pl-32 lg:pl-[340px]">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <div className="relative z-10 w-full px-2 sm:px-3 md:px-4 py-3 md:py-4 ml-0 md:ml-2 lg:ml-4">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 md:gap-4 max-w-[1600px] mx-auto">
           
           {/* Left Sidebar - Chart & Portfolio */}
-          <div className="xl:col-span-4 space-y-4">
+          <div className="xl:col-span-5 space-y-3 md:space-y-4">
             <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
             {showPortfolio && walletConnected && (
               <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
@@ -279,7 +279,7 @@ export default function G3Dex() {
           </div>
 
           {/* Main Trading Area */}
-          <div className="xl:col-span-5 space-y-4">
+          <div className="xl:col-span-4 space-y-3 md:space-y-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-8 gap-0.5`}>
                 <TabsTrigger 
