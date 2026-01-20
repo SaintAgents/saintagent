@@ -32,6 +32,7 @@ import Messages from './pages/Messages';
 import MissionCollaboration from './pages/MissionCollaboration';
 import MissionDetail from './pages/MissionDetail';
 import Missions from './pages/Missions';
+import News from './pages/News';
 import Onboarding from './pages/Onboarding';
 import Planner from './pages/Planner';
 import Profile from './pages/Profile';
@@ -47,7 +48,6 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import News from './pages/News';
 import __Layout from './Layout.jsx';
 
 
@@ -86,6 +86,7 @@ export const PAGES = {
     "MissionCollaboration": MissionCollaboration,
     "MissionDetail": MissionDetail,
     "Missions": Missions,
+    "News": News,
     "Onboarding": Onboarding,
     "Planner": Planner,
     "Profile": Profile,
@@ -101,7 +102,6 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "News": News,
 }
 
 export const pagesConfig = {

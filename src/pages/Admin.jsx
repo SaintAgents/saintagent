@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -18,6 +18,7 @@ import BadgeRewardsManager from '@/components/admin/BadgeRewardsManager';
 import RPSettingsManager from '@/components/admin/RPSettingsManager';
 import AdminChallenges from '@/components/admin/AdminChallenges';
 import AffiliateSettings from '@/components/admin/AffiliateSettings';
+import NewsAdminPanel from '@/components/news/NewsAdminPanel';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -122,6 +123,10 @@ export default function Admin() {
               <Target className="w-4 h-4" />
               Challenges
             </TabsTrigger>
+            <TabsTrigger value="news" className="gap-2 px-3 py-2">
+              <Newspaper className="w-4 h-4" />
+              News
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -174,6 +179,10 @@ export default function Admin() {
 
           <TabsContent value="challenges">
             <AdminChallenges />
+          </TabsContent>
+
+          <TabsContent value="news">
+            <NewsAdminPanel />
           </TabsContent>
         </Tabs>
       </div>
