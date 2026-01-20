@@ -196,6 +196,8 @@ export default function News() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
   const [showAdmin, setShowAdmin] = useState(false);
+  const urlParams = new URLSearchParams(window.location.search);
+  const articleIdFromUrl = urlParams.get('articleId');
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -224,6 +226,16 @@ export default function News() {
       view_count: (article.view_count || 0) + 1 
     });
   };
+
+  // Auto-select article from URL parameter
+  React.useEffect(() => {
+    if (articleIdFromUrl && articles.length > 0 && !selectedArticle) {
+      const foundArticle = articles.find(a => a.id === articleIdFromUrl);
+      if (foundArticle) {
+        handleArticleClick(foundArticle);
+      }
+    }
+  }, [articleIdFromUrl, articles]);
 
   if (showAdmin && isAdmin) {
     return <NewsAdminPanel onBack={() => { setShowAdmin(false); refetch(); }} />;

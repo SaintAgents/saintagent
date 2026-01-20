@@ -52,7 +52,7 @@ export default function NewsCard() {
             if (article.type === 'link' && article.external_link) {
               window.open(article.external_link, '_blank');
             } else {
-              window.location.href = createPageUrl('News');
+              window.location.href = createPageUrl(`News?articleId=${article.id}`);
             }
           }}
         >
