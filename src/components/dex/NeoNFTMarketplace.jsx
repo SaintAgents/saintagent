@@ -197,7 +197,7 @@ function NeoNFTCard({ nft, onClick, theme = 'lime' }) {
             </div>
             <Button 
               size="sm" 
-              className={`bg-gradient-to-r from-${theme}-500 to-emerald-500 hover:from-${theme}-400 hover:to-emerald-400 text-black`}
+              className="bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-semibold"
               onClick={(e) => { e.stopPropagation(); }}
             >
               Trade
