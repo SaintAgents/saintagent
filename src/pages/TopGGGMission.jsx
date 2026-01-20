@@ -11,10 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-// Navigation Component
-const Navigation = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+// In-page Navigation (sticky within content area)
+const InPageNavigation = () => {
   const navItems = [
     { label: 'Ultranet', href: '#ultranet' },
     { label: 'Technology', href: '#technology' },
@@ -24,61 +22,31 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-purple-900/80 backdrop-blur-md border-b border-purple-700/50">
+    <div className="sticky top-0 z-40 bg-purple-900/95 backdrop-blur-md border-b border-purple-700/50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img 
             src="https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759376854470_b9626868.png" 
             alt="GGE Logo" 
-            className="h-10 w-10 object-contain"
+            className="h-8 w-8 object-contain"
           />
-          <span className="text-yellow-400 font-bold text-lg tracking-wide">GAIA GLOBAL ENTERPRISE</span>
+          <span className="text-yellow-400 font-bold text-base tracking-wide hidden sm:block">GAIA GLOBAL ENTERPRISE</span>
         </div>
         
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="flex items-center gap-4 md:gap-6 overflow-x-auto">
           {navItems.map((item) => (
             <a 
               key={item.label}
               href={item.href}
-              className="text-gray-200 hover:text-yellow-400 transition-colors font-medium"
+              className="text-gray-200 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap"
             >
               {item.label}
             </a>
           ))}
-          <Button className="bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold rounded-full px-6">
-            Access Soon
-          </Button>
         </div>
-
-        {/* Mobile Menu Toggle */}
-        <button 
-          className="md:hidden text-white"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          <Menu size={24} />
-        </button>
       </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-purple-900/95 border-t border-purple-700/50 px-4 py-4 space-y-4">
-          {navItems.map((item) => (
-            <a 
-              key={item.label}
-              href={item.href}
-              className="block text-gray-200 hover:text-yellow-400 transition-colors font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
-          <Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold rounded-full">
-            Access Soon
-          </Button>
-        </div>
-      )}
-    </nav>
+    </div>
   );
 };
 
