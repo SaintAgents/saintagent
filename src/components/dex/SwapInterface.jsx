@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowDown, ChevronDown, Loader2, Zap, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowDown, ChevronDown, Loader2, Zap, AlertCircle, CheckCircle2, RefreshCw, Info, Percent } from 'lucide-react';
 import TokenSelector from './TokenSelector';
 import RouteDisplay from './RouteDisplay';
 import { BASE_TOKENS, formatBalance, formatUSD } from './dexUtils';
 
-export default function SwapInterface({ walletConnected, walletAddress, slippage, gasPriority }) {
+export default function SwapInterface({ walletConnected, walletAddress, slippage, gasPriority, onPairChange, theme = 'lime' }) {
   const [fromToken, setFromToken] = useState(BASE_TOKENS[0]); // ETH
   const [toToken, setToToken] = useState(BASE_TOKENS[1]); // USDC
   const [fromAmount, setFromAmount] = useState('');
@@ -18,6 +19,8 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
   const [priceImpact, setPriceImpact] = useState(0);
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(null);
   const [swapStatus, setSwapStatus] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
 
   // Simulate fetching quote when amount changes
   useEffect(() => {
@@ -63,11 +66,22 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
       });
       
       setQuoteLoading(false);
+      
+      // Notify parent of pair change
+      if (onPairChange) {
+        onPairChange({ from: fromToken.symbol, to: toToken.symbol });
+      }
     };
 
     const timer = setTimeout(fetchQuote, 300);
     return () => clearTimeout(timer);
   }, [fromAmount, fromToken, toToken]);
+
+  const refreshQuote = async () => {
+    setRefreshing(true);
+    await new Promise(r => setTimeout(r, 500));
+    setRefreshing(false);
+  };
 
   const handleSwap = async () => {
     if (!walletConnected) return;
@@ -112,166 +126,194 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Swap Card */}
-      <Card className="bg-black/40 border border-lime-500/20 backdrop-blur-xl p-6">
-        <div className="space-y-4">
-          {/* From Token */}
-          <div className="bg-black/40 rounded-xl p-4 border border-lime-500/10">
-            <div className="flex justify-between text-sm text-gray-400 mb-2">
-              <span>You Pay</span>
-              <span>Balance: {formatBalance(fromToken.balance || 0)}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Input
-                type="number"
-                value={fromAmount}
-                onChange={(e) => setFromAmount(e.target.value)}
-                placeholder="0.0"
-                className="flex-1 bg-transparent border-0 text-2xl font-mono text-white placeholder:text-gray-600 focus-visible:ring-0"
-              />
-              <Button
-                variant="outline"
-                className="bg-lime-500/10 border-lime-500/30 hover:bg-lime-500/20 text-lime-400"
-                onClick={() => setTokenSelectorOpen('from')}
-              >
-                <img src={fromToken.logo} alt="" className="w-5 h-5 rounded-full mr-2" />
-                {fromToken.symbol}
-                <ChevronDown className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-            {fromAmount && (
-              <div className="text-sm text-gray-500 mt-1">
-                ≈ {formatUSD(parseFloat(fromAmount) * (fromToken.price || 0))}
-              </div>
-            )}
+    <Card className={`bg-black/40 border border-${theme}-500/20 backdrop-blur-xl p-5`}>
+      <div className="space-y-3">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-medium text-white">Swap</h3>
+            <Badge variant="outline" className={`text-[10px] text-${theme}-400 border-${theme}-500/30`}>
+              Best Route
+            </Badge>
           </div>
-
-          {/* Switch Button */}
-          <div className="flex justify-center -my-2 relative z-10">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={switchTokens}
-              className="bg-black border-lime-500/30 hover:bg-lime-500/20 hover:border-lime-500 text-lime-400 rounded-full h-10 w-10"
+          <div className="flex items-center gap-1">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-7 w-7 text-gray-400 hover:text-white ${refreshing ? 'animate-spin' : ''}`}
+              onClick={refreshQuote}
             >
-              <ArrowDown className="w-5 h-5" />
+              <RefreshCw className="w-3.5 h-3.5" />
             </Button>
           </div>
+        </div>
 
-          {/* To Token */}
-          <div className="bg-black/40 rounded-xl p-4 border border-lime-500/10">
-            <div className="flex justify-between text-sm text-gray-400 mb-2">
-              <span>You Receive</span>
-              <span>Balance: {formatBalance(toToken.balance || 0)}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex-1 text-2xl font-mono text-white">
-                {quoteLoading ? (
-                  <Loader2 className="w-6 h-6 animate-spin text-lime-400" />
-                ) : (
-                  toAmount || '0.0'
-                )}
-              </div>
-              <Button
-                variant="outline"
-                className="bg-lime-500/10 border-lime-500/30 hover:bg-lime-500/20 text-lime-400"
-                onClick={() => setTokenSelectorOpen('to')}
-              >
-                <img src={toToken.logo} alt="" className="w-5 h-5 rounded-full mr-2" />
-                {toToken.symbol}
-                <ChevronDown className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-            {toAmount && (
-              <div className="text-sm text-gray-500 mt-1">
-                ≈ {formatUSD(parseFloat(toAmount) * (toToken.price || 0))}
-              </div>
-            )}
+        {/* From Token */}
+        <div className={`bg-black/40 rounded-xl p-4 border border-${theme}-500/10 transition-all hover:border-${theme}-500/30`}>
+          <div className="flex justify-between text-xs text-gray-400 mb-2">
+            <span>You Pay</span>
+            <button 
+              className={`hover:text-${theme}-400 transition-colors`}
+              onClick={() => setFromAmount(fromToken.balance?.toString() || '0')}
+            >
+              Balance: {formatBalance(fromToken.balance || 0)}
+              <span className={`ml-1 text-${theme}-400`}>MAX</span>
+            </button>
           </div>
-
-          {/* Price Info */}
-          {route && (
-            <div className="bg-lime-500/5 rounded-lg p-3 text-sm space-y-2">
-              <div className="flex justify-between text-gray-400">
-                <span>Rate</span>
-                <span className="text-white">
-                  1 {fromToken.symbol} = {(parseFloat(toAmount) / parseFloat(fromAmount)).toFixed(4)} {toToken.symbol}
-                </span>
-              </div>
-              <div className="flex justify-between text-gray-400">
-                <span>Price Impact</span>
-                <span className={priceImpact > 1 ? 'text-red-400' : 'text-lime-400'}>
-                  {priceImpact.toFixed(2)}%
-                </span>
-              </div>
-              <div className="flex justify-between text-gray-400">
-                <span>Slippage</span>
-                <span className="text-white">{slippage}%</span>
-              </div>
-              <div className="flex justify-between text-gray-400">
-                <span>Est. Gas</span>
-                <span className="text-white">{route.estimatedGas} ETH</span>
-              </div>
+          <div className="flex items-center gap-3">
+            <Input
+              type="number"
+              value={fromAmount}
+              onChange={(e) => setFromAmount(e.target.value)}
+              placeholder="0.0"
+              className="flex-1 bg-transparent border-0 text-2xl font-mono text-white placeholder:text-gray-600 focus-visible:ring-0 p-0"
+            />
+            <Button
+              variant="outline"
+              className={`bg-${theme}-500/10 border-${theme}-500/30 hover:bg-${theme}-500/20 text-${theme}-400 h-10`}
+              onClick={() => setTokenSelectorOpen('from')}
+            >
+              <img src={fromToken.logo} alt="" className="w-5 h-5 rounded-full mr-2" />
+              {fromToken.symbol}
+              <ChevronDown className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+          {fromAmount && (
+            <div className="text-xs text-gray-500 mt-1.5">
+              ≈ {formatUSD(parseFloat(fromAmount) * (fromToken.price || 0))}
             </div>
           )}
+        </div>
 
-          {/* Swap Button */}
+        {/* Switch Button */}
+        <div className="flex justify-center -my-1 relative z-10">
           <Button
-            className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black"
-            disabled={!walletConnected || !fromAmount || loading}
-            onClick={handleSwap}
+            variant="outline"
+            size="icon"
+            onClick={switchTokens}
+            className={`bg-black border-${theme}-500/30 hover:bg-${theme}-500/20 hover:border-${theme}-500 text-${theme}-400 rounded-full h-9 w-9 shadow-lg shadow-black/50`}
           >
-            {swapStatus === 'success' ? (
-              <>
-                <CheckCircle2 className="w-5 h-5 mr-2" />
-                Swap Successful!
-              </>
-            ) : loading ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Swapping...
-              </>
-            ) : !walletConnected ? (
-              'Connect Wallet'
-            ) : !fromAmount ? (
-              'Enter Amount'
-            ) : (
-              <>
-                <Zap className="w-5 h-5 mr-2" />
-                Swap
-              </>
-            )}
+            <ArrowDown className="w-4 h-4" />
           </Button>
         </div>
-      </Card>
 
-      {/* Route Display */}
-      <div className="space-y-6">
-        <RouteDisplay route={route} fromToken={fromToken} toToken={toToken} />
-        
-        {/* Quick Stats */}
-        <Card className="bg-black/40 border border-lime-500/20 backdrop-blur-xl p-4">
-          <h3 className="text-sm font-medium text-gray-400 mb-3">Network Stats</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-gray-500">Gas Price</div>
-              <div className="text-white font-mono">0.001 Gwei</div>
-            </div>
-            <div>
-              <div className="text-gray-500">Block</div>
-              <div className="text-lime-400 font-mono">#28,547,892</div>
-            </div>
-            <div>
-              <div className="text-gray-500">TVL (Base)</div>
-              <div className="text-white font-mono">$1.2B</div>
-            </div>
-            <div>
-              <div className="text-gray-500">24h Volume</div>
-              <div className="text-white font-mono">$456M</div>
-            </div>
+        {/* To Token */}
+        <div className={`bg-black/40 rounded-xl p-4 border border-${theme}-500/10 transition-all hover:border-${theme}-500/30`}>
+          <div className="flex justify-between text-xs text-gray-400 mb-2">
+            <span>You Receive</span>
+            <span>Balance: {formatBalance(toToken.balance || 0)}</span>
           </div>
-        </Card>
+          <div className="flex items-center gap-3">
+            <div className="flex-1 text-2xl font-mono text-white">
+              {quoteLoading ? (
+                <Loader2 className={`w-5 h-5 animate-spin text-${theme}-400`} />
+              ) : (
+                <span className={toAmount ? 'text-white' : 'text-gray-600'}>{toAmount || '0.0'}</span>
+              )}
+            </div>
+            <Button
+              variant="outline"
+              className={`bg-${theme}-500/10 border-${theme}-500/30 hover:bg-${theme}-500/20 text-${theme}-400 h-10`}
+              onClick={() => setTokenSelectorOpen('to')}
+            >
+              <img src={toToken.logo} alt="" className="w-5 h-5 rounded-full mr-2" />
+              {toToken.symbol}
+              <ChevronDown className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+          {toAmount && (
+            <div className="text-xs text-gray-500 mt-1.5">
+              ≈ {formatUSD(parseFloat(toAmount) * (toToken.price || 0))}
+            </div>
+          )}
+        </div>
+
+        {/* Price Info */}
+        {route && (
+          <div className={`bg-${theme}-500/5 rounded-xl p-3 border border-${theme}-500/10`}>
+            <button 
+              onClick={() => setShowDetails(!showDetails)}
+              className="w-full flex items-center justify-between text-xs"
+            >
+              <span className="text-gray-400 flex items-center gap-1">
+                <Info className="w-3 h-3" />
+                1 {fromToken.symbol} = {(parseFloat(toAmount) / parseFloat(fromAmount)).toFixed(4)} {toToken.symbol}
+              </span>
+              <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${showDetails ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {showDetails && (
+              <div className="mt-3 pt-3 border-t border-gray-800/50 space-y-2 text-xs">
+                <div className="flex justify-between text-gray-400">
+                  <span className="flex items-center gap-1">
+                    <Percent className="w-3 h-3" />
+                    Price Impact
+                  </span>
+                  <span className={priceImpact > 1 ? 'text-red-400' : `text-${theme}-400`}>
+                    {priceImpact.toFixed(2)}%
+                  </span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Min. Received</span>
+                  <span className="text-white font-mono">
+                    {(parseFloat(toAmount) * (1 - slippage/100)).toFixed(4)} {toToken.symbol}
+                  </span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Slippage Tolerance</span>
+                  <span className={`text-${theme}-400`}>{slippage}%</span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Route</span>
+                  <span className="text-white">{route.dex} ({route.hops} hop{route.hops > 1 ? 's' : ''})</span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Network Fee</span>
+                  <span className="text-white font-mono">~${(parseFloat(route.estimatedGas) * 3200).toFixed(2)}</span>
+                </div>
+                {parseFloat(route.savings) > 0 && (
+                  <div className={`flex justify-between text-${theme}-400`}>
+                    <span>You Save</span>
+                    <span className="font-mono">${route.savings}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Swap Button */}
+        <Button
+          className={`w-full h-12 text-base font-semibold bg-gradient-to-r from-${theme}-500 to-emerald-500 hover:from-${theme}-400 hover:to-emerald-400 text-black shadow-lg shadow-${theme}-500/20`}
+          disabled={!walletConnected || !fromAmount || loading}
+          onClick={handleSwap}
+        >
+          {swapStatus === 'success' ? (
+            <>
+              <CheckCircle2 className="w-5 h-5 mr-2" />
+              Swap Successful!
+            </>
+          ) : loading ? (
+            <>
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              Confirming...
+            </>
+          ) : !walletConnected ? (
+            'Connect Wallet'
+          ) : !fromAmount ? (
+            'Enter Amount'
+          ) : (
+            <>
+              <Zap className="w-5 h-5 mr-2" />
+              Swap
+            </>
+          )}
+        </Button>
+
+        {/* Route Preview */}
+        {route && (
+          <RouteDisplay route={route} fromToken={fromToken} toToken={toToken} theme={theme} compact />
+        )}
       </div>
 
       {/* Token Selector Modal */}
@@ -281,8 +323,9 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
           onClose={() => setTokenSelectorOpen(null)}
           onSelect={handleTokenSelect}
           excludeToken={tokenSelectorOpen === 'from' ? toToken : fromToken}
+          theme={theme}
         />
       )}
-    </div>
+    </Card>
   );
 }

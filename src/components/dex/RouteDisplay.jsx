@@ -1,21 +1,35 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { ArrowRight, Zap, TrendingUp } from 'lucide-react';
+import { ArrowRight, Zap, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { BASE_DEXS } from './dexUtils';
 
-export default function RouteDisplay({ route, fromToken, toToken }) {
+export default function RouteDisplay({ route, fromToken, toToken, theme = 'lime', compact = false }) {
   if (!route) {
+    if (compact) return null;
     return (
-      <Card className="bg-black/40 border border-lime-500/20 backdrop-blur-xl p-6">
+      <Card className={`bg-black/40 border border-${theme}-500/20 backdrop-blur-xl p-6`}>
         <div className="text-center text-gray-500 py-8">
           <Zap className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>Enter an amount to see the best route</p>
+          <p className="text-sm">Enter an amount to see the best route</p>
         </div>
       </Card>
     );
   }
 
   const dex = BASE_DEXS.find(d => d.name === route.dex) || BASE_DEXS[0];
+
+  if (compact) {
+    return (
+      <div className={`flex items-center justify-center gap-2 text-xs text-gray-400 py-2`}>
+        <CheckCircle2 className={`w-3 h-3 text-${theme}-400`} />
+        <span>Best route via</span>
+        <img src={dex.logo} alt="" className="w-4 h-4 rounded-full" />
+        <span className="text-white">{route.dex}</span>
+        <span>•</span>
+        <span className={`text-${theme}-400`}>Save ${route.savings}</span>
+      </div>
+    );
+  }
 
   return (
     <Card className="bg-black/40 border border-lime-500/20 backdrop-blur-xl p-6">

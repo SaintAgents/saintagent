@@ -3,7 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Wallet, Settings, TrendingUp, History, Repeat, Clock, DollarSign } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  ArrowLeft, Settings, TrendingUp, History, Repeat, Clock, 
+  Wallet, Activity, BarChart3, Layers, Shield, Zap, Globe,
+  Bell, Sun, Moon, ExternalLink, RefreshCw
+} from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
@@ -14,6 +19,10 @@ import TrendingPairs from '@/components/dex/TrendingPairs';
 import TransactionHistory from '@/components/dex/TransactionHistory';
 import WalletConnect from '@/components/dex/WalletConnect';
 import SettingsModal from '@/components/dex/SettingsModal';
+import PriceChart from '@/components/dex/PriceChart';
+import PortfolioPanel from '@/components/dex/PortfolioPanel';
+import PerpsTab from '@/components/dex/PerpsTab';
+import StatsBar from '@/components/dex/StatsBar';
 
 export default function G3Dex() {
   const [activeTab, setActiveTab] = useState('swap');
@@ -22,6 +31,9 @@ export default function G3Dex() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [slippage, setSlippage] = useState(0.5);
   const [gasPriority, setGasPriority] = useState('medium');
+  const [selectedPair, setSelectedPair] = useState({ from: 'ETH', to: 'USDC' });
+  const [showPortfolio, setShowPortfolio] = useState(false);
+  const [theme, setTheme] = useState('cyber'); // cyber, midnight, matrix
 
   // Check for existing wallet connection
   useEffect(() => {
@@ -39,6 +51,19 @@ export default function G3Dex() {
       }
     };
     checkWallet();
+
+    // Listen for account changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+          setWalletConnected(true);
+        } else {
+          setWalletAddress('');
+          setWalletConnected(false);
+        }
+      });
+    }
   }, []);
 
   const handleWalletConnect = (address) => {
@@ -51,127 +76,251 @@ export default function G3Dex() {
     setWalletConnected(false);
   };
 
+  const themeStyles = {
+    cyber: {
+      bg: 'bg-[#0a0a0f]',
+      accent: 'lime',
+      glow: 'rgba(0,255,100,0.03)',
+      border: 'lime-500/20'
+    },
+    midnight: {
+      bg: 'bg-[#0d1117]',
+      accent: 'blue',
+      glow: 'rgba(59,130,246,0.03)',
+      border: 'blue-500/20'
+    },
+    matrix: {
+      bg: 'bg-black',
+      accent: 'emerald',
+      glow: 'rgba(16,185,129,0.05)',
+      border: 'emerald-500/30'
+    }
+  };
+
+  const currentTheme = themeStyles[theme];
+
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Cyberpunk grid background */}
+    <div className={`min-h-screen ${currentTheme.bg} text-white`}>
+      {/* Animated Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,100,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,100,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-lime-500/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-[100px]" />
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(${currentTheme.glow} 1px, transparent 1px), linear-gradient(90deg, ${currentTheme.glow} 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}
+        />
+        <div className={`absolute top-0 left-1/4 w-[500px] h-[500px] bg-${currentTheme.accent}-500/5 rounded-full blur-[120px] animate-pulse`} />
+        <div className={`absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-${currentTheme.accent}-400/5 rounded-full blur-[100px]`} />
+        <div className={`absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-purple-500/3 rounded-full blur-[150px] -translate-x-1/2 -translate-y-1/2`} />
       </div>
 
+      {/* Top Stats Bar */}
+      <StatsBar />
+
       {/* Header */}
-      <header className="relative z-10 border-b border-lime-500/20 bg-black/40 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <header className={`relative z-10 border-b border-${currentTheme.border} bg-black/60 backdrop-blur-xl sticky top-0`}>
+        <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
+          {/* Left Section */}
           <div className="flex items-center gap-4">
             <Link to={createPageUrl('CommandDeck')}>
-              <Button variant="ghost" size="icon" className="text-lime-400 hover:bg-lime-500/10">
+              <Button variant="ghost" size="icon" className={`text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/10`}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
             </Link>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center font-bold text-black">
+            
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-${currentTheme.accent}-400 to-emerald-500 flex items-center justify-center font-bold text-black text-lg shadow-lg shadow-${currentTheme.accent}-500/20`}>
                 G3
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">
-                G3DEX
-              </span>
-              <span className="text-xs text-lime-500/60 border border-lime-500/30 px-2 py-0.5 rounded-full">
-                BASE
-              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xl font-bold bg-gradient-to-r from-${currentTheme.accent}-400 to-emerald-400 bg-clip-text text-transparent`}>
+                    G3DEX
+                  </span>
+                  <Badge variant="outline" className={`text-${currentTheme.accent}-400 border-${currentTheme.accent}-500/50 text-[10px] px-1.5`}>
+                    V2
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                  <div className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse" />
+                  Base Mainnet
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="hidden md:flex items-center gap-1 ml-4">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs h-7">
+                <Globe className="w-3 h-3 mr-1" />
+                Bridge
+              </Button>
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs h-7">
+                <Shield className="w-3 h-3 mr-1" />
+                Stake
+              </Button>
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs h-7">
+                <Layers className="w-3 h-3 mr-1" />
+                Pools
+              </Button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Right Section */}
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle */}
+            <div className="hidden sm:flex items-center gap-1 bg-black/40 rounded-lg p-0.5 border border-gray-800">
+              {['cyber', 'midnight', 'matrix'].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTheme(t)}
+                  className={`px-2 py-1 rounded-md text-[10px] capitalize transition-all ${
+                    theme === t 
+                      ? `bg-${t === 'cyber' ? 'lime' : t === 'midnight' ? 'blue' : 'emerald'}-500/20 text-white` 
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-gray-400 hover:text-white h-8 w-8"
+            >
+              <Bell className="w-4 h-4" />
+            </Button>
+
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setSettingsOpen(true)}
-              className="text-lime-400 hover:bg-lime-500/10"
+              className={`text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/10 h-8 w-8`}
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="w-4 h-4" />
             </Button>
+
+            {walletConnected && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowPortfolio(!showPortfolio)}
+                className={`text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/10 h-8 w-8 ${showPortfolio ? `bg-${currentTheme.accent}-500/20` : ''}`}
+              >
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+            )}
             
             <WalletConnect
               connected={walletConnected}
               address={walletAddress}
               onConnect={handleWalletConnect}
               onDisconnect={handleDisconnect}
+              theme={currentTheme.accent}
             />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="relative z-10 max-w-[1800px] mx-auto px-4 py-4">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+          
+          {/* Left Sidebar - Chart & Portfolio */}
+          <div className="xl:col-span-4 space-y-4">
+            <PriceChart pair={selectedPair} theme={currentTheme.accent} />
+            {showPortfolio && walletConnected && (
+              <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+            )}
+          </div>
+
           {/* Main Trading Area */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Tab Navigation */}
+          <div className="xl:col-span-5 space-y-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="bg-black/40 border border-lime-500/20 p-1">
+              <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-5`}>
                 <TabsTrigger 
                   value="swap" 
-                  className="data-[state=active]:bg-lime-500/20 data-[state=active]:text-lime-400"
+                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <Repeat className="w-4 h-4 mr-2" />
+                  <Repeat className="w-3 h-3 mr-1.5" />
                   Swap
                 </TabsTrigger>
                 <TabsTrigger 
                   value="limit" 
-                  className="data-[state=active]:bg-lime-500/20 data-[state=active]:text-lime-400"
+                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <TrendingUp className="w-4 h-4 mr-2" />
+                  <TrendingUp className="w-3 h-3 mr-1.5" />
                   Limit
                 </TabsTrigger>
                 <TabsTrigger 
                   value="dca" 
-                  className="data-[state=active]:bg-lime-500/20 data-[state=active]:text-lime-400"
+                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <Clock className="w-4 h-4 mr-2" />
+                  <Clock className="w-3 h-3 mr-1.5" />
                   DCA
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="history" 
-                  className="data-[state=active]:bg-lime-500/20 data-[state=active]:text-lime-400"
+                  value="perps" 
+                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
                 >
-                  <History className="w-4 h-4 mr-2" />
+                  <Activity className="w-3 h-3 mr-1.5" />
+                  Perps
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="history" 
+                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+                >
+                  <History className="w-3 h-3 mr-1.5" />
                   History
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="swap" className="mt-6">
+              <TabsContent value="swap" className="mt-4">
                 <SwapInterface
                   walletConnected={walletConnected}
                   walletAddress={walletAddress}
                   slippage={slippage}
                   gasPriority={gasPriority}
+                  onPairChange={setSelectedPair}
+                  theme={currentTheme.accent}
                 />
               </TabsContent>
 
-              <TabsContent value="limit" className="mt-6">
+              <TabsContent value="limit" className="mt-4">
                 <LimitOrderTab
                   walletConnected={walletConnected}
                   walletAddress={walletAddress}
+                  theme={currentTheme.accent}
                 />
               </TabsContent>
 
-              <TabsContent value="dca" className="mt-6">
+              <TabsContent value="dca" className="mt-4">
                 <DCATab
                   walletConnected={walletConnected}
                   walletAddress={walletAddress}
+                  theme={currentTheme.accent}
                 />
               </TabsContent>
 
-              <TabsContent value="history" className="mt-6">
-                <TransactionHistory walletAddress={walletAddress} />
+              <TabsContent value="perps" className="mt-4">
+                <PerpsTab
+                  walletConnected={walletConnected}
+                  walletAddress={walletAddress}
+                  theme={currentTheme.accent}
+                />
+              </TabsContent>
+
+              <TabsContent value="history" className="mt-4">
+                <TransactionHistory walletAddress={walletAddress} theme={currentTheme.accent} />
               </TabsContent>
             </Tabs>
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            <TrendingPairs />
+          {/* Right Sidebar - Trending & Info */}
+          <div className="xl:col-span-3 space-y-4">
+            <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} />
           </div>
         </div>
       </div>
@@ -184,7 +333,18 @@ export default function G3Dex() {
         setSlippage={setSlippage}
         gasPriority={gasPriority}
         setGasPriority={setGasPriority}
+        theme={currentTheme.accent}
       />
+
+      {/* Floating Action Button - Mobile */}
+      <div className="fixed bottom-20 right-4 xl:hidden z-50">
+        <Button
+          onClick={() => setShowPortfolio(!showPortfolio)}
+          className={`rounded-full w-12 h-12 bg-gradient-to-r from-${currentTheme.accent}-500 to-emerald-500 shadow-lg shadow-${currentTheme.accent}-500/30`}
+        >
+          <Wallet className="w-5 h-5 text-black" />
+        </Button>
+      </div>
     </div>
   );
 }
