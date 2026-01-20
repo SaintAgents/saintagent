@@ -18,6 +18,7 @@ import Forum from './pages/Forum';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Initiations from './pages/Initiations';
+import Insights from './pages/Insights';
 import Join from './pages/Join';
 import Landing from './pages/Landing';
 import LeaderChannel from './pages/LeaderChannel';
@@ -48,7 +49,6 @@ import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
-import Insights from './pages/Insights';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +73,7 @@ export const PAGES = {
     "Gamification": Gamification,
     "Home": Home,
     "Initiations": Initiations,
+    "Insights": Insights,
     "Join": Join,
     "Landing": Landing,
     "LeaderChannel": LeaderChannel,
@@ -103,7 +104,6 @@ export const PAGES = {
     "Teams": Teams,
     "Terms": Terms,
     "UserGuide": UserGuide,
-    "Insights": Insights,
 }
 
 export const pagesConfig = {

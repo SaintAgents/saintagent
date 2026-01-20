@@ -150,30 +150,43 @@ export default function ActivityFeed() {
 
   return (
     <div className="min-h-screen bg-[#F0F2F5]">
-      {/* Hero Section - McKinsey Style */}
-      <div className="bg-[#051C2C] text-white">
-        <div className="max-w-5xl mx-auto px-6 py-16">
-          <div className="flex items-center gap-4 mb-4">
-            <BackButton className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
-            <LoopStartIndicator currentPage="ActivityFeed" className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
-            <ForwardButton currentPage="ActivityFeed" className="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded" />
-          </div>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4">
-            Activity Feed
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl">
-            Real-time updates on community activity, platform announcements, and your network's engagement.
-          </p>
-          <div className="mt-8">
-            <Button 
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 gap-2"
-              onClick={() => refetch()} 
-              disabled={isFetching}
-            >
-              <RefreshCcw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
-              {isFetching ? 'Refreshing…' : 'Refresh Feed'}
-            </Button>
+      {/* Hero Section with Image */}
+      <div className="page-hero relative overflow-hidden">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b85f8b778_c187ff4c-c910-4f5d-aed1-62a6e76b4751.png"
+          alt="Activity Feed"
+          className="w-full h-full object-cover object-center hero-image"
+          data-no-filter="true"
+        />
+        <div className="hero-gradient absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-[#F0F2F5] dark:to-[#050505]" />
+        <div className="absolute inset-0 flex items-center justify-center hero-content">
+          <div className="text-center max-w-3xl px-6">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <BackButton className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <TrendingUp className="w-8 h-8 text-emerald-400" />
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg"
+                  style={{ fontFamily: 'serif', textShadow: '0 0 40px rgba(16,185,129,0.6), 0 2px 4px rgba(0,0,0,0.8)' }}>
+                Activity Feed
+              </h1>
+              <LoopStartIndicator currentPage="ActivityFeed" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+              <ForwardButton currentPage="ActivityFeed" className="text-white/80 hover:text-white bg-black/30 hover:bg-black/40 rounded-lg" />
+            </div>
+            <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
+              <p className="text-emerald-200/90 text-base tracking-wider drop-shadow-lg">
+                Real-time updates · Community Activity · Network Engagement
+              </p>
+            </div>
+            <div className="mt-6">
+              <Button 
+                variant="outline" 
+                className="border-white/30 text-white hover:bg-white/10 gap-2 bg-black/30"
+                onClick={() => refetch()} 
+                disabled={isFetching}
+              >
+                <RefreshCcw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+                {isFetching ? 'Refreshing…' : 'Refresh Feed'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
