@@ -33,7 +33,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
         
         // Direct lookup first
         if (BADGE_INDEX[code]) {
-          const badgeData = { ...BADGE_INDEX[code], code, earned_date: earnedDate };
+          const badgeData = { ...BADGE_INDEX[code], code, earned_date: earnedDate, created_date: createdDate };
           // If badge has custom icon_url from database, use it; otherwise use QUEST_BADGE_IMAGES
           if (b.icon_url) {
             return { ...badgeData, customIcon: b.icon_url };
