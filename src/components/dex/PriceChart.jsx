@@ -95,10 +95,29 @@ export default function PriceChart({ pair, theme = 'lime' }) {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-7 w-7 text-gray-400 hover:text-white"
-              onClick={() => setChartType(chartType === 'area' ? 'candle' : 'area')}
+              className={`h-7 w-7 ${chartType === 'area' ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setChartType('area')}
+              title="Area Chart"
             >
-              {chartType === 'area' ? <CandlestickChart className="w-4 h-4" /> : <BarChart2 className="w-4 h-4" />}
+              <BarChart2 className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-7 w-7 ${chartType === 'candle' ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setChartType('candle')}
+              title="Candlestick Chart"
+            >
+              <CandlestickChart className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-7 w-7 ${chartType === 'manhattan' ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setChartType('manhattan')}
+              title="Manhattan Chart"
+            >
+              <Building2 className="w-4 h-4" />
             </Button>
             <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-white">
               <Maximize2 className="w-4 h-4" />
