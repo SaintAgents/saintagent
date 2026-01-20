@@ -148,6 +148,27 @@ export const HERO_IMAGES = [
     url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/46b1af7b6_synchro.jpg',
     title: 'Soul Connections',
     description: 'Find your divine counterpart'
+  },
+  {
+    id: 'find-collaborators',
+    page: 'FindCollaborators',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/3ba1dc1c5_22.png',
+    title: 'Find Collaborators',
+    description: 'AI-powered matching based on skills, values, availability'
+  },
+  {
+    id: 'settings',
+    page: 'Settings',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39d5258fa_settings.jpg',
+    title: 'Settings',
+    description: 'Manage your account preferences and privacy'
+  },
+  {
+    id: 'activity-feed',
+    page: 'ActivityFeed',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2c8670516_activity.jpg',
+    title: 'Activity Feed',
+    description: 'Track community updates and engagement'
   }
 ];
 
