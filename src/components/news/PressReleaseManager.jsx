@@ -438,12 +438,27 @@ Return ONLY the press release content, no additional commentary.`,
             {/* Scheduled Date - only show when status is scheduled */}
             {formData.status === 'scheduled' && (
               <div className="space-y-2">
-                <Label>Scheduled Publish Date</Label>
-                <Input
-                  type="datetime-local"
-                  value={formData.publish_date ? formData.publish_date.slice(0, 16) : ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, publish_date: e.target.value ? new Date(e.target.value).toISOString() : '' }))}
-                />
+                <Label>Scheduled Publish Date & Time</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    type="date"
+                    value={formData.publish_date ? formData.publish_date.split('T')[0] : ''}
+                    onChange={(e) => {
+                      const date = e.target.value;
+                      const time = formData.publish_date?.split('T')[1]?.slice(0, 5) || '12:00';
+                      setFormData(prev => ({ ...prev, publish_date: date ? `${date}T${time}:00.000Z` : '' }));
+                    }}
+                  />
+                  <Input
+                    type="time"
+                    value={formData.publish_date ? formData.publish_date.split('T')[1]?.slice(0, 5) || '' : ''}
+                    onChange={(e) => {
+                      const time = e.target.value;
+                      const date = formData.publish_date?.split('T')[0] || new Date().toISOString().split('T')[0];
+                      setFormData(prev => ({ ...prev, publish_date: time ? `${date}T${time}:00.000Z` : prev.publish_date }));
+                    }}
+                  />
+                </div>
               </div>
             )}
 
