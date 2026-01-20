@@ -476,6 +476,64 @@ export default function CommunityFeed() {
           )}
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      <Dialog open={lightboxOpen} onOpenChange={closeLightbox}>
+        <DialogContent className="max-w-4xl w-full p-0 bg-black/95 border-none">
+          <div className="relative flex items-center justify-center min-h-[50vh] max-h-[90vh]">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={closeLightbox}
+              className="absolute top-2 right-2 z-10 text-white hover:bg-white/20 rounded-full"
+            >
+              <X className="w-6 h-6" />
+            </Button>
+            
+            {lightboxImages.length > 1 && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={prevImage}
+                  className="absolute left-2 z-10 text-white hover:bg-white/20 rounded-full"
+                >
+                  <ChevronLeft className="w-8 h-8" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={nextImage}
+                  className="absolute right-2 z-10 text-white hover:bg-white/20 rounded-full"
+                >
+                  <ChevronRight className="w-8 h-8" />
+                </Button>
+              </>
+            )}
+            
+            <img 
+              src={lightboxImages[lightboxIndex]} 
+              alt="" 
+              className="max-w-full max-h-[85vh] object-contain rounded-lg"
+            />
+            
+            {lightboxImages.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {lightboxImages.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setLightboxIndex(i)}
+                    className={cn(
+                      "w-2 h-2 rounded-full transition-colors",
+                      i === lightboxIndex ? "bg-white" : "bg-white/40"
+                    )}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
