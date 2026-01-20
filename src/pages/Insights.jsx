@@ -210,8 +210,22 @@ function ArticleDetail({ article, onBack, articles, onNavigate }) {
                 prose-p:text-slate-700 prose-p:leading-relaxed
                 prose-a:text-blue-900 prose-a:no-underline hover:prose-a:underline
                 prose-blockquote:border-l-[#051C2C] prose-blockquote:bg-slate-100 prose-blockquote:py-4 prose-blockquote:px-6
-                prose-strong:text-[#051C2C]">
-                <ReactMarkdown>{article.content}</ReactMarkdown>
+                prose-strong:text-[#051C2C]
+                [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-6
+                [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mb-3 [&_h2]:mt-5
+                [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mb-2 [&_h3]:mt-4
+                [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4
+                [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4
+                [&_li]:mb-2 [&_li]:text-slate-700
+                [&_p]:mb-4 [&_p]:leading-relaxed
+                [&_strong]:font-semibold [&_strong]:text-[#051C2C]
+                [&_em]:italic
+                [&_blockquote]:border-l-4 [&_blockquote]:border-[#051C2C] [&_blockquote]:bg-slate-100 [&_blockquote]:py-4 [&_blockquote]:px-6 [&_blockquote]:my-4 [&_blockquote]:italic">
+                {article.content.trim().startsWith('<') || article.content.includes('</') ? (
+                  <div dangerouslySetInnerHTML={{ __html: article.content.replace(/<!DOCTYPE[^>]*>/gi, '').replace(/<html[^>]*>|<\/html>|<head>[\s\S]*?<\/head>|<body[^>]*>|<\/body>/gi, '') }} />
+                ) : (
+                  <ReactMarkdown>{article.content}</ReactMarkdown>
+                )}
               </div>
             )}
             
