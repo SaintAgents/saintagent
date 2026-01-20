@@ -14,7 +14,10 @@ export default function ResourceHub() {
 
   const { data: all = [] } = useQuery({
     queryKey: ['resources'],
-    queryFn: () => base44.entities.Resource.list('-updated_date', 300)
+    queryFn: () => base44.entities.Resource.list('-updated_date', 300),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 1
   });
 
   const isAdmin = user?.role === 'admin';
