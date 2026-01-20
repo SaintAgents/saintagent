@@ -373,7 +373,7 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
   return (
     <Card className={`${cardBg} border ${isLightTheme ? 'border-gray-200' : `border-${theme}-500/20`} backdrop-blur-xl overflow-hidden`}>
       {/* Header */}
-      <div className={`p-4 border-b ${borderColor}`}
+      <div className={`p-4 border-b ${borderColor}`}>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2">

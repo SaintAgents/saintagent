@@ -156,7 +156,7 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
 
         {/* From Token */}
         <div className={`${inputBg} rounded-xl p-4 border ${isLightTheme ? 'border-gray-200 hover:border-gray-300' : `border-${theme}-500/10 hover:border-${theme}-500/30`} transition-all`}>
-          <div className={`flex justify-between text-xs ${textSecondary} mb-2`}
+          <div className={`flex justify-between text-xs ${textSecondary} mb-2`}>
             <span>You Pay</span>
             <button 
               className={`hover:text-${theme}-400 transition-colors`}
@@ -205,7 +205,7 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
 
         {/* To Token */}
         <div className={`${inputBg} rounded-xl p-4 border ${isLightTheme ? 'border-gray-200 hover:border-gray-300' : `border-${theme}-500/10 hover:border-${theme}-500/30`} transition-all`}>
-          <div className={`flex justify-between text-xs ${textSecondary} mb-2`}
+          <div className={`flex justify-between text-xs ${textSecondary} mb-2`}>
             <span>You Receive</span>
             <span>Balance: {formatBalance(toToken.balance || 0)}</span>
           </div>
@@ -250,7 +250,7 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
             
             {showDetails && (
               <div className={`mt-3 pt-3 border-t ${isLightTheme ? 'border-gray-200' : 'border-gray-800/50'} space-y-2 text-xs`}>
-                <div className={`flex justify-between ${textSecondary}`}
+                <div className={`flex justify-between ${textSecondary}`}>
                   <span className="flex items-center gap-1">
                     <Percent className="w-3 h-3" />
                     Price Impact
