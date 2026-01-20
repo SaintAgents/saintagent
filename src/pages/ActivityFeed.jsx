@@ -153,7 +153,12 @@ export default function ActivityFeed() {
       {/* Hero Section with Image */}
       <div className="page-hero relative overflow-hidden">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b85f8b778_c187ff4c-c910-4f5d-aed1-62a6e76b4751.png"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7729df215_universal_upscale_0_00e5fb0f-5e49-417e-9325-066ccd91e076_0.jpg"
+            alt="Activity Feed"
+            className="w-full h-full object-cover object-center hero-image"
+            data-no-filter="true"
+          />
+          {/* OLD: src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b85f8b778_c187ff4c-c910-4f5d-aed1-62a6e76b4751.png"
           alt="Activity Feed"
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
