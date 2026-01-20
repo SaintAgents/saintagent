@@ -87,7 +87,8 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
           section: 'mission',
           iconKey: 'award',
           customIcon: fallbackImage,
-          earned_date: earnedDate
+          earned_date: earnedDate,
+          created_date: createdDate
         };
       })
       .filter(Boolean);
