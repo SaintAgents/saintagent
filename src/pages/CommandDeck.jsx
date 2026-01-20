@@ -1209,33 +1209,33 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     </button>
                   </div>
                   
-                  {/* Featured: Eternal Flame + Social Butterfly */}
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    {/* Eternal Flame Feature Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-amber-50 to-orange-50 border border-amber-200">
+                  {/* Featured Badges - 3x Size */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {/* Eternal Flame Feature Badge - 3x Size */}
+                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-amber-300 shadow-lg shadow-amber-200/50">
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
                         alt="Eternal Flame"
-                        className="w-12 h-12 object-contain"
+                        className="w-36 h-36 object-contain drop-shadow-xl"
                         data-no-filter="true" />
-                      <div>
-                        <p className="font-semibold text-amber-900 text-sm">Eternal Flame</p>
-                        <p className="text-xs text-amber-700">Living Agent</p>
+                      <div className="text-center mt-3">
+                        <p className="font-bold text-amber-900 text-base">Eternal Flame</p>
+                        <p className="text-sm text-amber-700">Living Agent</p>
                       </div>
                     </div>
                     
-                    {/* Social Butterfly Badge */}
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-l from-violet-50 to-purple-50 border border-violet-200">
+                    {/* Social Butterfly Badge - 3x Size */}
+                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-violet-50 via-purple-50 to-violet-100 border-2 border-violet-300 shadow-lg shadow-violet-200/50">
                       <img
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png"
                         alt="Social Butterfly"
-                        className="w-12 h-12 object-contain"
+                        className="w-36 h-36 object-contain drop-shadow-xl"
                         data-no-filter="true"
                         title="Earned by: 50+ connections, 100+ messages sent, active in Global Chat"
                       />
-                      <div>
-                        <p className="font-semibold text-violet-900 text-sm">Social Butterfly</p>
-                        <p className="text-xs text-violet-700">Connector</p>
+                      <div className="text-center mt-3">
+                        <p className="font-bold text-violet-900 text-base">Social Butterfly</p>
+                        <p className="text-sm text-violet-700">Connector</p>
                       </div>
                     </div>
                   </div>

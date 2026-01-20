@@ -24,12 +24,15 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
         const code = (b.badge_code || b.code || '').toLowerCase();
         if (!code) return null;
         
+        // Preserve earned_date for sorting
+        const earnedDate = b.earned_date || b.created_date;
+        
         // Check QUEST_BADGE_IMAGES first for image URL
         const imageUrl = QUEST_BADGE_IMAGES[code];
         
         // Direct lookup first
         if (BADGE_INDEX[code]) {
-          const badgeData = { ...BADGE_INDEX[code], code };
+          const badgeData = { ...BADGE_INDEX[code], code, earned_date: earnedDate };
           // If badge has custom icon_url from database, use it; otherwise use QUEST_BADGE_IMAGES
           if (b.icon_url) {
             return { ...badgeData, customIcon: b.icon_url };
@@ -82,7 +85,8 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
           definition: b.description || b.awarded_for || `Badge: ${code}`,
           section: 'mission',
           iconKey: 'award',
-          customIcon: fallbackImage
+          customIcon: fallbackImage,
+          earned_date: earnedDate
         };
       })
       .filter(Boolean);
@@ -105,8 +109,18 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
     return items;
   }, [badges, defaultIfEmpty, eternalFlameBadge]);
 
-  const visible = derived.slice(0, effectiveMax);
-  const hiddenItems = derived.slice(effectiveMax);
+  // Sort badges by earned_date (most recent first) to ensure newest badges appear first
+  const sortedDerived = React.useMemo(() => {
+    return [...derived].sort((a, b) => {
+      // If badge has earned_date, use it for sorting (newest first)
+      const dateA = a.earned_date ? new Date(a.earned_date).getTime() : 0;
+      const dateB = b.earned_date ? new Date(b.earned_date).getTime() : 0;
+      return dateB - dateA;
+    });
+  }, [derived]);
+
+  const visible = sortedDerived.slice(0, effectiveMax);
+  const hiddenItems = sortedDerived.slice(effectiveMax);
   const remaining = hiddenItems.length;
 
   const handleMoreClick = (e) => {
@@ -118,7 +132,7 @@ export default function BadgesBar({ badges = [], defaultIfEmpty = true, max = 20
     }
   };
 
-  // Calculate how many empty slots to show
+  // Calculate how many empty slots to show - badges fill slots first, then show remaining empty slots
   const slotsToShow = showEmptySlots ? Math.max(0, emptySlotCount - visible.length) : 0;
 
   return (
