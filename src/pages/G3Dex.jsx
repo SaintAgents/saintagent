@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   ArrowLeft, Settings, TrendingUp, History, Repeat, Clock, 
   Wallet, Activity, BarChart3, Layers, Shield, Zap, Globe,
-  Bell, Sun, Moon, ExternalLink, RefreshCw
+  Bell, Sun, Moon, ExternalLink, RefreshCw, Lock, Sparkles
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
