@@ -272,7 +272,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       dailyops: 'Daily Ops',
       communityFeed: 'Community Feed',
       leaderboard: 'Leaderboard',
-      affirmations: 'Affirmations'
+      affirmations: 'Affirmations',
+      news: 'News & Updates'
     };
     return titles[id] || id;
   };
@@ -297,7 +298,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     dailyops: Calendar,
     communityFeed: Sparkles,
     leaderboard: Trophy,
-    affirmations: Sparkles
+    affirmations: Sparkles,
+    news: Newspaper
   };
 
   // Toss card to side panel storage
