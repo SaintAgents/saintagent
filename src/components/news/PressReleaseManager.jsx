@@ -12,7 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   Plus, Edit2, Trash2, Send, FileText, Calendar, 
-  Twitter, Linkedin, MessageCircle, Mail, Radio, Eye, Sparkles, Loader2, Upload, X, Image
+  Twitter, Linkedin, MessageCircle, Mail, Radio, Eye, Sparkles, Loader2, Upload, X, Image,
+  CheckCircle2, XCircle, Clock
 } from 'lucide-react';
 import { format } from 'date-fns';
 import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
