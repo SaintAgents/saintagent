@@ -1152,7 +1152,7 @@ export default function SidePanel({
       )}
 
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-6">
+        <div className="p-4 pb-8 space-y-6">
           {/* Stored Cards Section */}
           {storedCards && storedCards.length > 0 && (
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.3)]">
