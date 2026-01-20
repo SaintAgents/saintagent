@@ -111,6 +111,7 @@ const NAV_ITEMS = [
   { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
   { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission' },
+  { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure for Humanity\'s Golden Age' },
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
