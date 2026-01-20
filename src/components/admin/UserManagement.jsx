@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle } from
 "@/components/ui/dialog";
-import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock } from "lucide-react";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock, Recycle, Package } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
@@ -169,6 +169,34 @@ export default function UserManagement() {
 
   const [resettingSA, setResettingSA] = useState(false);
   const [customGGGAmount, setCustomGGGAmount] = useState('');
+  const [showUnassignedPool, setShowUnassignedPool] = useState(false);
+  const [assigningSA, setAssigningSA] = useState(false);
+  const [selectedSAToAssign, setSelectedSAToAssign] = useState('');
+
+  // Fetch unassigned SA numbers pool
+  const { data: unassignedPool = [], refetch: refetchPool } = useQuery({
+    queryKey: ['unassignedSAPool'],
+    queryFn: async () => {
+      // Get all assigned SA numbers
+      const allProfiles = await base44.entities.UserProfile.list('-created_date', 1000);
+      const assignedNumbers = new Set(
+        allProfiles
+          .filter(p => p.sa_number && !p.sa_number.startsWith('Demo'))
+          .map(p => p.sa_number)
+      );
+      
+      // Find gaps in sequence (numbers that were deleted)
+      const maxNumber = Math.max(0, ...Array.from(assignedNumbers).map(n => parseInt(n) || 0));
+      const unassigned = [];
+      for (let i = 1; i <= maxNumber; i++) {
+        const numStr = String(i).padStart(6, '0');
+        if (!assignedNumbers.has(numStr)) {
+          unassigned.push(numStr);
+        }
+      }
+      return unassigned;
+    }
+  });
   const handleResetSANumbers = async () => {
     if (!confirm('Reset and reassign ALL SA numbers in order by join date? This cannot be undone.')) return;
     setResettingSA(true);
