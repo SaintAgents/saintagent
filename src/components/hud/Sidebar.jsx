@@ -108,6 +108,7 @@ const NAV_ITEMS = [
   { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
   { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
   { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
+  { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission' },
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];

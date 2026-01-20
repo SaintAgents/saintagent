@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { ArrowDown, ChevronDown, Loader2, Zap, AlertCircle, CheckCircle2, RefreshCw, Info, Percent } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { ArrowDown, ChevronDown, Loader2, Zap, AlertCircle, CheckCircle2, RefreshCw, Info, Percent, Clock, Target, X, Trash2 } from 'lucide-react';
 import TokenSelector from './TokenSelector';
 import RouteDisplay from './RouteDisplay';
 import { BASE_TOKENS, formatBalance, formatUSD } from './dexUtils';
+import { format } from 'date-fns';
 
 export default function SwapInterface({ walletConnected, walletAddress, slippage, gasPriority, onPairChange, theme = 'lime', isLightTheme = false }) {
+  const [orderType, setOrderType] = useState('market'); // 'market' or 'limit'
   const [fromToken, setFromToken] = useState(BASE_TOKENS[0]); // ETH
   const [toToken, setToToken] = useState(BASE_TOKENS[1]); // USDC
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
+  const [limitPrice, setLimitPrice] = useState('');
+  const [expiryDays, setExpiryDays] = useState(7);
   const [loading, setLoading] = useState(false);
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [route, setRoute] = useState(null);
@@ -21,6 +29,60 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
   const [swapStatus, setSwapStatus] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [showDetails, setShowDetails] = useState(true);
+  const [showOpenOrders, setShowOpenOrders] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: openOrders = [] } = useQuery({
+    queryKey: ['limitOrders', currentUser?.email],
+    queryFn: () => base44.entities.LimitOrder.filter({ user_id: currentUser.email, status: 'open' }, '-created_date', 20),
+    enabled: !!currentUser?.email
+  });
+
+  const createLimitOrderMutation = useMutation({
+    mutationFn: async () => {
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + expiryDays);
+      
+      return base44.entities.LimitOrder.create({
+        user_id: currentUser.email,
+        from_token: fromToken.symbol,
+        to_token: toToken.symbol,
+        from_amount: parseFloat(fromAmount),
+        to_amount: parseFloat(toAmount),
+        limit_price: parseFloat(limitPrice),
+        status: 'open',
+        expiry_date: expiryDate.toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['limitOrders'] });
+      setSwapStatus('success');
+      setTimeout(() => {
+        setSwapStatus(null);
+        setFromAmount('');
+        setToAmount('');
+        setLimitPrice('');
+      }, 3000);
+    }
+  });
+
+  const cancelOrderMutation = useMutation({
+    mutationFn: (orderId) => base44.entities.LimitOrder.update(orderId, { status: 'cancelled' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['limitOrders'] })
+  });
+
+  // Calculate limit order output when limit price changes
+  useEffect(() => {
+    if (orderType === 'limit' && fromAmount && limitPrice) {
+      const calculated = parseFloat(fromAmount) * parseFloat(limitPrice);
+      setToAmount(calculated.toFixed(6));
+    }
+  }, [limitPrice, fromAmount, orderType]);
 
   // Simulate fetching quote when amount changes
   useEffect(() => {
@@ -131,28 +193,89 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
   const inputBg = isLightTheme ? 'bg-gray-100' : 'bg-black/40';
   const borderColor = isLightTheme ? 'border-gray-300' : `border-${theme}-500/20`;
 
+  // Get current market price for limit order reference
+  const mockPrices = {
+    'ETH': 3200, 'USDC': 1, 'WETH': 3200, 'DAI': 1, 'USDT': 1, 'AERO': 1.5, 'cbBTC': 42000, 'DEGEN': 0.01
+  };
+  const currentMarketPrice = (mockPrices[fromToken.symbol] || 1) / (mockPrices[toToken.symbol] || 1);
+
   return (
     <Card className={`${cardBg} border ${borderColor} backdrop-blur-xl p-5`}>
       <div className="space-y-3">
-        {/* Header */}
+        {/* Header with Order Type Tabs */}
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <h3 className={`text-sm font-medium ${textPrimary}`}>Swap</h3>
-            <Badge variant="outline" className={`text-[10px] text-${theme}-400 border-${theme}-500/30`}>
-              Best Route
-            </Badge>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className={`h-7 w-7 text-gray-400 hover:text-white ${refreshing ? 'animate-spin' : ''}`}
-              onClick={refreshQuote}
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-            </Button>
-          </div>
+          <Tabs value={orderType} onValueChange={setOrderType} className="w-full">
+            <div className="flex items-center justify-between">
+              <TabsList className={`${isLightTheme ? 'bg-gray-100' : 'bg-black/40'} h-8`}>
+                <TabsTrigger value="market" className="text-xs h-6 px-3">
+                  <Zap className="w-3 h-3 mr-1" />
+                  Market
+                </TabsTrigger>
+                <TabsTrigger value="limit" className="text-xs h-6 px-3">
+                  <Target className="w-3 h-3 mr-1" />
+                  Limit
+                </TabsTrigger>
+              </TabsList>
+              <div className="flex items-center gap-1">
+                {openOrders.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowOpenOrders(!showOpenOrders)}
+                    className={`h-7 text-xs ${textSecondary}`}
+                  >
+                    <Clock className="w-3 h-3 mr-1" />
+                    {openOrders.length} Open
+                  </Button>
+                )}
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`h-7 w-7 ${textSecondary} hover:text-white ${refreshing ? 'animate-spin' : ''}`}
+                  onClick={refreshQuote}
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            </div>
+          </Tabs>
         </div>
+
+        {/* Open Orders Panel */}
+        {showOpenOrders && openOrders.length > 0 && (
+          <div className={`${inputBg} rounded-xl p-3 border ${isLightTheme ? 'border-gray-200' : `border-${theme}-500/20`}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className={`text-xs font-medium ${textPrimary}`}>Open Limit Orders</span>
+              <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => setShowOpenOrders(false)}>
+                <X className="w-3 h-3" />
+              </Button>
+            </div>
+            <ScrollArea className="max-h-32">
+              <div className="space-y-2">
+                {openOrders.map((order) => (
+                  <div key={order.id} className={`flex items-center justify-between p-2 rounded-lg ${isLightTheme ? 'bg-gray-50' : 'bg-black/30'}`}>
+                    <div className="flex-1">
+                      <div className={`text-xs font-medium ${textPrimary}`}>
+                        {order.from_amount} {order.from_token} → {order.to_token}
+                      </div>
+                      <div className={`text-[10px] ${textSecondary}`}>
+                        @ {order.limit_price} • Expires {format(new Date(order.expiry_date), 'MMM d')}
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 text-red-400 hover:text-red-500"
+                      onClick={() => cancelOrderMutation.mutate(order.id)}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        )}
 
         {/* From Token */}
         <div className={`${inputBg} rounded-xl p-4 border ${isLightTheme ? 'border-gray-200 hover:border-gray-300' : `border-${theme}-500/10 hover:border-${theme}-500/30`} transition-all`}>
@@ -234,6 +357,52 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
           )}
         </div>
 
+        {/* Limit Order Settings */}
+        {orderType === 'limit' && (
+          <div className={`${isLightTheme ? 'bg-blue-50 border-blue-200' : 'bg-blue-500/10 border-blue-500/20'} rounded-xl p-4 border space-y-3`}>
+            <div className="flex items-center justify-between">
+              <span className={`text-xs font-medium ${textPrimary}`}>Limit Price</span>
+              <span className={`text-[10px] ${textSecondary}`}>
+                Market: {currentMarketPrice.toFixed(6)} {toToken.symbol}/{fromToken.symbol}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                value={limitPrice}
+                onChange={(e) => setLimitPrice(e.target.value)}
+                placeholder={currentMarketPrice.toFixed(6)}
+                className={`flex-1 ${isLightTheme ? 'bg-white border-blue-200' : 'bg-black/40 border-blue-500/30'} text-sm font-mono`}
+              />
+              <span className={`text-xs ${textSecondary}`}>{toToken.symbol}/{fromToken.symbol}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs ${textSecondary}`}>Expires in:</span>
+              <div className="flex gap-1">
+                {[1, 7, 30].map((days) => (
+                  <Button
+                    key={days}
+                    size="sm"
+                    variant={expiryDays === days ? 'default' : 'outline'}
+                    className={`h-6 text-xs px-2 ${expiryDays === days ? `bg-${theme}-500 text-white` : ''}`}
+                    onClick={() => setExpiryDays(days)}
+                  >
+                    {days}d
+                  </Button>
+                ))}
+              </div>
+            </div>
+            {limitPrice && (
+              <div className={`text-xs ${parseFloat(limitPrice) > currentMarketPrice ? 'text-green-500' : 'text-amber-500'}`}>
+                {parseFloat(limitPrice) > currentMarketPrice 
+                  ? `+${(((parseFloat(limitPrice) / currentMarketPrice) - 1) * 100).toFixed(2)}% above market`
+                  : `-${((1 - (parseFloat(limitPrice) / currentMarketPrice)) * 100).toFixed(2)}% below market`
+                }
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Price Info */}
         {route && (
           <div className={`${isLightTheme ? 'bg-violet-50 border-violet-200' : `bg-${theme}-500/5 border-${theme}-500/10`} rounded-xl p-3 border`}>
@@ -288,26 +457,33 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
           </div>
         )}
 
-        {/* Swap Button */}
+        {/* Swap/Limit Order Button */}
         <Button
           className={`w-full h-12 text-base font-semibold bg-gradient-to-r from-${theme}-500 to-emerald-500 hover:from-${theme}-400 hover:to-emerald-400 text-black shadow-lg shadow-${theme}-500/20`}
-          disabled={!walletConnected || !fromAmount || loading}
-          onClick={handleSwap}
+          disabled={!walletConnected || !fromAmount || loading || (orderType === 'limit' && !limitPrice)}
+          onClick={orderType === 'limit' ? () => createLimitOrderMutation.mutate() : handleSwap}
         >
           {swapStatus === 'success' ? (
             <>
               <CheckCircle2 className="w-5 h-5 mr-2" />
-              Swap Successful!
+              {orderType === 'limit' ? 'Order Placed!' : 'Swap Successful!'}
             </>
-          ) : loading ? (
+          ) : loading || createLimitOrderMutation.isPending ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Confirming...
+              {orderType === 'limit' ? 'Placing Order...' : 'Confirming...'}
             </>
           ) : !walletConnected ? (
             'Connect Wallet'
           ) : !fromAmount ? (
             'Enter Amount'
+          ) : orderType === 'limit' && !limitPrice ? (
+            'Enter Limit Price'
+          ) : orderType === 'limit' ? (
+            <>
+              <Target className="w-5 h-5 mr-2" />
+              Place Limit Order
+            </>
           ) : (
             <>
               <Zap className="w-5 h-5 mr-2" />

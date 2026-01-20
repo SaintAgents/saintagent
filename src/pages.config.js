@@ -52,6 +52,7 @@ import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import UserGuide from './pages/UserGuide';
 import Authority144 from './pages/Authority144';
+import Lottery from './pages/Lottery';
 import __Layout from './Layout.jsx';
 
 
@@ -110,6 +111,7 @@ export const PAGES = {
     "Terms": Terms,
     "UserGuide": UserGuide,
     "Authority144": Authority144,
+    "Lottery": Lottery,
 }
 
 export const pagesConfig = {
