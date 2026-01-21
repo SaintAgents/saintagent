@@ -58,12 +58,12 @@ export default function G3Dex() {
     trending: 'expanded'
   });
   
-  // Floating card positions and sizes
+  // Floating card positions and sizes (y starts at 70 to stay below topbar)
   const [floatingCards, setFloatingCards] = useState({
-    chart: { position: { x: 100, y: 100 }, size: { width: 600, height: 450 } },
-    portfolio: { position: { x: 150, y: 150 }, size: { width: 400, height: 350 } },
-    trading: { position: { x: 200, y: 120 }, size: { width: 450, height: 500 } },
-    trending: { position: { x: 250, y: 130 }, size: { width: 380, height: 400 } }
+    chart: { position: { x: 100, y: 70 }, size: { width: 600, height: 450 } },
+    portfolio: { position: { x: 150, y: 120 }, size: { width: 400, height: 350 } },
+    trading: { position: { x: 200, y: 90 }, size: { width: 450, height: 500 } },
+    trending: { position: { x: 250, y: 100 }, size: { width: 380, height: 400 } }
   });
   
   const setCardMode = (cardId, mode) => {
