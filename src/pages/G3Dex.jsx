@@ -688,9 +688,21 @@ export default function G3Dex() {
           </div>
 
           {/* Right Sidebar - Trending & Info */}
-          <div className={`${chartMode === 'docked' ? 'xl:col-span-3' : 'xl:col-span-6'} space-y-3 md:space-y-4`}>
-            <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
-          </div>
+          {cardModes.trending !== 'hidden' && cardModes.trending !== 'stowed' && (
+            <div className={`${cardModes.chart !== 'hidden' && cardModes.chart !== 'stowed' ? 'xl:col-span-3' : 'xl:col-span-6'} space-y-3 md:space-y-4`}>
+              <DexCard
+                id="trending"
+                title="Trending Pairs"
+                icon={TrendingUp}
+                mode={cardModes.trending}
+                onModeChange={(mode) => setCardMode('trending', mode)}
+                theme={currentTheme.accent}
+                isLightTheme={theme === 'light'}
+              >
+                <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
+              </DexCard>
+            </div>
+          )}
         </div>
       </div>
 
