@@ -1474,17 +1474,19 @@ function AuthenticatedLayout({ children, currentPageName }) {
           }
         `}</style>
 
-        {/* Sidebar */}
-      <Sidebar 
-        isCollapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        currentPage={getPageId(currentPageName)}
-        profile={profile}
-        onStatusChange={handleStatusChange}
-        onDMPolicyChange={handleDMPolicyChange}
-        theme={theme}
-        onThemeToggle={setTheme}
-      />
+        {/* Sidebar - hidden on G3Dex for full-width DEX experience */}
+        {currentPageName !== 'G3Dex' && (
+        <Sidebar 
+          isCollapsed={sidebarCollapsed}
+          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          currentPage={getPageId(currentPageName)}
+          profile={profile}
+          onStatusChange={handleStatusChange}
+          onDMPolicyChange={handleDMPolicyChange}
+          theme={theme}
+          onThemeToggle={setTheme}
+        />
+        )}
 
       {/* Top Bar */}
       <TopBar 
