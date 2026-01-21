@@ -373,12 +373,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryKey: ['wallet', walletUserId],
     queryFn: async () => {
       try {
-        const { data } = await base44.functions.invoke('walletEngine', {
+        const response = await base44.functions.invoke('walletEngine', {
           action: 'getWallet',
           payload: { user_id: walletUserId }
         });
-        console.log('Wallet response:', data);
-        return data;
+        // response is axios response, data is in response.data
+        const walletData = response?.data || response;
+        console.log('Wallet response full:', response);
+        console.log('Wallet data extracted:', walletData);
+        return walletData;
       } catch (e) {
         console.error('Wallet fetch error:', e);
         // Silently fail and use profile balance as fallback
@@ -392,6 +395,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   });
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
+  console.log('Wallet state:', { walletRes, walletBalance, profileGGG: profile?.ggg_balance });
   const walletAvailable = (walletBalance != null && walletBalance > 0) ? walletBalance : (profile?.ggg_balance ?? 0);
   // Use rp_points for calculation, but also check rank_points as fallback
   const rpPoints = profile?.rp_points || profile?.rank_points || 0;
