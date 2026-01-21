@@ -349,18 +349,25 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   });
 
-  // Fetch user profile (only when authenticated)
+  // Fetch user profile (only when authenticated) - CRITICAL: No staleTime to always get fresh data
   const { data: profiles, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
       const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
-      console.log('Fetched profile:', byEmail?.[0]?.rp_points, byEmail?.[0]?.rp_rank_code, byEmail?.[0]?.mystical_identifier);
+      console.log('Fetched profile:', {
+        ggg: byEmail?.[0]?.ggg_balance,
+        rp: byEmail?.[0]?.rp_points, 
+        rank: byEmail?.[0]?.rp_rank_code,
+        trust: byEmail?.[0]?.trust_score,
+        name: byEmail?.[0]?.display_name
+      });
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 30000, // Cache for 30 seconds
-    gcTime: 60000, // Keep in cache for 1 minute
-    refetchOnWindowFocus: true // Refetch when window regains focus
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 0, // Don't cache
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always' // Always refetch on mount
   });
   const profile = profiles?.[0];
   
