@@ -1488,20 +1488,22 @@ function AuthenticatedLayout({ children, currentPageName }) {
         />
         )}
 
-      {/* Top Bar */}
-      <TopBar 
-        mode={mode}
-        onModeChange={setMode}
-        profile={profile}
-        currentUser={currentUser}
-        notifications={notifications}
-        onSearch={handleSearch}
-        onQuickCreate={() => setQuickCreateOpen(true)}
-        onNotificationAction={handleNotificationAction}
-        sidebarCollapsed={sidebarCollapsed}
-        isCollapsed={topbarCollapsed}
-        onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
-      />
+      {/* Top Bar - hidden on G3Dex for full-width DEX experience */}
+      {currentPageName !== 'G3Dex' && (
+        <TopBar 
+          mode={mode}
+          onModeChange={setMode}
+          profile={profile}
+          currentUser={currentUser}
+          notifications={notifications}
+          onSearch={handleSearch}
+          onQuickCreate={() => setQuickCreateOpen(true)}
+          onNotificationAction={handleNotificationAction}
+          sidebarCollapsed={sidebarCollapsed}
+          isCollapsed={topbarCollapsed}
+          onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
+        />
+      )}
 
       {/* Beta Ticker - only show when topbar is not collapsed */}
       <BetaTicker 
