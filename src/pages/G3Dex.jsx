@@ -31,6 +31,7 @@ import EscrowManager from '@/components/dex/EscrowManager';
 import ResourceBridge from '@/components/dex/ResourceBridge';
 import StakePoolsModal from '@/components/dex/StakePoolsModal';
 import BridgeModal from '@/components/dex/BridgeModal';
+import { DexCard, DexFloatingCard } from '@/components/dex/DexCardControls';
 
 export default function G3Dex() {
   const [activeTab, setActiveTab] = useState('swap');
@@ -49,10 +50,49 @@ export default function G3Dex() {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [showTopCoinsDropdown, setShowTopCoinsDropdown] = useState(false);
   
-  // Chart display modes: 'hidden' (minimized to icon), 'docked' (in grid), 'floating' (window)
-  const [chartMode, setChartMode] = useState('docked');
-  const [floatingPosition, setFloatingPosition] = useState({ x: 100, y: 100 });
-  const [floatingSize, setFloatingSize] = useState({ width: 600, height: 450 });
+  // Card modes: 'expanded', 'collapsed', 'stowed' (floating), 'hidden'
+  const [cardModes, setCardModes] = useState({
+    chart: 'expanded',
+    portfolio: 'expanded',
+    trading: 'expanded',
+    trending: 'expanded'
+  });
+  
+  // Floating card positions and sizes
+  const [floatingCards, setFloatingCards] = useState({
+    chart: { position: { x: 100, y: 100 }, size: { width: 600, height: 450 } },
+    portfolio: { position: { x: 150, y: 150 }, size: { width: 400, height: 350 } },
+    trading: { position: { x: 200, y: 120 }, size: { width: 450, height: 500 } },
+    trending: { position: { x: 250, y: 130 }, size: { width: 380, height: 400 } }
+  });
+  
+  const setCardMode = (cardId, mode) => {
+    setCardModes(prev => ({ ...prev, [cardId]: mode }));
+  };
+  
+  const updateFloatingPosition = (cardId, position) => {
+    setFloatingCards(prev => ({
+      ...prev,
+      [cardId]: { ...prev[cardId], position }
+    }));
+  };
+  
+  const updateFloatingSize = (cardId, size) => {
+    setFloatingCards(prev => ({
+      ...prev,
+      [cardId]: { ...prev[cardId], size }
+    }));
+  };
+  
+  // Legacy chart mode for backward compatibility
+  const chartMode = cardModes.chart === 'stowed' ? 'floating' : cardModes.chart === 'hidden' ? 'hidden' : 'docked';
+  const setChartMode = (mode) => {
+    if (mode === 'floating') setCardMode('chart', 'stowed');
+    else if (mode === 'hidden') setCardMode('chart', 'hidden');
+    else setCardMode('chart', 'expanded');
+  };
+  const floatingPosition = floatingCards.chart.position;
+  const floatingSize = floatingCards.chart.size;
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
