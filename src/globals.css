@@ -445,12 +445,31 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 /* Dark mode: Brighten subtitle text */
 [data-theme='dark'] .text-slate-600,
 [data-theme='dark'] [class*='text-slate-600'] {
-  color: #d0d0d0 !important;
+  color: #e0e0e0 !important;
 }
 
 [data-theme='dark'] .text-slate-700,
 [data-theme='dark'] [class*='text-slate-700'] {
-  color: #e0e0e0 !important;
+  color: #f0f0f0 !important;
+}
+
+/* Dark mode: News/Article modal text brightness */
+[data-theme='dark'] [role="dialog"] p,
+[data-theme='dark'] [role="dialog"] span,
+[data-theme='dark'] [role="dialog"] div,
+[data-theme='dark'] [data-radix-dialog-content] p,
+[data-theme='dark'] [data-radix-dialog-content] span {
+  color: #f0f0f0 !important;
+}
+
+[data-theme='dark'] [role="dialog"] h1,
+[data-theme='dark'] [role="dialog"] h2,
+[data-theme='dark'] [role="dialog"] h3,
+[data-theme='dark'] [role="dialog"] h4,
+[data-theme='dark'] [data-radix-dialog-content] h1,
+[data-theme='dark'] [data-radix-dialog-content] h2,
+[data-theme='dark'] [data-radix-dialog-content] h3 {
+  color: #ffffff !important;
 }
 
 /* Dark mode: Fix purple text to emerald green */
