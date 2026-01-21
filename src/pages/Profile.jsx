@@ -52,7 +52,9 @@ import {
   Compass,
   BadgeCheck,
   MessageSquare,
-  Shield
+  Shield,
+  Award,
+  Medal
 } from
 "lucide-react";
 
