@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -23,6 +23,7 @@ import GlobalAlertManager from '@/components/admin/GlobalAlertManager';
 import PressReleaseManager from '@/components/news/PressReleaseManager';
 import InsightsAdminPanel from '@/components/admin/InsightsAdminPanel';
 import ProjectClaimsManager from '@/components/admin/ProjectClaimsManager';
+import OnboardingRewardsManager from '@/components/admin/OnboardingRewardsManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -143,6 +144,10 @@ export default function Admin() {
               <BookOpen className="w-4 h-4" />
               Insights
             </TabsTrigger>
+            <TabsTrigger value="onboarding" className="gap-2 px-3 py-2">
+              <Gift className="w-4 h-4" />
+              Onboarding
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -216,6 +221,10 @@ export default function Admin() {
 
           <TabsContent value="insights">
             <InsightsAdminPanel />
+          </TabsContent>
+
+          <TabsContent value="onboarding">
+            <OnboardingRewardsManager />
           </TabsContent>
         </Tabs>
       </div>
