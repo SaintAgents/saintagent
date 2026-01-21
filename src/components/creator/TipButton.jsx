@@ -69,7 +69,8 @@ export default function TipButton({
       const tipAmount = customAmount ? parseFloat(customAmount) : amount;
       
       if (tipAmount <= 0) throw new Error('Invalid tip amount');
-      if (userProfile.ggg_balance < tipAmount) throw new Error('Insufficient GGG balance');
+      if (!userProfile?.id) throw new Error('Profile not loaded. Please try again.');
+      if (walletBalance < tipAmount) throw new Error('Insufficient GGG balance');
 
       // Create tip record
       const tip = await base44.entities.Tip.create({
