@@ -19,6 +19,9 @@ const NEO_NFT_CATEGORIES = [
   { id: 'sovereign', label: 'Sovereign Instruments', icon: Shield },
 ];
 
+// 1 GGG = 1 gram of gold @ USD 145.00 per gram
+const GOLD_PRICE_USD = 145.00;
+
 const MOCK_NEO_NFTS = [
   {
     id: 1,
@@ -26,7 +29,7 @@ const MOCK_NEO_NFTS = [
     category: 'art',
     image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400',
     goldBacking: 1.5,
-    price: 4875.30,
+    price: 1.5, // 1.5 GGG = 1.5g Au = USD 217.50
     creator: 'StarArtist.eth',
     verified: true,
     rarity: 'legendary',
@@ -39,7 +42,7 @@ const MOCK_NEO_NFTS = [
     category: 'land',
     image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400',
     goldBacking: 50,
-    price: 162510,
+    price: 50, // 50 GGG = 50g Au = USD 7,250
     creator: 'SovereignLand.dao',
     verified: true,
     rarity: 'rare',
@@ -53,7 +56,7 @@ const MOCK_NEO_NFTS = [
     category: 'energy',
     image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400',
     goldBacking: 10,
-    price: 32502,
+    price: 10, // 10 GGG = 10g Au = USD 1,450
     creator: 'GaiaEnergy.org',
     verified: true,
     rarity: 'common',
@@ -66,7 +69,7 @@ const MOCK_NEO_NFTS = [
     category: 'commodities',
     image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400',
     goldBacking: 100,
-    price: 325020,
+    price: 100, // 100 GGG = 100g Au = USD 14,500
     creator: 'CrownVault.io',
     verified: true,
     rarity: 'epic',
@@ -81,7 +84,7 @@ const MOCK_NEO_NFTS = [
     category: 'commodities',
     image: 'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=400',
     goldBacking: 250,
-    price: 812550,
+    price: 250, // 250 GGG = 250g Au = USD 36,250
     creator: 'EnergyTrust.sov',
     verified: true,
     rarity: 'legendary',
@@ -96,7 +99,7 @@ const MOCK_NEO_NFTS = [
     category: 'sovereign',
     image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400',
     goldBacking: 500,
-    price: 1625100,
+    price: 500, // 500 GGG = 500g Au = USD 72,500
     creator: 'CrownFlame.office',
     verified: true,
     rarity: 'mythic',
