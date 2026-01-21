@@ -501,7 +501,9 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
                 </Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <span className={`${textPrimary} font-mono text-lg`}>${currentPrice.toFixed(2)}</span>
+                <span className={`${textPrimary} font-mono text-lg`}>
+                  ${currentPrice ? currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: currentPrice < 1 ? 4 : 2 }) : '--'}
+                </span>
                 <span className={`flex items-center gap-0.5 ${isPositive ? `text-${theme}-400` : 'text-red-400'}`}>
                   {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                   {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
