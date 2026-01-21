@@ -8,8 +8,9 @@ import {
   Image, Landmark, Zap, FileText, Droplet, Diamond, 
   Shield, Lock, TrendingUp, Search, Filter, Star,
   Coins, MapPin, Calendar, CheckCircle, ArrowRight, Sparkles,
-  Grid3X3, List, Globe, SortAsc, Package
+  Grid3X3, List, Globe, SortAsc, Package, History
 } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 import NeoNFTDetailModal from './NeoNFTDetailModal';
 import NeoNFTListView from './NeoNFTListView';
 
@@ -390,14 +391,27 @@ function NeoNFTCard({ nft, onClick, theme = 'lime' }) {
                 ≈ ${((nft.price_ggg || nft.price) * 145).toLocaleString()} USD
               </div>
             </div>
-            <Button 
-              size="sm" 
-              className="bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-semibold"
-              onClick={(e) => { e.stopPropagation(); }}
-            >
-              Trade
-              <ArrowRight className="w-3 h-3 ml-1" />
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="border-purple-500/40 text-purple-400 hover:bg-purple-500/10"
+                onClick={(e) => { 
+                  e.stopPropagation(); 
+                  window.location.href = createPageUrl('NeoNFTProvenance') + `?id=${nft.id}`;
+                }}
+              >
+                <History className="w-3 h-3" />
+              </Button>
+              <Button 
+                size="sm" 
+                className="bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-semibold"
+                onClick={(e) => { e.stopPropagation(); }}
+              >
+                Trade
+                <ArrowRight className="w-3 h-3 ml-1" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

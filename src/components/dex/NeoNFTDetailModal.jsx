@@ -10,6 +10,8 @@ import {
   ExternalLink, Copy, ArrowRight, X
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 const RARITY_STYLES = {
   common: 'bg-slate-500/20 text-slate-300 border-slate-500/40',
@@ -88,7 +90,6 @@ export default function NeoNFTDetailModal({ nft, open, onClose, theme = 'lime' }
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
               <TabsList className="mx-4 mt-2 bg-black/40 border border-gray-800">
                 <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
-                <TabsTrigger value="provenance" className="text-xs">Provenance</TabsTrigger>
                 <TabsTrigger value="geofence" className="text-xs">Geo-Fencing</TabsTrigger>
                 <TabsTrigger value="verification" className="text-xs">Verification</TabsTrigger>
               </TabsList>
@@ -104,10 +105,18 @@ export default function NeoNFTDetailModal({ nft, open, onClose, theme = 'lime' }
                           {(nft.price_ggg || nft.price).toLocaleString()} GGG
                         </div>
                       </div>
-                      <Button className={`bg-gradient-to-r from-${theme}-500 to-emerald-500 text-black font-semibold`}>
-                        Trade Now
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Link to={createPageUrl('NeoNFTProvenance') + `?id=${nft.id}`}>
+                          <Button variant="outline" className="border-purple-500/40 text-purple-400">
+                            <History className="w-4 h-4 mr-2" />
+                            Full Provenance
+                          </Button>
+                        </Link>
+                        <Button className={`bg-gradient-to-r from-${theme}-500 to-emerald-500 text-black font-semibold`}>
+                          Trade Now
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </div>
                     </div>
                     {nft.listing_type === 'barter' && (
                       <div className="text-xs text-amber-400">
@@ -175,50 +184,7 @@ export default function NeoNFTDetailModal({ nft, open, onClose, theme = 'lime' }
                   )}
                 </TabsContent>
 
-                <TabsContent value="provenance" className="mt-0 space-y-4">
-                  <h3 className="font-semibold text-white flex items-center gap-2">
-                    <History className="w-4 h-4 text-gray-400" />
-                    Ownership History
-                  </h3>
-                  
-                  {nft.ownership_history?.length > 0 ? (
-                    <div className="space-y-2">
-                      {nft.ownership_history.map((record, idx) => (
-                        <div key={idx} className="p-3 rounded-lg bg-black/40 border border-gray-800 flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-xs font-bold">
-                            {idx + 1}
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-sm text-white">{record.owner_id}</div>
-                            <div className="text-xs text-gray-500">
-                              {record.from_date} - {record.to_date || 'Present'}
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-xs">
-                            {record.transfer_type || 'Transfer'}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="p-4 rounded-lg bg-black/40 border border-gray-800 text-center">
-                      <div className="text-sm text-gray-400">First owner - no transfer history</div>
-                    </div>
-                  )}
 
-                  {/* StarChain TX */}
-                  {nft.starchain_tx_hash && (
-                    <div className="p-3 rounded-lg bg-black/40 border border-gray-800">
-                      <div className="text-xs text-gray-500">StarChain Transaction</div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-mono text-xs truncate">{nft.starchain_tx_hash}</span>
-                        <Button variant="ghost" size="icon" className="h-6 w-6">
-                          <ExternalLink className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </TabsContent>
 
                 <TabsContent value="geofence" className="mt-0 space-y-4">
                   <h3 className="font-semibold text-white flex items-center gap-2">
