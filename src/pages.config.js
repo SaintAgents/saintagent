@@ -54,6 +54,7 @@ import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
+import GGGCrypto from './pages/GGGCrypto';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "Terms": Terms,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
+    "GGGCrypto": GGGCrypto,
 }
 
 export const pagesConfig = {
