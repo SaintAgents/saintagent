@@ -267,8 +267,13 @@ export default function UserManagement() {
         </Card>
         <Card>
           <CardContent className="bg-purple-100 pt-6 p-6 text-center">
-            <p className="text-purple-950 text-3xl font-bold">{profiles.length}</p>
-            <p className="text-zinc-950 mt-1 text-sm">Total Users</p>
+            <p className="text-purple-950 text-3xl font-bold">
+              {isLoading ? '...' : profiles.length}
+            </p>
+            <p className="text-zinc-950 mt-1 text-sm">
+              {isLoading ? 'Loading...' : 'Total Users'}
+            </p>
+            {error && <p className="text-red-500 text-xs mt-1">Error loading</p>}
           </CardContent>
         </Card>
         <Card className="col-span-4">
