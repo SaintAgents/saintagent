@@ -201,9 +201,13 @@ export default function NewsViewerModal({
                   [&_blockquote]:border-l-4 [&_blockquote]:border-violet-400 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 dark:[&_blockquote]:text-slate-400
                   [&_hr]:my-6 [&_hr]:border-slate-200 dark:[&_hr]:border-slate-700
                   [&_a]:text-violet-600 [&_a]:underline hover:[&_a]:text-violet-800 dark:[&_a]:text-violet-400
-                  [&_div]:mb-4
-                  whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: currentArticle.content }}
+                  [&_div]:mb-4"
+                dangerouslySetInnerHTML={{ 
+                  __html: currentArticle.content
+                    .replace(/^```html\s*/i, '')
+                    .replace(/```\s*$/g, '')
+                    .trim()
+                }}
               />
             )}
             
