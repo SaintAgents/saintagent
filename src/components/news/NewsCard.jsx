@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Newspaper, ArrowRight, Video, Link as LinkIcon, Calendar, Eye, MessageCircle } from 'lucide-react';
+import { Newspaper, ArrowRight, Video, Link as LinkIcon, Calendar, Eye, MessageCircle, Heart, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { createPageUrl } from '@/utils';
