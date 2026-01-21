@@ -44,6 +44,15 @@ export default function G3Dex() {
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
   const [poolsModalOpen, setPoolsModalOpen] = useState(false);
   const [bridgeModalOpen, setBridgeModalOpen] = useState(false);
+  
+  // Chart display modes: 'hidden' (minimized to icon), 'docked' (in grid), 'floating' (window)
+  const [chartMode, setChartMode] = useState('docked');
+  const [floatingPosition, setFloatingPosition] = useState({ x: 100, y: 100 });
+  const [floatingSize, setFloatingSize] = useState({ width: 600, height: 450 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const floatingRef = useRef(null);
 
   // Check for existing wallet connection
   useEffect(() => {
