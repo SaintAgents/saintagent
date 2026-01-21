@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { 
   ArrowLeft, Settings, TrendingUp, History, Repeat, Clock, 
   Wallet, Activity, BarChart3, Layers, Shield, Zap, Globe,
-  Bell, Sun, Moon, ExternalLink, RefreshCw, Lock, Sparkles
+  Bell, Sun, Moon, ExternalLink, RefreshCw, Lock, Sparkles,
+  X, Minus, Maximize2, Move
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
