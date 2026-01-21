@@ -349,34 +349,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   });
 
-  const queryClient = useQueryClient();
-  
-  // Force refetch profile data when page becomes visible (back navigation)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && currentUser?.email) {
-        console.log('Page visible - forcing profile refetch');
-        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      }
-    };
-    
-    const handlePageShow = (event) => {
-      // bfcache restoration (back button)
-      if (event.persisted && currentUser?.email) {
-        console.log('Page restored from bfcache - forcing profile refetch');
-        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('pageshow', handlePageShow);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('pageshow', handlePageShow);
-    };
-  }, [currentUser?.email, queryClient]);
-
   // Fetch user profile (only when authenticated) - CRITICAL: No staleTime to always get fresh data
   const { data: profiles, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
