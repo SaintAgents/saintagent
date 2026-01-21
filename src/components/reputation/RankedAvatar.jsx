@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Image, Shield } from 'lucide-react';
+import { Sparkles, Image, Shield, Award } from 'lucide-react';
 import { getRPRank } from '@/components/reputation/rpUtils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -102,6 +102,14 @@ export default function RankedAvatar({
   const rpInfo = getRPRank(rpPointsFinal || 0);
   const statusMessageFinal = statusMessage ?? fetchedProfile?.status_message;
   const saNumberFinal = saNumber ?? fetchedProfile?.sa_number;
+  const mysticalIdImage = fetchedProfile?.mystical_id_image;
+
+  // Fetch user badges for sigil display
+  const { data: userBadges = [] } = useQuery({
+    queryKey: ['rankedAvatarBadges', saNumberFinal || userId || 'none'],
+    queryFn: () => base44.entities.Badge.filter({ user_id: saNumberFinal || userId, status: 'active' }, '-created_date', 5),
+    enabled: !!(saNumberFinal || userId),
+  });
 
   // Determine which sigils to show
   // Trust shield only shows at 100% trust (perfect score badge)
@@ -315,6 +323,59 @@ export default function RankedAvatar({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+      )}
+
+      {/* Earned Badge Sigils - row below avatar */}
+      {userBadges.length > 0 && size >= 64 && (
+        <div 
+          className="absolute flex items-center justify-center gap-0.5 z-10"
+          style={{
+            bottom: -Math.round(symbolPx * 0.8),
+            left: '50%',
+            transform: 'translateX(-50%)'
+          }}
+        >
+          {userBadges.slice(0, 3).map((badge) => (
+            <TooltipProvider key={badge.id}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div 
+                    className="cursor-help hover:scale-110 transition-transform"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {badge.image_url ? (
+                      <img 
+                        src={badge.image_url} 
+                        alt={badge.badge_type || 'Badge'} 
+                        className="object-contain drop-shadow-md"
+                        style={{ width: symbolPx * 1.2, height: symbolPx * 1.2, filter: 'none' }}
+                        data-no-filter="true"
+                      />
+                    ) : (
+                      <div 
+                        className="rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md"
+                        style={{ width: symbolPx * 0.9, height: symbolPx * 0.9 }}
+                      >
+                        <Award style={{ width: symbolPx * 0.5, height: symbolPx * 0.5 }} />
+                      </div>
+                    )}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
+                  <p className="font-semibold text-sm capitalize">{badge.badge_type?.replace(/_/g, ' ') || 'Badge'}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ))}
+          {userBadges.length > 3 && (
+            <div 
+              className="rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 text-xs font-bold"
+              style={{ width: symbolPx * 0.8, height: symbolPx * 0.8 }}
+            >
+              +{userBadges.length - 3}
+            </div>
+          )}
+        </div>
       )}
 
 
