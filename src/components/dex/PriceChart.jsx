@@ -145,11 +145,11 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
     fetchPriceData(true);
   }, [fromToken, timeframe]);
 
-  // Live price updates every 10 seconds (price only, not chart)
+  // Live price updates every 60 seconds to avoid rate limiting
   useEffect(() => {
     const interval = setInterval(() => {
       fetchPriceData(false);
-    }, 10000);
+    }, 60000);
     return () => clearInterval(interval);
   }, [fetchPriceData]);
 
