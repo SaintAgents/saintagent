@@ -32,6 +32,8 @@ export default function GlobalChatWidget() {
   const [isDragging, setIsDragging] = useState(false);
   const [townHallOpen, setTownHallOpen] = useState(false);
   const [townHallFullscreen, setTownHallFullscreen] = useState(false);
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+  const lastMessageCountRef = useRef(0);
   const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
   const scrollRef = useRef(null);
