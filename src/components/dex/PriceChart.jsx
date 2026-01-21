@@ -511,6 +511,12 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
           </div>
 
           <div className="flex items-center gap-1">
+            {/* Live indicator */}
+            <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] ${isLive ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+              {isLive ? <Wifi className="w-2.5 h-2.5" /> : <WifiOff className="w-2.5 h-2.5" />}
+              {isLive ? 'LIVE' : 'OFFLINE'}
+            </div>
+
             {/* Chart Type Buttons */}
             <Button 
               variant="ghost" 
