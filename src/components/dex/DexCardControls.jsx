@@ -116,13 +116,16 @@ export function DexFloatingCard({
   const [dragOffset, setDragOffset] = React.useState({ x: 0, y: 0 });
   const cardRef = React.useRef(null);
 
+  // Minimum Y position to stay below topbar (60px)
+  const MIN_Y = 60;
+  
   React.useEffect(() => {
     if (!isDragging) return;
     
     const handleMouseMove = (e) => {
       onPositionChange({
         x: Math.max(0, Math.min(window.innerWidth - size.width, e.clientX - dragOffset.x)),
-        y: Math.max(0, Math.min(window.innerHeight - size.height, e.clientY - dragOffset.y))
+        y: Math.max(MIN_Y, Math.min(window.innerHeight - size.height, e.clientY - dragOffset.y))
       });
     };
     
