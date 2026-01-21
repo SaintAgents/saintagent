@@ -13,6 +13,21 @@ css
 }
 
 /* =====================================================
+   VIBRATION ANIMATION FOR NOTIFICATIONS
+   ===================================================== */
+
+@keyframes vibrate {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+.animate-vibrate {
+  animation: vibrate 0.5s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(99, 102, 241, 0.4);
+}
+
+/* =====================================================
    MOBILE CLOSE BUTTON
    ===================================================== */
 
