@@ -590,15 +590,21 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 }
 
 [data-theme='hacker'] button,
-[data-theme='hacker'] [role="button"] {
+[data-theme='hacker'] [role="button"],
+[data-theme='hacker'] [class*='Button'],
+[data-theme='hacker'] [class*='Trigger'],
+[data-theme='hacker'] [role="tab"],
+[data-theme='hacker'] input,
+[data-theme='hacker'] textarea,
+[data-theme='hacker'] select,
+[data-theme='hacker'] label {
   color: #00ff00 !important;
   border-color: #00ff00 !important;
 }
 
-[data-theme='hacker'] button span,
-[data-theme='hacker'] button svg,
-[data-theme='hacker'] [role="button"] span,
-[data-theme='hacker'] [role="button"] svg {
+[data-theme='hacker'] button *,
+[data-theme='hacker'] [role="button"] *,
+[data-theme='hacker'] [class*='Button'] * {
   color: inherit !important;
 }
 
@@ -608,14 +614,31 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.5) !important;
 }
 
-/* Ensure badge/pill text is visible in dark themes */
-[data-theme='dark'] [class*='badge'],
-[data-theme='dark'] .badge {
-  color: #ffffff !important;
+[data-theme='hacker'] [class*='badge'],
+[data-theme='hacker'] .badge,
+[data-theme='hacker'] [class*='Badge'] {
+  color: #00ff00 !important;
+  border-color: #00ff00 !important;
 }
 
-[data-theme='hacker'] [class*='badge'],
-[data-theme='hacker'] .badge {
+[data-theme='hacker'] input::placeholder,
+[data-theme='hacker'] textarea::placeholder {
+  color: rgba(0, 255, 0, 0.5) !important;
+}
+
+[data-theme='hacker'] [class*='text-'],
+[data-theme='hacker'] p,
+[data-theme='hacker'] span,
+[data-theme='hacker'] div,
+[data-theme='hacker'] h1,
+[data-theme='hacker'] h2,
+[data-theme='hacker'] h3,
+[data-theme='hacker'] h4,
+[data-theme='hacker'] h5,
+[data-theme='hacker'] h6,
+[data-theme='hacker'] li,
+[data-theme='hacker'] td,
+[data-theme='hacker'] th {
   color: #00ff00 !important;
 }
 
@@ -624,7 +647,19 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 [data-theme='dark'] .text-4xl,
 [data-theme='dark'] .text-2xl,
 [data-theme='dark'] .text-xl,
-[data-theme='dark'] .text-lg {
+[data-theme='dark'] .text-lg,
+[data-theme='dark'] .text-base,
+[data-theme='dark'] .text-sm,
+[data-theme='dark'] .text-xs {
+  color: #e8e8e8 !important;
+}
+
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6 {
   color: #ffffff !important;
 }
 
@@ -632,8 +667,54 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 [data-theme='dark'] [class*='Header'] h1,
 [data-theme='dark'] [class*='Header'] h2,
 [data-theme='dark'] [class*='Header'] h3,
-[data-theme='dark'] [class*='Header'] p {
+[data-theme='dark'] [class*='Header'] p,
+[data-theme='dark'] [class*='Header'] span {
   color: #ffffff !important;
+}
+
+/* =====================================================
+   RESPONSIVE CARD LAYOUT UTILITIES
+   ===================================================== */
+
+/* Cards auto-adjust content */
+.card-content-auto {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-content-auto > * {
+  flex-shrink: 0;
+}
+
+.card-content-auto .card-scrollable {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Responsive grid that adapts when cards close */
+.dex-responsive-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dex-responsive-grid > * {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+/* When only one card, take full width */
+.dex-responsive-grid > *:only-child {
+  flex: 1 1 100%;
+}
+
+/* Transition for smooth card resizing */
+.card-transition {
+  transition: all 0.3s ease-in-out;
 }
 
 /* =====================================================

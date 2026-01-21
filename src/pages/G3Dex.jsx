@@ -635,11 +635,11 @@ export default function G3Dex() {
           </Tabs>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 md:gap-4 max-w-[1600px] mx-auto">
+        <div className="flex flex-col lg:flex-row gap-3 md:gap-4 max-w-[1800px] mx-auto">
           
           {/* Left Sidebar - Chart & Portfolio */}
-          {cardModes.chart !== 'hidden' && cardModes.chart !== 'stowed' && (
-            <div className="xl:col-span-5 space-y-3 md:space-y-4">
+          {(cardModes.chart !== 'hidden' && cardModes.chart !== 'stowed') && (
+            <div className={`${cardModes.trending !== 'hidden' && cardModes.trending !== 'stowed' ? 'lg:w-[38%]' : 'lg:w-[50%]'} space-y-3 md:space-y-4 transition-all duration-300`}>
               <DexCard
                 id="chart"
                 title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
@@ -667,26 +667,9 @@ export default function G3Dex() {
               )}
             </div>
           )}
-          
-          {/* When chart is hidden or floating, show portfolio if needed */}
-          {(cardModes.chart === 'hidden' || cardModes.chart === 'stowed') && showPortfolio && walletConnected && cardModes.portfolio !== 'hidden' && cardModes.portfolio !== 'stowed' && (
-            <div className="xl:col-span-5 space-y-3 md:space-y-4">
-              <DexCard
-                id="portfolio"
-                title="Portfolio"
-                icon={Wallet}
-                mode={cardModes.portfolio}
-                onModeChange={(mode) => setCardMode('portfolio', mode)}
-                theme={currentTheme.accent}
-                isLightTheme={theme === 'light'}
-              >
-                <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
-              </DexCard>
-            </div>
-          )}
 
-          {/* Main Trading Area */}
-          <div className={`${chartMode === 'docked' ? 'xl:col-span-4' : 'xl:col-span-6'} space-y-3 md:space-y-4`}>
+          {/* Main Trading Area - Expands when sidebars close */}
+          <div className={`flex-1 min-w-0 space-y-3 md:space-y-4 transition-all duration-300`}>
             {/* Tab Content */}
             {activeTab === 'swap' && (
               <SwapInterface
@@ -759,7 +742,7 @@ export default function G3Dex() {
 
           {/* Right Sidebar - Trending & Info */}
           {cardModes.trending !== 'hidden' && cardModes.trending !== 'stowed' && (
-            <div className={`${cardModes.chart !== 'hidden' && cardModes.chart !== 'stowed' ? 'xl:col-span-3' : 'xl:col-span-6'} space-y-3 md:space-y-4`}>
+            <div className={`${cardModes.chart !== 'hidden' && cardModes.chart !== 'stowed' ? 'lg:w-[25%]' : 'lg:w-[35%]'} space-y-3 md:space-y-4 transition-all duration-300`}>
               <DexCard
                 id="trending"
                 title="Trending Pairs"
