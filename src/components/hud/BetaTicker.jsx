@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
 import { X } from 'lucide-react';
 
-export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
+export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentPageName }) {
   const [isDismissed, setIsDismissed] = useState(() => {
     // Initialize from sessionStorage
     try {
@@ -11,6 +11,9 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed }) {
       return false;
     }
   });
+  
+  // Hide on G3Dex page
+  if (currentPageName === 'G3Dex') return null;
   
   const handleDismiss = () => {
     setIsDismissed(true);
