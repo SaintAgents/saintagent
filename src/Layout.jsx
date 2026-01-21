@@ -1474,8 +1474,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           }
         `}</style>
 
-        {/* Sidebar - hidden on G3Dex for full-width DEX experience */}
-        {currentPageName !== 'G3Dex' && (
+        {/* Sidebar - hidden on G3Dex and GGGCrypto for full-width experience */}
+        {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && (
         <Sidebar 
           isCollapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -1488,8 +1488,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         />
         )}
 
-      {/* Top Bar - hidden on G3Dex for full-width DEX experience */}
-      {currentPageName !== 'G3Dex' && (
+      {/* Top Bar - hidden on G3Dex and GGGCrypto for full-width experience */}
+      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && (
         <TopBar 
           mode={mode}
           onModeChange={setMode}
@@ -1533,12 +1533,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
           data-cmd-view={cmdViewMode || 'standard'}
           className={cn(
               "min-h-screen transition-all duration-300",
-              currentPageName === 'G3Dex' 
+              (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pl-0"
                 : "pl-0 md:pl-20 lg:pl-64",
               "pr-0",
-              currentPageName === 'G3Dex' 
-                ? (topbarCollapsed ? "pt-0" : "pt-12")
+              (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
+                ? "pt-0"
                 : (topbarCollapsed ? "pt-8" : "pt-28"),
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
