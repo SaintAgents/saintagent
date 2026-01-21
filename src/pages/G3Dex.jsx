@@ -408,12 +408,44 @@ export default function G3Dex() {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 md:gap-4 max-w-[1600px] mx-auto">
           
           {/* Left Sidebar - Chart & Portfolio */}
-          <div className="xl:col-span-5 space-y-3 md:space-y-4">
-            <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
-            {showPortfolio && walletConnected && (
+          {chartMode === 'docked' && (
+            <div className="xl:col-span-5 space-y-3 md:space-y-4">
+              <div className="relative">
+                {/* Chart Control Buttons */}
+                <div className="absolute top-2 right-2 z-20 flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 bg-black/60 hover:bg-black/80 text-gray-400 hover:text-white"
+                    onClick={() => setChartMode('hidden')}
+                    title="Minimize to header"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 bg-black/60 hover:bg-black/80 text-gray-400 hover:text-white"
+                    onClick={() => setChartMode('floating')}
+                    title="Pop out window"
+                  >
+                    <Maximize2 className="w-3 h-3" />
+                  </Button>
+                </div>
+                <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
+              </div>
+              {showPortfolio && walletConnected && (
+                <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+              )}
+            </div>
+          )}
+          
+          {/* When chart is hidden or floating, expand other columns */}
+          {chartMode !== 'docked' && showPortfolio && walletConnected && (
+            <div className="xl:col-span-5 space-y-3 md:space-y-4">
               <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Main Trading Area */}
           <div className="xl:col-span-4 space-y-3 md:space-y-4">
