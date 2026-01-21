@@ -66,7 +66,7 @@ export default function GGGCrypto() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-800">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-800 -ml-4 md:-ml-20 lg:-ml-64 pl-4 md:pl-20 lg:pl-64 transition-all duration-300">
       {/* Navigation - positioned relative to main content area */}
       <nav className="sticky top-0 z-40 bg-purple-900/80 backdrop-blur-md border-b border-purple-700/50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
