@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, Maximize2, Minimize2, RefreshCw, BarChart2, C
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarChart, Cell, ComposedChart, ReferenceLine } from 'recharts';
 import PriceAlertModal from './PriceAlertModal';
 
-const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M'];
+const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M', '6M'];
 const CHART_TYPES = ['area', 'candle', 'manhattan'];
 const DRAWING_TOOLS = [
   { id: 'line', icon: Minus, label: 'Trend Line' },
@@ -34,7 +34,7 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
 
   // Generate mock price data with OHLC for candlestick
   const chartData = useMemo(() => {
-    const points = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 7 : 30;
+    const points = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 7 : timeframe === '1M' ? 30 : 180;
     const basePrice = 3200;
     const data = [];
     let price = basePrice;
