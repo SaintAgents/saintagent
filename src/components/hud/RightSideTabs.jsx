@@ -247,7 +247,7 @@ export default function RightSideTabs() {
       {/* Help Tab */}
       <div 
         className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
-        style={{ bottom: '200px' }}
+        style={{ bottom: '240px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
