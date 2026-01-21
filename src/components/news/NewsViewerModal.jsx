@@ -106,17 +106,18 @@ export default function NewsViewerModal({
                 alt={currentArticle.title}
                 className="w-full h-full object-cover"
               />
-              {/* Image viewer trigger */}
+              {/* Image viewer trigger - always visible */}
               <button
                 onClick={() => {
                   document.dispatchEvent(new CustomEvent('openGlobalPhotoViewer', { 
                     detail: { imageUrl: currentArticle.image_url, title: currentArticle.title } 
                   }));
                 }}
-                className="absolute bottom-3 right-3 p-2 bg-black/60 hover:bg-black/80 rounded-lg text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute bottom-3 right-3 p-2 bg-black/60 hover:bg-black/80 rounded-lg text-white transition-colors flex items-center gap-1.5"
                 title="View full image"
               >
                 <ImageIcon className="w-4 h-4" />
+                <span className="text-xs font-medium">View</span>
               </button>
             </div>
           )}
