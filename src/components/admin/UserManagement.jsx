@@ -31,10 +31,14 @@ export default function UserManagement() {
   const [sortOrder, setSortOrder] = useState('date'); // 'date', 'alpha', 'sa'
   const queryClient = useQueryClient();
 
-  const { data: profiles = [] } = useQuery({
+  const { data: profiles = [], isLoading, error } = useQuery({
     queryKey: ['allProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 500)
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
+    staleTime: 0,
+    refetchOnMount: true
   });
+  
+  console.log('UserManagement - profiles loaded:', profiles?.length, 'loading:', isLoading, 'error:', error);
 
   const updateProfileMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.UserProfile.update(id, data),
