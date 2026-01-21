@@ -85,6 +85,56 @@ export default function G3Dex() {
     }
   }, []);
 
+  // Handle floating window drag
+  useEffect(() => {
+    if (!isDragging) return;
+    
+    const handleMouseMove = (e) => {
+      setFloatingPosition({
+        x: Math.max(0, Math.min(window.innerWidth - floatingSize.width, e.clientX - dragOffset.x)),
+        y: Math.max(0, Math.min(window.innerHeight - floatingSize.height, e.clientY - dragOffset.y))
+      });
+    };
+    
+    const handleMouseUp = () => setIsDragging(false);
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragOffset, floatingSize]);
+
+  // Handle floating window resize
+  useEffect(() => {
+    if (!isResizing) return;
+    
+    const handleMouseMove = (e) => {
+      setFloatingSize({
+        width: Math.max(400, e.clientX - floatingPosition.x),
+        height: Math.max(300, e.clientY - floatingPosition.y)
+      });
+    };
+    
+    const handleMouseUp = () => setIsResizing(false);
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing, floatingPosition]);
+
+  const startDrag = (e) => {
+    if (floatingRef.current) {
+      const rect = floatingRef.current.getBoundingClientRect();
+      setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      setIsDragging(true);
+    }
+  };
+
   const handleWalletConnect = (address) => {
     setWalletAddress(address);
     setWalletConnected(true);
