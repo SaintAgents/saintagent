@@ -402,13 +402,12 @@ export default function G3Dex() {
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
               </Button>
-              
               {/* Chart Icon - circular, only visible when chart is minimized */}
               {chartMode === 'hidden' && (
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className={`w-7 h-7 rounded-full bg-${currentTheme.accent}-500/20 text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/30 border border-${currentTheme.accent}-500/40 ml-1`}
+                  className={`w-7 h-7 rounded-full bg-${currentTheme.accent}-500/20 text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/30 border border-${currentTheme.accent}-500/40`}
                   onClick={() => setChartMode('floating')}
                   title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
                 >
