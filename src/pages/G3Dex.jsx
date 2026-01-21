@@ -725,79 +725,59 @@ export default function G3Dex() {
         theme={currentTheme.accent}
       />
 
-      {/* Floating Chart Window */}
-      {chartMode === 'floating' && (
-        <div
-          ref={floatingRef}
-          className={`fixed z-[100] rounded-xl overflow-hidden border border-${currentTheme.accent}-500/30 shadow-2xl shadow-${currentTheme.accent}-500/20`}
-          style={{
-            left: floatingPosition.x,
-            top: floatingPosition.y,
-            width: floatingSize.width,
-            height: floatingSize.height,
-            backgroundColor: theme === 'light' ? '#ffffff' : '#0a0a0f'
-          }}
+      {/* Floating Cards */}
+      {cardModes.chart === 'stowed' && (
+        <DexFloatingCard
+          id="chart"
+          title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
+          icon={BarChart3}
+          position={floatingCards.chart.position}
+          size={floatingCards.chart.size}
+          onPositionChange={(pos) => updateFloatingPosition('chart', pos)}
+          onSizeChange={(size) => updateFloatingSize('chart', size)}
+          onDock={() => setCardMode('chart', 'expanded')}
+          onHide={() => setCardMode('chart', 'hidden')}
+          theme={currentTheme.accent}
+          isLightTheme={theme === 'light'}
         >
-          {/* Floating Window Header */}
-          <div 
-            className={`flex items-center justify-between px-3 py-2 cursor-move border-b ${theme === 'light' ? 'bg-gray-100 border-gray-200' : 'bg-black/80 border-gray-800'}`}
-            onMouseDown={startDrag}
-          >
-            <div className="flex items-center gap-2">
-              <Move className="w-3 h-3 text-gray-500" />
-              <span className={`text-xs font-medium ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>
-                {selectedPair?.from || 'ETH'}/{selectedPair?.to || 'USDC'} Chart
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 text-gray-400 hover:text-white hover:bg-gray-700"
-                onClick={() => setChartMode('hidden')}
-                title="Minimize"
-              >
-                <Minus className="w-3 h-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`h-5 w-5 text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/20`}
-                onClick={() => setChartMode('docked')}
-                title="Dock to grid"
-              >
-                <Maximize2 className="w-3 h-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                onClick={() => setChartMode('hidden')}
-                title="Close"
-              >
-                <X className="w-3 h-3" />
-              </Button>
-            </div>
-          </div>
-          
-          {/* Floating Chart Content */}
-          <div className="h-[calc(100%-36px)] overflow-hidden">
-            <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
-          </div>
-          
-          {/* Resize Handle */}
-          <div
-            className={`absolute bottom-0 right-0 w-4 h-4 cursor-se-resize ${theme === 'light' ? 'bg-gray-300' : 'bg-gray-700'} rounded-tl`}
-            onMouseDown={(e) => {
-              e.stopPropagation();
-              setIsResizing(true);
-            }}
-            style={{
-              backgroundImage: 'linear-gradient(135deg, transparent 50%, currentColor 50%)',
-              opacity: 0.5
-            }}
-          />
-        </div>
+          <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
+        </DexFloatingCard>
+      )}
+      
+      {cardModes.portfolio === 'stowed' && showPortfolio && walletConnected && (
+        <DexFloatingCard
+          id="portfolio"
+          title="Portfolio"
+          icon={Wallet}
+          position={floatingCards.portfolio.position}
+          size={floatingCards.portfolio.size}
+          onPositionChange={(pos) => updateFloatingPosition('portfolio', pos)}
+          onSizeChange={(size) => updateFloatingSize('portfolio', size)}
+          onDock={() => setCardMode('portfolio', 'expanded')}
+          onHide={() => setCardMode('portfolio', 'hidden')}
+          theme={currentTheme.accent}
+          isLightTheme={theme === 'light'}
+        >
+          <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+        </DexFloatingCard>
+      )}
+      
+      {cardModes.trending === 'stowed' && (
+        <DexFloatingCard
+          id="trending"
+          title="Trending Pairs"
+          icon={TrendingUp}
+          position={floatingCards.trending.position}
+          size={floatingCards.trending.size}
+          onPositionChange={(pos) => updateFloatingPosition('trending', pos)}
+          onSizeChange={(size) => updateFloatingSize('trending', size)}
+          onDock={() => setCardMode('trending', 'expanded')}
+          onHide={() => setCardMode('trending', 'hidden')}
+          theme={currentTheme.accent}
+          isLightTheme={theme === 'light'}
+        >
+          <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
+        </DexFloatingCard>
       )}
 
     </div>
