@@ -235,7 +235,7 @@ export default function Join() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-6 rounded-xl"
+              className="border-violet-500/50 bg-violet-900/30 text-violet-200 hover:bg-violet-800/50 hover:border-violet-400 text-lg px-8 py-6 rounded-xl"
               onClick={handleSignIn}
             >
               Sign In
