@@ -128,7 +128,7 @@ export default function Onboarding() {
             const subject = 'Welcome to Saint Agents – Your Mission Just Went Live';
             const body = `Hi ${firstName},\n\nWelcome to Saint Agents. 🌟\nYour account is now active, and your Saint profile has been initiated inside the GGG-powered ecosystem. From here forward, every action—every mission, every connection, every contribution—can become part of a higher-aligned impact trail.\n\nWhat this means for you\nAs a Saint Agent, you’re not just “using a platform.” You’re stepping into a living system designed to:\n• Track real value you create through missions, services, and exchanges\n• Grow your GGG earnings in a secured, clean ledger\n• Build a visible reputation + trust profile that reflects who you truly are in the work\n\nOver time, you’ll unlock roles, badges, and access tiers that recognize your integrity, consistency, and service—not just your volume.\n\nYour first steps\nTo get started, we recommend:\n1) Complete Your Profile — add a clear photo, a short bio, and your main skills/offers.\n2) Review the Mission & Marketplace areas — browse missions to accept/support and post your first offer or service.\n3) Read the Saint Agent Ethos — Truth over manipulation • Service over extraction • Long-term alignment over quick wins.\n\nHow your trust & reputation grow\nBehind the scenes, the system is watching for follow-through, integrity, and contribution. As you complete missions, earn GGG, and interact with others, you’ll start to see:\n• Your Reputation Rank (from Seeker upward)\n• Your Trust Meter (0–100%)\n• Your badges unlocking (e.g., Mentor, Steward, Healer, Market Maker, etc.)\n\nNeed help?\nCheck the Help / FAQ section in your dashboard or reach out to support at ${supportEmail}.\n\nThank you for stepping in. The fact that you’re here says something about who you are—and what you’re ready to build.\n\nWelcome to Saint Agents. Your mission is now in motion.\n\nWith respect,\nThe Saint Agents Team`;
 
-            // Ensure Saint Agent number and basic profile exists
+            // Ensure basic profile exists first
             const existingProfiles = await base44.entities.UserProfile.filter({ user_id: user.email });
             if (!existingProfiles?.length) {
               const baseHandle = (user.full_name?.split(' ')?.[0] || user.email.split('@')[0] || 'agent').toLowerCase().replace(/[^a-z0-9_]/g, '');
@@ -137,37 +137,28 @@ export default function Onboarding() {
               if (collision?.length) {
                 handle = `${handle}${Math.floor(Math.random() * 1000)}`;
               }
-              let sa = String(Math.floor(100000 + Math.random() * 900000));
-              for (let i = 0; i < 2; i++) {
-                const taken = await base44.entities.UserProfile.filter({ sa_number: sa });
-                if (taken?.length) {
-                  sa = String(Math.floor(100000 + Math.random() * 900000));
-                } else break;
-              }
+              // Create profile WITHOUT sa_number - let assignSaNumber handle it
               await base44.entities.UserProfile.create({
                 user_id: user.email,
                 display_name: user.full_name || handle,
-                handle,
-                sa_number: sa
+                handle
               });
+            }
 
-              // ensure notifications are fresh for new SA
-              await base44.entities.Notification.create({
-                user_id: user.email,
-                type: 'system',
-                title: 'Saint Agent ID Assigned',
-                message: `Your Saint Agent number is SA#${sa}.`,
-                priority: 'normal'
-              });
-            } else if (!existingProfiles[0].sa_number) {
-              let sa = String(Math.floor(100000 + Math.random() * 900000));
-              for (let i = 0; i < 2; i++) {
-                const taken = await base44.entities.UserProfile.filter({ sa_number: sa });
-                if (taken?.length) {
-                  sa = String(Math.floor(100000 + Math.random() * 900000));
-                } else break;
+            // Use the proper incremental SA# assignment function
+            try {
+              const saResult = await base44.functions.invoke('assignSaNumber', {});
+              if (saResult?.data?.sa_number && saResult?.data?.assigned) {
+                await base44.entities.Notification.create({
+                  user_id: user.email,
+                  type: 'system',
+                  title: 'Saint Agent ID Assigned',
+                  message: `Your Saint Agent number is SA#${saResult.data.sa_number}.`,
+                  priority: 'normal'
+                });
               }
-              await base44.entities.UserProfile.update(existingProfiles[0].id, { sa_number: sa });
+            } catch (saErr) {
+              console.error('SA# assignment failed:', saErr);
             }
 
             // Clear any existing notifications and messages for this brand-new user
