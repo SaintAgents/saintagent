@@ -496,7 +496,7 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
         </div>
 
         {/* Timeframe Selector */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 mt-2 flex-wrap">
           {TIMEFRAMES.map((tf) => (
             <button
               key={tf}
