@@ -15,6 +15,23 @@ const DRAWING_TOOLS = [
   { id: 'circle', icon: Circle, label: 'Circle' }
 ];
 
+// Token base prices (approximate real values)
+const TOKEN_PRICES = {
+  BTC: { price: 67432, volatility: 200, change: 1.8 },
+  ETH: { price: 3247, volatility: 25, change: 2.4 },
+  SOL: { price: 142.5, volatility: 3, change: 5.2 },
+  ARB: { price: 1.24, volatility: 0.03, change: -0.8 },
+  USDC: { price: 1.0, volatility: 0.001, change: 0 },
+  USDT: { price: 1.0, volatility: 0.001, change: 0 },
+  MATIC: { price: 0.89, volatility: 0.02, change: 3.1 },
+  AVAX: { price: 35.2, volatility: 0.8, change: 4.2 },
+  LINK: { price: 14.5, volatility: 0.3, change: 1.5 },
+  UNI: { price: 7.8, volatility: 0.15, change: -1.2 },
+  AAVE: { price: 92, volatility: 2, change: 2.8 },
+  OP: { price: 2.1, volatility: 0.05, change: 6.3 },
+  BASE: { price: 0.45, volatility: 0.01, change: 8.5 },
+};
+
 export default function PriceChart({ pair, theme = 'lime', isLightTheme = false }) {
   const [timeframe, setTimeframe] = useState('1D');
   const [chartType, setChartType] = useState('area');
@@ -23,7 +40,7 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
   const [priceChange, setPriceChange] = useState(2.4);
   const [isExpanded, setIsExpanded] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
-  const [drawingMode, setDrawingMode] = useState(null); // null, 'line', 'horizontal', 'rectangle', 'circle'
+  const [drawingMode, setDrawingMode] = useState(null);
   const [drawings, setDrawings] = useState([]);
   const [showDrawingTools, setShowDrawingTools] = useState(false);
 
@@ -32,19 +49,32 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
     setDrawingMode(prev => prev === tool ? null : tool);
   };
 
+  // Get token info based on pair
+  const tokenInfo = useMemo(() => {
+    const fromToken = pair?.from?.toUpperCase() || 'ETH';
+    return TOKEN_PRICES[fromToken] || TOKEN_PRICES.ETH;
+  }, [pair]);
+
+  // Update price when pair changes
+  useEffect(() => {
+    setCurrentPrice(tokenInfo.price * (1 + (Math.random() - 0.5) * 0.01));
+    setPriceChange(tokenInfo.change + (Math.random() - 0.5) * 0.5);
+  }, [pair, tokenInfo]);
+
   // Generate mock price data with OHLC for candlestick
   const chartData = useMemo(() => {
     const points = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 7 : timeframe === '1M' ? 30 : 180;
-    const basePrice = 3200;
+    const basePrice = tokenInfo.price;
+    const volatility = tokenInfo.volatility;
     const data = [];
-    let price = basePrice;
+    let price = basePrice * (1 - 0.02); // Start slightly below current
     
     for (let i = 0; i < points; i++) {
       const open = price;
-      const volatility = 15 + Math.random() * 25;
-      const close = open + (Math.random() - 0.48) * volatility;
-      const high = Math.max(open, close) + Math.random() * 10;
-      const low = Math.min(open, close) - Math.random() * 10;
+      const change = volatility * (Math.random() - 0.48);
+      const close = open + change;
+      const high = Math.max(open, close) + Math.random() * volatility * 0.3;
+      const low = Math.min(open, close) - Math.random() * volatility * 0.3;
       
       data.push({
         time: i,
@@ -53,22 +83,25 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
         close,
         high,
         low,
-        volume: Math.random() * 1000000,
+        volume: Math.random() * 1000000 * (basePrice / 100),
         isUp: close >= open
       });
       price = close;
     }
     return data;
-  }, [timeframe, pair]);
+  }, [timeframe, pair, tokenInfo]);
 
-  // Simulate price updates
+  // Simulate live price updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPrice(prev => prev + (Math.random() - 0.5) * 2);
-      setPriceChange(prev => prev + (Math.random() - 0.5) * 0.1);
+      setCurrentPrice(prev => prev + (Math.random() - 0.5) * tokenInfo.volatility * 0.1);
+      setPriceChange(prev => {
+        const newChange = prev + (Math.random() - 0.5) * 0.05;
+        return Math.max(-10, Math.min(10, newChange));
+      });
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [tokenInfo]);
 
   const themeColor = theme === 'lime' ? '#84cc16' : theme === 'blue' ? '#3b82f6' : '#10b981';
   const isPositive = priceChange >= 0;
