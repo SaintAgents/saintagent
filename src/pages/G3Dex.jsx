@@ -504,7 +504,7 @@ export default function G3Dex() {
           </div>
 
           {/* Right Sidebar - Trending & Info */}
-          <div className="xl:col-span-3 space-y-3 md:space-y-4">
+          <div className={`${chartMode === 'docked' ? 'xl:col-span-3' : 'xl:col-span-6'} space-y-3 md:space-y-4`}
             <TrendingPairs onPairSelect={setSelectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
           </div>
         </div>
