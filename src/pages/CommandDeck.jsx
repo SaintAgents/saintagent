@@ -490,13 +490,21 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const challengeLimit = isMobile ? DATA_LIMITS.challenges.mobile : DATA_LIMITS.challenges.desktop;
   const projectLimit = isMobile ? DATA_LIMITS.projects.mobile : DATA_LIMITS.projects.desktop;
 
-  // Fetch user badges by SA# (preferred identifier) - mobile-optimized
+  // Fetch user badges by email (primary) with SA# fallback - mobile-optimized
+  const badgeUserId = currentUser?.email;
   const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', userIdentifier, badgeLimit],
+    queryKey: ['userBadges', badgeUserId, badgeLimit],
     queryFn: async () => {
-      return base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', badgeLimit);
+      // Try email first, then SA#
+      let results = await base44.entities.Badge.filter({ user_id: badgeUserId, status: 'active' }, '-created_date', badgeLimit);
+      // If no results and we have SA#, try with SA#
+      if ((!results || results.length === 0) && profile?.sa_number) {
+        results = await base44.entities.Badge.filter({ user_id: profile.sa_number, status: 'active' }, '-created_date', badgeLimit);
+      }
+      console.log('Badges fetched:', results?.length, 'for user:', badgeUserId);
+      return results || [];
     },
-    enabled: !!userIdentifier,
+    enabled: !!badgeUserId,
     staleTime: 300000, // 5 minutes for badges
     refetchOnWindowFocus: false,
     refetchOnMount: false,
