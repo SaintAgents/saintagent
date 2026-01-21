@@ -398,6 +398,12 @@ export default function UserManagement() {
         <CardContent className="bg-purple-100 pt-0 p-6">
           <ScrollArea className="h-[600px]">
             <div className="space-y-2">
+              {isLoading && (
+                <div className="text-center py-8 text-slate-500">Loading users...</div>
+              )}
+              {!isLoading && filteredProfiles.length === 0 && (
+                <div className="text-center py-8 text-slate-500">No users found</div>
+              )}
               {filteredProfiles.map((profile) =>
               <div
                 key={profile.id}
