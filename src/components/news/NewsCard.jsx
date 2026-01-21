@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Newspaper, ArrowRight, Video, Link as LinkIcon, Calendar } from 'lucide-react';
+import { Newspaper, ArrowRight, Video, Link as LinkIcon, Calendar, Eye, MessageCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { createPageUrl } from '@/utils';
@@ -87,9 +87,19 @@ export default function NewsCard() {
                   {article.summary}
                 </p>
               )}
-              <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-400">
-                <Calendar className="w-3 h-3" />
-                {article.published_date ? format(new Date(article.published_date), 'MMM d, yyyy') : 'Draft'}
+              <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-400">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {article.published_date ? format(new Date(article.published_date), 'MMM d, yyyy') : 'Draft'}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3 h-3" />
+                  {article.views_count || 0}
+                </span>
+                <span className="flex items-center gap-1">
+                  <MessageCircle className="w-3 h-3" />
+                  {article.comments_count || 0}
+                </span>
               </div>
             </div>
           </div>
