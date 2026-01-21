@@ -57,7 +57,7 @@ export function DexCardHeader({
         )}
         
         {/* Stow (float) */}
-        {mode !== 'stowed' && (
+        {mode !== 'stowed' && mode !== 'collapsed' && (
           <Button
             variant="ghost"
             size="icon"
@@ -69,7 +69,7 @@ export function DexCardHeader({
           </Button>
         )}
         
-        {/* Dock (back to grid) */}
+        {/* Dock (back to grid) - for stowed windows */}
         {mode === 'stowed' && (
           <Button
             variant="ghost"
