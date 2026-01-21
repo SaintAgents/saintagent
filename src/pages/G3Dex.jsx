@@ -242,7 +242,7 @@ export default function G3Dex() {
 
             {/* Quick Links */}
             <div className="hidden md:flex items-center gap-1 ml-4">
-              {/* Token Search */}
+              {/* Token Search with Top Coins Dropdown */}
               <div className="relative">
                 <div className={`flex items-center gap-1 ${theme === 'light' ? 'bg-gray-100 border-gray-300' : 'bg-black/60 border-gray-700'} border rounded-lg px-2 h-7`}>
                   <Search className="w-3 h-3 text-gray-500" />
@@ -253,16 +253,28 @@ export default function G3Dex() {
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
                       setShowSearchDropdown(e.target.value.length > 0);
+                      setShowTopCoinsDropdown(false);
                     }}
                     onFocus={() => searchQuery.length > 0 && setShowSearchDropdown(true)}
                     onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                    className={`border-0 bg-transparent h-6 w-32 text-xs focus-visible:ring-0 focus-visible:ring-offset-0 ${theme === 'light' ? 'text-gray-800 placeholder:text-gray-500' : 'text-white placeholder:text-gray-500'}`}
+                    className={`border-0 bg-transparent h-6 w-28 text-xs focus-visible:ring-0 focus-visible:ring-offset-0 ${theme === 'light' ? 'text-gray-800 placeholder:text-gray-500' : 'text-white placeholder:text-gray-500'}`}
                   />
+                  {/* Top Coins Dropdown Button */}
+                  <button
+                    onClick={() => {
+                      setShowTopCoinsDropdown(!showTopCoinsDropdown);
+                      setShowSearchDropdown(false);
+                    }}
+                    className={`flex items-center justify-center h-5 w-5 rounded ${theme === 'light' ? 'hover:bg-gray-200' : 'hover:bg-gray-700'} transition-colors`}
+                    title="Top Coins"
+                  >
+                    <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform ${showTopCoinsDropdown ? 'rotate-180' : ''}`} />
+                  </button>
                 </div>
                 {/* Search Dropdown */}
                 {showSearchDropdown && (
                   <div className={`absolute top-full left-0 mt-1 w-64 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-black/95 border-gray-700'} border rounded-lg shadow-xl z-[200] overflow-hidden`}>
-                    <div className="p-2 text-[10px] text-gray-500 border-b border-gray-700/50">Popular Tokens</div>
+                    <div className="p-2 text-[10px] text-gray-500 border-b border-gray-700/50">Search Results</div>
                     {[
                       { symbol: 'ETH', name: 'Ethereum', price: '$3,247.82', change: '+2.4%' },
                       { symbol: 'BTC', name: 'Bitcoin', price: '$67,432.00', change: '+1.8%' },
@@ -302,6 +314,63 @@ export default function G3Dex() {
                         Press Enter to search all tokens
                       </div>
                     )}
+                  </div>
+                )}
+                {/* Top Coins Dropdown */}
+                {showTopCoinsDropdown && (
+                  <div className={`absolute top-full left-0 mt-1 w-72 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-black/95 border-gray-700'} border rounded-lg shadow-xl z-[200] overflow-hidden`}>
+                    <div className={`p-2 text-[10px] text-gray-500 border-b ${theme === 'light' ? 'border-gray-200' : 'border-gray-700/50'} flex items-center justify-between`}>
+                      <span>Top Coins by Market Cap</span>
+                      <span className="text-[9px]">24h Change</span>
+                    </div>
+                    <div className="max-h-80 overflow-y-auto scrollbar-hide">
+                      {[
+                        { symbol: 'BTC', name: 'Bitcoin', price: '$67,432.00', change: '+1.8%', rank: 1 },
+                        { symbol: 'ETH', name: 'Ethereum', price: '$3,247.82', change: '+2.4%', rank: 2 },
+                        { symbol: 'USDT', name: 'Tether', price: '$1.00', change: '0%', rank: 3 },
+                        { symbol: 'BNB', name: 'BNB', price: '$598.20', change: '+0.5%', rank: 4 },
+                        { symbol: 'SOL', name: 'Solana', price: '$142.50', change: '+5.2%', rank: 5 },
+                        { symbol: 'XRP', name: 'XRP', price: '$0.52', change: '-1.2%', rank: 6 },
+                        { symbol: 'USDC', name: 'USD Coin', price: '$1.00', change: '0%', rank: 7 },
+                        { symbol: 'ADA', name: 'Cardano', price: '$0.45', change: '+3.1%', rank: 8 },
+                        { symbol: 'AVAX', name: 'Avalanche', price: '$35.20', change: '+4.2%', rank: 9 },
+                        { symbol: 'DOGE', name: 'Dogecoin', price: '$0.082', change: '+2.8%', rank: 10 },
+                        { symbol: 'DOT', name: 'Polkadot', price: '$7.12', change: '-0.3%', rank: 11 },
+                        { symbol: 'TRX', name: 'TRON', price: '$0.11', change: '+1.5%', rank: 12 },
+                        { symbol: 'LINK', name: 'Chainlink', price: '$14.50', change: '+1.5%', rank: 13 },
+                        { symbol: 'MATIC', name: 'Polygon', price: '$0.89', change: '+3.1%', rank: 14 },
+                        { symbol: 'UNI', name: 'Uniswap', price: '$7.80', change: '-1.2%', rank: 15 },
+                        { symbol: 'ATOM', name: 'Cosmos', price: '$9.24', change: '+2.1%', rank: 16 },
+                        { symbol: 'LTC', name: 'Litecoin', price: '$72.50', change: '+0.8%', rank: 17 },
+                        { symbol: 'ARB', name: 'Arbitrum', price: '$1.24', change: '-0.8%', rank: 18 },
+                        { symbol: 'OP', name: 'Optimism', price: '$2.10', change: '+6.3%', rank: 19 },
+                        { symbol: 'AAVE', name: 'Aave', price: '$92.00', change: '+2.8%', rank: 20 },
+                      ].map((token) => (
+                        <button
+                          key={token.symbol}
+                          className={`w-full flex items-center justify-between px-3 py-2 ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-800'} transition-colors`}
+                          onClick={() => {
+                            setSelectedPair({ from: token.symbol, to: 'USDC' });
+                            setShowTopCoinsDropdown(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-gray-500 w-4">{token.rank}</span>
+                            <div className={`w-6 h-6 rounded-full bg-gradient-to-br from-${currentTheme.accent}-400 to-emerald-500 flex items-center justify-center text-[10px] font-bold text-black`}>
+                              {token.symbol.charAt(0)}
+                            </div>
+                            <div className="text-left">
+                              <div className={`text-xs font-medium ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{token.symbol}</div>
+                              <div className="text-[10px] text-gray-500">{token.name}</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className={`text-xs ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{token.price}</div>
+                            <div className={`text-[10px] ${token.change.startsWith('+') ? 'text-green-400' : token.change.startsWith('-') ? 'text-red-400' : 'text-gray-500'}`}>{token.change}</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
