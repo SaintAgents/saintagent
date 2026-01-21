@@ -71,6 +71,8 @@ import { Newspaper } from 'lucide-react';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
+  const queryClient = useQueryClient();
+  
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
     // On mobile, side panel starts closed
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -683,8 +685,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     mutationFn: ({ id, data }) => base44.entities.Meeting.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['meetings'] })
   });
-
-  const queryClient = useQueryClient();
 
   const createMutation = useMutation({
     mutationFn: ({ entity, data }) => {
