@@ -1508,7 +1508,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Beta Ticker - only show when topbar is not collapsed */}
       <BetaTicker 
         topbarCollapsed={topbarCollapsed} 
-        sidebarCollapsed={sidebarCollapsed} 
+        sidebarCollapsed={sidebarCollapsed}
+        currentPageName={currentPageName}
       />
 
       {/* System-wide Announcement Banner */}
