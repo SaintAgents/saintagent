@@ -241,6 +241,70 @@ export default function G3Dex() {
 
             {/* Quick Links */}
             <div className="hidden md:flex items-center gap-1 ml-4">
+              {/* Token Search */}
+              <div className="relative">
+                <div className={`flex items-center gap-1 ${theme === 'light' ? 'bg-gray-100 border-gray-300' : 'bg-black/60 border-gray-700'} border rounded-lg px-2 h-7`}>
+                  <Search className="w-3 h-3 text-gray-500" />
+                  <Input
+                    type="text"
+                    placeholder="Search tokens..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setShowSearchDropdown(e.target.value.length > 0);
+                    }}
+                    onFocus={() => searchQuery.length > 0 && setShowSearchDropdown(true)}
+                    onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
+                    className={`border-0 bg-transparent h-6 w-32 text-xs focus-visible:ring-0 focus-visible:ring-offset-0 ${theme === 'light' ? 'text-gray-800 placeholder:text-gray-500' : 'text-white placeholder:text-gray-500'}`}
+                  />
+                </div>
+                {/* Search Dropdown */}
+                {showSearchDropdown && (
+                  <div className={`absolute top-full left-0 mt-1 w-64 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-black/95 border-gray-700'} border rounded-lg shadow-xl z-50 overflow-hidden`}>
+                    <div className="p-2 text-[10px] text-gray-500 border-b border-gray-700/50">Popular Tokens</div>
+                    {[
+                      { symbol: 'ETH', name: 'Ethereum', price: '$3,247.82', change: '+2.4%' },
+                      { symbol: 'BTC', name: 'Bitcoin', price: '$67,432.00', change: '+1.8%' },
+                      { symbol: 'USDC', name: 'USD Coin', price: '$1.00', change: '0%' },
+                      { symbol: 'SOL', name: 'Solana', price: '$142.50', change: '+5.2%' },
+                      { symbol: 'ARB', name: 'Arbitrum', price: '$1.24', change: '-0.8%' },
+                    ].filter(t => 
+                      t.symbol.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                      t.name.toLowerCase().includes(searchQuery.toLowerCase())
+                    ).map((token) => (
+                      <button
+                        key={token.symbol}
+                        className={`w-full flex items-center justify-between px-3 py-2 ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-800'} transition-colors`}
+                        onClick={() => {
+                          setSelectedPair({ from: token.symbol, to: 'USDC' });
+                          setSearchQuery('');
+                          setShowSearchDropdown(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className={`w-6 h-6 rounded-full bg-gradient-to-br from-${currentTheme.accent}-400 to-emerald-500 flex items-center justify-center text-[10px] font-bold text-black`}>
+                            {token.symbol.charAt(0)}
+                          </div>
+                          <div className="text-left">
+                            <div className={`text-xs font-medium ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{token.symbol}</div>
+                            <div className="text-[10px] text-gray-500">{token.name}</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-xs ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{token.price}</div>
+                          <div className={`text-[10px] ${token.change.startsWith('+') ? 'text-green-400' : token.change.startsWith('-') ? 'text-red-400' : 'text-gray-500'}`}>{token.change}</div>
+                        </div>
+                      </button>
+                    ))}
+                    {searchQuery.length > 0 && (
+                      <div className={`p-2 text-[10px] text-gray-500 border-t ${theme === 'light' ? 'border-gray-200' : 'border-gray-700/50'}`}>
+                        Press Enter to search all tokens
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -269,16 +333,16 @@ export default function G3Dex() {
                 Pools
               </Button>
               
-              {/* Chart Icon - only visible when chart is minimized */}
+              {/* Chart Icon - circular, only visible when chart is minimized */}
               {chartMode === 'hidden' && (
                 <Button 
                   variant="ghost" 
-                  size="sm" 
-                  className={`text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/20 text-xs h-7 ml-2 border border-${currentTheme.accent}-500/30`}
+                  size="icon"
+                  className={`w-7 h-7 rounded-full bg-${currentTheme.accent}-500/20 text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/30 border border-${currentTheme.accent}-500/40 ml-1`}
                   onClick={() => setChartMode('floating')}
+                  title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
                 >
-                  <BarChart3 className="w-3 h-3 mr-1" />
-                  Chart
+                  <BarChart3 className="w-3.5 h-3.5" />
                 </Button>
               )}
             </div>
