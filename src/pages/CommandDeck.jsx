@@ -1167,6 +1167,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     onClick={() => {
                       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
                       queryClient.invalidateQueries({ queryKey: ['wallet'] });
+                      refetchWallet();
                     }}
                     className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group"
                     title="Refresh profile data"
