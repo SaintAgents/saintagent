@@ -32,6 +32,9 @@ import ResourceBridge from '@/components/dex/ResourceBridge';
 import StakePoolsModal from '@/components/dex/StakePoolsModal';
 import BridgeModal from '@/components/dex/BridgeModal';
 import StakingDashboard from '@/components/dex/StakingDashboard';
+import AnalyticsDashboard from '@/components/dex/AnalyticsDashboard';
+import AdoptionHeatmap from '@/components/dex/AdoptionHeatmap';
+import OrderBookDepth from '@/components/dex/OrderBookDepth';
 import { DexCard, DexFloatingCard } from '@/components/dex/DexCardControls';
 
 export default function G3Dex() {
@@ -543,7 +546,7 @@ export default function G3Dex() {
         {/* Function Tabs Bar - ABOVE the chart */}
         <div className="max-w-[1600px] mx-auto mb-3">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-9 gap-0.5`}>
+            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-12 gap-0.5`}>
               <TabsTrigger 
                 value="swap" 
                 className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
@@ -601,13 +604,34 @@ export default function G3Dex() {
                 Staking
               </TabsTrigger>
               <TabsTrigger 
+                value="analytics" 
+                className={`data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400 text-xs`}
+              >
+                <BarChart3 className="w-3 h-3 mr-1" />
+                Analytics
+              </TabsTrigger>
+              <TabsTrigger 
+                value="adoption" 
+                className={`data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-400 text-xs`}
+              >
+                <Globe className="w-3 h-3 mr-1" />
+                Adoption
+              </TabsTrigger>
+              <TabsTrigger 
+                value="orderbook" 
+                className={`data-[state=active]:bg-rose-500/20 data-[state=active]:text-rose-400 text-xs`}
+              >
+                <Activity className="w-3 h-3 mr-1" />
+                Order Book
+              </TabsTrigger>
+              <TabsTrigger 
                 value="history" 
                 className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
               >
                 <History className="w-3 h-3 mr-1" />
                 History
               </TabsTrigger>
-              </TabsList>
+                </TabsList>
           </Tabs>
         </div>
 
@@ -714,6 +738,18 @@ export default function G3Dex() {
 
             {activeTab === 'staking' && (
               <StakingDashboard theme={currentTheme.accent} />
+            )}
+
+            {activeTab === 'analytics' && (
+              <AnalyticsDashboard theme={currentTheme.accent} />
+            )}
+
+            {activeTab === 'adoption' && (
+              <AdoptionHeatmap theme={currentTheme.accent} />
+            )}
+
+            {activeTab === 'orderbook' && (
+              <OrderBookDepth theme={currentTheme.accent} />
             )}
 
             {activeTab === 'history' && (
