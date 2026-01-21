@@ -442,16 +442,38 @@ export default function G3Dex() {
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
               </Button>
-              {/* Chart Icon - circular, only visible when chart is minimized */}
-              {chartMode === 'hidden' && (
+              {/* Hidden card restore buttons */}
+              {cardModes.chart === 'hidden' && (
                 <Button 
                   variant="ghost" 
                   size="icon"
                   className={`w-7 h-7 rounded-full bg-${currentTheme.accent}-500/20 text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/30 border border-${currentTheme.accent}-500/40`}
-                  onClick={() => setChartMode('floating')}
+                  onClick={() => setCardMode('chart', 'stowed')}
                   title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
                 >
                   <BarChart3 className="w-3.5 h-3.5" />
+                </Button>
+              )}
+              {cardModes.portfolio === 'hidden' && showPortfolio && walletConnected && (
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className={`w-7 h-7 rounded-full bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40`}
+                  onClick={() => setCardMode('portfolio', 'stowed')}
+                  title="Portfolio"
+                >
+                  <Wallet className="w-3.5 h-3.5" />
+                </Button>
+              )}
+              {cardModes.trending === 'hidden' && (
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className={`w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40`}
+                  onClick={() => setCardMode('trending', 'stowed')}
+                  title="Trending Pairs"
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
                 </Button>
               )}
             </div>
