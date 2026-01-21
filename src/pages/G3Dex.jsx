@@ -8,8 +8,9 @@ import {
   ArrowLeft, Settings, TrendingUp, History, Repeat, Clock, 
   Wallet, Activity, BarChart3, Layers, Shield, Zap, Globe,
   Bell, Sun, Moon, ExternalLink, RefreshCw, Lock, Sparkles,
-  X, Minus, Maximize2, Move
+  X, Minus, Maximize2, Move, Search
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
