@@ -135,7 +135,7 @@ Name: ${profile?.display_name || 'Seeker'}`;
   }
   
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-3 p-2">
       <div className={`relative ${sizeClasses[size]} rounded-xl overflow-hidden group`}>
         {profile?.mystical_id_image ? (
           <>
