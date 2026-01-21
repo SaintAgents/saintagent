@@ -104,11 +104,19 @@ export default function RankedAvatar({
   const saNumberFinal = saNumber ?? fetchedProfile?.sa_number;
   const mysticalIdImage = fetchedProfile?.mystical_id_image;
 
-  // Fetch user badges for sigil display
+  // Fetch user badges for sigil display - try email first, then SA#
   const { data: userBadges = [] } = useQuery({
-    queryKey: ['rankedAvatarBadges', saNumberFinal || userId || 'none'],
-    queryFn: () => base44.entities.Badge.filter({ user_id: saNumberFinal || userId, status: 'active' }, '-created_date', 5),
-    enabled: !!(saNumberFinal || userId),
+    queryKey: ['rankedAvatarBadges', userId || saNumberFinal || 'none'],
+    queryFn: async () => {
+      // Try email (userId) first since badges are stored with email
+      let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 5);
+      // If no results and we have SA#, try with SA#
+      if ((!results || results.length === 0) && saNumberFinal && saNumberFinal !== userId) {
+        results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 5);
+      }
+      return results || [];
+    },
+    enabled: !!(userId || saNumberFinal),
   });
 
   // Determine which sigils to show
