@@ -322,9 +322,15 @@ export default function GlobalChatWidget() {
         <div
           onMouseDown={handleButtonDragStart}
           onClick={() => {
-            if (!buttonDraggedRef.current) setIsOpen(true);
+            if (!buttonDraggedRef.current) {
+              setIsOpen(true);
+              setHasNewMessage(false);
+            }
           }}
-          className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 rounded-full"
+          className={cn(
+            "flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all cursor-pointer hover:scale-105 rounded-full",
+            hasNewMessage && "animate-vibrate"
+          )}
         >
           <Globe className="w-4 h-4" />
           <span className="text-xs font-medium">Chat</span>
