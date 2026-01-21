@@ -67,11 +67,15 @@ export default function GGGCrypto() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-800">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-purple-900/80 backdrop-blur-md border-b border-purple-700/50">
+      {/* Navigation - positioned relative to main content area */}
+      <nav className="sticky top-0 z-40 bg-purple-900/80 backdrop-blur-md border-b border-purple-700/50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={GGG_TOKEN_IMAGE} alt="GGG" className="w-10 h-10" />
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png" 
+              alt="SaintAgent" 
+              className="w-10 h-10" 
+            />
             <span className="text-yellow-400 font-bold text-xl">GGG</span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm">
@@ -97,7 +101,7 @@ export default function GGGCrypto() {
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="pt-24 pb-16 px-4">
+      <section id="hero" className="pt-8 pb-16 px-4">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center min-h-[80vh]">
           <div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
