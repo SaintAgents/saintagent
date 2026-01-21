@@ -367,29 +367,32 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Use SA# for all database queries if available, fallback to email
   const userIdentifier = profile?.sa_number || currentUser?.email;
 
-  // Wallet (authoritative GGG balance)
-  const { data: walletRes } = useQuery({
-    queryKey: ['wallet', userIdentifier],
+  // Wallet (authoritative GGG balance) - use currentUser.email as primary identifier
+  const walletUserId = currentUser?.email;
+  const { data: walletRes, refetch: refetchWallet } = useQuery({
+    queryKey: ['wallet', walletUserId],
     queryFn: async () => {
       try {
         const { data } = await base44.functions.invoke('walletEngine', {
           action: 'getWallet',
-          payload: { user_id: userIdentifier }
+          payload: { user_id: walletUserId }
         });
+        console.log('Wallet response:', data);
         return data;
       } catch (e) {
+        console.error('Wallet fetch error:', e);
         // Silently fail and use profile balance as fallback
         return { wallet: { available_balance: profile?.ggg_balance || 0 } };
       }
     },
-    enabled: !!userIdentifier,
+    enabled: !!walletUserId,
     refetchInterval: 60000, // Reduced frequency to avoid excessive API calls
-    retry: 0, // Don't retry on failure
+    retry: 1,
     staleTime: 30000
   });
   // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
   const walletBalance = walletRes?.wallet?.available_balance;
-  const walletAvailable = walletBalance != null && walletBalance > 0 ? walletBalance : profile?.ggg_balance ?? 0;
+  const walletAvailable = (walletBalance != null && walletBalance > 0) ? walletBalance : (profile?.ggg_balance ?? 0);
   // Use rp_points for calculation, but also check rank_points as fallback
   const rpPoints = profile?.rp_points || profile?.rank_points || 0;
   const rpInfo = getRPRank(rpPoints);
