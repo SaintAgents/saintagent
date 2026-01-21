@@ -570,16 +570,19 @@ export default function SidePanel({
     return format(date, "MMM d, h:mm a");
   };
 
+  // Wallet query - MUST use email (user_id) not SA#
+  const walletUserId = profile?.user_id;
   const { data: walletRes } = useQuery({
-    queryKey: ['wallet', userIdentifier],
+    queryKey: ['wallet', walletUserId],
     queryFn: async () => {
-      const { data } = await base44.functions.invoke('walletEngine', {
+      const response = await base44.functions.invoke('walletEngine', {
         action: 'getWallet',
-        payload: { user_id: userIdentifier }
+        payload: { user_id: walletUserId }
       });
-      return data;
+      // response is axios response, data is in response.data
+      return response?.data || response;
     },
-    enabled: !!userIdentifier
+    enabled: !!walletUserId
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpInfo = getRPRank(profile?.rp_points || 0);
