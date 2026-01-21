@@ -448,7 +448,7 @@ export default function G3Dex() {
           )}
 
           {/* Main Trading Area */}
-          <div className={`${chartMode === 'docked' ? 'xl:col-span-4' : 'xl:col-span-6'} space-y-3 md:space-y-4`}
+          <div className={`${chartMode === 'docked' ? 'xl:col-span-4' : 'xl:col-span-6'} space-y-3 md:space-y-4`}>
             {/* Tab Content */}
             {activeTab === 'swap' && (
               <SwapInterface
