@@ -570,6 +570,15 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
           <div className={`${textPrimary} font-mono`}>$128.4M</div>
         </div>
       </div>
+
+      {/* Price Alert Modal */}
+      <PriceAlertModal
+        open={alertModalOpen}
+        onClose={() => setAlertModalOpen(false)}
+        pair={pair}
+        currentPrice={currentPrice}
+        theme={theme}
+      />
     </Card>
   );
 }
