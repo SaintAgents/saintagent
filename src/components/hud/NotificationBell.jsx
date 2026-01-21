@@ -82,13 +82,26 @@ export default function NotificationBell({ notifications = [], onAction }) {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-xs h-7 text-rose-600 hover:text-rose-700"
-              onClick={() => {
-                onAction?.('clearAll');
+              className="text-xs h-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 gap-1"
+              disabled={isClearing}
+              onClick={async () => {
+                setIsClearing(true);
+                await onAction?.('clearAll');
+                setIsClearing(false);
                 setOpen(false);
               }}
             >
-              Clear all
+              {isClearing ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Clearing...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-3 h-3" />
+                  Clear all
+                </>
+              )}
             </Button>
           )}
         </div>
