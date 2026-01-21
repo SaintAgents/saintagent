@@ -17,6 +17,7 @@ import FAQ from './pages/FAQ';
 import FindCollaborators from './pages/FindCollaborators';
 import Forum from './pages/Forum';
 import G3Dex from './pages/G3Dex';
+import GGGCrypto from './pages/GGGCrypto';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Initiations from './pages/Initiations';
@@ -54,7 +55,6 @@ import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
-import GGGCrypto from './pages/GGGCrypto';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +78,7 @@ export const PAGES = {
     "FindCollaborators": FindCollaborators,
     "Forum": Forum,
     "G3Dex": G3Dex,
+    "GGGCrypto": GGGCrypto,
     "Gamification": Gamification,
     "Home": Home,
     "Initiations": Initiations,
@@ -115,7 +116,6 @@ export const PAGES = {
     "Terms": Terms,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
-    "GGGCrypto": GGGCrypto,
 }
 
 export const pagesConfig = {

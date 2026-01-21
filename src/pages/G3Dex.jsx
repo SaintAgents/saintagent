@@ -31,6 +31,7 @@ import EscrowManager from '@/components/dex/EscrowManager';
 import ResourceBridge from '@/components/dex/ResourceBridge';
 import StakePoolsModal from '@/components/dex/StakePoolsModal';
 import BridgeModal from '@/components/dex/BridgeModal';
+import StakingDashboard from '@/components/dex/StakingDashboard';
 import { DexCard, DexFloatingCard } from '@/components/dex/DexCardControls';
 
 export default function G3Dex() {
@@ -542,7 +543,7 @@ export default function G3Dex() {
         {/* Function Tabs Bar - ABOVE the chart */}
         <div className="max-w-[1600px] mx-auto mb-3">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-8 gap-0.5`}>
+            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-9 gap-0.5`}>
               <TabsTrigger 
                 value="swap" 
                 className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
@@ -593,13 +594,20 @@ export default function G3Dex() {
                 Bridge
               </TabsTrigger>
               <TabsTrigger 
+                value="staking" 
+                className={`data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 text-xs`}
+              >
+                <Shield className="w-3 h-3 mr-1" />
+                Staking
+              </TabsTrigger>
+              <TabsTrigger 
                 value="history" 
                 className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
               >
                 <History className="w-3 h-3 mr-1" />
                 History
               </TabsTrigger>
-            </TabsList>
+              </TabsList>
           </Tabs>
         </div>
 
@@ -702,6 +710,10 @@ export default function G3Dex() {
 
             {activeTab === 'bridge' && (
               <ResourceBridge theme={currentTheme.accent} />
+            )}
+
+            {activeTab === 'staking' && (
+              <StakingDashboard theme={currentTheme.accent} />
             )}
 
             {activeTab === 'history' && (
