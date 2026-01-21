@@ -684,6 +684,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['meetings'] })
   });
 
+  const queryClient = useQueryClient();
+
   const createMutation = useMutation({
     mutationFn: ({ entity, data }) => {
       if (entity === 'Listing') return base44.entities.Listing.create(data);
