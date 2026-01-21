@@ -588,9 +588,39 @@ export default function UserManagement() {
                     )}
                   </div>
                   
-                  {!selectedUser.sa_number && (
+                  {/* Manual SA# Override */}
+                  <div className="border-t pt-3">
+                    <p className="text-sm text-slate-600 mb-2">Manual SA# Override:</p>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="e.g. 000025"
+                        value={customSANumber}
+                        onChange={(e) => setCustomSANumber(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                        className="w-32"
+                      />
+                      <Button 
+                        size="sm" 
+                        disabled={!customSANumber || assigningSA}
+                        onClick={async () => {
+                          const padded = customSANumber.padStart(6, '0');
+                          // Check if already taken
+                          const existing = await base44.entities.UserProfile.filter({ sa_number: padded });
+                          if (existing?.length && existing[0].id !== selectedUser.id) {
+                            alert(`SA#${padded} is already assigned to ${existing[0].display_name}`);
+                            return;
+                          }
+                          await handleAssignSAFromPool(selectedUser.id, padded);
+                          setCustomSANumber('');
+                        }}
+                      >
+                        Set SA#
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {!selectedUser.sa_number && unassignedPool.length > 0 && (
                     <div className="border-t pt-3">
-                      <p className="text-sm text-slate-600 mb-2">Assign from pool ({unassignedPool.length} available):</p>
+                      <p className="text-sm text-slate-600 mb-2">Or assign from pool ({unassignedPool.length} available):</p>
                       <div className="flex gap-2">
                         <Select
                           value={selectedSAToAssign}
