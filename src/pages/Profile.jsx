@@ -1025,11 +1025,11 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            {/* Badges & Sigils */}
+            {/* Sigils - Large badge icons in a row */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-violet-700">
-                  <span>Badges & Sigils</span>
+                  <span>Sigils</span>
                   {isOwnProfile &&
                       <Button
                         variant="ghost"
@@ -1042,7 +1042,51 @@ export default function Profile() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <BadgesBar badges={profileBadges} defaultIfEmpty={true} onMore={() => setBadgeGlossaryOpen(true)} />
+                {/* Large sigil display - show first 5 badge images */}
+                <div className="flex flex-wrap gap-4 items-center">
+                  {profileBadges.slice(0, 5).map((badge) => (
+                    <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
+                      {badge.image_url || badge.icon_url ? (
+                        <img 
+                          src={badge.image_url || badge.icon_url} 
+                          alt={badge.badge_type || 'Badge'} 
+                          className="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform"
+                          data-no-filter="true"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                          {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {/* Empty slots if fewer than 5 badges */}
+                  {Array.from({ length: Math.max(0, 5 - profileBadges.length) }).map((_, idx) => (
+                    <div key={`empty-${idx}`} className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+                      <Award className="w-8 h-8 text-slate-400" />
+                    </div>
+                  ))}
+                  {profileBadges.length > 5 && (
+                    <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
+                      +{profileBadges.length - 5} more
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Badges - compact badge bar */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center justify-between text-amber-600">
+                  <span className="flex items-center gap-2">
+                    <Medal className="w-5 h-5" />
+                    Recent Badges
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BadgesBar badges={profileBadges} defaultIfEmpty={true} max={8} onMore={() => setBadgeGlossaryOpen(true)} />
               </CardContent>
             </Card>
 
