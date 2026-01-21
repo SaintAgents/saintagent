@@ -582,10 +582,11 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
             <Button 
               variant="ghost" 
               size="icon" 
-              className={`h-7 w-7 text-gray-400 hover:text-white ${isLoading ? 'animate-spin' : ''}`}
-              onClick={() => { setIsLoading(true); setTimeout(() => setIsLoading(false), 500); }}
+              className={`h-7 w-7 text-gray-400 hover:text-white`}
+              onClick={() => fetchPriceData(true)}
+              disabled={isLoading}
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>
