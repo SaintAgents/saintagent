@@ -2,13 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Flame, ExternalLink, RefreshCw, Sparkles, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, Flame, ExternalLink, RefreshCw, Sparkles, Activity, ShoppingCart, Coins } from 'lucide-react';
 import { TRENDING_PAIRS } from './dexUtils';
+import { toast } from 'sonner';
 
-export default function TrendingPairs({ onPairSelect, theme = 'lime', isLightTheme = false }) {
+export default function TrendingPairs({ onPairSelect, onQuickTrade, theme = 'lime', isLightTheme = false }) {
   const [pairs, setPairs] = useState(TRENDING_PAIRS);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('trending'); // trending, gainers, volume
+
+  const handleQuickBuy = (e, pair) => {
+    e.stopPropagation();
+    const [from, to] = pair.pair.split('/');
+    toast.success(`Quick Buy: ${from} selected`, { description: 'Swap interface ready' });
+    onPairSelect?.({ from: 'USDC', to: from });
+    onQuickTrade?.('buy', from);
+  };
+
+  const handleQuickSell = (e, pair) => {
+    e.stopPropagation();
+    const [from, to] = pair.pair.split('/');
+    toast.success(`Quick Sell: ${from} selected`, { description: 'Swap interface ready' });
+    onPairSelect?.({ from, to: 'USDC' });
+    onQuickTrade?.('sell', from);
+  };
 
   // Simulate live updates
   useEffect(() => {
@@ -84,41 +101,64 @@ export default function TrendingPairs({ onPairSelect, theme = 'lime', isLightThe
       {/* Pairs List */}
       <div className="p-2 space-y-1 max-h-[400px] overflow-y-auto">
         {sortedPairs.map((pair, idx) => (
-          <button 
+          <div 
             key={pair.pair}
-            onClick={() => {
-              const [from, to] = pair.pair.split('/');
-              onPairSelect?.({ from, to });
-            }}
-            className={`w-full flex items-center justify-between p-2.5 rounded-lg ${isLightTheme ? 'bg-gray-50 hover:bg-gray-100' : `bg-black/30 hover:bg-${theme}-500/10`} transition-colors group`}
+            className={`w-full p-2.5 rounded-lg ${isLightTheme ? 'bg-gray-50 hover:bg-gray-100' : `bg-black/30 hover:bg-${theme}-500/10`} transition-colors group`}
           >
-            <div className="flex items-center gap-2.5">
-              <div className={`w-5 h-5 rounded-full bg-${theme}-500/20 flex items-center justify-center text-[10px] font-bold text-${theme}-400`}>
-                {idx + 1}
-              </div>
-              <div className="text-left">
-                <div className={`text-xs font-medium ${textPrimary} group-hover:text-${theme}-400 transition-colors`}>
-                  {pair.pair}
+            <button 
+              onClick={() => {
+                const [from, to] = pair.pair.split('/');
+                onPairSelect?.({ from, to });
+              }}
+              className="w-full flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className={`w-5 h-5 rounded-full bg-${theme}-500/20 flex items-center justify-center text-[10px] font-bold text-${theme}-400`}>
+                  {idx + 1}
                 </div>
-                <div className={`text-[10px] ${textSecondary}`}>Vol: ${pair.volume}</div>
+                <div className="text-left">
+                  <div className={`text-xs font-medium ${textPrimary} group-hover:text-${theme}-400 transition-colors`}>
+                    {pair.pair}
+                  </div>
+                  <div className={`text-[10px] ${textSecondary}`}>Vol: ${pair.volume}</div>
+                </div>
               </div>
+              <div className="text-right">
+                <div className={`text-xs font-mono ${textPrimary}`}>
+                  ${typeof pair.price === 'number' ? pair.price.toFixed(pair.price < 1 ? 6 : 2) : pair.price}
+                </div>
+                <div className={`flex items-center justify-end gap-0.5 text-[10px] ${
+                  pair.change >= 0 ? `text-${theme}-400` : 'text-red-400'
+                }`}>
+                  {pair.change >= 0 ? (
+                    <TrendingUp className="w-2.5 h-2.5" />
+                  ) : (
+                    <TrendingDown className="w-2.5 h-2.5" />
+                  )}
+                  {Math.abs(pair.change).toFixed(1)}%
+                </div>
+              </div>
+            </button>
+            {/* Quick Buy/Sell Buttons */}
+            <div className="flex gap-1.5 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                size="sm"
+                className={`flex-1 h-6 text-[10px] bg-${theme}-500/20 hover:bg-${theme}-500/40 text-${theme}-400 border border-${theme}-500/30`}
+                onClick={(e) => handleQuickBuy(e, pair)}
+              >
+                <ShoppingCart className="w-2.5 h-2.5 mr-1" />
+                Buy
+              </Button>
+              <Button
+                size="sm"
+                className="flex-1 h-6 text-[10px] bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30"
+                onClick={(e) => handleQuickSell(e, pair)}
+              >
+                <Coins className="w-2.5 h-2.5 mr-1" />
+                Sell
+              </Button>
             </div>
-            <div className="text-right">
-              <div className={`text-xs font-mono ${textPrimary}`}>
-                ${typeof pair.price === 'number' ? pair.price.toFixed(pair.price < 1 ? 6 : 2) : pair.price}
-              </div>
-              <div className={`flex items-center justify-end gap-0.5 text-[10px] ${
-                pair.change >= 0 ? `text-${theme}-400` : 'text-red-400'
-              }`}>
-                {pair.change >= 0 ? (
-                  <TrendingUp className="w-2.5 h-2.5" />
-                ) : (
-                  <TrendingDown className="w-2.5 h-2.5" />
-                )}
-                {Math.abs(pair.change).toFixed(1)}%
-              </div>
-            </div>
-          </button>
+          </div>
         ))}
       </div>
 

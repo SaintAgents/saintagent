@@ -30,6 +30,7 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
   const [refreshing, setRefreshing] = useState(false);
   const [showDetails, setShowDetails] = useState(true);
   const [showOpenOrders, setShowOpenOrders] = useState(false);
+  const [localSlippage, setLocalSlippage] = useState(slippage || 0.5);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -241,6 +242,39 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
           </Tabs>
         </div>
 
+        {/* Slippage Tolerance Input */}
+        <div className={`flex items-center justify-between p-2.5 rounded-lg ${inputBg} border ${isLightTheme ? 'border-gray-200' : `border-${theme}-500/10`}`}>
+          <div className="flex items-center gap-2">
+            <Percent className={`w-3.5 h-3.5 text-${theme}-400`} />
+            <span className={`text-xs ${textSecondary}`}>Slippage Tolerance</span>
+          </div>
+          <div className="flex items-center gap-1">
+            {[0.1, 0.5, 1.0].map((val) => (
+              <button
+                key={val}
+                onClick={() => setLocalSlippage(val)}
+                className={`px-2 py-0.5 rounded text-[10px] font-medium transition-colors ${
+                  localSlippage === val
+                    ? `bg-${theme}-500/20 text-${theme}-400 border border-${theme}-500/30`
+                    : `${textSecondary} hover:text-white`
+                }`}
+              >
+                {val}%
+              </button>
+            ))}
+            <Input
+              type="number"
+              value={localSlippage}
+              onChange={(e) => setLocalSlippage(parseFloat(e.target.value) || 0.5)}
+              className={`w-14 h-6 text-xs text-center ${isLightTheme ? 'bg-white border-gray-300' : 'bg-black/60 border-gray-700'} ${textPrimary}`}
+              step="0.1"
+              min="0.1"
+              max="50"
+            />
+            <span className={`text-[10px] ${textSecondary}`}>%</span>
+          </div>
+        </div>
+
         {/* Open Orders Panel */}
         {showOpenOrders && openOrders.length > 0 && (
           <div className={`${inputBg} rounded-xl p-3 border ${isLightTheme ? 'border-gray-200' : `border-${theme}-500/20`}`}>
@@ -431,12 +465,12 @@ export default function SwapInterface({ walletConnected, walletAddress, slippage
                 <div className={`flex justify-between ${textSecondary}`}>
                   <span>Min. Received</span>
                   <span className={`${textPrimary} font-mono`}>
-                    {(parseFloat(toAmount) * (1 - slippage/100)).toFixed(4)} {toToken.symbol}
+                    {(parseFloat(toAmount) * (1 - localSlippage/100)).toFixed(4)} {toToken.symbol}
                   </span>
                 </div>
                 <div className={`flex justify-between ${textSecondary}`}>
                   <span>Slippage Tolerance</span>
-                  <span className={`text-${theme}-400`}>{slippage}%</span>
+                  <span className={`text-${theme}-400`}>{localSlippage}%</span>
                 </div>
                 <div className={`flex justify-between ${textSecondary}`}>
                   <span>Route</span>

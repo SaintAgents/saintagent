@@ -2,11 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Maximize2, Minimize2, RefreshCw, BarChart2, CandlestickChart, Building2, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, Maximize2, Minimize2, RefreshCw, BarChart2, CandlestickChart, Building2, X, Bell, Pencil, Minus, TrendingUp as LineIcon, Circle, Square, Trash2 } from 'lucide-react';
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarChart, Cell, ComposedChart, ReferenceLine } from 'recharts';
+import PriceAlertModal from './PriceAlertModal';
 
 const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M'];
 const CHART_TYPES = ['area', 'candle', 'manhattan'];
+const DRAWING_TOOLS = [
+  { id: 'line', icon: Minus, label: 'Trend Line' },
+  { id: 'horizontal', icon: LineIcon, label: 'Horizontal Line' },
+  { id: 'rectangle', icon: Square, label: 'Rectangle' },
+  { id: 'circle', icon: Circle, label: 'Circle' }
+];
 
 export default function PriceChart({ pair, theme = 'lime', isLightTheme = false }) {
   const [timeframe, setTimeframe] = useState('1D');
@@ -15,6 +22,15 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
   const [currentPrice, setCurrentPrice] = useState(3247.82);
   const [priceChange, setPriceChange] = useState(2.4);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [drawingMode, setDrawingMode] = useState(null); // null, 'line', 'horizontal', 'rectangle', 'circle'
+  const [drawings, setDrawings] = useState([]);
+  const [showDrawingTools, setShowDrawingTools] = useState(false);
+
+  const clearDrawings = () => setDrawings([]);
+  const toggleDrawingTool = (tool) => {
+    setDrawingMode(prev => prev === tool ? null : tool);
+  };
 
   // Generate mock price data with OHLC for candlestick
   const chartData = useMemo(() => {
@@ -406,6 +422,7 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
           </div>
 
           <div className="flex items-center gap-1">
+            {/* Chart Type Buttons */}
             <Button 
               variant="ghost" 
               size="icon" 
@@ -433,6 +450,31 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
             >
               <Building2 className="w-4 h-4" />
             </Button>
+            
+            <div className={`w-px h-4 ${isLightTheme ? 'bg-gray-300' : 'bg-gray-700'}`} />
+            
+            {/* Drawing Tools */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-7 w-7 ${showDrawingTools ? `text-${theme}-400 bg-${theme}-500/20` : 'text-gray-400 hover:text-white'}`}
+              onClick={() => setShowDrawingTools(!showDrawingTools)}
+              title="Drawing Tools"
+            >
+              <Pencil className="w-4 h-4" />
+            </Button>
+            
+            {/* Price Alert */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={`h-7 w-7 text-amber-400 hover:text-amber-300 hover:bg-amber-500/20`}
+              onClick={() => setAlertModalOpen(true)}
+              title="Price Alerts"
+            >
+              <Bell className="w-4 h-4" />
+            </Button>
+            
             <Button 
               variant="ghost" 
               size="icon" 
@@ -469,6 +511,39 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
             </button>
           ))}
         </div>
+
+        {/* Drawing Tools Panel */}
+        {showDrawingTools && (
+          <div className={`flex items-center gap-1 p-2 rounded-lg ${isLightTheme ? 'bg-gray-100' : 'bg-black/60'} border ${isLightTheme ? 'border-gray-200' : 'border-gray-800'}`}>
+            {DRAWING_TOOLS.map(({ id, icon: Icon, label }) => (
+              <Button
+                key={id}
+                variant="ghost"
+                size="icon"
+                className={`h-7 w-7 ${drawingMode === id ? `text-${theme}-400 bg-${theme}-500/20` : 'text-gray-400 hover:text-white'}`}
+                onClick={() => toggleDrawingTool(id)}
+                title={label}
+              >
+                <Icon className="w-4 h-4" />
+              </Button>
+            ))}
+            <div className={`w-px h-4 ${isLightTheme ? 'bg-gray-300' : 'bg-gray-700'}`} />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-red-400 hover:text-red-300"
+              onClick={clearDrawings}
+              title="Clear Drawings"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            {drawingMode && (
+              <span className={`text-[10px] ${textSecondary} ml-2`}>
+                Click on chart to draw
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Chart */}
