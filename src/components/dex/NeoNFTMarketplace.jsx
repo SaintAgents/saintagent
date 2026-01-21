@@ -197,6 +197,9 @@ function NeoNFTCard({ nft, onClick, theme = 'lime' }) {
               <div className={`text-lg font-bold text-${theme}-400 font-mono`}>
                 {nft.price.toLocaleString()} GGG
               </div>
+              <div className="text-xs text-gray-500">
+                ≈ ${(nft.price * 145).toLocaleString()} USD
+              </div>
             </div>
             <Button 
               size="sm" 
