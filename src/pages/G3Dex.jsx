@@ -45,6 +45,8 @@ export default function G3Dex() {
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
   const [poolsModalOpen, setPoolsModalOpen] = useState(false);
   const [bridgeModalOpen, setBridgeModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   
   // Chart display modes: 'hidden' (minimized to icon), 'docked' (in grid), 'floating' (window)
   const [chartMode, setChartMode] = useState('docked');
