@@ -209,7 +209,7 @@ export default function G3Dex() {
       <StatsBar />
 
       {/* Header */}
-      <header className={`relative z-10 border-b border-${currentTheme.border} ${theme === 'light' ? 'bg-white/90' : 'bg-black/60'} backdrop-blur-xl sticky top-0`}>
+      <header className={`relative z-[150] border-b border-${currentTheme.border} ${theme === 'light' ? 'bg-white/90' : 'bg-black/60'} backdrop-blur-xl sticky top-0`}>
         <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
           {/* Left Section */}
           <div className="flex items-center gap-4">
