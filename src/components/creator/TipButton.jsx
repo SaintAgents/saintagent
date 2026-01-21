@@ -100,25 +100,18 @@ export default function TipButton({
         }
       });
 
-      // Add to creator (95% after 5% platform fee for tips)
+      // Add to creator (95% after 5% platform fee for tips) via walletEngine
       const creatorEarning = tipAmount * 0.95;
-      const creatorProfiles = await base44.entities.UserProfile.filter({ user_id: toUserId });
-      if (creatorProfiles[0]) {
-        await base44.entities.UserProfile.update(creatorProfiles[0].id, {
-          ggg_balance: (creatorProfiles[0].ggg_balance || 0) + creatorEarning,
-          total_earnings: (creatorProfiles[0].total_earnings || 0) + creatorEarning
-        });
-      }
-
-      // Create transaction
-      await base44.entities.GGGTransaction.create({
-        user_id: currentUser.email,
-        source_type: 'tip',
-        source_id: tip.id,
-        delta: -tipAmount,
-        reason_code: 'tip_sent',
-        description: `Tip to ${toUserName}`,
-        balance_after: userProfile.ggg_balance - tipAmount
+      await base44.functions.invoke('walletEngine', {
+        action: 'earn',
+        payload: {
+          user_id: toUserId,
+          amount: creatorEarning,
+          reason_code: 'tip_received',
+          description: `Tip from ${isAnonymous ? 'Anonymous' : userProfile.display_name}`,
+          source_type: 'tip',
+          source_id: tip.id
+        }
       });
 
       // Create notification for creator
