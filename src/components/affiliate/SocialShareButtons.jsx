@@ -88,7 +88,7 @@ const PLATFORMS = {
 export default function SocialShareButtons({ 
   url, 
   text = "Join me on SaintAgent - a platform for conscious creators and collaborators!",
-  platforms = ['twitter', 'telegram', 'warpcast', 'whatsapp'],
+  platforms = ['twitter', 'facebook', 'linkedin', 'telegram', 'whatsapp', 'warpcast'],
   size = 'default', // 'sm', 'default', 'lg'
   variant = 'icon', // 'icon', 'full'
   className 
