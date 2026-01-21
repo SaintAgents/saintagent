@@ -267,7 +267,7 @@ export default function G3Dex() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 w-full px-2 sm:px-3 md:px-4 py-3 md:py-4 ml-0 md:ml-2 lg:ml-4">
+      <div className="relative z-10 w-full px-2 sm:px-3 md:px-4 py-3 md:py-4">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 md:gap-4 max-w-[1600px] mx-auto">
           
           {/* Left Sidebar - Chart & Portfolio */}
