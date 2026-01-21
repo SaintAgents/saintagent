@@ -260,7 +260,7 @@ export default function G3Dex() {
                 </div>
                 {/* Search Dropdown */}
                 {showSearchDropdown && (
-                  <div className={`absolute top-full left-0 mt-1 w-64 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-black/95 border-gray-700'} border rounded-lg shadow-xl z-50 overflow-hidden`}>
+                  <div className={`absolute top-full left-0 mt-1 w-64 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-black/95 border-gray-700'} border rounded-lg shadow-xl z-[200] overflow-hidden`}>
                     <div className="p-2 text-[10px] text-gray-500 border-b border-gray-700/50">Popular Tokens</div>
                     {[
                       { symbol: 'ETH', name: 'Ethereum', price: '$3,247.82', change: '+2.4%' },
