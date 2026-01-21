@@ -1031,7 +1031,10 @@ export default function Profile() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-violet-700">
-                  <span>Sigils</span>
+                  <span className="flex items-center gap-2">
+                    <Award className="w-5 h-5" />
+                    Sigils & Badges
+                  </span>
                   {isOwnProfile &&
                       <Button
                         variant="ghost"
@@ -1043,36 +1046,75 @@ export default function Profile() {
                       }
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                {/* Large sigil display - show first 5 badge images */}
-                <div className="flex flex-wrap gap-4 items-center">
-                  {profileBadges.slice(0, 5).map((badge) => (
-                    <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
-                      {badge.image_url || badge.icon_url ? (
-                        <img 
-                          src={badge.image_url || badge.icon_url} 
-                          alt={badge.badge_type || 'Badge'} 
-                          className="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform"
-                          data-no-filter="true"
-                        />
-                      ) : (
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
-                          {badge.badge_type?.[0]?.toUpperCase() || '★'}
+              <CardContent className="space-y-4">
+                {/* Badge placeholders row - always show 5 slots */}
+                <div>
+                  <p className="text-xs text-slate-500 mb-2 font-medium">Featured Badges</p>
+                  <div className="flex flex-wrap gap-4 items-center">
+                    {Array.from({ length: 5 }).map((_, idx) => {
+                      const badge = profileBadges[idx];
+                      return badge ? (
+                        <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
+                          {badge.image_url || badge.icon_url ? (
+                            <img 
+                              src={badge.image_url || badge.icon_url} 
+                              alt={badge.badge_type || 'Badge'} 
+                              className="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform"
+                              data-no-filter="true"
+                            />
+                          ) : (
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                              {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ))}
-                  {/* Empty slots if fewer than 5 badges */}
-                  {Array.from({ length: Math.max(0, 5 - profileBadges.length) }).map((_, idx) => (
-                    <div key={`empty-${idx}`} className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                      <Award className="w-8 h-8 text-slate-400" />
-                    </div>
-                  ))}
-                  {profileBadges.length > 5 && (
-                    <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
-                      +{profileBadges.length - 5} more
-                    </Button>
-                  )}
+                      ) : (
+                        <div key={`empty-${idx}`} className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-600">
+                          <Award className="w-8 h-8 text-slate-400" />
+                        </div>
+                      );
+                    })}
+                    {profileBadges.length > 5 && (
+                      <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
+                        +{profileBadges.length - 5} more
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Sigils row - show all earned sigils with images */}
+                <div>
+                  <p className="text-xs text-slate-500 mb-2 font-medium">Earned Sigils ({profileBadges.length})</p>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    {profileBadges.length > 0 ? (
+                      profileBadges.slice(0, 12).map((badge) => (
+                        <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
+                          {badge.image_url || badge.icon_url ? (
+                            <img 
+                              src={badge.image_url || badge.icon_url} 
+                              alt={badge.badge_type || 'Badge'} 
+                              className="w-12 h-12 object-contain drop-shadow-sm hover:scale-110 transition-transform"
+                              data-no-filter="true"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                              {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                            </div>
+                          )}
+                          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-20">
+                            {badge.badge_type?.replace(/_/g, ' ')}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-slate-400 text-sm italic">No sigils earned yet</p>
+                    )}
+                    {profileBadges.length > 12 && (
+                      <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
+                        +{profileBadges.length - 12} more
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
