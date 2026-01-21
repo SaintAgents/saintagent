@@ -87,9 +87,17 @@ export default function TipButton({
         status: 'completed'
       });
 
-      // Deduct from tipper
-      await base44.entities.UserProfile.update(userProfile.id, {
-        ggg_balance: userProfile.ggg_balance - tipAmount
+      // Deduct from tipper via walletEngine for consistency
+      await base44.functions.invoke('walletEngine', {
+        action: 'spend',
+        payload: {
+          user_id: currentUser.email,
+          amount: tipAmount,
+          reason_code: 'tip_sent',
+          description: `Tip to ${toUserName}`,
+          source_type: 'tip',
+          source_id: tip.id
+        }
       });
 
       // Add to creator (95% after 5% platform fee for tips)
