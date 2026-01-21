@@ -651,19 +651,19 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
       <div className={`px-4 py-3 border-t ${borderColor} grid grid-cols-4 gap-4 text-xs`}>
         <div>
           <div className={textSecondary}>24h High</div>
-          <div className={`${textPrimary} font-mono`}>${(currentPrice * 1.02).toFixed(2)}</div>
+          <div className={`${textPrimary} font-mono`}>${currentPrice ? (currentPrice * 1.02).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '--'}</div>
         </div>
         <div>
           <div className={textSecondary}>24h Low</div>
-          <div className={`${textPrimary} font-mono`}>${(currentPrice * 0.97).toFixed(2)}</div>
+          <div className={`${textPrimary} font-mono`}>${currentPrice ? (currentPrice * 0.97).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '--'}</div>
         </div>
         <div>
           <div className={textSecondary}>24h Vol</div>
-          <div className={`${textPrimary} font-mono`}>$45.2M</div>
+          <div className={`${textPrimary} font-mono`}>${volume24h ? (volume24h / 1e6).toFixed(1) + 'M' : '--'}</div>
         </div>
         <div>
-          <div className={textSecondary}>Liquidity</div>
-          <div className={`${textPrimary} font-mono`}>$128.4M</div>
+          <div className={textSecondary}>Mkt Cap</div>
+          <div className={`${textPrimary} font-mono`}>${marketCap ? (marketCap / 1e9).toFixed(1) + 'B' : '--'}</div>
         </div>
       </div>
 
