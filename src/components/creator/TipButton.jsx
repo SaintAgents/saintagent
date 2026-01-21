@@ -219,13 +219,26 @@ export default function TipButton({
             {/* Message */}
             <div>
               <Label>Message (optional)</Label>
-              <Textarea
-                placeholder="Add a note to your tip..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="mt-1 min-h-20"
-                maxLength={200}
-              />
+              <div className="relative mt-1">
+                <Textarea
+                  placeholder="Add a note to your tip..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="min-h-20 pr-10"
+                  maxLength={200}
+                />
+                <EmojiPicker
+                  onSelect={(emoji) => setMessage(prev => prev + emoji)}
+                  trigger={
+                    <button
+                      type="button"
+                      className="absolute right-2 top-2 p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                    >
+                      <Smile className="w-5 h-5" />
+                    </button>
+                  }
+                />
+              </div>
               <p className="text-xs text-slate-400 mt-1">{message.length}/200</p>
             </div>
 
