@@ -209,6 +209,7 @@ export default function UserManagement() {
   const [showUnassignedPool, setShowUnassignedPool] = useState(false);
   const [assigningSA, setAssigningSA] = useState(false);
   const [selectedSAToAssign, setSelectedSAToAssign] = useState('');
+  const [customSANumber, setCustomSANumber] = useState('');
 
   // Fetch unassigned SA numbers pool
   const { data: unassignedPool = [], refetch: refetchPool } = useQuery({
