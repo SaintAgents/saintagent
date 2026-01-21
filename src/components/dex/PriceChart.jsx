@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Maximize2, Minimize2, RefreshCw, BarChart2, CandlestickChart, Building2, X, Bell, Pencil, Minus, TrendingUp as LineIcon, Circle, Square, Trash2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Maximize2, Minimize2, RefreshCw, BarChart2, CandlestickChart, Building2, X, Bell, Pencil, Minus, TrendingUp as LineIcon, Circle, Square, Trash2, Wifi, WifiOff } from 'lucide-react';
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarChart, Cell, ComposedChart, ReferenceLine } from 'recharts';
 import PriceAlertModal from './PriceAlertModal';
+import { base44 } from '@/api/base44Client';
 
 const TIMEFRAMES = ['1H', '4H', '1D', '1W', '1M', '6M'];
+const TIMEFRAME_DAYS = { '1H': 1, '4H': 1, '1D': 1, '1W': 7, '1M': 30, '6M': 180 };
 const CHART_TYPES = ['area', 'candle', 'manhattan'];
 const DRAWING_TOOLS = [
   { id: 'line', icon: Minus, label: 'Trend Line' },
@@ -15,8 +17,8 @@ const DRAWING_TOOLS = [
   { id: 'circle', icon: Circle, label: 'Circle' }
 ];
 
-// Token base prices (approximate real values)
-const TOKEN_PRICES = {
+// Fallback prices if API fails
+const FALLBACK_PRICES = {
   BTC: { price: 67432, volatility: 200, change: 1.8 },
   ETH: { price: 3247, volatility: 25, change: 2.4 },
   SOL: { price: 142.5, volatility: 3, change: 5.2 },
@@ -29,45 +31,92 @@ const TOKEN_PRICES = {
   UNI: { price: 7.8, volatility: 0.15, change: -1.2 },
   AAVE: { price: 92, volatility: 2, change: 2.8 },
   OP: { price: 2.1, volatility: 0.05, change: 6.3 },
-  BASE: { price: 0.45, volatility: 0.01, change: 8.5 },
 };
 
 export default function PriceChart({ pair, theme = 'lime', isLightTheme = false }) {
   const [timeframe, setTimeframe] = useState('1D');
   const [chartType, setChartType] = useState('area');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState(3247.82);
-  const [priceChange, setPriceChange] = useState(2.4);
+  const [currentPrice, setCurrentPrice] = useState(null);
+  const [priceChange, setPriceChange] = useState(0);
+  const [volume24h, setVolume24h] = useState(0);
+  const [marketCap, setMarketCap] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [drawingMode, setDrawingMode] = useState(null);
   const [drawings, setDrawings] = useState([]);
   const [showDrawingTools, setShowDrawingTools] = useState(false);
+  const [chartData, setChartData] = useState([]);
+  const [isLive, setIsLive] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(null);
 
   const clearDrawings = () => setDrawings([]);
   const toggleDrawingTool = (tool) => {
     setDrawingMode(prev => prev === tool ? null : tool);
   };
 
-  // Get token info based on pair
-  const tokenInfo = useMemo(() => {
-    const fromToken = pair?.from?.toUpperCase() || 'ETH';
-    return TOKEN_PRICES[fromToken] || TOKEN_PRICES.ETH;
-  }, [pair]);
+  const fromToken = pair?.from?.toUpperCase() || 'ETH';
 
-  // Update price when pair changes
-  useEffect(() => {
-    setCurrentPrice(tokenInfo.price * (1 + (Math.random() - 0.5) * 0.01));
-    setPriceChange(tokenInfo.change + (Math.random() - 0.5) * 0.5);
-  }, [pair, tokenInfo]);
+  // Fetch live price data
+  const fetchPriceData = useCallback(async (withChart = true) => {
+    setIsLoading(true);
+    try {
+      const response = await base44.functions.invoke('fetchCryptoPrices', {
+        symbols: [fromToken],
+        includeChart: withChart,
+        chartDays: TIMEFRAME_DAYS[timeframe] || 1
+      });
+      
+      const data = response.data;
+      
+      if (data.prices && data.prices[fromToken]) {
+        const tokenData = data.prices[fromToken];
+        setCurrentPrice(tokenData.price);
+        setPriceChange(tokenData.change24h);
+        setVolume24h(tokenData.volume24h);
+        setMarketCap(tokenData.marketCap);
+        setIsLive(true);
+        setLastUpdate(new Date());
+      }
+      
+      if (data.chartData && data.chartData.length > 0) {
+        // Downsample if needed based on timeframe
+        let processedData = data.chartData;
+        const maxPoints = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 7 * 24 : 30 * 24;
+        
+        if (processedData.length > maxPoints) {
+          const step = Math.ceil(processedData.length / maxPoints);
+          processedData = processedData.filter((_, i) => i % step === 0);
+        }
+        
+        setChartData(processedData.map((d, i) => ({
+          ...d,
+          time: i,
+          timeLabel: new Date(d.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        })));
+      }
+    } catch (error) {
+      console.error('Failed to fetch live prices:', error);
+      // Use fallback data
+      const fallback = FALLBACK_PRICES[fromToken] || FALLBACK_PRICES.ETH;
+      setCurrentPrice(fallback.price);
+      setPriceChange(fallback.change);
+      setIsLive(false);
+      
+      // Generate fallback chart data
+      generateFallbackChart(fallback);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fromToken, timeframe]);
 
-  // Generate mock price data with OHLC for candlestick
-  const chartData = useMemo(() => {
-    const points = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 7 : timeframe === '1M' ? 30 : 180;
+  // Generate fallback chart when API fails
+  const generateFallbackChart = useCallback((tokenInfo) => {
+    const points = timeframe === '1H' ? 60 : timeframe === '4H' ? 48 : timeframe === '1D' ? 24 : timeframe === '1W' ? 168 : 720;
     const basePrice = tokenInfo.price;
     const volatility = tokenInfo.volatility;
     const data = [];
-    let price = basePrice * (1 - 0.02); // Start slightly below current
+    let price = basePrice * 0.98;
     
     for (let i = 0; i < points; i++) {
       const open = price;
@@ -88,20 +137,21 @@ export default function PriceChart({ pair, theme = 'lime', isLightTheme = false 
       });
       price = close;
     }
-    return data;
-  }, [timeframe, pair, tokenInfo]);
+    setChartData(data);
+  }, [timeframe]);
 
-  // Simulate live price updates
+  // Initial fetch and when pair/timeframe changes
+  useEffect(() => {
+    fetchPriceData(true);
+  }, [fromToken, timeframe]);
+
+  // Live price updates every 10 seconds (price only, not chart)
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPrice(prev => prev + (Math.random() - 0.5) * tokenInfo.volatility * 0.1);
-      setPriceChange(prev => {
-        const newChange = prev + (Math.random() - 0.5) * 0.05;
-        return Math.max(-10, Math.min(10, newChange));
-      });
-    }, 2000);
+      fetchPriceData(false);
+    }, 10000);
     return () => clearInterval(interval);
-  }, [tokenInfo]);
+  }, [fetchPriceData]);
 
   const themeColor = theme === 'lime' ? '#84cc16' : theme === 'blue' ? '#3b82f6' : '#10b981';
   const isPositive = priceChange >= 0;
