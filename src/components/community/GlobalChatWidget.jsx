@@ -238,12 +238,30 @@ export default function GlobalChatWidget() {
   });
 
   // Global chat uses a special circle_id = 'global'
+  // Poll even when closed to detect new messages for notification
   const { data: messages = [] } = useQuery({
     queryKey: ['globalChatMessages'],
     queryFn: () => base44.entities.CircleMessage.filter({ circle_id: 'global' }, '-created_date', 50),
-    enabled: isOpen,
-    refetchInterval: isOpen ? 3000 : false
+    refetchInterval: isOpen ? 3000 : 10000 // Poll every 10s when closed for notifications
   });
+
+  // Detect new messages when chat is closed
+  useEffect(() => {
+    if (!isOpen && messages.length > 0) {
+      if (lastMessageCountRef.current > 0 && messages.length > lastMessageCountRef.current) {
+        // New message arrived while closed - trigger vibration
+        setHasNewMessage(true);
+        // Auto-clear after 5 seconds
+        setTimeout(() => setHasNewMessage(false), 5000);
+      }
+      lastMessageCountRef.current = messages.length;
+    }
+    if (isOpen) {
+      // Clear notification when opened
+      setHasNewMessage(false);
+      lastMessageCountRef.current = messages.length;
+    }
+  }, [messages.length, isOpen]);
 
   // Count online users
   const { data: onlineUsers = [] } = useQuery({
