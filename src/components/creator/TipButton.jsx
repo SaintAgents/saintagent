@@ -13,7 +13,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Heart, Coins, Sparkles } from "lucide-react";
+import { Heart, Coins, Sparkles, Smile } from "lucide-react";
+import EmojiPicker from '@/components/messages/EmojiPicker';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
