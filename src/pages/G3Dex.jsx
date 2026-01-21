@@ -47,6 +47,7 @@ export default function G3Dex() {
   const [bridgeModalOpen, setBridgeModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [showTopCoinsDropdown, setShowTopCoinsDropdown] = useState(false);
   
   // Chart display modes: 'hidden' (minimized to icon), 'docked' (in grid), 'floating' (window)
   const [chartMode, setChartMode] = useState('docked');
