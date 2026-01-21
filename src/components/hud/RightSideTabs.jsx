@@ -383,7 +383,7 @@ export default function RightSideTabs() {
       {/* Chat Tab */}
       <div 
         className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
-        style={{ bottom: '130px' }}
+        style={{ bottom: '190px' }}
         onMouseEnter={handleChatMouseEnter}
         onMouseLeave={handleChatMouseLeave}
       >
