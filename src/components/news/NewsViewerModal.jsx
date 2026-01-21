@@ -186,9 +186,12 @@ export default function NewsViewerModal({
             {currentArticle.content && (
               <div 
                 className="prose prose-slate dark:prose-invert max-w-none
+                  [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
                   [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3
                   [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-5 [&_h3]:mb-2
+                  [&_h4]:text-base [&_h4]:font-semibold [&_h4]:mt-4 [&_h4]:mb-2
                   [&_p]:mb-4 [&_p]:leading-relaxed
+                  [&_br]:block [&_br]:content-[''] [&_br]:mt-2
                   [&_strong]:font-semibold [&_strong]:text-slate-900 dark:[&_strong]:text-white
                   [&_em]:italic [&_em]:text-slate-600 dark:[&_em]:text-slate-300
                   [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-2
@@ -196,7 +199,9 @@ export default function NewsViewerModal({
                   [&_li]:text-slate-700 dark:[&_li]:text-slate-300
                   [&_blockquote]:border-l-4 [&_blockquote]:border-violet-400 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 dark:[&_blockquote]:text-slate-400
                   [&_hr]:my-6 [&_hr]:border-slate-200 dark:[&_hr]:border-slate-700
-                  [&_a]:text-violet-600 [&_a]:underline hover:[&_a]:text-violet-800 dark:[&_a]:text-violet-400"
+                  [&_a]:text-violet-600 [&_a]:underline hover:[&_a]:text-violet-800 dark:[&_a]:text-violet-400
+                  [&_div]:mb-4
+                  whitespace-pre-line"
                 dangerouslySetInnerHTML={{ __html: currentArticle.content }}
               />
             )}
