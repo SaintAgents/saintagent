@@ -10,7 +10,7 @@ export const VIEW_MODE_CONFIG = {
     description: 'Top 5 essential features',
     cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu) - excludes insights
-    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'settings']
+    navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'gggcrypto', 'g3dex', 'settings']
   },
   advanced: {
     label: 'Advanced',
