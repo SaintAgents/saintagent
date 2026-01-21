@@ -367,7 +367,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Use SA# for all database queries if available, fallback to email
   const userIdentifier = profile?.sa_number || currentUser?.email;
 
-  // Wallet (authoritative GGG balance) - use currentUser.email as primary identifier
+  // GGG Balance - profile is primary source, wallet is secondary/verification
+  // Profile loads instantly, wallet API is slower - always show profile balance first
   const walletUserId = currentUser?.email;
   const { data: walletRes, refetch: refetchWallet } = useQuery({
     queryKey: ['wallet', walletUserId],
@@ -377,26 +378,25 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           action: 'getWallet',
           payload: { user_id: walletUserId }
         });
-        // response is axios response, data is in response.data
         const walletData = response?.data || response;
-        console.log('Wallet response full:', response);
-        console.log('Wallet data extracted:', walletData);
         return walletData;
       } catch (e) {
         console.error('Wallet fetch error:', e);
-        // Silently fail and use profile balance as fallback
-        return { wallet: { available_balance: profile?.ggg_balance || 0 } };
+        return null;
       }
     },
-    enabled: !!walletUserId,
-    refetchInterval: 60000, // Reduced frequency to avoid excessive API calls
+    enabled: !!walletUserId && !!profile, // Only fetch wallet AFTER profile loads
+    refetchInterval: 120000, // Less frequent - wallet is backup only
     retry: 1,
-    staleTime: 30000
+    staleTime: 60000
   });
-  // If wallet returns null/undefined or 0 but profile has a balance, prefer profile
-  const walletBalance = walletRes?.wallet?.available_balance;
-  console.log('Wallet state:', { walletRes, walletBalance, profileGGG: profile?.ggg_balance });
-  const walletAvailable = (walletBalance != null && walletBalance > 0) ? walletBalance : (profile?.ggg_balance ?? 0);
+  
+  // PRIORITY: Always use profile.ggg_balance as primary source (loads instantly)
+  // Wallet is only for verification/sync, not primary display
+  const profileGGG = profile?.ggg_balance ?? 0;
+  const walletGGG = walletRes?.wallet?.available_balance ?? 0;
+  // Use profile balance - it's authoritative and loads with profile
+  const walletAvailable = profileGGG;
   // Use rp_points for calculation, but also check rank_points as fallback
   const rpPoints = profile?.rp_points || profile?.rank_points || 0;
   const rpInfo = getRPRank(rpPoints);
