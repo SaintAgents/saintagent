@@ -268,6 +268,70 @@ export default function G3Dex() {
 
       {/* Main Content */}
       <div className="relative z-10 w-full px-2 sm:px-3 md:px-4 py-3 md:py-4">
+        {/* Function Tabs Bar - ABOVE the chart */}
+        <div className="max-w-[1600px] mx-auto mb-3">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-8 gap-0.5`}>
+              <TabsTrigger 
+                value="swap" 
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+              >
+                <Repeat className="w-3 h-3 mr-1" />
+                Swap
+              </TabsTrigger>
+              <TabsTrigger 
+                value="limit" 
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+              >
+                <TrendingUp className="w-3 h-3 mr-1" />
+                Limit
+              </TabsTrigger>
+              <TabsTrigger 
+                value="dca" 
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+              >
+                <Clock className="w-3 h-3 mr-1" />
+                DCA
+              </TabsTrigger>
+              <TabsTrigger 
+                value="perps" 
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+              >
+                <Activity className="w-3 h-3 mr-1" />
+                Perps
+              </TabsTrigger>
+              <TabsTrigger 
+                value="neonft" 
+                className={`data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 text-xs`}
+              >
+                <Shield className="w-3 h-3 mr-1" />
+                Neo-NFT
+              </TabsTrigger>
+              <TabsTrigger 
+                value="escrow" 
+                className={`data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400 text-xs`}
+              >
+                <Lock className="w-3 h-3 mr-1" />
+                Escrow
+              </TabsTrigger>
+              <TabsTrigger 
+                value="bridge" 
+                className={`data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 text-xs`}
+              >
+                <Sparkles className="w-3 h-3 mr-1" />
+                Bridge
+              </TabsTrigger>
+              <TabsTrigger 
+                value="history" 
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+              >
+                <History className="w-3 h-3 mr-1" />
+                History
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 md:gap-4 max-w-[1600px] mx-auto">
           
           {/* Left Sidebar - Chart & Portfolio */}
@@ -280,118 +344,58 @@ export default function G3Dex() {
 
           {/* Main Trading Area */}
           <div className="xl:col-span-4 space-y-3 md:space-y-4">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-8 gap-0.5`}>
-                <TabsTrigger 
-                  value="swap" 
-                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
-                >
-                  <Repeat className="w-3 h-3 mr-1" />
-                  Swap
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="limit" 
-                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
-                >
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  Limit
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="dca" 
-                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
-                >
-                  <Clock className="w-3 h-3 mr-1" />
-                  DCA
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="perps" 
-                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
-                >
-                  <Activity className="w-3 h-3 mr-1" />
-                  Perps
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="neonft" 
-                  className={`data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 text-xs`}
-                >
-                  <Shield className="w-3 h-3 mr-1" />
-                  Neo-NFT
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="escrow" 
-                  className={`data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400 text-xs`}
-                >
-                  <Lock className="w-3 h-3 mr-1" />
-                  Escrow
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="bridge" 
-                  className={`data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 text-xs`}
-                >
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Bridge
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="history" 
-                  className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
-                >
-                  <History className="w-3 h-3 mr-1" />
-                  History
-                </TabsTrigger>
-              </TabsList>
+            {/* Tab Content */}
+            {activeTab === 'swap' && (
+              <SwapInterface
+                walletConnected={walletConnected}
+                walletAddress={walletAddress}
+                slippage={slippage}
+                gasPriority={gasPriority}
+                onPairChange={setSelectedPair}
+                theme={currentTheme.accent}
+                isLightTheme={theme === 'light'}
+              />
+            )}
 
-              <TabsContent value="swap" className="mt-4">
-                <SwapInterface
-                  walletConnected={walletConnected}
-                  walletAddress={walletAddress}
-                  slippage={slippage}
-                  gasPriority={gasPriority}
-                  onPairChange={setSelectedPair}
-                  theme={currentTheme.accent}
-                  isLightTheme={theme === 'light'}
-                />
-              </TabsContent>
+            {activeTab === 'limit' && (
+              <LimitOrderTab
+                walletConnected={walletConnected}
+                walletAddress={walletAddress}
+                theme={currentTheme.accent}
+              />
+            )}
 
-              <TabsContent value="limit" className="mt-4">
-                <LimitOrderTab
-                  walletConnected={walletConnected}
-                  walletAddress={walletAddress}
-                  theme={currentTheme.accent}
-                />
-              </TabsContent>
+            {activeTab === 'dca' && (
+              <DCATab
+                walletConnected={walletConnected}
+                walletAddress={walletAddress}
+                theme={currentTheme.accent}
+              />
+            )}
 
-              <TabsContent value="dca" className="mt-4">
-                <DCATab
-                  walletConnected={walletConnected}
-                  walletAddress={walletAddress}
-                  theme={currentTheme.accent}
-                />
-              </TabsContent>
+            {activeTab === 'perps' && (
+              <PerpsTab
+                walletConnected={walletConnected}
+                walletAddress={walletAddress}
+                theme={currentTheme.accent}
+              />
+            )}
 
-              <TabsContent value="perps" className="mt-4">
-                <PerpsTab
-                  walletConnected={walletConnected}
-                  walletAddress={walletAddress}
-                  theme={currentTheme.accent}
-                />
-              </TabsContent>
+            {activeTab === 'neonft' && (
+              <NeoNFTMarketplace theme={currentTheme.accent} />
+            )}
 
-              <TabsContent value="neonft" className="mt-4">
-                <NeoNFTMarketplace theme={currentTheme.accent} />
-              </TabsContent>
+            {activeTab === 'escrow' && (
+              <EscrowManager theme={currentTheme.accent} />
+            )}
 
-              <TabsContent value="escrow" className="mt-4">
-                <EscrowManager theme={currentTheme.accent} />
-              </TabsContent>
+            {activeTab === 'bridge' && (
+              <ResourceBridge theme={currentTheme.accent} />
+            )}
 
-              <TabsContent value="bridge" className="mt-4">
-                <ResourceBridge theme={currentTheme.accent} />
-              </TabsContent>
-
-              <TabsContent value="history" className="mt-4">
-                <TransactionHistory walletAddress={walletAddress} theme={currentTheme.accent} />
-              </TabsContent>
-            </Tabs>
+            {activeTab === 'history' && (
+              <TransactionHistory walletAddress={walletAddress} theme={currentTheme.accent} />
+            )}
           </div>
 
           {/* Right Sidebar - Trending & Info */}
