@@ -442,14 +442,14 @@ export default function G3Dex() {
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
               </Button>
-              {/* Hidden card restore buttons */}
+              {/* Hidden card restore buttons - click to restore to docked position */}
               {cardModes.chart === 'hidden' && (
                 <Button 
                   variant="ghost" 
                   size="icon"
                   className={`w-7 h-7 rounded-full bg-${currentTheme.accent}-500/20 text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/30 border border-${currentTheme.accent}-500/40`}
-                  onClick={() => setCardMode('chart', 'stowed')}
-                  title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
+                  onClick={() => setCardMode('chart', 'expanded')}
+                  title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart - Click to restore`}
                 >
                   <BarChart3 className="w-3.5 h-3.5" />
                 </Button>
@@ -459,8 +459,8 @@ export default function G3Dex() {
                   variant="ghost" 
                   size="icon"
                   className={`w-7 h-7 rounded-full bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40`}
-                  onClick={() => setCardMode('portfolio', 'stowed')}
-                  title="Portfolio"
+                  onClick={() => setCardMode('portfolio', 'expanded')}
+                  title="Portfolio - Click to restore"
                 >
                   <Wallet className="w-3.5 h-3.5" />
                 </Button>
@@ -470,8 +470,8 @@ export default function G3Dex() {
                   variant="ghost" 
                   size="icon"
                   className={`w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40`}
-                  onClick={() => setCardMode('trending', 'stowed')}
-                  title="Trending Pairs"
+                  onClick={() => setCardMode('trending', 'expanded')}
+                  title="Trending Pairs - Click to restore"
                 >
                   <TrendingUp className="w-3.5 h-3.5" />
                 </Button>
