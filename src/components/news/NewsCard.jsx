@@ -96,6 +96,14 @@ export default function NewsCard() {
                   <Eye className="w-3 h-3" />
                   {article.views_count || 0}
                 </span>
+                <span className="flex items-center gap-1 text-rose-400">
+                  <Heart className="w-3 h-3" />
+                  {article.likes_count || 0}
+                </span>
+                <span className="flex items-center gap-1 text-violet-400">
+                  <Sparkles className="w-3 h-3" />
+                  {article.resonance_count || 0}
+                </span>
                 <span className="flex items-center gap-1">
                   <MessageCircle className="w-3 h-3" />
                   {article.comments_count || 0}
