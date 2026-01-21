@@ -265,6 +265,19 @@ export default function G3Dex() {
                 <Layers className="w-3 h-3 mr-1" />
                 Pools
               </Button>
+              
+              {/* Chart Icon - only visible when chart is minimized */}
+              {chartMode === 'hidden' && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={`text-${currentTheme.accent}-400 hover:bg-${currentTheme.accent}-500/20 text-xs h-7 ml-2 border border-${currentTheme.accent}-500/30`}
+                  onClick={() => setChartMode('floating')}
+                >
+                  <BarChart3 className="w-3 h-3 mr-1" />
+                  Chart
+                </Button>
+              )}
             </div>
           </div>
 
