@@ -584,42 +584,50 @@ export default function G3Dex() {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 md:gap-4 max-w-[1600px] mx-auto">
           
           {/* Left Sidebar - Chart & Portfolio */}
-          {chartMode === 'docked' && (
+          {cardModes.chart !== 'hidden' && cardModes.chart !== 'stowed' && (
             <div className="xl:col-span-5 space-y-3 md:space-y-4">
-              <div className="relative">
-                {/* Chart Control Buttons */}
-                <div className="absolute top-2 right-2 z-20 flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 bg-black/60 hover:bg-black/80 text-gray-400 hover:text-white"
-                    onClick={() => setChartMode('hidden')}
-                    title="Minimize to header"
-                  >
-                    <Minus className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 bg-black/60 hover:bg-black/80 text-gray-400 hover:text-white"
-                    onClick={() => setChartMode('floating')}
-                    title="Pop out window"
-                  >
-                    <Maximize2 className="w-3 h-3" />
-                  </Button>
-                </div>
+              <DexCard
+                id="chart"
+                title={`${selectedPair?.from || 'ETH'}/${selectedPair?.to || 'USDC'} Chart`}
+                icon={BarChart3}
+                mode={cardModes.chart}
+                onModeChange={(mode) => setCardMode('chart', mode)}
+                theme={currentTheme.accent}
+                isLightTheme={theme === 'light'}
+              >
                 <PriceChart pair={selectedPair} theme={currentTheme.accent} isLightTheme={theme === 'light'} />
-              </div>
-              {showPortfolio && walletConnected && (
-                <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+              </DexCard>
+              
+              {showPortfolio && walletConnected && cardModes.portfolio !== 'hidden' && cardModes.portfolio !== 'stowed' && (
+                <DexCard
+                  id="portfolio"
+                  title="Portfolio"
+                  icon={Wallet}
+                  mode={cardModes.portfolio}
+                  onModeChange={(mode) => setCardMode('portfolio', mode)}
+                  theme={currentTheme.accent}
+                  isLightTheme={theme === 'light'}
+                >
+                  <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+                </DexCard>
               )}
             </div>
           )}
           
-          {/* When chart is hidden or floating, expand other columns */}
-          {chartMode !== 'docked' && showPortfolio && walletConnected && (
+          {/* When chart is hidden or floating, show portfolio if needed */}
+          {(cardModes.chart === 'hidden' || cardModes.chart === 'stowed') && showPortfolio && walletConnected && cardModes.portfolio !== 'hidden' && cardModes.portfolio !== 'stowed' && (
             <div className="xl:col-span-5 space-y-3 md:space-y-4">
-              <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+              <DexCard
+                id="portfolio"
+                title="Portfolio"
+                icon={Wallet}
+                mode={cardModes.portfolio}
+                onModeChange={(mode) => setCardMode('portfolio', mode)}
+                theme={currentTheme.accent}
+                isLightTheme={theme === 'light'}
+              >
+                <PortfolioPanel walletAddress={walletAddress} theme={currentTheme.accent} />
+              </DexCard>
             </div>
           )}
 
