@@ -357,16 +357,24 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       if (document.visibilityState === 'visible' && currentUser?.email) {
         console.log('Page visible - forcing profile refetch');
         queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        queryClient.invalidateQueries({ queryKey: ['wallet'] });
       }
     };
     
     const handlePageShow = (event) => {
-      // bfcache restoration (back button)
-      if (event.persisted && currentUser?.email) {
-        console.log('Page restored from bfcache - forcing profile refetch');
+      // bfcache restoration (back button) - ALWAYS refetch, not just on persisted
+      if (currentUser?.email) {
+        console.log('Page show event - forcing profile refetch');
         queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        queryClient.invalidateQueries({ queryKey: ['wallet'] });
       }
     };
+    
+    // Immediately refetch on mount (handles back navigation)
+    if (currentUser?.email) {
+      console.log('CommandDeck mount - forcing immediate profile refetch');
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    }
     
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pageshow', handlePageShow);
