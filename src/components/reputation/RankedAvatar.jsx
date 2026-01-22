@@ -344,11 +344,11 @@ export default function RankedAvatar({
           }}
         >
           {userBadges.slice(0, 3).map((badge) => {
-            // Get badge code from various possible fields
-            const badgeCode = badge.badge_code || badge.code || badge.badge_type || '';
-            // Look up image from QUEST_BADGE_IMAGES using badge code, fallback to badge.image_url or icon_url
-            const badgeImage = QUEST_BADGE_IMAGES[badgeCode] || badge.image_url || badge.icon_url;
-            const badgeLabel = badge.badge_name || badgeCode?.replace(/_/g, ' ') || 'Badge';
+            // Get badge code from either field
+            const badgeCode = badge.badge_code || badge.code || '';
+            // Try to get image from: 1) icon_url on badge, 2) QUEST_BADGE_IMAGES lookup
+            const badgeImageUrl = badge.icon_url || QUEST_BADGE_IMAGES[badgeCode] || QUEST_BADGE_IMAGES[badgeCode.toLowerCase()];
+            const badgeName = badge.badge_name || badgeCode?.replace(/_/g, ' ') || 'Badge';
             
             return (
               <TooltipProvider key={badge.id}>
@@ -358,10 +358,10 @@ export default function RankedAvatar({
                       className="cursor-help hover:scale-110 transition-transform"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {badgeImage ? (
+                      {badgeImageUrl ? (
                         <img 
-                          src={badgeImage} 
-                          alt={badgeLabel} 
+                          src={badgeImageUrl} 
+                          alt={badgeName} 
                           className="object-contain drop-shadow-md"
                           style={{ width: symbolPx * 1.2, height: symbolPx * 1.2, filter: 'none' }}
                           data-no-filter="true"
@@ -377,7 +377,7 @@ export default function RankedAvatar({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
-                    <p className="font-semibold text-sm capitalize">{badgeLabel}</p>
+                    <p className="font-semibold text-sm capitalize">{badgeName}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
