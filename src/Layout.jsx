@@ -32,8 +32,115 @@ import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home'];
 
+// Global hacker theme draggable popup handler
+function useHackerDraggablePopups() {
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (theme !== 'hacker') return;
+      
+      // Find all dialogs and make them draggable
+      const setupDraggable = (el) => {
+        if (el.dataset.hackerDraggable) return;
+        el.dataset.hackerDraggable = 'true';
+        
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let offsetX = 0, offsetY = 0;
+        
+        const onMouseDown = (e) => {
+          if (e.target.closest('button, input, textarea, select, a, [role="button"]')) return;
+          isDragging = true;
+          startX = e.clientX - offsetX;
+          startY = e.clientY - offsetY;
+          el.style.transition = 'none';
+        };
+        
+        const onMouseMove = (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+          offsetX = e.clientX - startX;
+          offsetY = e.clientY - startY;
+          el.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+        };
+        
+        const onMouseUp = () => {
+          isDragging = false;
+          el.style.transition = '';
+        };
+        
+        el.addEventListener('mousedown', onMouseDown);
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        
+        // Touch support
+        el.addEventListener('touchstart', (e) => {
+          if (e.target.closest('button, input, textarea, select, a, [role="button"]')) return;
+          isDragging = true;
+          startX = e.touches[0].clientX - offsetX;
+          startY = e.touches[0].clientY - offsetY;
+          el.style.transition = 'none';
+        });
+        document.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          offsetX = e.touches[0].clientX - startX;
+          offsetY = e.touches[0].clientY - startY;
+          el.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+        });
+        document.addEventListener('touchend', onMouseUp);
+      };
+      
+      // Observe for new dialogs
+      document.querySelectorAll('[role="dialog"], [data-radix-dialog-content]').forEach(setupDraggable);
+    };
+    
+    // Run on theme changes and periodically check for new dialogs
+    const observer = new MutationObserver(() => {
+      if (document.documentElement.getAttribute('data-theme') === 'hacker') {
+        document.querySelectorAll('[role="dialog"], [data-radix-dialog-content]').forEach(el => {
+          if (!el.dataset.hackerDraggable) {
+            el.dataset.hackerDraggable = 'true';
+            let isDragging = false;
+            let startX = 0, startY = 0;
+            let offsetX = 0, offsetY = 0;
+            
+            el.addEventListener('mousedown', (e) => {
+              if (e.target.closest('button, input, textarea, select, a, [role="button"]')) return;
+              isDragging = true;
+              startX = e.clientX - offsetX;
+              startY = e.clientY - offsetY;
+              el.style.transition = 'none';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              e.preventDefault();
+              offsetX = e.clientX - startX;
+              offsetY = e.clientY - startY;
+              el.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+            });
+            
+            document.addEventListener('mouseup', () => {
+              isDragging = false;
+              el.style.transition = '';
+            });
+          }
+        });
+      }
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
+    handleThemeChange();
+    
+    return () => observer.disconnect();
+  }, []);
+}
+
 // Authenticated layout with all the hooks - only used for protected pages
 function AuthenticatedLayout({ children, currentPageName }) {
+  // Enable hacker theme draggable popups
+  useHackerDraggablePopups();
+  
   // On mobile, sidebar starts collapsed
     const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
