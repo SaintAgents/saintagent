@@ -72,11 +72,19 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
     enabled: !!userId
   });
 
-  // Fetch files shared with me (inbox)
+  // Fetch current user email for inbox lookup (inbox must use email, not SA#)
+  const { data: currentUserData } = useQuery({
+    queryKey: ['currentUserForFiles'],
+    queryFn: () => base44.auth.me(),
+    enabled: isOwnProfile
+  });
+  const currentUserEmail = currentUserData?.email;
+
+  // Fetch files shared with me (inbox) - lookup by email since that's what sender uses
   const { data: sharedWithMe = [], isLoading: inboxLoading } = useQuery({
-    queryKey: ['sharedFilesInbox', userId],
-    queryFn: () => base44.entities.SharedFile.filter({ recipient_user_id: userId }, '-created_date'),
-    enabled: !!userId && isOwnProfile
+    queryKey: ['sharedFilesInbox', currentUserEmail],
+    queryFn: () => base44.entities.SharedFile.filter({ recipient_user_id: currentUserEmail }, '-created_date'),
+    enabled: !!currentUserEmail && isOwnProfile
   });
 
   // Fetch files I've shared
