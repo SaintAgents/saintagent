@@ -56,6 +56,7 @@ import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
+import Notes from './pages/Notes';
 import __Layout from './Layout.jsx';
 
 
@@ -118,6 +119,7 @@ export const PAGES = {
     "Terms": Terms,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
+    "Notes": Notes,
 }
 
 export const pagesConfig = {

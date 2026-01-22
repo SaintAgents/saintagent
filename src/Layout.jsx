@@ -28,6 +28,7 @@ import UserTourModal from '@/components/hud/UserTourModal';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import BetaTicker from '@/components/hud/BetaTicker.jsx';
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
+import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home'];
 
@@ -1614,6 +1615,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Meeting Reminder Service */}
               {currentUser && <MeetingReminderService />}
+
+      {/* Floating Notes Widget */}
+      <FloatingNotesWidget />
 
               {/* Mobile Close Button - shows X on secondary pages */}
               <MobileCloseButton currentPageName={currentPageName} />
