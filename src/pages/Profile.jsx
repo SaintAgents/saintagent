@@ -884,7 +884,7 @@ export default function Profile() {
             <CollapsibleProfileCard 
               title="Intentions" 
               headerClassName="dark:bg-[#050505]"
-              headerContent={isOwnProfile && (
+              headerContent={isOwnProfile ? (
                       !editingIntentions ?
                       <Button
                         variant="ghost"
@@ -910,8 +910,8 @@ export default function Profile() {
                           <Save className="w-4 h-4 mr-1" />
                           Save
                         </Button>
-                      </div>)
-                      )}
+                      </div>
+                      ) : null}
             >
                   <div className="dark:bg-[#050505]">
                 {editingIntentions ?
