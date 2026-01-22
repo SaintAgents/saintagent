@@ -30,6 +30,7 @@ export default function FloatingNotesWidget() {
   const [editingNote, setEditingNote] = useState(null);
   const [newNote, setNewNote] = useState({ title: '', content: '', tags: [], color: 'default' });
   const [tagInput, setTagInput] = useState('');
+  const [colorFilter, setColorFilter] = useState(null);
   const [position, setPosition] = useState({ x: null, y: null });
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef(null);
