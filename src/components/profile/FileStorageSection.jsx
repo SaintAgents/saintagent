@@ -14,8 +14,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { 
   Upload, File, Image, FileText, Film, Music, Archive, 
   Trash2, Share2, Download, Eye, EyeOff, Copy, Check,
-  Inbox, Send, Clock, User, X, Loader2, FolderOpen, ChevronDown
+  Inbox, Send, Clock, User, X, Loader2, FolderOpen, ChevronDown, Search
 } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const FILE_ICONS = {
   'image': Image,
