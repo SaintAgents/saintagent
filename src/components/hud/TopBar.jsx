@@ -196,10 +196,10 @@ export default function TopBar({
 
   return (
     <header className={cn(
-      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 flex flex-wrap items-center gap-2 md:gap-4 px-2 md:px-6 transition-all duration-300",
+      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 flex items-center gap-2 md:gap-4 px-2 md:px-6 transition-all duration-300 overflow-x-auto scrollbar-hide",
       "left-0",
       sidebarCollapsed ? "md:left-20" : "md:left-64",
-      isCollapsed ? "h-10" : "h-auto min-h-14 py-2"
+      isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999 }}>
       {/* Collapse/Expand Toggle */}
       <button
