@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,7 +21,8 @@ import {
   MessageSquare,
   TrendingUp,
   Home,
-  GripHorizontal } from
+  GripHorizontal,
+  RefreshCw } from
 "lucide-react";
 
 import { createPageUrl } from '@/utils';
@@ -86,6 +87,7 @@ function CompatibilityChart({ match }) {
 }
 
 export default function DatingMatchesPopup({ currentUser }) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [photoIndex, setPhotoIndex] = useState(0);
@@ -384,6 +386,19 @@ export default function DatingMatchesPopup({ currentUser }) {
               <h3 className="text-slate-50 font-semibold dark:text-slate-100">Dating Matches</h3>
             </div>
             <div className="flex items-center gap-1">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-7 w-7 text-slate-400 hover:text-white" 
+                onClick={() => {
+                  // Trigger refresh of dating profiles
+                  queryClient.invalidateQueries({ queryKey: ['datingProfilesPopup'] });
+                  queryClient.invalidateQueries({ queryKey: ['userProfilesForDating'] });
+                }}
+                title="Refresh matches"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
               <a href={createPageUrl('DatingMatches')} onClick={() => setOpen(false)}>
                 <Button variant="ghost" size="sm" className="text-xs h-7 text-pink-400 hover:text-pink-300">
                   View All
@@ -398,8 +413,14 @@ export default function DatingMatchesPopup({ currentUser }) {
         {enrichedMatches.length === 0 ?
         <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500 px-4">
             <Heart className="w-10 h-10 mb-3 opacity-50" />
-            <p className="text-sm text-center">No matches yet</p>
-            <p className="text-xs text-center mt-1">Check back soon for new connections</p>
+            <p className="text-sm text-center">No new matches found</p>
+            <p className="text-xs text-center mt-1 mb-4">Try adjusting your preferences or check again later</p>
+            <a href={createPageUrl('DatingMatches')}>
+              <Button variant="outline" size="sm" className="gap-2 border-pink-200 text-pink-600 hover:bg-pink-50">
+                <Heart className="w-4 h-4" />
+                View All Dating Profiles
+              </Button>
+            </a>
           </div> :
 
         <div className="relative">

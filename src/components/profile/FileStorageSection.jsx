@@ -188,15 +188,31 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   };
 
   // Filter profiles based on search (display_name, handle, SA#, user_id)
+  // Also support searching by SA# partial number (e.g., "23" should match SA#000023)
   const filteredProfiles = allProfiles.filter(p => {
     if (p.user_id === userId) return false;
-    const search = recipientSearch.toLowerCase();
-    return (
+    const search = recipientSearch.toLowerCase().trim();
+    if (!search) return false;
+    
+    // Standard search
+    const basicMatch = (
       p.display_name?.toLowerCase().includes(search) ||
       p.handle?.toLowerCase().includes(search) ||
       p.user_id?.toLowerCase().includes(search) ||
       p.sa_number?.toLowerCase().includes(search)
     );
+    if (basicMatch) return true;
+    
+    // SA# numeric search - if user enters a number or "SA#" prefix
+    const saSearchMatch = search.match(/^(?:sa#?)?(\d+)$/i);
+    if (saSearchMatch && p.sa_number) {
+      const searchNum = saSearchMatch[1];
+      // Match if SA number ends with or contains the search digits
+      const saNumeric = p.sa_number.replace(/\D/g, '');
+      return saNumeric.endsWith(searchNum) || saNumeric.includes(searchNum);
+    }
+    
+    return false;
   }).slice(0, 10);
 
   const selectRecipient = (profile) => {
@@ -447,7 +463,7 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <Input 
-                  placeholder="Search by name or email..." 
+                  placeholder="Search by name, @handle, SA# or email..." 
                   value={recipientSearch} 
                   onChange={(e) => {
                     setRecipientSearch(e.target.value);
