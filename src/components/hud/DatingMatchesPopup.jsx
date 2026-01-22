@@ -226,7 +226,7 @@ export default function DatingMatchesPopup({ currentUser }) {
     }
     
     return true;
-  }) : [];
+  })) : [];
 
   // Enrich with user profile data and assign unique demo avatars
   const usedMaleIdx = new Set();
