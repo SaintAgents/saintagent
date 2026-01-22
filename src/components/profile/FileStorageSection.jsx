@@ -503,14 +503,9 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
             <Button variant="outline" onClick={() => setShareModalOpen(false)}>Cancel</Button>
             <Button 
               onClick={() => {
-                let recipientId = shareRecipient.trim();
-                if (recipientId.startsWith('@')) {
-                  // Would need to resolve handle to user_id - for now assume it's email
-                  recipientId = recipientId.slice(1);
-                }
-                shareMutation.mutate({ file: selectedFile, recipientId, message: shareMessage });
+                shareMutation.mutate({ file: selectedFile, recipientId: shareRecipient, message: shareMessage });
               }}
-              disabled={!shareRecipient.trim() || shareMutation.isPending}
+              disabled={!shareRecipient || shareMutation.isPending}
             >
               {shareMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Share2 className="h-4 w-4 mr-2" />}
               Share
