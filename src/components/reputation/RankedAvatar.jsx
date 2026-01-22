@@ -109,12 +109,17 @@ export default function RankedAvatar({
     queryKey: ['rankedAvatarBadges', userId || saNumberFinal || 'none'],
     queryFn: async () => {
       // Try email (userId) first since badges are stored with email
-      let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 5);
+      let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 20);
       // If no results and we have SA#, try with SA#
       if ((!results || results.length === 0) && saNumberFinal && saNumberFinal !== userId) {
-        results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 5);
+        results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 20);
       }
-      return results || [];
+      // Filter to only badges that have images available
+      const badgesWithImages = (results || []).filter(badge => {
+        const code = badge.badge_code || badge.code || '';
+        return badge.icon_url || QUEST_BADGE_IMAGES[code] || QUEST_BADGE_IMAGES[code?.toLowerCase?.()];
+      });
+      return badgesWithImages;
     },
     enabled: !!(userId || saNumberFinal),
   });
