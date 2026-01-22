@@ -22,15 +22,22 @@ const WALLETS = [
   { 
     id: 'trust', 
     name: 'Trust Wallet', 
-    icon: 'https://trustwallet.com/assets/images/media/assets/trust_platform.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/AntonyMTuhin/cryptocurrency-wallet-icons/svg/trust.svg',
     installed: typeof window !== 'undefined' && window.ethereum?.isTrust,
     deepLink: 'https://link.trustwallet.com/open_url?coin_id=60&url=' + (typeof window !== 'undefined' ? encodeURIComponent(window.location.href) : '')
   },
   { 
     id: 'rabby', 
     name: 'Rabby', 
-    icon: 'https://rabby.io/assets/images/logo.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/AntonyMTuhin/cryptocurrency-wallet-icons/svg/rabby.svg',
     installed: typeof window !== 'undefined' && window.ethereum?.isRabby,
+    deepLink: null
+  },
+  { 
+    id: 'exodus', 
+    name: 'Exodus', 
+    icon: 'https://cdn.jsdelivr.net/gh/AntonyMTuhin/cryptocurrency-wallet-icons/svg/exodus.svg',
+    installed: typeof window !== 'undefined' && window.ethereum?.isExodus,
     deepLink: null
   }
 ];
