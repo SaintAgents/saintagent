@@ -26,7 +26,7 @@ import {
 export default function SearchModal({ open, onClose, onSelect }) {
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true); // Default to showing all results on arrival
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['searchProfiles', query],
@@ -129,35 +129,30 @@ export default function SearchModal({ open, onClose, onSelect }) {
 
         <Tabs value={tab} onValueChange={setTab} className="px-4">
           <TabsList className="w-full grid grid-cols-7">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="people">
+            <TabsTrigger value="all" title="All Results">All</TabsTrigger>
+            <TabsTrigger value="people" title="People">
               <Users className="w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="offers">
+            <TabsTrigger value="offers" title="Offers">
               <ShoppingBag className="w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="missions">
+            <TabsTrigger value="missions" title="Missions">
               <Target className="w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="circles">
+            <TabsTrigger value="circles" title="Circles">
               <CircleDot className="w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="projects">
+            <TabsTrigger value="projects" title="Projects">
               <Folder className="w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="posts">
+            <TabsTrigger value="posts" title="Posts">
               <FileText className="w-4 h-4" />
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
         <ScrollArea className="h-96 px-4 pb-4">
-          {!showAll && query.length < 1 ? (
-            <div className="text-center py-12 text-slate-400">
-              <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>Type to search or press Enter to browse all</p>
-            </div>
-          ) : (
+          {(
             <div className="space-y-2">
               {(tab === 'all' || tab === 'people') && filteredProfiles.length > 0 && (
                 <div>
