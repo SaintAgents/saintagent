@@ -460,8 +460,18 @@ export default function FloatingNotesWidget() {
           </div>
         </div>
       )}
-    </div>
-  );
+
+      {/* Resize Handle */}
+      <div 
+        onMouseDown={handleResizeMouseDown}
+        className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+        style={{ 
+          background: 'linear-gradient(135deg, transparent 50%, rgba(100,100,100,0.3) 50%)',
+          borderBottomRightRadius: '0.75rem'
+        }}
+      />
+      </div>
+      );
 }
 
 function NoteCard({ note, onEdit, onPin, onDelete }) {
