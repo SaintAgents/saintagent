@@ -167,18 +167,29 @@ export default function DatingMatchesPopup({ currentUser }) {
   const isDatingOptedIn = myDatingProfile?.some(p => p.opt_in === true) ?? false;
   const profileLoaded = !isLoadingProfile && myDatingProfile !== undefined;
 
-  // Fetch dating profiles - always call hook but conditionally enable
+  // First, check for existing matches in the Match entity (dating-related)
+  const { data: existingMatches = [], isLoading: isLoadingMatches } = useQuery({
+    queryKey: ['existingDatingMatches', currentUser?.email],
+    queryFn: () => base44.entities.Match.filter({ 
+      user_id: currentUser.email, 
+      target_type: 'person',
+      status: 'active'
+    }, '-match_score', 20),
+    enabled: !!currentUser?.email && isDatingOptedIn
+  });
+
+  // Only fetch dating profiles if no existing matches found
   const { data: datingProfiles = [] } = useQuery({
     queryKey: ['datingProfilesPopup', currentUser?.email],
     queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }, '-updated_date', 50),
-    enabled: !!currentUser?.email && isDatingOptedIn
+    enabled: !!currentUser?.email && isDatingOptedIn && existingMatches.length === 0 && !isLoadingMatches
   });
 
   // Fetch user profiles for additional info - always call hook but conditionally enable
   const { data: userProfiles = [] } = useQuery({
     queryKey: ['userProfilesForDating'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 200),
-    enabled: !!currentUser?.email && isDatingOptedIn && datingProfiles.length > 0
+    enabled: !!currentUser?.email && isDatingOptedIn && (existingMatches.length > 0 || datingProfiles.length > 0)
   });
 
   // Get my dating profile preferences
