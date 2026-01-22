@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Download, X, Loader2, FileText, Image, Film, Music, File, ExternalLink } from 'lucide-react';
 
@@ -193,6 +193,9 @@ export default function FileViewer({ file, sharedFile, open, onClose }) {
           <DialogTitle className="flex items-center justify-between pr-8">
             <span className="truncate">{fileName}</span>
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Preview and download file
+          </DialogDescription>
         </DialogHeader>
         
         <div className="mt-4">
