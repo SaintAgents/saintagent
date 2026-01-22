@@ -86,6 +86,7 @@ import FriendRequestsPanel from '@/components/friends/FriendRequestsPanel';
 import FriendsList from '@/components/friends/FriendsList';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import { getDestinyCardMeaning } from '@/components/destiny/destinyCardsData';
+import FileStorageSection from '@/components/profile/FileStorageSection';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -1188,6 +1189,9 @@ export default function Profile() {
                   </Card>
                   <PortfolioSection profile={profile} currentUser={currentUser} />
                   <EndorsementsSection profile={profile} currentUser={currentUser} />
+
+                  {/* File Storage Section */}
+                  <FileStorageSection userId={profile?.user_id} isOwnProfile={isOwnProfile} />
 
                   {/* Social Links Editor - Own Profile Only */}
                   {isOwnProfile && (

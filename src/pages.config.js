@@ -39,6 +39,7 @@ import MissionDetail from './pages/MissionDetail';
 import Missions from './pages/Missions';
 import NeoNFTProvenance from './pages/NeoNFTProvenance';
 import News from './pages/News';
+import Notes from './pages/Notes';
 import Onboarding from './pages/Onboarding';
 import Planner from './pages/Planner';
 import PressAnalytics from './pages/PressAnalytics';
@@ -56,7 +57,6 @@ import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
-import Notes from './pages/Notes';
 import __Layout from './Layout.jsx';
 
 
@@ -102,6 +102,7 @@ export const PAGES = {
     "Missions": Missions,
     "NeoNFTProvenance": NeoNFTProvenance,
     "News": News,
+    "Notes": Notes,
     "Onboarding": Onboarding,
     "Planner": Planner,
     "PressAnalytics": PressAnalytics,
@@ -119,7 +120,6 @@ export const PAGES = {
     "Terms": Terms,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
-    "Notes": Notes,
 }
 
 export const pagesConfig = {
