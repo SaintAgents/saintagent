@@ -439,13 +439,55 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
                 </div>
               </div>
             )}
-            <div>
-              <Label>Recipient (email or @handle)</Label>
-              <Input 
-                placeholder="user@example.com or @username" 
-                value={shareRecipient} 
-                onChange={(e) => setShareRecipient(e.target.value)} 
-              />
+            <div className="relative">
+              <Label>Recipient</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Input 
+                  placeholder="Search by name or email..." 
+                  value={recipientSearch} 
+                  onChange={(e) => {
+                    setRecipientSearch(e.target.value);
+                    setShareRecipient('');
+                    setShowRecipientDropdown(true);
+                  }}
+                  onFocus={() => setShowRecipientDropdown(true)}
+                  className="pl-9"
+                />
+              </div>
+              {showRecipientDropdown && recipientSearch.length >= 2 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg">
+                  <ScrollArea className="max-h-48">
+                    {filteredProfiles.length > 0 ? (
+                      filteredProfiles.map(profile => (
+                        <button
+                          key={profile.id}
+                          type="button"
+                          className="w-full flex items-center gap-3 p-2 hover:bg-slate-50 text-left"
+                          onClick={() => selectRecipient(profile)}
+                        >
+                          {profile.avatar_url ? (
+                            <img src={profile.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" />
+                          ) : (
+                            <div className="h-8 w-8 rounded-full bg-violet-100 flex items-center justify-center">
+                              <User className="h-4 w-4 text-violet-600" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-900 truncate">{profile.display_name || profile.handle}</p>
+                            <p className="text-xs text-slate-500 truncate">{profile.user_id}</p>
+                          </div>
+                        </button>
+                      ))
+                    ) : (
+                      <div className="p-3 text-sm text-slate-500 text-center">No users found</div>
+                    )}
+                  </ScrollArea>
+                </div>
+              )}
+              {shareRecipient && (
+                <p className="text-xs text-green-600 mt-1">Selected: {shareRecipient}</p>
+              )}
             </div>
             <div>
               <Label>Message (optional)</Label>
