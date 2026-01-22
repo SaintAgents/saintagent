@@ -63,6 +63,32 @@ export default function FloatingNotesWidget() {
     };
   }, [isDragging]);
 
+  // Resizing logic
+  const handleResizeMouseDown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+    offsetRef.current = { x: e.clientX, y: e.clientY, width: size.width, height: size.height };
+  };
+
+  useEffect(() => {
+    if (!isResizing) return;
+    const handleMouseMove = (e) => {
+      const deltaX = e.clientX - offsetRef.current.x;
+      const deltaY = e.clientY - offsetRef.current.y;
+      const newWidth = Math.max(280, Math.min(600, offsetRef.current.width + deltaX));
+      const newHeight = Math.max(300, Math.min(800, offsetRef.current.height + deltaY));
+      setSize({ width: newWidth, height: newHeight });
+    };
+    const handleMouseUp = () => setIsResizing(false);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
+
   // Export all notes
   const handleExportNotes = () => {
     if (notes.length === 0) {
