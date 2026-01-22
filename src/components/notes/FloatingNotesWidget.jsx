@@ -116,7 +116,7 @@ export default function FloatingNotesWidget() {
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 right-4 z-[100] w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-400 text-black shadow-lg shadow-amber-500/30"
+        className="fixed bottom-[140px] right-0 z-[100] w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-400 text-black shadow-lg shadow-amber-500/30"
         title="Notes (Ctrl+Shift+N)"
       >
         <StickyNote className="w-5 h-5" />
