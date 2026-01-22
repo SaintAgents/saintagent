@@ -49,6 +49,10 @@ const RANK_ORDER = ['guardian', 'ascended', 'oracle', 'sage', 'master', 'practit
 const QUICK_RANKS = ['seeker', 'adept', 'master', 'sage', 'guardian'];
 
 export default function Profiles() {
+  // Check URL for online filter
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialOnlineFilter = urlParams.get('filter') === 'online';
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('rank');
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -64,6 +68,7 @@ export default function Profiles() {
   const [mbtiFilter, setMbtiFilter] = useState('all');
   const [practiceFilter, setPracticeFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('');
+  const [showOnlineOnly, setShowOnlineOnly] = useState(initialOnlineFilter);
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ['allProfiles'],
@@ -222,6 +227,19 @@ export default function Profiles() {
       );
     }
 
+    // Helper function to check if user is online (seen in last 5 minutes)
+    const isOnline = (profile) => {
+      if (!profile.last_seen_at) return false;
+      const lastSeen = new Date(profile.last_seen_at);
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+      return lastSeen > fiveMinutesAgo;
+    };
+
+    // Online only filter
+    if (showOnlineOnly) {
+      result = result.filter(isOnline);
+    }
+
     // Sorting
     result.sort((a, b) => {
       switch (sortBy) {
@@ -246,7 +264,18 @@ export default function Profiles() {
     });
 
     return result;
-  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, astroFilter, humanDesignFilter, enneagramFilter, mbtiFilter, practiceFilter, locationFilter, currentProfile]);
+  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, astroFilter, humanDesignFilter, enneagramFilter, mbtiFilter, practiceFilter, locationFilter, currentProfile, showOnlineOnly]);
+
+  // Separate online and offline profiles for grouped display
+  const isUserOnline = (profile) => {
+    if (!profile.last_seen_at) return false;
+    const lastSeen = new Date(profile.last_seen_at);
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    return lastSeen > fiveMinutesAgo;
+  };
+
+  const onlineProfiles = filteredProfiles.filter(isUserOnline);
+  const offlineProfiles = filteredProfiles.filter(p => !isUserOnline(p));
 
   const activeFilterCount = [
     rankFilter !== 'all' ? 1 : 0,
@@ -259,6 +288,7 @@ export default function Profiles() {
     mbtiFilter !== 'all' ? 1 : 0,
     practiceFilter !== 'all' ? 1 : 0,
     locationFilter.trim() ? 1 : 0,
+    showOnlineOnly ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
   const clearFilters = () => {
@@ -273,6 +303,7 @@ export default function Profiles() {
     setMbtiFilter('all');
     setPracticeFilter('all');
     setLocationFilter('');
+    setShowOnlineOnly(false);
   };
 
   const handleTagClick = (tag) => {
@@ -432,6 +463,19 @@ export default function Profiles() {
                 <Heart className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Online Toggle */}
+            <Button
+              variant={showOnlineOnly ? "default" : "outline"}
+              className={cn(
+                "rounded-xl gap-2",
+                showOnlineOnly && "bg-emerald-600 hover:bg-emerald-700 text-white"
+              )}
+              onClick={() => setShowOnlineOnly(!showOnlineOnly)}
+            >
+              <span className={cn("w-2 h-2 rounded-full", showOnlineOnly ? "bg-white animate-pulse" : "bg-emerald-500")} />
+              Online
+            </Button>
 
             {/* Filter Toggle */}
             <Button
@@ -744,15 +788,54 @@ export default function Profiles() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredProfiles.map((profile) => (
-              <ProfileDataSlate 
-                key={profile.id} 
-                profile={profile} 
-                recentMissions={missionsByUser[profile.user_id]}
-                onTagClick={handleTagClick}
-              />
-            ))}
+          <div className="space-y-8">
+            {/* Online Users Section */}
+            {onlineProfiles.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Online Now</h2>
+                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    {onlineProfiles.length}
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {onlineProfiles.map((profile) => (
+                    <ProfileDataSlate 
+                      key={profile.id} 
+                      profile={profile} 
+                      recentMissions={missionsByUser[profile.user_id]}
+                      onTagClick={handleTagClick}
+                      isOnline={true}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Offline Users Section */}
+            {offlineProfiles.length > 0 && !showOnlineOnly && (
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Offline</h2>
+                  <Badge className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                    {offlineProfiles.length}
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {offlineProfiles.map((profile) => (
+                    <ProfileDataSlate 
+                      key={profile.id} 
+                      profile={profile} 
+                      recentMissions={missionsByUser[profile.user_id]}
+                      onTagClick={handleTagClick}
+                      isOnline={false}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

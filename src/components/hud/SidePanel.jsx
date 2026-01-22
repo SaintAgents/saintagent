@@ -1307,7 +1307,10 @@ export default function SidePanel({
               </button>
             </div>
             <CollapsibleCard title="Online Now" icon={Users} onPopout={() => setOnlinePopupOpen(true)}>
-              <div className="p-4 rounded-xl bg-slate-50 border">
+              <div 
+                className="p-4 rounded-xl bg-slate-50 border cursor-pointer hover:bg-emerald-50 hover:border-emerald-200 transition-colors"
+                onClick={() => window.location.href = createPageUrl('Profiles') + '?filter=online'}
+              >
                 <p className="text-xs text-slate-500 mb-1">Online Now</p>
                 <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
