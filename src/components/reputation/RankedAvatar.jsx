@@ -109,17 +109,12 @@ export default function RankedAvatar({
     queryKey: ['rankedAvatarBadges', userId || saNumberFinal || 'none'],
     queryFn: async () => {
       // Try email (userId) first since badges are stored with email
-      let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 20);
+      let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 5);
       // If no results and we have SA#, try with SA#
       if ((!results || results.length === 0) && saNumberFinal && saNumberFinal !== userId) {
-        results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 20);
+        results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 5);
       }
-      // Filter to only badges that have images available
-      const badgesWithImages = (results || []).filter(badge => {
-        const code = badge.badge_code || badge.code || '';
-        return badge.icon_url || QUEST_BADGE_IMAGES[code] || QUEST_BADGE_IMAGES[code?.toLowerCase?.()];
-      });
-      return badgesWithImages;
+      return results || [];
     },
     enabled: !!(userId || saNumberFinal),
   });
@@ -338,35 +333,38 @@ export default function RankedAvatar({
         </TooltipProvider>
       )}
 
-      {/* Earned Badge Sigils - row below avatar */}
-      {userBadges.length > 0 && size >= 64 && (
-        <div 
-          className="absolute flex items-center justify-center gap-0.5 z-10"
-          style={{
-            bottom: -Math.round(symbolPx * 0.8),
-            left: '50%',
-            transform: 'translateX(-50%)'
-          }}
-        >
-          {userBadges.slice(0, 3).map((badge) => {
-            // Get badge code from either field - check both badge_code and code
-            const badgeCode = badge.badge_code || badge.code || '';
-            // Try to get image from: 1) icon_url on badge record, 2) QUEST_BADGE_IMAGES lookup by code
-            const badgeImageUrl = badge.icon_url || QUEST_BADGE_IMAGES[badgeCode] || QUEST_BADGE_IMAGES[badgeCode?.toLowerCase?.()] || null;
-            const badgeName = badge.badge_name || badgeCode?.replace?.(/_/g, ' ') || 'Badge';
-            
-            // Debug: log what we're looking up
-            console.log('Badge lookup:', { badgeCode, hasImage: !!badgeImageUrl, badge });
-            
-            return (
-              <TooltipProvider key={badge.id}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div 
-                      className="cursor-help hover:scale-110 transition-transform"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {badgeImageUrl ? (
+      {/* Earned Badge Sigils - row below avatar - only show badges that have images */}
+      {(() => {
+        // Filter to badges that have an image (either icon_url or in QUEST_BADGE_IMAGES)
+        const badgesWithImages = userBadges.filter((badge) => {
+          const badgeCode = badge.badge_code || badge.code || '';
+          return badge.icon_url || QUEST_BADGE_IMAGES[badgeCode] || QUEST_BADGE_IMAGES[badgeCode?.toLowerCase?.()];
+        }).slice(0, 3);
+        
+        if (badgesWithImages.length === 0 || size < 64) return null;
+        
+        return (
+          <div 
+            className="absolute flex items-center justify-center gap-0.5 z-10"
+            style={{
+              bottom: -Math.round(symbolPx * 0.8),
+              left: '50%',
+              transform: 'translateX(-50%)'
+            }}
+          >
+            {badgesWithImages.map((badge) => {
+              const badgeCode = badge.badge_code || badge.code || '';
+              const badgeImageUrl = badge.icon_url || QUEST_BADGE_IMAGES[badgeCode] || QUEST_BADGE_IMAGES[badgeCode?.toLowerCase?.()];
+              const badgeName = badge.badge_name || badgeCode?.replace?.(/_/g, ' ') || 'Badge';
+              
+              return (
+                <TooltipProvider key={badge.id}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div 
+                        className="cursor-help hover:scale-110 transition-transform"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <img 
                           src={badgeImageUrl} 
                           alt={badgeName} 
@@ -374,33 +372,18 @@ export default function RankedAvatar({
                           style={{ width: symbolPx * 1.2, height: symbolPx * 1.2, filter: 'none' }}
                           data-no-filter="true"
                         />
-                      ) : (
-                        <div 
-                          className="rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md"
-                          style={{ width: symbolPx * 0.9, height: symbolPx * 0.9 }}
-                        >
-                          <Award style={{ width: symbolPx * 0.5, height: symbolPx * 0.5 }} />
-                        </div>
-                      )}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
-                    <p className="font-semibold text-sm capitalize">{badgeName}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            );
-          })}
-          {userBadges.length > 3 && (
-            <div 
-              className="rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 text-xs font-bold"
-              style={{ width: symbolPx * 0.8, height: symbolPx * 0.8 }}
-            >
-              +{userBadges.length - 3}
-            </div>
-          )}
-        </div>
-      )}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
+                      <p className="font-semibold text-sm capitalize">{badgeName}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              );
+            })}
+          </div>
+        );
+      })()}
 
 
 
