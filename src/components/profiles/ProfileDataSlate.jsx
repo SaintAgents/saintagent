@@ -42,11 +42,12 @@ const BADGE_ICONS = {
   leader: { icon: Award, color: 'text-rose-500', bg: 'bg-rose-100 dark:bg-rose-900/30' }
 };
 
-export default function ProfileDataSlate({ profile, recentMissions = [], onTagClick }) {
+export default function ProfileDataSlate({ profile, recentMissions = [], onTagClick, isOnline: isOnlineProp }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const rankCode = profile.rp_rank_code || 'seeker';
   const rankConfig = RANK_CONFIG[rankCode] || RANK_CONFIG.seeker;
-  const isOnline = profile.status === 'online' || profile.last_seen_at && new Date(profile.last_seen_at) > new Date(Date.now() - 5 * 60 * 1000);
+  // Use passed prop if available, otherwise calculate
+  const isOnline = isOnlineProp !== undefined ? isOnlineProp : (profile.status === 'online' || profile.last_seen_at && new Date(profile.last_seen_at) > new Date(Date.now() - 5 * 60 * 1000));
 
   // Derive badges from achievements array
   const badges = (profile.achievements || []).slice(0, 3).map((a) => {
@@ -91,8 +92,17 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
         "group relative bg-white dark:bg-[#0a0a0a] rounded-xl border transition-all duration-300 cursor-pointer overflow-hidden",
         "border-slate-200 dark:border-[rgba(0,255,136,0.15)] hover:border-violet-300 dark:hover:border-[rgba(0,255,136,0.4)]",
         "hover:shadow-lg dark:hover:shadow-[0_0_30px_rgba(0,255,136,0.1)]",
-        "hover:-translate-y-1"
+        "hover:-translate-y-1",
+        isOnline && "ring-2 ring-emerald-400/50 dark:ring-emerald-500/40"
       )}>
+
+      {/* Online indicator */}
+      {isOnline && (
+        <div className="absolute top-2 right-2 z-10 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[9px] font-medium text-emerald-700 dark:text-emerald-400">Online</span>
+        </div>
+      )}
 
       {/* Rank glow effect on hover */}
       <div className={cn(
