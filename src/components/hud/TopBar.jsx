@@ -479,35 +479,37 @@ export default function TopBar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Dating Heart Button - opens dating popup */}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9 p-0" 
-          title="Dating Matches"
-          disabled={datingSearching}
-          onClick={() => {
-            setDatingSearching(true);
-            // Show loading briefly then open popup
-            setTimeout(() => {
-              setDatingSearching(false);
-              document.dispatchEvent(new CustomEvent('openDatingPopup'));
-            }, 600);
-          }}
-        >
-          {datingSearching ? (
-            <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center" style={{ boxShadow: '0 0 15px rgba(236, 72, 153, 0.8)' }}>
-              <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : (
-            <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
-              <Heart className="w-3 h-3 md:w-3.5 md:h-3.5 text-white fill-white" />
-            </div>
-          )}
-          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
-            {datingSearching ? 'Searching...' : 'Dating Matches'}
-          </span>
-        </Button>
+        {/* Dating Heart Button - opens dating popup (hidden if user opted out) */}
+        {!profile?.dating_opt_out && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9 p-0" 
+            title="Dating Matches"
+            disabled={datingSearching}
+            onClick={() => {
+              setDatingSearching(true);
+              // Show loading briefly then open popup
+              setTimeout(() => {
+                setDatingSearching(false);
+                document.dispatchEvent(new CustomEvent('openDatingPopup'));
+              }, 600);
+            }}
+          >
+            {datingSearching ? (
+              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center" style={{ boxShadow: '0 0 15px rgba(236, 72, 153, 0.8)' }}>
+                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : (
+              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+                <Heart className="w-3 h-3 md:w-3.5 md:h-3.5 text-white fill-white" />
+              </div>
+            )}
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
+              {datingSearching ? 'Searching...' : 'Dating Matches'}
+            </span>
+          </Button>
+        )}
 
         <Link to={createPageUrl('DailyOps')} className="hidden md:block">
           <Button variant="ghost" size="icon" className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9" title="Calendar">
