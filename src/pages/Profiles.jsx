@@ -789,16 +789,16 @@ export default function Profiles() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Online Users Section */}
-            {onlineProfiles.length > 0 && (
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Online Now</h2>
-                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                    {onlineProfiles.length}
-                  </Badge>
-                </div>
+            {/* Online Users Section - Always show first */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Online Now</h2>
+                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                  {onlineProfiles.length}
+                </Badge>
+              </div>
+              {onlineProfiles.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {onlineProfiles.map((profile) => (
                     <ProfileDataSlate 
@@ -810,11 +810,15 @@ export default function Profiles() {
                     />
                   ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-8 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                  No users online right now
+                </div>
+              )}
+            </div>
 
             {/* Offline Users Section */}
-            {offlineProfiles.length > 0 && !showOnlineOnly && (
+            {!showOnlineOnly && (
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
@@ -823,17 +827,23 @@ export default function Profiles() {
                     {offlineProfiles.length}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {offlineProfiles.map((profile) => (
-                    <ProfileDataSlate 
-                      key={profile.id} 
-                      profile={profile} 
-                      recentMissions={missionsByUser[profile.user_id]}
-                      onTagClick={handleTagClick}
-                      isOnline={false}
-                    />
-                  ))}
-                </div>
+                {offlineProfiles.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {offlineProfiles.map((profile) => (
+                      <ProfileDataSlate 
+                        key={profile.id} 
+                        profile={profile} 
+                        recentMissions={missionsByUser[profile.user_id]}
+                        onTagClick={handleTagClick}
+                        isOnline={false}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                    No offline users
+                  </div>
+                )}
               </div>
             )}
           </div>
