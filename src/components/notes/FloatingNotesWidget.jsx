@@ -254,6 +254,38 @@ export default function FloatingNotesWidget() {
         </Button>
       </div>
 
+      {/* Color Filter Buckets */}
+      <div className="px-2 py-1.5 border-b border-slate-300 dark:border-slate-600 flex items-center gap-1 flex-wrap">
+        <button
+          onClick={() => setColorFilter(null)}
+          className={`px-2 py-0.5 text-[10px] rounded-full border transition-all ${
+            !colorFilter 
+              ? 'bg-slate-700 text-white border-slate-700' 
+              : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-slate-400'
+          }`}
+        >
+          All
+        </button>
+        {Object.entries(COLORS).map(([color, classes]) => {
+          const count = notes.filter(n => (n.color || 'default') === color).length;
+          if (count === 0) return null;
+          return (
+            <button
+              key={color}
+              onClick={() => setColorFilter(colorFilter === color ? null : color)}
+              className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center text-[9px] font-bold ${classes} ${
+                colorFilter === color 
+                  ? 'border-slate-800 dark:border-white ring-2 ring-amber-400' 
+                  : 'border-transparent hover:border-slate-400'
+              }`}
+              title={`${color} (${count})`}
+            >
+              {count}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Content */}
       <ScrollArea className="flex-1">
         {isEditing || editingNote ? (
