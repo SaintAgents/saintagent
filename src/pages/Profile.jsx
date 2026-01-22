@@ -54,7 +54,8 @@ import {
   MessageSquare,
   Shield,
   Award,
-  Medal
+  Medal,
+  ChevronDown
 } from
 "lucide-react";
 
@@ -87,6 +88,7 @@ import FriendsList from '@/components/friends/FriendsList';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import { getDestinyCardMeaning } from '@/components/destiny/destinyCardsData';
 import FileStorageSection from '@/components/profile/FileStorageSection';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
