@@ -17,6 +17,7 @@ import {
   Inbox, Send, Clock, User, X, Loader2, FolderOpen, ChevronDown, Search
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import FileViewer from './FileViewer';
 
 const FILE_ICONS = {
   'image': Image,
@@ -57,6 +58,9 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   const [isOpen, setIsOpen] = useState(true);
   const [recipientSearch, setRecipientSearch] = useState('');
   const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerFile, setViewerFile] = useState(null);
+  const [viewerSharedFile, setViewerSharedFile] = useState(null);
 
   // Fetch all user profiles for recipient search
   const { data: allProfiles = [] } = useQuery({
@@ -243,41 +247,45 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
     }
   };
 
+  const handleViewFile = (file) => {
+    setViewerFile(file);
+    setViewerSharedFile(null);
+    setViewerOpen(true);
+  };
+
+  const handleViewSharedFile = (sharedFile) => {
+    setViewerFile(null);
+    setViewerSharedFile(sharedFile);
+    setViewerOpen(true);
+  };
+
   const handleDownloadShared = async (sharedFile) => {
-    const userFile = await base44.entities.UserFile.filter({ id: sharedFile.user_file_id });
-    const file = userFile?.[0];
-    if (!file) return;
-    
-    let url = file.file_url;
-    if (file.is_private_storage && file.file_uri) {
-      const result = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: file.file_uri });
-      url = result.signed_url;
-    }
-    if (url) {
-      window.open(url, '_blank');
-      if (sharedFile.status === 'pending') {
-        await base44.entities.SharedFile.update(sharedFile.id, { status: 'downloaded' });
-        queryClient.invalidateQueries({ queryKey: ['sharedFilesInbox', userId] });
-      }
-    }
+    // Open viewer instead of direct download
+    handleViewSharedFile(sharedFile);
   };
 
   const FileCard = ({ file, showActions = true }) => {
     const IconComponent = getFileIcon(file.mime_type);
     return (
       <div className="flex flex-col gap-2 p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
-        <div className="flex items-center gap-3">
+        <div 
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => handleViewFile(file)}
+        >
           <div className="h-10 w-10 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
             <IconComponent className="h-5 w-5 text-violet-600" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-900 truncate">{file.file_name}</p>
+            <p className="text-sm font-medium text-slate-900 truncate hover:text-violet-600">{file.file_name}</p>
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <span>{formatFileSize(file.size_bytes)}</span>
               {file.is_public && <Badge variant="secondary" className="text-xs py-0">Public</Badge>}
               {file.is_private_storage && <Badge variant="outline" className="text-xs py-0">Private</Badge>}
             </div>
           </div>
+          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={(e) => { e.stopPropagation(); handleViewFile(file); }}>
+            <Eye className="h-4 w-4" />
+          </Button>
         </div>
         {showActions && isOwnProfile && (
           <div className="flex flex-wrap items-center gap-1 pt-1 border-t border-slate-100">
@@ -308,12 +316,15 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
     const isPending = sharedFile.status === 'pending';
     
     return (
-      <div className={`flex items-center gap-3 p-3 rounded-lg border ${isPending ? 'border-violet-200 bg-violet-50' : 'border-slate-200 bg-white'}`}>
+      <div 
+        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-slate-50 transition-colors ${isPending ? 'border-violet-200 bg-violet-50 hover:bg-violet-100' : 'border-slate-200 bg-white'}`}
+        onClick={() => handleViewSharedFile(sharedFile)}
+      >
         <div className="h-10 w-10 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
           <IconComponent className="h-5 w-5 text-violet-600" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-slate-900 truncate">{sharedFile.file_name}</p>
+          <p className="text-sm font-medium text-slate-900 truncate hover:text-violet-600">{sharedFile.file_name}</p>
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <span>{formatFileSize(sharedFile.file_size)}</span>
             {type === 'inbox' && <span>from {sharedFile.sender_name}</span>}
@@ -322,11 +333,16 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
           </div>
           {sharedFile.message && <p className="text-xs text-slate-500 mt-1 truncate">"{sharedFile.message}"</p>}
         </div>
-        {type === 'inbox' && (
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDownloadShared(sharedFile)}>
-            <Download className="h-4 w-4" />
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleViewSharedFile(sharedFile); }}>
+            <Eye className="h-4 w-4" />
           </Button>
-        )}
+          {type === 'inbox' && (
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleViewSharedFile(sharedFile); }}>
+              <Download className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
     );
   };
@@ -545,6 +561,22 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
           </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* File Viewer Modal */}
+        <FileViewer
+          file={viewerFile}
+          sharedFile={viewerSharedFile}
+          open={viewerOpen}
+          onClose={() => {
+            setViewerOpen(false);
+            setViewerFile(null);
+            setViewerSharedFile(null);
+            // Refresh inbox to update status
+            if (viewerSharedFile?.status === 'pending') {
+              queryClient.invalidateQueries({ queryKey: ['sharedFilesInbox', currentUserEmail] });
+            }
+          }}
+        />
       </Card>
     </Collapsible>
   );
