@@ -659,6 +659,19 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.5) !important;
 }
 
+/* HACKER THEME - Force ALL button text to be bright green */
+[data-theme='hacker'] button span,
+[data-theme='hacker'] button div,
+[data-theme='hacker'] button p,
+[data-theme='hacker'] [role="button"] span,
+[data-theme='hacker'] [role="button"] div,
+[data-theme='hacker'] [class*="Button"] span,
+[data-theme='hacker'] [class*="btn"] span,
+html[data-theme='hacker'] button *,
+html[data-theme='hacker'] [role="button"] * {
+  color: #00ff00 !important;
+}
+
 [data-theme='hacker'] [class*='badge'],
 [data-theme='hacker'] .badge,
 [data-theme='hacker'] [class*='Badge'] {
