@@ -191,9 +191,7 @@ export default function FloatingNotesWidget() {
 
   const positionStyle = position.x !== null 
     ? { left: Math.max(8, Math.min(position.x, window.innerWidth - 340)), top: Math.max(8, Math.min(position.y, window.innerHeight - 520)), right: 'auto', bottom: 'auto' }
-    : isExpanded 
-      ? { bottom: 16, right: 16 }
-      : { bottom: 96, right: 16 };
+    : { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
 
   return (
     <div 
