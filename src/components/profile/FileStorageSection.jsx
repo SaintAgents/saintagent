@@ -7,14 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   Upload, File, Image, FileText, Film, Music, Archive, 
   Trash2, Share2, Download, Eye, EyeOff, Copy, Check,
-  Inbox, Send, Clock, User, X, Loader2, FolderOpen
+  Inbox, Send, Clock, User, X, Loader2, FolderOpen, ChevronDown
 } from 'lucide-react';
 
 const FILE_ICONS = {
@@ -53,6 +54,7 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   const [shareMessage, setShareMessage] = useState('');
   const [uploadAsPrivate, setUploadAsPrivate] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   // Fetch user's files
   const { data: myFiles = [], isLoading: filesLoading } = useQuery({
@@ -281,41 +283,86 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex flex-col gap-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-slate-900">
-            <FolderOpen className="h-5 w-5" /> File Storage
-          </CardTitle>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Switch id="private-upload" checked={uploadAsPrivate} onCheckedChange={setUploadAsPrivate} />
-              <Label htmlFor="private-upload" className="text-sm font-medium text-slate-700">Private</Label>
+    <TooltipProvider>
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2 text-slate-900">
+                  <FolderOpen className="h-5 w-5" /> File Storage
+                </CardTitle>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? '' : '-rotate-90'}`} />
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-2">
+                      <Switch id="private-upload" checked={uploadAsPrivate} onCheckedChange={setUploadAsPrivate} />
+                      <Label htmlFor="private-upload" className="text-sm font-medium text-slate-700">Private</Label>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Private files require a signed URL to access</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                      {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                      Upload
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Upload files to your storage</p>
+                  </TooltipContent>
+                </Tooltip>
+                <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileSelect} />
+              </div>
             </div>
-            <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-              {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
-              Upload
-            </Button>
-            <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileSelect} />
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="files">
-          <TabsList className="mb-4 flex flex-wrap h-auto gap-1 p-1">
-            <TabsTrigger value="files" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
-              <File className="h-4 w-4" /> My Files
-            </TabsTrigger>
-            <TabsTrigger value="inbox" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
-              <Inbox className="h-4 w-4" /> Inbox
-              {sharedWithMe.filter(f => f.status === 'pending').length > 0 && (
-                <Badge className="bg-violet-500 ml-1">{sharedWithMe.filter(f => f.status === 'pending').length}</Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="sent" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
-              <Send className="h-4 w-4" /> Sent
-            </TabsTrigger>
-          </TabsList>
+          </CardHeader>
+          <CollapsibleContent>
+            <CardContent>
+              <Tabs defaultValue="files">
+                <TabsList className="mb-4 flex flex-wrap h-auto gap-1 p-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <TabsTrigger value="files" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
+                        <File className="h-4 w-4" /> My Files
+                      </TabsTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Your uploaded files</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <TabsTrigger value="inbox" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
+                        <Inbox className="h-4 w-4" /> Inbox
+                        {sharedWithMe.filter(f => f.status === 'pending').length > 0 && (
+                          <Badge className="bg-violet-500 ml-1">{sharedWithMe.filter(f => f.status === 'pending').length}</Badge>
+                        )}
+                      </TabsTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Files shared with you by others</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <TabsTrigger value="sent" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
+                        <Send className="h-4 w-4" /> Sent
+                      </TabsTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Files you've shared with others</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TabsList>
 
           <TabsContent value="files">
             {filesLoading ? (
@@ -366,11 +413,12 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
                 {sharedByMe.map(sf => <SharedFileCard key={sf.id} sharedFile={sf} type="sent" />)}
               </div>
             )}
-          </TabsContent>
-        </Tabs>
-      </CardContent>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </CollapsibleContent>
 
-      {/* Share Modal */}
+        {/* Share Modal */}
       <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
         <DialogContent>
           <DialogHeader>
@@ -421,8 +469,10 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
               Share
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Card>
+          </DialogContent>
+        </Dialog>
+      </Card>
+    </Collapsible>
+  </TooltipProvider>
   );
 }
