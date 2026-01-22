@@ -1296,7 +1296,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 {/* Mystical Profile */}
                 <div>
                   <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
-                  <div className="flex gap-4">
+                  <div className="flex flex-col md:flex-row gap-4">
                     {/* Mystical ID Badge Image */}
                     <div className="shrink-0">
                       <MysticalIDImage profile={profile} size="medium" />
