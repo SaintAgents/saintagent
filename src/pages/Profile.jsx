@@ -600,46 +600,46 @@ export default function Profile() {
           <TabsList className={cn(
             "flex flex-nowrap overflow-x-auto w-full max-w-4xl gap-1"
           )}>
-            <TabsTrigger value="basic" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="basic" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Basic Info">
               <span className="hidden sm:inline">Basic Info</span>
               <User className="sm:hidden w-4 h-4" />
             </TabsTrigger>
-            <TabsTrigger value="showcase" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="showcase" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Showcase">
               <span className="hidden sm:inline">Showcase</span>
               <Star className="sm:hidden w-4 h-4" />
             </TabsTrigger>
             {isOwnProfile && (
-              <TabsTrigger value="onboarding" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <TabsTrigger value="onboarding" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Details">
                 <span className="hidden sm:inline">Details</span>
                 <Compass className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             )}
-            <TabsTrigger value="spiritual" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="spiritual" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Spiritual">
               <span className="hidden sm:inline">Spiritual</span>
               <Star className="sm:hidden w-4 h-4" />
             </TabsTrigger>
             {isOwnProfile && (
-              <TabsTrigger value="metrics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <TabsTrigger value="metrics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Metrics">
                 <span className="hidden sm:inline">Metrics</span>
                 <TrendingUp className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             )}
-            <TabsTrigger value="stats" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="stats" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Stats">
               <span className="hidden sm:inline">Stats</span>
               <Target className="sm:hidden w-4 h-4" />
             </TabsTrigger>
             {isOwnProfile && (
-              <TabsTrigger value="trust-network" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <TabsTrigger value="trust-network" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Trust Network">
                 <span className="hidden sm:inline">Trust Network</span>
                 <Users className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             )}
-            <TabsTrigger value="roles" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="roles" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Roles">
               <span className="hidden sm:inline">Roles</span>
               <Crown className="sm:hidden w-4 h-4" />
             </TabsTrigger>
             {isOwnProfile && (
-              <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+              <TabsTrigger value="friends" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Friends">
                 <span className="hidden sm:inline">Friends</span>
                 <Heart className="sm:hidden w-4 h-4" />
                 {following.length > 0 &&
@@ -648,19 +648,19 @@ export default function Profile() {
               </TabsTrigger>
             )}
             {isOwnProfile &&
-            <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="monetization" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Monetization">
                 <span className="hidden sm:inline">Monetization</span>
                 <Coins className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             }
             {isOwnProfile &&
-            <TabsTrigger value="privacy" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="privacy" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Privacy">
                 <span className="hidden sm:inline">Privacy</span>
                 <User className="sm:hidden w-4 h-4" />
               </TabsTrigger>
             }
             {isOwnProfile && showDatingTab &&
-            <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="dating" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3" title="Dating">
                 <span className="hidden sm:inline">Dating</span>
                 <Heart className="sm:hidden w-4 h-4" />
               </TabsTrigger>

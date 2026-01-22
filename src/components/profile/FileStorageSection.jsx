@@ -187,14 +187,17 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
     setShareModalOpen(true);
   };
 
-  // Filter profiles based on search
-  const filteredProfiles = allProfiles.filter(p => 
-    p.user_id !== userId && (
-      p.display_name?.toLowerCase().includes(recipientSearch.toLowerCase()) ||
-      p.handle?.toLowerCase().includes(recipientSearch.toLowerCase()) ||
-      p.user_id?.toLowerCase().includes(recipientSearch.toLowerCase())
-    )
-  ).slice(0, 10);
+  // Filter profiles based on search (display_name, handle, SA#, user_id)
+  const filteredProfiles = allProfiles.filter(p => {
+    if (p.user_id === userId) return false;
+    const search = recipientSearch.toLowerCase();
+    return (
+      p.display_name?.toLowerCase().includes(search) ||
+      p.handle?.toLowerCase().includes(search) ||
+      p.user_id?.toLowerCase().includes(search) ||
+      p.sa_number?.toLowerCase().includes(search)
+    );
+  }).slice(0, 10);
 
   const selectRecipient = (profile) => {
     setShareRecipient(profile.user_id);
@@ -475,7 +478,11 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-slate-900 truncate">{profile.display_name || profile.handle}</p>
-                            <p className="text-xs text-slate-500 truncate">{profile.user_id}</p>
+                            <p className="text-xs text-slate-500 truncate">
+                              {profile.handle && <span className="mr-2">@{profile.handle}</span>}
+                              {profile.sa_number && <span className="mr-2">SA#{profile.sa_number}</span>}
+                              <span>{profile.user_id}</span>
+                            </p>
                           </div>
                         </button>
                       ))
