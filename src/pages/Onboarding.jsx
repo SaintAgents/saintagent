@@ -395,13 +395,52 @@ export default function Onboarding() {
             Back
           </Button>
 
-          <Button
-            variant="ghost"
-            onClick={handleSkip}
-            className="text-slate-500"
-          >
-            Skip for now
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              onClick={handleSkip}
+              className="text-slate-500"
+            >
+              Skip
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={async () => {
+                // Skip all remaining steps
+                const completedSteps = [...new Set([...(progress?.completed_steps || []), ...STEPS.map(s => s.id)])];
+                await saveProgressMutation.mutateAsync({
+                  current_step: STEPS.length - 1,
+                  completed_steps: completedSteps,
+                  step_data: stepData,
+                  status: 'complete'
+                });
+                try { localStorage.setItem('onboardingJustCompleted', '1'); } catch {}
+                window.location.href = createPageUrl('CommandDeck');
+              }}
+              className="text-amber-600 hover:text-amber-700"
+            >
+              Skip All
+            </Button>
+          </div>
+        </div>
+
+        {/* Section Navigator */}
+        <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <p className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wide">Jump to Section</p>
+          <div className="flex flex-wrap gap-2">
+            {STEPS.slice(currentStep + 1, currentStep + 6).map((step) => (
+              <button
+                key={step.id}
+                onClick={() => setCurrentStep(step.id)}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 hover:border-violet-300 hover:bg-violet-50 text-slate-700 transition-colors"
+              >
+                {step.title}
+              </button>
+            ))}
+            {currentStep + 6 < STEPS.length && (
+              <span className="px-3 py-1.5 text-xs text-slate-400">+{STEPS.length - currentStep - 6} more</span>
+            )}
+          </div>
         </div>
       </div>
 

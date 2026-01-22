@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Users, Sparkles, X, Upload } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Heart, Users, Sparkles, X, Upload, Clock, Ban } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 
 const relationshipTypes = [
@@ -29,6 +30,8 @@ const qualityOptions = [
 export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete }) {
   const [customQualitySeeking, setCustomQualitySeeking] = useState('');
   const [customQualityProviding, setCustomQualityProviding] = useState('');
+  const [datingOptOut, setDatingOptOut] = useState(data?.dating_opt_out || false);
+  const [doLater, setDoLater] = useState(data?.dating_do_later || false);
 
   const setData = onChange || onUpdate || (() => {});
 
@@ -93,6 +96,19 @@ export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete 
     }
   };
 
+  // If user opts out completely, save and continue
+  const handleOptOut = () => {
+    setDatingOptOut(true);
+    setData({ ...data, dating_opt_out: true });
+    if (onComplete) onComplete({ ...data, dating_opt_out: true });
+  };
+
+  const handleDoLater = () => {
+    setDoLater(true);
+    setData({ ...data, dating_do_later: true });
+    if (onComplete) onComplete({ ...data, dating_do_later: true });
+  };
+
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
@@ -103,6 +119,32 @@ export default function Step7Dating({ data = {}, onChange, onUpdate, onComplete 
         <p className="text-slate-600">Share what you're seeking in connections (completely optional)</p>
         <p className="text-sm text-slate-500 mt-2">
           💡 This data also helps us find your most compatible <strong>friends and collaborators</strong> — even if you opt out of dating features.
+        </p>
+      </div>
+
+      {/* Opt Out Options */}
+      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+        <p className="text-sm font-medium text-slate-700">Dating Features</p>
+        <div className="flex flex-wrap gap-3">
+          <Button
+            variant="outline"
+            onClick={handleOptOut}
+            className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+          >
+            <Ban className="w-4 h-4" />
+            Opt Out Completely
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleDoLater}
+            className="gap-2 text-amber-600 border-amber-200 hover:bg-amber-50"
+          >
+            <Clock className="w-4 h-4" />
+            Do This Later
+          </Button>
+        </div>
+        <p className="text-xs text-slate-500">
+          Opting out removes the dating heart icon from your navigation bar. You can re-enable dating features anytime in Settings.
         </p>
       </div>
 

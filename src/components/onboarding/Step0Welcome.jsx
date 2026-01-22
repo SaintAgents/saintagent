@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -12,7 +14,9 @@ import {
   Calendar, 
   Target,
   TrendingUp,
-  Sparkles
+  Sparkles,
+  AlertCircle,
+  Gift
 } from "lucide-react";
 
 const INTENTIONS = [
@@ -28,8 +32,9 @@ const INTENTIONS = [
 ];
 
 export default function Step0Welcome({ data, onComplete }) {
-  const [selected, setSelected] = useState(data.intentions || []);
+  const [selected, setSelected] = useState(data?.intentions || []);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [deepProfileOptOut, setDeepProfileOptOut] = useState(data?.deep_profile_opt_out || false);
 
   const toggleIntention = (code) => {
     if (selected.includes(code)) {
@@ -40,11 +45,43 @@ export default function Step0Welcome({ data, onComplete }) {
   };
 
   const handleContinue = () => {
-    onComplete({ intentions: selected });
+    onComplete({ intentions: selected, deep_profile_opt_out: deepProfileOptOut });
   };
 
   return (
     <div className="space-y-6">
+      {/* Deep Profile Notice */}
+      <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-violet-600 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <h3 className="font-semibold text-slate-900 mb-1">Deep Data Profile</h3>
+            <p className="text-sm text-slate-600 mb-3">
+              This onboarding collects detailed information to power intelligent matching for collaborators, mentors, and connections. 
+              You can opt out now and complete later for a <span className="text-amber-600 font-medium">token bonus</span>.
+            </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Switch 
+                  id="deep-opt-out" 
+                  checked={deepProfileOptOut} 
+                  onCheckedChange={setDeepProfileOptOut}
+                />
+                <Label htmlFor="deep-opt-out" className="text-sm font-medium text-slate-700 cursor-pointer">
+                  Skip deep profile (complete later)
+                </Label>
+              </div>
+              {deepProfileOptOut && (
+                <div className="flex items-center gap-1 text-amber-600 text-sm">
+                  <Gift className="w-4 h-4" />
+                  <span>+Bonus when completed</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Why are you here?</h2>
         <p className="text-slate-600">Select up to 7 intentions that resonate with you</p>
