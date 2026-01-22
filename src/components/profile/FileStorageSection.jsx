@@ -194,31 +194,37 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   const FileCard = ({ file, showActions = true }) => {
     const IconComponent = getFileIcon(file.mime_type);
     return (
-      <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
-        <div className="h-10 w-10 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
-          <IconComponent className="h-5 w-5 text-violet-600" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-slate-900 truncate">{file.file_name}</p>
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span>{formatFileSize(file.size_bytes)}</span>
-            {file.is_public && <Badge variant="secondary" className="text-xs py-0">Public</Badge>}
-            {file.is_private_storage && <Badge variant="outline" className="text-xs py-0">Private</Badge>}
+      <div className="flex flex-col gap-2 p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
+            <IconComponent className="h-5 w-5 text-violet-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-slate-900 truncate">{file.file_name}</p>
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <span>{formatFileSize(file.size_bytes)}</span>
+              {file.is_public && <Badge variant="secondary" className="text-xs py-0">Public</Badge>}
+              {file.is_private_storage && <Badge variant="outline" className="text-xs py-0">Private</Badge>}
+            </div>
           </div>
         </div>
         {showActions && isOwnProfile && (
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleCopyLink(file)}>
-              {copiedId === file.id ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+          <div className="flex flex-wrap items-center gap-1 pt-1 border-t border-slate-100">
+            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => handleCopyLink(file)}>
+              {copiedId === file.id ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+              Copy Link
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => togglePublicMutation.mutate({ fileId: file.id, isPublic: !file.is_public })}>
-              {file.is_public ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => togglePublicMutation.mutate({ fileId: file.id, isPublic: !file.is_public })}>
+              {file.is_public ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+              {file.is_public ? 'Public' : 'Private'}
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleShare(file)}>
-              <Share2 className="h-4 w-4" />
+            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => handleShare(file)}>
+              <Share2 className="h-3 w-3" />
+              Share
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={() => deleteMutation.mutate(file.id)}>
-              <Trash2 className="h-4 w-4" />
+            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1 text-red-500 hover:text-red-600" onClick={() => deleteMutation.mutate(file.id)}>
+              <Trash2 className="h-3 w-3" />
+              Delete
             </Button>
           </div>
         )}
@@ -312,60 +318,54 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
           </TabsList>
 
           <TabsContent value="files">
-            <ScrollArea className="h-64">
-              {filesLoading ? (
-                <div className="flex items-center justify-center h-32">
-                  <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-                </div>
-              ) : myFiles.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-32 text-slate-400">
-                  <FolderOpen className="h-8 w-8 mb-2" />
-                  <p className="text-sm">No files uploaded yet</p>
-                </div>
-              ) : (
-                <div className="space-y-2 pr-4">
-                  {myFiles.map(file => <FileCard key={file.id} file={file} />)}
-                </div>
-              )}
-            </ScrollArea>
+            {filesLoading ? (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+              </div>
+            ) : myFiles.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-32 text-slate-400">
+                <FolderOpen className="h-8 w-8 mb-2" />
+                <p className="text-sm">No files uploaded yet</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {myFiles.map(file => <FileCard key={file.id} file={file} />)}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="inbox">
-            <ScrollArea className="h-64">
-              {inboxLoading ? (
-                <div className="flex items-center justify-center h-32">
-                  <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-                </div>
-              ) : sharedWithMe.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-32 text-slate-400">
-                  <Inbox className="h-8 w-8 mb-2" />
-                  <p className="text-sm">No files shared with you</p>
-                </div>
-              ) : (
-                <div className="space-y-2 pr-4">
-                  {sharedWithMe.map(sf => <SharedFileCard key={sf.id} sharedFile={sf} type="inbox" />)}
-                </div>
-              )}
-            </ScrollArea>
+            {inboxLoading ? (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+              </div>
+            ) : sharedWithMe.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-32 text-slate-400">
+                <Inbox className="h-8 w-8 mb-2" />
+                <p className="text-sm">No files shared with you</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {sharedWithMe.map(sf => <SharedFileCard key={sf.id} sharedFile={sf} type="inbox" />)}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="sent">
-            <ScrollArea className="h-64">
-              {sentLoading ? (
-                <div className="flex items-center justify-center h-32">
-                  <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-                </div>
-              ) : sharedByMe.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-32 text-slate-400">
-                  <Send className="h-8 w-8 mb-2" />
-                  <p className="text-sm">No files shared yet</p>
-                </div>
-              ) : (
-                <div className="space-y-2 pr-4">
-                  {sharedByMe.map(sf => <SharedFileCard key={sf.id} sharedFile={sf} type="sent" />)}
-                </div>
-              )}
-            </ScrollArea>
+            {sentLoading ? (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+              </div>
+            ) : sharedByMe.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-32 text-slate-400">
+                <Send className="h-8 w-8 mb-2" />
+                <p className="text-sm">No files shared yet</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {sharedByMe.map(sf => <SharedFileCard key={sf.id} sharedFile={sf} type="sent" />)}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </CardContent>
