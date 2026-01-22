@@ -169,6 +169,24 @@ main {
    HACKER THEME - GREEN EVERYTHING
    ===================================================== */
 
+/* Hacker theme - Glass blur popup/menu containers */
+[data-theme='hacker'] [role="menu"],
+[data-theme='hacker'] [role="dialog"],
+[data-theme='hacker'] [role="listbox"],
+[data-theme='hacker'] [data-radix-menu-content],
+[data-theme='hacker'] [data-radix-popper-content-wrapper] > *,
+[data-theme='hacker'] [data-radix-select-content],
+[data-theme='hacker'] [data-radix-dropdown-menu-content],
+[data-theme='hacker'] [data-radix-popover-content],
+[data-theme='hacker'] .popover-content,
+[data-theme='hacker'] .dropdown-content {
+  background: rgba(0, 10, 0, 0.77) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(0, 255, 0, 0.4) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 30px rgba(0, 255, 0, 0.05) !important;
+}
+
 /* All text green */
 [data-theme='hacker'] * {
   color: #00ff00 !important;
