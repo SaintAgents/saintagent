@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus } from 'lucide-react';
+import { Plus, Briefcase } from 'lucide-react';
 import PortfolioItemCard from './PortfolioItemCard';
+import CollapsibleProfileCard from './CollapsibleProfileCard';
 
 export default function PortfolioSection({ profile, currentUser }) {
   const isOwner = currentUser?.email === profile?.user_id;
@@ -46,37 +46,35 @@ export default function PortfolioSection({ profile, currentUser }) {
   const handleDelete = (item) => deleteMutation.mutate(item.id);
 
   return (
-    <Card className="mt-6">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <div className="text-lg font-semibold text-slate-900">Portfolio / Projects</div>
-          <div className="text-xs text-slate-500">Showcase past work</div>
-        </div>
-        {isOwner && (
-          <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => setOpen(!open)}>
-            <Plus className="w-4 h-4 mr-2" /> Add Project
-          </Button>
-        )}
-      </CardHeader>
-      {open && isOwner && (
-        <CardContent className="pt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <Input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-            <Input placeholder="Link URL (https://...)" value={form.link_url} onChange={(e) => setForm({ ...form, link_url: e.target.value })} />
-            <Input placeholder="Image URL (optional)" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
-            <Input placeholder="Tags (comma separated)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
-            <Input placeholder="Skills (comma separated)" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} />
-            <div className="md:col-span-2">
-              <Textarea placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+    <CollapsibleProfileCard 
+      title="Portfolio / Projects" 
+      icon={Briefcase}
+      headerContent={isOwner && (
+        <Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => setOpen(!open)}>
+          <Plus className="w-4 h-4 mr-2" /> Add Project
+        </Button>
+      )}
+    >
+      <div>
+        <p className="text-xs text-slate-500 mb-3">Showcase past work</p>
+        {open && isOwner && (
+          <div className="mb-4 p-3 bg-slate-50 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+              <Input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+              <Input placeholder="Link URL (https://...)" value={form.link_url} onChange={(e) => setForm({ ...form, link_url: e.target.value })} />
+              <Input placeholder="Image URL (optional)" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+              <Input placeholder="Tags (comma separated)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+              <Input placeholder="Skills (comma separated)" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} />
+              <div className="md:col-span-2">
+                <Textarea placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+              <Button className="bg-violet-600 hover:bg-violet-700" onClick={addItem} disabled={createMutation.isPending}>Save</Button>
             </div>
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button className="bg-violet-600 hover:bg-violet-700" onClick={addItem} disabled={createMutation.isPending}>Save</Button>
-          </div>
-        </CardContent>
-      )}
-      <CardContent>
+        )}
         {items.length === 0 ? (
           <div className="text-sm text-slate-500">No projects yet.</div>
         ) : (
@@ -86,7 +84,7 @@ export default function PortfolioSection({ profile, currentUser }) {
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </CollapsibleProfileCard>
   );
 }

@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ThumbsUp } from 'lucide-react';
+import CollapsibleProfileCard from './CollapsibleProfileCard';
 
 export default function EndorsementsSection({ profile, currentUser }) {
   const queryClient = useQueryClient();
@@ -46,14 +47,9 @@ export default function EndorsementsSection({ profile, currentUser }) {
   });
 
   return (
-    <Card className="mt-6">
-      <CardHeader>
-        <div>
-          <div className="text-lg font-semibold text-slate-900">Skills Endorsements</div>
-          <div className="text-xs text-slate-500">Endorse skills to vouch for expertise</div>
-        </div>
-      </CardHeader>
-      <CardContent>
+    <CollapsibleProfileCard title="Skills Endorsements" icon={ThumbsUp}>
+      <div>
+        <p className="text-xs text-slate-500 mb-3">Endorse skills to vouch for expertise</p>
         {skills.length === 0 ? (
           <div className="text-sm text-slate-500">No skills listed.</div>
         ) : (
@@ -85,7 +81,7 @@ export default function EndorsementsSection({ profile, currentUser }) {
             })}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </CollapsibleProfileCard>
   );
 }
