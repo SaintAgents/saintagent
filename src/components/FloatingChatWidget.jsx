@@ -10,6 +10,7 @@ import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import IcebreakerPrompts from '@/components/messages/IcebreakerPrompts';
+import EmojiPicker from '@/components/messages/EmojiPicker';
 
 export default function FloatingChatWidget({ recipientId, recipientName, recipientAvatar, onClose }) {
   const [message, setMessage] = useState('');
@@ -370,6 +371,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
               });
             }}
           />
+          <EmojiPicker onSelect={(emoji) => setMessage((prev) => prev + emoji)} />
           <Input
             value={message}
             onChange={(e) => { setMessage(e.target.value); sendTypingPing(); }}
