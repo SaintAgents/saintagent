@@ -1296,125 +1296,128 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 {/* Mystical Profile */}
                 <div>
                   <p className="text-fuchsia-500 mb-3 text-xs">✨ Mystical Identity</p>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="flex gap-4">
                     {/* Mystical ID Badge Image */}
-                    <div className="md:row-span-2 pr-2">
+                    <div className="shrink-0">
                       <MysticalIDImage profile={profile} size="medium" />
                     </div>
                     
-                    {profile?.mystical_identifier &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
-                          <Sparkles className="w-4 h-4 text-purple-600" />
+                    {/* Mystical fields grid - 4 columns to align properly */}
+                    <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {profile?.mystical_identifier &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
+                            <Sparkles className="w-4 h-4 text-purple-600" />
+                          </div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Mystical ID</p>
+                            <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Mystical ID</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.mystical_identifier}</p>
+                      }
+                      {profile?.astrological_sign &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">✨</div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Sun Sign</p>
+                            <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.astrological_sign &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">✨</div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Sun Sign</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.astrological_sign}</p>
+                      }
+                      {profile?.rising_sign &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center shrink-0">🌅</div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Rising</p>
+                            <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.rising_sign &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center shrink-0">🌅</div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Rising</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.rising_sign}</p>
+                      }
+                      {profile?.moon_sign &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">🌙</div>
+                          <div>
+                            <p className="text-teal-400 text-xs">Moon</p>
+                            <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.moon_sign &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">🌙</div>
-                        <div>
-                          <p className="text-teal-400 text-xs">Moon</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.moon_sign}</p>
+                      }
+                      {profile?.numerology_life_path &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
+                            <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
+                          </div>
+                          <div>
+                            <p className="text-teal-400 text-xs">Life Path</p>
+                            <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.numerology_life_path &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
-                          <span className="text-sm font-bold text-amber-600">{profile.numerology_life_path}</span>
+                      }
+                      {profile?.numerology_personality &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
+                            <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
+                          </div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Personality</p>
+                            <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-teal-400 text-xs">Life Path</p>
-                          <p className="text-sm font-semibold text-slate-900">Path {profile.numerology_life_path}</p>
+                      }
+                      {profile?.birth_card &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">🃏</div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Birth Card</p>
+                            <p className="text-sm font-semibold text-slate-900">
+                              <DestinyCardTooltip card={profile.birth_card} />
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.numerology_personality &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
-                          <span className="text-sm font-bold text-orange-600">{profile.numerology_personality}</span>
+                      }
+                      {profile?.sun_card &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center shrink-0">☀️</div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Sun Card</p>
+                            <p className="text-sm font-semibold text-slate-900">
+                              <DestinyCardTooltip card={profile.sun_card} />
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Personality</p>
-                          <p className="text-sm font-semibold text-slate-900">#{profile.numerology_personality}</p>
+                      }
+                      {profile?.human_design_type &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">⚡</div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Human Design</p>
+                            <p className="text-sm font-semibold text-slate-900 capitalize">{profile.human_design_type.replace(/_/g, ' ')}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.birth_card &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">🃏</div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Birth Card</p>
-                          <p className="text-sm font-semibold text-slate-900">
-                            <DestinyCardTooltip card={profile.birth_card} />
-                          </p>
+                      }
+                      {profile?.enneagram_type &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
+                            <span className="text-sm font-bold text-rose-600">{profile.enneagram_type}</span>
+                          </div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">Enneagram</p>
+                            <p className="text-sm font-semibold text-slate-900">Type {profile.enneagram_type}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.sun_card &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center shrink-0">☀️</div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Sun Card</p>
-                          <p className="text-sm font-semibold text-slate-900">
-                            <DestinyCardTooltip card={profile.sun_card} />
-                          </p>
+                      }
+                      {profile?.mbti_type &&
+                      <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+                            <span className="text-xs font-bold text-violet-600">MB</span>
+                          </div>
+                          <div>
+                            <p className="text-cyan-400 text-xs">MBTI</p>
+                            <p className="text-sm font-semibold text-slate-900">{profile.mbti_type}</p>
+                          </div>
                         </div>
-                      </div>
-                    }
-                    {profile?.human_design_type &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">⚡</div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Human Design</p>
-                          <p className="text-sm font-semibold text-slate-900 capitalize">{profile.human_design_type.replace(/_/g, ' ')}</p>
-                        </div>
-                      </div>
-                    }
-                    {profile?.enneagram_type &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0">
-                          <span className="text-sm font-bold text-rose-600">{profile.enneagram_type}</span>
-                        </div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">Enneagram</p>
-                          <p className="text-sm font-semibold text-slate-900">Type {profile.enneagram_type}</p>
-                        </div>
-                      </div>
-                    }
-                    {profile?.mbti_type &&
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
-                          <span className="text-xs font-bold text-violet-600">MB</span>
-                        </div>
-                        <div>
-                          <p className="text-cyan-400 text-xs">MBTI</p>
-                          <p className="text-sm font-semibold text-slate-900">{profile.mbti_type}</p>
-                        </div>
-                      </div>
-                    }
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
