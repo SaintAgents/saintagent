@@ -232,7 +232,31 @@ export default function DatingMatchesPopup({ currentUser }) {
   const usedMaleIdx = new Set();
   const usedFemaleIdx = new Set();
 
-  const enrichedMatches = otherProfiles.map((dp, idx) => {
+  // Build enriched matches from existing Match records first, then fall back to dating profiles
+  const matchesToEnrich = hasExistingMatches 
+    ? existingMatches.map(m => {
+        // Find user profile for this match target
+        const userProfile = userProfiles.find(up => up.user_id === m.target_id);
+        return {
+          user_id: m.target_id,
+          display_name: m.target_name || userProfile?.display_name,
+          avatar_url: m.target_avatar || userProfile?.avatar_url,
+          location: userProfile?.location,
+          bio: userProfile?.bio,
+          values_tags: userProfile?.values_tags || [],
+          skills: userProfile?.skills || [],
+          gallery_images: userProfile?.gallery_images || [],
+          match_score: m.match_score,
+          explanation: m.explanation,
+          conversation_starters: m.conversation_starters,
+          shared_values: m.shared_values,
+          spiritual_synergies: m.spiritual_synergies,
+          from_match_entity: true
+        };
+      })
+    : otherProfiles;
+
+  const enrichedMatches = matchesToEnrich.map((dp, idx) => {
     const userProfile = userProfiles.find((up) => up.user_id === dp.user_id);
     let avatar = dp.avatar_url || userProfile?.avatar_url;
 
