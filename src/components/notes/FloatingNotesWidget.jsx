@@ -199,8 +199,8 @@ export default function FloatingNotesWidget() {
       style={positionStyle}
       className={`fixed z-[100] bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl shadow-2xl transition-all duration-300 flex flex-col ${
         isExpanded 
-          ? 'w-[min(500px,calc(100vw-32px))] max-h-[calc(100vh-32px)]' 
-          : 'w-[min(320px,calc(100vw-32px))] max-h-[min(500px,calc(100vh-112px))]'
+          ? 'w-[min(450px,calc(100vw-32px))] h-[min(600px,calc(100vh-32px))]' 
+          : 'w-[min(320px,calc(100vw-32px))] h-[min(450px,calc(100vh-100px))]'
       } ${isDragging ? 'cursor-grabbing' : ''}`}
     >
       {/* Drag Handle */}
