@@ -32,7 +32,9 @@ export default function FloatingNotesWidget() {
   const [tagInput, setTagInput] = useState('');
   const [colorFilter, setColorFilter] = useState(null);
   const [position, setPosition] = useState({ x: null, y: null });
+  const [size, setSize] = useState({ width: 320, height: 450 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const dragRef = useRef(null);
   const offsetRef = useRef({ x: 0, y: 0 });
   const queryClient = useQueryClient();
