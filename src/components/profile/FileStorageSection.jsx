@@ -182,7 +182,24 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
 
   const handleShare = (file) => {
     setSelectedFile(file);
+    setShareRecipient('');
+    setRecipientSearch('');
     setShareModalOpen(true);
+  };
+
+  // Filter profiles based on search
+  const filteredProfiles = allProfiles.filter(p => 
+    p.user_id !== userId && (
+      p.display_name?.toLowerCase().includes(recipientSearch.toLowerCase()) ||
+      p.handle?.toLowerCase().includes(recipientSearch.toLowerCase()) ||
+      p.user_id?.toLowerCase().includes(recipientSearch.toLowerCase())
+    )
+  ).slice(0, 10);
+
+  const selectRecipient = (profile) => {
+    setShareRecipient(profile.user_id);
+    setRecipientSearch(profile.display_name || profile.handle || profile.user_id);
+    setShowRecipientDropdown(false);
   };
 
   const handleCopyLink = async (file) => {
