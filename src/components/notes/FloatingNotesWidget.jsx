@@ -397,13 +397,13 @@ export default function FloatingNotesWidget() {
 function NoteCard({ note, onEdit, onPin, onDelete }) {
   return (
     <div 
-      className={`p-3 rounded-lg border-2 cursor-pointer hover:border-amber-600 transition-colors ${COLORS[note.color || 'default']}`}
+      className={`p-3 rounded-lg border-2 cursor-pointer hover:border-amber-600 transition-colors overflow-hidden ${COLORS[note.color || 'default']}`}
       onClick={onEdit}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="font-medium text-slate-800 dark:text-white text-sm truncate">{note.title || 'Untitled'}</div>
-          <div className="text-xs text-slate-600 dark:text-gray-300 line-clamp-2 mt-1">{note.content}</div>
+          <div className="text-xs text-slate-600 dark:text-gray-300 line-clamp-2 mt-1 break-words">{note.content}</div>
         </div>
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onPin}>
