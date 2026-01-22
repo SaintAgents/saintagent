@@ -313,10 +313,16 @@ export default function DatingMatchesPopup({ currentUser }) {
       avatar_url: avatar,
       location: dp.location || userProfile?.location,
       bio: dp.bio || userProfile?.bio,
-      values_tags: userProfile?.values_tags || [],
-      skills: userProfile?.skills || [],
+      values_tags: dp.values_tags?.length > 0 ? dp.values_tags : (userProfile?.values_tags || []),
+      skills: dp.skills?.length > 0 ? dp.skills : (userProfile?.skills || []),
       all_images: allImages,
-      is_demo: dp.is_demo === true || !userProfile
+      is_demo: dp.is_demo === true || !userProfile,
+      match_score: dp.match_score,
+      explanation: dp.explanation,
+      conversation_starters: dp.conversation_starters,
+      shared_values: dp.shared_values,
+      spiritual_synergies: dp.spiritual_synergies,
+      from_match_entity: dp.from_match_entity
     };
   });
 
