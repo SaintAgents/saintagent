@@ -40,12 +40,13 @@ export default function FileViewer({ file, sharedFile, open, onClose }) {
             url = file.file_url;
           }
         } else if (sharedFile) {
-          // Shared file - need to look up the original UserFile
-          const userFiles = await base44.entities.UserFile.filter({ id: sharedFile.user_file_id });
-          const originalFile = userFiles?.[0];
+          // Shared file - need to look up the original UserFile by its ID
+          // Use list with filter on the built-in id field
+          const allFiles = await base44.entities.UserFile.list('-created_date', 500);
+          const originalFile = allFiles?.find(f => f.id === sharedFile.user_file_id);
           
           if (!originalFile) {
-            setError('File no longer exists');
+            setError('File no longer exists or you do not have access');
             setLoading(false);
             return;
           }
