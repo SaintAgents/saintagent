@@ -55,6 +55,15 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   const [uploadAsPrivate, setUploadAsPrivate] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+  const [recipientSearch, setRecipientSearch] = useState('');
+  const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
+
+  // Fetch all user profiles for recipient search
+  const { data: allProfiles = [] } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-updated_date', 100),
+    enabled: shareModalOpen
+  });
 
   // Fetch user's files
   const { data: myFiles = [], isLoading: filesLoading } = useQuery({
