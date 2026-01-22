@@ -203,7 +203,8 @@ export default function DatingMatchesPopup({ currentUser }) {
   // If existing matches exist, use those first
   const hasExistingMatches = existingMatches.length > 0;
   
-  const otherProfiles = isDatingOptedIn ? (hasExistingMatches ? [] : datingProfiles.filter((p) => {
+  // Filter dating profiles when no existing matches
+  const filteredDatingProfiles = datingProfiles.filter((p) => {
     if (p.user_id === currentUser?.email) return false;
     
     // I must be interested in their gender
@@ -226,7 +227,11 @@ export default function DatingMatchesPopup({ currentUser }) {
     }
     
     return true;
-  })) : [];
+  });
+
+  const otherProfiles = isDatingOptedIn 
+    ? (hasExistingMatches ? [] : filteredDatingProfiles) 
+    : [];
 
   // Enrich with user profile data and assign unique demo avatars
   const usedMaleIdx = new Set();
