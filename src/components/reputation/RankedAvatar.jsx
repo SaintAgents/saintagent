@@ -344,11 +344,14 @@ export default function RankedAvatar({
           }}
         >
           {userBadges.slice(0, 3).map((badge) => {
-            // Get badge code from either field
+            // Get badge code from either field - check both badge_code and code
             const badgeCode = badge.badge_code || badge.code || '';
-            // Try to get image from: 1) icon_url on badge, 2) QUEST_BADGE_IMAGES lookup
-            const badgeImageUrl = badge.icon_url || QUEST_BADGE_IMAGES[badgeCode] || QUEST_BADGE_IMAGES[badgeCode.toLowerCase()];
-            const badgeName = badge.badge_name || badgeCode?.replace(/_/g, ' ') || 'Badge';
+            // Try to get image from: 1) icon_url on badge record, 2) QUEST_BADGE_IMAGES lookup by code
+            const badgeImageUrl = badge.icon_url || QUEST_BADGE_IMAGES[badgeCode] || QUEST_BADGE_IMAGES[badgeCode?.toLowerCase?.()] || null;
+            const badgeName = badge.badge_name || badgeCode?.replace?.(/_/g, ' ') || 'Badge';
+            
+            // Debug: log what we're looking up
+            console.log('Badge lookup:', { badgeCode, hasImage: !!badgeImageUrl, badge });
             
             return (
               <TooltipProvider key={badge.id}>
