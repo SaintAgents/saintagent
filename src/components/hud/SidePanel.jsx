@@ -43,7 +43,9 @@ import {
   Radio,
   Trophy,
   CheckCircle,
-  Folder } from
+  Folder,
+  Compass,
+  MapPin } from
   "lucide-react";
 
 // Card icon mapping - must be defined here to resolve icons from stored card data
@@ -1323,28 +1325,37 @@ export default function SidePanel({
             <div className="mt-4">
               <CollapsibleCard title="Users & Regions" icon={Users} onPopout={() => setUsersPopupOpen(true)}>
                 <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="text-xs text-slate-500 mb-1">Total Users</p>
                       <p className="text-2xl font-bold text-slate-900">{totalUsers}</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-right">
-                        <p className="text-xs text-slate-500">North America</p>
-                        <p className="text-sm font-semibold text-slate-900">{regionCounts['North America']}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs text-slate-500">Europe</p>
-                        <p className="text-sm font-semibold text-slate-900">{regionCounts['Europe']}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs text-slate-500">Asia</p>
-                        <p className="text-sm font-semibold text-slate-900">{regionCounts['Asia']}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs text-slate-500">Other</p>
-                        <p className="text-sm font-semibold text-slate-900">{regionCounts['Other']}</p>
-                      </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 text-violet-600 border-violet-200 hover:bg-violet-50"
+                      onClick={() => window.location.href = createPageUrl('Circles') + '?view=map'}
+                    >
+                      <Compass className="w-4 h-4" />
+                      View Map
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-2 rounded-lg bg-slate-50 text-center">
+                      <p className="text-xs text-slate-500">North America</p>
+                      <p className="text-sm font-semibold text-slate-900">{regionCounts['North America']}</p>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 text-center">
+                      <p className="text-xs text-slate-500">Europe</p>
+                      <p className="text-sm font-semibold text-slate-900">{regionCounts['Europe']}</p>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 text-center">
+                      <p className="text-xs text-slate-500">Asia</p>
+                      <p className="text-sm font-semibold text-slate-900">{regionCounts['Asia']}</p>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 text-center">
+                      <p className="text-xs text-slate-500">Other</p>
+                      <p className="text-sm font-semibold text-slate-900">{regionCounts['Other']}</p>
                     </div>
                   </div>
                 </div>
