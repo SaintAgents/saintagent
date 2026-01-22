@@ -13,13 +13,13 @@ import {
 import { toast } from 'sonner';
 
 const COLORS = {
-  default: 'bg-slate-800 border-slate-700',
-  yellow: 'bg-yellow-900/30 border-yellow-600/50',
-  green: 'bg-emerald-900/30 border-emerald-600/50',
-  blue: 'bg-blue-900/30 border-blue-600/50',
-  purple: 'bg-purple-900/30 border-purple-600/50',
-  pink: 'bg-pink-900/30 border-pink-600/50',
-  orange: 'bg-orange-900/30 border-orange-600/50',
+  default: 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700',
+  yellow: 'bg-yellow-50 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-600/50',
+  green: 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-600/50',
+  blue: 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600/50',
+  purple: 'bg-purple-50 dark:bg-purple-900/30 border-purple-300 dark:border-purple-600/50',
+  pink: 'bg-pink-50 dark:bg-pink-900/30 border-pink-300 dark:border-pink-600/50',
+  orange: 'bg-orange-50 dark:bg-orange-900/30 border-orange-300 dark:border-orange-600/50',
 };
 
 export default function FloatingNotesWidget() {
@@ -126,18 +126,18 @@ export default function FloatingNotesWidget() {
 
   return (
     <div 
-      className={`fixed z-[100] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl transition-all duration-300 ${
+      className={`fixed z-[100] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl transition-all duration-300 ${
         isExpanded 
           ? 'bottom-4 right-4 w-[500px] h-[600px]' 
           : 'bottom-24 right-4 w-80 h-96'
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-slate-700">
+      <div className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-2">
-          <StickyNote className="w-4 h-4 text-amber-400" />
-          <span className="font-semibold text-white text-sm">Notes</span>
-          <Badge className="bg-amber-500/20 text-amber-400 text-[10px]">{notes.length}</Badge>
+          <StickyNote className="w-4 h-4 text-amber-500" />
+          <span className="font-semibold text-slate-900 dark:text-white text-sm">Notes</span>
+          <Badge className="bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px]">{notes.length}</Badge>
         </div>
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setIsExpanded(!isExpanded)}>
@@ -150,14 +150,14 @@ export default function FloatingNotesWidget() {
       </div>
 
       {/* Search & Add */}
-      <div className="p-2 border-b border-slate-700 flex gap-2">
+      <div className="p-2 border-b border-slate-200 dark:border-slate-700 flex gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500" />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search notes..."
-            className="h-8 pl-7 text-xs bg-slate-800 border-slate-700"
+            className="h-8 pl-7 text-xs bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
           />
         </div>
         <Button 
@@ -180,7 +180,7 @@ export default function FloatingNotesWidget() {
                 : setNewNote({...newNote, title: e.target.value})
               }
               placeholder="Note title..."
-              className="text-sm bg-slate-800 border-slate-700"
+              className="text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
             />
             <Textarea
               value={editingNote?.content ?? newNote.content}
@@ -189,7 +189,7 @@ export default function FloatingNotesWidget() {
                 : setNewNote({...newNote, content: e.target.value})
               }
               placeholder="Write your note..."
-              className="min-h-[120px] text-sm bg-slate-800 border-slate-700"
+              className="min-h-[120px] text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
             />
             
             {/* Tags */}
@@ -200,12 +200,12 @@ export default function FloatingNotesWidget() {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && addTag(editingNote || newNote, editingNote ? setEditingNote : setNewNote)}
                   placeholder="Add tag..."
-                  className="h-7 text-xs bg-slate-800 border-slate-700"
+                  className="h-7 text-xs bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  className="h-7 border-slate-700"
+                  className="h-7 border-slate-200 dark:border-slate-700"
                   onClick={() => addTag(editingNote || newNote, editingNote ? setEditingNote : setNewNote)}
                 >
                   <Tag className="w-3 h-3" />
@@ -215,7 +215,7 @@ export default function FloatingNotesWidget() {
                 {(editingNote?.tags || newNote.tags).map(tag => (
                   <Badge 
                     key={tag} 
-                    className="bg-slate-700 text-xs cursor-pointer hover:bg-red-500/50"
+                    className="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs cursor-pointer hover:bg-red-500/50"
                     onClick={() => removeTag(editingNote || newNote, editingNote ? setEditingNote : setNewNote, tag)}
                   >
                     {tag} ×
@@ -253,7 +253,7 @@ export default function FloatingNotesWidget() {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-slate-700"
+                className="border-slate-200 dark:border-slate-700"
                 onClick={() => { setIsEditing(false); setEditingNote(null); }}
               >
                 Cancel
@@ -293,7 +293,7 @@ export default function FloatingNotesWidget() {
               </>
             )}
             {filteredNotes.length === 0 && (
-              <div className="text-center py-8 text-gray-500 text-sm">
+              <div className="text-center py-8 text-slate-500 text-sm">
                 {searchQuery ? 'No notes found' : 'No notes yet. Create one!'}
               </div>
             )}
@@ -312,12 +312,12 @@ function NoteCard({ note, onEdit, onPin, onDelete }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-white text-sm truncate">{note.title || 'Untitled'}</div>
-          <div className="text-xs text-gray-400 line-clamp-2 mt-1">{note.content}</div>
+          <div className="font-medium text-slate-900 dark:text-white text-sm truncate">{note.title || 'Untitled'}</div>
+          <div className="text-xs text-slate-500 dark:text-gray-400 line-clamp-2 mt-1">{note.content}</div>
         </div>
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onPin}>
-            <Pin className={`w-3 h-3 ${note.is_pinned ? 'text-amber-400' : 'text-gray-500'}`} />
+            <Pin className={`w-3 h-3 ${note.is_pinned ? 'text-amber-500' : 'text-slate-400'}`} />
           </Button>
           <Button variant="ghost" size="icon" className="h-6 w-6 hover:text-red-400" onClick={onDelete}>
             <Trash2 className="w-3 h-3" />
@@ -327,7 +327,7 @@ function NoteCard({ note, onEdit, onPin, onDelete }) {
       {note.tags?.length > 0 && (
         <div className="flex gap-1 mt-2 flex-wrap">
           {note.tags.map(tag => (
-            <Badge key={tag} className="bg-black/30 text-[10px]">{tag}</Badge>
+            <Badge key={tag} className="bg-slate-200/50 dark:bg-black/30 text-slate-600 dark:text-slate-300 text-[10px]">{tag}</Badge>
           ))}
         </div>
       )}
