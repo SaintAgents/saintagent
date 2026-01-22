@@ -89,6 +89,7 @@ import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import { getDestinyCardMeaning } from '@/components/destiny/destinyCardsData';
 import FileStorageSection from '@/components/profile/FileStorageSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -682,9 +683,8 @@ export default function Profile() {
               <div className="lg:col-span-2 space-y-6">
             {/* Status Message (own profile only) */}
             {isOwnProfile &&
-                <Card>
-                <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
-                  <CardTitle className="text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                <CollapsibleProfileCard title="Status Message" headerClassName="bg-purple-100 dark:bg-[#050505] p-4">
+                  <div className="text-sm text-slate-900 dark:text-white flex items-center gap-2 mb-4">
                     <div className={cn(
                         "w-3 h-3 rounded-full",
                         profile?.status === 'online' && "bg-emerald-500",
@@ -693,10 +693,9 @@ export default function Profile() {
                         profile?.status === 'offline' && "bg-slate-400",
                         !profile?.status && "bg-emerald-500"
                       )} />
-                    Status Message
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4">
+                    <span className="text-sm font-medium">Status Message</span>
+                  </div>
+                  <div className="bg-purple-100 dark:bg-[#050505]">
                   <div className="flex gap-2">
                     <Input
                         placeholder="What's on your mind?"
@@ -708,18 +707,15 @@ export default function Profile() {
                         className="flex-1 text-slate-900 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
 
                   </div>
-                  <p className="text-xs text-slate-400 mt-2">This message shows when others hover over your avatar</p>
-                </CardContent>
-              </Card>
+                  <p className="text-xs text-slate-500 mt-2 font-medium">This message shows when others hover over your avatar</p>
+                </div>
+              </CollapsibleProfileCard>
                 }
 
             {/* Theme Customization (own profile only) */}
             {isOwnProfile &&
-                <Card>
-                <CardHeader className="bg-purple-100 dark:bg-[#050505] p-4">
-                  <CardTitle className="text-sm text-slate-900 dark:text-white">Theme Customization</CardTitle>
-                </CardHeader>
-                <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-4 space-y-4">
+                <CollapsibleProfileCard title="Theme Customization" headerClassName="bg-purple-100 dark:bg-[#050505] p-4">
+                <div className="bg-purple-100 dark:bg-[#050505] space-y-4">
                   <div>
                     <Label className="text-xs text-slate-800 dark:text-slate-400 font-medium">Theme</Label>
                     <Select
@@ -785,8 +781,8 @@ export default function Profile() {
                       </div>
                     </div>
                     }
-                </CardContent>
-              </Card>
+                </div>
+              </CollapsibleProfileCard>
                 }
 
             {/* Show status message for other profiles */}
@@ -809,14 +805,8 @@ export default function Profile() {
                 }
 
             {/* Bio & Details */}
-            <Card>
-              <CardHeader className="bg-purple-100 p-6 flex flex-col space-y-1.5">
-                <CardTitle className="flex items-center gap-2">
-                  <User className="w-5 h-5 text-slate-500" />
-                  About
-                </CardTitle>
-              </CardHeader>
-                  <CardContent className="bg-purple-100 dark:bg-[#050505] pt-0 p-6 space-y-4">
+            <CollapsibleProfileCard title="About" icon={User} headerClassName="bg-purple-100 p-6">
+                  <div className="bg-purple-100 dark:bg-[#050505] space-y-4">
                 {isEditing ?
                     <>
                     <div>
@@ -887,15 +877,14 @@ export default function Profile() {
                     </div>
                   </>
                     }
-              </CardContent>
-            </Card>
+              </div>
+            </CollapsibleProfileCard>
 
             {/* Intentions */}
-            <Card>
-              <CardHeader className="dark:bg-[#050505]">
-                <CardTitle className="flex items-center justify-between dark:!text-white">
-                  <span>Intentions</span>
-                  {isOwnProfile && (
+            <CollapsibleProfileCard 
+              title="Intentions" 
+              headerClassName="dark:bg-[#050505]"
+              headerContent={isOwnProfile && (
                       !editingIntentions ?
                       <Button
                         variant="ghost"
@@ -922,10 +911,9 @@ export default function Profile() {
                           Save
                         </Button>
                       </div>)
-                      }
-                </CardTitle>
-              </CardHeader>
-                  <CardContent className="dark:bg-[#050505]">
+                      )}
+            >
+                  <div className="dark:bg-[#050505]">
                 {editingIntentions ?
                     <div className="space-y-3">
                     <div className="flex gap-2">
@@ -965,18 +953,12 @@ export default function Profile() {
                       }
                   </div>
                     }
-              </CardContent>
-            </Card>
+              </div>
+            </CollapsibleProfileCard>
 
             {/* Testimonials */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-amber-500" />
-                  Testimonials
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+            <CollapsibleProfileCard title="Testimonials" icon={Star}>
+              <div>
                 {testimonials.length === 0 ?
                     <div className="text-center py-4">
                       <Star className="w-10 h-10 text-slate-200 mx-auto mb-2" />
@@ -1027,29 +1009,24 @@ export default function Profile() {
                       )}
                   </div>
                     }
-              </CardContent>
-            </Card>
+              </div>
+            </CollapsibleProfileCard>
 
             {/* Sigils - Large badge icons in a row */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between text-violet-700">
-                  <span className="flex items-center gap-2">
-                    <Award className="w-5 h-5" />
-                    Sigils & Badges
-                  </span>
-                  {isOwnProfile &&
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-violet-600"
-                        onClick={() => setBadgeGlossaryOpen(true)}>
-                      View Glossary
-                    </Button>
-                      }
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <CollapsibleProfileCard 
+              title="Sigils & Badges" 
+              icon={Award}
+              headerContent={isOwnProfile && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-violet-600"
+                      onClick={() => setBadgeGlossaryOpen(true)}>
+                    View Glossary
+                  </Button>
+                    )}
+            >
+              <div className="space-y-4">
                 {/* Badge placeholders row - always show 5 slots */}
                 <div>
                   <p className="text-xs text-slate-500 mb-2 font-medium">Featured Badges</p>
@@ -1119,42 +1096,31 @@ export default function Profile() {
                     )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </CollapsibleProfileCard>
 
             {/* Recent Badges - compact badge bar */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-amber-600">
-                  <span className="flex items-center gap-2">
-                    <Medal className="w-5 h-5" />
-                    Recent Badges
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+            <CollapsibleProfileCard title="Recent Badges" icon={Medal}>
+              <div>
                 <BadgesBar badges={profileBadges} defaultIfEmpty={true} max={8} onMore={() => setBadgeGlossaryOpen(true)} />
-              </CardContent>
-            </Card>
+              </div>
+            </CollapsibleProfileCard>
 
             {/* Skills */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Skills</span>
-                  {isOwnProfile &&
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-violet-600"
-                        onClick={() => setSkillsPickerOpen(true)}>
-                      <Plus className="w-4 h-4 mr-1" />
-                      Add Skills
-                    </Button>
-                      }
-                  </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+            <CollapsibleProfileCard 
+              title="Skills"
+              headerContent={isOwnProfile && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-violet-600"
+                      onClick={() => setSkillsPickerOpen(true)}>
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Skills
+                  </Button>
+                    )}
+            >
+                  <div>
                   <div className="space-y-3">
                   {skills.filter((s) => s.type === 'offer').length > 0 &&
                       <div>
@@ -1187,8 +1153,7 @@ export default function Profile() {
                       <p className="text-slate-400">No skills added yet</p>
                       }
                   </div>
-                  </CardContent>
-                  </Card>
+            </CollapsibleProfileCard>
                   <PortfolioSection profile={profile} currentUser={currentUser} />
                   <EndorsementsSection profile={profile} currentUser={currentUser} />
 
@@ -1207,21 +1172,22 @@ export default function Profile() {
                   onCancel={() => setEditingSocialLinks(false)} /> :
 
 
-                <Card>
-                        <CardHeader className="flex flex-row items-center justify-between">
-                          <CardTitle className="text-sm">Social Links & Website</CardTitle>
-                          <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingSocialLinks(true)}>
-                            <Edit className="w-4 h-4 mr-1" /> Edit
-                          </Button>
-                        </CardHeader>
-                        <CardContent>
+                <CollapsibleProfileCard 
+                  title="Social Links & Website"
+                  headerContent={
+                    <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingSocialLinks(true)}>
+                      <Edit className="w-4 h-4 mr-1" /> Edit
+                    </Button>
+                  }
+                >
+                        <div>
                           {profile?.social_links && Object.values(profile.social_links).some((v) => v) ?
                     <SocialLinksDisplay socialLinks={profile.social_links} /> :
 
                     <p className="text-slate-400 text-sm">No social links added yet</p>
                     }
-                        </CardContent>
-                      </Card>)
+                        </div>
+                      </CollapsibleProfileCard>)
 
                 }
 
@@ -1237,21 +1203,22 @@ export default function Profile() {
                   onCancel={() => setEditingBio(false)} /> :
 
 
-                <Card>
-                        <CardHeader className="flex flex-row items-center justify-between">
-                          <CardTitle className="text-sm">Detailed Bio</CardTitle>
-                          <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingBio(true)}>
-                            <Edit className="w-4 h-4 mr-1" /> Edit
-                          </Button>
-                        </CardHeader>
-                        <CardContent>
+                <CollapsibleProfileCard 
+                  title="Detailed Bio"
+                  headerContent={
+                    <Button variant="ghost" size="sm" className="text-violet-600" onClick={() => setEditingBio(true)}>
+                      <Edit className="w-4 h-4 mr-1" /> Edit
+                    </Button>
+                  }
+                >
+                        <div>
                           {profile?.detailed_bio ?
                     <p className="text-slate-700 whitespace-pre-wrap">{profile.detailed_bio}</p> :
 
                     <p className="text-slate-400 text-sm">Add a detailed about section to tell your story</p>
                     }
-                        </CardContent>
-                      </Card>)
+                        </div>
+                      </CollapsibleProfileCard>)
 
                 }
 
