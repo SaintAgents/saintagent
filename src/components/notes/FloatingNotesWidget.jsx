@@ -464,10 +464,10 @@ export default function FloatingNotesWidget() {
       {/* Resize Handle */}
       <div 
         onMouseDown={handleResizeMouseDown}
-        className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+        className="absolute bottom-1 right-1 w-3 h-3 cursor-se-resize opacity-50 hover:opacity-100"
         style={{ 
-          background: 'linear-gradient(135deg, transparent 50%, rgba(100,100,100,0.3) 50%)',
-          borderBottomRightRadius: '0.75rem'
+          background: 'linear-gradient(135deg, transparent 50%, rgba(100,100,100,0.5) 50%)',
+          borderRadius: '2px'
         }}
       />
       </div>
