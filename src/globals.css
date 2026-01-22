@@ -187,6 +187,33 @@ main {
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 30px rgba(0, 255, 0, 0.05) !important;
 }
 
+/* Hacker theme - Make all popups/dialogs draggable */
+[data-theme='hacker'] [role="dialog"],
+[data-theme='hacker'] [data-radix-dialog-content],
+[data-theme='hacker'] [data-radix-alertdialog-content] {
+  cursor: grab !important;
+  user-select: none;
+}
+
+[data-theme='hacker'] [role="dialog"]:active,
+[data-theme='hacker'] [data-radix-dialog-content]:active,
+[data-theme='hacker'] [data-radix-alertdialog-content]:active {
+  cursor: grabbing !important;
+}
+
+/* Hacker draggable indicator bar at top of dialogs */
+[data-theme='hacker'] [role="dialog"]::before,
+[data-theme='hacker'] [data-radix-dialog-content]::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: rgba(0, 255, 0, 0.5);
+  border-radius: 2px;
+  margin: 8px auto 12px auto;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+}
+
 /* All text green */
 [data-theme='hacker'] * {
   color: #00ff00 !important;
