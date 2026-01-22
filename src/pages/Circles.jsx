@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CircleDot, Plus, Users, Search, MessageCircle, Heart, Sparkles, ArrowRight } from "lucide-react";
+import { CircleDot, Plus, Users, Search, MessageCircle, Heart, Sparkles, ArrowRight, Globe, Map, List } from "lucide-react";
 import CircleManageModal from "@/components/circles/CircleManageModal";
 import CreateCircleModal from "@/components/community/CreateCircleModal";
 import CircleChatPanel from "@/components/community/CircleChatPanel";
@@ -15,6 +15,7 @@ import GroupDetailPage from "@/components/groups/GroupDetailPage";
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import GeoLocationHub from '@/components/geo/GeoLocationHub';
 
 export default function Circles() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -25,7 +26,16 @@ export default function Circles() {
   const [tab, setTab] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'map'
   const queryClient = useQueryClient();
+
+  // Check URL for view param
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('view') === 'map') {
+      setViewMode('map');
+    }
+  }, []);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -135,7 +145,35 @@ export default function Circles() {
 
       <div className="w-full md:max-w-6xl md:mx-auto p-0 md:p-6">
         {/* Header */}
-        <div className="flex items-center justify-end mb-6">
+        <div className="flex items-center justify-between mb-6">
+          {/* View Toggle */}
+          <div className="flex items-center gap-2 p-1 rounded-xl bg-slate-100 dark:bg-slate-800">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className={cn(
+                "gap-1.5 rounded-lg",
+                viewMode === 'grid' ? "bg-white dark:bg-slate-700 shadow-sm" : ""
+              )}
+            >
+              <List className="w-4 h-4" />
+              Grid
+            </Button>
+            <Button
+              variant={viewMode === 'map' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('map')}
+              className={cn(
+                "gap-1.5 rounded-lg",
+                viewMode === 'map' ? "bg-white dark:bg-slate-700 shadow-sm" : ""
+              )}
+            >
+              <Globe className="w-4 h-4" />
+              Globe
+            </Button>
+          </div>
+
           <Button onClick={() => setCreateOpen(true)} className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-500 [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl gap-2">
             <Plus className="w-4 h-4" />
             Create Group
@@ -186,17 +224,30 @@ export default function Circles() {
           </Select>
         </div>
 
-        {/* Tabs */}
-        <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="h-12 bg-white rounded-xl border dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]">
-            <TabsTrigger value="all" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">All Groups</TabsTrigger>
-            <TabsTrigger value="my_circles" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">My Groups</TabsTrigger>
-            <TabsTrigger value="owned" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">I Created</TabsTrigger>
-            <TabsTrigger value="featured" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">Featured</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {/* Tabs - only show in grid mode */}
+        {viewMode === 'grid' && (
+          <Tabs value={tab} onValueChange={setTab} className="mb-6">
+            <TabsList className="h-12 bg-white rounded-xl border dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]">
+              <TabsTrigger value="all" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">All Groups</TabsTrigger>
+              <TabsTrigger value="my_circles" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">My Groups</TabsTrigger>
+              <TabsTrigger value="owned" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">I Created</TabsTrigger>
+              <TabsTrigger value="featured" className="rounded-lg dark:text-slate-300 dark:data-[state=active]:bg-violet-600 dark:data-[state=active]:text-white [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:data-[state=active]:bg-[#001a00] [data-theme='hacker']_&:data-[state=active]:shadow-[0_0_8px_#00ff00]">Featured</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
 
-        {/* Circles Grid */}
+        {/* Globe/Map View */}
+        {viewMode === 'map' && (
+          <div className="mb-6">
+            <GeoLocationHub
+              circles={filteredCircles}
+              onCircleClick={(circle) => setSelectedGroup(circle)}
+            />
+          </div>
+        )}
+
+        {/* Circles Grid - only show in grid mode */}
+        {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCircles.map((circle) => {
             const isMember = circle.member_ids?.includes(user?.email);
@@ -310,8 +361,9 @@ export default function Circles() {
 
           })}
         </div>
+        )}
 
-        {filteredCircles.length === 0 &&
+        {viewMode === 'grid' && filteredCircles.length === 0 &&
         <div className="text-center py-16">
             <CircleDot className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No groups found</h3>
