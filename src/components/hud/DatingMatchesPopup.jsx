@@ -200,7 +200,10 @@ export default function DatingMatchesPopup({ currentUser }) {
   // Filter matches based on gender preferences (both ways) - same logic as DatingMatches page
   const genderToInterest = { 'man': 'men', 'woman': 'women', 'non_binary': 'non_binary' };
   
-  const otherProfiles = isDatingOptedIn ? datingProfiles.filter((p) => {
+  // If existing matches exist, use those first
+  const hasExistingMatches = existingMatches.length > 0;
+  
+  const otherProfiles = isDatingOptedIn ? (hasExistingMatches ? [] : datingProfiles.filter((p) => {
     if (p.user_id === currentUser?.email) return false;
     
     // I must be interested in their gender
