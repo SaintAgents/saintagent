@@ -234,8 +234,8 @@ export default function SearchModal({ open, onClose, onSelect }) {
                 </div>
               )}
 
-              {(showAll || query) && filteredProfiles.length === 0 && filteredListings.length === 0 && 
-               filteredMissions.length === 0 && filteredCircles.length === 0 && filteredPosts.length === 0 && (
+              {filteredProfiles.length === 0 && filteredListings.length === 0 && 
+               filteredMissions.length === 0 && filteredCircles.length === 0 && filteredPosts.length === 0 && filteredProjects.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
                   <p>No results found{query ? ` for "${query}"` : ''}</p>
                 </div>
