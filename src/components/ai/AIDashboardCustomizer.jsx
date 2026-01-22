@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, RefreshCw, Wand2, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { Sparkles, RefreshCw, Wand2, CheckCircle2, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CARD_DEFINITIONS = {
@@ -32,6 +32,7 @@ const CARD_DEFINITIONS = {
 export default function AIDashboardCustomizer({ profile, currentCards, onApplySuggestions }) {
   const [suggestions, setSuggestions] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const analyzeDashboard = async () => {
     setIsAnalyzing(true);
@@ -121,15 +122,23 @@ Return JSON with this structure:
 
   return (
     <Card className="border-violet-200">
-      <CardHeader>
+      <CardHeader 
+        className="cursor-pointer select-none"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <CardTitle className="flex items-center justify-between">
           <span className="flex items-center gap-2">
             <Wand2 className="w-5 h-5 text-violet-600" />
             AI Dashboard Optimizer
+            {isExpanded ? (
+              <ChevronUp className="w-4 h-4 text-slate-400" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-slate-400" />
+            )}
           </span>
           <Button
             size="sm"
-            onClick={analyzeDashboard}
+            onClick={(e) => { e.stopPropagation(); analyzeDashboard(); }}
             disabled={isAnalyzing}
             variant="outline"
             className="gap-2"
@@ -148,7 +157,7 @@ Return JSON with this structure:
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      {isExpanded && <CardContent>
         {!suggestions ? (
           <div className="text-center py-6">
             <Wand2 className="w-10 h-10 text-violet-300 mx-auto mb-3" />
@@ -234,7 +243,7 @@ Return JSON with this structure:
             </Button>
           </div>
         )}
-      </CardContent>
+      </CardContent>}
     </Card>
   );
 }
