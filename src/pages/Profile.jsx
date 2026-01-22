@@ -1153,6 +1153,7 @@ export default function Profile() {
                       <p className="text-slate-400">No skills added yet</p>
                       }
                   </div>
+                  </div>
             </CollapsibleProfileCard>
                   <PortfolioSection profile={profile} currentUser={currentUser} />
                   <EndorsementsSection profile={profile} currentUser={currentUser} />
