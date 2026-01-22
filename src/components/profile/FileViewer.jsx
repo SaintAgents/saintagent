@@ -164,12 +164,23 @@ export default function FileViewer({ file, sharedFile, open, onClose }) {
     }
 
     if (isPDF) {
+      // Use Google Docs Viewer as fallback for better PDF support
+      const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`;
       return (
-        <iframe 
-          src={fileUrl} 
-          className="w-full h-[60vh] rounded-lg border"
-          title={fileName}
-        />
+        <div className="w-full h-[60vh] relative">
+          <iframe 
+            src={googleViewerUrl} 
+            className="w-full h-full rounded-lg border"
+            title={fileName}
+            allow="fullscreen"
+          />
+          <div className="absolute bottom-2 right-2">
+            <Button size="sm" variant="secondary" onClick={() => window.open(fileUrl, '_blank')} className="gap-1 text-xs">
+              <ExternalLink className="h-3 w-3" />
+              Open Original
+            </Button>
+          </div>
+        </div>
       );
     }
 

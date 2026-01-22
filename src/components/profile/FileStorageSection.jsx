@@ -260,8 +260,46 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   };
 
   const handleDownloadShared = async (sharedFile) => {
-    // Open viewer instead of direct download
-    handleViewSharedFile(sharedFile);
+    try {
+      // Fetch original file to get URL
+      const allFiles = await base44.entities.UserFile.list('-created_date', 500);
+      const originalFile = allFiles?.find(f => f.id === sharedFile.user_file_id);
+      
+      if (!originalFile) {
+        console.error('Original file not found');
+        return;
+      }
+      
+      let url = originalFile.file_url;
+      if (originalFile.is_private_storage && originalFile.file_uri) {
+        const result = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: originalFile.file_uri });
+        url = result.signed_url;
+      }
+      
+      if (url) {
+        // Fetch as blob for proper download
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = sharedFile.file_name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+        
+        // Mark as downloaded
+        if (sharedFile.status === 'pending') {
+          await base44.entities.SharedFile.update(sharedFile.id, { status: 'downloaded' });
+          queryClient.invalidateQueries({ queryKey: ['sharedFilesInbox', currentUserEmail] });
+        }
+      }
+    } catch (err) {
+      console.error('Download failed:', err);
+      // Fallback to viewer
+      handleViewSharedFile(sharedFile);
+    }
   };
 
   const FileCard = ({ file, showActions = true }) => {
@@ -338,7 +376,7 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
             <Eye className="h-4 w-4" />
           </Button>
           {type === 'inbox' && (
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleViewSharedFile(sharedFile); }}>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleDownloadShared(sharedFile); }}>
               <Download className="h-4 w-4" />
             </Button>
           )}
