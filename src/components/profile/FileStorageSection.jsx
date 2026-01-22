@@ -11,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   Upload, File, Image, FileText, Film, Music, Archive, 
   Trash2, Share2, Download, Eye, EyeOff, Copy, Check,
@@ -123,7 +122,7 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
       const profiles = await base44.entities.UserProfile.filter({ user_id: me.email });
       const myProfile = profiles?.[0];
       
-      return base44.entities.SharedFile.create({
+      const sharedFile = await base44.entities.SharedFile.create({
         user_file_id: file.id,
         sender_user_id: userId,
         sender_name: myProfile?.display_name || me.full_name,
@@ -134,6 +133,21 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
         mime_type: file.mime_type,
         message: message || null
       });
+      
+      // Create notification for recipient
+      await base44.entities.Notification.create({
+        user_id: recipientId,
+        type: 'message',
+        title: 'New File Shared',
+        message: `${myProfile?.display_name || me.full_name} shared a file with you: ${file.file_name}`,
+        source_user_id: me.email,
+        source_user_name: myProfile?.display_name || me.full_name,
+        source_user_avatar: myProfile?.avatar_url,
+        action_url: '/Profile',
+        action_label: 'View File'
+      });
+      
+      return sharedFile;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sharedFilesSent', userId] });
@@ -283,9 +297,8 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   }
 
   return (
-    <TooltipProvider>
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <Card>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card>
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
@@ -299,28 +312,14 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
                 </CollapsibleTrigger>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2">
-                      <Switch id="private-upload" checked={uploadAsPrivate} onCheckedChange={setUploadAsPrivate} />
-                      <Label htmlFor="private-upload" className="text-sm font-medium text-slate-700">Private</Label>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Private files require a signed URL to access</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-                      {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
-                      Upload
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Upload files to your storage</p>
-                  </TooltipContent>
-                </Tooltip>
+                <div className="flex items-center gap-2" title="Private files require a signed URL to access">
+                  <Switch id="private-upload" checked={uploadAsPrivate} onCheckedChange={setUploadAsPrivate} />
+                  <Label htmlFor="private-upload" className="text-sm font-medium text-slate-700">Private</Label>
+                </div>
+                <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => fileInputRef.current?.click()} disabled={uploading} title="Upload files to your storage">
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                  Upload
+                </Button>
                 <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileSelect} />
               </div>
             </div>
@@ -329,39 +328,18 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
             <CardContent>
               <Tabs defaultValue="files">
                 <TabsList className="mb-4 flex flex-wrap h-auto gap-1 p-1">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <TabsTrigger value="files" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
-                        <File className="h-4 w-4" /> My Files
-                      </TabsTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Your uploaded files</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <TabsTrigger value="inbox" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
-                        <Inbox className="h-4 w-4" /> Inbox
-                        {sharedWithMe.filter(f => f.status === 'pending').length > 0 && (
-                          <Badge className="bg-violet-500 ml-1">{sharedWithMe.filter(f => f.status === 'pending').length}</Badge>
-                        )}
-                      </TabsTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Files shared with you by others</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <TabsTrigger value="sent" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
-                        <Send className="h-4 w-4" /> Sent
-                      </TabsTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Files you've shared with others</p>
-                    </TooltipContent>
-                  </Tooltip>
+                  <TabsTrigger value="files" className="gap-2 text-slate-700 data-[state=active]:text-slate-900" title="Your uploaded files">
+                    <File className="h-4 w-4" /> My Files
+                  </TabsTrigger>
+                  <TabsTrigger value="inbox" className="gap-2 text-slate-700 data-[state=active]:text-slate-900" title="Files shared with you by others">
+                    <Inbox className="h-4 w-4" /> Inbox
+                    {sharedWithMe.filter(f => f.status === 'pending').length > 0 && (
+                      <Badge className="bg-violet-500 ml-1">{sharedWithMe.filter(f => f.status === 'pending').length}</Badge>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="sent" className="gap-2 text-slate-700 data-[state=active]:text-slate-900" title="Files you've shared with others">
+                    <Send className="h-4 w-4" /> Sent
+                  </TabsTrigger>
                 </TabsList>
 
           <TabsContent value="files">
@@ -473,6 +451,5 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
         </Dialog>
       </Card>
     </Collapsible>
-  </TooltipProvider>
   );
 }
