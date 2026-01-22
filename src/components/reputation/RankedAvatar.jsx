@@ -343,38 +343,46 @@ export default function RankedAvatar({
             transform: 'translateX(-50%)'
           }}
         >
-          {userBadges.slice(0, 3).map((badge) => (
-            <TooltipProvider key={badge.id}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div 
-                    className="cursor-help hover:scale-110 transition-transform"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {badge.image_url ? (
-                      <img 
-                        src={badge.image_url} 
-                        alt={badge.badge_type || 'Badge'} 
-                        className="object-contain drop-shadow-md"
-                        style={{ width: symbolPx * 1.2, height: symbolPx * 1.2, filter: 'none' }}
-                        data-no-filter="true"
-                      />
-                    ) : (
-                      <div 
-                        className="rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md"
-                        style={{ width: symbolPx * 0.9, height: symbolPx * 0.9 }}
-                      >
-                        <Award style={{ width: symbolPx * 0.5, height: symbolPx * 0.5 }} />
-                      </div>
-                    )}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
-                  <p className="font-semibold text-sm capitalize">{badge.badge_type?.replace(/_/g, ' ') || 'Badge'}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ))}
+          {userBadges.slice(0, 3).map((badge) => {
+            // Get badge code from various possible fields
+            const badgeCode = badge.badge_code || badge.code || badge.badge_type || '';
+            // Look up image from QUEST_BADGE_IMAGES using badge code, fallback to badge.image_url or icon_url
+            const badgeImage = QUEST_BADGE_IMAGES[badgeCode] || badge.image_url || badge.icon_url;
+            const badgeLabel = badge.badge_name || badgeCode?.replace(/_/g, ' ') || 'Badge';
+            
+            return (
+              <TooltipProvider key={badge.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className="cursor-help hover:scale-110 transition-transform"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {badgeImage ? (
+                        <img 
+                          src={badgeImage} 
+                          alt={badgeLabel} 
+                          className="object-contain drop-shadow-md"
+                          style={{ width: symbolPx * 1.2, height: symbolPx * 1.2, filter: 'none' }}
+                          data-no-filter="true"
+                        />
+                      ) : (
+                        <div 
+                          className="rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md"
+                          style={{ width: symbolPx * 0.9, height: symbolPx * 0.9 }}
+                        >
+                          <Award style={{ width: symbolPx * 0.5, height: symbolPx * 0.5 }} />
+                        </div>
+                      )}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-[200px] z-[9999]">
+                    <p className="font-semibold text-sm capitalize">{badgeLabel}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })}
           {userBadges.length > 3 && (
             <div 
               className="rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 text-xs font-bold"
