@@ -224,8 +224,9 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   }).slice(0, 10);
 
   const selectRecipient = (profile) => {
+    // Always use user_id (email) for sharing - this is what recipient uses to find their inbox
     setShareRecipient(profile.user_id);
-    setRecipientSearch(profile.display_name || profile.handle || profile.user_id);
+    setRecipientSearch(`${profile.display_name || profile.handle}${profile.sa_number ? ` (SA#${profile.sa_number})` : ''}`);
     setShowRecipientDropdown(false);
   };
 
