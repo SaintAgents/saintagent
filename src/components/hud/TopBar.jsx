@@ -542,7 +542,7 @@ export default function TopBar({
 
 
         {/* Profile Menu / Auth */}
-        {currentUser ? (
+        {currentUser && profile ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl">
@@ -639,6 +639,15 @@ export default function TopBar({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        ) : currentUser && !profile ? (
+          // User logged in but profile still loading - show loading avatar
+          <div className="flex items-center gap-2">
+            <Avatar className="w-7 h-7 md:w-8 md:h-8 animate-pulse">
+              <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
+                {currentUser?.full_name?.charAt(0) || 'U'}
+              </AvatarFallback>
+            </Avatar>
+          </div>
         ) : (
           <div className="flex items-center gap-2">
             <Button 
