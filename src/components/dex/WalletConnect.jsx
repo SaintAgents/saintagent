@@ -16,19 +16,22 @@ const WALLETS = [
     id: 'metamask', 
     name: 'MetaMask', 
     icon: 'https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg',
-    installed: typeof window !== 'undefined' && window.ethereum?.isMetaMask
+    installed: typeof window !== 'undefined' && window.ethereum?.isMetaMask,
+    deepLink: 'https://metamask.app.link/dapp/' + (typeof window !== 'undefined' ? window.location.host : '')
   },
   { 
-    id: 'coinbase', 
-    name: 'Coinbase Wallet', 
-    icon: 'https://altcoinsbox.com/wp-content/uploads/2022/12/coinbase-logo.webp',
-    installed: typeof window !== 'undefined' && window.ethereum?.isCoinbaseWallet
+    id: 'trust', 
+    name: 'Trust Wallet', 
+    icon: 'https://trustwallet.com/assets/images/media/assets/trust_platform.svg',
+    installed: typeof window !== 'undefined' && window.ethereum?.isTrust,
+    deepLink: 'https://link.trustwallet.com/open_url?coin_id=60&url=' + (typeof window !== 'undefined' ? encodeURIComponent(window.location.href) : '')
   },
   { 
     id: 'rabby', 
     name: 'Rabby', 
     icon: 'https://rabby.io/assets/images/logo.svg',
-    installed: typeof window !== 'undefined' && window.ethereum?.isRabby
+    installed: typeof window !== 'undefined' && window.ethereum?.isRabby,
+    deepLink: null
   }
 ];
 
@@ -38,14 +41,24 @@ export default function WalletConnect({ connected, address, onConnect, onDisconn
   const [copied, setCopied] = useState(false);
 
   const handleConnect = async (walletId) => {
+    const wallet = WALLETS.find(w => w.id === walletId);
+    
+    // Check if ethereum provider exists
     if (typeof window === 'undefined' || !window.ethereum) {
-      window.open('https://metamask.io/download/', '_blank');
+      // On mobile or if wallet not installed, use deep link
+      if (wallet?.deepLink) {
+        window.location.href = wallet.deepLink;
+      } else if (walletId === 'metamask') {
+        window.open('https://metamask.io/download/', '_blank');
+      } else if (walletId === 'trust') {
+        window.open('https://trustwallet.com/download', '_blank');
+      }
       return;
     }
 
     setConnecting(walletId);
     try {
-      // Request account access
+      // Request account access - this should trigger the wallet popup
       const accounts = await window.ethereum.request({ 
         method: 'eth_requestAccounts' 
       });
@@ -78,6 +91,12 @@ export default function WalletConnect({ connected, address, onConnect, onDisconn
       }
     } catch (error) {
       console.error('Connection error:', error);
+      // If user rejected or error, try deep link on mobile
+      if (error.code === 4001) {
+        console.log('User rejected connection');
+      } else if (wallet?.deepLink) {
+        window.location.href = wallet.deepLink;
+      }
     } finally {
       setConnecting(null);
     }
