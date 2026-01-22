@@ -190,7 +190,7 @@ export default function FloatingNotesWidget() {
   }
 
   const positionStyle = position.x !== null 
-    ? { left: position.x, top: position.y, right: 'auto', bottom: 'auto' }
+    ? { left: Math.max(8, Math.min(position.x, window.innerWidth - 340)), top: Math.max(8, Math.min(position.y, window.innerHeight - 520)), right: 'auto', bottom: 'auto' }
     : isExpanded 
       ? { bottom: 16, right: 16 }
       : { bottom: 96, right: 16 };
@@ -201,8 +201,8 @@ export default function FloatingNotesWidget() {
       style={positionStyle}
       className={`fixed z-[100] bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl shadow-2xl transition-all duration-300 flex flex-col ${
         isExpanded 
-          ? 'w-[500px] h-[700px]' 
-          : 'w-80 h-[500px]'
+          ? 'w-[min(500px,calc(100vw-32px))] max-h-[calc(100vh-32px)]' 
+          : 'w-[min(320px,calc(100vw-32px))] max-h-[min(500px,calc(100vh-112px))]'
       } ${isDragging ? 'cursor-grabbing' : ''}`}
     >
       {/* Drag Handle */}
