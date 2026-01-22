@@ -272,7 +272,9 @@ export default function HeroGalleryViewer() {
 
 // Trigger button component to open the gallery
 export function HeroGalleryTrigger({ className, startIndex = 0 }) {
-  const openGallery = () => {
+  const openGallery = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex } }));
   };
 
@@ -280,7 +282,7 @@ export function HeroGalleryTrigger({ className, startIndex = 0 }) {
     <button
       onClick={openGallery}
       className={cn(
-        "p-1.5 rounded-lg transition-all",
+        "p-1.5 rounded-lg transition-all cursor-pointer pointer-events-auto",
         "bg-black/30 hover:bg-black/50 text-white/70 hover:text-white",
         "dark:bg-[#0a0a0a]/50 dark:hover:bg-[#0a0a0a] dark:border dark:border-[#00ff88]/30 dark:hover:border-[#00ff88]",
         "dark:hover:shadow-[0_0_10px_rgba(0,255,136,0.3)]",
