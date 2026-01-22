@@ -68,16 +68,66 @@ export default function SpinningGlobe({
     const draw = () => {
       ctx.clearRect(0, 0, size, size);
 
-      // Draw globe background
-      const gradient = ctx.createRadialGradient(centerX - 30, centerY - 30, 0, centerX, centerY, radius);
-      gradient.addColorStop(0, '#1e3a5f');
-      gradient.addColorStop(0.5, '#0f172a');
-      gradient.addColorStop(1, '#020617');
+      // Draw globe background - ocean
+      const oceanGradient = ctx.createRadialGradient(centerX - 30, centerY - 30, 0, centerX, centerY, radius);
+      oceanGradient.addColorStop(0, '#1e40af');
+      oceanGradient.addColorStop(0.5, '#1e3a8a');
+      oceanGradient.addColorStop(1, '#172554');
       
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = oceanGradient;
       ctx.fill();
+
+      // Draw simplified continents
+      const continents = [
+        // North America
+        { points: [[60, -130], [70, -140], [70, -100], [60, -80], [50, -60], [30, -80], [25, -100], [30, -120], [40, -125], [50, -130]], color: '#22c55e' },
+        // South America
+        { points: [[10, -80], [5, -60], [-10, -40], [-20, -45], [-35, -60], [-55, -70], [-50, -75], [-35, -70], [-20, -70], [0, -80]], color: '#16a34a' },
+        // Europe
+        { points: [[70, 10], [60, 0], [50, -10], [40, 0], [45, 20], [55, 40], [65, 30], [70, 25]], color: '#15803d' },
+        // Africa
+        { points: [[35, -10], [30, 30], [20, 40], [5, 40], [-10, 40], [-30, 25], [-35, 20], [-25, 15], [-10, -10], [10, -20], [30, -10]], color: '#166534' },
+        // Asia
+        { points: [[70, 60], [70, 120], [60, 140], [50, 130], [30, 120], [20, 100], [25, 70], [40, 50], [50, 50], [60, 40], [70, 50]], color: '#14532d' },
+        // Australia
+        { points: [[-15, 130], [-20, 145], [-30, 150], [-35, 140], [-30, 115], [-20, 115]], color: '#15803d' },
+      ];
+
+      // Draw continents
+      continents.forEach(continent => {
+        ctx.beginPath();
+        let firstVisible = true;
+        let hasVisiblePoints = false;
+        
+        continent.points.forEach((point, i) => {
+          const pos = latLngToSphere(point[0], point[1], radius);
+          const rotated = rotatePoint(pos, rotationRef.current.x, rotationRef.current.y);
+          
+          if (rotated.z > -radius * 0.1) {
+            hasVisiblePoints = true;
+            const screenX = centerX + rotated.x;
+            const screenY = centerY - rotated.y;
+            
+            if (firstVisible) {
+              ctx.moveTo(screenX, screenY);
+              firstVisible = false;
+            } else {
+              ctx.lineTo(screenX, screenY);
+            }
+          }
+        });
+        
+        if (hasVisiblePoints) {
+          ctx.closePath();
+          ctx.fillStyle = continent.color + 'cc';
+          ctx.fill();
+          ctx.strokeStyle = continent.color;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      });
 
       // Draw globe outline glow
       ctx.beginPath();
@@ -90,7 +140,7 @@ export default function SpinningGlobe({
       ctx.shadowBlur = 0;
 
       // Draw latitude/longitude grid lines
-      ctx.strokeStyle = 'rgba(99, 102, 241, 0.15)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
       ctx.lineWidth = 0.5;
       
       // Latitude lines
