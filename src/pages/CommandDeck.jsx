@@ -351,7 +351,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   });
 
-  // Fetch user profile (only when authenticated) - CRITICAL: No staleTime to always get fresh data
+  // Fetch user profile (only when authenticated)
   const { data: profiles, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: async () => {
@@ -366,10 +366,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 0, // Always fetch fresh data
-    gcTime: 0, // Don't cache
-    refetchOnWindowFocus: true,
-    refetchOnMount: 'always' // Always refetch on mount
+    staleTime: 30000, // 30 seconds - reduce API calls
+    refetchOnWindowFocus: false,
+    refetchOnMount: true
   });
   const profile = profiles?.[0];
   
@@ -1180,35 +1179,52 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl grid grid-cols-2 md:grid-cols-5 gap-3" data-stats-bar>
-                  {/* Refresh Button */}
-                  <button
-                    onClick={() => {
-                      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-                      queryClient.invalidateQueries({ queryKey: ['wallet'] });
-                      refetchWallet();
-                    }}
-                    className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group"
-                    title="Refresh profile data"
-                  >
-                    <RefreshCw className="w-5 h-5 text-violet-600 dark:text-violet-400 group-hover:rotate-180 transition-transform duration-500 mb-1" />
-                    <p className="text-slate-600 dark:text-slate-300 text-xs">Refresh</p>
-                  </button>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-violet-700 dark:text-amber-400">{walletAvailable != null ? walletAvailable.toLocaleString() : profile?.ggg_balance?.toLocaleString?.() || "0"}</p>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 dark:text-violet-400">{profile?.rp_points?.toLocaleString() || profile?.rank_points?.toLocaleString() || 0}</p>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 dark:text-blue-400 mt-0.5">{profile?.follower_count || 0}</p>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900 dark:text-emerald-400 mt-0.5">{profile?.meetings_completed || 0}</p>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
+                <div className="relative bg-violet-50 dark:bg-slate-800/80 mb-4 p-3 rounded-xl" data-stats-bar>
+                  {/* Loading bar at top of stats */}
+                  {profileLoading && (
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-violet-200 dark:bg-violet-900 rounded-t-xl overflow-hidden">
+                      <div className="h-full bg-violet-500 dark:bg-violet-400 animate-pulse" style={{ width: '100%' }} />
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    {/* Refresh Button */}
+                    <button
+                      onClick={() => {
+                        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+                        queryClient.invalidateQueries({ queryKey: ['wallet'] });
+                        refetchWallet();
+                      }}
+                      disabled={profileLoading}
+                      className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group disabled:opacity-50"
+                      title="Refresh profile data"
+                    >
+                      <RefreshCw className={cn("w-5 h-5 text-violet-600 dark:text-violet-400 mb-1", profileLoading ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500")} />
+                      <p className="text-slate-600 dark:text-slate-300 text-xs">{profileLoading ? 'Loading...' : 'Refresh'}</p>
+                    </button>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-violet-700 dark:text-amber-400">
+                        {profileLoading ? <span className="inline-block w-12 h-5 bg-violet-200 dark:bg-violet-700 rounded animate-pulse" /> : (walletAvailable != null ? walletAvailable.toLocaleString() : profile?.ggg_balance?.toLocaleString?.() || "0")}
+                      </p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">GGG <HelpHint content="Your GGG balance" /></p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-slate-900 dark:text-violet-400">
+                        {profileLoading ? <span className="inline-block w-12 h-5 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" /> : (profile?.rp_points?.toLocaleString() || profile?.rank_points?.toLocaleString() || 0)}
+                      </p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Rank Points <HelpHint content="Total rank points" /></p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-slate-900 dark:text-blue-400 mt-0.5">
+                        {profileLoading ? <span className="inline-block w-8 h-5 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" /> : (profile?.follower_count || 0)}
+                      </p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-slate-900 dark:text-emerald-400 mt-0.5">
+                        {profileLoading ? <span className="inline-block w-8 h-5 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" /> : (profile?.meetings_completed || 0)}
+                      </p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
+                    </div>
                   </div>
                 </div>
 
