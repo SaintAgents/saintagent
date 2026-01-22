@@ -157,11 +157,13 @@ export default function FloatingNotesWidget() {
     setNote({ ...note, tags: note.tags.filter(t => t !== tag) });
   };
 
-  const filteredNotes = notes.filter(note => 
-    note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.tags?.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredNotes = notes.filter(note => {
+    const matchesSearch = note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.tags?.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesColor = !colorFilter || (note.color || 'default') === colorFilter;
+    return matchesSearch && matchesColor;
+  });
 
   const pinnedNotes = filteredNotes.filter(n => n.is_pinned);
   const regularNotes = filteredNotes.filter(n => !n.is_pinned);
