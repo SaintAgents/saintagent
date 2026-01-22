@@ -283,16 +283,16 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
+        <div className="flex flex-col gap-3">
+          <CardTitle className="text-lg flex items-center gap-2 text-slate-900">
             <FolderOpen className="h-5 w-5" /> File Storage
           </CardTitle>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Switch id="private-upload" checked={uploadAsPrivate} onCheckedChange={setUploadAsPrivate} />
-              <Label htmlFor="private-upload" className="text-xs">Private</Label>
+              <Label htmlFor="private-upload" className="text-sm font-medium text-slate-700">Private</Label>
             </div>
-            <Button size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+            <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
               {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
               Upload
             </Button>
@@ -302,17 +302,17 @@ export default function FileStorageSection({ userId, isOwnProfile }) {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="files">
-          <TabsList className="mb-4">
-            <TabsTrigger value="files" className="gap-2">
+          <TabsList className="mb-4 flex flex-wrap h-auto gap-1 p-1">
+            <TabsTrigger value="files" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
               <File className="h-4 w-4" /> My Files
             </TabsTrigger>
-            <TabsTrigger value="inbox" className="gap-2">
+            <TabsTrigger value="inbox" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
               <Inbox className="h-4 w-4" /> Inbox
               {sharedWithMe.filter(f => f.status === 'pending').length > 0 && (
                 <Badge className="bg-violet-500 ml-1">{sharedWithMe.filter(f => f.status === 'pending').length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="sent" className="gap-2">
+            <TabsTrigger value="sent" className="gap-2 text-slate-700 data-[state=active]:text-slate-900">
               <Send className="h-4 w-4" /> Sent
             </TabsTrigger>
           </TabsList>
