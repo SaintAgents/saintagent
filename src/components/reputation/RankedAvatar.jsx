@@ -8,6 +8,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { QUEST_BADGE_IMAGES } from '@/components/badges/badgesData';
+import { HERO_IMAGES } from '@/components/hud/HeroImageData';
+
+// Hero image URLs to exclude from personal photo galleries
+const HERO_IMAGE_URLS = new Set(HERO_IMAGES.map(h => h.url));
 
 // Rank titles for tooltips
 const RANK_TITLES = {
