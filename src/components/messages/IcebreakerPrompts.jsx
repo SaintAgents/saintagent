@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import { Sparkles, RefreshCw, Heart, Compass, Star, Zap } from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import { Sparkles, RefreshCw, Heart, Compass, Star, Zap, X } from "lucide-react";
 
 const ICEBREAKER_CATEGORIES = {
   spiritual: {
