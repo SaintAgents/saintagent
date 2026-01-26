@@ -51,13 +51,13 @@ import Projects from './pages/Projects';
 import Quests from './pages/Quests';
 import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
+import SovereignAlliance from './pages/SovereignAlliance';
 import Studio from './pages/Studio';
 import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
-import SovereignAlliance from './pages/SovereignAlliance';
 import __Layout from './Layout.jsx';
 
 
@@ -115,13 +115,13 @@ export const PAGES = {
     "Quests": Quests,
     "ResourceHub": ResourceHub,
     "Settings": Settings,
+    "SovereignAlliance": SovereignAlliance,
     "Studio": Studio,
     "SynchronicityEngine": SynchronicityEngine,
     "Teams": Teams,
     "Terms": Terms,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
-    "SovereignAlliance": SovereignAlliance,
 }
 
 export const pagesConfig = {

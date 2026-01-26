@@ -193,16 +193,22 @@ const ST_GERMAIN_AFFIRMATIONS = [
   }
 ];
 
+// Combined affirmations from all sources
+const ALL_AFFIRMATIONS = [
+  ...ST_GERMAIN_AFFIRMATIONS.map(a => ({ ...a, source: 'Saint Germain' })),
+  ...GNOSTIC_WISDOM_AFFIRMATIONS.map(a => ({ ...a, source: a.category }))
+];
+
 export default function StGermainAffirmations() {
   const [currentIndex, setCurrentIndex] = useState(() => 
-    Math.floor(Math.random() * ST_GERMAIN_AFFIRMATIONS.length)
+    Math.floor(Math.random() * ALL_AFFIRMATIONS.length)
   );
   const [isAnimating, setIsAnimating] = useState(false);
   
   const getNextAffirmation = () => {
     setIsAnimating(true);
     setTimeout(() => {
-      setCurrentIndex(Math.floor(Math.random() * ST_GERMAIN_AFFIRMATIONS.length));
+      setCurrentIndex(Math.floor(Math.random() * ALL_AFFIRMATIONS.length));
       setIsAnimating(false);
     }, 300);
   };
@@ -215,7 +221,7 @@ export default function StGermainAffirmations() {
     return () => clearInterval(interval);
   }, []);
   
-  const current = ST_GERMAIN_AFFIRMATIONS[currentIndex];
+  const current = ALL_AFFIRMATIONS[currentIndex];
   
   return (
     <div className="relative min-h-[280px] rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 dark:from-amber-900/40 dark:via-orange-900/30 dark:to-rose-900/40 border-2 border-amber-300 dark:border-amber-600 shadow-lg">
@@ -268,12 +274,19 @@ export default function StGermainAffirmations() {
           </span>
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-rose-400" />
-            <span className="text-sm font-medium text-amber-700 dark:text-amber-300">— SAINT GERMAIN</span>
+            <span className="text-sm font-medium text-amber-700 dark:text-amber-300">— {current.source?.toUpperCase() || 'WISDOM'}</span>
           </div>
         </div>
+        {current.pillar && (
+          <div className="mt-2 text-center">
+            <span className="text-xs text-amber-500 dark:text-amber-400 uppercase tracking-wider">
+              {current.pillar} Pillar
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export { ST_GERMAIN_AFFIRMATIONS };
+export { ST_GERMAIN_AFFIRMATIONS, GNOSTIC_WISDOM_AFFIRMATIONS, ALL_AFFIRMATIONS };
