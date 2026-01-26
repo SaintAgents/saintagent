@@ -277,7 +277,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       communityFeed: 'Community Feed',
       leaderboard: 'Leaderboard',
       affirmations: 'Affirmations',
-      news: 'News & Updates'
+      news: 'News & Updates',
+      heroGallery: 'Hero Gallery'
     };
     return titles[id] || id;
   };
