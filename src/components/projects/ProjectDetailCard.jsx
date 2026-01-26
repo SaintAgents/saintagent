@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   DollarSign, MapPin, Users, Calendar, Building2, Globe, 
   FileText, Tag, ExternalLink, CheckCircle, XCircle, HelpCircle,
-  Clock, AlertTriangle, Shield, Brain, TrendingUp, MessageSquare, Megaphone
+  Clock, AlertTriangle, Shield, Brain, TrendingUp, MessageSquare, Megaphone, UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ProjectEvaluationPanel from '@/components/evaluation/ProjectEvaluationPanel';
@@ -233,6 +233,27 @@ export default function ProjectDetailCard({ project }) {
                     {tag.replace(/_/g, ' ')}
                   </Badge>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Introducer Info */}
+          {project.introduced_by && (
+            <div className="p-3 rounded-lg bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800">
+              <h4 className="text-sm font-medium text-violet-700 dark:text-violet-300 mb-2 flex items-center gap-2">
+                <UserPlus className="w-4 h-4" />
+                Introduced By
+              </h4>
+              <div className="text-sm text-violet-900 dark:text-violet-100">
+                <span 
+                  className="font-medium cursor-pointer hover:underline" 
+                  data-user-id={project.introduced_by}
+                >
+                  {project.introducer_name || project.introduced_by}
+                </span>
+                {project.introduction_commission_paid && (
+                  <Badge className="ml-2 bg-emerald-100 text-emerald-700 text-xs">Commission Paid</Badge>
+                )}
               </div>
             </div>
           )}

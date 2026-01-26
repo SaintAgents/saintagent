@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HelpHint from "@/components/hud/HelpHint";
 import { createPageUrl } from "@/utils";
+import { UserPlus } from "lucide-react";
 
 export default function ProjectCreate() {
   const [form, setForm] = useState({
@@ -18,15 +21,28 @@ export default function ProjectCreate() {
     impact_tags: "",
     strategic_intent: "",
     negative_environmental_impact: false,
+    introduced_by: "",
   });
   const [submitting, setSubmitting] = useState(false);
 
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
+  // Fetch profiles for introducer selection
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 200),
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
     setSubmitting(true);
+    
+    // Find introducer profile for name
+    const introducerProfile = form.introduced_by 
+      ? profiles.find(p => p.user_id === form.introduced_by) 
+      : null;
+    
     const payload = {
       title: form.title.trim(),
       description: form.description?.trim() || "",
@@ -37,6 +53,8 @@ export default function ProjectCreate() {
       strategic_intent: form.strategic_intent || "",
       negative_environmental_impact: !!form.negative_environmental_impact,
       status: "pending_review",
+      introduced_by: form.introduced_by || undefined,
+      introducer_name: introducerProfile?.display_name || undefined,
     };
     await base44.entities.Project.create(payload);
     // Gamification: points + badge for project contribution
@@ -180,6 +198,29 @@ export default function ProjectCreate() {
             <Label className="text-sm">Strategic Intent</Label>
             <Input value={form.strategic_intent} onChange={(e) => update("strategic_intent", e.target.value)} placeholder="Alignment with mission" className="mt-1" />
           </div>
+          {/* Introducer Field */}
+          <div className="p-3 rounded-lg bg-violet-50 border border-violet-200">
+            <Label className="text-sm flex items-center gap-2 mb-2">
+              <UserPlus className="w-4 h-4 text-violet-600" />
+              Introduced By (Optional)
+              <HelpHint content="If someone introduced you to this project opportunity, select them here. They may earn a commission if the project gets funded." />
+            </Label>
+            <Select value={form.introduced_by} onValueChange={(v) => update("introduced_by", v)}>
+              <SelectTrigger className="bg-white">
+                <SelectValue placeholder="Select introducer (if applicable)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>None</SelectItem>
+                {profiles.map((p) => (
+                  <SelectItem key={p.user_id} value={p.user_id}>
+                    {p.display_name || p.handle || p.user_id}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="text-xs text-violet-600 mt-1">Introducers may earn commission on funded projects.</div>
+          </div>
+
           <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border">
             <div>
               <Label className="text-sm">Negative Environmental Impact</Label>
