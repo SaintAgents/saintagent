@@ -34,7 +34,7 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentP
           "left-0 right-0",
           "md:pl-20",
           !sidebarCollapsed && "md:pl-64",
-          "top-[44px] md:top-[64px]"
+          "top-[56px] md:top-[72px]"
         )}
       >
         <div className="flex items-center justify-center relative">
