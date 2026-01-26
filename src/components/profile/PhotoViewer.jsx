@@ -26,12 +26,12 @@ export default function PhotoViewer({ open, images = [], startIndex = 0, onClose
   const src = has ? images[idx % safeLen] : null;
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-[10000] bg-black/90 flex items-center justify-center" onClick={onClose}>
       <button 
-        className="absolute top-4 right-4 p-3 rounded-full bg-white/20 hover:bg-white/30 z-50 transition-colors" 
+        className="absolute top-20 md:top-6 right-4 p-3 rounded-full bg-white/30 hover:bg-white/50 z-[10001] transition-colors shadow-lg" 
         onClick={(e) => { e.stopPropagation(); onClose?.(); }}
       >
-        <X className="w-7 h-7 text-white" />
+        <X className="w-8 h-8 text-white" />
       </button>
       {images.length > 1 && (
         <>
