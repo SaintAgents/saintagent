@@ -35,7 +35,14 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentP
           "md:pl-20", // Only apply sidebar offset on desktop
           !sidebarCollapsed && "md:pl-64"
         )}
-        style={{ top: '64px' }}
+        style={{ top: '44px' }}
+        className={cn(
+          "fixed z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-medium overflow-hidden transition-all duration-300",
+          "left-0 right-0",
+          "md:pl-20",
+          !sidebarCollapsed && "md:pl-64",
+          "md:!top-[64px]" // Desktop uses 64px, mobile uses 44px via inline style
+        )}
       >
         <div className="flex items-center justify-center relative">
           <div className="animate-marquee whitespace-nowrap inline-block">
