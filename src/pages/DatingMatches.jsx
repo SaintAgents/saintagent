@@ -96,10 +96,12 @@ export default function DatingMatches() {
     .filter((dp) => {
       if (dp.user_id === currentUser?.email) return false;
       
-      // STRICT: I must be interested in their gender
+      // STRICT: Candidate must have a valid gender set
       const candidateGender = dp.gender;
+      if (!candidateGender || candidateGender === '') return false;
+      
+      // STRICT: I must be interested in their gender
       if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
-        if (!candidateGender) return false;
         const candidateInterestKey = genderToInterest[candidateGender];
         if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
           return false;
