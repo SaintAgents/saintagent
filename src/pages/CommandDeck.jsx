@@ -1675,6 +1675,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <NewsCard />
             </CollapsibleCard>}
 
+            {isCardVisible('heroGallery') && <CollapsibleCard title="Hero Gallery" cardId="heroGallery" icon={Image} badge="Live" badgeColor="emerald" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('heroGallery')} onToggleHide={() => toggleCardVisibility('heroGallery')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+              <HeroImageSlideshow className="w-full" />
+            </CollapsibleCard>}
+
             {isCardVisible('quickActions') && <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">
                 <div className="flex items-center gap-3">
