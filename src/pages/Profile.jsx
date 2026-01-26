@@ -55,7 +55,8 @@ import {
   Shield,
   Award,
   Medal,
-  ChevronDown
+  ChevronDown,
+  BookOpen
 } from
 "lucide-react";
 
@@ -90,6 +91,7 @@ import { getDestinyCardMeaning } from '@/components/destiny/destinyCardsData';
 import FileStorageSection from '@/components/profile/FileStorageSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
+import JournalTab from '@/components/profile/JournalTab';
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -666,6 +668,12 @@ export default function Profile() {
               <TabsTrigger value="dating" className="text-xs sm:text-sm px-2 sm:px-3" title="Dating">
                   <span className="hidden sm:inline">Dating</span>
                   <Heart className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              }
+              {isOwnProfile &&
+              <TabsTrigger value="journal" className="text-xs sm:text-sm px-2 sm:px-3" title="Journal">
+                  <span className="hidden sm:inline">Journal</span>
+                  <BookOpen className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               }
             </TabsList>
@@ -1655,6 +1663,12 @@ export default function Profile() {
                </div>
              </TabsContent>
           }
+
+          {isOwnProfile && (
+            <TabsContent value="journal" className="space-y-6">
+              <JournalTab profile={profile} />
+            </TabsContent>
+          )}
 
           {isOwnProfile && (
             <TabsContent value="friends" className="space-y-6">
