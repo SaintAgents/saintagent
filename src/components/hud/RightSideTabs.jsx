@@ -232,11 +232,22 @@ export default function RightSideTabs() {
       setHelpOpen(true);
       setHelpHovered(true);
     };
+    const handleOpenRightSideTab = (e) => {
+      if (e.detail?.tab === 'help') {
+        setHelpOpen(true);
+        setHelpHovered(true);
+      } else if (e.detail?.tab === 'chat') {
+        setChatOpen(true);
+        setChatHovered(true);
+      }
+    };
     document.addEventListener('openGlobalChat', handleOpenChat);
     document.addEventListener('openGlobalHelp', handleOpenHelp);
+    document.addEventListener('openRightSideTab', handleOpenRightSideTab);
     return () => {
       document.removeEventListener('openGlobalChat', handleOpenChat);
       document.removeEventListener('openGlobalHelp', handleOpenHelp);
+      document.removeEventListener('openRightSideTab', handleOpenRightSideTab);
     };
   }, []);
 
