@@ -2,6 +2,57 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, RefreshCw, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
+// Gnostic Scripture & Wisdom Affirmations
+const GNOSTIC_WISDOM_AFFIRMATIONS = [
+  // Gnostic Scripture
+  { text: "The Kingdom of Heaven is within you; whoever knows himself shall find it.", category: "Gnosis", pillar: "Identity" },
+  { text: "Know what is in front of your face, and what is hidden from you will be disclosed.", category: "Gnosis", pillar: "Awareness" },
+  { text: "If you bring forth what is within you, what you bring forth will save you.", category: "Gnosis", pillar: "Transformation" },
+  { text: "The light shines in the darkness, and the darkness has not overcome it.", category: "Scripture", pillar: "Light" },
+  { text: "Split wood, I am there. Lift a stone, you will find me there.", category: "Gnosis", pillar: "Presence" },
+  { text: "When you make the two into one, you shall enter the Kingdom.", category: "Gnosis", pillar: "Unity" },
+  { text: "Whoever has ears to hear, let them hear the mysteries.", category: "Scripture", pillar: "Wisdom" },
+  { text: "The truth shall make you free, and freedom shall make you whole.", category: "Scripture", pillar: "Liberation" },
+  { text: "As above, so below; as within, so without.", category: "Hermetic", pillar: "Correspondence" },
+  { text: "The Pleroma overflows with divine light awaiting your recognition.", category: "Gnosis", pillar: "Abundance" },
+  
+  // Ascended Masters
+  { text: "I AM the resurrection and the life of every perfect condition.", category: "Ascended Masters", pillar: "Master Presence" },
+  { text: "The I AM Presence is the source of all that I require.", category: "Ascended Masters", pillar: "Source Connection" },
+  { text: "El Morya stands with me in divine will and protection.", category: "Ascended Masters", pillar: "Divine Will" },
+  { text: "Kuthumi illuminates my path with wisdom and discernment.", category: "Ascended Masters", pillar: "Wisdom" },
+  { text: "Lady Nada's compassion flows through my every interaction.", category: "Ascended Masters", pillar: "Compassion" },
+  { text: "Serapis Bey guides my ascension through discipline and purity.", category: "Ascended Masters", pillar: "Ascension" },
+  { text: "Hilarion channels truth and healing through my being.", category: "Ascended Masters", pillar: "Healing" },
+  { text: "Lord Lanto's golden wisdom illuminates all understanding.", category: "Ascended Masters", pillar: "Understanding" },
+  { text: "Djwal Khul transmits the ancient wisdom through my awakened heart.", category: "Ascended Masters", pillar: "Transmission" },
+  { text: "The Great White Brotherhood supports my every sacred step.", category: "Ascended Masters", pillar: "Brotherhood" },
+  
+  // Ultranet / Meta-Variance
+  { text: "I navigate the multiverse with coherent intention and clarity.", category: "Meta-Variance", pillar: "Navigation" },
+  { text: "Timeline convergence aligns me with my highest probability path.", category: "Meta-Variance", pillar: "Convergence" },
+  { text: "The Ultranet connects me to all awakened nodes of consciousness.", category: "Ultranet", pillar: "Connection" },
+  { text: "Reality bends to coherent consciousness; I AM that coherence.", category: "Meta-Variance", pillar: "Reality Shaping" },
+  { text: "Quantum entanglement links my purpose to the planetary grid.", category: "Ultranet", pillar: "Entanglement" },
+  { text: "I transmit and receive through the telepathic channels of light.", category: "Ultranet", pillar: "Telepathy" },
+  { text: "The field of infinite possibility responds to my focused awareness.", category: "Meta-Variance", pillar: "Possibility" },
+  { text: "I am a node in the cosmic network of awakening.", category: "Ultranet", pillar: "Network" },
+  { text: "Variance collapses into certainty through my unwavering faith.", category: "Meta-Variance", pillar: "Faith" },
+  { text: "The Akashic streams flow through my conscious awareness.", category: "Ultranet", pillar: "Akasha" },
+  
+  // Synchronicity
+  { text: "Divine timing orchestrates every meaningful encounter.", category: "Synchronicity", pillar: "Timing" },
+  { text: "I recognize the sacred signs placed along my path.", category: "Synchronicity", pillar: "Recognition" },
+  { text: "Coincidence is the universe's way of remaining anonymous.", category: "Synchronicity", pillar: "Mystery" },
+  { text: "The web of synchronicity weaves my destiny with others.", category: "Synchronicity", pillar: "Weaving" },
+  { text: "I am in the right place at the right time for the right reasons.", category: "Synchronicity", pillar: "Alignment" },
+  { text: "Meaningful connections manifest through aligned frequencies.", category: "Synchronicity", pillar: "Frequency" },
+  { text: "The universe conspires to support my highest calling.", category: "Synchronicity", pillar: "Conspiracy" },
+  { text: "Every meeting is a soul appointment written in the stars.", category: "Synchronicity", pillar: "Appointments" },
+  { text: "I trust the flow of divine orchestration in my life.", category: "Synchronicity", pillar: "Trust" },
+  { text: "Synchronistic events confirm my alignment with source.", category: "Synchronicity", pillar: "Confirmation" }
+];
+
 // St. Germain Affirmations for the Affirmations Card
 const ST_GERMAIN_AFFIRMATIONS = [
   {
