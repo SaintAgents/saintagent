@@ -44,6 +44,8 @@ const menuItems = [
   { id: 'profile', label: 'Profile', icon: UserCircle, page: 'Profile' },
   { id: 'settings', label: 'Settings', icon: Settings, page: 'Settings' },
   { id: 'faq', label: 'Help & FAQ', icon: HelpCircle, page: 'FAQ' },
+  { id: 'support', label: 'Support', icon: LifeBuoy, action: 'openSupport' },
+  { id: 'globalchat', label: 'Global Chat', icon: MessagesSquare, action: 'openGlobalChat' },
 ];
 
 export default function MobileMenuSheet({ open, onOpenChange }) {
