@@ -6,7 +6,8 @@ import {
   Users, Target, ShoppingBag, Calendar, Settings, 
   Trophy, Folder, Radio, UserCircle, HelpCircle,
   Heart, Zap, LayoutDashboard, MessageSquare, Compass,
-  UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft, Orbit, Newspaper
+  UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft, Orbit, Newspaper,
+  LifeBuoy, MessagesSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
