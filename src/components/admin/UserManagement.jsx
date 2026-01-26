@@ -112,6 +112,7 @@ export default function UserManagement() {
       payload: { user_id: profile.user_id, amount: absAmount, direction, memo: 'Admin adjustment' }
     });
     await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+    await queryClient.invalidateQueries({ queryKey: ['wallet', profile.user_id] });
   };
 
   const handleProfileSave = () => {
@@ -510,6 +511,9 @@ export default function UserManagement() {
                     {walletAvailable?.toFixed?.(6) || 0}
                   </p>
                   <div className="flex gap-2 flex-wrap">
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -10)}>
+                      -10
+                    </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -1)}>
                       -1
                     </Button>
