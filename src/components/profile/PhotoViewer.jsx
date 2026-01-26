@@ -33,16 +33,33 @@ export default function PhotoViewer({ open, images = [], startIndex = 0, onClose
       >
         <X className="w-7 h-7 text-white" />
       </button>
-      <button className="absolute left-4 p-2 rounded-full bg-white/10 hover:bg-white/20" onClick={prev}>
-        <ChevronLeft className="w-7 h-7 text-white" />
-      </button>
-      <button className="absolute right-4 p-2 rounded-full bg-white/10 hover:bg-white/20" onClick={next}>
-        <ChevronRight className="w-7 h-7 text-white" />
-      </button>
-      {src ? (
-        <img src={src} alt="photo" className="max-h-[85vh] max-w-[90vw] object-contain" />
-      ) : (
-        <div className="text-white">No images</div>
+      {images.length > 1 && (
+        <>
+          <button 
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors" 
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+          >
+            <ChevronLeft className="w-7 h-7 text-white" />
+          </button>
+          <button 
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors" 
+            onClick={(e) => { e.stopPropagation(); next(); }}
+          >
+            <ChevronRight className="w-7 h-7 text-white" />
+          </button>
+        </>
+      )}
+      <div onClick={(e) => e.stopPropagation()}>
+        {src ? (
+          <img src={src} alt="photo" className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg" />
+        ) : (
+          <div className="text-white">No images</div>
+        )}
+      </div>
+      {images.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-black/60 text-white text-sm font-medium">
+          {idx + 1} / {images.length}
+        </div>
       )}
     </div>
   );
