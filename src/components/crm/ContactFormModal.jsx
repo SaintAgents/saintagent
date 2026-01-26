@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Star, Globe, Lock, Eye, EyeOff, X, Plus } from 'lucide-react';
+import { Star, Globe, Lock, Eye, EyeOff, X, Plus, Mail, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const DOMAINS = ['finance', 'tech', 'governance', 'health', 'education', 'media', 'legal', 'spiritual', 'creative', 'nonprofit', 'other'];
@@ -18,7 +18,14 @@ const PERMISSION_OPTIONS = [
   { value: 'private', label: 'Private', desc: 'Only you can see this contact', icon: Lock },
   { value: 'signal_only', label: 'Signal Only', desc: 'Others see existence & strength, no identity', icon: Eye },
   { value: 'masked', label: 'Masked', desc: 'Others see role/domain only, no name', icon: EyeOff },
-  { value: 'shared', label: 'Full Share', desc: 'Full details visible to network', icon: Globe }
+  { value: 'shared', label: 'Full Share', desc: 'Full details visible to network (earn 0.010 GGG)', icon: Globe }
+];
+
+const CONTACT_METHODS = [
+  { value: 'email', label: 'Email Introduction', icon: Mail },
+  { value: 'phone', label: 'Phone Call', icon: Phone },
+  { value: 'video_call', label: 'Video Call', icon: Eye },
+  { value: 'in_person', label: 'In Person', icon: Globe }
 ];
 
 export default function ContactFormModal({ open, onClose, contact, currentUserId }) {
@@ -94,13 +101,96 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
       if (data.relationship_strength >= 4) quality += 10;
       payload.quality_score = quality;
 
+      let savedContact;
       if (isEdit) {
-        return base44.entities.Contact.update(contact.id, payload);
+        savedContact = await base44.entities.Contact.update(contact.id, payload);
+        
+        // Award GGG if contact is being federated for the first time (0.010 GGG)
+        if (data.is_federated && !contact.is_federated && !contact.ggg_federated_awarded) {
+          await base44.entities.Contact.update(contact.id, { ggg_federated_awarded: true });
+          
+          // Update contribution record
+          const contribRecords = await base44.entities.CRMContribution.filter({ user_id: currentUserId });
+          let contribution = contribRecords?.[0];
+          if (!contribution) {
+            contribution = await base44.entities.CRMContribution.create({
+              user_id: currentUserId,
+              federated_contacts: 1,
+              total_ggg_earned: 0.010
+            });
+          } else {
+            await base44.entities.CRMContribution.update(contribution.id, {
+              federated_contacts: (contribution.federated_contacts || 0) + 1,
+              total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.010
+            });
+          }
+          
+          // Award GGG to user
+          const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
+          const userProfile = userProfiles?.[0];
+          if (userProfile) {
+            const newBalance = (userProfile.ggg_balance || 0) + 0.010;
+            await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
+            
+            await base44.entities.GGGTransaction.create({
+              user_id: currentUserId,
+              source_type: 'reward',
+              source_id: contact.id,
+              delta: 0.010,
+              reason_code: 'crm_federated',
+              description: 'Contact added to federated network',
+              balance_after: newBalance
+            });
+          }
+        }
+      } else {
+        savedContact = await base44.entities.Contact.create(payload);
+        
+        // Award GGG if new contact is federated (0.010 GGG)
+        if (data.is_federated) {
+          await base44.entities.Contact.update(savedContact.id, { ggg_federated_awarded: true });
+          
+          const contribRecords = await base44.entities.CRMContribution.filter({ user_id: currentUserId });
+          let contribution = contribRecords?.[0];
+          if (!contribution) {
+            contribution = await base44.entities.CRMContribution.create({
+              user_id: currentUserId,
+              total_contacts: 1,
+              federated_contacts: 1,
+              total_ggg_earned: 0.010
+            });
+          } else {
+            await base44.entities.CRMContribution.update(contribution.id, {
+              total_contacts: (contribution.total_contacts || 0) + 1,
+              federated_contacts: (contribution.federated_contacts || 0) + 1,
+              total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.010
+            });
+          }
+          
+          const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
+          const userProfile = userProfiles?.[0];
+          if (userProfile) {
+            const newBalance = (userProfile.ggg_balance || 0) + 0.010;
+            await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
+            
+            await base44.entities.GGGTransaction.create({
+              user_id: currentUserId,
+              source_type: 'reward',
+              source_id: savedContact.id,
+              delta: 0.010,
+              reason_code: 'crm_federated',
+              description: 'Contact added to federated network',
+              balance_after: newBalance
+            });
+          }
+        }
       }
-      return base44.entities.Contact.create(payload);
+      return savedContact;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['myContacts'] });
+      queryClient.invalidateQueries({ queryKey: ['myContribution'] });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       onClose();
     }
   });

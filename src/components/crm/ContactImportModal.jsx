@@ -195,9 +195,65 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
       }
     }
 
+    // Award GGG for first-time CSV import (0.030 GGG)
+    if (created > 0) {
+      try {
+        // Check if user has contribution record
+        const contribRecords = await base44.entities.CRMContribution.filter({ user_id: currentUserId });
+        let contribution = contribRecords?.[0];
+        
+        if (!contribution) {
+          // Create new contribution record
+          contribution = await base44.entities.CRMContribution.create({
+            user_id: currentUserId,
+            total_contacts: created,
+            import_ggg_awarded: true,
+            total_ggg_earned: 0.030
+          });
+        } else if (!contribution.import_ggg_awarded) {
+          // Award GGG for first import
+          await base44.entities.CRMContribution.update(contribution.id, {
+            total_contacts: (contribution.total_contacts || 0) + created,
+            import_ggg_awarded: true,
+            total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.030
+          });
+        } else {
+          // Just update count, no GGG
+          await base44.entities.CRMContribution.update(contribution.id, {
+            total_contacts: (contribution.total_contacts || 0) + created
+          });
+        }
+        
+        // Award GGG to user profile if this is their first import
+        if (!contribution || !contribution.import_ggg_awarded) {
+          const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
+          const userProfile = userProfiles?.[0];
+          if (userProfile) {
+            const newBalance = (userProfile.ggg_balance || 0) + 0.030;
+            await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
+            
+            // Log transaction
+            await base44.entities.GGGTransaction.create({
+              user_id: currentUserId,
+              source_type: 'reward',
+              source_id: contribution?.id,
+              delta: 0.030,
+              reason_code: 'crm_import',
+              description: 'First-time CRM contact base upload',
+              balance_after: newBalance
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to award import GGG:', err);
+      }
+    }
+
     setImporting(false);
     setResult({ created, failed, total: allRecords.length });
     queryClient.invalidateQueries({ queryKey: ['myContacts'] });
+    queryClient.invalidateQueries({ queryKey: ['myContribution'] });
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
   };
 
   const handleClose = () => {
