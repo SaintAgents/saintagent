@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -25,6 +25,7 @@ import InsightsAdminPanel from '@/components/admin/InsightsAdminPanel';
 import ProjectClaimsManager from '@/components/admin/ProjectClaimsManager';
 import OnboardingRewardsManager from '@/components/admin/OnboardingRewardsManager';
 import HeroImageManager from '@/components/admin/HeroImageManager';
+import EmailNewsletterManager from '@/components/admin/EmailNewsletterManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -153,6 +154,10 @@ export default function Admin() {
               <Image className="w-4 h-4" />
               Hero Images
             </TabsTrigger>
+            <TabsTrigger value="newsletter" className="gap-2 px-3 py-2">
+              <Mail className="w-4 h-4" />
+              Newsletter
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -234,6 +239,10 @@ export default function Admin() {
 
           <TabsContent value="hero-images">
             <HeroImageManager />
+          </TabsContent>
+
+          <TabsContent value="newsletter">
+            <EmailNewsletterManager />
           </TabsContent>
         </Tabs>
       </div>
