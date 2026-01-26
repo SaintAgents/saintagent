@@ -57,6 +57,7 @@ import Teams from './pages/Teams';
 import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
+import SovereignAlliance from './pages/SovereignAlliance';
 import __Layout from './Layout.jsx';
 
 
@@ -120,6 +121,7 @@ export const PAGES = {
     "Terms": Terms,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
+    "SovereignAlliance": SovereignAlliance,
 }
 
 export const pagesConfig = {
