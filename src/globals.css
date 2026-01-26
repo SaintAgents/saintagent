@@ -169,7 +169,7 @@ main {
    HACKER THEME - GREEN EVERYTHING
    ===================================================== */
 
-/* Hacker theme - Glass blur popup/menu containers */
+/* Hacker theme - Glass blur popup/menu containers with 50% black backdrop */
 [data-theme='hacker'] [role="menu"],
 [data-theme='hacker'] [role="dialog"],
 [data-theme='hacker'] [role="listbox"],
@@ -180,11 +180,17 @@ main {
 [data-theme='hacker'] [data-radix-popover-content],
 [data-theme='hacker'] .popover-content,
 [data-theme='hacker'] .dropdown-content {
-  background: rgba(0, 10, 0, 0.77) !important;
+  background: rgba(0, 0, 0, 0.85) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   border: 1px solid rgba(0, 255, 0, 0.4) !important;
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 30px rgba(0, 255, 0, 0.05) !important;
+}
+
+/* Hacker theme - Dialog overlay with 50% black background */
+[data-theme='hacker'] [data-radix-dialog-overlay],
+[data-theme='hacker'] [data-radix-alert-dialog-overlay] {
+  background: rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Hacker theme - Make all popups/dialogs draggable */
