@@ -67,8 +67,9 @@ import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import NewsCard from '@/components/news/NewsCard';
-import { Newspaper } from 'lucide-react';
+import { Newspaper, Image } from 'lucide-react';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
+import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
