@@ -89,10 +89,10 @@ export default function IcebreakerPrompts({ onSelect, recipientName }) {
         <Button
           variant="outline"
           size="sm"
-          className="bg-violet-50 text-violet-600 border-violet-200 hover:bg-violet-100 hover:border-violet-300 h-9 px-3 gap-1.5"
+          className="bg-violet-50 text-violet-600 border-violet-200 hover:bg-violet-100 hover:border-violet-300 h-8 sm:h-9 px-2 sm:px-3 gap-1 sm:gap-1.5 shrink-0"
           title="Send an icebreaker"
         >
-          <Sparkles className="w-4 h-4" />
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
           <span className="hidden sm:inline text-xs">Icebreaker</span>
         </Button>
       </DialogTrigger>
