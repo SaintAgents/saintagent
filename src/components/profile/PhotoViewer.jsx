@@ -26,9 +26,12 @@ export default function PhotoViewer({ open, images = [], startIndex = 0, onClose
   const src = has ? images[idx % safeLen] : null;
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center">
-      <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20" onClick={onClose}>
-        <X className="w-6 h-6 text-white" />
+    <div className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center" onClick={onClose}>
+      <button 
+        className="absolute top-4 right-4 p-3 rounded-full bg-white/20 hover:bg-white/30 z-50 transition-colors" 
+        onClick={(e) => { e.stopPropagation(); onClose?.(); }}
+      >
+        <X className="w-7 h-7 text-white" />
       </button>
       <button className="absolute left-4 p-2 rounded-full bg-white/10 hover:bg-white/20" onClick={prev}>
         <ChevronLeft className="w-7 h-7 text-white" />
