@@ -304,7 +304,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     communityFeed: Sparkles,
     leaderboard: Trophy,
     affirmations: Sparkles,
-    news: Newspaper
+    news: Newspaper,
+    heroGallery: Image
   };
 
   // Toss card to side panel storage
