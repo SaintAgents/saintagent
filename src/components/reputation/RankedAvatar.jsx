@@ -97,7 +97,10 @@ export default function RankedAvatar({
   // Debug: Log avatar URL sources
   const avatarUrl = src || fetchedProfile?.avatar_url;
   const finalAvatarUrl = (avatarUrl && avatarUrl.trim() !== '') ? avatarUrl : DEFAULT_AVATAR;
-  const allImages = [finalAvatarUrl, ...combinedGallery].filter(Boolean).slice(0, 6);
+  // Filter out hero images from personal gallery
+  const allImages = [finalAvatarUrl, ...combinedGallery]
+    .filter(url => url && !HERO_IMAGE_URLS.has(url))
+    .slice(0, 6);
 
   const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
   const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
