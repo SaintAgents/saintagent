@@ -137,6 +137,33 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
             <div className="grid grid-cols-4 gap-2">
               {filteredMenuItems.map((item) => {
                 const Icon = item.icon;
+                
+                // Handle action items (Support, Global Chat)
+                if (item.action) {
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        onOpenChange(false);
+                        if (item.action === 'openSupport') {
+                          document.dispatchEvent(new CustomEvent('openRightSideTab', { detail: { tab: 'help' } }));
+                        } else if (item.action === 'openGlobalChat') {
+                          document.dispatchEvent(new CustomEvent('openRightSideTab', { detail: { tab: 'chat' } }));
+                        }
+                      }}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-1 p-2 rounded-lg",
+                        "bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700",
+                        "hover:bg-violet-50 dark:hover:bg-violet-900/30 hover:border-violet-300 dark:hover:border-[#00ff88]/30",
+                        "transition-all active:scale-95"
+                      )}
+                    >
+                      <Icon className="w-5 h-5 text-violet-600 dark:text-[#00ff88]" />
+                      <span className="text-[9px] font-medium text-slate-700 dark:text-slate-300 text-center leading-tight">{item.label}</span>
+                    </button>
+                  );
+                }
+                
                 return (
                   <Link
                     key={item.page}
