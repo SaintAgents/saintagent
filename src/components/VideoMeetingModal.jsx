@@ -51,12 +51,7 @@ export default function VideoMeetingModal({ meeting, open, onClose }) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <DialogHeader className="p-4 border-b">
-            <div className="flex items-center justify-between">
-              <DialogTitle>{meeting?.title}</DialogTitle>
-              <Button variant="ghost" size="icon" onClick={onClose}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+            <DialogTitle>{meeting?.title}</DialogTitle>
           </DialogHeader>
 
           {/* Video Area */}

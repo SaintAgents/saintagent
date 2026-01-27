@@ -108,6 +108,7 @@ const NAV_ITEMS = [
   { id: 'studio', label: 'Creator Studio', Icon: Star, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
   { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
   { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
+  { id: 'gallery', label: 'Hero Gallery', Icon: Eye, page: 'CommandDeck', hint: 'View and explore the hero image gallery', action: 'openGallery' },
   { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
   { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
   { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },

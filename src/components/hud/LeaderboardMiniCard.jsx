@@ -6,6 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Trophy, Coins, Star, Target, Calendar, Users, Flame, Crown, Medal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const RANK_STYLES = {
   1: { bg: 'bg-gradient-to-r from-amber-100 to-yellow-100', text: 'text-amber-700', icon: Crown },
@@ -101,26 +107,57 @@ export default function LeaderboardMiniCard() {
 
   return (
     <div className="space-y-3">
+      <TooltipProvider delayDuration={200}>
       <Tabs defaultValue="ggg" className="w-full">
         <TabsList className="grid grid-cols-6 w-full mb-3">
-          <TabsTrigger value="ggg" className="text-xs p-1">
-            <Coins className="w-3 h-3" />
-          </TabsTrigger>
-          <TabsTrigger value="points" className="text-xs p-1">
-            <Flame className="w-3 h-3" />
-          </TabsTrigger>
-          <TabsTrigger value="trust" className="text-xs p-1">
-            <Star className="w-3 h-3" />
-          </TabsTrigger>
-          <TabsTrigger value="missions" className="text-xs p-1">
-            <Target className="w-3 h-3" />
-          </TabsTrigger>
-          <TabsTrigger value="meetings" className="text-xs p-1">
-            <Calendar className="w-3 h-3" />
-          </TabsTrigger>
-          <TabsTrigger value="connections" className="text-xs p-1">
-            <Users className="w-3 h-3" />
-          </TabsTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TabsTrigger value="ggg" className="text-xs p-1">
+                <Coins className="w-3 h-3" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent><p>GGG Balance</p></TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TabsTrigger value="points" className="text-xs p-1">
+                <Flame className="w-3 h-3" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent><p>Engagement Points</p></TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TabsTrigger value="trust" className="text-xs p-1">
+                <Star className="w-3 h-3" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent><p>Trust Score</p></TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TabsTrigger value="missions" className="text-xs p-1">
+                <Target className="w-3 h-3" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent><p>Missions Completed</p></TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TabsTrigger value="meetings" className="text-xs p-1">
+                <Calendar className="w-3 h-3" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent><p>Meetings Attended</p></TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TabsTrigger value="connections" className="text-xs p-1">
+                <Users className="w-3 h-3" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent><p>Connections</p></TooltipContent>
+          </Tooltip>
         </TabsList>
 
         <TabsContent value="ggg" className="space-y-1">
@@ -147,6 +184,7 @@ export default function LeaderboardMiniCard() {
           {topConnections.map((p, i) => <MiniRow key={p.id} idx={i} profile={p} valueLabel={`${(p.follower_count || 0) + (p.following_count || 0)}`} metric="connections" />)}
         </TabsContent>
       </Tabs>
+      </TooltipProvider>
 
       <Button variant="outline" className="w-full rounded-xl text-xs" onClick={() => window.location.href = createPageUrl('Leaderboards')}>
         <Trophy className="w-3 h-3 mr-1" />
