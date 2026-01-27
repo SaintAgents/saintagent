@@ -307,42 +307,53 @@ export default function TopBar({
       )}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
-        "flex flex-wrap items-center gap-1 bg-slate-100 rounded-xl p-1 transition-all duration-300 flex",
+        "flex flex-wrap items-center gap-1 bg-slate-100/80 rounded-xl p-1 transition-all duration-300 flex",
         isCollapsed && "!hidden"
       )} data-no-top>
-        {MODE_TABS.map((tab) => (
-          <div key={tab.id} className="flex items-center">
-            <button
-              onClick={() => {
-                if (tab.page) {
-                  window.location.href = createPageUrl(tab.page);
-                } else {
-                  onModeChange?.(tab.id);
-                }
-              }}
-              className={cn(
-                "px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5",
-                mode === tab.id 
-                  ? "bg-white text-violet-700 shadow-sm" 
-                  : "text-slate-600 hover:text-slate-900"
-              )}
-            >
-              {tab.icon && <tab.icon className="w-4 h-4" />}
-              {tab.label}
-              {tab.locked && <Crown className="w-3 h-3 text-amber-500" />}
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setHelpMode(tab.id);
-              }}
-              className="p-1 rounded-full hover:bg-slate-200 transition-colors ml-0.5"
-              title={`Learn about ${tab.label}`}
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-slate-400 hover:text-violet-600" />
-            </button>
-          </div>
-        ))}
+        {MODE_TABS.map((tab) => {
+          const iconUrl = MODE_ICONS[tab.id]?.[currentTheme] || MODE_ICONS[tab.id]?.light;
+          return (
+            <div key={tab.id} className="flex items-center group relative">
+              <button
+                onClick={() => {
+                  if (tab.page) {
+                    window.location.href = createPageUrl(tab.page);
+                  } else {
+                    onModeChange?.(tab.id);
+                  }
+                }}
+                className={cn(
+                  "p-1 rounded-lg transition-all flex items-center justify-center relative",
+                  mode === tab.id 
+                    ? "bg-white/90 shadow-sm ring-1 ring-violet-200" 
+                    : "hover:bg-white/50"
+                )}
+                title={tab.label}
+              >
+                <img 
+                  src={iconUrl} 
+                  alt={tab.label}
+                  className="w-10 h-10 object-contain"
+                  data-no-filter="true"
+                />
+                {/* Hover tooltip with label */}
+                <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
+                  {tab.label}
+                </span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setHelpMode(tab.id);
+                }}
+                className="p-0.5 rounded-full hover:bg-slate-200 transition-colors ml-0.5 opacity-0 group-hover:opacity-100"
+                title={`Learn about ${tab.label}`}
+              >
+                <HelpCircle className="w-3 h-3 text-slate-400 hover:text-violet-600" />
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {/* Mode Help Modal */}
