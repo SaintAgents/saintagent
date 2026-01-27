@@ -322,7 +322,7 @@ export default function TopBar({
                   }
                 }}
                 className={cn(
-                  "p-1 rounded-lg transition-all flex items-center justify-center relative",
+                  "p-1.5 rounded-lg transition-all flex items-center justify-center relative",
                   mode === tab.id 
                     ? "bg-white/90 shadow-sm ring-1 ring-violet-200" 
                     : "hover:bg-white/50"
@@ -332,7 +332,10 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="w-10 h-10 object-contain topbar-mode-icon"
+                  className={cn(
+                    "object-contain topbar-mode-icon",
+                    tab.id === 'command' ? "w-10 h-10" : "w-9 h-9"
+                  )}
                   style={currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : undefined}
                 />
                 {/* Hover tooltip with label */}
