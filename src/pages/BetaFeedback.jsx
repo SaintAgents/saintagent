@@ -35,18 +35,94 @@ const STATUS_CONFIG = {
 export default function BetaFeedback() {
   const queryClient = useQueryClient();
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [expandedFeedback, setExpandedFeedback] = useState(null);
+  const [newComment, setNewComment] = useState('');
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
 
-  // Fetch only the current user's feedback
-  const { data: myFeedback = [], isLoading } = useQuery({
-    queryKey: ['myBetaFeedback', currentUser?.email],
-    queryFn: () => base44.entities.BetaFeedback.filter({ reporter_id: currentUser.email }, '-created_date', 100),
+  const { data: profile } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
+      return profiles?.[0];
+    },
     enabled: !!currentUser?.email
   });
+
+  // Fetch ALL feedback (public feed)
+  const { data: allFeedback = [], isLoading } = useQuery({
+    queryKey: ['allBetaFeedback'],
+    queryFn: () => base44.entities.BetaFeedback.list('-created_date', 100)
+  });
+
+  // Like mutation
+  const likeMutation = useMutation({
+    mutationFn: async (feedback) => {
+      const likedBy = feedback.liked_by || [];
+      const hasLiked = likedBy.includes(currentUser.email);
+      const newLikedBy = hasLiked 
+        ? likedBy.filter(id => id !== currentUser.email)
+        : [...likedBy, currentUser.email];
+      await base44.entities.BetaFeedback.update(feedback.id, {
+        liked_by: newLikedBy,
+        likes_count: newLikedBy.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['allBetaFeedback'] })
+  });
+
+  // Love mutation
+  const loveMutation = useMutation({
+    mutationFn: async (feedback) => {
+      const lovedBy = feedback.loved_by || [];
+      const hasLoved = lovedBy.includes(currentUser.email);
+      const newLovedBy = hasLoved 
+        ? lovedBy.filter(id => id !== currentUser.email)
+        : [...lovedBy, currentUser.email];
+      await base44.entities.BetaFeedback.update(feedback.id, {
+        loved_by: newLovedBy,
+        loves_count: newLovedBy.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['allBetaFeedback'] })
+  });
+
+  // Comment mutation
+  const commentMutation = useMutation({
+    mutationFn: async ({ feedback, content }) => {
+      const comments = feedback.comments || [];
+      const newComment = {
+        id: Date.now().toString(),
+        user_id: currentUser.email,
+        user_name: profile?.display_name || currentUser.full_name,
+        user_avatar: profile?.avatar_url,
+        content,
+        created_at: new Date().toISOString()
+      };
+      await base44.entities.BetaFeedback.update(feedback.id, {
+        comments: [...comments, newComment]
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allBetaFeedback'] });
+      setNewComment('');
+    }
+  });
+
+  // Track view
+  const trackView = async (feedback) => {
+    await base44.entities.BetaFeedback.update(feedback.id, {
+      view_count: (feedback.view_count || 0) + 1
+    });
+  };
+
+  const handleAddComment = (feedback) => {
+    if (!newComment.trim()) return;
+    commentMutation.mutate({ feedback, content: newComment.trim() });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
