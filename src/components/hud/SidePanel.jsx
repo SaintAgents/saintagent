@@ -780,14 +780,35 @@ export default function SidePanel({
                         {walletAvailable?.toLocaleString?.() || 0}
                       </p>
                     </div>
-                    <ProgressRing
-                      value={rankProgress}
-                      max={nextRankAt}
-                      size={64}
-                      strokeWidth={5}
-                      label={profile?.rank_code?.charAt(0).toUpperCase()}
-                      sublabel="Rank"
-                    />
+                    <div className="relative w-16 h-16">
+                      {/* Background ring */}
+                      <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
+                        <circle 
+                          cx="32" cy="32" r="28" 
+                          stroke="currentColor"
+                          className="text-violet-600"
+                          strokeWidth="5" 
+                          fill="none" 
+                          strokeDasharray={`${2 * Math.PI * 28}`} 
+                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
+                          style={{ transition: 'all 0.7s' }}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      {/* Badge image centered - show NEXT rank badge */}
+                      <img 
+                        src={(() => {
+                          // Find the next tier's code based on current rank
+                          const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
+                          const nextTier = RP_LADDER[currentIdx + 1];
+                          return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
+                        })()}
+                        alt={rpInfo.nextTitle || 'Next Rank'}
+                        className="absolute inset-0 w-full h-full object-contain p-2"
+                        data-no-filter="true"
+                      />
+                    </div>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-600">To next rank</span>
@@ -1150,11 +1171,11 @@ export default function SidePanel({
             "absolute w-5 h-8 flex items-center justify-center transition-colors z-[9999]",
             dockSide === 'right' ? "-left-5 rounded-l-md" : "-right-5 rounded-r-md"
           )}
-          style={{ top: '20px' }}>
-        <div className="w-full h-full rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
+          style={{ top: '20px', height: '22px' }}>
+        <div className="w-full h-full rounded-md bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
           {dockSide === 'right' ?
-            isOpen ? <ChevronRight className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> :
-            isOpen ? <ChevronLeft className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronRight className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" />
+            isOpen ? <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> :
+            isOpen ? <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" />
           }
         </div>
       </button>
@@ -1709,13 +1730,35 @@ export default function SidePanel({
                   {walletAvailable?.toLocaleString?.() || 0}
                 </p>
               </div>
-              <ProgressRing
-                  value={rankProgress}
-                  max={nextRankAt}
-                  size={64}
-                  strokeWidth={5}
-                  label={profile?.rank_code?.charAt(0).toUpperCase()}
-                  sublabel="Rank" />
+              <div className="relative w-16 h-16">
+                {/* Background ring */}
+                <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
+                  <circle 
+                    cx="32" cy="32" r="28" 
+                    stroke="currentColor"
+                    className="text-violet-600"
+                    strokeWidth="5" 
+                    fill="none" 
+                    strokeDasharray={`${2 * Math.PI * 28}`} 
+                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
+                    style={{ transition: 'all 0.7s' }}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                {/* Badge image centered - show NEXT rank badge */}
+                <img 
+                  src={(() => {
+                    // Find the next tier's code based on current rank
+                    const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
+                    const nextTier = RP_LADDER[currentIdx + 1];
+                    return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
+                  })()}
+                  alt={rpInfo.nextTitle || 'Next Rank'}
+                  className="absolute inset-0 w-full h-full object-contain p-2"
+                  data-no-filter="true"
+                />
+              </div>
 
             </div>
             <div className="flex items-center justify-between text-sm">
