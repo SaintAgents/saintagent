@@ -19,12 +19,17 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 
-const ONBOARDING_GGG_REWARD = 100;
-
 export default function OnboardingRewardsManager() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all'); // all, complete, incomplete, missing_reward
   const queryClient = useQueryClient();
+
+  // Fetch the actual reward amount from GGGRewardRule
+  const { data: rewardRules = [] } = useQuery({
+    queryKey: ['onboardingRewardRule'],
+    queryFn: () => base44.entities.GGGRewardRule.filter({ action_type: 'finish_onboard', is_active: true })
+  });
+  const ONBOARDING_GGG_REWARD = rewardRules[0]?.ggg_amount || 0.1;
 
   // Fetch all onboarding progress
   const { data: onboardingRecords = [], isLoading: loadingOnboarding } = useQuery({
