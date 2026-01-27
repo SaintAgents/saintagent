@@ -92,6 +92,12 @@ import FileStorageSection from '@/components/profile/FileStorageSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
 import JournalTab from '@/components/profile/JournalTab';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Profile() {
   const [viewerOpen, setViewerOpen] = useState(false);
