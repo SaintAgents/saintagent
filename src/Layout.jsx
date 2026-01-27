@@ -367,6 +367,27 @@ function AuthenticatedLayout({ children, currentPageName }) {
           } else if (type === 'project') {
             window.location.href = createPageUrl('Projects');
             setSearchOpen(false);
+          } else if (type === 'dailylog') {
+            window.location.href = createPageUrl('DailyOps') + `?date=${item.date}`;
+            setSearchOpen(false);
+          } else if (type === 'note') {
+            window.location.href = createPageUrl('Notes') + `?id=${item.id}`;
+            setSearchOpen(false);
+          } else if (type === 'meeting') {
+            window.location.href = createPageUrl('Meetings') + `?id=${item.id}`;
+            setSearchOpen(false);
+          } else if (type === 'event') {
+            window.location.href = createPageUrl('Events') + `?id=${item.id}`;
+            setSearchOpen(false);
+          } else if (type === 'mission') {
+            window.location.href = createPageUrl('MissionDetail') + `?id=${item.id}`;
+            setSearchOpen(false);
+          } else if (type === 'listing') {
+            window.location.href = createPageUrl('ListingDetail') + `?id=${item.id}`;
+            setSearchOpen(false);
+          } else if (type === 'circle') {
+            window.location.href = createPageUrl('Circles') + `?id=${item.id}`;
+            setSearchOpen(false);
           }
         };
 
