@@ -993,15 +993,27 @@ html[data-theme='hacker'] [role="button"] * {
    Matching dark charcoal UI reference
    ===================================================== */
 
+html[data-theme='grey'],
+html[data-theme='grey'] body,
 [data-theme='grey'] body {
   background-color: #1a1d21 !important;
+  background: #1a1d21 !important;
 }
 
+html[data-theme='grey'] .min-h-screen,
+html[data-theme='grey'] main,
 [data-theme='grey'] .min-h-screen,
 [data-theme='grey'] main {
   background: #1a1d21 !important;
   background-color: #1a1d21 !important;
+  background-image: none !important;
   color: #9ca3af !important;
+}
+
+/* Force all white/light backgrounds to dark in grey theme */
+html[data-theme='grey'] *,
+[data-theme='grey'] * {
+  --tw-bg-opacity: 1 !important;
 }
 
 [data-theme='grey'] h1,
@@ -1021,10 +1033,35 @@ html[data-theme='hacker'] [role="button"] * {
 }
 
 /* Grey theme - force dark backgrounds on all containers */
+html[data-theme='grey'] [class*='bg-white'],
+html[data-theme='grey'] [class*='bg-slate-'],
+html[data-theme='grey'] [class*='bg-gray-'],
+html[data-theme='grey'] [class*='bg-violet-'],
+html[data-theme='grey'] [class*='bg-purple-'],
 [data-theme='grey'] [class*='bg-white'],
 [data-theme='grey'] [class*='bg-slate-'],
-[data-theme='grey'] [class*='bg-gray-'] {
+[data-theme='grey'] [class*='bg-gray-'],
+[data-theme='grey'] [class*='bg-violet-'],
+[data-theme='grey'] [class*='bg-purple-'] {
   background-color: #22262b !important;
+  background: #22262b !important;
+}
+
+/* Grey theme - force transparent gradient backgrounds */
+html[data-theme='grey'] [class*='from-slate-'],
+html[data-theme='grey'] [class*='from-gray-'],
+html[data-theme='grey'] [class*='from-violet-'],
+html[data-theme='grey'] [class*='to-slate-'],
+html[data-theme='grey'] [class*='to-violet-'],
+html[data-theme='grey'] [class*='via-'],
+[data-theme='grey'] [class*='from-slate-'],
+[data-theme='grey'] [class*='from-gray-'],
+[data-theme='grey'] [class*='from-violet-'],
+[data-theme='grey'] [class*='to-slate-'],
+[data-theme='grey'] [class*='to-violet-'],
+[data-theme='grey'] [class*='via-'] {
+  background: #1a1d21 !important;
+  background-image: none !important;
 }
 
 /* Grey theme cards - dark charcoal with subtle borders */
@@ -1183,9 +1220,19 @@ html[data-theme='hacker'] [role="button"] * {
 }
 
 /* Grey theme gradient backgrounds - make solid dark */
+html[data-theme='grey'] [class*='bg-gradient-'],
 [data-theme='grey'] [class*='bg-gradient-'] {
-  background: #22262b !important;
+  background: #1a1d21 !important;
+  background-color: #1a1d21 !important;
   background-image: none !important;
+}
+
+/* Grey theme - header and topbar */
+html[data-theme='grey'] header,
+[data-theme='grey'] header {
+  background-color: #22262b !important;
+  background: #22262b !important;
+  backdrop-filter: none !important;
 }
 
 [data-theme='hacker'] [class*='text-'],
