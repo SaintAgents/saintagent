@@ -1004,6 +1004,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Side Panel Handle - Dark/Hacker Theme */
+        [data-theme='dark'] [data-side-panel-handle],
+        [data-theme='hacker'] [data-side-panel-handle] {
+          height: 22px !important;
+        }
         [data-theme='dark'] [data-side-panel-handle] > div,
         [data-theme='hacker'] [data-side-panel-handle] > div {
           background: #050505 !important;
