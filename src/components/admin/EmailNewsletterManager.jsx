@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List } from 'lucide-react';
+import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List, Clock, Calendar } from 'lucide-react';
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -28,6 +28,9 @@ export default function EmailNewsletterManager() {
   const [previewImages, setPreviewImages] = useState([]);
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiPopoverOpen, setAiPopoverOpen] = useState(false);
+  const [scheduleEnabled, setScheduleEnabled] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleTime, setScheduleTime] = useState('');
 
   // AI format options for newsletter
   const AI_FORMAT_OPTIONS = [
@@ -290,6 +293,41 @@ Return ONLY the formatted content.`;
       return;
     }
 
+    // If scheduling is enabled, save the scheduled newsletter
+    if (scheduleEnabled && scheduleDate && scheduleTime) {
+      const scheduledDateTime = new Date(`${scheduleDate}T${scheduleTime}`);
+      if (scheduledDateTime <= new Date()) {
+        toast.error('Scheduled time must be in the future');
+        return;
+      }
+
+      setSending('schedule');
+      try {
+        await base44.entities.NewsletterCampaign.create({
+          subject,
+          status: 'draft',
+          scheduled_send_at: scheduledDateTime.toISOString(),
+          body_content: finalContent,
+          recipient_count: recipients.length,
+          articles_included: selectedArticles
+        });
+        toast.success(`Newsletter scheduled for ${scheduledDateTime.toLocaleString()}`);
+        // Reset form
+        setSubject('');
+        setBody('');
+        setSelectedArticles([]);
+        setScheduleEnabled(false);
+        setScheduleDate('');
+        setScheduleTime('');
+      } catch (error) {
+        console.error('Failed to schedule newsletter:', error);
+        toast.error('Failed to schedule newsletter');
+      } finally {
+        setSending(false);
+      }
+      return;
+    }
+
     setSending('all');
     let successCount = 0;
     let failCount = 0;
@@ -307,6 +345,19 @@ Return ONLY the formatted content.`;
         console.error(`Failed to send to ${email}:`, error);
         failCount++;
       }
+    }
+
+    // Create campaign record for analytics
+    try {
+      await base44.entities.NewsletterCampaign.create({
+        subject,
+        sent_at: new Date().toISOString(),
+        total_sent: successCount,
+        status: 'sent',
+        articles_included: selectedArticles
+      });
+    } catch (e) {
+      console.error('Failed to record campaign:', e);
     }
 
     setSending(false);
@@ -596,10 +647,54 @@ Return ONLY the formatted content.`;
                 </div>
               </div>
 
+              {/* Schedule Options */}
+              <div className="border rounded-lg p-4 bg-slate-50 dark:bg-slate-800/50">
+                <div className="flex items-center gap-3 mb-3">
+                  <Checkbox
+                    id="schedule-toggle"
+                    checked={scheduleEnabled}
+                    onCheckedChange={setScheduleEnabled}
+                  />
+                  <Label htmlFor="schedule-toggle" className="flex items-center gap-2 cursor-pointer text-slate-900 dark:text-slate-100">
+                    <Clock className="w-4 h-4" />
+                    Schedule for later
+                  </Label>
+                </div>
+                
+                {scheduleEnabled && (
+                  <div className="flex gap-3 mt-3">
+                    <div className="flex-1">
+                      <Label className="text-xs text-slate-600 dark:text-slate-300">Date</Label>
+                      <Input
+                        type="date"
+                        value={scheduleDate}
+                        onChange={(e) => setScheduleDate(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-xs text-slate-600 dark:text-slate-300">Time</Label>
+                      <Input
+                        type="time"
+                        value={scheduleTime}
+                        onChange={(e) => setScheduleTime(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Send Button */}
               <div className="flex items-center justify-between pt-4 border-t">
                 <p className="text-sm text-slate-500">
                   Will send to {displayEmails.length} subscribers • {selectedArticles.length} article(s) embedded
+                  {scheduleEnabled && scheduleDate && scheduleTime && (
+                    <span className="block text-violet-600 font-medium">
+                      Scheduled: {new Date(`${scheduleDate}T${scheduleTime}`).toLocaleString()}
+                    </span>
+                  )}
                 </p>
                 <div className="flex gap-2">
                   <Button 
@@ -617,13 +712,18 @@ Return ONLY the formatted content.`;
                   </Button>
                   <Button 
                     onClick={handleSendNewsletter}
-                    disabled={sending || !subject || (!body && selectedArticles.length === 0) || displayEmails.length === 0}
+                    disabled={sending || !subject || (!body && selectedArticles.length === 0) || displayEmails.length === 0 || (scheduleEnabled && (!scheduleDate || !scheduleTime))}
                     className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
                   >
-                    {sending === 'all' ? (
+                    {sending === 'all' || sending === 'schedule' ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin text-white" />
-                        <span className="text-white">Sending...</span>
+                        <span className="text-white">{sending === 'schedule' ? 'Scheduling...' : 'Sending...'}</span>
+                      </>
+                    ) : scheduleEnabled ? (
+                      <>
+                        <Calendar className="w-4 h-4 text-white" />
+                        <span className="text-white">Schedule Send</span>
                       </>
                     ) : (
                       <>
