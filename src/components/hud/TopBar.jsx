@@ -653,6 +653,16 @@ export default function TopBar({
               sideOffset={12}
               className="w-72 z-[9999] bg-white dark:bg-[#050505] [data-theme='dark']_&:bg-[#050505] [data-theme='dark']_&:border-[#00ff88] [data-theme='dark']_&:border [data-theme='dark']_&:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200 p-0 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
+              {/* Admin Dashboard Banner - TOP OF MENU for admin users */}
+              {currentUser?.role === 'admin' && (
+                <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3">
+                  <Link to={createPageUrl('Admin')} className="flex items-center gap-3 text-white font-bold hover:opacity-90 transition-opacity">
+                    <Shield className="w-5 h-5" />
+                    <span>🔐 ADMIN DASHBOARD</span>
+                  </Link>
+                </div>
+              )}
+
               {/* Avatar Card Header */}
               <div className="flex flex-col items-center py-5 px-4 border-b border-slate-100 dark:border-slate-800">
                 <Avatar className="w-16 h-16 mb-3 ring-2 ring-violet-100 dark:ring-violet-900">
