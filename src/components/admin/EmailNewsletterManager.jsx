@@ -330,123 +330,169 @@ Return ONLY the formatted content.`;
     }
   };
 
+  // Convert markdown-like syntax to HTML
+  const formatBodyContent = (text) => {
+    if (!text) return '';
+
+    let formatted = text
+      // Headers: # Header -> <h1>, ## Header -> <h2>, ### Header -> <h3>
+      .replace(/^### (.+)$/gm, '<h3 style="color: #1e293b; font-size: 18px; font-weight: 700; margin: 24px 0 12px 0; line-height: 1.3;">$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2 style="color: #1e293b; font-size: 22px; font-weight: 700; margin: 28px 0 14px 0; line-height: 1.3; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1 style="color: #1e293b; font-size: 28px; font-weight: 800; margin: 32px 0 16px 0; line-height: 1.2;">$1</h1>')
+      // CAPS HEADERS (lines in all caps)
+      .replace(/^([A-Z][A-Z\s\d&:!?-]{3,})$/gm, '<h2 style="color: #8b5cf6; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 28px 0 14px 0; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
+      // Bold: **text** or __text__
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight: 700; color: #0f172a;">$1</strong>')
+      .replace(/__(.+?)__/g, '<strong style="font-weight: 700; color: #0f172a;">$1</strong>')
+      // Italic: *text* or _text_
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em style="font-style: italic;">$1</em>')
+      .replace(/(?<!_)_([^_]+)_(?!_)/g, '<em style="font-style: italic;">$1</em>')
+      // Bullet points: • or - at start of line
+      .replace(/^[•\-]\s*(.+)$/gm, '<li style="margin: 6px 0; padding-left: 8px;">$1</li>')
+      // Numbered lists: 1. 2. etc
+      .replace(/^\d+\.\s*(.+)$/gm, '<li style="margin: 6px 0; padding-left: 8px;">$1</li>')
+      // Section dividers: === or ---
+      .replace(/^[═=]{3,}$/gm, '<hr style="border: none; border-top: 2px solid #e2e8f0; margin: 24px 0;">')
+      .replace(/^[-]{3,}$/gm, '<hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;">')
+      // Links: [text](url)
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color: #8b5cf6; text-decoration: underline;">$1</a>')
+      // Highlight/callout: >text
+      .replace(/^>\s*(.+)$/gm, '<blockquote style="border-left: 4px solid #8b5cf6; padding-left: 16px; margin: 16px 0; color: #475569; font-style: italic;">$1</blockquote>')
+      // Double line breaks become paragraphs
+      .replace(/\n\n/g, '</p><p style="margin: 16px 0; line-height: 1.8;">')
+      // Single line breaks
+      .replace(/\n/g, '<br>');
+
+    // Wrap consecutive <li> elements in <ul>
+    formatted = formatted.replace(/(<li[^>]*>.*?<\/li>\s*)+/g, (match) => {
+      return `<ul style="margin: 16px 0; padding-left: 24px; list-style-type: disc;">${match}</ul>`;
+    });
+
+    return `<p style="margin: 16px 0; line-height: 1.8;">${formatted}</p>`;
+  };
+
   // Build the final email content with embedded articles and images (HTML format)
   const buildFinalEmailContent = () => {
     let html = `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     `;
-    
+
     // Add header images at the top (user-uploaded)
     if (previewImages.filter(Boolean).length > 0) {
       previewImages.filter(Boolean).forEach((imgUrl) => {
         html += `
           <div style="width: 100%;">
-            <img src="${imgUrl}" alt="Newsletter header" style="width: 100%; max-width: 600px; height: auto; display: block;" />
+            <img src="${imgUrl}" alt="Newsletter header" style="width: 100%; max-width: 640px; height: auto; display: block;" />
           </div>
         `;
       });
     }
-    
+
     // Content wrapper with padding
-    html += '<div style="padding: 30px;">';
-    
-    // Add body content
+    html += '<div style="padding: 40px 36px;">';
+
+    // Add body content with rich formatting
     if (body) {
       html += `
-        <div style="color: #1e293b; font-size: 16px; line-height: 1.7; margin-bottom: 30px; white-space: pre-wrap;">
-          ${body.replace(/\n/g, '<br>')}
+        <div style="color: #1e293b; font-size: 16px; line-height: 1.8;">
+          ${formatBodyContent(body)}
         </div>
       `;
     }
-    
+
     // Add selected articles with featured images
     if (selectedArticles.length > 0) {
       html += `
-        <div style="border-top: 2px solid #e2e8f0; margin-top: 20px; padding-top: 25px;">
-          <h2 style="color: #8b5cf6; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 20px 0; font-weight: 600;">Featured Articles</h2>
+        <div style="border-top: 3px solid #8b5cf6; margin-top: 36px; padding-top: 32px;">
+          <h2 style="color: #8b5cf6; font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin: 0 0 24px 0; font-weight: 700;">✦ Featured Articles</h2>
       `;
-      
+
       selectedArticles.forEach((articleId, index) => {
         const article = newsArticles.find(a => a.id === articleId);
         if (article) {
           html += `
-            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+            <div style="background: linear-gradient(135deg, #faf5ff 0%, #f8fafc 100%); border-radius: 16px; overflow: hidden; margin-bottom: 24px; border: 1px solid #e9d5ff;">
           `;
-          
+
           // Article featured image
           if (article.image_url || article.featured_image || article.thumbnail) {
             const articleImage = article.image_url || article.featured_image || article.thumbnail;
             html += `
-              <div style="width: 100%; height: 200px; overflow: hidden;">
-                <img src="${articleImage}" alt="${article.title || 'Article image'}" style="width: 100%; height: 200px; object-fit: cover; display: block;" />
+              <div style="width: 100%; height: 220px; overflow: hidden;">
+                <img src="${articleImage}" alt="${article.title || 'Article image'}" style="width: 100%; height: 220px; object-fit: cover; display: block;" />
               </div>
             `;
           }
-          
+
           // Article content
           html += `
-            <div style="padding: 20px;">
-              <h3 style="color: #1e293b; font-size: 18px; margin: 0 0 10px 0; font-weight: 600; line-height: 1.4;">
+            <div style="padding: 24px;">
+              <h3 style="color: #1e293b; font-size: 22px; margin: 0 0 12px 0; font-weight: 700; line-height: 1.3;">
                 ${article.title || 'Untitled'}
               </h3>
           `;
-          
+
           // Category/tag badge if exists
           if (article.category || article.tags?.length > 0) {
             const tag = article.category || article.tags?.[0];
             html += `
-              <span style="display: inline-block; background: #8b5cf6; color: #ffffff; font-size: 11px; padding: 4px 10px; border-radius: 12px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+              <span style="display: inline-block; background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); color: #ffffff; font-size: 10px; padding: 5px 12px; border-radius: 20px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
                 ${tag}
               </span>
             `;
           }
-          
+
           // Summary
           if (article.summary) {
             html += `
-              <p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0; font-style: italic; line-height: 1.5;">
+              <p style="color: #6b7280; font-size: 15px; margin: 0 0 16px 0; font-style: italic; line-height: 1.6; border-left: 3px solid #c4b5fd; padding-left: 14px;">
                 ${article.summary}
               </p>
             `;
           }
-          
+
           // Truncated content
           if (article.content) {
-            const trimmedContent = article.content.length > 800 
-              ? article.content.substring(0, 800).trim() + '...'
+            const trimmedContent = article.content.length > 600 
+              ? article.content.substring(0, 600).trim() + '...'
               : article.content;
             html += `
-              <div style="color: #475569; font-size: 14px; line-height: 1.7;">
-                ${trimmedContent.replace(/\n\n/g, '</p><p style="margin: 12px 0;">').replace(/\n/g, '<br>')}
+              <div style="color: #475569; font-size: 15px; line-height: 1.75;">
+                ${trimmedContent.replace(/\n\n/g, '</p><p style="margin: 14px 0;">').replace(/\n/g, '<br>')}
               </div>
             `;
           }
-          
-          // Read more hint
+
+          // Read more button
           html += `
-              <p style="color: #8b5cf6; font-size: 13px; margin: 15px 0 0 0; font-weight: 500;">
-                Read more on SaintAgent →
-              </p>
+              <div style="margin-top: 20px;">
+                <a href="#" style="display: inline-block; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; font-size: 13px; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; letter-spacing: 0.5px;">
+                  Read Full Article →
+                </a>
+              </div>
             </div>
           </div>
           `;
         }
       });
-      
+
       html += '</div>';
     }
-    
+
     // Footer
     html += `
-        <div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 20px; text-align: center;">
-          <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-            Sent with ✨ from SaintAgent Newsletter
+        <div style="border-top: 2px solid #e2e8f0; margin-top: 40px; padding-top: 24px; text-align: center;">
+          <p style="color: #8b5cf6; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">
+            ✨ SaintAgent Newsletter
+          </p>
+          <p style="color: #94a3b8; font-size: 11px; margin: 0;">
+            Empowering the 144,000 • Building the New Earth Together
           </p>
         </div>
       </div>
     </div>
     `;
-    
+
     return html;
   };
 
