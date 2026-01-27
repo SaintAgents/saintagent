@@ -116,8 +116,9 @@ export default function MissionDetail() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 flex items-center justify-center p-6">
         <div className="text-center">
-          <Target className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">Mission not found</h2>
+          <Target className="w-16 h-16 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Mission not found</h2>
+          <p className="text-sm mb-4">Mission ID: {missionId || 'none'}</p>
           <Button onClick={() => window.location.href = createPageUrl('Missions')}>
             Back to Missions
           </Button>
