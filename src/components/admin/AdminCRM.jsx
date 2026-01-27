@@ -420,6 +420,11 @@ export default function AdminCRM() {
             </div>
           )}
         </TabsContent>
+
+        {/* Workflows Tab */}
+        <TabsContent value="workflows" className="mt-4">
+          <WorkflowAutomationEngine />
+        </TabsContent>
       </Tabs>
     </div>
   );
