@@ -187,7 +187,7 @@ export default function AdminBetaFeedback() {
       )}
 
       {/* Detail Modal */}
-      <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
+      <Dialog open={!!selectedFeedback} onOpenChange={(open) => { if (!open) setSelectedFeedback(null); }}>
         <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           {selectedFeedback && (
             <>
