@@ -537,14 +537,32 @@ export default function Profile() {
                     </Badge>
                   )}
                   {typeof profile?.influence_score === 'number' &&
-                  <Badge className="bg-violet-100 text-violet-700">
-                      <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile.influence_score)}
-                    </Badge>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="bg-violet-100 text-violet-700 cursor-help">
+                          <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile.influence_score)}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Influence Score - measures your reach and impact in the community</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   }
                   {typeof profile?.expertise_score === 'number' &&
-                  <Badge className="bg-blue-100 text-blue-700">
-                      <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile.expertise_score)}
-                    </Badge>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="bg-blue-100 text-blue-700 cursor-help">
+                          <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile.expertise_score)}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Expertise Score - based on skills, endorsements, and verified accomplishments</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   }
                 </div>
                 <p className="text-blue-950">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
