@@ -2,9 +2,15 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Progress } from "@/components/ui/progress";
-import { Sparkles, Square } from "lucide-react";
+import { Sparkles, Square, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createPageUrl } from "@/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ACTIONS = [
   { label: "Follow 5 leaders", reward: 0.03 },
