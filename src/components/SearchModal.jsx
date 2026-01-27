@@ -20,7 +20,10 @@ import {
   CircleDot,
   FileText,
   Folder,
-  X
+  X,
+  StickyNote,
+  CalendarDays,
+  Clock
 } from "lucide-react";
 
 export default function SearchModal({ open, onClose, onSelect }) {
