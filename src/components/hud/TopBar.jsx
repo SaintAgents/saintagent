@@ -331,7 +331,10 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="w-10 h-10 object-contain"
+                  className={cn(
+                    "w-10 h-10 object-contain",
+                    currentTheme === 'hacker' && "hacker-mode-icon"
+                  )}
                   data-no-filter="true"
                 />
                 {/* Hover tooltip with label */}
