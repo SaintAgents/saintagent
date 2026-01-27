@@ -1227,27 +1227,23 @@ export default function SidePanel({
           )}
 
           {/* Control Panel */}
-          <div data-ggg-controls className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggAuditOpen(true)}>
-                <Activity className="w-4 h-4 mr-1" />
-                Audit
+          <div data-ggg-controls className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)] text-xs" onClick={() => setGggTxOpen(true)}>
+                <Coins className="w-3.5 h-3.5 mr-1" />
+                GGG Log
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggPopupOpen(true)}>
-                <TrendingUp className="w-4 h-4 mr-1" />
-                Rank
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)] text-xs" onClick={() => setGggPopupOpen(true)}>
+                <TrendingUp className="w-3.5 h-3.5 mr-1" />
+                RP Progress
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => setGggTxOpen(true)}>
-                <List className="w-4 h-4 mr-1" />
-                Transactions
-              </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
-                <Calendar className="w-4 h-4 mr-1" />
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)] text-xs" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>
+                <Calendar className="w-3.5 h-3.5 mr-1" />
                 Daily Ops
               </Button>
-              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => {window.location.href = createPageUrl('Admin') + '?tab=audit';}}>
-                <Users className="w-4 h-4 mr-1" />
-                User Log
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)] text-xs" onClick={() => setGggAuditOpen(true)}>
+                <Activity className="w-3.5 h-3.5 mr-1" />
+                My Activity
               </Button>
             </div>
           </div>
