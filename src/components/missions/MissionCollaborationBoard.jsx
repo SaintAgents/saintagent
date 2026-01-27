@@ -48,6 +48,378 @@ const TYPE_CONFIG = {
   resource: { label: 'Resource', icon: Link2, color: 'bg-rose-100 text-rose-700' }
 };
 
+// Task Assignment Component
+function TaskAssignment({ mission, missionId, participants, currentUser, userProfile }) {
+  const queryClient = useQueryClient();
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskAssignee, setNewTaskAssignee] = useState('');
+
+  const updateTasksMutation = useMutation({
+    mutationFn: async (tasks) => {
+      await base44.entities.Mission.update(missionId, { tasks });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['missions'] })
+  });
+
+  const tasks = mission?.tasks || [];
+
+  const addTask = () => {
+    if (!newTaskTitle.trim()) return;
+    const newTask = {
+      id: Date.now().toString(),
+      title: newTaskTitle,
+      completed: false,
+      assignee_id: newTaskAssignee || null,
+      assignee_name: participants?.find(p => p.user_id === newTaskAssignee)?.display_name || null,
+      created_at: new Date().toISOString(),
+      created_by: currentUser?.email
+    };
+    updateTasksMutation.mutate([...tasks, newTask]);
+    setNewTaskTitle('');
+    setNewTaskAssignee('');
+  };
+
+  const toggleTask = (taskId) => {
+    const updated = tasks.map(t => t.id === taskId ? { ...t, completed: !t.completed } : t);
+    updateTasksMutation.mutate(updated);
+  };
+
+  const assignTask = (taskId, assigneeId) => {
+    const assignee = participants?.find(p => p.user_id === assigneeId);
+    const updated = tasks.map(t => t.id === taskId ? { 
+      ...t, 
+      assignee_id: assigneeId,
+      assignee_name: assignee?.display_name || null
+    } : t);
+    updateTasksMutation.mutate(updated);
+  };
+
+  const deleteTask = (taskId) => {
+    updateTasksMutation.mutate(tasks.filter(t => t.id !== taskId));
+  };
+
+  const completedCount = tasks.filter(t => t.completed).length;
+  const progressPercent = tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Progress */}
+      <div className="flex items-center gap-3">
+        <Progress value={progressPercent} className="flex-1 h-2" />
+        <span className="text-sm font-medium text-slate-600">{completedCount}/{tasks.length}</span>
+      </div>
+
+      {/* Add Task */}
+      <div className="flex gap-2">
+        <Input
+          value={newTaskTitle}
+          onChange={(e) => setNewTaskTitle(e.target.value)}
+          placeholder="Add a task..."
+          className="flex-1"
+          onKeyDown={(e) => e.key === 'Enter' && addTask()}
+        />
+        <Select value={newTaskAssignee} onValueChange={setNewTaskAssignee}>
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Assign to..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={null}>Unassigned</SelectItem>
+            {participants?.map(p => (
+              <SelectItem key={p.user_id} value={p.user_id}>
+                {p.display_name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button onClick={addTask} disabled={!newTaskTitle.trim()} className="bg-violet-600 hover:bg-violet-700">
+          Add
+        </Button>
+      </div>
+
+      {/* Task List */}
+      <div className="space-y-2">
+        {tasks.map(task => (
+          <div key={task.id} className={cn(
+            "flex items-center gap-3 p-3 rounded-lg border transition-all",
+            task.completed ? "bg-emerald-50 border-emerald-200" : "bg-white border-slate-200"
+          )}>
+            <button onClick={() => toggleTask(task.id)} className="shrink-0">
+              {task.completed ? (
+                <CheckSquare className="w-5 h-5 text-emerald-600" />
+              ) : (
+                <Square className="w-5 h-5 text-slate-400 hover:text-violet-600" />
+              )}
+            </button>
+            <span className={cn("flex-1 text-sm", task.completed && "line-through text-slate-500")}>
+              {task.title}
+            </span>
+            {task.assignee_name ? (
+              <Badge variant="secondary" className="text-xs">
+                <Users className="w-3 h-3 mr-1" />
+                {task.assignee_name}
+              </Badge>
+            ) : (
+              <Select value={task.assignee_id || ''} onValueChange={(v) => assignTask(task.id, v)}>
+                <SelectTrigger className="w-32 h-7 text-xs">
+                  <SelectValue placeholder="Assign" />
+                </SelectTrigger>
+                <SelectContent>
+                  {participants?.map(p => (
+                    <SelectItem key={p.user_id} value={p.user_id}>
+                      {p.display_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            <button onClick={() => deleteTask(task.id)} className="text-slate-400 hover:text-rose-500">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        ))}
+        {tasks.length === 0 && (
+          <p className="text-center text-slate-500 text-sm py-4">No tasks yet. Add one above!</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Real-time Chat Component
+function MissionChat({ missionId, currentUser, userProfile }) {
+  const queryClient = useQueryClient();
+  const [message, setMessage] = useState('');
+  const scrollRef = useRef(null);
+  const conversationId = `mission_${missionId}`;
+
+  const { data: messages = [] } = useQuery({
+    queryKey: ['missionChat', missionId],
+    queryFn: () => base44.entities.Message.filter({ conversation_id: conversationId }, 'created_date', 100),
+    enabled: !!missionId,
+    refetchInterval: 3000 // Poll every 3 seconds for real-time feel
+  });
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    if (!missionId) return;
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      if (event.data?.conversation_id === conversationId) {
+        queryClient.invalidateQueries({ queryKey: ['missionChat', missionId] });
+      }
+    });
+    return unsubscribe;
+  }, [missionId, conversationId, queryClient]);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const sendMutation = useMutation({
+    mutationFn: (content) => base44.entities.Message.create({
+      conversation_id: conversationId,
+      from_user_id: currentUser.email,
+      to_user_id: 'mission_group',
+      from_name: currentUser.full_name,
+      from_avatar: userProfile?.avatar_url,
+      content,
+      message_type: 'text'
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missionChat', missionId] });
+      setMessage('');
+    }
+  });
+
+  const handleSend = () => {
+    if (!message.trim()) return;
+    sendMutation.mutate(message.trim());
+  };
+
+  return (
+    <div className="flex flex-col h-[400px]">
+      {/* Messages */}
+      <ScrollArea ref={scrollRef} className="flex-1 p-3">
+        <div className="space-y-3">
+          {messages.map(msg => {
+            const isOwn = msg.from_user_id === currentUser?.email;
+            return (
+              <div key={msg.id} className={cn("flex gap-2", isOwn && "flex-row-reverse")}>
+                {!isOwn && (
+                  <Avatar className="w-7 h-7">
+                    <AvatarImage src={msg.from_avatar} />
+                    <AvatarFallback className="text-xs">{msg.from_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                )}
+                <div className={cn(
+                  "max-w-[70%] rounded-2xl px-3 py-2",
+                  isOwn ? "bg-violet-600 text-white" : "bg-slate-100 text-slate-900"
+                )}>
+                  {!isOwn && <p className="text-xs font-medium mb-0.5">{msg.from_name}</p>}
+                  <p className="text-sm">{msg.content}</p>
+                  <p className={cn("text-xs mt-1", isOwn ? "text-violet-200" : "text-slate-400")}>
+                    {format(new Date(msg.created_date), 'h:mm a')}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+          {messages.length === 0 && (
+            <p className="text-center text-slate-500 text-sm py-8">No messages yet. Start the conversation!</p>
+          )}
+        </div>
+      </ScrollArea>
+
+      {/* Input */}
+      <div className="p-3 border-t flex gap-2">
+        <Input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type a message..."
+          className="flex-1"
+          onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+        />
+        <Button 
+          onClick={handleSend} 
+          disabled={!message.trim() || sendMutation.isPending}
+          className="bg-violet-600 hover:bg-violet-700"
+        >
+          <Send className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// File Sharing Component
+function MissionFiles({ missionId, currentUser, userProfile }) {
+  const queryClient = useQueryClient();
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const { data: files = [] } = useQuery({
+    queryKey: ['missionFiles', missionId],
+    queryFn: () => base44.entities.SharedFile.filter({ entity_type: 'mission', entity_id: missionId }, '-created_date', 50),
+    enabled: !!missionId
+  });
+
+  const uploadMutation = useMutation({
+    mutationFn: async (file) => {
+      setUploading(true);
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.entities.SharedFile.create({
+        entity_type: 'mission',
+        entity_id: missionId,
+        file_url,
+        file_name: file.name,
+        file_type: file.type,
+        file_size: file.size,
+        uploaded_by: currentUser.email,
+        uploader_name: currentUser.full_name,
+        uploader_avatar: userProfile?.avatar_url
+      });
+      setUploading(false);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['missionFiles', missionId] }),
+    onError: () => setUploading(false)
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.SharedFile.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['missionFiles', missionId] })
+  });
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (file) uploadMutation.mutate(file);
+  };
+
+  const getFileIcon = (type) => {
+    if (type?.startsWith('image/')) return ImageIcon;
+    if (type?.includes('pdf')) return FileText;
+    return File;
+  };
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Upload Button */}
+      <div className="flex justify-center">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+        <Button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          variant="outline"
+          className="gap-2"
+        >
+          {uploading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Upload className="w-4 h-4" />
+          )}
+          {uploading ? 'Uploading...' : 'Upload File'}
+        </Button>
+      </div>
+
+      {/* Files Grid */}
+      <div className="grid grid-cols-2 gap-3">
+        {files.map(file => {
+          const FileIcon = getFileIcon(file.file_type);
+          return (
+            <div key={file.id} className="bg-white border rounded-lg p-3 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-slate-100 rounded-lg">
+                  <FileIcon className="w-5 h-5 text-slate-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">{file.file_name}</p>
+                  <p className="text-xs text-slate-500">{formatFileSize(file.file_size)}</p>
+                  <p className="text-xs text-slate-400 mt-1">by {file.uploader_name}</p>
+                </div>
+                <div className="flex gap-1">
+                  <a
+                    href={file.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 hover:bg-slate-100 rounded"
+                  >
+                    <Download className="w-4 h-4 text-slate-500" />
+                  </a>
+                  {file.uploaded_by === currentUser?.email && (
+                    <button
+                      onClick={() => deleteMutation.mutate(file.id)}
+                      className="p-1.5 hover:bg-rose-50 rounded text-slate-400 hover:text-rose-500"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {files.length === 0 && (
+        <p className="text-center text-slate-500 text-sm py-8">No files shared yet. Upload one to get started!</p>
+      )}
+    </div>
+  );
+}
+
 function BoardPost({ post, onReply, onLike, onDelete, isOwn, profiles }) {
   const [showReplies, setShowReplies] = useState(false);
   const config = TYPE_CONFIG[post.content_type] || TYPE_CONFIG.discussion;
