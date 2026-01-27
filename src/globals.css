@@ -201,6 +201,20 @@ main {
   -webkit-backdrop-filter: none !important;
   border: 1px solid #00ff00 !important;
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), 0 0 40px rgba(0, 255, 0, 0.2) !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+}
+
+/* Hacker theme - Dialogs must stay within viewport */
+[data-theme='hacker'] [role="dialog"],
+[data-theme='hacker'] [data-radix-dialog-content] {
+  max-height: 90vh !important;
+  max-width: 95vw !important;
+  overflow-y: auto !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  position: fixed !important;
 }
 
 /* Hacker theme - Ensure ALL nested elements in popups are also solid black */
