@@ -1,5 +1,19 @@
 css
 /* =====================================================
+   SIDE PANEL HANDLE - FORCE 22PX HEIGHT
+   ===================================================== */
+
+[data-side-panel-handle] {
+  height: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
+}
+
+[data-side-panel-handle] > div {
+  height: 22px !important;
+}
+
+/* =====================================================
    SCROLLBAR HIDE UTILITY
    ===================================================== */
 
