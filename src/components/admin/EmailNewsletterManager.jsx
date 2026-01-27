@@ -517,11 +517,11 @@ Do NOT include HTML tags - plain text only with clear formatting using:
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Eye className="w-5 h-5" />
-                Email Preview
+                Email Preview (Final)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {!subject && !body ? (
+              {!subject && !body && selectedArticles.length === 0 ? (
                 <p className="text-slate-500 text-center py-8">
                   Compose your newsletter to see a preview.
                 </p>
@@ -530,10 +530,13 @@ Do NOT include HTML tags - plain text only with clear formatting using:
                   <div className="bg-slate-100 dark:bg-slate-800 p-4 border-b">
                     <p className="text-sm text-slate-500">Subject:</p>
                     <p className="font-semibold">{subject || '(No subject)'}</p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {selectedArticles.length} article(s) embedded
+                    </p>
                   </div>
-                  <div className="p-6 bg-white dark:bg-slate-900 min-h-[300px]">
+                  <div className="p-6 bg-white dark:bg-slate-900 min-h-[300px] max-h-[500px] overflow-y-auto">
                     <pre className="whitespace-pre-wrap font-sans text-sm">
-                      {body || '(No content)'}
+                      {buildFinalEmailContent() || '(No content)'}
                     </pre>
                   </div>
                 </div>
