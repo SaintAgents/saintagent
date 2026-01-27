@@ -748,12 +748,36 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 
       /* GLOBAL THEME FONT COLORS - Single source of truth */
                   /* Light theme defaults */
-                  [data-theme='light'] {
-                    --text-primary: #1e293b;
-                    --text-secondary: #475569;
-                    --text-muted: #64748b;
-                    --text-on-primary: #ffffff;
-                    --text-on-dark: #ffffff;
+                                          [data-theme='light'] {
+                                            --text-primary: #1e293b;
+                                            --text-secondary: #475569;
+                                            --text-muted: #64748b;
+                                            --text-on-primary: #ffffff;
+                                            --text-on-dark: #ffffff;
+                                          }
+
+                  /* Light theme - ensure hover/tooltip text is dark and readable */
+                  [data-theme='light'] [role="tooltip"] *,
+                  [data-theme='light'] [data-radix-popper-content-wrapper] *,
+                  [data-theme='light'] [data-state="open"] [role="tooltip"] * {
+                    color: #1e293b !important;
+                  }
+
+                  [data-theme='light'] [role="tooltip"] p,
+                  [data-theme='light'] [role="tooltip"] span,
+                  [data-theme='light'] [role="tooltip"] div,
+                  [data-theme='light'] [role="tooltip"] h1,
+                  [data-theme='light'] [role="tooltip"] h2,
+                  [data-theme='light'] [role="tooltip"] h3,
+                  [data-theme='light'] [role="tooltip"] h4 {
+                    color: #1e293b !important;
+                  }
+
+                  [data-theme='light'] [role="tooltip"] .text-slate-500,
+                  [data-theme='light'] [role="tooltip"] .text-slate-400,
+                  [data-theme='light'] [role="tooltip"] .text-gray-500,
+                  [data-theme='light'] [role="tooltip"] .text-gray-400 {
+                    color: #475569 !important;
                   }
 
                   /* Dark theme font colors */
