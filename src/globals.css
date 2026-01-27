@@ -900,21 +900,70 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                   [data-theme='light'] button[class*="bg-primary"],
                   [data-theme='light'] button[class*="bg-slate-800"],
                   [data-theme='light'] button[class*="bg-slate-900"],
-                  [data-theme='light'] [class*="bg-violet"] *,
-                  [data-theme='light'] [class*="bg-purple"] *,
-                  [data-theme='light'] [class*="bg-emerald"] *,
-                  [data-theme='light'] [class*="bg-blue"] *,
+                  [data-theme='light'] [class*="bg-violet-600"] *,
+                  [data-theme='light'] [class*="bg-violet-700"] *,
+                  [data-theme='light'] [class*="bg-purple-600"] *,
+                  [data-theme='light'] [class*="bg-purple-700"] *,
+                  [data-theme='light'] [class*="bg-emerald-600"] *,
+                  [data-theme='light'] [class*="bg-emerald-700"] *,
+                  [data-theme='light'] [class*="bg-blue-600"] *,
+                  [data-theme='light'] [class*="bg-blue-700"] *,
                   [data-theme='light'] [class*="bg-primary"] *,
                   [data-theme='light'] [class*="bg-slate-800"] *,
                   [data-theme='light'] [class*="bg-slate-900"] *,
-                  html[data-theme='light'] button[class*="bg-violet"] *,
-                  html[data-theme='light'] button[class*="bg-purple"] *,
-                  html[data-theme='light'] button[class*="bg-emerald"] *,
-                  html[data-theme='light'] button[class*="bg-blue"] *,
+                  html[data-theme='light'] button[class*="bg-violet-600"] *,
+                  html[data-theme='light'] button[class*="bg-violet-700"] *,
+                  html[data-theme='light'] button[class*="bg-purple-600"] *,
+                  html[data-theme='light'] button[class*="bg-purple-700"] *,
+                  html[data-theme='light'] button[class*="bg-emerald-600"] *,
+                  html[data-theme='light'] button[class*="bg-emerald-700"] *,
+                  html[data-theme='light'] button[class*="bg-blue-600"] *,
+                  html[data-theme='light'] button[class*="bg-blue-700"] *,
                   html[data-theme='light'] button[class*="bg-primary"] *,
                   html[data-theme='light'] button[class*="bg-slate-800"] *,
                   html[data-theme='light'] button[class*="bg-slate-900"] * {
                     color: #ffffff !important;
+                  }
+
+                  /* CRITICAL: Badge text color fix - badges with colored backgrounds need white text */
+                  [data-theme='light'] .bg-violet-600,
+                  [data-theme='light'] .bg-violet-700,
+                  [data-theme='light'] .bg-purple-600,
+                  [data-theme='light'] .bg-purple-700,
+                  [data-theme='light'] .bg-emerald-600,
+                  [data-theme='light'] .bg-emerald-700,
+                  [data-theme='light'] .bg-blue-600,
+                  [data-theme='light'] .bg-blue-700,
+                  [data-theme='light'] .bg-green-600,
+                  [data-theme='light'] .bg-green-700,
+                  [data-theme='light'] .bg-red-600,
+                  [data-theme='light'] .bg-red-700,
+                  [data-theme='light'] .bg-amber-600,
+                  [data-theme='light'] .bg-amber-700,
+                  [data-theme='light'] .bg-primary,
+                  html[data-theme='light'] .bg-violet-600,
+                  html[data-theme='light'] .bg-violet-700,
+                  html[data-theme='light'] .bg-purple-600,
+                  html[data-theme='light'] .bg-purple-700,
+                  html[data-theme='light'] .bg-emerald-600,
+                  html[data-theme='light'] .bg-emerald-700,
+                  html[data-theme='light'] .bg-blue-600,
+                  html[data-theme='light'] .bg-blue-700,
+                  html[data-theme='light'] .bg-green-600,
+                  html[data-theme='light'] .bg-green-700,
+                  html[data-theme='light'] .bg-red-600,
+                  html[data-theme='light'] .bg-red-700,
+                  html[data-theme='light'] .bg-amber-600,
+                  html[data-theme='light'] .bg-amber-700,
+                  html[data-theme='light'] .bg-primary {
+                    color: #ffffff !important;
+                  }
+
+                  /* Default shadcn button text - ensure dark text on light backgrounds */
+                  [data-theme='light'] button:not([class*="bg-violet"]):not([class*="bg-purple"]):not([class*="bg-emerald"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]):not([class*="bg-primary"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]),
+                  [data-theme='light'] button:not([class*="bg-violet"]):not([class*="bg-purple"]):not([class*="bg-emerald"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]):not([class*="bg-primary"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]) span,
+                  html[data-theme='light'] button:not([class*="bg-violet"]):not([class*="bg-purple"]):not([class*="bg-emerald"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]):not([class*="bg-primary"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]) {
+                    color: #1e293b !important;
                   }
 
                   /* Dark theme font colors */
