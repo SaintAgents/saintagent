@@ -203,9 +203,13 @@ export default function DatingMatchesPopup({ currentUser }) {
   // If existing matches exist, use those first
   const hasExistingMatches = existingMatches.length > 0;
   
-  // Filter dating profiles when no existing matches
+  // Filter dating profiles when no existing matches - STRICT GENDER FILTERING
   const filteredDatingProfiles = datingProfiles.filter((p) => {
     if (p.user_id === currentUser?.email) return false;
+    
+    // STRICT: Candidate MUST have a valid gender set
+    const candidateGender = p.gender;
+    if (!candidateGender || candidateGender === '') return false;
     
     // I must be interested in their gender
     if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
