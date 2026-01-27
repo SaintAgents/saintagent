@@ -138,8 +138,11 @@ export default function QuickStartChecklist() {
     create_offer: listings.length >= 1
   };
   
+  // Combine all actions for display
+  const ALL_ACTIONS = [...ACTIONS, READ_ME_ACTION, OFFER_ACTION];
+  
   const completedCount = Object.values(completionStatus).filter(Boolean).length;
-  const progressPercent = (completedCount / ACTIONS.length) * 100;
+  const progressPercent = (completedCount / 5) * 100; // 5 completable actions
   
   // Active walkthrough state
   const [activeWalkthrough, setActiveWalkthrough] = useState(null);
