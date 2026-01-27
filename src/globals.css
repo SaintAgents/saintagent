@@ -353,6 +353,33 @@ img[alt="Trust Gauge"],
 }
 
 /* =====================================================
+   FLOATING NOTES BUTTON - DARK THEME FIX
+   ===================================================== */
+
+[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"],
+[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"] {
+  background-color: #10b981 !important;
+  color: #000000 !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5) !important;
+}
+
+[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"]:hover,
+[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover {
+  background-color: #34d399 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.7) !important;
+}
+
+[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"] {
+  background-color: #00ff00 !important;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+}
+
+[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover {
+  background-color: #00ff00 !important;
+  box-shadow: 0 0 25px rgba(0, 255, 0, 0.8) !important;
+}
+
+/* =====================================================
    FLOATING PANELS - DARK THEME OVERRIDE
    ===================================================== */
 
