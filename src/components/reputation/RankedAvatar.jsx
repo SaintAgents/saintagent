@@ -96,7 +96,21 @@ export default function RankedAvatar({
   
   // Debug: Log avatar URL sources
   const avatarUrl = src || fetchedProfile?.avatar_url;
-  const finalAvatarUrl = (avatarUrl && avatarUrl.trim() !== '') ? avatarUrl : DEFAULT_AVATAR;
+  // Only use default if no avatar URL provided - never override a valid URL
+  const finalAvatarUrl = (avatarUrl && typeof avatarUrl === 'string' && avatarUrl.trim() !== '' && avatarUrl !== 'null' && avatarUrl !== 'undefined') 
+    ? avatarUrl 
+    : DEFAULT_AVATAR;
+  
+  // Debug logging for avatar issues
+  if (typeof window !== 'undefined' && window.location.pathname.includes('CommandDeck')) {
+    console.log('RankedAvatar debug:', { 
+      srcProp: src, 
+      fetchedAvatar: fetchedProfile?.avatar_url, 
+      finalAvatarUrl,
+      userId,
+      needsFetch
+    });
+  }
   // Filter out hero images from personal gallery
   const allImages = [finalAvatarUrl, ...combinedGallery]
     .filter(url => url && !HERO_IMAGE_URLS.has(url))
