@@ -634,11 +634,67 @@ html[data-theme='hacker'] img[alt*="Badge"] {
 }
 
 /* Dark mode: Fix all button variants text visibility */
-[data-theme='dark'] .btn,
-[data-theme='dark'] [class*='btn-'],
-[data-theme='dark'] button:not([class*='bg-']) {
-  color: #ffffff !important;
-}
+      [data-theme='dark'] .btn,
+      [data-theme='dark'] [class*='btn-'],
+      [data-theme='dark'] button:not([class*='bg-']) {
+        color: #ffffff !important;
+      }
+
+      /* GLOBAL THEME FONT COLORS - Single source of truth */
+      /* Light theme defaults */
+      [data-theme='light'] {
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --text-on-primary: #ffffff;
+        --text-on-dark: #ffffff;
+      }
+
+      /* Dark theme font colors */
+      [data-theme='dark'] {
+        --text-primary: #ffffff;
+        --text-secondary: #e0e0e0;
+        --text-muted: #a0a0a0;
+        --text-on-primary: #ffffff;
+        --text-on-dark: #ffffff;
+      }
+
+      /* Hacker theme font colors */
+      [data-theme='hacker'] {
+        --text-primary: #00ff00;
+        --text-secondary: #00dd00;
+        --text-muted: #00aa00;
+        --text-on-primary: #00ff00;
+        --text-on-dark: #00ff00;
+      }
+
+      /* Apply theme colors globally */
+      [data-theme='dark'] body,
+      [data-theme='dark'] p,
+      [data-theme='dark'] span,
+      [data-theme='dark'] div,
+      [data-theme='dark'] label,
+      [data-theme='dark'] h1, [data-theme='dark'] h2, [data-theme='dark'] h3,
+      [data-theme='dark'] h4, [data-theme='dark'] h5, [data-theme='dark'] h6 {
+        color: var(--text-primary) !important;
+      }
+
+      /* Force button text to be visible in dark themes */
+      [data-theme='dark'] button,
+      [data-theme='dark'] [role="button"],
+      [data-theme='dark'] button span,
+      [data-theme='dark'] button div,
+      [data-theme='dark'] [role="button"] span {
+        color: var(--text-on-primary) !important;
+      }
+
+      [data-theme='hacker'] button,
+      [data-theme='hacker'] [role="button"],
+      [data-theme='hacker'] button span,
+      [data-theme='hacker'] button div,
+      [data-theme='hacker'] [role="button"] span {
+        color: var(--text-on-primary) !important;
+      }
 
 [data-theme='hacker'] button,
 [data-theme='hacker'] [role="button"],

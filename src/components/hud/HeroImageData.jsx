@@ -1,6 +1,7 @@
 // Registry of all hero images across pages for the Global Hero Viewer
 // Add new hero images here when pages are created
 
+// Deduplicated hero images - each unique URL appears once
 export const HERO_IMAGES = [
   {
     id: 'mentorship',
@@ -31,39 +32,11 @@ export const HERO_IMAGES = [
     description: 'Sacred quests for planetary transformation'
   },
   {
-    id: 'marketplace',
-    page: 'Marketplace',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/740e4858f_universal_upscale_0_1b9b7ded-4214-49b8-8dd1-4839388dd21a_0.jpg',
-    title: 'Marketplace',
-    description: 'Exchange value with conscious creators'
-  },
-  {
     id: 'meetings',
     page: 'Meetings',
     url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg',
     title: 'Meetings',
     description: 'Connect with aligned souls'
-  },
-  {
-    id: 'matches',
-    page: 'Matches',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/46b1af7b6_synchro.jpg',
-    title: 'Matches',
-    description: 'Soul-aligned connections await'
-  },
-  {
-    id: 'gamification',
-    page: 'Gamification',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d702dc79_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg',
-    title: 'Gamification',
-    description: 'Level up your journey'
-  },
-  {
-    id: 'initiations',
-    page: 'Initiations',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7e50f7bf_universal_upscale_0_616bb1f7-8a11-4de2-bec2-b326e9e4b195_0.jpg',
-    title: 'Initiations',
-    description: 'Sacred pathways of transformation'
   },
   {
     id: 'circles',
@@ -120,34 +93,6 @@ export const HERO_IMAGES = [
     url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/f95689693_Screenshot2026-01-04192526.png',
     title: 'Affiliate Center',
     description: 'Grow your network'
-  },
-  {
-    id: 'leader-channel',
-    page: 'LeaderChannel',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c7e50f7bf_universal_upscale_0_616bb1f7-8a11-4de2-bec2-b326e9e4b195_0.jpg',
-    title: '144K Leader Channel',
-    description: 'Broadcast to the collective'
-  },
-  {
-    id: 'crm',
-    page: 'CRM',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/834e5195f_image_2025-12-27_132011008.png',
-    title: 'Contact Network',
-    description: 'Manage your sacred connections'
-  },
-  {
-    id: 'forum',
-    page: 'Forum',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg',
-    title: 'Forum',
-    description: 'Community discussions'
-  },
-  {
-    id: 'dating',
-    page: 'DatingMatches',
-    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/46b1af7b6_synchro.jpg',
-    title: 'Soul Connections',
-    description: 'Find your divine counterpart'
   },
   {
     id: 'find-collaborators',

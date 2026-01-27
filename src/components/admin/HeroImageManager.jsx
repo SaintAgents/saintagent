@@ -242,6 +242,9 @@ export default function HeroImageManager() {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          <p className="text-sm text-slate-500 mb-4">
+            These are built-in images. To remove them, edit the HeroImageData.jsx file.
+          </p>
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
             {HERO_IMAGES.map((img) => (
               <div key={img.id} className="relative group rounded-lg overflow-hidden">

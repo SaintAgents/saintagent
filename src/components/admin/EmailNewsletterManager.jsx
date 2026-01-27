@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart } from 'lucide-react';
 import { toast } from "sonner";
 
 export default function EmailNewsletterManager() {
@@ -25,7 +25,13 @@ export default function EmailNewsletterManager() {
   // Fetch news articles
   const { data: newsArticles = [] } = useQuery({
     queryKey: ['newsArticles'],
-    queryFn: () => base44.entities.NewsArticle.list('-created_date', 20)
+    queryFn: () => base44.entities.NewsArticle.list('-created_date', 50)
+  });
+
+  // Fetch press releases / insights
+  const { data: pressReleases = [] } = useQuery({
+    queryKey: ['pressReleases'],
+    queryFn: () => base44.entities.PressRelease.list('-created_date', 20)
   });
 
   // Fetch stored email list
@@ -94,6 +100,15 @@ export default function EmailNewsletterManager() {
     if (article) {
       setSubject(article.title || '');
       setBody(`${article.summary || ''}\n\n${article.content || ''}`);
+    }
+  };
+
+  // Load press release / analysis content
+  const handleSelectPress = (pressId) => {
+    const press = pressReleases.find(p => p.id === pressId);
+    if (press) {
+      setSubject(press.title || '');
+      setBody(`${press.summary || ''}\n\n${press.content || ''}`);
     }
   };
 
@@ -176,21 +191,44 @@ export default function EmailNewsletterManager() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Load from News */}
-              <div>
-                <Label>Load from News Article (optional)</Label>
-                <Select value={selectedNews} onValueChange={handleSelectNews}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a news article..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {newsArticles.map((article) => (
-                      <SelectItem key={article.id} value={article.id}>
-                        {article.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              {/* Load from News or Analysis */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="flex items-center gap-2">
+                    <Newspaper className="w-4 h-4" />
+                    Load from News Article
+                  </Label>
+                  <Select value={selectedNews} onValueChange={handleSelectNews}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a news article..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {newsArticles.map((article) => (
+                        <SelectItem key={article.id} value={article.id}>
+                          {article.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="flex items-center gap-2">
+                    <BarChart className="w-4 h-4" />
+                    Load from Analysis/Press
+                  </Label>
+                  <Select onValueChange={handleSelectPress}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select analysis/press release..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {pressReleases.map((press) => (
+                        <SelectItem key={press.id} value={press.id}>
+                          {press.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               {/* Subject */}
