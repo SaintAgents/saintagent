@@ -92,6 +92,7 @@ import FileStorageSection from '@/components/profile/FileStorageSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
 import JournalTab from '@/components/profile/JournalTab';
+import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import {
   Tooltip,
   TooltipContent,
@@ -710,6 +711,12 @@ export default function Profile() {
               <TabsTrigger value="journal" className="text-xs sm:text-sm px-2 sm:px-3" title="Journal">
                   <span className="hidden sm:inline">Journal</span>
                   <BookOpen className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              }
+              {isOwnProfile &&
+              <TabsTrigger value="bank" className="text-xs sm:text-sm px-2 sm:px-3" title="Bank">
+                  <span className="hidden sm:inline">Bank</span>
+                  <Coins className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               }
             </TabsList>
@@ -1703,6 +1710,12 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="journal" className="space-y-6">
               <JournalTab profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
+            <TabsContent value="bank" className="space-y-6">
+              <GaiaBankTab />
             </TabsContent>
           )}
 
