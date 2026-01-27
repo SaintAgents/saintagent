@@ -798,6 +798,15 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                     --text-on-dark: #00ff00;
                   }
 
+                  /* Grey theme font colors */
+                  [data-theme='grey'] {
+                    --text-primary: #606060;
+                    --text-secondary: #808080;
+                    --text-muted: #505050;
+                    --text-on-primary: #606060;
+                    --text-on-dark: #909090;
+                  }
+
       /* =====================================================
          DARK/HACKER THEME - COMPREHENSIVE TEXT VISIBILITY FIX
          ===================================================== */
@@ -977,6 +986,171 @@ html[data-theme='hacker'] [role="button"] * {
 [data-theme='hacker'] input::placeholder,
 [data-theme='hacker'] textarea::placeholder {
   color: rgba(0, 255, 0, 0.5) !important;
+}
+
+/* =====================================================
+   GREY THEME - Industrial Dark with Red Accents
+   ===================================================== */
+
+[data-theme='grey'] body {
+  background-color: #1a1a1a !important;
+}
+
+[data-theme='grey'] .min-h-screen,
+[data-theme='grey'] main {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #606060 !important;
+}
+
+[data-theme='grey'] h1,
+[data-theme='grey'] h2,
+[data-theme='grey'] h3,
+[data-theme='grey'] h4,
+[data-theme='grey'] h5,
+[data-theme='grey'] h6 {
+  color: #808080 !important;
+}
+
+[data-theme='grey'] p,
+[data-theme='grey'] span,
+[data-theme='grey'] div,
+[data-theme='grey'] label {
+  color: #606060 !important;
+}
+
+/* Grey theme cards - dark with subtle borders */
+[data-theme='grey'] .rounded-xl:not(img):not([data-no-filter="true"]),
+[data-theme='grey'] .rounded-lg:not(img):not([data-no-filter="true"]),
+[data-theme='grey'] .rounded-2xl:not(img):not([data-no-filter="true"]),
+[data-theme='grey'] [class*='Card']:not(img) {
+  background-color: rgba(26, 26, 26, 0.95) !important;
+  border: 1px solid #333333 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Grey theme inputs */
+[data-theme='grey'] input,
+[data-theme='grey'] textarea,
+[data-theme='grey'] select {
+  background-color: #121315 !important;
+  color: #808080 !important;
+  border: 1px solid #333333 !important;
+}
+
+[data-theme='grey'] input:focus,
+[data-theme='grey'] textarea:focus,
+[data-theme='grey'] select:focus {
+  border-color: #ef565e !important;
+  box-shadow: 0 0 8px rgba(239, 86, 94, 0.3) !important;
+}
+
+[data-theme='grey'] input::placeholder,
+[data-theme='grey'] textarea::placeholder {
+  color: #505050 !important;
+}
+
+/* Grey theme buttons - red accent */
+[data-theme='grey'] button,
+[data-theme='grey'] [role="button"] {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+  color: #808080 !important;
+}
+
+[data-theme='grey'] button:hover,
+[data-theme='grey'] [role="button"]:hover {
+  background-color: rgba(239, 86, 94, 0.1) !important;
+  border-color: #ef565e !important;
+  color: #ef565e !important;
+  box-shadow: 0 0 12px rgba(239, 86, 94, 0.2) !important;
+}
+
+/* Grey theme active/selected states - red accent */
+[data-theme='grey'] [data-state="active"],
+[data-theme='grey'] [aria-selected="true"] {
+  background-color: rgba(239, 86, 94, 0.15) !important;
+  border-color: #ef565e !important;
+  color: #ef565e !important;
+}
+
+/* Grey theme tabs */
+[data-theme='grey'] [role="tablist"] {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+}
+
+[data-theme='grey'] [role="tab"] {
+  color: #606060 !important;
+}
+
+[data-theme='grey'] [role="tab"][data-state="active"] {
+  background-color: rgba(239, 86, 94, 0.15) !important;
+  color: #ef565e !important;
+  border-color: #ef565e !important;
+}
+
+/* Grey theme dialogs/modals */
+[data-theme='grey'] [role="dialog"],
+[data-theme='grey'] [data-radix-popper-content-wrapper] > * {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Grey theme scrollbar */
+[data-theme='grey'] ::-webkit-scrollbar {
+  background-color: #1a1a1a !important;
+  width: 8px;
+}
+
+[data-theme='grey'] ::-webkit-scrollbar-thumb {
+  background: #333333 !important;
+  border-radius: 4px;
+}
+
+[data-theme='grey'] ::-webkit-scrollbar-thumb:hover {
+  background: #ef565e !important;
+}
+
+/* Grey theme badges */
+[data-theme='grey'] [class*='badge'],
+[data-theme='grey'] .badge,
+[data-theme='grey'] [class*='Badge'] {
+  background-color: #121315 !important;
+  border: 1px solid #333333 !important;
+  color: #808080 !important;
+}
+
+/* Grey theme links on hover - red accent */
+[data-theme='grey'] a:hover {
+  color: #ef565e !important;
+}
+
+/* Grey theme images - desaturated */
+[data-theme='grey'] img:not(.gauge-image):not([data-no-filter="true"]) {
+  filter: grayscale(60%) brightness(0.9) !important;
+  -webkit-filter: grayscale(60%) brightness(0.9) !important;
+}
+
+/* Grey theme sidebar/nav */
+[data-theme='grey'] aside,
+[data-theme='grey'] nav,
+[data-theme='grey'] [data-sidebar] {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+}
+
+/* Grey theme code blocks */
+[data-theme='grey'] pre {
+  background: #121315 !important;
+  color: #808080 !important;
+  border: 1px solid #333333 !important;
+}
+
+[data-theme='grey'] code {
+  background: #121315 !important;
+  color: #ef565e !important;
 }
 
 [data-theme='hacker'] [class*='text-'],
