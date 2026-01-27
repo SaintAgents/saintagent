@@ -13,10 +13,12 @@ export default function HeroGalleryViewer() {
 
   useEffect(() => {
     const handleOpen = (e) => {
+      console.log('HeroGalleryViewer received event:', e.detail);
       const startIndex = e.detail?.startIndex || 0;
       // If imageId is passed, find the index
       if (e.detail?.imageId) {
         const idx = HERO_IMAGES.findIndex(img => img.id === e.detail.imageId);
+        console.log('Found image at index:', idx, 'for id:', e.detail.imageId);
         if (idx !== -1) setCurrentIndex(idx);
         else setCurrentIndex(startIndex);
       } else {
@@ -28,6 +30,7 @@ export default function HeroGalleryViewer() {
     };
 
     document.addEventListener('openHeroGallery', handleOpen);
+    console.log('HeroGalleryViewer: Event listener attached');
     return () => document.removeEventListener('openHeroGallery', handleOpen);
   }, []);
 
