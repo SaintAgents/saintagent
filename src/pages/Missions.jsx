@@ -49,6 +49,7 @@ import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import AgentTestimonialsMarquee from '@/components/missions/AgentTestimonialsMarquee';
 
 export default function Missions() {
   const [tab, setTab] = useState('active');
@@ -584,6 +585,9 @@ export default function Missions() {
           )}
           </div>
         }
+
+        {/* Agent Testimonials */}
+        <AgentTestimonialsMarquee />
       </div>
 
       <CreateMissionModal
