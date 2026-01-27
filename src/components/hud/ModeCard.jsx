@@ -12,6 +12,21 @@ const MODE_BACKGROUNDS = {
   connect: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=80"
 };
 
+// Theme-aware custom icons
+const MODE_ICONS_LIGHT = {
+  command: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/78a908ab8_lighttv.png",
+  earn: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2a92a8b82_earndark.png",
+  build: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b0460b6fc_lightbuild.png",
+  teach: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5ec3e631c_lightteach.png"
+};
+
+const MODE_ICONS_DARK = {
+  command: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/dbc5c74f4_commandgreen.png",
+  earn: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/2a92a8b82_earndark.png",
+  build: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1c3eade4b_bulkddark.png",
+  teach: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/888735e7a_teahsgreen.png"
+};
+
 export default function ModeCard({ 
   mode, 
   title, 
@@ -19,6 +34,15 @@ export default function ModeCard({
   stats,
   onClick 
 }) {
+  // Get current theme
+  const theme = typeof document !== 'undefined' 
+    ? document.documentElement.getAttribute('data-theme') 
+    : 'light';
+  const isDark = theme === 'dark' || theme === 'hacker';
+  
+  // Check if this mode has a custom icon
+  const customIcon = isDark ? MODE_ICONS_DARK[mode] : MODE_ICONS_LIGHT[mode];
+  
   return (
     <button
       onClick={onClick}
@@ -41,11 +65,20 @@ export default function ModeCard({
               <p className="text-sm text-white/80">{stats}</p>
             )}
           </div>
-          {Icon && (
+          {customIcon ? (
+            <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
+              <img 
+                src={customIcon} 
+                alt={title}
+                className="w-10 h-10 object-contain"
+                data-no-filter="true"
+              />
+            </div>
+          ) : Icon ? (
             <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
               <Icon className="w-5 h-5 text-white" />
             </div>
-          )}
+          ) : null}
         </div>
 
         <div className="flex items-center justify-between">
