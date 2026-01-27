@@ -27,11 +27,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 
 export default function NotificationBell({ notifications = [], onAction }) {
   const [open, setOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const [localNotifications, setLocalNotifications] = useState(null);
+  const queryClient = useQueryClient();
+  
+  // Use local state if we've cleared, otherwise use props
+  const displayNotifications = localNotifications !== null ? localNotifications : notifications;
+  const unreadCount = displayNotifications.filter(n => !n.is_read).length;
 
   const typeIcons = {
     match: Users,
@@ -78,7 +85,7 @@ export default function NotificationBell({ notifications = [], onAction }) {
       <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100">Notifications</h3>
-          {notifications.length > 0 && (
+          {displayNotifications.length > 0 && (
             <Button 
               variant="ghost" 
               size="sm" 
@@ -87,12 +94,21 @@ export default function NotificationBell({ notifications = [], onAction }) {
               onClick={async () => {
                 setIsClearing(true);
                 try {
-                  await onAction?.('clearAll');
-                  // Force close popover and reset count display
-                  setTimeout(() => {
-                    setIsClearing(false);
-                    setOpen(false);
-                  }, 500);
+                  // Delete all notifications directly here
+                  for (const n of displayNotifications) {
+                    try {
+                      await base44.entities.Notification.delete(n.id);
+                    } catch (err) {
+                      console.warn('Failed to delete notification:', n.id, err);
+                    }
+                  }
+                  // Clear local state immediately to update UI
+                  setLocalNotifications([]);
+                  // Invalidate and refetch queries
+                  await queryClient.invalidateQueries({ queryKey: ['notifications'] });
+                  await queryClient.refetchQueries({ queryKey: ['notifications'] });
+                  setIsClearing(false);
+                  setOpen(false);
                 } catch (err) {
                   console.error('Failed to clear notifications:', err);
                   setIsClearing(false);
@@ -114,14 +130,14 @@ export default function NotificationBell({ notifications = [], onAction }) {
           )}
         </div>
         <ScrollArea className="h-96">
-          {notifications.length === 0 ? (
+          {displayNotifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500">
               <Bell className="w-10 h-10 mb-3 opacity-50" />
               <p className="text-sm">No notifications yet</p>
             </div>
           ) : (
             <div className="divide-y divide-slate-100 dark:divide-slate-700">
-              {notifications.map((notif) => {
+              {displayNotifications.map((notif) => {
                 const Icon = typeIcons[notif.type] || Settings;
                 return (
                   <div 
