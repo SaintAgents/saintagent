@@ -115,6 +115,109 @@ export default function EmailNewsletterManager() {
     }
   };
 
+  // Toggle article selection for embedding
+  const toggleArticleSelection = (articleId) => {
+    setSelectedArticles(prev => 
+      prev.includes(articleId) 
+        ? prev.filter(id => id !== articleId)
+        : [...prev, articleId]
+    );
+  };
+
+  // AI format newsletter
+  const handleAIFormat = async () => {
+    if (!body && selectedArticles.length === 0) {
+      toast.error('Please add content or select articles first');
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const articlesToInclude = selectedArticles.map(id => {
+        const article = newsArticles.find(a => a.id === id);
+        return article ? `ARTICLE: ${article.title}\nSummary: ${article.summary || ''}\nContent: ${article.content || ''}` : '';
+      }).filter(Boolean).join('\n\n---\n\n');
+
+      const prompt = `You are formatting a professional newsletter email for SaintAgent platform. 
+
+${body ? `CUSTOM MESSAGE FROM SENDER:\n${body}\n\n` : ''}
+${articlesToInclude ? `ARTICLES TO INCLUDE:\n${articlesToInclude}\n\n` : ''}
+
+Format this into a cohesive, professional newsletter email. Include:
+1. A brief intro greeting
+2. The custom message (if provided) integrated naturally
+3. Each article formatted with:
+   - Clear headline
+   - Key highlights (bullet points)
+   - Brief summary paragraph
+4. A call-to-action
+5. Professional sign-off
+
+Keep the tone professional but engaging. Use clear section breaks. Make it scannable with headers and bullet points.
+Do NOT include HTML tags - plain text only with clear formatting using:
+- Headers in CAPS
+- Bullet points with •
+- Clear line breaks
+- Section dividers with ═══════════════════`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            formatted_email: { type: "string" },
+            suggested_subject: { type: "string" }
+          }
+        }
+      });
+
+      if (result.formatted_email) {
+        setBody(result.formatted_email);
+      }
+      if (result.suggested_subject && !subject) {
+        setSubject(result.suggested_subject);
+      }
+      toast.success('Newsletter formatted by AI');
+    } catch (error) {
+      console.error('AI formatting error:', error);
+      toast.error('AI formatting failed');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Build the final email content with embedded articles
+  const buildFinalEmailContent = () => {
+    let content = body || '';
+    
+    if (selectedArticles.length > 0) {
+      content += '\n\n═══════════════════════════════════════\n';
+      content += 'FEATURED ARTICLES\n';
+      content += '═══════════════════════════════════════\n\n';
+      
+      selectedArticles.forEach((articleId, idx) => {
+        const article = newsArticles.find(a => a.id === articleId);
+        if (article) {
+          content += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+          content += `📰 ${article.title?.toUpperCase() || 'UNTITLED'}\n`;
+          content += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+          if (article.summary) {
+            content += `${article.summary}\n\n`;
+          }
+          if (article.content) {
+            // Trim content to reasonable length for email
+            const trimmedContent = article.content.length > 1000 
+              ? article.content.substring(0, 1000) + '...\n\n[Read full article on SaintAgent]'
+              : article.content;
+            content += `${trimmedContent}\n\n`;
+          }
+        }
+      });
+    }
+    
+    return content;
+  };
+
   // Send newsletter
   const handleSendNewsletter = async () => {
     if (!subject || !body) {
