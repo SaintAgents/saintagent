@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
-import { PanelRightOpen, Sparkles } from "lucide-react";
+import { PanelRightOpen, Sparkles, PanelRight } from "lucide-react";
 
 /**
  * A globally visible nudge handle that appears on the right edge of the viewport
@@ -83,9 +83,14 @@ export default function GlobalSidePanelNudge() {
         )}
         style={{ 
           width: '28px', 
-          height: '100px',
+          height: '110px',
         }}
       >
+        {/* Panel icon at top */}
+        <PanelRight className={cn(
+          "w-4 h-4 text-white/80 group-hover:text-white transition-colors icon-glow",
+          dockSide === 'left' && "rotate-180"
+        )} />
         {/* Decorative dots */}
         <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
         <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
