@@ -22,6 +22,7 @@ import ContactSummaryHeader from '@/components/crm/ContactSummaryHeader';
 import ContactCleanupModal from '@/components/crm/ContactCleanupModal';
 import ContactEnrichModal from '@/components/crm/ContactEnrichModal';
 import CRMAnalyticsDashboard from '@/components/crm/CRMAnalyticsDashboard';
+import BatchFederationPanel from '@/components/crm/BatchFederationPanel';
 import { cn } from '@/lib/utils';
 
 const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
@@ -39,6 +40,7 @@ export default function CRM() {
   const [cleanupOpen, setCleanupOpen] = useState(false);
   const [enrichOpen, setEnrichOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState(null);
+  const [batchFederateOpen, setBatchFederateOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Check for ?help in URL
@@ -162,9 +164,13 @@ export default function CRM() {
               <Upload className="w-4 h-4" />
               Import CSV
             </Button>
-            <Button onClick={() => setFormOpen(true)} className="bg-violet-600 hover:bg-violet-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Contact
+            <Button variant="outline" onClick={() => setBatchFederateOpen(true)} className="gap-2 crm-import-btn">
+              <Globe className="w-4 h-4" />
+              Batch Federate
+            </Button>
+            <Button onClick={() => setFormOpen(true)} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
+              <Plus className="w-4 h-4" />
+              <span className="text-white">Add Contact</span>
             </Button>
           </div>
         </div>
@@ -363,6 +369,13 @@ export default function CRM() {
         open={enrichOpen}
         onClose={() => setEnrichOpen(false)}
         contacts={myContacts}
+      />
+
+      <BatchFederationPanel
+        open={batchFederateOpen}
+        onClose={() => setBatchFederateOpen(false)}
+        contacts={myContacts}
+        currentUserId={currentUser?.email}
       />
     </div>
   );
