@@ -57,9 +57,7 @@ import { base44 } from '@/api/base44Client';
 import MastersMessagesTicker from './MastersMessagesTicker';
 import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
 import SaintBrowser from '../browser/SaintBrowser';
-import QRCodeLogin from '../auth/QRCodeLogin';
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { QrCode } from "lucide-react";
 
 // Theme-aware mode icons
 const MODE_ICONS = {
@@ -115,7 +113,6 @@ export default function TopBar({
   const [isBoostActive, setIsBoostActive] = useState(false);
   const [datingSearching, setDatingSearching] = useState(false);
   const [browserOpen, setBrowserOpen] = useState(false);
-  const [qrLoginOpen, setQrLoginOpen] = useState(false);
   const searchRef = useRef(null);
   const [currentTheme, setCurrentTheme] = useState('light');
   
@@ -510,22 +507,6 @@ export default function TopBar({
         "flex items-center transition-all duration-300 ml-auto flex-shrink-0 relative",
         isCollapsed ? "gap-0.5" : "gap-1 md:gap-2"
       )} style={{ zIndex: 10000 }}>
-        {/* QR Code Login */}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => setQrLoginOpen(true)}
-          className="rounded-xl relative group hidden md:flex w-8 h-8 md:w-9 md:h-9" 
-          title="QR Code Login"
-        >
-          <div className="w-5 h-5 md:w-6 md:h-6 rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center">
-            <QrCode className="w-3 h-3 md:w-3.5 md:h-3.5 text-white" />
-          </div>
-          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            QR Login
-          </span>
-        </Button>
-
         {/* SaintBrowser */}
         <Button 
           variant="ghost" 
@@ -987,15 +968,6 @@ export default function TopBar({
       
       {/* SaintBrowser Modal */}
       <SaintBrowser open={browserOpen} onClose={() => setBrowserOpen(false)} />
-      
-      {/* QR Code Login Modal */}
-      <QRCodeLogin 
-        open={qrLoginOpen} 
-        onOpenChange={setQrLoginOpen}
-        onLoginSuccess={(userId) => {
-          console.log('QR Login approved for:', userId);
-        }}
-      />
     </header>
   );
 }
