@@ -86,9 +86,17 @@ export default function NotificationBell({ notifications = [], onAction }) {
               disabled={isClearing}
               onClick={async () => {
                 setIsClearing(true);
-                await onAction?.('clearAll');
-                setIsClearing(false);
-                setOpen(false);
+                try {
+                  await onAction?.('clearAll');
+                  // Force close popover and reset count display
+                  setTimeout(() => {
+                    setIsClearing(false);
+                    setOpen(false);
+                  }, 500);
+                } catch (err) {
+                  console.error('Failed to clear notifications:', err);
+                  setIsClearing(false);
+                }
               }}
             >
               {isClearing ? (

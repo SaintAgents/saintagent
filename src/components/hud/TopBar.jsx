@@ -575,9 +575,31 @@ export default function TopBar({
                     <div 
                       key={msg.id}
                       className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                      onClick={() => window.location.href = createPageUrl('Messages')}
+                      onClick={() => {
+                        // Open floating chat with this user
+                        document.dispatchEvent(new CustomEvent('openFloatingChat', {
+                          detail: {
+                            recipientId: msg.from_user_id,
+                            recipientName: msg.from_name,
+                            recipientAvatar: msg.from_avatar
+                          }
+                        }));
+                      }}
                     >
-                      <Avatar className="w-10 h-10 shrink-0">
+                      <Avatar 
+                        className="w-10 h-10 shrink-0 cursor-pointer hover:ring-2 hover:ring-violet-400 transition-all"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Open floating chat when clicking avatar
+                          document.dispatchEvent(new CustomEvent('openFloatingChat', {
+                            detail: {
+                              recipientId: msg.from_user_id,
+                              recipientName: msg.from_name,
+                              recipientAvatar: msg.from_avatar
+                            }
+                          }));
+                        }}
+                      >
                         <AvatarImage src={msg.from_avatar} />
                         <AvatarFallback className="bg-violet-100 text-violet-600 text-xs dark:bg-violet-900/30 dark:text-violet-400">
                           {msg.from_name?.charAt(0) || 'U'}
