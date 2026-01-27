@@ -24,8 +24,20 @@ export default function EmailNewsletterManager() {
   const [csvInput, setCsvInput] = useState('');
   const [sending, setSending] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(null);
   const [previewImages, setPreviewImages] = useState([]);
+  const [aiSuggestion, setAiSuggestion] = useState(null);
+  const [aiPopoverOpen, setAiPopoverOpen] = useState(false);
+
+  // AI format options like AIWritingAssistant
+  const AI_FORMAT_OPTIONS = [
+    { id: 'newsletter', label: 'Newsletter Format', icon: Newspaper, prompt: 'Transform this into a beautifully formatted email newsletter. Use clear section headers in CAPS, bullet points with •, and well-spaced paragraphs. Make it scannable and engaging.' },
+    { id: 'professional', label: 'Professional', icon: Type, prompt: 'Rewrite this in a polished, professional business tone. Use precise language, maintain authority and credibility.' },
+    { id: 'friendly', label: 'Friendly & Warm', icon: Smile, prompt: 'Transform this to be genuinely warm, friendly, and approachable. Use conversational language and add personality.' },
+    { id: 'concise', label: 'Make Concise', icon: Zap, prompt: 'Cut this down significantly while keeping all key points. Remove filler words and make every word count.' },
+    { id: 'expand', label: 'Expand & Elaborate', icon: BookOpen, prompt: 'Expand this with rich detail, examples, and context. Add depth while maintaining the original tone.' },
+    { id: 'structured', label: 'Add Structure', icon: List, prompt: 'Restructure into a well-organized, scannable format with clear section headers in CAPS, bullet points, and proper paragraph breaks.' },
+  ];
 
   // Fetch news articles
   const { data: newsArticles = [] } = useQuery({
