@@ -35,10 +35,10 @@ export default function GaiaBankTab() {
   });
   const profile = profiles?.[0];
 
-  // Get bank account
+  // Get bank account (user's main wallet)
   const { data: bankAccounts } = useQuery({
     queryKey: ['gaiaBankAccount', currentUser?.email],
-    queryFn: () => base44.entities.Wallet.filter({ user_id: currentUser.email, wallet_type: 'gaia_bank' }),
+    queryFn: () => base44.entities.Wallet.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email
   });
   const bankAccount = bankAccounts?.[0];
@@ -57,10 +57,10 @@ export default function GaiaBankTab() {
     mutationFn: async () => {
       return base44.entities.Wallet.create({
         user_id: currentUser.email,
-        wallet_type: 'gaia_bank',
-        balance: 0,
-        status: 'active',
-        label: '7th Seal Gaia Bank Account'
+        available_balance: 0,
+        locked_balance: 0,
+        total_earned: 0,
+        total_spent: 0
       });
     },
     onSuccess: () => {
@@ -83,9 +83,9 @@ export default function GaiaBankTab() {
         ggg_balance: (profile.ggg_balance || 0) - numAmount
       });
 
-      // Add to bank balance
+      // Add to bank balance (locked_balance for savings)
       await base44.entities.Wallet.update(bankAccount.id, {
-        balance: (bankAccount.balance || 0) + numAmount
+        locked_balance: (bankAccount.locked_balance || 0) + numAmount
       });
 
       // Record transaction
@@ -94,7 +94,7 @@ export default function GaiaBankTab() {
         wallet_id: bankAccount.id,
         transaction_type: 'deposit',
         amount: numAmount,
-        balance_after: (bankAccount.balance || 0) + numAmount,
+        balance_after: (bankAccount.locked_balance || 0) + numAmount,
         description: 'Deposit to Gaia Bank',
         status: 'completed'
       });
@@ -120,7 +120,7 @@ export default function GaiaBankTab() {
   const withdrawMutation = useMutation({
     mutationFn: async (amount) => {
       const numAmount = parseFloat(amount);
-      if (numAmount <= 0 || numAmount > (bankAccount?.balance || 0)) {
+      if (numAmount <= 0 || numAmount > (bankAccount?.locked_balance || 0)) {
         throw new Error('Insufficient bank balance');
       }
 
@@ -129,9 +129,9 @@ export default function GaiaBankTab() {
         ggg_balance: (profile.ggg_balance || 0) + numAmount
       });
 
-      // Deduct from bank balance
+      // Deduct from bank balance (locked_balance)
       await base44.entities.Wallet.update(bankAccount.id, {
-        balance: (bankAccount.balance || 0) - numAmount
+        locked_balance: (bankAccount.locked_balance || 0) - numAmount
       });
 
       // Record transaction
@@ -140,7 +140,7 @@ export default function GaiaBankTab() {
         wallet_id: bankAccount.id,
         transaction_type: 'withdrawal',
         amount: -numAmount,
-        balance_after: (bankAccount.balance || 0) - numAmount,
+        balance_after: (bankAccount.locked_balance || 0) - numAmount,
         description: 'Withdrawal from Gaia Bank',
         status: 'completed'
       });
@@ -222,7 +222,7 @@ export default function GaiaBankTab() {
               </div>
               <div>
                 <p className="text-sm text-amber-700">Bank Balance</p>
-                <p className="text-3xl font-bold text-amber-900">{(bankAccount?.balance || 0).toLocaleString()}</p>
+                <p className="text-3xl font-bold text-amber-900">{(bankAccount?.locked_balance || 0).toLocaleString()}</p>
                 <p className="text-xs text-amber-600">GGG</p>
               </div>
             </div>
@@ -253,7 +253,7 @@ export default function GaiaBankTab() {
               <div>
                 <p className="text-sm text-slate-500">Total Assets</p>
                 <p className="text-3xl font-bold text-emerald-600">
-                  {((bankAccount?.balance || 0) + (profile?.ggg_balance || 0)).toLocaleString()}
+                  {((bankAccount?.locked_balance || 0) + (profile?.ggg_balance || 0)).toLocaleString()}
                 </p>
                 <p className="text-xs text-slate-500">GGG</p>
               </div>
@@ -270,7 +270,7 @@ export default function GaiaBankTab() {
               <div>
                 <p className="text-sm text-blue-700">Line of Credit</p>
                 <p className="text-3xl font-bold text-blue-900">
-                  {Math.floor(((bankAccount?.balance || 0) + (profile?.ggg_balance || 0)) * 0.5).toLocaleString()}
+                  {Math.floor(((bankAccount?.locked_balance || 0) + (profile?.ggg_balance || 0)) * 0.5).toLocaleString()}
                 </p>
                 <p className="text-xs text-blue-600">Available GGG</p>
               </div>
@@ -365,10 +365,10 @@ export default function GaiaBankTab() {
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
                   placeholder="Enter amount..."
-                  max={bankAccount?.balance || 0}
+                  max={bankAccount?.locked_balance || 0}
                 />
                 <p className="text-xs text-slate-500 mt-1">
-                  Bank Balance: {(bankAccount?.balance || 0).toLocaleString()} GGG
+                  Bank Balance: {(bankAccount?.locked_balance || 0).toLocaleString()} GGG
                 </p>
               </div>
               <div className="flex gap-2">
@@ -377,8 +377,8 @@ export default function GaiaBankTab() {
                     key={amt}
                     variant="outline"
                     size="sm"
-                    onClick={() => setWithdrawAmount(String(Math.min(amt, bankAccount?.balance || 0)))}
-                    disabled={(bankAccount?.balance || 0) < amt}
+                    onClick={() => setWithdrawAmount(String(Math.min(amt, bankAccount?.locked_balance || 0)))}
+                    disabled={(bankAccount?.locked_balance || 0) < amt}
                   >
                     {amt}
                   </Button>
@@ -386,7 +386,7 @@ export default function GaiaBankTab() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setWithdrawAmount(String(bankAccount?.balance || 0))}
+                  onClick={() => setWithdrawAmount(String(bankAccount?.locked_balance || 0))}
                 >
                   Max
                 </Button>
