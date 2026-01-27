@@ -1252,25 +1252,13 @@ Return ONLY the formatted content.`;
                       {selectedArticles.length} article(s) embedded • {previewImages.filter(Boolean).length} image(s)
                     </p>
                   </div>
-                  <div className="p-6 bg-white dark:bg-slate-900 min-h-[300px] max-h-[600px] overflow-y-auto">
-                    {/* Preview Images */}
-                    {previewImages.filter(Boolean).length > 0 && (
-                      <div className="mb-6 space-y-4">
-                        {previewImages.filter(Boolean).map((imgUrl, idx) => (
-                          <div key={idx} className="rounded-lg overflow-hidden border">
-                            <img 
-                              src={imgUrl} 
-                              alt={`Newsletter image ${idx + 1}`}
-                              className="w-full h-auto max-h-[300px] object-cover"
-                              onError={(e) => e.target.style.display = 'none'}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <pre className="whitespace-pre-wrap font-sans text-sm">
-                      {buildFinalEmailContent() || '(No content)'}
-                    </pre>
+                  <div 
+                    className="p-0 bg-slate-100 dark:bg-slate-800 min-h-[300px] max-h-[600px] overflow-y-auto"
+                    style={{ backgroundColor: '#f5f5f5' }}
+                  >
+                    <div 
+                      dangerouslySetInnerHTML={{ __html: buildFinalEmailContent() || '<p class="text-center py-8 text-slate-500">(No content)</p>' }}
+                    />
                   </div>
                 </div>
               )}
