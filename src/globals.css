@@ -655,31 +655,134 @@ html[data-theme='hacker'] img[alt*="Badge"] {
       }
 
       /* GLOBAL THEME FONT COLORS - Single source of truth */
-      /* Light theme defaults */
-      [data-theme='light'] {
-        --text-primary: #1e293b;
-        --text-secondary: #475569;
-        --text-muted: #64748b;
-        --text-on-primary: #ffffff;
-        --text-on-dark: #ffffff;
+                  /* Light theme defaults */
+                  [data-theme='light'] {
+                    --text-primary: #1e293b;
+                    --text-secondary: #475569;
+                    --text-muted: #64748b;
+                    --text-on-primary: #ffffff;
+                    --text-on-dark: #ffffff;
+                  }
+
+                  /* Dark theme font colors */
+                  [data-theme='dark'] {
+                    --text-primary: #ffffff;
+                    --text-secondary: #e0e0e0;
+                    --text-muted: #a0a0a0;
+                    --text-on-primary: #ffffff;
+                    --text-on-dark: #ffffff;
+                  }
+
+                  /* Hacker theme font colors */
+                  [data-theme='hacker'] {
+                    --text-primary: #00ff00;
+                    --text-secondary: #00dd00;
+                    --text-muted: #00aa00;
+                    --text-on-primary: #00ff00;
+                    --text-on-dark: #00ff00;
+                  }
+
+      /* =====================================================
+         DARK/HACKER THEME - COMPREHENSIVE TEXT VISIBILITY FIX
+         ===================================================== */
+
+      /* Force ALL text elements to be readable in dark themes */
+      [data-theme='dark'] p,
+      [data-theme='dark'] span,
+      [data-theme='dark'] div,
+      [data-theme='dark'] label,
+      [data-theme='dark'] td,
+      [data-theme='dark'] th,
+      [data-theme='dark'] li,
+      [data-theme='dark'] dt,
+      [data-theme='dark'] dd {
+        color: #e8e8e8 !important;
       }
 
-      /* Dark theme font colors */
-      [data-theme='dark'] {
-        --text-primary: #ffffff;
-        --text-secondary: #e0e0e0;
-        --text-muted: #a0a0a0;
-        --text-on-primary: #ffffff;
-        --text-on-dark: #ffffff;
+      [data-theme='dark'] h1,
+      [data-theme='dark'] h2,
+      [data-theme='dark'] h3,
+      [data-theme='dark'] h4,
+      [data-theme='dark'] h5,
+      [data-theme='dark'] h6 {
+        color: #ffffff !important;
       }
 
-      /* Hacker theme font colors */
-      [data-theme='hacker'] {
-        --text-primary: #00ff00;
-        --text-secondary: #00dd00;
-        --text-muted: #00aa00;
-        --text-on-primary: #00ff00;
-        --text-on-dark: #00ff00;
+      /* Hacker theme - everything green */
+      [data-theme='hacker'] p,
+      [data-theme='hacker'] span,
+      [data-theme='hacker'] div,
+      [data-theme='hacker'] label,
+      [data-theme='hacker'] td,
+      [data-theme='hacker'] th,
+      [data-theme='hacker'] li,
+      [data-theme='hacker'] dt,
+      [data-theme='hacker'] dd,
+      [data-theme='hacker'] h1,
+      [data-theme='hacker'] h2,
+      [data-theme='hacker'] h3,
+      [data-theme='hacker'] h4,
+      [data-theme='hacker'] h5,
+      [data-theme='hacker'] h6 {
+        color: #00ff00 !important;
+      }
+
+      /* CARDS content must be readable */
+      [data-theme='dark'] [class*='Card'] p,
+      [data-theme='dark'] [class*='Card'] span,
+      [data-theme='dark'] [class*='Card'] div,
+      [data-theme='dark'] [class*='Card'] label {
+        color: #e8e8e8 !important;
+      }
+
+      [data-theme='dark'] [class*='CardTitle'],
+      [data-theme='dark'] [class*='CardHeader'] h1,
+      [data-theme='dark'] [class*='CardHeader'] h2,
+      [data-theme='dark'] [class*='CardHeader'] h3 {
+        color: #ffffff !important;
+      }
+
+      [data-theme='hacker'] [class*='Card'] p,
+      [data-theme='hacker'] [class*='Card'] span,
+      [data-theme='hacker'] [class*='Card'] div,
+      [data-theme='hacker'] [class*='Card'] label,
+      [data-theme='hacker'] [class*='CardTitle'],
+      [data-theme='hacker'] [class*='CardHeader'] * {
+        color: #00ff00 !important;
+      }
+
+      /* Fix slate/gray text classes in dark themes */
+      [data-theme='dark'] .text-slate-500,
+      [data-theme='dark'] .text-slate-600,
+      [data-theme='dark'] .text-slate-700,
+      [data-theme='dark'] .text-gray-500,
+      [data-theme='dark'] .text-gray-600,
+      [data-theme='dark'] .text-gray-700,
+      [data-theme='dark'] .text-zinc-500,
+      [data-theme='dark'] .text-zinc-600 {
+        color: #b8b8b8 !important;
+      }
+
+      [data-theme='dark'] .text-slate-800,
+      [data-theme='dark'] .text-slate-900,
+      [data-theme='dark'] .text-gray-800,
+      [data-theme='dark'] .text-gray-900 {
+        color: #ffffff !important;
+      }
+
+      [data-theme='hacker'] .text-slate-500,
+      [data-theme='hacker'] .text-slate-600,
+      [data-theme='hacker'] .text-slate-700,
+      [data-theme='hacker'] .text-slate-800,
+      [data-theme='hacker'] .text-slate-900,
+      [data-theme='hacker'] .text-gray-500,
+      [data-theme='hacker'] .text-gray-600,
+      [data-theme='hacker'] .text-gray-700,
+      [data-theme='hacker'] .text-gray-800,
+      [data-theme='hacker'] .text-gray-900,
+      [data-theme='hacker'] .text-zinc-500,
+      [data-theme='hacker'] .text-zinc-600 {
+        color: #00ff00 !important;
       }
 
       /* Apply theme colors globally */

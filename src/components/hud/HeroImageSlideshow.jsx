@@ -104,8 +104,9 @@ export default function HeroImageSlideshow({ className }) {
           variant="ghost"
           size="icon"
           onClick={() => {
+            console.log('Opening hero gallery with imageId:', current.id);
             document.dispatchEvent(new CustomEvent('openHeroGallery', { 
-              detail: { imageId: current.id } 
+              detail: { imageId: current.id, images: HERO_IMAGES } 
             }));
           }}
           className="h-8 w-8 bg-black/50 hover:bg-black/70 text-white"
