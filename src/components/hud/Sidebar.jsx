@@ -69,7 +69,8 @@ import {
   BookOpen,
   Coins,
   Ticket,
-  Globe
+  Globe,
+  Play
 } from "lucide-react";
 import {
   Tooltip,
@@ -116,6 +117,7 @@ const NAV_ITEMS = [
   { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure for Humanity\'s Golden Age' },
   { id: 'gggcrypto', label: 'GGG Crypto', Icon: Coins, page: 'GGGCrypto', hint: 'Gaia Global Gold - Gold-backed cryptocurrency with staking and swap' },
   { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Globe, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty' },
+  { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
