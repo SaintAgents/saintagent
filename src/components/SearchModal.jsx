@@ -67,6 +67,34 @@ export default function SearchModal({ open, onClose, onSelect }) {
     enabled: open
   });
 
+  // Daily Logs
+  const { data: dailyLogs = [] } = useQuery({
+    queryKey: ['searchDailyLogs', query],
+    queryFn: () => base44.entities.DailyLog.list('-date', 100),
+    enabled: open
+  });
+
+  // Notes
+  const { data: notes = [] } = useQuery({
+    queryKey: ['searchNotes', query],
+    queryFn: () => base44.entities.Note.list('-updated_date', 100),
+    enabled: open
+  });
+
+  // Meetings
+  const { data: meetings = [] } = useQuery({
+    queryKey: ['searchMeetings', query],
+    queryFn: () => base44.entities.Meeting.list('-scheduled_time', 100),
+    enabled: open
+  });
+
+  // Events
+  const { data: events = [] } = useQuery({
+    queryKey: ['searchEvents', query],
+    queryFn: () => base44.entities.Event.list('-start_time', 100),
+    enabled: open
+  });
+
   const handleSearch = (e) => {
     if (e.key === 'Enter' && !query.trim()) {
       setShowAll(true);
