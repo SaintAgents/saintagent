@@ -1265,7 +1265,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       <style>{`
         /* Light theme background for Command Deck */
         [data-theme='light'] main[data-page='CommandDeck'] {
-          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/6fc853590_gemini-25-flash-image_place_into_the_circuit_board_coin_in_most_clear_space_and_the_shield_lower_left-01.jpg');
+          background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ccd2173e5_universal_upscale_0_cd3894c1-6a97-4a04-8d63-916963fb681c_0.jpg');
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
