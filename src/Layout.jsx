@@ -1003,9 +1003,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           animation: glitchSlideIn 0.25s ease-out forwards !important;
         }
 
-        /* Side Panel Handle - Dark/Hacker Theme */
-        [data-theme='dark'] [data-side-panel-handle],
-        [data-theme='hacker'] [data-side-panel-handle] {
+        /* Side Panel Handle - ALL themes - FORCE 22px height */
+        [data-side-panel-handle] {
+          height: 22px !important;
+          min-height: 22px !important;
+          max-height: 22px !important;
+        }
+        [data-side-panel-handle] > div {
           height: 22px !important;
         }
         [data-theme='dark'] [data-side-panel-handle] > div,
