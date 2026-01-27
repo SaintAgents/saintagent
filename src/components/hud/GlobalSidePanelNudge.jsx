@@ -72,34 +72,24 @@ export default function GlobalSidePanelNudge() {
       title="Open Side Panel"
       data-side-panel-handle
     >
-      {/* Main handle - theme aware - moved to top to make room for forward arrow */}
+      {/* Main handle - compact 32px height */}
       <div
         className={cn(
-          "shadow-lg flex flex-col items-center justify-center gap-1.5 transition-all",
+          "shadow-lg flex items-center justify-center transition-all",
           // Light theme
           "bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600",
           // Dark/Hacker theme overrides applied via CSS
-          dockSide === 'right' ? "rounded-l-xl" : "rounded-r-xl"
+          dockSide === 'right' ? "rounded-l-lg" : "rounded-r-lg"
         )}
         style={{ 
-          width: '39px', 
-          height: '110px',
+          width: '24px', 
+          height: '32px',
         }}
       >
-        {/* Panel icon at top */}
-        <PanelRight className={cn(
-          "w-4 h-4 text-white/80 group-hover:text-white transition-colors icon-glow",
-          dockSide === 'left' && "rotate-180"
-        )} />
-        {/* Decorative dots */}
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
         <PanelRightOpen className={cn(
-          "w-4 h-4 text-white/70 group-hover:text-white transition-colors my-1 icon-glow",
+          "w-4 h-4 text-white/90 group-hover:text-white transition-colors icon-glow",
           dockSide === 'left' && "rotate-180"
         )} />
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40 group-hover:bg-white/60 transition-colors dot-glow" />
       </div>
       
       {/* Tooltip on hover */}
