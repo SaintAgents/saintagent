@@ -683,13 +683,13 @@ export default function TopBar({
                 </>
               )}
 
-              <DropdownMenuSeparator className="my-0" />
-              <div className="py-2">
-                <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Landing'))} className="flex items-center gap-3 px-4 py-2.5 text-rose-600">
-                  <LogOut className="w-4 h-4" />
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </div>
+                <DropdownMenuSeparator className="my-0" />
+                <div className="py-2">
+                  <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Landing'))} className="flex items-center gap-3 px-4 py-2.5 text-rose-600">
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </div>
               </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
