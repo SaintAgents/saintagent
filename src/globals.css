@@ -161,12 +161,13 @@ main {
   position: relative;
   z-index: 1;
 }
+/* Hacker theme - SOLID black cards, no transparency */
 [data-theme='hacker'] .rounded-xl:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='hacker'] .rounded-lg:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='hacker'] .rounded-2xl:not(img):not(.hero-image):not([data-no-filter]),
 [data-theme='hacker'] [class*='Card']:not(img) {
-  background-color: rgba(0, 0, 0, 0.85) !important;
-  border-color: rgba(0, 255, 136, 0.2) !important;
+  background-color: #000000 !important;
+  border-color: #00ff00 !important;
   position: relative;
   z-index: 1;
 }
@@ -183,7 +184,7 @@ main {
    HACKER THEME - GREEN EVERYTHING
    ===================================================== */
 
-/* Hacker theme - Glass blur popup/menu containers with 50% black backdrop */
+/* Hacker theme - SOLID black popup/menu containers - NO transparency */
 [data-theme='hacker'] [role="menu"],
 [data-theme='hacker'] [role="dialog"],
 [data-theme='hacker'] [role="listbox"],
@@ -194,17 +195,36 @@ main {
 [data-theme='hacker'] [data-radix-popover-content],
 [data-theme='hacker'] .popover-content,
 [data-theme='hacker'] .dropdown-content {
-  background: rgba(0, 0, 0, 0.85) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(0, 255, 0, 0.4) !important;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 30px rgba(0, 255, 0, 0.05) !important;
+  background: #000000 !important;
+  background-color: #000000 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid #00ff00 !important;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), 0 0 40px rgba(0, 255, 0, 0.2) !important;
 }
 
-/* Hacker theme - Dialog overlay with 50% black background */
+/* Hacker theme - Ensure ALL nested elements in popups are also solid black */
+[data-theme='hacker'] [role="menu"] *,
+[data-theme='hacker'] [role="dialog"] > div,
+[data-theme='hacker'] [role="listbox"] *,
+[data-theme='hacker'] [data-radix-popper-content-wrapper] * {
+  background-color: #000000 !important;
+}
+
+/* Hacker theme - Cards inside popups solid black */
+[data-theme='hacker'] [role="dialog"] .rounded-xl,
+[data-theme='hacker'] [role="dialog"] .rounded-lg,
+[data-theme='hacker'] [role="dialog"] .rounded-2xl,
+[data-theme='hacker'] [data-radix-popover-content] .rounded-xl,
+[data-theme='hacker'] [data-radix-popover-content] .rounded-lg {
+  background-color: #0a0a0a !important;
+  border-color: #00ff00 !important;
+}
+
+/* Hacker theme - Dialog overlay with darker background */
 [data-theme='hacker'] [data-radix-dialog-overlay],
 [data-theme='hacker'] [data-radix-alert-dialog-overlay] {
-  background: rgba(0, 0, 0, 0.5) !important;
+  background: rgba(0, 0, 0, 0.85) !important;
 }
 
 /* Hacker theme - Make all popups/dialogs draggable */
@@ -1365,6 +1385,37 @@ html[data-theme='hacker'] [role="button"] * {
     .pl-64,
     .pl-20 {
       padding-left: 0 !important;
+    }
+
+    /* DESKTOP: Ensure main content respects sidebar width */
+    @media (min-width: 768px) {
+    [data-theme='hacker'] main,
+    [data-theme='dark'] main {
+    margin-left: 0 !important;
+    }
+    }
+
+    /* Hacker theme inputs - solid black background */
+    [data-theme='hacker'] input,
+    [data-theme='hacker'] textarea,
+    [data-theme='hacker'] select,
+    [data-theme='hacker'] [role="combobox"],
+    [data-theme='hacker'] [data-slot="control"] {
+    background-color: #000000 !important;
+    background: #000000 !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+    }
+
+    /* Hacker theme table cells and rows */
+    [data-theme='hacker'] table,
+    [data-theme='hacker'] tr,
+    [data-theme='hacker'] td,
+    [data-theme='hacker'] th,
+    [data-theme='hacker'] thead,
+    [data-theme='hacker'] tbody {
+    background-color: #000000 !important;
+    border-color: #00ff00 !important;
     }
 
     /* Side panel padding removed */
