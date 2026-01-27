@@ -9,9 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X } from 'lucide-react';
+import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List } from 'lucide-react';
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function EmailNewsletterManager() {
   const queryClient = useQueryClient();
