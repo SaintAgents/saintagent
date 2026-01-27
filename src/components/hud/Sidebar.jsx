@@ -504,8 +504,8 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* Leaderboard */}
-      {(inPopup || true) && (
+      {/* Leaderboard - hidden when collapsed */}
+      {(inPopup || !isCollapsed) && (
         <div className={cn("border-t border-slate-100 p-3", isCollapsed && !inPopup && "p-1")}>
           <div className={cn("mb-3 px-2", isCollapsed && !inPopup && "mb-1 px-0")}>
             <div className={cn("flex items-center justify-between", isCollapsed && !inPopup && "justify-center")}>
@@ -640,10 +640,10 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Footer - Status Controls */}
+      {/* Footer - Status Controls - hidden when collapsed */}
       <div className={cn(
         "border-t border-slate-100 p-4 space-y-3",
-        (isCollapsed && !inPopup) && "px-2"
+        (isCollapsed && !inPopup) && "hidden"
       )}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
