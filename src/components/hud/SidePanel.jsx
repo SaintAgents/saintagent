@@ -1147,14 +1147,14 @@ export default function SidePanel({
           onClick={onToggle}
           data-side-panel-handle
           className={cn(
-            "absolute w-5 flex items-center justify-center transition-colors z-[9999]",
+            "absolute w-5 h-8 flex items-center justify-center transition-colors z-[9999]",
             dockSide === 'right' ? "-left-5 rounded-l-md" : "-right-5 rounded-r-md"
           )}
-          style={{ top: '20px', height: '22px' }}>
-        <div className="w-full h-full rounded-md bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
+          style={{ top: '20px' }}>
+        <div className="w-full h-full rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
           {dockSide === 'right' ?
-            isOpen ? <ChevronRight className="w-3 h-3 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-3 h-3 text-white dark:text-[#00ff88] icon-glow" /> :
-            isOpen ? <ChevronLeft className="w-3 h-3 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronRight className="w-3 h-3 text-white dark:text-[#00ff88] icon-glow" />
+            isOpen ? <ChevronRight className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> :
+            isOpen ? <ChevronLeft className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronRight className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" />
           }
         </div>
       </button>
