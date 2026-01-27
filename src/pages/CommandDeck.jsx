@@ -978,8 +978,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
               {/* Left column: Avatar only */}
               <div className="relative shrink-0" data-user-id={profile?.user_id || currentUser?.email}>
+                {/* Debug: profile avatar = {profile?.avatar_url} */}
                 <RankedAvatar
-                  src={profile?.avatar_url}
+                  src={profile?.avatar_url || null}
                   name={profile?.display_name || currentUser?.full_name || 'User'}
                   size={120}
                   leaderTier={profile?.leader_tier}
@@ -989,7 +990,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   userId={profile?.user_id || currentUser?.email}
                   saNumber={profile?.sa_number}
                   affiliatePaidCount={profile?.activated_referral_count}
-                  status={profile?.status || 'online'} />
+                  status={profile?.status || 'online'}
+                  galleryImages={profile?.gallery_images || []} />
                   </div>
 
                   <div className="flex-1 min-w-0 w-full">
