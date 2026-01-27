@@ -25,6 +25,7 @@ import {
 import ListingCard from '@/components/hud/ListingCard';
 import CreateListingModal from '@/components/marketplace/CreateListingModal';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
+import BookingRequestModal from '@/components/matches/BookingRequestModal';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
@@ -40,6 +41,8 @@ export default function Marketplace() {
   const [matrixOpen, setMatrixOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [deliveryFilter, setDeliveryFilter] = useState('all');
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedListing, setSelectedListing] = useState(null);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -69,15 +72,8 @@ export default function Marketplace() {
   const handleAction = async (action, listing) => {
     if (action === 'book') {
       if (!currentUser) return;
-      await base44.entities.Booking.create({
-        listing_id: listing.id,
-        buyer_id: currentUser.email,
-        seller_id: listing.owner_id,
-        buyer_name: currentUser.full_name,
-        seller_name: listing.owner_name,
-        status: 'pending'
-      });
-      window.location.href = createPageUrl('Meetings');
+      setSelectedListing(listing);
+      setBookingModalOpen(true);
     }
   };
 
@@ -264,6 +260,19 @@ export default function Marketplace() {
             queryClient.invalidateQueries({ queryKey: ['listings'] });
             setCreateOpen(false);
             }} />
+
+      {/* Booking Request Modal */}
+      <BookingRequestModal
+        open={bookingModalOpen}
+        onOpenChange={setBookingModalOpen}
+        targetUser={selectedListing ? {
+          id: selectedListing.owner_id,
+          email: selectedListing.owner_id,
+          name: selectedListing.owner_name,
+          avatar: selectedListing.owner_avatar
+        } : null}
+        listing={selectedListing}
+      />
             </div>
             </div>
             );
