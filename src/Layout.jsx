@@ -1643,7 +1643,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               "min-h-screen transition-all duration-300",
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pl-0"
-                : sidebarCollapsed ? "pl-0 md:pl-20" : "pl-0 md:pl-20 lg:pl-64",
+                : sidebarCollapsed ? "pl-0 md:pl-16" : "pl-0 md:pl-16 lg:pl-64",
               "pr-0",
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pt-0"
