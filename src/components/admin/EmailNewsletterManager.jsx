@@ -9,10 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List, Clock, Calendar } from 'lucide-react';
+import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List, Clock, Calendar, Save, FolderOpen, Layout } from 'lucide-react';
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function EmailNewsletterManager() {
   const queryClient = useQueryClient();
@@ -31,6 +32,10 @@ export default function EmailNewsletterManager() {
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleTime, setScheduleTime] = useState('');
+  const [saveTemplateOpen, setSaveTemplateOpen] = useState(false);
+  const [templateName, setTemplateName] = useState('');
+  const [templateDescription, setTemplateDescription] = useState('');
+  const [selectedTemplateId, setSelectedTemplateId] = useState('');
 
   // AI format options for newsletter
   const AI_FORMAT_OPTIONS = [
@@ -51,6 +56,33 @@ export default function EmailNewsletterManager() {
   const { data: pressReleases = [] } = useQuery({
     queryKey: ['pressReleases'],
     queryFn: () => base44.entities.PressRelease.list('-created_date', 20)
+  });
+
+  // Fetch newsletter templates
+  const { data: templates = [] } = useQuery({
+    queryKey: ['newsletterTemplates'],
+    queryFn: () => base44.entities.NewsletterTemplate.list('-created_date', 50)
+  });
+
+  // Save template mutation
+  const saveTemplateMutation = useMutation({
+    mutationFn: (templateData) => base44.entities.NewsletterTemplate.create(templateData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['newsletterTemplates'] });
+      toast.success('Template saved');
+      setSaveTemplateOpen(false);
+      setTemplateName('');
+      setTemplateDescription('');
+    }
+  });
+
+  // Delete template mutation
+  const deleteTemplateMutation = useMutation({
+    mutationFn: (id) => base44.entities.NewsletterTemplate.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['newsletterTemplates'] });
+      toast.success('Template deleted');
+    }
   });
 
   // Fetch stored email list
@@ -129,6 +161,34 @@ export default function EmailNewsletterManager() {
       setSubject(press.title || '');
       setBody(`${press.summary || ''}\n\n${press.content || ''}`);
     }
+  };
+
+  // Load template
+  const handleLoadTemplate = (templateId) => {
+    const template = templates.find(t => t.id === templateId);
+    if (template) {
+      setSubject(template.subject_template || '');
+      setBody(template.body_template || '');
+      setPreviewImages(template.header_images || []);
+      setSelectedTemplateId(templateId);
+      toast.success(`Loaded template: ${template.name}`);
+    }
+  };
+
+  // Save current composition as template
+  const handleSaveAsTemplate = () => {
+    if (!templateName.trim()) {
+      toast.error('Please enter a template name');
+      return;
+    }
+    saveTemplateMutation.mutate({
+      name: templateName,
+      description: templateDescription,
+      subject_template: subject,
+      body_template: body,
+      header_images: previewImages.filter(Boolean),
+      include_articles: selectedArticles.length > 0
+    });
   };
 
   // Toggle article selection for embedding
@@ -497,12 +557,133 @@ Return ONLY the formatted content.`;
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Select Articles to Embed */}
-              <div>
-                <Label className="flex items-center gap-2 mb-2">
-                  <Newspaper className="w-4 h-4" />
-                  Select Articles to Include in Newsletter
-                </Label>
+              {/* Template Selection */}
+                  <div className="flex gap-3 items-end">
+                    <div className="flex-1">
+                      <Label className="flex items-center gap-2 mb-2">
+                        <Layout className="w-4 h-4" />
+                        Load from Template
+                      </Label>
+                      <Select value={selectedTemplateId} onValueChange={handleLoadTemplate}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a template..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {templates.length === 0 ? (
+                            <SelectItem value="none" disabled>No templates saved yet</SelectItem>
+                          ) : (
+                            templates.map((template) => (
+                              <SelectItem key={template.id} value={template.id}>
+                                <div className="flex items-center justify-between w-full">
+                                  <span>{template.name}</span>
+                                  {template.is_default && <Badge variant="secondary" className="ml-2 text-xs">Default</Badge>}
+                                </div>
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <Dialog open={saveTemplateOpen} onOpenChange={setSaveTemplateOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="gap-2">
+                          <Save className="w-4 h-4" />
+                          Save as Template
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Save as Template</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 pt-4">
+                          <div>
+                            <Label>Template Name *</Label>
+                            <Input
+                              value={templateName}
+                              onChange={(e) => setTemplateName(e.target.value)}
+                              placeholder="e.g., Weekly Digest, Product Update..."
+                            />
+                          </div>
+                          <div>
+                            <Label>Description (optional)</Label>
+                            <Textarea
+                              value={templateDescription}
+                              onChange={(e) => setTemplateDescription(e.target.value)}
+                              placeholder="Brief description of when to use this template..."
+                              className="h-20"
+                            />
+                          </div>
+                          <div className="text-sm text-slate-500 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
+                            <p className="font-medium mb-1">Will save:</p>
+                            <ul className="list-disc list-inside space-y-1 text-xs">
+                              <li>Subject: {subject || '(empty)'}</li>
+                              <li>Body content: {body ? `${body.substring(0, 50)}...` : '(empty)'}</li>
+                              <li>Header images: {previewImages.filter(Boolean).length} image(s)</li>
+                            </ul>
+                          </div>
+                          <div className="flex justify-end gap-2">
+                            <Button variant="outline" onClick={() => setSaveTemplateOpen(false)}>
+                              Cancel
+                            </Button>
+                            <Button 
+                              onClick={handleSaveAsTemplate}
+                              disabled={!templateName.trim() || saveTemplateMutation.isPending}
+                              className="gap-2"
+                            >
+                              {saveTemplateMutation.isPending ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Save className="w-4 h-4" />
+                              )}
+                              Save Template
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+
+                  {/* Manage Templates */}
+                  {templates.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {templates.slice(0, 5).map((template) => (
+                        <div 
+                          key={template.id} 
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border cursor-pointer transition-colors ${
+                            selectedTemplateId === template.id 
+                              ? 'bg-violet-100 border-violet-300 dark:bg-violet-900/30 dark:border-violet-700' 
+                              : 'bg-slate-50 border-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700'
+                          }`}
+                          onClick={() => handleLoadTemplate(template.id)}
+                        >
+                          <FolderOpen className="w-3 h-3" />
+                          <span>{template.name}</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm(`Delete template "${template.name}"?`)) {
+                                deleteTemplateMutation.mutate(template.id);
+                              }
+                            }}
+                            className="ml-1 text-slate-400 hover:text-red-500"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                      {templates.length > 5 && (
+                        <span className="text-xs text-slate-500 self-center">+{templates.length - 5} more</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Select Articles to Embed */}
+                  <div>
+                    <Label className="flex items-center gap-2 mb-2">
+                      <Newspaper className="w-4 h-4" />
+                      Select Articles to Include in Newsletter
+                    </Label>
                 <div className="border rounded-lg p-3 max-h-[200px] overflow-y-auto space-y-2">
                   {newsArticles.length === 0 ? (
                     <p className="text-sm text-slate-500">No articles available</p>
