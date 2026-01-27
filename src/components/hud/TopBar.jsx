@@ -44,7 +44,8 @@ import {
   CircleDot,
   X,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  PoundSterling
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -331,11 +332,8 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className={cn(
-                    "w-10 h-10 object-contain",
-                    currentTheme === 'hacker' && "hacker-mode-icon"
-                  )}
-                  data-no-filter="true"
+                  className="w-10 h-10 object-contain topbar-mode-icon"
+                  style={currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : undefined}
                 />
                 {/* Hover tooltip with label */}
                 <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
@@ -531,7 +529,7 @@ export default function TopBar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-xl relative group hidden md:flex w-8 h-8 md:w-9 md:h-9" title="Language">
-              <Globe className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
+              <PoundSterling className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 Language
               </span>
@@ -724,7 +722,7 @@ export default function TopBar({
                   <Avatar className={cn(
                     "w-7 h-7 md:w-8 md:h-8 relative",
                     isBoostActive && "ring-2 ring-amber-400 ring-offset-2 ring-offset-white"
-                  )} data-user-id={profile?.user_id || currentUser?.email}>
+                  )}>
                     {profile?.avatar_url && (
                       <AvatarImage src={profile.avatar_url} alt={profile?.display_name} />
                     )}
