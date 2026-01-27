@@ -243,7 +243,34 @@ Return ONLY the formatted newsletter text.`;
     return content;
   };
 
-  // Send newsletter
+  // Send test email to current user
+  const handleSendTestEmail = async () => {
+    const finalContent = buildFinalEmailContent();
+    
+    if (!subject || (!body && selectedArticles.length === 0)) {
+      toast.error('Please enter subject and add content or select articles');
+      return;
+    }
+
+    setSending('test');
+    try {
+      const user = await base44.auth.me();
+      await base44.integrations.Core.SendEmail({
+        to: user.email,
+        subject: `[TEST] ${subject}`,
+        body: finalContent,
+        from_name: 'SaintAgent Newsletter'
+      });
+      toast.success(`Test email sent to ${user.email}`);
+    } catch (error) {
+      console.error('Failed to send test email:', error);
+      toast.error('Failed to send test email: ' + (error.message || 'Unknown error'));
+    } finally {
+      setSending(false);
+    }
+  };
+
+  // Send newsletter to all subscribers
   const handleSendNewsletter = async () => {
     const finalContent = buildFinalEmailContent();
     
@@ -258,7 +285,7 @@ Return ONLY the formatted newsletter text.`;
       return;
     }
 
-    setSending(true);
+    setSending('all');
     let successCount = 0;
     let failCount = 0;
 
