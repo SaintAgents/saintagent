@@ -823,7 +823,9 @@ Return ONLY the formatted content.`;
                       Select Articles to Include in Newsletter
                     </Label>
                 <div className="border rounded-lg p-3 max-h-[200px] overflow-y-auto space-y-2">
-                  {newsArticles.length === 0 ? (
+                  {loadingArticles ? (
+                    <p className="text-sm text-slate-500">Loading articles...</p>
+                  ) : newsArticles.length === 0 ? (
                     <p className="text-sm text-slate-500">No articles available</p>
                   ) : (
                     newsArticles.slice(0, 20).map((article) => {
