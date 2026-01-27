@@ -55,27 +55,30 @@ const ACTIONS = [
     tooltip: "Find a mission that aligns with your purpose and join the team",
     link: "Missions",
     badge: "Mission Ready"
-  },
-  { 
-    id: "create_offer",
-    label: "Create 1 offer", 
-    reward: 0.03, 
-    icon: Gift,
-    tooltip: "Share your skills and services with the community",
-    link: "Marketplace",
-    badge: "Provider"
-  },
-  { 
-    id: "read_me",
-    label: "READ ME", 
-    reward: 0,
-    icon: Info,
-    tooltip: "Earn GGG! - Refer friends, Advanced view for more to Explore and receive rewards, submit projects for funding.",
-    link: null,
-    badge: null,
-    isReadMe: true
   }
 ];
+
+// Separate READ ME action - always shown at the end
+const READ_ME_ACTION = { 
+  id: "read_me",
+  label: "READ ME", 
+  reward: 0,
+  icon: Info,
+  tooltip: "Earn GGG! - Refer friends, Advanced view for more to Explore and receive rewards, submit projects for funding.",
+  link: null,
+  badge: null,
+  isReadMe: true
+};
+
+const OFFER_ACTION = { 
+  id: "create_offer",
+  label: "Create 1 offer", 
+  reward: 0.03, 
+  icon: Gift,
+  tooltip: "Share your skills and services with the community",
+  link: "Marketplace",
+  badge: "Provider"
+};
 
 const MILESTONE_BADGES = [
   { threshold: 1, label: "First Steps", icon: "🌱", color: "bg-green-100 text-green-700" },
