@@ -64,15 +64,15 @@ export default function AnnouncementBanner({ sidebarCollapsed, topbarCollapsed }
     return 'bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600';
   };
 
-  // Position below ticker (ticker is at top: 64px, height ~32px)
-  const topPosition = topbarCollapsed ? '32px' : '96px';
+  // Position below topbar
+  const topPosition = topbarCollapsed ? '40px' : '56px';
 
   return (
     <div 
       className={cn(
-        "fixed left-0 right-0 z-39 text-white py-2 px-4 transition-all duration-300",
+        "fixed right-0 z-[39] text-white py-2 px-4 transition-all duration-300",
         getBgClass(),
-        sidebarCollapsed ? "pl-24" : "pl-68"
+        sidebarCollapsed ? "left-0 md:left-20" : "left-0 md:left-64"
       )}
       style={{ top: topPosition }}
     >
