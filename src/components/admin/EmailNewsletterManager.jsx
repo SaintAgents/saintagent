@@ -411,11 +411,14 @@ Do NOT include HTML tags - plain text only with clear formatting using:
               <div>
                 <Label className="flex items-center gap-2 mb-2">
                   <Plus className="w-4 h-4" />
-                  Add Preview Images (URLs)
+                  Add Images
                 </Label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {previewImages.map((img, idx) => (
                     <div key={idx} className="flex items-center gap-2">
+                      {img && (
+                        <img src={img} alt="" className="w-12 h-12 object-cover rounded" />
+                      )}
                       <Input 
                         value={img}
                         onChange={(e) => {
@@ -435,15 +438,42 @@ Do NOT include HTML tags - plain text only with clear formatting using:
                       </Button>
                     </div>
                   ))}
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setPreviewImages([...previewImages, ''])}
-                    className="gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Image URL
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setPreviewImages([...previewImages, ''])}
+                      className="gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add URL
+                    </Button>
+                    <label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          try {
+                            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                            setPreviewImages([...previewImages, file_url]);
+                            toast.success('Image uploaded');
+                          } catch (err) {
+                            toast.error('Upload failed');
+                          }
+                          e.target.value = '';
+                        }}
+                      />
+                      <Button variant="outline" size="sm" className="gap-2" asChild>
+                        <span>
+                          <Upload className="w-4 h-4" />
+                          Upload Image
+                        </span>
+                      </Button>
+                    </label>
+                  </div>
                 </div>
               </div>
 
