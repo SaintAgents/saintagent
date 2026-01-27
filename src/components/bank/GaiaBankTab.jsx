@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Landmark, Coins, ArrowUpRight, ArrowDownRight, History,
-  Shield, Sparkles, CheckCircle, AlertCircle, Clock, TrendingUp
+  Shield, Sparkles, CheckCircle, AlertCircle, Clock, TrendingUp, CreditCard
 } from 'lucide-react';
 import { toast } from "sonner";
 import { format } from 'date-fns';
@@ -213,7 +213,7 @@ export default function GaiaBankTab() {
   return (
     <div className="space-y-6">
       {/* Balance Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
@@ -256,6 +256,23 @@ export default function GaiaBankTab() {
                   {((bankAccount?.balance || 0) + (profile?.ggg_balance || 0)).toLocaleString()}
                 </p>
                 <p className="text-xs text-slate-500">GGG</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-blue-700">Line of Credit</p>
+                <p className="text-3xl font-bold text-blue-900">
+                  {Math.floor(((bankAccount?.balance || 0) + (profile?.ggg_balance || 0)) * 0.5).toLocaleString()}
+                </p>
+                <p className="text-xs text-blue-600">Available GGG</p>
               </div>
             </div>
           </CardContent>
