@@ -995,10 +995,12 @@ export default function Sidebar({
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col transition-all duration-300",
+      "fixed left-0 top-0 h-screen border-r z-50 flex flex-col transition-all duration-300",
+      "bg-white border-slate-200",
+      "data-[theme=grey]:bg-[#1a1d21] data-[theme=grey]:border-[#3a3f47]",
       isCollapsed ? "w-16" : "w-64",
       "hidden md:flex" // Hide sidebar on mobile
-    )} data-sidebar>
+    )} data-sidebar data-theme={theme}>
       {/* Logo */}
       <div className="flex items-center justify-between p-4 border-b border-slate-100">
         <div

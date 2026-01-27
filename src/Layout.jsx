@@ -261,6 +261,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
       document.querySelector('html')?.setAttribute('data-theme', theme);
+      document.body?.setAttribute('data-theme', theme);
+      // Also set on all sidebar elements
+      document.querySelectorAll('[data-sidebar]').forEach(el => {
+        el.setAttribute('data-theme', theme);
+      });
       if (theme === 'custom') {
         const p = localStorage.getItem('custom_primary') || '#7c3aed';
         const a = localStorage.getItem('custom_accent') || '#f59e0b';

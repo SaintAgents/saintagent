@@ -1181,13 +1181,119 @@ html[data-theme='grey'] [class*='via-'],
   -webkit-filter: grayscale(30%) brightness(0.95) !important;
 }
 
-/* Grey theme sidebar/nav */
+/* Grey theme sidebar/nav - FORCE with highest specificity */
+html[data-theme='grey'] aside,
+html[data-theme='grey'] nav,
+html[data-theme='grey'] header,
+html[data-theme='grey'] [data-sidebar],
 [data-theme='grey'] aside,
 [data-theme='grey'] nav,
 [data-theme='grey'] header,
-[data-theme='grey'] [data-sidebar] {
+[data-theme='grey'] [data-sidebar],
+[data-sidebar][data-theme='grey'],
+html [data-sidebar][data-theme='grey'] {
+  background-color: #1a1d21 !important;
+  background: #1a1d21 !important;
+  border-color: #3a3f47 !important;
+}
+
+/* Grey theme - force sidebar and all children */
+html[data-theme='grey'] [data-sidebar] *,
+[data-theme='grey'] [data-sidebar] *,
+[data-sidebar][data-theme='grey'] * {
+  background-color: transparent !important;
+}
+
+html[data-theme='grey'] [data-sidebar] .bg-white,
+[data-theme='grey'] [data-sidebar] .bg-white,
+[data-sidebar][data-theme='grey'] .bg-white {
+  background-color: #1a1d21 !important;
+}
+
+/* Grey theme sidebar text */
+html[data-theme='grey'] [data-sidebar] span,
+html[data-theme='grey'] [data-sidebar] p,
+html[data-theme='grey'] [data-sidebar] div,
+html[data-theme='grey'] [data-sidebar] label,
+[data-theme='grey'] [data-sidebar] span,
+[data-theme='grey'] [data-sidebar] p,
+[data-theme='grey'] [data-sidebar] div,
+[data-theme='grey'] [data-sidebar] label {
+  color: #9ca3af !important;
+}
+
+html[data-theme='grey'] [data-sidebar] h1,
+html[data-theme='grey'] [data-sidebar] h2,
+html[data-theme='grey'] [data-sidebar] h3,
+html[data-theme='grey'] [data-sidebar] .font-bold,
+html[data-theme='grey'] [data-sidebar] .font-semibold,
+html[data-theme='grey'] [data-sidebar] .font-medium,
+[data-theme='grey'] [data-sidebar] h1,
+[data-theme='grey'] [data-sidebar] h2,
+[data-theme='grey'] [data-sidebar] h3,
+[data-theme='grey'] [data-sidebar] .font-bold,
+[data-theme='grey'] [data-sidebar] .font-semibold,
+[data-theme='grey'] [data-sidebar] .font-medium {
+  color: #e5e7eb !important;
+}
+
+/* Grey theme sidebar inputs and selects */
+html[data-theme='grey'] [data-sidebar] input,
+html[data-theme='grey'] [data-sidebar] select,
+html[data-theme='grey'] [data-sidebar] button,
+html[data-theme='grey'] [data-sidebar] [role="button"],
+[data-theme='grey'] [data-sidebar] input,
+[data-theme='grey'] [data-sidebar] select,
+[data-theme='grey'] [data-sidebar] button,
+[data-theme='grey'] [data-sidebar] [role="button"] {
   background-color: #22262b !important;
   border-color: #3a3f47 !important;
+  color: #e5e7eb !important;
+}
+
+html[data-theme='grey'] [data-sidebar] button:hover,
+html[data-theme='grey'] [data-sidebar] [role="button"]:hover,
+[data-theme='grey'] [data-sidebar] button:hover,
+[data-theme='grey'] [data-sidebar] [role="button"]:hover {
+  background-color: #2a2f36 !important;
+  border-color: #5ba3a8 !important;
+}
+
+/* Grey theme sidebar borders */
+html[data-theme='grey'] [data-sidebar] .border-slate-100,
+html[data-theme='grey'] [data-sidebar] .border-slate-200,
+html[data-theme='grey'] [data-sidebar] .border-t,
+html[data-theme='grey'] [data-sidebar] .border-b,
+html[data-theme='grey'] [data-sidebar] .border-r,
+[data-theme='grey'] [data-sidebar] .border-slate-100,
+[data-theme='grey'] [data-sidebar] .border-slate-200,
+[data-theme='grey'] [data-sidebar] .border-t,
+[data-theme='grey'] [data-sidebar] .border-b,
+[data-theme='grey'] [data-sidebar] .border-r {
+  border-color: #3a3f47 !important;
+}
+
+/* Grey theme sidebar hover states */
+html[data-theme='grey'] [data-sidebar] .hover\:bg-slate-50:hover,
+html[data-theme='grey'] [data-sidebar] .hover\:bg-slate-100:hover,
+[data-theme='grey'] [data-sidebar] .hover\:bg-slate-50:hover,
+[data-theme='grey'] [data-sidebar] .hover\:bg-slate-100:hover {
+  background-color: #2a2f36 !important;
+}
+
+/* Grey theme sidebar active states */
+html[data-theme='grey'] [data-sidebar] .bg-violet-100,
+html[data-theme='grey'] [data-sidebar] .bg-violet-50,
+[data-theme='grey'] [data-sidebar] .bg-violet-100,
+[data-theme='grey'] [data-sidebar] .bg-violet-50 {
+  background-color: rgba(91, 163, 168, 0.15) !important;
+}
+
+html[data-theme='grey'] [data-sidebar] .text-violet-700,
+html[data-theme='grey'] [data-sidebar] .text-violet-600,
+[data-theme='grey'] [data-sidebar] .text-violet-700,
+[data-theme='grey'] [data-sidebar] .text-violet-600 {
+  color: #5ba3a8 !important;
 }
 
 /* Grey theme code blocks */
