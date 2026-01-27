@@ -44,6 +44,7 @@ import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import AIMissionGenerator from '@/components/missions/AIMissionGenerator';
 import AIMissionBoard from '@/components/missions/AIMissionBoard';
 import AIMissionProposalGenerator from '@/components/ai/AIMissionProposalGenerator';
+import RecommendedMissions from '@/components/missions/RecommendedMissions';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
@@ -63,13 +64,28 @@ export default function Missions() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [rewardFilter, setRewardFilter] = useState('all');
+  const [missionTypeFilter, setMissionTypeFilter] = useState('all');
+  const [creatorFilter, setCreatorFilter] = useState('');
+  const [participantCountFilter, setParticipantCountFilter] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
+  const [showRecommended, setShowRecommended] = useState(true);
 
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 100),
     staleTime: 2 * 60 * 1000,
   });
+
+  // Get unique creators for filter dropdown
+  const uniqueCreators = useMemo(() => {
+    const creators = new Map();
+    missions.forEach(m => {
+      if (m.creator_id && m.creator_name) {
+        creators.set(m.creator_id, m.creator_name);
+      }
+    });
+    return Array.from(creators.entries()).map(([id, name]) => ({ id, name }));
+  }, [missions]);
 
   // Separate active vs past missions
   const now = new Date();
@@ -125,6 +141,28 @@ export default function Missions() {
       });
     }
 
+    // Mission type filter (when not using tabs)
+    if (missionTypeFilter !== 'all' && tab === 'all') {
+      result = result.filter((m) => m.mission_type === missionTypeFilter);
+    }
+
+    // Creator filter
+    if (creatorFilter) {
+      result = result.filter((m) => m.creator_id === creatorFilter);
+    }
+
+    // Participant count filter
+    if (participantCountFilter !== 'all') {
+      result = result.filter((m) => {
+        const count = m.participant_count || 0;
+        if (participantCountFilter === 'empty') return count === 0;
+        if (participantCountFilter === 'few') return count > 0 && count <= 5;
+        if (participantCountFilter === 'some') return count > 5 && count <= 20;
+        if (participantCountFilter === 'many') return count > 20;
+        return true;
+      });
+    }
+
     // Sorting
     result = [...result].sort((a, b) => {
       switch (sortBy) {
@@ -153,12 +191,15 @@ export default function Missions() {
     });
 
     return result;
-  }, [missions, activeMissions, pastMissions, tab, searchQuery, statusFilter, rewardFilter, sortBy, now]);
+  }, [missions, activeMissions, pastMissions, tab, searchQuery, statusFilter, rewardFilter, missionTypeFilter, creatorFilter, participantCountFilter, sortBy, now]);
 
   const activeFilterCount = [
     searchQuery.trim() ? 1 : 0,
     statusFilter !== 'all' ? 1 : 0,
     rewardFilter !== 'all' ? 1 : 0,
+    missionTypeFilter !== 'all' ? 1 : 0,
+    creatorFilter ? 1 : 0,
+    participantCountFilter !== 'all' ? 1 : 0,
     sortBy !== 'relevance' ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
@@ -166,6 +207,9 @@ export default function Missions() {
     setSearchQuery('');
     setStatusFilter('all');
     setRewardFilter('all');
+    setMissionTypeFilter('all');
+    setCreatorFilter('');
+    setParticipantCountFilter('all');
     setSortBy('relevance');
   };
 
@@ -388,6 +432,56 @@ export default function Missions() {
                   </Select>
                 </div>
 
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600">Type:</span>
+                  <Select value={missionTypeFilter} onValueChange={setMissionTypeFilter}>
+                    <SelectTrigger className="w-36 h-9 rounded-lg">
+                      <SelectValue placeholder="All types" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="platform">Platform</SelectItem>
+                      <SelectItem value="circle">Circle</SelectItem>
+                      <SelectItem value="region">Region</SelectItem>
+                      <SelectItem value="leader">Leader</SelectItem>
+                      <SelectItem value="personal">Personal</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600">Participants:</span>
+                  <Select value={participantCountFilter} onValueChange={setParticipantCountFilter}>
+                    <SelectTrigger className="w-36 h-9 rounded-lg">
+                      <SelectValue placeholder="Any count" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Any Count</SelectItem>
+                      <SelectItem value="empty">No participants yet</SelectItem>
+                      <SelectItem value="few">1-5 participants</SelectItem>
+                      <SelectItem value="some">6-20 participants</SelectItem>
+                      <SelectItem value="many">20+ participants</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {uniqueCreators.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-slate-600">Creator:</span>
+                    <Select value={creatorFilter} onValueChange={setCreatorFilter}>
+                      <SelectTrigger className="w-44 h-9 rounded-lg">
+                        <SelectValue placeholder="All creators" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={null}>All Creators</SelectItem>
+                        {uniqueCreators.map(c => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 {activeFilterCount > 0 && (
                   <Button
                     variant="ghost"
@@ -443,6 +537,14 @@ export default function Missions() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
+
+        {/* Recommended Missions Section */}
+        {showRecommended && tab === 'active' && !searchQuery && activeFilterCount === 0 && (
+          <RecommendedMissions 
+            missions={activeMissions} 
+            onAction={handleAction}
+          />
+        )}
 
         {/* Results count */}
         {(searchQuery || activeFilterCount > 0) && (
