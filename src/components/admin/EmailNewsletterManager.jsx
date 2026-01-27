@@ -869,18 +869,22 @@ Return ONLY the formatted content.`;
               <div>
                 <Label className="flex items-center gap-2">
                   <BarChart className="w-4 h-4" />
-                  Or Load from Analysis/Press Release
+                  Or Load from Analysis/Press Release ({pressReleases.length})
                 </Label>
                 <Select onValueChange={handleSelectPress}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select analysis/press release..." />
+                    <SelectValue placeholder={loadingPress ? "Loading..." : pressReleases.length === 0 ? "No press releases available" : "Select analysis/press release..."} />
                   </SelectTrigger>
                   <SelectContent>
-                    {pressReleases.map((press) => (
-                      <SelectItem key={press.id} value={press.id}>
-                        {press.title}
-                      </SelectItem>
-                    ))}
+                    {pressReleases.length === 0 ? (
+                      <SelectItem value="none" disabled>No press releases found</SelectItem>
+                    ) : (
+                      pressReleases.map((press) => (
+                        <SelectItem key={press.id} value={press.id}>
+                          {press.title}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
