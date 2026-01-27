@@ -1150,7 +1150,7 @@ export default function SidePanel({
             "absolute top-1/2 w-10 h-20 flex items-center justify-center transition-colors z-[9999]",
             dockSide === 'right' ? "-left-10 rounded-l-lg" : "-right-10 rounded-r-lg"
           )}
-          style={{ transform: 'translateY(calc(-50% + 100px))' }}>
+          style={{ transform: 'translateY(calc(-50% + 45px))' }}>
         <div className="w-full h-full rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
           <div className="absolute top-1.5 left-1/2 -translate-x-1/2 flex flex-col gap-0.5">
             <span className="w-1 h-1 rounded-full bg-white/50 dark:bg-[#00ff88]/50 dot-glow" />
