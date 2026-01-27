@@ -61,11 +61,34 @@ import QRCodeLogin from '../auth/QRCodeLogin';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { QrCode } from "lucide-react";
 
-const MODE_TABS = [
-  { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
-  { id: 'build', label: 'Build', page: 'Missions' },
-  { id: 'teach', label: 'Teach', page: 'Studio' },
+// Theme-aware mode icons
+const MODE_ICONS = {
+  command: {
+    light: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/0f53a5513_cmd_light.png',
+    dark: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b48cc60f0_cmd_dark.png',
+    hacker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8e2a70da5_cmd_hack.png'
+  },
+  build: {
+    light: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1ab1071a9_bld_light.png',
+    dark: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/eff74268d_bld_dark.png',
+    hacker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/9fe976a30_bld_hack.png'
+  },
+  teach: {
+    light: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c0d4fc530_do_light.png',
+    dark: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c530fd668_do_dark.png',
+    hacker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/dd409f172_do_hack.png'
+  },
+  earn: {
+    light: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/9f89172eb_ern_light.png',
+    dark: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/bcdffc113_ern_dark.png',
+    hacker: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/97444be95_ern_hack.png'
+  }
+};
 
+const MODE_TABS = [
+  { id: 'command', label: 'Command', page: 'CommandDeck' },
+  { id: 'build', label: 'Build', page: 'Missions' },
+  { id: 'teach', label: 'Do', page: 'Studio' },
   { id: 'earn', label: 'Earn', page: 'Marketplace' },
 ];
 
