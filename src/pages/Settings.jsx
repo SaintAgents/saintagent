@@ -23,10 +23,12 @@ import {
   MessageCircle,
   Eye,
   Save,
-  Check } from
+  Check,
+  Landmark } from
 "lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import BackButton from '@/components/hud/BackButton';
+import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
 import { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -202,10 +204,14 @@ export default function Settings() {
       <div className="max-w-3xl mx-auto p-6">
 
         <Tabs defaultValue="account" className="space-y-6">
-          <TabsList className="w-full grid grid-cols-5 h-11 bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
+          <TabsList className="w-full grid grid-cols-6 h-11 bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
             <TabsTrigger value="account" className="rounded-lg gap-2">
               <User className="w-4 h-4" />
               Account
+            </TabsTrigger>
+            <TabsTrigger value="bank" className="rounded-lg gap-2">
+              <Landmark className="w-4 h-4" />
+              Bank
             </TabsTrigger>
             <TabsTrigger value="privacy" className="rounded-lg gap-2">
               <Shield className="w-4 h-4" />
@@ -303,6 +309,11 @@ export default function Settings() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Bank Tab */}
+          <TabsContent value="bank" className="space-y-6">
+            <GaiaBankTab />
           </TabsContent>
 
           {/* Privacy Settings */}
