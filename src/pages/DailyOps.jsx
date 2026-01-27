@@ -185,38 +185,99 @@ export default function DailyOps() {
     updateLog({ field_update: { ...current, [type]: nextArr } });
   };
 
+  // Fetch recent past logs for AI context
+  const { data: recentLogs = [] } = useQuery({
+    queryKey: ['recentDailyLogs', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return base44.entities.DailyLog.filter({ user_id: user.email }, '-date', 7);
+    },
+    enabled: !!user?.email
+  });
+
   const generateAISuggestions = async () => {
     setAiLoading(true);
     setAiAssistOpen(true);
     try {
+      // Build context from past logs
+      const pastLogsContext = recentLogs
+        .filter(log => log.date !== selectedDate)
+        .slice(0, 5)
+        .map(log => `
+Date: ${log.date}
+Overview: ${log.overview || 'N/A'}
+In Progress: ${JSON.stringify(log.in_progress || [])}
+Completed: ${JSON.stringify(log.completed || [])}
+Blockers: ${JSON.stringify(log.field_update?.blockers || [])}
+        `).join('\n---\n');
+
       const context = `
 User: ${user?.full_name}
-Date: ${selectedDate}
+Selected Date: ${selectedDate}
 Current Overview: ${overview || 'Not set'}
 Schedule: ${JSON.stringify(dailyLog?.schedule || [])}
 In Progress: ${JSON.stringify(dailyLog?.in_progress || [])}
 Completed: ${JSON.stringify(dailyLog?.completed || [])}
 Wins: ${JSON.stringify(dailyLog?.field_update?.wins || [])}
 Blockers: ${JSON.stringify(dailyLog?.field_update?.blockers || [])}
+
+=== RECENT PAST LOGS (for continuity) ===
+${pastLogsContext || 'No past logs available'}
+
+=== TODAY'S TRANSACTIONS ===
+${txToday.map(t => `${t.reason_code || t.source_type}: ${t.delta} GGG`).join(', ') || 'None yet'}
       `.trim();
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Based on this user's daily operations log, provide helpful suggestions:
+        prompt: `You are an AI assistant helping a user manage their daily operations. Based on the context below, provide comprehensive suggestions.
 
 ${context}
 
-Generate:
-1. 2-3 priority tasks they should focus on next
-2. Tips to overcome current blockers
-3. A motivational insight based on their progress
+Generate the following:
+1. priority_tasks: 2-3 specific priority tasks they should focus on (based on past incomplete items and current blockers)
+2. blocker_tips: Tips to overcome any current blockers
+3. motivation: A motivational insight based on their progress
+4. suggested_in_progress: Items that should be marked as "In Progress" based on past logs showing incomplete work or carried-over tasks (array of {title, note})
+5. suggested_completed: Items that appear to have been completed based on context/transactions but not logged (array of {action, note, ggg_earned})
+6. draft_overview: A 1-2 sentence overview summarizing what the user should focus on today, based on their schedule, past progress, and current priorities
 
-Return JSON with: { priority_tasks: string[], blocker_tips: string[], motivation: string }`,
+Return JSON with this exact structure:
+{
+  "priority_tasks": ["string"],
+  "blocker_tips": ["string"],
+  "motivation": "string",
+  "suggested_in_progress": [{"title": "string", "note": "string"}],
+  "suggested_completed": [{"action": "string", "note": "string", "ggg_earned": number or null}],
+  "draft_overview": "string"
+}`,
         response_json_schema: {
           type: 'object',
           properties: {
             priority_tasks: { type: 'array', items: { type: 'string' } },
             blocker_tips: { type: 'array', items: { type: 'string' } },
-            motivation: { type: 'string' }
+            motivation: { type: 'string' },
+            suggested_in_progress: { 
+              type: 'array', 
+              items: { 
+                type: 'object',
+                properties: {
+                  title: { type: 'string' },
+                  note: { type: 'string' }
+                }
+              } 
+            },
+            suggested_completed: { 
+              type: 'array', 
+              items: { 
+                type: 'object',
+                properties: {
+                  action: { type: 'string' },
+                  note: { type: 'string' },
+                  ggg_earned: { type: 'number' }
+                }
+              } 
+            },
+            draft_overview: { type: 'string' }
           }
         }
       });
@@ -232,6 +293,34 @@ Return JSON with: { priority_tasks: string[], blocker_tips: string[], motivation
   const applyAISuggestion = (task) => {
     setSchedDraft({ ...schedDraft, title: task, priority: 'High' });
     setAiAssistOpen(false);
+  };
+
+  const applyDraftOverview = (draft) => {
+    setOverview(draft);
+    setAiAssistOpen(false);
+  };
+
+  const addSuggestedInProgress = (item) => {
+    const next = [...(dailyLog?.in_progress || []), { title: item.title, note: item.note || '', link: '' }];
+    updateLog({ in_progress: next });
+  };
+
+  const addSuggestedCompleted = (item) => {
+    const next = [...(dailyLog?.completed || []), { action: item.action, note: item.note || '', ggg_earned: item.ggg_earned || undefined, link: '' }];
+    updateLog({ completed: next });
+  };
+
+  const applyAllSuggested = (type) => {
+    if (type === 'in_progress' && aiSuggestions?.suggested_in_progress) {
+      const current = dailyLog?.in_progress || [];
+      const newItems = aiSuggestions.suggested_in_progress.map(item => ({ title: item.title, note: item.note || '', link: '' }));
+      updateLog({ in_progress: [...current, ...newItems] });
+    }
+    if (type === 'completed' && aiSuggestions?.suggested_completed) {
+      const current = dailyLog?.completed || [];
+      const newItems = aiSuggestions.suggested_completed.map(item => ({ action: item.action, note: item.note || '', ggg_earned: item.ggg_earned || undefined, link: '' }));
+      updateLog({ completed: [...current, ...newItems] });
+    }
   };
 
   return (
