@@ -345,10 +345,10 @@ Return ONLY the formatted content.`;
     let formatted = text
       // Headers: # Header -> <h1>, ## Header -> <h2>, ### Header -> <h3>
       .replace(/^### (.+)$/gm, '<h3 style="color: #1e293b; font-size: 18px; font-weight: 700; margin: 24px 0 12px 0; line-height: 1.3;">$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2 style="color: #1e293b; font-size: 22px; font-weight: 700; margin: 28px 0 14px 0; line-height: 1.3; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1 style="color: #1e293b; font-size: 28px; font-weight: 800; margin: 32px 0 16px 0; line-height: 1.2;">$1</h1>')
+      .replace(/^## (.+)$/gm, '<h2 style="color: #1e293b; font-size: 28px; font-weight: 700; margin: 28px 0 14px 0; line-height: 1.3; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1 style="color: #1e293b; font-size: 36px; font-weight: 800; margin: 32px 0 16px 0; line-height: 1.2;">$1</h1>')
       // CAPS HEADERS (lines in all caps)
-      .replace(/^([A-Z][A-Z\s\d&:!?-]{3,})$/gm, '<h2 style="color: #8b5cf6; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 28px 0 14px 0; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
+      .replace(/^([A-Z][A-Z\s\d&:!?-]{3,})$/gm, '<h2 style="color: #8b5cf6; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 28px 0 14px 0; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
       // Bold: **text** or __text__
       .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight: 700; color: #0f172a;">$1</strong>')
       .replace(/__(.+?)__/g, '<strong style="font-weight: 700; color: #0f172a;">$1</strong>')
