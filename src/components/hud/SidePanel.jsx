@@ -371,14 +371,16 @@ export default function SidePanel({
     queryFn: () => base44.entities.PostComment.list('-created_date')
   });
 
-  // Use SA# for queries if available, fallback to user_id
+  // Use SA# for display, but email (user_id) for queries
   const userIdentifier = profile?.sa_number || profile?.user_id;
+  // CRITICAL: GGG transactions are stored with email, not SA#
+  const userEmail = profile?.user_id;
 
   // Audit trail data (GGG + Reputation)
   const { data: gggTx = [] } = useQuery({
-    queryKey: ['gggTx', userIdentifier],
-    queryFn: () => base44.entities.GGGTransaction.filter({ user_id: userIdentifier }, '-created_date', 100),
-    enabled: !!userIdentifier
+    queryKey: ['gggTx', userEmail],
+    queryFn: () => base44.entities.GGGTransaction.filter({ user_id: userEmail }, '-created_date', 100),
+    enabled: !!userEmail
   });
 
   const { data: rpEvents = [] } = useQuery({
