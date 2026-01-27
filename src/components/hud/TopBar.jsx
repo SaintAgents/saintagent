@@ -638,50 +638,50 @@ export default function TopBar({
                 </DropdownMenuItem>
               </div>
 
-              <DropdownMenuSeparator className="my-0" />
+                <DropdownMenuSeparator className="my-0" />
 
-              <div className="py-2">
-                <DropdownMenuItem asChild>
-                  <Link to={createPageUrl('UserGuide')} className="flex items-center gap-3 px-4 py-2.5">
+                <div className="py-2">
+                  <DropdownMenuItem asChild>
+                    <Link to={createPageUrl('UserGuide')} className="flex items-center gap-3 px-4 py-2.5">
+                      <BookOpen className="w-4 h-4 text-slate-500" />
+                      <span>User Guide</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setWalkthroughOpen(true)} className="flex items-center gap-3 px-4 py-2.5">
                     <BookOpen className="w-4 h-4 text-slate-500" />
-                    <span>User Guide</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setWalkthroughOpen(true)} className="flex items-center gap-3 px-4 py-2.5">
-                  <BookOpen className="w-4 h-4 text-slate-500" />
-                  <span>Walkthrough</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to={createPageUrl('FAQ')} className="flex items-center gap-3 px-4 py-2.5">
-                    <HelpCircle className="w-4 h-4 text-slate-500" />
-                    <span>Help / FAQ</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setPrivacyOpen(true)} className="flex items-center gap-3 px-4 py-2.5">
-                  <Lock className="w-4 h-4 text-slate-500" />
-                  <span>Privacy & Data</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to={createPageUrl('Terms')} className="flex items-center gap-3 px-4 py-2.5">
-                    <Shield className="w-4 h-4 text-slate-500" />
-                    <span>Terms & Conditions</span>
-                  </Link>
-                </DropdownMenuItem>
-              </div>
+                    <span>Walkthrough</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={createPageUrl('FAQ')} className="flex items-center gap-3 px-4 py-2.5">
+                      <HelpCircle className="w-4 h-4 text-slate-500" />
+                      <span>Help / FAQ</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setPrivacyOpen(true)} className="flex items-center gap-3 px-4 py-2.5">
+                    <Lock className="w-4 h-4 text-slate-500" />
+                    <span>Privacy & Data</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={createPageUrl('Terms')} className="flex items-center gap-3 px-4 py-2.5">
+                      <Shield className="w-4 h-4 text-slate-500" />
+                      <span>Terms & Conditions</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </div>
 
-              {currentUser?.role === 'admin' && (
-                <>
-                  <DropdownMenuSeparator className="my-0" />
-                  <div className="py-2">
-                    <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Admin')} className="flex items-center gap-3 px-4 py-2.5 text-violet-600">
-                        <Shield className="w-4 h-4" />
-                        <span>Admin Dashboard</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  </div>
-                </>
-              )}
+                {currentUser?.role === 'admin' && (
+                  <>
+                    <DropdownMenuSeparator className="my-0" />
+                    <div className="py-2">
+                      <DropdownMenuItem asChild>
+                        <Link to={createPageUrl('Admin')} className="flex items-center gap-3 px-4 py-2.5 text-violet-600">
+                          <Shield className="w-4 h-4" />
+                          <span>Admin Dashboard</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </div>
+                  </>
+                )}
 
                 <DropdownMenuSeparator className="my-0" />
                 <div className="py-2">
