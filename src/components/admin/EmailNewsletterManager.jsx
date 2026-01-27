@@ -278,7 +278,7 @@ Return ONLY the formatted content.`;
       await base44.integrations.Core.SendEmail({
         to: user.email,
         subject: `[TEST] ${subject}`,
-        body: finalContent,
+        body: `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;padding:20px;background:#f5f5f5;">${finalContent}</body></html>`,
         from_name: 'SaintAgent Newsletter'
       });
       toast.success(`Test email sent to ${user.email}`);
@@ -344,12 +344,14 @@ Return ONLY the formatted content.`;
     let successCount = 0;
     let failCount = 0;
 
+    const htmlEmail = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;padding:20px;background:#f5f5f5;">${finalContent}</body></html>`;
+    
     for (const email of recipients) {
       try {
         await base44.integrations.Core.SendEmail({
           to: email,
           subject: subject,
-          body: finalContent,
+          body: htmlEmail,
           from_name: 'SaintAgent Newsletter'
         });
         successCount++;
