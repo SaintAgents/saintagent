@@ -183,6 +183,10 @@ export default function AdminCRM() {
             <TrendingUp className="w-4 h-4" />
             Contributions ({allContributions.length})
           </TabsTrigger>
+          <TabsTrigger value="workflows" className="gap-2">
+            <Workflow className="w-4 h-4" />
+            Workflows
+          </TabsTrigger>
         </TabsList>
 
         {/* Contacts Tab */}
