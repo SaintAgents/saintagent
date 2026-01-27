@@ -592,66 +592,103 @@ export default function TopBar({
             <DropdownMenuContent 
               align="end" 
               sideOffset={12}
-              className="w-56 z-[9999] bg-white dark:bg-[#050505] [data-theme='dark']_&:bg-[#050505] [data-theme='dark']_&:border-[#00ff88] [data-theme='dark']_&:border [data-theme='dark']_&:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200"
+              className="w-72 z-[9999] bg-white dark:bg-[#050505] [data-theme='dark']_&:bg-[#050505] [data-theme='dark']_&:border-[#00ff88] [data-theme='dark']_&:border [data-theme='dark']_&:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200 p-0"
             >
-              <p className="px-2 py-1 text-xs font-semibold text-slate-400 uppercase">User Tools</p>
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('Profile')} className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  View Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('Settings')} className="flex items-center gap-2">
-                  <Settings className="w-4 h-4" />
-                  Settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('UserGuide')} className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" />
-                  User Guide
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setQuickStartOpen(true)} className="flex items-center gap-2 text-violet-600 font-medium">
-                <Sparkles className="w-4 h-4" />
-                🚀 Quick Start Guide
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setWalkthroughOpen(true)} className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                Walkthrough
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('FAQ')} className="flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4" />
-                  Help / FAQ
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={createPageUrl('Terms')} className="flex items-center gap-2">
-                  Terms & Conditions
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setPrivacyOpen(true)} className="flex items-center gap-2">
-                <Lock className="w-4 h-4" />
-                Privacy & Data
-              </DropdownMenuItem>
+              {/* Avatar Card Header */}
+              <div className="flex flex-col items-center py-5 px-4 border-b border-slate-100 dark:border-slate-800">
+                <Avatar className="w-16 h-16 mb-3 ring-2 ring-violet-100 dark:ring-violet-900">
+                  {profile?.avatar_url && (
+                    <AvatarImage src={profile.avatar_url} alt={profile?.display_name} />
+                  )}
+                  <AvatarFallback className="bg-violet-100 text-violet-600 text-xl">
+                    {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <p className="font-semibold text-slate-900 dark:text-white text-base">
+                  {profile?.display_name || currentUser?.full_name}
+                </p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {currentUser?.email}
+                </p>
+                {profile?.sa_number && (
+                  <p className="text-xs text-violet-600 dark:text-violet-400 mt-1 font-medium">
+                    SA# {profile.sa_number}
+                  </p>
+                )}
+              </div>
+
+              {/* Menu Items */}
+              <div className="py-2">
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl('Profile')} className="flex items-center gap-3 px-4 py-2.5">
+                    <User className="w-4 h-4 text-slate-500" />
+                    <span>View Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl('Settings')} className="flex items-center gap-3 px-4 py-2.5">
+                    <Settings className="w-4 h-4 text-slate-500" />
+                    <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setQuickStartOpen(true)} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-medium">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Quick Start Guide</span>
+                </DropdownMenuItem>
+              </div>
+
+              <DropdownMenuSeparator className="my-0" />
+
+              <div className="py-2">
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl('UserGuide')} className="flex items-center gap-3 px-4 py-2.5">
+                    <BookOpen className="w-4 h-4 text-slate-500" />
+                    <span>User Guide</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setWalkthroughOpen(true)} className="flex items-center gap-3 px-4 py-2.5">
+                  <BookOpen className="w-4 h-4 text-slate-500" />
+                  <span>Walkthrough</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl('FAQ')} className="flex items-center gap-3 px-4 py-2.5">
+                    <HelpCircle className="w-4 h-4 text-slate-500" />
+                    <span>Help / FAQ</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setPrivacyOpen(true)} className="flex items-center gap-3 px-4 py-2.5">
+                  <Lock className="w-4 h-4 text-slate-500" />
+                  <span>Privacy & Data</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl('Terms')} className="flex items-center gap-3 px-4 py-2.5">
+                    <Shield className="w-4 h-4 text-slate-500" />
+                    <span>Terms & Conditions</span>
+                  </Link>
+                </DropdownMenuItem>
+              </div>
+
               {currentUser?.role === 'admin' && (
                 <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to={createPageUrl('Admin')} className="flex items-center gap-2 text-violet-600">
-                      <Shield className="w-4 h-4" />
-                      Admin Dashboard
-                    </Link>
-                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="my-0" />
+                  <div className="py-2">
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('Admin')} className="flex items-center gap-3 px-4 py-2.5 text-violet-600">
+                        <Shield className="w-4 h-4" />
+                        <span>Admin Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </div>
                 </>
               )}
 
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Landing'))}>
-                Sign out
-              </DropdownMenuItem>
+              <DropdownMenuSeparator className="my-0" />
+              <div className="py-2">
+                <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Landing'))} className="flex items-center gap-3 px-4 py-2.5 text-rose-600">
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : currentUser && !profile ? (
