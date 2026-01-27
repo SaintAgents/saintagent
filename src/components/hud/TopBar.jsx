@@ -300,18 +300,7 @@ export default function TopBar({
             )}
             title="Hacker theme"
           />
-          <button
-            onClick={() => {
-              localStorage.setItem('theme', 'grey');
-              document.documentElement.setAttribute('data-theme', 'grey');
-            }}
-            className={cn(
-              "w-3 h-3 rounded-full transition-all",
-              "bg-gradient-to-br from-gray-500 to-gray-700",
-              document.documentElement.getAttribute('data-theme') === 'grey' && "ring-2 ring-offset-1 ring-red-500"
-            )}
-            title="Grey theme"
-          />
+
           </div>
           )}
       {/* Mode Selector - hidden when collapsed */}
