@@ -384,15 +384,15 @@ export default function SidePanel({
   });
 
   const { data: rpEvents = [] } = useQuery({
-    queryKey: ['rpEvents', userIdentifier],
-    queryFn: () => base44.entities.ReputationEvent.filter({ user_id: userIdentifier }, '-created_date', 100),
-    enabled: !!userIdentifier
+    queryKey: ['rpEvents', userEmail],
+    queryFn: () => base44.entities.ReputationEvent.filter({ user_id: userEmail }, '-created_date', 100),
+    enabled: !!userEmail
   });
 
   const { data: trustEvents = [] } = useQuery({
-    queryKey: ['trustEvents', userIdentifier],
-    queryFn: () => base44.entities.TrustEvent.filter({ user_id: userIdentifier }, '-created_date', 100),
-    enabled: !!userIdentifier
+    queryKey: ['trustEvents', userEmail],
+    queryFn: () => base44.entities.TrustEvent.filter({ user_id: userEmail }, '-created_date', 100),
+    enabled: !!userEmail
   });
 
   const auditItems = React.useMemo(() => {
