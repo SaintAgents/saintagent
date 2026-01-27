@@ -410,7 +410,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const profileGGG = profile?.ggg_balance ?? 0;
   const walletGGG = walletRes?.wallet?.available_balance ?? 0;
   // Use profile balance - it's authoritative and loads with profile
-  const walletAvailable = profileGGG;
+  // If profile has a balance, use it. Otherwise try wallet.
+  const walletAvailable = profileGGG > 0 ? profileGGG : (walletGGG > 0 ? walletGGG : profileGGG);
   // Use rp_points for calculation, but also check rank_points as fallback
   const rpPoints = profile?.rp_points || profile?.rank_points || 0;
   const rpInfo = getRPRank(rpPoints);
