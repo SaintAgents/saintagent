@@ -663,8 +663,8 @@ Return ONLY the formatted content.`;
         <TabsContent value="compose" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Mail className="w-5 h-5" />
+              <CardTitle className="flex items-center gap-2 text-2xl">
+                <Mail className="w-6 h-6" />
                 Compose Newsletter
               </CardTitle>
             </CardHeader>
