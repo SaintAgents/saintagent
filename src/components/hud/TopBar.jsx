@@ -723,9 +723,7 @@ export default function TopBar({
                     "w-7 h-7 md:w-8 md:h-8 relative",
                     isBoostActive && "ring-2 ring-amber-400 ring-offset-2 ring-offset-white"
                   )}>
-                    {profile?.avatar_url && (
-                      <AvatarImage src={profile.avatar_url} alt={profile?.display_name} />
-                    )}
+                    <AvatarImage src={profile?.avatar_url} alt={profile?.display_name || ''} />
                     <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
                       {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
                     </AvatarFallback>
@@ -764,9 +762,7 @@ export default function TopBar({
               {/* Avatar Card Header */}
               <div className="flex flex-col items-center py-5 px-4 border-b border-slate-100 dark:border-slate-800">
                 <Avatar className="w-16 h-16 mb-3 ring-2 ring-violet-100 dark:ring-violet-900">
-                  {profile?.avatar_url && (
-                    <AvatarImage src={profile.avatar_url} alt={profile?.display_name} />
-                  )}
+                  <AvatarImage src={profile?.avatar_url} alt={profile?.display_name || ''} />
                   <AvatarFallback className="bg-violet-100 text-violet-600 text-xl">
                     {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
                   </AvatarFallback>
