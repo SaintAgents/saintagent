@@ -9,11 +9,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List, Clock, Calendar, Save, FolderOpen, Layout } from 'lucide-react';
+import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X, Wand2, Type, Smile, Zap, BookOpen, Bold, List, Clock, Calendar, Save, FolderOpen, Layout, Settings2, FlaskConical } from 'lucide-react';
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import TemplateManagerModal from './TemplateManagerModal';
+import ABTestingPanel from './ABTestingPanel';
 
 export default function EmailNewsletterManager() {
   const queryClient = useQueryClient();
@@ -35,7 +37,9 @@ export default function EmailNewsletterManager() {
   const [saveTemplateOpen, setSaveTemplateOpen] = useState(false);
   const [templateName, setTemplateName] = useState('');
   const [templateDescription, setTemplateDescription] = useState('');
+  const [templateCategory, setTemplateCategory] = useState('newsletter');
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
+  const [templateManagerOpen, setTemplateManagerOpen] = useState(false);
 
   // AI format options for newsletter
   const AI_FORMAT_OPTIONS = [
@@ -184,11 +188,58 @@ export default function EmailNewsletterManager() {
     saveTemplateMutation.mutate({
       name: templateName,
       description: templateDescription,
+      category: templateCategory,
       subject_template: subject,
       body_template: body,
       header_images: previewImages.filter(Boolean),
-      include_articles: selectedArticles.length > 0
+      include_articles: selectedArticles.length > 0,
+      version: 1,
+      version_history: [],
+      usage_count: 0
     });
+  };
+
+  // Handle template selection from manager
+  const handleTemplateFromManager = (template) => {
+    setSubject(template.subject_template || '');
+    setBody(template.body_template || '');
+    setPreviewImages(template.header_images || []);
+    setSelectedTemplateId(template.id);
+    toast.success(`Loaded template: ${template.name}`);
+  };
+
+  // Build email content helper for A/B testing
+  const buildEmailContentForAB = (bodyContent, images, articles) => {
+    let html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    `;
+    
+    if (images?.filter(Boolean).length > 0) {
+      images.filter(Boolean).forEach((imgUrl) => {
+        html += `<div style="width: 100%;"><img src="${imgUrl}" alt="Newsletter header" style="width: 100%; max-width: 600px; height: auto; display: block;" /></div>`;
+      });
+    }
+    
+    html += '<div style="padding: 30px;">';
+    
+    if (bodyContent) {
+      html += `<div style="color: #1e293b; font-size: 16px; line-height: 1.7; margin-bottom: 30px; white-space: pre-wrap;">${bodyContent.replace(/\n/g, '<br>')}</div>`;
+    }
+    
+    if (articles?.length > 0) {
+      html += `<div style="border-top: 2px solid #e2e8f0; margin-top: 20px; padding-top: 25px;"><h2 style="color: #8b5cf6; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 20px 0; font-weight: 600;">Featured Articles</h2>`;
+      articles.forEach((articleId) => {
+        const article = newsArticles.find(a => a.id === articleId);
+        if (article) {
+          html += `<div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #e2e8f0;"><div style="padding: 20px;"><h3 style="color: #1e293b; font-size: 18px; margin: 0 0 10px 0; font-weight: 600; line-height: 1.4;">${article.title || 'Untitled'}</h3>${article.summary ? `<p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0; font-style: italic; line-height: 1.5;">${article.summary}</p>` : ''}</div></div>`;
+        }
+      });
+      html += '</div>';
+    }
+    
+    html += `<div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 20px; text-align: center;"><p style="color: #94a3b8; font-size: 12px; margin: 0;">Sent with ✨ from SaintAgent Newsletter</p></div></div></div>`;
+    
+    return html;
   };
 
   // Toggle article selection for embedding
@@ -585,6 +636,11 @@ Return ONLY the formatted content.`;
                       </Select>
                     </div>
 
+                    <Button variant="outline" onClick={() => setTemplateManagerOpen(true)} className="gap-2">
+                      <Settings2 className="w-4 h-4" />
+                      Manage
+                    </Button>
+
                     <Dialog open={saveTemplateOpen} onOpenChange={setSaveTemplateOpen}>
                       <DialogTrigger asChild>
                         <Button variant="outline" className="gap-2">
@@ -597,13 +653,33 @@ Return ONLY the formatted content.`;
                           <DialogTitle>Save as Template</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4 pt-4">
-                          <div>
-                            <Label>Template Name *</Label>
-                            <Input
-                              value={templateName}
-                              onChange={(e) => setTemplateName(e.target.value)}
-                              placeholder="e.g., Weekly Digest, Product Update..."
-                            />
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label>Template Name *</Label>
+                              <Input
+                                value={templateName}
+                                onChange={(e) => setTemplateName(e.target.value)}
+                                placeholder="e.g., Weekly Digest..."
+                                className="mt-1"
+                              />
+                            </div>
+                            <div>
+                              <Label>Category</Label>
+                              <Select value={templateCategory} onValueChange={setTemplateCategory}>
+                                <SelectTrigger className="mt-1">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="newsletter">Newsletter</SelectItem>
+                                  <SelectItem value="announcement">Announcement</SelectItem>
+                                  <SelectItem value="promotional">Promotional</SelectItem>
+                                  <SelectItem value="digest">Digest</SelectItem>
+                                  <SelectItem value="event">Event</SelectItem>
+                                  <SelectItem value="update">Update</SelectItem>
+                                  <SelectItem value="custom">Custom</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                           </div>
                           <div>
                             <Label>Description (optional)</Label>
@@ -659,6 +735,9 @@ Return ONLY the formatted content.`;
                         >
                           <FolderOpen className="w-3 h-3" />
                           <span>{template.name}</span>
+                          {template.category && (
+                            <Badge variant="outline" className="text-[10px] px-1 py-0">{template.category}</Badge>
+                          )}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -673,7 +752,12 @@ Return ONLY the formatted content.`;
                         </div>
                       ))}
                       {templates.length > 5 && (
-                        <span className="text-xs text-slate-500 self-center">+{templates.length - 5} more</span>
+                        <button 
+                          onClick={() => setTemplateManagerOpen(true)}
+                          className="text-xs text-violet-600 hover:text-violet-700 self-center"
+                        >
+                          +{templates.length - 5} more
+                        </button>
                       )}
                     </div>
                   )}
@@ -957,6 +1041,16 @@ Return ONLY the formatted content.`;
                 )}
               </div>
 
+              {/* A/B Testing Panel */}
+              <ABTestingPanel
+                baseSubject={subject}
+                baseBody={body}
+                buildEmailContent={buildEmailContentForAB}
+                subscribers={displayEmails}
+                previewImages={previewImages}
+                selectedArticles={selectedArticles}
+              />
+
               {/* Send Button */}
               <div className="flex items-center justify-between pt-4 border-t">
                 <p className="text-sm text-slate-500">
@@ -1138,6 +1232,13 @@ Return ONLY the formatted content.`;
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Template Manager Modal */}
+      <TemplateManagerModal
+        open={templateManagerOpen}
+        onOpenChange={setTemplateManagerOpen}
+        onSelectTemplate={handleTemplateFromManager}
+      />
     </div>
   );
 }
