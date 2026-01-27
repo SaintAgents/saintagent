@@ -130,6 +130,12 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filteredCircles = filterResults(circles, ['name', 'description', 'purpose']);
   const filteredPosts = filterResults(posts, ['content', 'title']);
   const filteredProjects = filterResults(projects, ['title', 'description']);
+  
+  // New: Daily Logs, Notes, Meetings, Events
+  const filteredDailyLogs = filterResults(dailyLogs, ['overview', 'date']);
+  const filteredNotes = filterResults(notes, ['title', 'content']);
+  const filteredMeetings = filterResults(meetings, ['title', 'host_name', 'guest_name']);
+  const filteredEvents = filterResults(events, ['title', 'description', 'location']);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
