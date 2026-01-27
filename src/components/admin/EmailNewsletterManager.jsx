@@ -618,17 +618,17 @@ Return ONLY the formatted content.`;
                   <Button 
                     onClick={handleSendNewsletter}
                     disabled={sending || !subject || (!body && selectedArticles.length === 0) || displayEmails.length === 0}
-                    className="gap-2"
+                    className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
                   >
                     {sending === 'all' ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Sending...
+                        <Loader2 className="w-4 h-4 animate-spin text-white" />
+                        <span className="text-white">Sending...</span>
                       </>
                     ) : (
                       <>
-                        <Send className="w-4 h-4" />
-                        Send to All
+                        <Send className="w-4 h-4 text-white" />
+                        <span className="text-white">Send to All</span>
                       </>
                     )}
                   </Button>
