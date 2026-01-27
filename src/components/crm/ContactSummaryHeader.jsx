@@ -3,16 +3,18 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Users, Copy, AlertCircle, Clock, Star, AlertTriangle,
-  Sparkles, Trash2, ChevronRight
+  Sparkles, Trash2, ChevronRight, Calculator, TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { differenceInDays } from 'date-fns';
+import { calculateContactScore, getScoreColor, getScoreLabel } from './ContactScoringEngine';
 
 export default function ContactSummaryHeader({ 
   contacts, 
   onOpenCleanup, 
   onOpenEnrich,
-  onFilterByCategory 
+  onFilterByCategory,
+  onOpenScoring
 }) {
   // Calculate contact categories
   const summary = useMemo(() => {
@@ -39,6 +41,10 @@ export default function ContactSummaryHeader({
     const highValue = contacts.filter(c => (c.relationship_strength || 0) >= 4).length;
     const needsAttention = contacts.filter(c => (c.relationship_strength || 0) <= 2).length;
     const enriched = contacts.filter(c => c.notes?.includes('AI Intelligence Report')).length;
+    
+    // Calculate average quality score
+    const scores = contacts.map(c => c.quality_score || calculateContactScore(c));
+    const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 
     return {
       total: contacts.length,
@@ -47,7 +53,8 @@ export default function ContactSummaryHeader({
       inactive,
       highValue,
       needsAttention,
-      enriched
+      enriched,
+      avgScore
     };
   }, [contacts]);
 
@@ -107,6 +114,19 @@ export default function ContactSummaryHeader({
           )}
         </div>
         <div className="flex items-center gap-2">
+          <Badge className={`${getScoreColor(summary.avgScore)} flex items-center gap-1`}>
+            <TrendingUp className="w-3 h-3" />
+            Avg Score: {summary.avgScore}
+          </Badge>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={onOpenScoring}
+            className="gap-2"
+          >
+            <Calculator className="w-4 h-4" />
+            Scoring
+          </Button>
           <Button 
             variant="outline" 
             size="sm" 
@@ -119,10 +139,10 @@ export default function ContactSummaryHeader({
           <Button 
             size="sm" 
             onClick={onOpenEnrich}
-            className="gap-2 bg-violet-600 hover:bg-violet-700"
+            className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
           >
             <Sparkles className="w-4 h-4" />
-            AI Enrich All
+            <span className="text-white">AI Enrich All</span>
           </Button>
         </div>
       </div>

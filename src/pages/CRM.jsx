@@ -23,6 +23,7 @@ import ContactCleanupModal from '@/components/crm/ContactCleanupModal';
 import ContactEnrichModal from '@/components/crm/ContactEnrichModal';
 import CRMAnalyticsDashboard from '@/components/crm/CRMAnalyticsDashboard';
 import BatchFederationPanel from '@/components/crm/BatchFederationPanel';
+import ContactScoringEngine from '@/components/crm/ContactScoringEngine';
 import { cn } from '@/lib/utils';
 
 const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
@@ -41,6 +42,7 @@ export default function CRM() {
   const [enrichOpen, setEnrichOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [batchFederateOpen, setBatchFederateOpen] = useState(false);
+  const [scoringOpen, setScoringOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Check for ?help in URL
@@ -188,6 +190,7 @@ export default function CRM() {
             contacts={myContacts}
             onOpenCleanup={() => setCleanupOpen(true)}
             onOpenEnrich={() => setEnrichOpen(true)}
+            onOpenScoring={() => setScoringOpen(true)}
             onFilterByCategory={(cat) => setCategoryFilter(cat)}
           />
         )}
@@ -374,6 +377,13 @@ export default function CRM() {
       <BatchFederationPanel
         open={batchFederateOpen}
         onClose={() => setBatchFederateOpen(false)}
+        contacts={myContacts}
+        currentUserId={currentUser?.email}
+      />
+
+      <ContactScoringEngine
+        open={scoringOpen}
+        onClose={() => setScoringOpen(false)}
         contacts={myContacts}
         currentUserId={currentUser?.email}
       />
