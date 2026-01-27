@@ -632,6 +632,13 @@ Return ONLY the formatted content.`;
     }
   };
 
+  // Use effect to sync stored emails to local state when they load
+  React.useEffect(() => {
+    if (storedEmails.length > 0 && emailList.length === 0) {
+      setEmailList(storedEmails);
+    }
+  }, [storedEmails]);
+
   const displayEmails = emailList.length > 0 ? emailList : storedEmails;
 
   return (
