@@ -989,31 +989,18 @@ html[data-theme='hacker'] [role="button"] * {
 }
 
 /* =====================================================
-   GREY THEME - Industrial Dark with Red/Teal Accents
-   Matching dark charcoal UI reference
+   GREY THEME - Industrial Dark with Red Accents
    ===================================================== */
 
-html[data-theme='grey'],
-html[data-theme='grey'] body,
 [data-theme='grey'] body {
-  background-color: #1a1d21 !important;
-  background: #1a1d21 !important;
+  background-color: #1a1a1a !important;
 }
 
-html[data-theme='grey'] .min-h-screen,
-html[data-theme='grey'] main,
 [data-theme='grey'] .min-h-screen,
 [data-theme='grey'] main {
-  background: #1a1d21 !important;
-  background-color: #1a1d21 !important;
-  background-image: none !important;
-  color: #9ca3af !important;
-}
-
-/* Force all white/light backgrounds to dark in grey theme */
-html[data-theme='grey'] *,
-[data-theme='grey'] * {
-  --tw-bg-opacity: 1 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #606060 !important;
 }
 
 [data-theme='grey'] h1,
@@ -1022,396 +1009,148 @@ html[data-theme='grey'] *,
 [data-theme='grey'] h4,
 [data-theme='grey'] h5,
 [data-theme='grey'] h6 {
-  color: #e5e7eb !important;
+  color: #808080 !important;
 }
 
 [data-theme='grey'] p,
 [data-theme='grey'] span,
 [data-theme='grey'] div,
 [data-theme='grey'] label {
-  color: #9ca3af !important;
+  color: #606060 !important;
 }
 
-/* Grey theme - force dark backgrounds on all containers */
-html[data-theme='grey'] [class*='bg-white'],
-html[data-theme='grey'] [class*='bg-slate-'],
-html[data-theme='grey'] [class*='bg-gray-'],
-html[data-theme='grey'] [class*='bg-violet-'],
-html[data-theme='grey'] [class*='bg-purple-'],
-[data-theme='grey'] [class*='bg-white'],
-[data-theme='grey'] [class*='bg-slate-'],
-[data-theme='grey'] [class*='bg-gray-'],
-[data-theme='grey'] [class*='bg-violet-'],
-[data-theme='grey'] [class*='bg-purple-'] {
-  background-color: #22262b !important;
-  background: #22262b !important;
-}
-
-/* Grey theme - force transparent gradient backgrounds */
-html[data-theme='grey'] [class*='from-slate-'],
-html[data-theme='grey'] [class*='from-gray-'],
-html[data-theme='grey'] [class*='from-violet-'],
-html[data-theme='grey'] [class*='to-slate-'],
-html[data-theme='grey'] [class*='to-violet-'],
-html[data-theme='grey'] [class*='via-'],
-[data-theme='grey'] [class*='from-slate-'],
-[data-theme='grey'] [class*='from-gray-'],
-[data-theme='grey'] [class*='from-violet-'],
-[data-theme='grey'] [class*='to-slate-'],
-[data-theme='grey'] [class*='to-violet-'],
-[data-theme='grey'] [class*='via-'] {
-  background: #1a1d21 !important;
-  background-image: none !important;
-}
-
-/* Grey theme cards - dark charcoal with subtle borders */
+/* Grey theme cards - dark with subtle borders */
 [data-theme='grey'] .rounded-xl:not(img):not([data-no-filter="true"]),
 [data-theme='grey'] .rounded-lg:not(img):not([data-no-filter="true"]),
 [data-theme='grey'] .rounded-2xl:not(img):not([data-no-filter="true"]),
 [data-theme='grey'] [class*='Card']:not(img) {
-  background-color: #22262b !important;
-  border: 1px solid #3a3f47 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(26, 26, 26, 0.95) !important;
+  border: 1px solid #333333 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Grey theme inputs */
 [data-theme='grey'] input,
 [data-theme='grey'] textarea,
 [data-theme='grey'] select {
-  background-color: #2a2f36 !important;
-  color: #e5e7eb !important;
-  border: 1px solid #3a3f47 !important;
+  background-color: #121315 !important;
+  color: #808080 !important;
+  border: 1px solid #333333 !important;
 }
 
 [data-theme='grey'] input:focus,
 [data-theme='grey'] textarea:focus,
 [data-theme='grey'] select:focus {
-  border-color: #5ba3a8 !important;
-  box-shadow: 0 0 8px rgba(91, 163, 168, 0.3) !important;
+  border-color: #ef565e !important;
+  box-shadow: 0 0 8px rgba(239, 86, 94, 0.3) !important;
 }
 
 [data-theme='grey'] input::placeholder,
 [data-theme='grey'] textarea::placeholder {
-  color: #6b7280 !important;
+  color: #505050 !important;
 }
 
-/* Grey theme buttons - teal accent */
+/* Grey theme buttons - red accent */
 [data-theme='grey'] button,
 [data-theme='grey'] [role="button"] {
-  background-color: #2a2f36 !important;
-  border: 1px solid #3a3f47 !important;
-  color: #9ca3af !important;
+  background-color: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+  color: #808080 !important;
 }
 
 [data-theme='grey'] button:hover,
 [data-theme='grey'] [role="button"]:hover {
-  background-color: #353b44 !important;
-  border-color: #5ba3a8 !important;
-  color: #5ba3a8 !important;
+  background-color: rgba(239, 86, 94, 0.1) !important;
+  border-color: #ef565e !important;
+  color: #ef565e !important;
+  box-shadow: 0 0 12px rgba(239, 86, 94, 0.2) !important;
 }
 
-/* Grey theme active/selected states - teal accent */
+/* Grey theme active/selected states - red accent */
 [data-theme='grey'] [data-state="active"],
 [data-theme='grey'] [aria-selected="true"] {
-  background-color: rgba(91, 163, 168, 0.15) !important;
-  border-color: #5ba3a8 !important;
-  color: #5ba3a8 !important;
+  background-color: rgba(239, 86, 94, 0.15) !important;
+  border-color: #ef565e !important;
+  color: #ef565e !important;
 }
 
 /* Grey theme tabs */
 [data-theme='grey'] [role="tablist"] {
-  background-color: #22262b !important;
-  border-color: #3a3f47 !important;
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
 }
 
 [data-theme='grey'] [role="tab"] {
-  color: #9ca3af !important;
+  color: #606060 !important;
 }
 
 [data-theme='grey'] [role="tab"][data-state="active"] {
-  background-color: rgba(91, 163, 168, 0.15) !important;
-  color: #5ba3a8 !important;
-  border-color: #5ba3a8 !important;
+  background-color: rgba(239, 86, 94, 0.15) !important;
+  color: #ef565e !important;
+  border-color: #ef565e !important;
 }
 
 /* Grey theme dialogs/modals */
 [data-theme='grey'] [role="dialog"],
 [data-theme='grey'] [data-radix-popper-content-wrapper] > * {
-  background-color: #22262b !important;
-  border: 1px solid #3a3f47 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  background-color: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Grey theme scrollbar */
 [data-theme='grey'] ::-webkit-scrollbar {
-  background-color: #1a1d21 !important;
+  background-color: #1a1a1a !important;
   width: 8px;
 }
 
 [data-theme='grey'] ::-webkit-scrollbar-thumb {
-  background: #3a3f47 !important;
+  background: #333333 !important;
   border-radius: 4px;
 }
 
 [data-theme='grey'] ::-webkit-scrollbar-thumb:hover {
-  background: #5ba3a8 !important;
+  background: #ef565e !important;
 }
 
 /* Grey theme badges */
 [data-theme='grey'] [class*='badge'],
 [data-theme='grey'] .badge,
 [data-theme='grey'] [class*='Badge'] {
-  background-color: #2a2f36 !important;
-  border: 1px solid #3a3f47 !important;
-  color: #9ca3af !important;
+  background-color: #121315 !important;
+  border: 1px solid #333333 !important;
+  color: #808080 !important;
 }
 
-/* Grey theme links - teal accent */
-[data-theme='grey'] a {
-  color: #5ba3a8 !important;
-}
-
+/* Grey theme links on hover - red accent */
 [data-theme='grey'] a:hover {
-  color: #7cc5ca !important;
+  color: #ef565e !important;
 }
 
-/* Grey theme images - slightly desaturated */
+/* Grey theme images - desaturated */
 [data-theme='grey'] img:not(.gauge-image):not([data-no-filter="true"]) {
-  filter: grayscale(30%) brightness(0.95) !important;
-  -webkit-filter: grayscale(30%) brightness(0.95) !important;
+  filter: grayscale(60%) brightness(0.9) !important;
+  -webkit-filter: grayscale(60%) brightness(0.9) !important;
 }
 
-/* Grey theme sidebar/nav - FORCE with highest specificity */
-html[data-theme='grey'] aside,
-html[data-theme='grey'] nav,
-html[data-theme='grey'] header,
-html[data-theme='grey'] [data-sidebar],
+/* Grey theme sidebar/nav */
 [data-theme='grey'] aside,
 [data-theme='grey'] nav,
-[data-theme='grey'] header,
-[data-theme='grey'] [data-sidebar],
-[data-sidebar][data-theme='grey'],
-html [data-sidebar][data-theme='grey'] {
-  background-color: #1a1d21 !important;
-  background: #1a1d21 !important;
-  border-color: #3a3f47 !important;
-}
-
-/* Grey theme - force sidebar and all children */
-html[data-theme='grey'] [data-sidebar] *,
-[data-theme='grey'] [data-sidebar] *,
-[data-sidebar][data-theme='grey'] * {
-  background-color: transparent !important;
-}
-
-html[data-theme='grey'] [data-sidebar] .bg-white,
-[data-theme='grey'] [data-sidebar] .bg-white,
-[data-sidebar][data-theme='grey'] .bg-white {
-  background-color: #1a1d21 !important;
-}
-
-/* Grey theme sidebar text */
-html[data-theme='grey'] [data-sidebar] span,
-html[data-theme='grey'] [data-sidebar] p,
-html[data-theme='grey'] [data-sidebar] div,
-html[data-theme='grey'] [data-sidebar] label,
-[data-theme='grey'] [data-sidebar] span,
-[data-theme='grey'] [data-sidebar] p,
-[data-theme='grey'] [data-sidebar] div,
-[data-theme='grey'] [data-sidebar] label {
-  color: #9ca3af !important;
-}
-
-html[data-theme='grey'] [data-sidebar] h1,
-html[data-theme='grey'] [data-sidebar] h2,
-html[data-theme='grey'] [data-sidebar] h3,
-html[data-theme='grey'] [data-sidebar] .font-bold,
-html[data-theme='grey'] [data-sidebar] .font-semibold,
-html[data-theme='grey'] [data-sidebar] .font-medium,
-[data-theme='grey'] [data-sidebar] h1,
-[data-theme='grey'] [data-sidebar] h2,
-[data-theme='grey'] [data-sidebar] h3,
-[data-theme='grey'] [data-sidebar] .font-bold,
-[data-theme='grey'] [data-sidebar] .font-semibold,
-[data-theme='grey'] [data-sidebar] .font-medium {
-  color: #e5e7eb !important;
-}
-
-/* Grey theme sidebar inputs and selects */
-html[data-theme='grey'] [data-sidebar] input,
-html[data-theme='grey'] [data-sidebar] select,
-html[data-theme='grey'] [data-sidebar] button,
-html[data-theme='grey'] [data-sidebar] [role="button"],
-[data-theme='grey'] [data-sidebar] input,
-[data-theme='grey'] [data-sidebar] select,
-[data-theme='grey'] [data-sidebar] button,
-[data-theme='grey'] [data-sidebar] [role="button"] {
-  background-color: #22262b !important;
-  border-color: #3a3f47 !important;
-  color: #e5e7eb !important;
-}
-
-html[data-theme='grey'] [data-sidebar] button:hover,
-html[data-theme='grey'] [data-sidebar] [role="button"]:hover,
-[data-theme='grey'] [data-sidebar] button:hover,
-[data-theme='grey'] [data-sidebar] [role="button"]:hover {
-  background-color: #2a2f36 !important;
-  border-color: #5ba3a8 !important;
-}
-
-/* Grey theme sidebar borders */
-html[data-theme='grey'] [data-sidebar] .border-slate-100,
-html[data-theme='grey'] [data-sidebar] .border-slate-200,
-html[data-theme='grey'] [data-sidebar] .border-t,
-html[data-theme='grey'] [data-sidebar] .border-b,
-html[data-theme='grey'] [data-sidebar] .border-r,
-[data-theme='grey'] [data-sidebar] .border-slate-100,
-[data-theme='grey'] [data-sidebar] .border-slate-200,
-[data-theme='grey'] [data-sidebar] .border-t,
-[data-theme='grey'] [data-sidebar] .border-b,
-[data-theme='grey'] [data-sidebar] .border-r {
-  border-color: #3a3f47 !important;
-}
-
-/* Grey theme sidebar hover states */
-html[data-theme='grey'] [data-sidebar] .hover\:bg-slate-50:hover,
-html[data-theme='grey'] [data-sidebar] .hover\:bg-slate-100:hover,
-[data-theme='grey'] [data-sidebar] .hover\:bg-slate-50:hover,
-[data-theme='grey'] [data-sidebar] .hover\:bg-slate-100:hover {
-  background-color: #2a2f36 !important;
-}
-
-/* Grey theme sidebar active states */
-html[data-theme='grey'] [data-sidebar] .bg-violet-100,
-html[data-theme='grey'] [data-sidebar] .bg-violet-50,
-[data-theme='grey'] [data-sidebar] .bg-violet-100,
-[data-theme='grey'] [data-sidebar] .bg-violet-50 {
-  background-color: rgba(91, 163, 168, 0.15) !important;
-}
-
-html[data-theme='grey'] [data-sidebar] .text-violet-700,
-html[data-theme='grey'] [data-sidebar] .text-violet-600,
-[data-theme='grey'] [data-sidebar] .text-violet-700,
-[data-theme='grey'] [data-sidebar] .text-violet-600 {
-  color: #5ba3a8 !important;
+[data-theme='grey'] [data-sidebar] {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
 }
 
 /* Grey theme code blocks */
 [data-theme='grey'] pre {
-  background: #2a2f36 !important;
-  color: #e5e7eb !important;
-  border: 1px solid #3a3f47 !important;
+  background: #121315 !important;
+  color: #808080 !important;
+  border: 1px solid #333333 !important;
 }
 
 [data-theme='grey'] code {
-  background: #2a2f36 !important;
-  color: #5ba3a8 !important;
-}
-
-/* Grey theme text utilities override */
-[data-theme='grey'] [class*='text-slate-'],
-[data-theme='grey'] [class*='text-gray-'] {
-  color: #9ca3af !important;
-}
-
-[data-theme='grey'] [class*='text-slate-900'],
-[data-theme='grey'] [class*='text-gray-900'] {
-  color: #e5e7eb !important;
-}
-
-/* Grey theme borders */
-[data-theme='grey'] [class*='border-slate-'],
-[data-theme='grey'] [class*='border-gray-'] {
-  border-color: #3a3f47 !important;
-}
-
-/* Grey theme gradient backgrounds - make solid dark */
-html[data-theme='grey'] [class*='bg-gradient-'],
-[data-theme='grey'] [class*='bg-gradient-'] {
-  background: #1a1d21 !important;
-  background-color: #1a1d21 !important;
-  background-image: none !important;
-}
-
-/* Grey theme - header and topbar */
-html[data-theme='grey'] header,
-[data-theme='grey'] header {
-  background-color: #1a1d21 !important;
-  background: #1a1d21 !important;
-  backdrop-filter: none !important;
-}
-
-/* Grey theme - FORCE main content area */
-html[data-theme='grey'] main,
-html[data-theme='grey'] .min-h-screen,
-[data-theme='grey'] main,
-[data-theme='grey'] .min-h-screen {
-  background-color: #1a1d21 !important;
-  background: #1a1d21 !important;
-}
-
-/* Grey theme - topbar specific */
-html[data-theme='grey'] header *,
-[data-theme='grey'] header * {
-  background-color: transparent !important;
-}
-
-html[data-theme='grey'] header .bg-white,
-html[data-theme='grey'] header [class*='bg-white'],
-[data-theme='grey'] header .bg-white,
-[data-theme='grey'] header [class*='bg-white'] {
-  background-color: #1a1d21 !important;
-}
-
-/* Grey theme - popovers and dropdowns */
-html[data-theme='grey'] [data-radix-popper-content-wrapper] > *,
-html[data-theme='grey'] [role="listbox"],
-html[data-theme='grey'] [data-radix-select-content],
-html[data-theme='grey'] [data-radix-menu-content],
-[data-theme='grey'] [data-radix-popper-content-wrapper] > *,
-[data-theme='grey'] [role="listbox"],
-[data-theme='grey'] [data-radix-select-content],
-[data-theme='grey'] [data-radix-menu-content] {
-  background-color: #22262b !important;
-  background: #22262b !important;
-  border-color: #3a3f47 !important;
-}
-
-html[data-theme='grey'] [data-radix-select-content] [role="option"],
-html[data-theme='grey'] [role="menuitem"],
-[data-theme='grey'] [data-radix-select-content] [role="option"],
-[data-theme='grey'] [role="menuitem"] {
-  color: #e5e7eb !important;
-}
-
-html[data-theme='grey'] [data-radix-select-content] [role="option"]:hover,
-html[data-theme='grey'] [role="menuitem"]:hover,
-[data-theme='grey'] [data-radix-select-content] [role="option"]:hover,
-[data-theme='grey'] [role="menuitem"]:hover {
-  background-color: #2a2f36 !important;
-}
-
-/* Grey theme - slider tracks */
-html[data-theme='grey'] [role="slider"],
-html[data-theme='grey'] [data-radix-slider-track],
-html[data-theme='grey'] [data-radix-slider-range],
-html[data-theme='grey'] [data-radix-slider-thumb],
-[data-theme='grey'] [role="slider"],
-[data-theme='grey'] [data-radix-slider-track],
-[data-theme='grey'] [data-radix-slider-range],
-[data-theme='grey'] [data-radix-slider-thumb] {
-  background-color: #3a3f47 !important;
-}
-
-html[data-theme='grey'] [data-radix-slider-range],
-[data-theme='grey'] [data-radix-slider-range] {
-  background-color: #5ba3a8 !important;
-}
-
-html[data-theme='grey'] [data-radix-slider-thumb],
-[data-theme='grey'] [data-radix-slider-thumb] {
-  background-color: #5ba3a8 !important;
-  border-color: #5ba3a8 !important;
+  background: #121315 !important;
+  color: #ef565e !important;
 }
 
 [data-theme='hacker'] [class*='text-'],

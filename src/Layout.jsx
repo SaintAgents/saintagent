@@ -246,10 +246,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
         setTheme(saved);
         // Apply immediately to prevent flash
         document.documentElement.setAttribute('data-theme', saved);
-        // For grey theme, also set on html element
-        if (saved === 'grey') {
-          document.querySelector('html').setAttribute('data-theme', 'grey');
-        }
       }
     } catch {}
   }, []);
@@ -260,12 +256,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
     } catch {}
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
-      document.querySelector('html')?.setAttribute('data-theme', theme);
-      document.body?.setAttribute('data-theme', theme);
-      // Also set on all sidebar elements
-      document.querySelectorAll('[data-sidebar]').forEach(el => {
-        el.setAttribute('data-theme', theme);
-      });
       if (theme === 'custom') {
         const p = localStorage.getItem('custom_primary') || '#7c3aed';
         const a = localStorage.getItem('custom_accent') || '#f59e0b';
