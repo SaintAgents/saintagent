@@ -537,29 +537,31 @@ export default function Profile() {
                     </Badge>
                   )}
                   {typeof profile?.influence_score === 'number' &&
-                  <TooltipProvider>
+                  <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Badge className="bg-violet-100 text-violet-700 cursor-help">
                           <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile.influence_score)}
                         </Badge>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Influence Score - measures your reach and impact in the community</p>
+                      <TooltipContent side="bottom" className="max-w-xs">
+                        <p className="font-semibold">Influence Score</p>
+                        <p className="text-xs text-slate-300">Measures your reach and impact in the community based on followers, engagement, and content reach.</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                   }
                   {typeof profile?.expertise_score === 'number' &&
-                  <TooltipProvider>
+                  <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Badge className="bg-blue-100 text-blue-700 cursor-help">
                           <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile.expertise_score)}
                         </Badge>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Expertise Score - based on skills, endorsements, and verified accomplishments</p>
+                      <TooltipContent side="bottom" className="max-w-xs">
+                        <p className="font-semibold">Expertise Score</p>
+                        <p className="text-xs text-slate-300">Based on verified skills, endorsements from peers, and demonstrated accomplishments.</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
