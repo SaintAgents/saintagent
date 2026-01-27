@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Trophy, Star, BadgePercent, Users, Medal, Crown, Coins, Target, TrendingUp, Calendar, Flame } from 'lucide-react';
+import { Trophy, Star, BadgePercent, Users, Medal, Crown, Coins, Target, TrendingUp, Calendar, Flame, History } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import BackButton from '@/components/hud/BackButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import LeaderboardFilters from '@/components/leaderboard/LeaderboardFilters';
+import UserHistoryModal from '@/components/leaderboard/UserHistoryModal';
+import moment from 'moment';
 
 const RANK_STYLES = {
   1: { bg: 'bg-gradient-to-r from-amber-100 to-yellow-100', border: 'border-amber-300', text: 'text-amber-700', icon: Crown },
@@ -16,14 +20,14 @@ const RANK_STYLES = {
   3: { bg: 'bg-gradient-to-r from-orange-100 to-amber-100', border: 'border-orange-300', text: 'text-orange-700', icon: Medal }
 };
 
-function Row({ idx, profile, valueLabel, metric }) {
+function Row({ idx, profile, valueLabel, metric, onHistoryClick }) {
   const rank = idx + 1;
   const rankStyle = RANK_STYLES[rank];
   const isTopThree = rank <= 3;
   
   return (
     <div className={cn(
-      "flex items-center justify-between py-3 px-4 rounded-xl transition-all",
+      "flex items-center justify-between py-3 px-4 rounded-xl transition-all group",
       isTopThree ? rankStyle?.bg : "hover:bg-slate-50",
       isTopThree && `border ${rankStyle?.border}`
     )}>
@@ -34,7 +38,10 @@ function Row({ idx, profile, valueLabel, metric }) {
         )}>
           {isTopThree ? <rankStyle.icon className="w-4 h-4" /> : rank}
         </div>
-        <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100">
+        <div 
+          className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 cursor-pointer"
+          data-user-id={profile?.user_id}
+        >
           {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full object-cover" />
           ) : (
@@ -46,24 +53,47 @@ function Row({ idx, profile, valueLabel, metric }) {
         <div>
           <div className={cn("text-sm font-semibold", isTopThree ? rankStyle?.text : "text-slate-900")}>
             {profile?.display_name || profile?.handle || 'User'}
+            {profile?.leader_tier === 'verified144k' && (
+              <Crown className="w-3 h-3 text-amber-500 inline ml-1" />
+            )}
           </div>
           <div className="text-xs text-slate-500">@{profile?.handle}</div>
         </div>
       </div>
-      <div className={cn(
-        "text-sm font-bold",
-        metric === 'ggg' ? "text-amber-600" :
-        metric === 'trust' ? "text-emerald-600" :
-        metric === 'points' ? "text-violet-600" :
-        "text-blue-600"
-      )}>
-        {valueLabel}
+      <div className="flex items-center gap-2">
+        <div className={cn(
+          "text-sm font-bold",
+          metric === 'ggg' ? "text-amber-600" :
+          metric === 'trust' ? "text-emerald-600" :
+          metric === 'points' ? "text-violet-600" :
+          "text-blue-600"
+        )}>
+          {valueLabel}
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={(e) => {
+            e.stopPropagation();
+            onHistoryClick?.(profile);
+          }}
+          title="View history"
+        >
+          <History className="w-4 h-4 text-slate-400" />
+        </Button>
       </div>
     </div>
   );
 }
 
 export default function Leaderboards() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortMetric, setSortMetric] = useState('rp_points');
+  const [tierFilter, setTierFilter] = useState('all');
+  const [activityFilter, setActivityFilter] = useState('all');
+  const [historyModal, setHistoryModal] = useState({ open: false, profile: null });
+
   const { data: profiles = [] } = useQuery({
     queryKey: ['leaderboard_profiles'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 200),
@@ -79,15 +109,63 @@ export default function Leaderboards() {
     queryFn: () => base44.entities.Meeting.filter({ status: 'completed' }, '-created_date', 500),
   });
 
+  // Apply filters
+  const filteredProfiles = useMemo(() => {
+    let result = [...(profiles || [])];
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(p => 
+        p.display_name?.toLowerCase().includes(q) ||
+        p.handle?.toLowerCase().includes(q) ||
+        p.user_id?.toLowerCase().includes(q)
+      );
+    }
+
+    // Tier filter
+    if (tierFilter !== 'all') {
+      result = result.filter(p => {
+        if (tierFilter === 'verified144k') return p.leader_tier === 'verified144k';
+        if (tierFilter === 'candidate') return p.leader_tier === 'candidate';
+        if (tierFilter === 'none') return !p.leader_tier || p.leader_tier === 'none';
+        return true;
+      });
+    }
+
+    // Activity filter
+    if (activityFilter !== 'all') {
+      const now = moment();
+      result = result.filter(p => {
+        if (!p.last_seen_at) return false;
+        const lastSeen = moment(p.last_seen_at);
+        if (activityFilter === 'day') return lastSeen.isAfter(now.clone().subtract(1, 'day'));
+        if (activityFilter === 'week') return lastSeen.isAfter(now.clone().subtract(7, 'days'));
+        if (activityFilter === 'month') return lastSeen.isAfter(now.clone().subtract(30, 'days'));
+        return true;
+      });
+    }
+
+    return result;
+  }, [profiles, searchQuery, tierFilter, activityFilter]);
+
+  const openHistory = (profile) => {
+    setHistoryModal({ open: true, profile });
+  };
+
   const topBy = (key, labelFormatter = (v)=>String(v), metric = 'default') => {
-    const sorted = [...(profiles || [])]
+    const sorted = [...filteredProfiles]
       .sort((a,b) => (b?.[key] || 0) - (a?.[key] || 0))
       .slice(0, 20);
     return (
       <div className="space-y-2">
-        {sorted.map((p, i) => (
-          <Row key={p.id} idx={i} profile={p} valueLabel={labelFormatter(p?.[key] || 0)} metric={metric} />
-        ))}
+        {sorted.length === 0 ? (
+          <p className="text-center text-slate-500 py-8">No users match your filters</p>
+        ) : (
+          sorted.map((p, i) => (
+            <Row key={p.id} idx={i} profile={p} valueLabel={labelFormatter(p?.[key] || 0)} metric={metric} onHistoryClick={openHistory} />
+          ))
+        )}
       </div>
     );
   };
@@ -113,45 +191,57 @@ export default function Leaderboards() {
   }, [meetings]);
 
   const topMissions = () => {
-    const enriched = (profiles || []).map(p => ({
+    const enriched = filteredProfiles.map(p => ({
       profile: p,
       count: missionCounts[p.user_id] || 0,
     })).sort((a,b) => b.count - a.count).slice(0, 20);
 
     return (
       <div className="space-y-2">
-        {enriched.map((it, i) => (
-          <Row key={it.profile.id} idx={i} profile={it.profile} valueLabel={`${it.count} missions`} metric="missions" />
-        ))}
+        {enriched.length === 0 ? (
+          <p className="text-center text-slate-500 py-8">No users match your filters</p>
+        ) : (
+          enriched.map((it, i) => (
+            <Row key={it.profile.id} idx={i} profile={it.profile} valueLabel={`${it.count} missions`} metric="missions" onHistoryClick={openHistory} />
+          ))
+        )}
       </div>
     );
   };
 
   const topMeetings = () => {
-    const enriched = (profiles || []).map(p => ({
+    const enriched = filteredProfiles.map(p => ({
       profile: p,
       count: meetingCounts[p.user_id] || 0,
     })).sort((a,b) => b.count - a.count).slice(0, 20);
 
     return (
       <div className="space-y-2">
-        {enriched.map((it, i) => (
-          <Row key={it.profile.id} idx={i} profile={it.profile} valueLabel={`${it.count} meetings`} metric="meetings" />
-        ))}
+        {enriched.length === 0 ? (
+          <p className="text-center text-slate-500 py-8">No users match your filters</p>
+        ) : (
+          enriched.map((it, i) => (
+            <Row key={it.profile.id} idx={i} profile={it.profile} valueLabel={`${it.count} meetings`} metric="meetings" onHistoryClick={openHistory} />
+          ))
+        )}
       </div>
     );
   };
 
   const topConnections = () => {
-    const sorted = [...(profiles || [])]
+    const sorted = [...filteredProfiles]
       .sort((a,b) => ((b?.follower_count || 0) + (b?.following_count || 0)) - ((a?.follower_count || 0) + (a?.following_count || 0)))
       .slice(0, 20);
 
     return (
       <div className="space-y-2">
-        {sorted.map((p, i) => (
-          <Row key={p.id} idx={i} profile={p} valueLabel={`${(p?.follower_count || 0) + (p?.following_count || 0)} connections`} metric="connections" />
-        ))}
+        {sorted.length === 0 ? (
+          <p className="text-center text-slate-500 py-8">No users match your filters</p>
+        ) : (
+          sorted.map((p, i) => (
+            <Row key={p.id} idx={i} profile={p} valueLabel={`${(p?.follower_count || 0) + (p?.following_count || 0)} connections`} metric="connections" onHistoryClick={openHistory} />
+          ))
+        )}
       </div>
     );
   };
@@ -220,6 +310,18 @@ export default function Leaderboards() {
             </div>
           </Card>
         </div>
+
+        {/* Filters */}
+        <LeaderboardFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortMetric={sortMetric}
+          onSortChange={setSortMetric}
+          tierFilter={tierFilter}
+          onTierChange={setTierFilter}
+          activityFilter={activityFilter}
+          onActivityChange={setActivityFilter}
+        />
 
         {/* Leaderboard Tabs */}
         <Tabs defaultValue="ggg" className="w-full">
@@ -310,6 +412,14 @@ export default function Leaderboards() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* User History Modal */}
+        <UserHistoryModal
+          open={historyModal.open}
+          onClose={() => setHistoryModal({ open: false, profile: null })}
+          userId={historyModal.profile?.user_id}
+          profile={historyModal.profile}
+        />
       </div>
     </div>
   );
