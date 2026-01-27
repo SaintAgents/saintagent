@@ -92,9 +92,6 @@ export default function NewsViewerModal({
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
-            <X className="w-4 h-4" />
-          </Button>
         </div>
 
         {/* Content */}
