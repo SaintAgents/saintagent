@@ -219,36 +219,48 @@ Return ONLY the formatted content.`;
     }
   };
 
-  // Build the final email content with embedded articles
+  // Build the final email content with embedded articles and images (HTML format)
   const buildFinalEmailContent = () => {
-    let content = body || '';
+    let html = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">';
     
+    // Add images at the top
+    if (previewImages.filter(Boolean).length > 0) {
+      previewImages.filter(Boolean).forEach((imgUrl) => {
+        html += `<div style="margin-bottom: 20px;"><img src="${imgUrl}" alt="Newsletter image" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px;" /></div>`;
+      });
+    }
+    
+    // Add body content
+    if (body) {
+      html += `<div style="white-space: pre-wrap; line-height: 1.6; margin-bottom: 20px;">${body.replace(/\n/g, '<br>')}</div>`;
+    }
+    
+    // Add selected articles
     if (selectedArticles.length > 0) {
-      content += '\n\n═══════════════════════════════════════\n';
-      content += 'FEATURED ARTICLES\n';
-      content += '═══════════════════════════════════════\n\n';
+      html += '<hr style="border: none; border-top: 2px solid #8b5cf6; margin: 30px 0;" />';
+      html += '<h2 style="color: #1e293b; font-size: 20px; margin-bottom: 20px;">FEATURED ARTICLES</h2>';
       
-      selectedArticles.forEach((articleId, idx) => {
+      selectedArticles.forEach((articleId) => {
         const article = newsArticles.find(a => a.id === articleId);
         if (article) {
-          content += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-          content += `📰 ${article.title?.toUpperCase() || 'UNTITLED'}\n`;
-          content += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+          html += '<div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #8b5cf6;">';
+          html += `<h3 style="color: #1e293b; font-size: 18px; margin: 0 0 10px 0;">${article.title || 'Untitled'}</h3>`;
           if (article.summary) {
-            content += `${article.summary}\n\n`;
+            html += `<p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0; font-style: italic;">${article.summary}</p>`;
           }
           if (article.content) {
-            // Trim content to reasonable length for email
             const trimmedContent = article.content.length > 1000 
-              ? article.content.substring(0, 1000) + '...\n\n[Read full article on SaintAgent]'
+              ? article.content.substring(0, 1000) + '...'
               : article.content;
-            content += `${trimmedContent}\n\n`;
+            html += `<div style="color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${trimmedContent.replace(/\n/g, '<br>')}</div>`;
           }
+          html += '</div>';
         }
       });
     }
     
-    return content;
+    html += '</div>';
+    return html;
   };
 
   // Send test email to current user
