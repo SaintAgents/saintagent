@@ -1147,10 +1147,10 @@ export default function SidePanel({
           onClick={onToggle}
           data-side-panel-handle
           className={cn(
-            "absolute top-1/2 w-6 h-10 flex items-center justify-center transition-colors z-[9999]",
+            "absolute w-6 h-10 flex items-center justify-center transition-colors z-[9999]",
             dockSide === 'right' ? "-left-6 rounded-l-lg" : "-right-6 rounded-r-lg"
           )}
-          style={{ transform: 'translateY(-10px)' }}>
+          style={{ top: '20px' }}>
         <div className="w-full h-full rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
           {dockSide === 'right' ?
             isOpen ? <ChevronRight className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-4 h-4 text-white dark:text-[#00ff88] icon-glow" /> :
