@@ -166,27 +166,31 @@ export default function BetaFeedback() {
           </CardContent>
         </Card>
 
-        {/* My Previous Submissions */}
-        <h3 className="text-lg font-semibold text-slate-900 mb-4">Your Previous Submissions</h3>
+        {/* Community Feedback Feed */}
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Community Feedback</h3>
         
         {isLoading ? (
           <div className="text-center py-8 text-slate-500">Loading...</div>
-        ) : myFeedback.length === 0 ? (
+        ) : allFeedback.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <MessageSquare className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">You haven't submitted any feedback yet.</p>
+              <p className="text-slate-500">No feedback submitted yet. Be the first!</p>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
-            {myFeedback.map((feedback) => {
+          <div className="space-y-4">
+            {allFeedback.map((feedback) => {
               const typeConfig = TYPE_CONFIG[feedback.feedback_type] || TYPE_CONFIG.other;
               const statusConfig = STATUS_CONFIG[feedback.status] || STATUS_CONFIG.pending;
               const TypeIcon = typeConfig.icon;
+              const isExpanded = expandedFeedback === feedback.id;
+              const hasLiked = (feedback.liked_by || []).includes(currentUser?.email);
+              const hasLoved = (feedback.loved_by || []).includes(currentUser?.email);
+              const comments = feedback.comments || [];
 
               return (
-                <Card key={feedback.id}>
+                <Card key={feedback.id} className="overflow-hidden">
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       <div className={`p-2 rounded-lg ${typeConfig.color}`}>
@@ -196,11 +200,103 @@ export default function BetaFeedback() {
                         <div className="flex items-center gap-2 flex-wrap mb-1">
                           <Badge className={typeConfig.color} variant="secondary">{typeConfig.label}</Badge>
                           <Badge className={statusConfig.color} variant="secondary">{statusConfig.label}</Badge>
+                          <span className="text-xs text-slate-400">
+                            by {feedback.reporter_name || 'Anonymous'}
+                          </span>
                         </div>
-                        <p className="text-slate-700 text-sm line-clamp-2">{feedback.description}</p>
-                        <p className="text-xs text-slate-400 mt-2">
-                          {format(new Date(feedback.created_date), 'MMM d, yyyy')}
-                        </p>
+                        <p className="text-slate-700 text-sm">{feedback.description}</p>
+                        
+                        {/* Stats Row */}
+                        <div className="flex items-center gap-4 mt-3 text-sm">
+                          <button
+                            onClick={() => likeMutation.mutate(feedback)}
+                            className={`flex items-center gap-1.5 transition-colors ${hasLiked ? 'text-blue-600' : 'text-slate-500 hover:text-blue-600'}`}
+                          >
+                            <ThumbsUp className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
+                            <span>{feedback.likes_count || 0}</span>
+                          </button>
+                          <button
+                            onClick={() => loveMutation.mutate(feedback)}
+                            className={`flex items-center gap-1.5 transition-colors ${hasLoved ? 'text-rose-600' : 'text-slate-500 hover:text-rose-600'}`}
+                          >
+                            <Heart className={`w-4 h-4 ${hasLoved ? 'fill-current' : ''}`} />
+                            <span>{feedback.loves_count || 0}</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (!isExpanded) trackView(feedback);
+                              setExpandedFeedback(isExpanded ? null : feedback.id);
+                            }}
+                            className="flex items-center gap-1.5 text-slate-500 hover:text-violet-600 transition-colors"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                            <span>{comments.length}</span>
+                          </button>
+                          <span className="flex items-center gap-1.5 text-slate-400">
+                            <Eye className="w-4 h-4" />
+                            <span>{feedback.view_count || 0}</span>
+                          </span>
+                          <span className="text-xs text-slate-400 ml-auto">
+                            {format(new Date(feedback.created_date), 'MMM d, yyyy')}
+                          </span>
+                          <button
+                            onClick={() => setExpandedFeedback(isExpanded ? null : feedback.id)}
+                            className="text-slate-400 hover:text-slate-600"
+                          >
+                            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </button>
+                        </div>
+
+                        {/* Expanded Comments Section */}
+                        {isExpanded && (
+                          <div className="mt-4 pt-4 border-t border-slate-100">
+                            {/* Comments List */}
+                            {comments.length > 0 && (
+                              <ScrollArea className="max-h-48 mb-4">
+                                <div className="space-y-3">
+                                  {comments.map((comment) => (
+                                    <div key={comment.id} className="flex gap-2">
+                                      <Avatar className="w-7 h-7">
+                                        <AvatarImage src={comment.user_avatar} />
+                                        <AvatarFallback className="text-xs bg-slate-100">
+                                          {comment.user_name?.charAt(0)}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <div className="bg-slate-50 rounded-lg px-3 py-2">
+                                          <p className="text-xs font-medium text-slate-700">{comment.user_name}</p>
+                                          <p className="text-sm text-slate-600">{comment.content}</p>
+                                        </div>
+                                        <p className="text-xs text-slate-400 mt-1">
+                                          {format(new Date(comment.created_at), 'MMM d, h:mm a')}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </ScrollArea>
+                            )}
+
+                            {/* Add Comment Input */}
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="Leave a comment..."
+                                value={expandedFeedback === feedback.id ? newComment : ''}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleAddComment(feedback)}
+                                className="flex-1 h-9"
+                              />
+                              <Button
+                                size="sm"
+                                onClick={() => handleAddComment(feedback)}
+                                disabled={!newComment.trim() || commentMutation.isPending}
+                                className="bg-violet-600 hover:bg-violet-700 h-9"
+                              >
+                                <Send className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </CardContent>
