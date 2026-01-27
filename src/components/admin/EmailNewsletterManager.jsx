@@ -29,14 +29,13 @@ export default function EmailNewsletterManager() {
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiPopoverOpen, setAiPopoverOpen] = useState(false);
 
-  // AI format options like AIWritingAssistant
+  // AI format options for newsletter
   const AI_FORMAT_OPTIONS = [
-    { id: 'newsletter', label: 'Newsletter Format', icon: Newspaper, prompt: 'Transform this into a beautifully formatted email newsletter. Use clear section headers in CAPS, bullet points with •, and well-spaced paragraphs. Make it scannable and engaging.' },
-    { id: 'professional', label: 'Professional', icon: Type, prompt: 'Rewrite this in a polished, professional business tone. Use precise language, maintain authority and credibility.' },
-    { id: 'friendly', label: 'Friendly & Warm', icon: Smile, prompt: 'Transform this to be genuinely warm, friendly, and approachable. Use conversational language and add personality.' },
-    { id: 'concise', label: 'Make Concise', icon: Zap, prompt: 'Cut this down significantly while keeping all key points. Remove filler words and make every word count.' },
-    { id: 'expand', label: 'Expand & Elaborate', icon: BookOpen, prompt: 'Expand this with rich detail, examples, and context. Add depth while maintaining the original tone.' },
-    { id: 'structured', label: 'Add Structure', icon: List, prompt: 'Restructure into a well-organized, scannable format with clear section headers in CAPS, bullet points, and proper paragraph breaks.' },
+    { id: 'professional', label: 'Professional Tone', icon: Type, prompt: 'Rewrite this content in a polished, professional business tone. Use precise language, maintain authority and credibility. Keep the same meaning but make it sound more formal and authoritative.' },
+    { id: 'friendly', label: 'Friendly & Approachable', icon: Smile, prompt: 'Rewrite this content to be warm, friendly, and approachable. Use conversational language, add personality, and make the reader feel welcomed. Keep it genuine and relatable.' },
+    { id: 'concise', label: 'Condense for Brevity', icon: Zap, prompt: 'Condense this content significantly while keeping all key points intact. Remove filler words, redundant phrases, and make every word count. Be direct and to the point.' },
+    { id: 'expand', label: 'Expand with Details', icon: BookOpen, prompt: 'Expand this content with more detail, examples, and context. Add depth, supporting information, and make it more comprehensive while maintaining the original tone and message.' },
+    { id: 'structured', label: 'Structured Newsletter Layout', icon: List, prompt: 'Format this content into a structured newsletter layout with clear headings in CAPS, organized sections, bullet points (•) for key information, and proper paragraph breaks. Make it easy to scan and read.' },
   ];
 
   // Fetch news articles
@@ -140,8 +139,9 @@ export default function EmailNewsletterManager() {
 
   // AI format newsletter with options
   const handleAIFormat = async (option) => {
-    if (selectedArticles.length === 0) {
-      toast.error('Please select articles first');
+    // Check if there's content to format (either body text or selected articles)
+    if (!body && selectedArticles.length === 0) {
+      toast.error('Please add content or select articles first');
       return;
     }
 
@@ -149,47 +149,52 @@ export default function EmailNewsletterManager() {
     setAiSuggestion(null);
     
     try {
-      const articlesToInclude = selectedArticles.map(id => {
-        const article = newsArticles.find(a => a.id === id);
-        return article ? `ARTICLE: ${article.title}\nSummary: ${article.summary || ''}\nContent: ${article.content || ''}` : '';
-      }).filter(Boolean).join('\n\n---\n\n');
+      // Build the content to format
+      let contentToFormat = body || '';
+      
+      if (selectedArticles.length > 0) {
+        const articlesToInclude = selectedArticles.map(id => {
+          const article = newsArticles.find(a => a.id === id);
+          return article ? `ARTICLE: ${article.title}\nSummary: ${article.summary || ''}\nContent: ${article.content || ''}` : '';
+        }).filter(Boolean).join('\n\n---\n\n');
+        
+        if (contentToFormat) {
+          contentToFormat += '\n\n---\n\nARTICLES:\n' + articlesToInclude;
+        } else {
+          contentToFormat = articlesToInclude;
+        }
+      }
 
-      const prompt = `You are formatting a newsletter email for SaintAgent platform.
+      const prompt = `${option.prompt}
 
-${body ? `CUSTOM MESSAGE FROM SENDER:\n${body}\n\n` : ''}
-ARTICLES TO INCLUDE:
-${articlesToInclude}
+CONTENT TO FORMAT:
+${contentToFormat}
 
-${option.prompt}
+IMPORTANT INSTRUCTIONS:
+- Return ONLY the formatted text, nothing else
+- Do NOT include any explanations, comments, or meta-text
+- Do NOT include HTML tags - use plain text only
+- For structure/layout options, use:
+  • Bullet points with •
+  • Headers in CAPS
+  • Clear line breaks between sections
+  • Section dividers with ═══════════════════
 
-Format this into a cohesive newsletter email. Include:
-1. A brief intro greeting
-2. The custom message (if provided) integrated naturally
-3. Each article formatted with clear headline, key highlights (bullet points), and brief summary
-4. A call-to-action
-5. Professional sign-off
-
-Do NOT include HTML tags - plain text only with clear formatting using:
-- Headers in CAPS
-- Bullet points with •
-- Clear line breaks
-- Section dividers with ═══════════════════
-
-Return ONLY the formatted newsletter text.`;
+Return ONLY the formatted content.`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
           type: "object",
           properties: {
-            formatted_email: { type: "string" },
+            formatted_text: { type: "string" },
             suggested_subject: { type: "string" }
           }
         }
       });
 
-      if (result.formatted_email) {
-        setAiSuggestion({ text: result.formatted_email, subject: result.suggested_subject, option });
+      if (result.formatted_text) {
+        setAiSuggestion({ text: result.formatted_text, subject: result.suggested_subject, option });
       }
     } catch (error) {
       console.error('AI formatting error:', error);
@@ -437,11 +442,11 @@ Return ONLY the formatted newsletter text.`;
                       <Button
                         variant="outline"
                         size="sm"
-                        disabled={selectedArticles.length === 0}
+                        disabled={!body && selectedArticles.length === 0}
                         className="gap-2"
                       >
                         <Sparkles className="w-4 h-4" />
-                        AI Format Newsletter
+                        AI Format
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80 p-3" align="end">
