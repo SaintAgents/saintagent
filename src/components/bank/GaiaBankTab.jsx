@@ -263,17 +263,26 @@ export default function GaiaBankTab() {
 
         <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                <CreditCard className="w-6 h-6 text-white" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <CreditCard className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm text-blue-700">Line of Credit</p>
+                  <p className="text-3xl font-bold text-blue-900">
+                    {Math.floor(((bankAccount?.locked_balance || 0) + (profile?.ggg_balance || 0)) * 0.5).toLocaleString()}
+                  </p>
+                  <p className="text-xs text-blue-600">Available GGG</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-blue-700">Line of Credit</p>
-                <p className="text-3xl font-bold text-blue-900">
-                  {Math.floor(((bankAccount?.locked_balance || 0) + (profile?.ggg_balance || 0)) * 0.5).toLocaleString()}
-                </p>
-                <p className="text-xs text-blue-600">Available GGG</p>
-              </div>
+              <Button 
+                size="sm" 
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => toast.info('Line of Credit feature coming soon!')}
+              >
+                Take Out
+              </Button>
             </div>
           </CardContent>
         </Card>
