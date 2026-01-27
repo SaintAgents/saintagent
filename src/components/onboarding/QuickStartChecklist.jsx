@@ -251,16 +251,18 @@ export default function QuickStartChecklist() {
         {/* Admin/User Buttons */}
         {user?.role === 'admin' ? (
           <div className="flex justify-end gap-2">
-            <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}>
+            <Button variant="outline" size="sm" className="rounded-lg" onClick={(e) => { e.stopPropagation(); window.location.href = createPageUrl('ProjectOnboard'); }}>
               Import Projects (CSV)
             </Button>
-            <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('Admin'); }}>
-              Admin Dashboard
-            </Button>
+            <a href={createPageUrl('Admin')} onClick={(e) => e.stopPropagation()}>
+              <Button variant="outline" size="sm" className="rounded-lg">
+                Admin Dashboard
+              </Button>
+            </a>
           </div>
         ) : (
           <div className="flex justify-end">
-            <Button size="sm" className="rounded-lg bg-violet-600 hover:bg-violet-700" onClick={() => { window.location.href = createPageUrl('ProjectCreate'); }}>
+            <Button size="sm" className="rounded-lg bg-violet-600 hover:bg-violet-700" onClick={(e) => { e.stopPropagation(); window.location.href = createPageUrl('ProjectCreate'); }}>
               Add Project
             </Button>
           </div>
