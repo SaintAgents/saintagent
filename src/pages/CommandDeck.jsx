@@ -70,6 +70,7 @@ import NewsCard from '@/components/news/NewsCard';
 import { Newspaper, Image } from 'lucide-react';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
+import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
@@ -278,7 +279,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       leaderboard: 'Leaderboard',
       affirmations: 'Affirmations',
       news: 'News & Updates',
-      heroGallery: 'Hero Gallery'
+      heroGallery: 'Hero Gallery',
+      videos: 'SaintTube Videos'
     };
     return titles[id] || id;
   };
@@ -305,7 +307,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     leaderboard: Trophy,
     affirmations: Sparkles,
     news: Newspaper,
-    heroGallery: Image
+    heroGallery: Image,
+    videos: Play
   };
 
   // Toss card to side panel storage
@@ -1760,6 +1763,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
             {isCardVisible('affirmations') && <CollapsibleCard title="St. Germain Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <StGermainAffirmations />
+            </CollapsibleCard>}
+
+            {isCardVisible('videos') && <CollapsibleCard title="SaintTube Videos" cardId="videos" icon={Play} badge="20 min max" badgeColor="red" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('videos')} onToggleHide={() => toggleCardVisibility('videos')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Videos')}>
+              <VideosDashboardCard profile={profile} currentUser={currentUser} />
             </CollapsibleCard>}
 
             {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
