@@ -356,27 +356,92 @@ img[alt="Trust Gauge"],
    FLOATING NOTES BUTTON - DARK THEME FIX
    ===================================================== */
 
+html[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"],
+html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"],
 [data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"],
 [data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"] {
   background-color: #10b981 !important;
+  background: #10b981 !important;
   color: #000000 !important;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.5) !important;
 }
 
+html[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"]:hover,
+html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover,
 [data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"]:hover,
 [data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover {
   background-color: #34d399 !important;
+  background: #34d399 !important;
   box-shadow: 0 0 20px rgba(16, 185, 129, 0.7) !important;
 }
 
+html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"],
 [data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"] {
   background-color: #00ff00 !important;
+  background: #00ff00 !important;
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
 }
 
+html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover,
 [data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover {
   background-color: #00ff00 !important;
+  background: #00ff00 !important;
   box-shadow: 0 0 25px rgba(0, 255, 0, 0.8) !important;
+}
+
+/* =====================================================
+   DARK/HACKER THEME - ALL BUTTONS MUST BE VISIBLE
+   ===================================================== */
+
+html[data-theme='dark'] button,
+html[data-theme='dark'] [role="button"],
+[data-theme='dark'] button,
+[data-theme='dark'] [role="button"] {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  border-color: #10b981 !important;
+  color: #10b981 !important;
+}
+
+html[data-theme='dark'] button:hover,
+html[data-theme='dark'] [role="button"]:hover,
+[data-theme='dark'] button:hover,
+[data-theme='dark'] [role="button"]:hover {
+  background-color: rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
+}
+
+html[data-theme='hacker'] button,
+html[data-theme='hacker'] [role="button"],
+[data-theme='hacker'] button,
+[data-theme='hacker'] [role="button"] {
+  background-color: rgba(0, 255, 0, 0.1) !important;
+  background: rgba(0, 255, 0, 0.1) !important;
+  border-color: #00ff00 !important;
+  color: #00ff00 !important;
+}
+
+html[data-theme='hacker'] button:hover,
+html[data-theme='hacker'] [role="button"]:hover,
+[data-theme='hacker'] button:hover,
+[data-theme='hacker'] [role="button"]:hover {
+  background-color: rgba(0, 255, 0, 0.2) !important;
+  background: rgba(0, 255, 0, 0.2) !important;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5) !important;
+}
+
+/* Button text and icons */
+html[data-theme='dark'] button *,
+html[data-theme='dark'] [role="button"] *,
+[data-theme='dark'] button *,
+[data-theme='dark'] [role="button"] * {
+  color: #10b981 !important;
+}
+
+html[data-theme='hacker'] button *,
+html[data-theme='hacker'] [role="button"] *,
+[data-theme='hacker'] button *,
+[data-theme='hacker'] [role="button"] * {
+  color: #00ff00 !important;
 }
 
 /* =====================================================
