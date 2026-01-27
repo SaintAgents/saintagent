@@ -728,8 +728,8 @@ export default function TopBar({
                   </DropdownMenuItem>
                 </div>
 
-                {/* Admin Dashboard - always show for admin users */}
-                {currentUser?.role === 'admin' && (
+                {/* Admin Dashboard - show for admin users (check both role formats) */}
+                {(currentUser?.role === 'admin' || profile?.user_id === currentUser?.email) && currentUser?.role === 'admin' && (
                   <>
                     <DropdownMenuSeparator className="my-0" />
                     <div className="py-2 bg-violet-50 dark:bg-violet-900/20">
@@ -741,6 +741,17 @@ export default function TopBar({
                       </DropdownMenuItem>
                     </div>
                   </>
+                )}
+                {/* Fallback: Also show Admin link at TOP of menu for visibility */}
+                {currentUser?.role === 'admin' && (
+                  <div className="py-2 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-700">
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('Admin')} className="flex items-center gap-3 px-4 py-2.5 text-amber-700 dark:text-amber-400 font-bold">
+                        <Shield className="w-5 h-5" />
+                        <span>🔐 ADMIN DASHBOARD</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </div>
                 )}
 
                 <DropdownMenuSeparator className="my-0" />

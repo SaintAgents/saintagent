@@ -58,22 +58,21 @@ export default function QuickStartChecklist() {
                 <Sparkles className="w-4 h-4" /> +{action.reward} GGG
               </div>
             </div>
-            {/* Read Me tooltip after step 4 (Join 1 mission) */}
+            {/* Read Me info box after step 4 (Join 1 mission) */}
             {i === 3 && (
-              <TooltipProvider delayDuration={100}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2 py-2 px-3 cursor-help text-violet-600 hover:text-violet-700 transition-colors bg-violet-50 rounded-lg mt-2 border border-violet-200">
-                      <Info className="w-4 h-4" />
-                      <span className="text-sm font-medium">📖 Read Me - Important Tips!</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-xs p-3 text-sm bg-violet-900 text-white">
-                    <p className="font-semibold mb-1">How to Maximize Your Experience:</p>
-                    <p>Earn GGG for many actions in app. Earn GGG for referrals. Add your projects for funding. Explore in the Advanced view to discover more functions of the app.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="py-3 px-4 mt-2 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-200 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
+                    <Info className="w-4 h-4 text-violet-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-violet-800 mb-1">📖 Read Me - Important Tips!</p>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      <strong>Earn GGG</strong> for many actions in the app. <strong>Earn GGG for referrals.</strong> Add your projects for funding. Explore in the <strong>Advanced view</strong> to discover more functions of the app.
+                    </p>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         ))}
