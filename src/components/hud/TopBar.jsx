@@ -680,7 +680,7 @@ export default function TopBar({
               <ScrollArea className="max-h-[60vh]">
                 <div className="py-2">
                   <DropdownMenuItem asChild>
-                    <Link to={createPageUrl('CommandDeck')} className="flex items-center gap-3 px-4 py-2.5">
+                    <Link to={createPageUrl('Profile')} className="flex items-center gap-3 px-4 py-2.5">
                       <User className="w-4 h-4 text-slate-500" />
                       <span>My Dashboard</span>
                     </Link>
