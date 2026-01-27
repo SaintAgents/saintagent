@@ -18,6 +18,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { 
   Search,
   MessageCircle,
@@ -52,6 +57,8 @@ import { base44 } from '@/api/base44Client';
 import MastersMessagesTicker from './MastersMessagesTicker';
 import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
 import SaintBrowser from '../browser/SaintBrowser';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 const MODE_TABS = [
   { id: 'command', label: 'Command', icon: Sparkles, page: 'CommandDeck' },
@@ -529,20 +536,73 @@ export default function TopBar({
             </span>
           </Button>
         </Link>
-        {/* Messages */}
-        <Link to={createPageUrl('Messages')}>
-          <Button variant="ghost" size="icon" className="relative group w-8 h-8 md:w-9 md:h-9" title="Messages">
-            <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
-            {unreadMessages.length > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center text-[10px] font-bold text-white bg-rose-500 rounded-full">
-                {unreadMessages.length}
+        {/* Messages Dropdown */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative group w-8 h-8 md:w-9 md:h-9" title="Messages" style={{ zIndex: 10001, pointerEvents: 'auto' }}>
+              <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
+              {unreadMessages.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-[10px] md:text-xs font-bold text-white bg-rose-500 rounded-full">
+                  {unreadMessages.length > 9 ? '9+' : unreadMessages.length}
+                </span>
+              )}
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
+                Messages
               </span>
-            )}
-            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
-              Messages
-            </span>
-          </Button>
-        </Link>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Messages</h3>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs h-7 text-violet-600 hover:text-violet-700 hover:bg-violet-50"
+                onClick={() => window.location.href = createPageUrl('Messages')}
+              >
+                <MessageCircle className="w-3 h-3 mr-1" />
+                View All
+              </Button>
+            </div>
+            <ScrollArea className="h-96">
+              {unreadMessages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-slate-500">
+                  <MessageCircle className="w-10 h-10 mb-3 opacity-50" />
+                  <p className="text-sm">No unread messages</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100 dark:divide-slate-700">
+                  {unreadMessages.slice(0, 10).map((msg) => (
+                    <div 
+                      key={msg.id}
+                      className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
+                      onClick={() => window.location.href = createPageUrl('Messages')}
+                    >
+                      <Avatar className="w-10 h-10 shrink-0">
+                        <AvatarImage src={msg.from_avatar} />
+                        <AvatarFallback className="bg-violet-100 text-violet-600 text-xs dark:bg-violet-900/30 dark:text-violet-400">
+                          {msg.from_name?.charAt(0) || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                          {msg.from_name}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
+                          {msg.content}
+                        </p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                          {msg.created_date && formatDistanceToNow(parseISO(msg.created_date), { addSuffix: true })}
+                        </p>
+                      </div>
+                      <div className="w-2 h-2 rounded-full bg-rose-500 shrink-0 mt-2" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </PopoverContent>
+        </Popover>
 
 
         {/* Notifications */}
