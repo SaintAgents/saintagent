@@ -360,7 +360,7 @@ export default function Sidebar({
   const renderSidebarContent = (inPopup = false) => (
     <>
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto">
+      <div className={cn("overflow-y-auto", navOpen ? "flex-1" : "flex-shrink-0")}>
         {/* Nav Header with Popout */}
         {(!isCollapsed || inPopup) && (
           <div className="px-3 pt-2 pb-1">
