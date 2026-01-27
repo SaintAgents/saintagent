@@ -874,10 +874,29 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                     color: #94a3b8 !important;
                   }
 
-                  /* Light theme buttons */
+                  /* Light theme buttons - FORCE dark readable text */
                   [data-theme='light'] button,
-                  [data-theme='light'] [role="button"] {
-                    color: inherit;
+                  [data-theme='light'] [role="button"],
+                  [data-theme='light'] button span,
+                  [data-theme='light'] button div,
+                  [data-theme='light'] [role="button"] span,
+                  [data-theme='light'] [role="button"] div,
+                  [data-theme='light'] [class*="Button"],
+                  [data-theme='light'] [class*="Button"] span {
+                    color: #1e293b !important;
+                  }
+
+                  /* Light theme primary/colored buttons - white text */
+                  [data-theme='light'] button[class*="bg-violet"],
+                  [data-theme='light'] button[class*="bg-purple"],
+                  [data-theme='light'] button[class*="bg-emerald"],
+                  [data-theme='light'] button[class*="bg-blue"],
+                  [data-theme='light'] button[class*="bg-primary"],
+                  [data-theme='light'] [class*="bg-violet"] span,
+                  [data-theme='light'] [class*="bg-purple"] span,
+                  [data-theme='light'] [class*="bg-emerald"] span,
+                  [data-theme='light'] [class*="bg-blue"] span {
+                    color: #ffffff !important;
                   }
 
                   /* Dark theme font colors */
