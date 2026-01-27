@@ -250,9 +250,12 @@ export default function QuickStartChecklist() {
 
         {/* Admin/User Buttons */}
         {user?.role === 'admin' ? (
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('ProjectOnboard'); }}>
               Import Projects (CSV)
+            </Button>
+            <Button variant="outline" size="sm" className="rounded-lg" onClick={() => { window.location.href = createPageUrl('Admin'); }}>
+              Admin Dashboard
             </Button>
           </div>
         ) : (
