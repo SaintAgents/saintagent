@@ -677,7 +677,7 @@ export default function TopBar({
 
         {/* Profile Menu / Auth */}
         {currentUser && profile ? (
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl">
                 <div className={cn(
@@ -721,6 +721,7 @@ export default function TopBar({
                 <Link 
                   to={createPageUrl('Admin')} 
                   className="block bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3"
+                  onClick={() => document.body.click()}
                 >
                   <div className="flex items-center gap-3 text-white font-bold hover:opacity-90 transition-opacity">
                     <Shield className="w-5 h-5" />
@@ -810,7 +811,7 @@ export default function TopBar({
                     <DropdownMenuSeparator className="my-0" />
                     <div className="py-2 bg-violet-50 dark:bg-violet-900/20">
                       <DropdownMenuItem asChild>
-                        <Link to={createPageUrl('Admin')} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold">
+                        <Link to={createPageUrl('Admin')} onClick={() => document.body.click()} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold">
                           <Shield className="w-4 h-4" />
                           <span>⚡ Admin Dashboard</span>
                         </Link>
