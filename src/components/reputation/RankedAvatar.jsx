@@ -67,7 +67,8 @@ export default function RankedAvatar({
   
   // Always call useQuery unconditionally to avoid hook order issues
   // The enabled flag controls whether it actually fetches
-  const needsFetch = !!userId && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null || saNumber == null);
+  // IMPORTANT: Only fetch if we DON'T have the src prop - prevents overriding passed avatar
+  const needsFetch = !!userId && !src && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null || saNumber == null);
   const { data: fetched = [] } = useQuery({
     queryKey: ['rankedAvatarProfile', userId || 'none'],
     queryFn: () => {
@@ -76,6 +77,7 @@ export default function RankedAvatar({
       return base44.entities.UserProfile.filter({ user_id: userId });
     },
     enabled: needsFetch,
+    staleTime: 60000, // 1 minute - prevent excessive refetching
   });
   const fetchedProfile = fetched?.[0];
   
