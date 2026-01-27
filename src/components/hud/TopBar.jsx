@@ -553,15 +553,37 @@ export default function TopBar({
           <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
               <h3 className="font-semibold text-slate-900 dark:text-slate-100">Messages</h3>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-xs h-7 text-violet-600 hover:text-violet-700 hover:bg-violet-50"
-                onClick={() => window.location.href = createPageUrl('Messages')}
-              >
-                <MessageCircle className="w-3 h-3 mr-1" />
-                View All
-              </Button>
+              <div className="flex items-center gap-2">
+                {unreadMessages.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs h-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                    onClick={async () => {
+                      // Mark all as read
+                      try {
+                        await Promise.all(unreadMessages.map(m => 
+                          base44.entities.Message.update(m.id, { is_read: true })
+                        ));
+                      } catch (err) {
+                        console.error('Failed to mark messages as read:', err);
+                      }
+                    }}
+                  >
+                    <X className="w-3 h-3 mr-1" />
+                    Clear All
+                  </Button>
+                )}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs h-7 text-violet-600 hover:text-violet-700 hover:bg-violet-50"
+                  onClick={() => window.location.href = createPageUrl('Messages')}
+                >
+                  <MessageCircle className="w-3 h-3 mr-1" />
+                  View All
+                </Button>
+              </div>
             </div>
             <ScrollArea className="h-96">
               {unreadMessages.length === 0 ? (

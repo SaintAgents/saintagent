@@ -66,8 +66,8 @@ export default function QuickStartChecklist() {
                     <Info className="w-4 h-4 text-violet-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-violet-800 mb-1">📖 Read Me - Important Tips!</p>
-                    <p className="text-xs text-slate-600 leading-relaxed">
+                    <p className="text-sm font-semibold text-black mb-1">📖 Read Me - Important Tips!</p>
+                    <p className="text-xs text-black leading-relaxed">
                       <strong>Earn GGG</strong> for many actions in the app. <strong>Earn GGG for referrals.</strong> Add your projects for funding. Explore in the <strong>Advanced view</strong> to discover more functions of the app.
                     </p>
                   </div>
