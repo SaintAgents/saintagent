@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
-  MessageSquare, Bug, Lightbulb, HelpCircle, Plus, CheckCircle2, Clock
+  MessageSquare, Bug, Lightbulb, HelpCircle, Plus, CheckCircle2, Clock,
+  ThumbsUp, Heart, Send, Eye, ChevronDown, ChevronUp
 } from "lucide-react";
 import { format } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';

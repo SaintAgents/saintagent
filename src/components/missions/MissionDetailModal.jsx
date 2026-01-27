@@ -534,16 +534,35 @@ export default function MissionDetailModal({ mission, open, onClose }) {
               <Users className="w-4 h-4 mr-2" />
               Join Your Mission
             </Button>
-          ) : (
+          ) : mission.max_participants && (mission.participant_count || 0) >= mission.max_participants ? (
             <Button
-              className="flex-1 bg-violet-600 hover:bg-violet-700"
-              onClick={() => requestToJoinMutation.mutate()}
-              disabled={requestToJoinMutation.isPending}
+              variant="outline"
+              className="flex-1 text-slate-500"
+              disabled
             >
-              <Users className="w-4 h-4 mr-2" />
-              Request to Join
+              Mission Full
             </Button>
-          )}
+          ) : (
+            <>
+              <Button
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                onClick={() => joinMissionMutation.mutate()}
+                disabled={joinMissionMutation.isPending}
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Join Mission
+              </Button>
+              <Button
+                variant="outline"
+                className="bg-violet-50 text-violet-700 border-violet-200 hover:bg-violet-100"
+                onClick={() => requestToJoinMutation.mutate()}
+                disabled={requestToJoinMutation.isPending}
+              >
+                <Clock className="w-4 h-4 mr-2" />
+                Request to Join
+              </Button>
+            </>
+          )
           <Button
             variant="outline"
             onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}
