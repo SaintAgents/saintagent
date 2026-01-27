@@ -1,16 +1,16 @@
 css
 /* =====================================================
-   SIDE PANEL HANDLE - FORCE 22PX HEIGHT
+   SIDE PANEL HANDLE - FORCE 32PX HEIGHT
    ===================================================== */
 
 [data-side-panel-handle] {
-  height: 22px !important;
-  min-height: 22px !important;
-  max-height: 22px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
 }
 
 [data-side-panel-handle] > div {
-  height: 22px !important;
+  height: 32px !important;
 }
 
 /* =====================================================

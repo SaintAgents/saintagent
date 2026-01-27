@@ -1003,14 +1003,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
           animation: glitchSlideIn 0.25s ease-out forwards !important;
         }
 
-        /* Side Panel Handle - ALL themes - FORCE 22px height */
+        /* Side Panel Handle - ALL themes - FORCE 32px height */
         [data-side-panel-handle] {
-          height: 22px !important;
-          min-height: 22px !important;
-          max-height: 22px !important;
+          height: 32px !important;
+          min-height: 32px !important;
+          max-height: 32px !important;
         }
         [data-side-panel-handle] > div {
-          height: 22px !important;
+          height: 32px !important;
         }
         [data-theme='dark'] [data-side-panel-handle] > div,
         [data-theme='hacker'] [data-side-panel-handle] > div {
