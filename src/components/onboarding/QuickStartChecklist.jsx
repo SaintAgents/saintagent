@@ -57,20 +57,27 @@ export default function QuickStartChecklist() {
                 <Sparkles className="w-4 h-4" /> +{action.reward} GGG
               </div>
             </div>
-            {/* Read Me info box after step 4 (Join 1 mission) */}
+            {/* Read Me hover info after step 4 (Join 1 mission) */}
             {i === 3 && (
-              <div className="py-3 px-4 mt-2 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-200 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
-                    <Info className="w-4 h-4 text-violet-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-black mb-1">📖 Read Me - Important Tips!</p>
-                    <p className="text-xs text-black leading-relaxed">
-                      <strong>Earn GGG</strong> for many actions in the app. <strong>Earn GGG for referrals.</strong> Add your projects for funding. Explore in the <strong>Advanced view</strong> to discover more functions of the app.
-                    </p>
-                  </div>
-                </div>
+              <div className="flex justify-end mt-2">
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-lg border border-violet-200 transition-colors cursor-pointer">
+                      <Info className="w-3.5 h-3.5" />
+                      📖 READ ME
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-72 p-4" side="top">
+                    <div className="space-y-2">
+                      <p className="text-sm font-semibold text-slate-900">💡 Important Tips!</p>
+                      <ul className="text-xs text-slate-600 space-y-1.5">
+                        <li>• <strong>Earn GGG!</strong> - Refer friends</li>
+                        <li>• <strong>Advanced view</strong> for more to explore and receive rewards</li>
+                        <li>• <strong>Submit projects</strong> for funding</li>
+                      </ul>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             )}
           </div>
