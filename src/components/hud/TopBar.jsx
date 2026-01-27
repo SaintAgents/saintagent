@@ -330,7 +330,7 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="w-10 h-10 object-contain"
+                  className="w-7 h-7 object-contain"
                   data-no-filter="true"
                 />
                 {/* Hover tooltip with label */}
