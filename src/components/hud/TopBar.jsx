@@ -690,6 +690,7 @@ export default function TopBar({
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </div>
+              </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : currentUser && !profile ? (
