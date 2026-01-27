@@ -117,6 +117,20 @@ export default function TopBar({
   const [browserOpen, setBrowserOpen] = useState(false);
   const [qrLoginOpen, setQrLoginOpen] = useState(false);
   const searchRef = useRef(null);
+  const [currentTheme, setCurrentTheme] = useState('light');
+  
+  // Track theme changes
+  useEffect(() => {
+    const updateTheme = () => {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      setCurrentTheme(theme);
+    };
+    updateTheme();
+    
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  }, []);
   
   // Listen for boost activation event
   useEffect(() => {
