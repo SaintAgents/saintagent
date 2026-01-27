@@ -26,6 +26,7 @@ import ProjectClaimsManager from '@/components/admin/ProjectClaimsManager';
 import OnboardingRewardsManager from '@/components/admin/OnboardingRewardsManager';
 import HeroImageManager from '@/components/admin/HeroImageManager';
 import EmailNewsletterManager from '@/components/admin/EmailNewsletterManager';
+import NewsletterAnalyticsDashboard from '@/components/admin/NewsletterAnalyticsDashboard';
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
 
 export default function Admin() {
@@ -247,7 +248,24 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="newsletter">
-            <EmailNewsletterManager />
+            <Tabs defaultValue="compose" className="w-full">
+              <TabsList className="mb-4">
+                <TabsTrigger value="compose" className="gap-2">
+                  <Mail className="w-4 h-4" />
+                  Compose
+                </TabsTrigger>
+                <TabsTrigger value="analytics" className="gap-2">
+                  <BarChart3 className="w-4 h-4" />
+                  Analytics
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="compose">
+                <EmailNewsletterManager />
+              </TabsContent>
+              <TabsContent value="analytics">
+                <NewsletterAnalyticsDashboard />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           <TabsContent value="audit">
