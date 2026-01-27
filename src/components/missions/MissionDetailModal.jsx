@@ -516,14 +516,32 @@ export default function MissionDetailModal({ mission, open, onClose }) {
                 </Button>
               )}
             </>
-          ) : (
+          ) : myPendingRequest ? (
+            <Button
+              variant="outline"
+              className="flex-1 text-amber-600 border-amber-200 bg-amber-50"
+              disabled
+            >
+              <Clock className="w-4 h-4 mr-2" />
+              Request Pending
+            </Button>
+          ) : isCreator ? (
             <Button
               className="flex-1 bg-violet-600 hover:bg-violet-700"
               onClick={() => joinMissionMutation.mutate()}
               disabled={joinMissionMutation.isPending}
             >
               <Users className="w-4 h-4 mr-2" />
-              Join Mission
+              Join Your Mission
+            </Button>
+          ) : (
+            <Button
+              className="flex-1 bg-violet-600 hover:bg-violet-700"
+              onClick={() => requestToJoinMutation.mutate()}
+              disabled={requestToJoinMutation.isPending}
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Request to Join
             </Button>
           )}
           <Button
