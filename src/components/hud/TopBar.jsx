@@ -592,6 +592,7 @@ export default function TopBar({
               sideOffset={12}
               className="w-56 z-[9999] bg-white dark:bg-[#050505] [data-theme='dark']_&:bg-[#050505] [data-theme='dark']_&:border-[#00ff88] [data-theme='dark']_&:border [data-theme='dark']_&:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200"
             >
+              <p className="px-2 py-1 text-xs font-semibold text-slate-400 uppercase">User Tools</p>
               <DropdownMenuItem asChild>
                 <Link to={createPageUrl('Profile')} className="flex items-center gap-2">
                   <User className="w-4 h-4" />
