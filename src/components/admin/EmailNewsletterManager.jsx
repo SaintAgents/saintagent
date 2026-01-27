@@ -309,22 +309,24 @@ Do NOT include HTML tags - plain text only with clear formatting using:
                   {newsArticles.length === 0 ? (
                     <p className="text-sm text-slate-500">No articles available</p>
                   ) : (
-                    newsArticles.slice(0, 20).map((article) => (
-                      <div 
-                        key={article.id} 
-                        className="flex items-start gap-2 p-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
-                        onClick={() => toggleArticleSelection(article.id)}
-                      >
-                        <Checkbox 
-                          checked={selectedArticles.includes(article.id)}
-                          onCheckedChange={() => toggleArticleSelection(article.id)}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{article.title}</p>
-                          <p className="text-xs text-slate-500 truncate">{article.summary || 'No summary'}</p>
+                    newsArticles.slice(0, 20).map((article) => {
+                      const isSelected = selectedArticles.includes(article.id);
+                      return (
+                        <div 
+                          key={article.id} 
+                          className={`flex items-start gap-3 p-2 rounded cursor-pointer border ${isSelected ? 'bg-violet-50 border-violet-300 dark:bg-violet-900/20 dark:border-violet-700' : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                          onClick={() => toggleArticleSelection(article.id)}
+                        >
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 ${isSelected ? 'bg-violet-600 border-violet-600' : 'border-slate-300'}`}>
+                            {isSelected && <CheckCircle className="w-4 h-4 text-white" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{article.title}</p>
+                            <p className="text-xs text-slate-500 truncate">{article.summary || 'No summary'}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
                 {selectedArticles.length > 0 && (
