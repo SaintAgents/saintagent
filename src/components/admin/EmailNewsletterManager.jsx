@@ -221,45 +221,121 @@ Return ONLY the formatted content.`;
 
   // Build the final email content with embedded articles and images (HTML format)
   const buildFinalEmailContent = () => {
-    let html = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">';
+    let html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    `;
     
-    // Add images at the top
+    // Add header images at the top (user-uploaded)
     if (previewImages.filter(Boolean).length > 0) {
       previewImages.filter(Boolean).forEach((imgUrl) => {
-        html += `<div style="margin-bottom: 20px;"><img src="${imgUrl}" alt="Newsletter image" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px;" /></div>`;
+        html += `
+          <div style="width: 100%;">
+            <img src="${imgUrl}" alt="Newsletter header" style="width: 100%; max-width: 600px; height: auto; display: block;" />
+          </div>
+        `;
       });
     }
+    
+    // Content wrapper with padding
+    html += '<div style="padding: 30px;">';
     
     // Add body content
     if (body) {
-      html += `<div style="white-space: pre-wrap; line-height: 1.6; margin-bottom: 20px;">${body.replace(/\n/g, '<br>')}</div>`;
+      html += `
+        <div style="color: #1e293b; font-size: 16px; line-height: 1.7; margin-bottom: 30px; white-space: pre-wrap;">
+          ${body.replace(/\n/g, '<br>')}
+        </div>
+      `;
     }
     
-    // Add selected articles
+    // Add selected articles with featured images
     if (selectedArticles.length > 0) {
-      html += '<hr style="border: none; border-top: 2px solid #8b5cf6; margin: 30px 0;" />';
-      html += '<h2 style="color: #1e293b; font-size: 20px; margin-bottom: 20px;">FEATURED ARTICLES</h2>';
+      html += `
+        <div style="border-top: 2px solid #e2e8f0; margin-top: 20px; padding-top: 25px;">
+          <h2 style="color: #8b5cf6; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 20px 0; font-weight: 600;">Featured Articles</h2>
+      `;
       
-      selectedArticles.forEach((articleId) => {
+      selectedArticles.forEach((articleId, index) => {
         const article = newsArticles.find(a => a.id === articleId);
         if (article) {
-          html += '<div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #8b5cf6;">';
-          html += `<h3 style="color: #1e293b; font-size: 18px; margin: 0 0 10px 0;">${article.title || 'Untitled'}</h3>`;
+          html += `
+            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+          `;
+          
+          // Article featured image
+          if (article.image_url || article.featured_image || article.thumbnail) {
+            const articleImage = article.image_url || article.featured_image || article.thumbnail;
+            html += `
+              <div style="width: 100%; height: 200px; overflow: hidden;">
+                <img src="${articleImage}" alt="${article.title || 'Article image'}" style="width: 100%; height: 200px; object-fit: cover; display: block;" />
+              </div>
+            `;
+          }
+          
+          // Article content
+          html += `
+            <div style="padding: 20px;">
+              <h3 style="color: #1e293b; font-size: 18px; margin: 0 0 10px 0; font-weight: 600; line-height: 1.4;">
+                ${article.title || 'Untitled'}
+              </h3>
+          `;
+          
+          // Category/tag badge if exists
+          if (article.category || article.tags?.length > 0) {
+            const tag = article.category || article.tags?.[0];
+            html += `
+              <span style="display: inline-block; background: #8b5cf6; color: #ffffff; font-size: 11px; padding: 4px 10px; border-radius: 12px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                ${tag}
+              </span>
+            `;
+          }
+          
+          // Summary
           if (article.summary) {
-            html += `<p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0; font-style: italic;">${article.summary}</p>`;
+            html += `
+              <p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0; font-style: italic; line-height: 1.5;">
+                ${article.summary}
+              </p>
+            `;
           }
+          
+          // Truncated content
           if (article.content) {
-            const trimmedContent = article.content.length > 1000 
-              ? article.content.substring(0, 1000) + '...'
+            const trimmedContent = article.content.length > 800 
+              ? article.content.substring(0, 800).trim() + '...'
               : article.content;
-            html += `<div style="color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${trimmedContent.replace(/\n/g, '<br>')}</div>`;
+            html += `
+              <div style="color: #475569; font-size: 14px; line-height: 1.7;">
+                ${trimmedContent.replace(/\n\n/g, '</p><p style="margin: 12px 0;">').replace(/\n/g, '<br>')}
+              </div>
+            `;
           }
-          html += '</div>';
+          
+          // Read more hint
+          html += `
+              <p style="color: #8b5cf6; font-size: 13px; margin: 15px 0 0 0; font-weight: 500;">
+                Read more on SaintAgent →
+              </p>
+            </div>
+          </div>
+          `;
         }
       });
+      
+      html += '</div>';
     }
     
-    html += '</div>';
+    // Footer
+    html += `
+        <div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 20px; text-align: center;">
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">
+            Sent with ✨ from SaintAgent Newsletter
+          </p>
+        </div>
+      </div>
+    </div>
+    `;
+    
     return html;
   };
 
