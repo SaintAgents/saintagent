@@ -549,7 +549,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Fetch missions - mobile-optimized
   const { data: missions = [] } = useQuery({
     queryKey: ['missions', missionLimit],
-    queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit),
+    queryFn: async () => {
+      const result = await base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit);
+      console.log('Missions fetched:', result?.length, result);
+      return result || [];
+    },
     staleTime: 300000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
