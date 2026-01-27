@@ -7,8 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, Plus, Check, Clock, Pencil, Save, Trash2 } from 'lucide-react';
+import { CalendarDays, Plus, Check, Clock, Pencil, Save, Trash2, Sparkles, Lightbulb, Target } from 'lucide-react';
 import { format, parseISO, startOfWeek, endOfWeek, isSameDay, isWithinInterval } from 'date-fns';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function DailyOps() {
   const queryClient = useQueryClient();
@@ -122,6 +123,9 @@ export default function DailyOps() {
   const [inProgDraft, setInProgDraft] = useState({ title: '', note: '', link: '' });
   const [completedDraft, setCompletedDraft] = useState({ action: '', ggg_earned: '', note: '', link: '' });
   const [fieldDraft, setFieldDraft] = useState({ focus: '', win: '', blocker: '', insight: '' });
+  const [aiAssistOpen, setAiAssistOpen] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState(null);
 
   React.useEffect(() => {
     if (dailyLog) {
@@ -181,6 +185,55 @@ export default function DailyOps() {
     updateLog({ field_update: { ...current, [type]: nextArr } });
   };
 
+  const generateAISuggestions = async () => {
+    setAiLoading(true);
+    setAiAssistOpen(true);
+    try {
+      const context = `
+User: ${user?.full_name}
+Date: ${selectedDate}
+Current Overview: ${overview || 'Not set'}
+Schedule: ${JSON.stringify(dailyLog?.schedule || [])}
+In Progress: ${JSON.stringify(dailyLog?.in_progress || [])}
+Completed: ${JSON.stringify(dailyLog?.completed || [])}
+Wins: ${JSON.stringify(dailyLog?.field_update?.wins || [])}
+Blockers: ${JSON.stringify(dailyLog?.field_update?.blockers || [])}
+      `.trim();
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on this user's daily operations log, provide helpful suggestions:
+
+${context}
+
+Generate:
+1. 2-3 priority tasks they should focus on next
+2. Tips to overcome current blockers
+3. A motivational insight based on their progress
+
+Return JSON with: { priority_tasks: string[], blocker_tips: string[], motivation: string }`,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            priority_tasks: { type: 'array', items: { type: 'string' } },
+            blocker_tips: { type: 'array', items: { type: 'string' } },
+            motivation: { type: 'string' }
+          }
+        }
+      });
+      
+      setAiSuggestions(response);
+    } catch (error) {
+      console.error('AI assist failed:', error);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const applyAISuggestion = (task) => {
+    setSchedDraft({ ...schedDraft, title: task, priority: 'High' });
+    setAiAssistOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-violet-950/30 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -189,6 +242,14 @@ export default function DailyOps() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-violet-700 dark:text-slate-100"><CalendarDays className="w-5 h-5" /> Daily Ops & Progress Tracker</CardTitle>
             <div className="flex items-center gap-3">
+              <Button 
+                onClick={generateAISuggestions}
+                variant="outline"
+                className="gap-2 bg-gradient-to-r from-violet-50 to-purple-50 border-violet-300 hover:from-violet-100 hover:to-purple-100"
+              >
+                <Sparkles className="w-4 h-4 text-violet-600" />
+                AI Assist
+              </Button>
               <Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-40 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
               <Button onClick={() => updateLog({ overview })} className="gap-2"><Save className="w-4 h-4" /> Save Overview</Button>
             </div>
@@ -410,6 +471,81 @@ export default function DailyOps() {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI Assistant Modal */}
+      <Dialog open={aiAssistOpen} onOpenChange={setAiAssistOpen}>
+        <DialogContent className="max-w-2xl dark:bg-slate-800 dark:border-slate-700">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-violet-700 dark:text-violet-400">
+              <Sparkles className="w-5 h-5" />
+              AI Daily Ops Assistant
+            </DialogTitle>
+          </DialogHeader>
+          
+          {aiLoading ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mb-4" />
+              <p className="text-slate-600 dark:text-slate-400">Analyzing your day...</p>
+            </div>
+          ) : aiSuggestions ? (
+            <div className="space-y-6">
+              {/* Priority Tasks */}
+              <div>
+                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                  <Target className="w-4 h-4 text-violet-600" />
+                  Recommended Priority Tasks
+                </h4>
+                <div className="space-y-2">
+                  {aiSuggestions.priority_tasks?.map((task, idx) => (
+                    <div key={idx} className="flex items-start justify-between p-3 rounded-lg border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20">
+                      <p className="text-sm text-slate-700 dark:text-slate-300 flex-1">{task}</p>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => applyAISuggestion(task)}
+                        className="ml-2 text-violet-600 hover:text-violet-700"
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Blocker Tips */}
+              {aiSuggestions.blocker_tips?.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                    <Lightbulb className="w-4 h-4 text-amber-600" />
+                    Tips to Overcome Blockers
+                  </h4>
+                  <div className="space-y-2">
+                    {aiSuggestions.blocker_tips.map((tip, idx) => (
+                      <div key={idx} className="p-3 rounded-lg border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20">
+                        <p className="text-sm text-slate-700 dark:text-slate-300">{tip}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Motivation */}
+              {aiSuggestions.motivation && (
+                <div className="p-4 rounded-xl bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-300 dark:border-violet-600">
+                  <p className="text-sm font-medium text-violet-900 dark:text-violet-200 text-center italic">
+                    "{aiSuggestions.motivation}"
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="py-8 text-center text-slate-500 dark:text-slate-400">
+              Click "AI Assist" to get personalized suggestions
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
