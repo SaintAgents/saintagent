@@ -965,6 +965,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">4</span>
                       <span className="text-slate-700 dark:text-slate-300">Create an offer or join a mission</span>
                     </li>
+                    <li className="flex items-start gap-2">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center justify-center">5</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">📖 READ ME: Earn GGG! - Refer friends, Advanced view for more to Explore and receive rewards, submit projects for funding.</span>
+                    </li>
                   </ol>
                 </PopoverContent>
               </Popover>
