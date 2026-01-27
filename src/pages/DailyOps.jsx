@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, Plus, Check, Clock, Pencil, Save, Trash2, Sparkles, Lightbulb, Target } from 'lucide-react';
+import { CalendarDays, Plus, Check, Clock, Pencil, Save, Trash2, Sparkles, Lightbulb, Target, FileText, ListChecks, CheckCircle2 } from 'lucide-react';
 import { format, parseISO, startOfWeek, endOfWeek, isSameDay, isWithinInterval } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
