@@ -412,7 +412,13 @@ export default function Sidebar({
                   <Link
                     key={item.id}
                     to={isLocked ? '#' : createPageUrl(item.page)}
-                    onClick={(e) => isLocked && e.preventDefault()}
+                    onClick={(e) => {
+                      if (isLocked) { e.preventDefault(); return; }
+                      if (item.action === 'openGallery') {
+                        e.preventDefault();
+                        document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
+                      }
+                    }}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
                       isActive 
