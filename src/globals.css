@@ -966,6 +966,65 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                     color: #1e293b !important;
                   }
 
+                  /* =====================================================
+                  BADGE STATUS COLORS - FORCE WHITE TEXT ON COLORED BADGES
+                  ===================================================== */
+
+                  /* Status badge - "sent" green badge needs white text */
+                  .bg-green-100.text-green-700,
+                  .bg-green-500,
+                  .bg-green-600,
+                  .bg-emerald-500,
+                  .bg-emerald-600,
+                  [class*="bg-green-5"],
+                  [class*="bg-green-6"],
+                  [class*="bg-emerald-5"],
+                  [class*="bg-emerald-6"] {
+                  color: #ffffff !important;
+                  }
+
+                  /* Ensure badge text is always readable */
+                  [data-theme='light'] [class*="Badge"][class*="bg-green"],
+                  [data-theme='light'] [class*="badge"][class*="bg-green"],
+                  html[data-theme='light'] [class*="Badge"][class*="bg-green"],
+                  html[data-theme='light'] [class*="badge"][class*="bg-green"] {
+                  color: #ffffff !important;
+                  }
+
+                  /* Generic colored badges - white text */
+                  .bg-violet-500, .bg-violet-600, .bg-violet-700,
+                  .bg-purple-500, .bg-purple-600, .bg-purple-700,
+                  .bg-blue-500, .bg-blue-600, .bg-blue-700,
+                  .bg-green-500, .bg-green-600, .bg-green-700,
+                  .bg-emerald-500, .bg-emerald-600, .bg-emerald-700,
+                  .bg-red-500, .bg-red-600, .bg-red-700,
+                  .bg-amber-500, .bg-amber-600, .bg-amber-700,
+                  .bg-orange-500, .bg-orange-600, .bg-orange-700,
+                  .bg-pink-500, .bg-pink-600, .bg-pink-700,
+                  .bg-cyan-500, .bg-cyan-600, .bg-cyan-700,
+                  .bg-indigo-500, .bg-indigo-600, .bg-indigo-700,
+                  .bg-slate-700, .bg-slate-800, .bg-slate-900,
+                  .bg-gray-700, .bg-gray-800, .bg-gray-900 {
+                  color: #ffffff !important;
+                  }
+
+                  /* Light colored badges - dark text */
+                  .bg-violet-100, .bg-violet-200,
+                  .bg-purple-100, .bg-purple-200,
+                  .bg-blue-100, .bg-blue-200,
+                  .bg-green-100, .bg-green-200,
+                  .bg-emerald-100, .bg-emerald-200,
+                  .bg-red-100, .bg-red-200,
+                  .bg-amber-100, .bg-amber-200,
+                  .bg-orange-100, .bg-orange-200,
+                  .bg-pink-100, .bg-pink-200,
+                  .bg-cyan-100, .bg-cyan-200,
+                  .bg-indigo-100, .bg-indigo-200,
+                  .bg-slate-100, .bg-slate-200,
+                  .bg-gray-100, .bg-gray-200 {
+                  color: #374151 !important;
+                  }
+
                   /* Dark theme font colors */
                   [data-theme='dark'] {
                     --text-primary: #ffffff;
