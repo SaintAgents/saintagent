@@ -215,10 +215,10 @@ export default function Onboarding() {
               }
               
               // Award GGG tokens for completing onboarding - fetch amount from GGGRewardRule
-              // Use retry logic since rate limits can occur during busy onboarding
+              // Default is 0.1 GGG (~$14.50) per the reward rules
               try {
                 const rules = await base44.entities.GGGRewardRule.filter({ action_type: 'finish_onboard', is_active: true });
-                const gggAmount = rules?.[0]?.ggg_amount || 0.1;
+                const gggAmount = rules?.[0]?.ggg_amount || 0.1; // 0.1 GGG = ~$14.50
                 if (gggAmount > 0) {
                   const eventId = `finish_onboard_${user.email}_${Date.now()}`;
                   let walletSuccess = false;
