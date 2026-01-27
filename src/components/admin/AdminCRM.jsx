@@ -9,10 +9,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Users, Search, Trash2, Eye, Globe, Lock, 
   Share2, TrendingUp, ArrowRight, CheckCircle, XCircle,
-  Clock, User, Building, Mail
+  Clock, User, Building, Mail, Workflow
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import WorkflowAutomationEngine from '../crm/WorkflowAutomationEngine';
 
 export default function AdminCRM() {
   const [tab, setTab] = useState('contacts');
