@@ -406,16 +406,8 @@ export default function Onboarding() {
             <Button
               variant="ghost"
               onClick={async () => {
-                // Skip all remaining steps
-                const completedSteps = [...new Set([...(progress?.completed_steps || []), ...STEPS.map(s => s.id)])];
-                await saveProgressMutation.mutateAsync({
-                  current_step: STEPS.length - 1,
-                  completed_steps: completedSteps,
-                  step_data: stepData,
-                  status: 'complete'
-                });
-                try { localStorage.setItem('onboardingJustCompleted', '1'); } catch {}
-                window.location.href = createPageUrl('CommandDeck');
+                // Skip all remaining steps - go directly to final step so handleStepComplete runs
+                setCurrentStep(STEPS.length - 1);
               }}
               className="text-amber-600 hover:text-amber-700"
             >
