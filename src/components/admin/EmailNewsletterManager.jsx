@@ -51,15 +51,23 @@ export default function EmailNewsletterManager() {
   ];
 
   // Fetch news articles
-  const { data: newsArticles = [] } = useQuery({
-    queryKey: ['newsArticles'],
-    queryFn: () => base44.entities.NewsArticle.list('-created_date', 50)
+  const { data: newsArticles = [], isLoading: loadingArticles } = useQuery({
+    queryKey: ['newsArticlesNewsletter'],
+    queryFn: async () => {
+      const results = await base44.entities.NewsArticle.list('-created_date', 50);
+      console.log('Fetched articles:', results?.length || 0);
+      return results || [];
+    }
   });
 
   // Fetch press releases / insights
-  const { data: pressReleases = [] } = useQuery({
-    queryKey: ['pressReleases'],
-    queryFn: () => base44.entities.PressRelease.list('-created_date', 20)
+  const { data: pressReleases = [], isLoading: loadingPress } = useQuery({
+    queryKey: ['pressReleasesNewsletter'],
+    queryFn: async () => {
+      const results = await base44.entities.PressRelease.list('-created_date', 20);
+      console.log('Fetched press releases:', results?.length || 0);
+      return results || [];
+    }
   });
 
   // Fetch newsletter templates
