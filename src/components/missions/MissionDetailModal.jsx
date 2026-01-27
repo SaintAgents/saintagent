@@ -77,6 +77,102 @@ export default function MissionDetailModal({ mission, open, onClose }) {
     staleTime: 5 * 60 * 1000,
   });
 
+  // Fetch pending join requests for this mission
+  const { data: joinRequests = [] } = useQuery({
+    queryKey: ['missionJoinRequests', mission?.id],
+    queryFn: () => base44.entities.MissionJoinRequest.filter({ mission_id: mission?.id }),
+    enabled: !!mission?.id && open,
+    staleTime: 30 * 1000,
+  });
+
+  const myPendingRequest = joinRequests.find(
+    r => r.user_id === profile?.user_id && r.status === 'pending'
+  );
+  const isCreator = mission?.creator_id === profile?.user_id;
+  const pendingRequests = joinRequests.filter(r => r.status === 'pending');
+
+  // Request to join mutation (requires approval)
+  const requestToJoinMutation = useMutation({
+    mutationFn: async (data) => {
+      await base44.entities.MissionJoinRequest.create({
+        mission_id: mission.id,
+        user_id: profile.user_id,
+        user_name: profile.display_name,
+        user_avatar: profile.avatar_url,
+        role_applied: data?.role || '',
+        message: data?.message || '',
+        status: 'pending'
+      });
+      // Notify mission creator
+      if (mission.creator_id) {
+        await base44.entities.Notification.create({
+          user_id: mission.creator_id,
+          type: 'mission',
+          title: 'New mission join request',
+          message: `${profile.display_name} wants to join "${mission.title}"`,
+          action_url: createPageUrl('MissionDetail') + '?id=' + mission.id
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missionJoinRequests', mission?.id] });
+    }
+  });
+
+  // Approve request mutation
+  const approveRequestMutation = useMutation({
+    mutationFn: async (request) => {
+      // Update request status
+      await base44.entities.MissionJoinRequest.update(request.id, {
+        status: 'approved',
+        reviewed_by: profile.user_id,
+        reviewed_at: new Date().toISOString()
+      });
+      // Add user to mission participants
+      const newParticipants = [...(mission.participant_ids || []), request.user_id];
+      await base44.entities.Mission.update(mission.id, {
+        participant_ids: newParticipants,
+        participant_count: newParticipants.length
+      });
+      // Notify the applicant
+      await base44.entities.Notification.create({
+        user_id: request.user_id,
+        type: 'mission',
+        title: 'Mission request approved!',
+        message: `You've been approved to join "${mission.title}"`,
+        action_url: createPageUrl('MissionDetail') + '?id=' + mission.id
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missions'] });
+      queryClient.invalidateQueries({ queryKey: ['missionJoinRequests', mission?.id] });
+    }
+  });
+
+  // Reject request mutation
+  const rejectRequestMutation = useMutation({
+    mutationFn: async ({ request, reason }) => {
+      await base44.entities.MissionJoinRequest.update(request.id, {
+        status: 'rejected',
+        reviewed_by: profile.user_id,
+        reviewed_at: new Date().toISOString(),
+        rejection_reason: reason || ''
+      });
+      // Notify the applicant
+      await base44.entities.Notification.create({
+        user_id: request.user_id,
+        type: 'mission',
+        title: 'Mission request update',
+        message: `Your request to join "${mission.title}" was not approved`,
+        action_url: createPageUrl('Missions')
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missionJoinRequests', mission?.id] });
+    }
+  });
+
+  // Direct join mutation (for open missions or creator adding themselves)
   const joinMissionMutation = useMutation({
     mutationFn: async () => {
       const newParticipants = [...(mission.participant_ids || []), profile.user_id];
