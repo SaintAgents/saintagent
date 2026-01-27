@@ -569,23 +569,38 @@ Return ONLY the formatted newsletter text.`;
                 <p className="text-sm text-slate-500">
                   Will send to {displayEmails.length} subscribers • {selectedArticles.length} article(s) embedded
                 </p>
-                <Button 
-                  onClick={handleSendNewsletter}
-                  disabled={sending || !subject || (!body && selectedArticles.length === 0) || displayEmails.length === 0}
-                  className="gap-2"
-                >
-                  {sending ? (
-                    <>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline"
+                    onClick={handleSendTestEmail}
+                    disabled={sending || !subject || (!body && selectedArticles.length === 0)}
+                    className="gap-2"
+                  >
+                    {sending === 'test' ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      Send Newsletter
-                    </>
-                  )}
-                </Button>
+                    ) : (
+                      <Mail className="w-4 h-4" />
+                    )}
+                    Send Test to Me
+                  </Button>
+                  <Button 
+                    onClick={handleSendNewsletter}
+                    disabled={sending || !subject || (!body && selectedArticles.length === 0) || displayEmails.length === 0}
+                    className="gap-2"
+                  >
+                    {sending === 'all' ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Send to All
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
