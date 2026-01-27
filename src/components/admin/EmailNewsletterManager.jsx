@@ -384,7 +384,7 @@ Do NOT include HTML tags - plain text only with clear formatting using:
                     variant="outline"
                     size="sm"
                     onClick={handleAIFormat}
-                    disabled={aiLoading || (!body && selectedArticles.length === 0)}
+                    disabled={aiLoading || selectedArticles.length === 0}
                     className="gap-2"
                   >
                     {aiLoading ? (
@@ -398,12 +398,52 @@ Do NOT include HTML tags - plain text only with clear formatting using:
                 <Textarea
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  placeholder="Add your personal message, introduction, or additional content here. The selected articles will be embedded below..."
+                  placeholder="Add your personal message, introduction, or additional content here (optional). The selected articles will be embedded below..."
                   className="min-h-[200px] font-mono"
                 />
                 <p className="text-xs text-slate-500 mt-1">
                   Selected articles ({selectedArticles.length}) will be automatically embedded in the final email.
                 </p>
+              </div>
+
+              {/* Preview Images for Email */}
+              <div>
+                <Label className="flex items-center gap-2 mb-2">
+                  <Plus className="w-4 h-4" />
+                  Add Preview Images (URLs)
+                </Label>
+                <div className="space-y-2">
+                  {previewImages.map((img, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <Input 
+                        value={img}
+                        onChange={(e) => {
+                          const newImages = [...previewImages];
+                          newImages[idx] = e.target.value;
+                          setPreviewImages(newImages);
+                        }}
+                        placeholder="https://example.com/image.jpg"
+                        className="flex-1"
+                      />
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => setPreviewImages(previewImages.filter((_, i) => i !== idx))}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setPreviewImages([...previewImages, ''])}
+                    className="gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Image URL
+                  </Button>
+                </div>
               </div>
 
               {/* Send Button */}
