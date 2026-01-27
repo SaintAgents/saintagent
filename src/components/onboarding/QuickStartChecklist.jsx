@@ -426,7 +426,7 @@ export default function QuickStartChecklist() {
         </div>
 
         {/* Completion Celebration */}
-        {completedCount === ACTIONS.length && (
+        {completedCount === 5 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
