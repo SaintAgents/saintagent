@@ -59,6 +59,21 @@ export default function QuickStartChecklist() {
             </div>
           </div>
         ))}
+        
+        {/* Read Me tooltip after step 4 */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2 pt-2 cursor-help text-violet-600 hover:text-violet-700 transition-colors">
+                <Info className="w-4 h-4" />
+                <span className="text-sm font-medium">Read Me</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-xs p-3 text-sm">
+              <p>Earn GGG for many actions in app. Earn GGG for referrals. Add your projects for funding. Explore in the Advanced view to discover more functions of the app.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );
