@@ -220,8 +220,10 @@ Do NOT include HTML tags - plain text only with clear formatting using:
 
   // Send newsletter
   const handleSendNewsletter = async () => {
-    if (!subject || !body) {
-      toast.error('Please enter subject and body');
+    const finalContent = buildFinalEmailContent();
+    
+    if (!subject || (!body && selectedArticles.length === 0)) {
+      toast.error('Please enter subject and add content or select articles');
       return;
     }
 
@@ -240,7 +242,7 @@ Do NOT include HTML tags - plain text only with clear formatting using:
         await base44.integrations.Core.SendEmail({
           to: email,
           subject: subject,
-          body: body,
+          body: finalContent,
           from_name: 'SaintAgent Newsletter'
         });
         successCount++;
