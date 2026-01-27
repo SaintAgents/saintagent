@@ -102,7 +102,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl p-0">
+      <DialogContent className="sm:max-w-2xl p-0 top-[120px] translate-y-0" style={{ top: '120px', transform: 'translateX(-50%)' }}>
         <div className="p-4 border-b">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />

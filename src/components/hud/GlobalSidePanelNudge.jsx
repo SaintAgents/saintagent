@@ -82,7 +82,7 @@ export default function GlobalSidePanelNudge() {
           dockSide === 'right' ? "rounded-l-xl" : "rounded-r-xl"
         )}
         style={{ 
-          width: '28px', 
+          width: '39px', 
           height: '110px',
         }}
       >
