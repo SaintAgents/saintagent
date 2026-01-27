@@ -64,6 +64,16 @@ const ACTIONS = [
     tooltip: "Share your skills and services with the community",
     link: "Marketplace",
     badge: "Provider"
+  },
+  { 
+    id: "read_me",
+    label: "READ ME", 
+    reward: 0,
+    icon: Info,
+    tooltip: "Earn GGG! - Refer friends, Advanced view for more to Explore and receive rewards, submit projects for funding.",
+    link: null,
+    badge: null,
+    isReadMe: true
   }
 ];
 
@@ -273,6 +283,30 @@ export default function QuickStartChecklist() {
           {ACTIONS.map((action, i) => {
             const isCompleted = completionStatus[action.id];
             const ActionIcon = action.icon;
+            const isReadMe = action.isReadMe;
+            
+            // Special READ ME item styling
+            if (isReadMe) {
+              return (
+                <div key={i}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center justify-between p-3 rounded-xl border transition-all cursor-help bg-amber-50 border-amber-300 hover:bg-amber-100">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-100">
+                            <Info className="w-4 h-4 text-amber-600" />
+                          </div>
+                          <span className="text-sm font-bold text-amber-700">📖 READ ME</span>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="left" className="max-w-[250px] bg-slate-900 border-emerald-500 p-3">
+                      <p className="text-sm text-emerald-300">{action.tooltip}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              );
+            }
             
             return (
               <div key={i}>
@@ -329,29 +363,7 @@ export default function QuickStartChecklist() {
                   </TooltipContent>
                 </Tooltip>
                 
-                {/* Read Me hover info after step 4 (Join 1 mission) */}
-                {i === 3 && (
-                  <div className="flex justify-end mt-2">
-                    <HoverCard>
-                      <HoverCardTrigger asChild>
-                        <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-300 transition-colors cursor-pointer">
-                          <Info className="w-3.5 h-3.5" />
-                          📖 READ ME
-                        </button>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-72 p-4 bg-slate-900 border-emerald-500" side="top">
-                        <div className="space-y-2">
-                          <p className="text-sm font-semibold text-emerald-400">💡 Important Tips!</p>
-                          <ul className="text-xs text-emerald-300 space-y-1.5">
-                            <li>• <strong className="text-emerald-200">Earn GGG!</strong> - Refer friends</li>
-                            <li>• <strong className="text-emerald-200">Advanced view</strong> for more to Explore and receive rewards</li>
-                            <li>• <strong className="text-emerald-200">Submit projects</strong> for funding</li>
-                          </ul>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                )}
+
               </div>
             );
           })}
