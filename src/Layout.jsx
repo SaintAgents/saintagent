@@ -242,7 +242,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light' || saved === 'custom' || saved === 'hacker') {
+      if (saved === 'dark' || saved === 'light' || saved === 'custom' || saved === 'hacker' || saved === 'grey') {
         setTheme(saved);
         // Apply immediately to prevent flash
         document.documentElement.setAttribute('data-theme', saved);
