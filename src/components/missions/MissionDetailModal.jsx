@@ -562,7 +562,7 @@ export default function MissionDetailModal({ mission, open, onClose }) {
                 Request to Join
               </Button>
             </>
-          )
+          )}
           <Button
             variant="outline"
             onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}
