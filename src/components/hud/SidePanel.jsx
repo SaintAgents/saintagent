@@ -1168,7 +1168,7 @@ export default function SidePanel({
           onClick={onToggle}
           data-side-panel-handle
           className={cn(
-            "absolute w-5 h-8 flex items-center justify-center transition-colors z-[9999]",
+            "absolute w-5 flex items-center justify-center transition-colors z-[9999]",
             dockSide === 'right' ? "-left-5 rounded-l-md" : "-right-5 rounded-r-md"
           )}
           style={{ top: '20px', height: '22px' }}>
