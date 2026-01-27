@@ -70,20 +70,22 @@ export default function AnnouncementBanner({ sidebarCollapsed, topbarCollapsed }
   return (
     <div 
       className={cn(
-        "fixed right-0 z-[39] text-white py-2 px-4 transition-all duration-300",
+        "fixed right-0 z-[50] text-white py-2 px-4 transition-all duration-300",
         getBgClass(),
         sidebarCollapsed ? "left-0 md:left-20" : "left-0 md:left-64"
       )}
       style={{ top: topPosition }}
     >
-      <div className="max-w-4xl mx-auto flex items-center justify-center gap-3">
-        <div className="flex items-center gap-2 animate-pulse">
-          {getIcon()}
+      <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 flex-1 justify-center">
+          <div className="flex items-center gap-2 animate-pulse shrink-0">
+            {getIcon()}
+          </div>
+          <p className="text-sm font-medium truncate">{announcement}</p>
         </div>
-        <p className="text-sm font-medium">{announcement}</p>
         <button
           onClick={handleDismiss}
-          className="ml-4 p-1 rounded-full hover:bg-white/20 transition-colors"
+          className="p-1.5 rounded-full hover:bg-white/20 transition-colors shrink-0 bg-black/20"
           title="Dismiss"
         >
           <X className="w-4 h-4" />
