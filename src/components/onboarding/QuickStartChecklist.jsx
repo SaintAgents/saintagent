@@ -334,18 +334,18 @@ export default function QuickStartChecklist() {
                   <div className="flex justify-end mt-2">
                     <HoverCard>
                       <HoverCardTrigger asChild>
-                        <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-lg border border-violet-200 transition-colors cursor-pointer">
+                        <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-300 transition-colors cursor-pointer">
                           <Info className="w-3.5 h-3.5" />
                           📖 READ ME
                         </button>
                       </HoverCardTrigger>
-                      <HoverCardContent className="w-72 p-4" side="top">
+                      <HoverCardContent className="w-72 p-4 bg-slate-900 border-emerald-500" side="top">
                         <div className="space-y-2">
-                          <p className="text-sm font-semibold text-slate-900">💡 Important Tips!</p>
-                          <ul className="text-xs text-slate-600 space-y-1.5">
-                            <li>• <strong>Earn GGG!</strong> - Refer friends</li>
-                            <li>• <strong>Advanced view</strong> for more to explore and receive rewards</li>
-                            <li>• <strong>Submit projects</strong> for funding</li>
+                          <p className="text-sm font-semibold text-emerald-400">💡 Important Tips!</p>
+                          <ul className="text-xs text-emerald-300 space-y-1.5">
+                            <li>• <strong className="text-emerald-200">Earn GGG!</strong> - Refer friends</li>
+                            <li>• <strong className="text-emerald-200">Advanced view</strong> for more to Explore and receive rewards</li>
+                            <li>• <strong className="text-emerald-200">Submit projects</strong> for funding</li>
                           </ul>
                         </div>
                       </HoverCardContent>
