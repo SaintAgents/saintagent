@@ -283,8 +283,95 @@ export default function SearchModal({ open, onClose, onSelect }) {
                 </div>
               )}
 
+              {/* Daily Logs */}
+              {(tab === 'all' || tab === 'dailylogs') && filteredDailyLogs.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Daily Logs</h3>}
+                  {filteredDailyLogs.map(log => (
+                    <button
+                      key={log.id}
+                      onClick={() => { onSelect?.('dailylog', log); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <CalendarDays className="w-10 h-10 p-2 rounded-lg bg-violet-100 text-violet-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{log.date}</p>
+                        <p className="text-sm text-slate-500 truncate">{log.overview || 'No overview'}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Notes */}
+              {(tab === 'all' || tab === 'notes') && filteredNotes.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Notes</h3>}
+                  {filteredNotes.map(note => (
+                    <button
+                      key={note.id}
+                      onClick={() => { onSelect?.('note', note); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <StickyNote className="w-10 h-10 p-2 rounded-lg bg-amber-100 text-amber-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{note.title || 'Untitled Note'}</p>
+                        <p className="text-sm text-slate-500 truncate">{note.content?.substring(0, 60) || ''}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Meetings */}
+              {(tab === 'all' || tab === 'meetings') && filteredMeetings.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Meetings</h3>}
+                  {filteredMeetings.map(meeting => (
+                    <button
+                      key={meeting.id}
+                      onClick={() => { onSelect?.('meeting', meeting); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <Clock className="w-10 h-10 p-2 rounded-lg bg-indigo-100 text-indigo-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{meeting.title}</p>
+                        <p className="text-sm text-slate-500">
+                          {meeting.scheduled_time ? new Date(meeting.scheduled_time).toLocaleDateString() : 'No date'} • {meeting.host_name || 'Unknown host'}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Events */}
+              {(tab === 'all' || tab === 'events') && filteredEvents.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Events</h3>}
+                  {filteredEvents.map(event => (
+                    <button
+                      key={event.id}
+                      onClick={() => { onSelect?.('event', event); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <Calendar className="w-10 h-10 p-2 rounded-lg bg-rose-100 text-rose-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{event.title}</p>
+                        <p className="text-sm text-slate-500">
+                          {event.start_time ? new Date(event.start_time).toLocaleDateString() : 'No date'} {event.location && `• ${event.location}`}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {filteredProfiles.length === 0 && filteredListings.length === 0 && 
-               filteredMissions.length === 0 && filteredCircles.length === 0 && filteredPosts.length === 0 && filteredProjects.length === 0 && (
+               filteredMissions.length === 0 && filteredCircles.length === 0 && 
+               filteredPosts.length === 0 && filteredProjects.length === 0 &&
+               filteredDailyLogs.length === 0 && filteredNotes.length === 0 &&
+               filteredMeetings.length === 0 && filteredEvents.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
                   <p>No results found{query ? ` for "${query}"` : ''}</p>
                 </div>
