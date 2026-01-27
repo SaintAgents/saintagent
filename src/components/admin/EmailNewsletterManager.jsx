@@ -405,20 +405,83 @@ Return ONLY the formatted newsletter text.`;
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <Label>Your Message (optional intro/outro)</Label>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleAIFormat}
-                    disabled={aiLoading || selectedArticles.length === 0}
-                    className="gap-2"
-                  >
-                    {aiLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Sparkles className="w-4 h-4" />
-                    )}
-                    AI Format Newsletter
-                  </Button>
+                  <Popover open={aiPopoverOpen} onOpenChange={setAiPopoverOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={selectedArticles.length === 0}
+                        className="gap-2"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        AI Format Newsletter
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-3" align="end">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                          <Sparkles className="w-4 h-4 text-violet-500" />
+                          AI Newsletter Formatter
+                        </div>
+
+                        {!aiSuggestion ? (
+                          <div className="space-y-1">
+                            {AI_FORMAT_OPTIONS.map((option) => {
+                              const Icon = option.icon;
+                              const isLoading = aiLoading === option.id;
+                              return (
+                                <button
+                                  key={option.id}
+                                  onClick={() => handleAIFormat(option)}
+                                  disabled={!!aiLoading}
+                                  className="w-full flex items-center gap-2.5 p-2 rounded-lg text-left text-sm hover:bg-slate-100 disabled:opacity-50 transition-colors"
+                                >
+                                  {isLoading ? (
+                                    <Loader2 className="w-4 h-4 text-violet-500 animate-spin" />
+                                  ) : (
+                                    <Icon className="w-4 h-4 text-slate-500" />
+                                  )}
+                                  <span className="text-slate-700">{option.label}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            <div className="text-xs text-slate-500 flex items-center gap-1">
+                              <aiSuggestion.option.icon className="w-3 h-3" />
+                              {aiSuggestion.option.label}
+                            </div>
+                            <div className="p-3 rounded-lg bg-violet-50 border border-violet-200 text-sm text-slate-700 max-h-60 overflow-y-auto whitespace-pre-wrap">
+                              {aiSuggestion.text}
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setAiSuggestion(null)}
+                                className="flex-1"
+                              >
+                                Try Another
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={applyAISuggestion}
+                                className="flex-1 bg-violet-600 hover:bg-violet-700"
+                              >
+                                <CheckCircle className="w-3.5 h-3.5 mr-1" />
+                                Apply
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        <p className="text-[10px] text-slate-400 text-center">
+                          AI suggestions may need review before sending
+                        </p>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <Textarea
                   value={body}
