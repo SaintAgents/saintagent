@@ -510,12 +510,22 @@ export default function Profile() {
                   userId={profile?.user_id}
                   status={profile?.status}
                   saNumber={profile?.sa_number}
-                  showPhotoIcon={true}
+                  showPhotoIcon={false}
                   galleryImages={profile?.gallery_images} />
 
               </div>
               <div className="flex-1 pt-2">
                 <div className="flex items-center gap-3 flex-wrap">
+                  {/* Photo icon next to name */}
+                  {(profile?.gallery_images?.length > 0 || profile?.avatar_url) && (
+                    <button 
+                      onClick={() => setViewerOpen(true)} 
+                      className="text-violet-500 hover:text-violet-700 transition-colors"
+                      title="View photos"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    </button>
+                  )}
                   <h1 className="text-slate-900 dark:text-white text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline &&
                   <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
