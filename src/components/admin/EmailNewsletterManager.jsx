@@ -24,6 +24,7 @@ export default function EmailNewsletterManager() {
   const [sending, setSending] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
+  const [previewImages, setPreviewImages] = useState([]);
 
   // Fetch news articles
   const { data: newsArticles = [] } = useQuery({
