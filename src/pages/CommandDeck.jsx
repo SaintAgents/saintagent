@@ -933,20 +933,21 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <Zap className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </button>
               <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className="p-2 hover:bg-amber-100 dark:hover:bg-amber-900/30 rounded-lg transition-colors relative"
-                    title="Quick Start Guide"
-                  >
-                    <AlertCircle className="w-6 h-6 text-amber-500" />
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-72 p-4" align="end">
-                  <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5 text-amber-500" />
-                    Quick Start Guide
-                  </h4>
+              <PopoverTrigger asChild>
+                <button
+                  className="p-2 hover:bg-amber-100 dark:hover:bg-amber-900/30 rounded-lg transition-colors relative"
+                  title="Read Me - Quick Start Guide"
+                >
+                  <AlertCircle className="w-6 h-6 text-amber-500" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[9px] font-bold text-amber-600 whitespace-nowrap">READ ME</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72 p-4" align="end">
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-amber-500" />
+                  Quick Start Guide
+                </h4>
                   <ol className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                       <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">1</span>
