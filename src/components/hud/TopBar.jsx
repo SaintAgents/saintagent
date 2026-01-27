@@ -620,23 +620,23 @@ export default function TopBar({
               {/* Menu Items */}
               <ScrollArea className="max-h-[60vh]">
                 <div className="py-2">
-                <DropdownMenuItem asChild>
-                  <Link to={createPageUrl('CommandDeck')} className="flex items-center gap-3 px-4 py-2.5">
-                    <User className="w-4 h-4 text-slate-500" />
-                    <span>My Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to={createPageUrl('Settings')} className="flex items-center gap-3 px-4 py-2.5">
-                    <Settings className="w-4 h-4 text-slate-500" />
-                    <span>Settings</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setQuickStartOpen(true)} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-medium">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Quick Start Guide</span>
-                </DropdownMenuItem>
-              </div>
+                  <DropdownMenuItem asChild>
+                    <Link to={createPageUrl('CommandDeck')} className="flex items-center gap-3 px-4 py-2.5">
+                      <User className="w-4 h-4 text-slate-500" />
+                      <span>My Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={createPageUrl('Settings')} className="flex items-center gap-3 px-4 py-2.5">
+                      <Settings className="w-4 h-4 text-slate-500" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setQuickStartOpen(true)} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-medium">
+                    <Sparkles className="w-4 h-4" />
+                    <span>Quick Start Guide</span>
+                  </DropdownMenuItem>
+                </div>
 
                 <DropdownMenuSeparator className="my-0" />
 
