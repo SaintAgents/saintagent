@@ -1147,8 +1147,8 @@ export default function SidePanel({
           onClick={onToggle}
           data-side-panel-handle
           className={cn(
-            "absolute top-1/2 w-10 h-20 flex items-center justify-center transition-colors z-[9999]",
-            dockSide === 'right' ? "-left-10 rounded-l-lg" : "-right-10 rounded-r-lg"
+            "absolute top-1/2 w-6 h-10 flex items-center justify-center transition-colors z-[9999]",
+            dockSide === 'right' ? "-left-6 rounded-l-lg" : "-right-6 rounded-r-lg"
           )}
           style={{ transform: 'translateY(-10px)' }}>
         <div className="w-full h-full rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-md hover:shadow-lg">
