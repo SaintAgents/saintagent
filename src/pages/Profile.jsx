@@ -547,12 +547,11 @@ export default function Profile() {
                       {ROLE_LABELS[r.role_code] || r.role_code.replace(/_/g, ' ')}
                     </Badge>
                   )}
-                  {typeof profile?.influence_score === 'number' &&
                   <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Badge className="bg-violet-100 text-violet-700 cursor-help">
-                          <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile.influence_score)}
+                          <TrendingUp className="w-3 h-3 mr-1" /> {Math.round(profile?.influence_score || 0)}
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="max-w-xs">
@@ -561,13 +560,11 @@ export default function Profile() {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  }
-                  {typeof profile?.expertise_score === 'number' &&
                   <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Badge className="bg-blue-100 text-blue-700 cursor-help">
-                          <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile.expertise_score)}
+                          <BadgeCheck className="w-3 h-3 mr-1" /> {Math.round(profile?.expertise_score || 0)}
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="max-w-xs">
@@ -576,7 +573,6 @@ export default function Profile() {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  }
                 </div>
                 <p className="text-blue-950">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
                 {/* Joined Date */}
