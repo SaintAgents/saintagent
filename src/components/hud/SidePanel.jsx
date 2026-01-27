@@ -1245,6 +1245,10 @@ export default function SidePanel({
                 <Calendar className="w-4 h-4 mr-1" />
                 Daily Ops
               </Button>
+              <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)]" onClick={() => {window.location.href = createPageUrl('Admin') + '?tab=audit';}}>
+                <Users className="w-4 h-4 mr-1" />
+                User Log
+              </Button>
             </div>
           </div>
 
