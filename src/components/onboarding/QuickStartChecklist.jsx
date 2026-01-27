@@ -286,33 +286,10 @@ export default function QuickStartChecklist() {
 
         {/* Action Items with Tooltips and Walkthroughs */}
         <div className="space-y-2">
+          {/* First 4 actions */}
           {ACTIONS.map((action, i) => {
             const isCompleted = completionStatus[action.id];
             const ActionIcon = action.icon;
-            const isReadMe = action.isReadMe;
-            
-            // Special READ ME item styling
-            if (isReadMe) {
-              return (
-                <div key={i}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center justify-between p-3 rounded-xl border transition-all cursor-help bg-amber-50 border-amber-300 hover:bg-amber-100">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-100">
-                            <Info className="w-4 h-4 text-amber-600" />
-                          </div>
-                          <span className="text-sm font-bold text-amber-700">📖 READ ME</span>
-                        </div>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="left" className="max-w-[250px] bg-slate-900 border-emerald-500 p-3">
-                      <p className="text-sm text-emerald-300">{action.tooltip}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              );
-            }
             
             return (
               <div key={i}>
@@ -368,11 +345,84 @@ export default function QuickStartChecklist() {
                     )}
                   </TooltipContent>
                 </Tooltip>
-                
-
               </div>
             );
           })}
+          
+          {/* #5 READ ME - Always visible after item 4 */}
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center justify-between p-3 rounded-xl border transition-all cursor-help bg-amber-50 border-amber-300 hover:bg-amber-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-100">
+                      <Info className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <span className="text-sm font-bold text-amber-700">📖 READ ME</span>
+                  </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="max-w-[250px] bg-slate-900 border-emerald-500 p-3">
+                <p className="text-sm text-emerald-300">{READ_ME_ACTION.tooltip}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          
+          {/* #6 Create 1 offer */}
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <motion.div
+                  initial={false}
+                  animate={completionStatus.create_offer ? { scale: [1, 1.02, 1] } : {}}
+                  className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer group ${
+                    completionStatus.create_offer 
+                      ? 'bg-emerald-50 border-emerald-200' 
+                      : 'bg-slate-50 border-slate-200 hover:border-violet-300 hover:bg-violet-50'
+                  }`}
+                  onClick={() => !completionStatus.create_offer && startWalkthrough(OFFER_ACTION)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      completionStatus.create_offer ? 'bg-emerald-100' : 'bg-slate-100 group-hover:bg-violet-100'
+                    }`}>
+                      {completionStatus.create_offer ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                      ) : (
+                        <Gift className="w-4 h-4 text-slate-500 group-hover:text-violet-600" />
+                      )}
+                    </div>
+                    <div>
+                      <span className={`text-sm font-medium ${completionStatus.create_offer ? 'text-emerald-700 line-through' : 'text-slate-900'}`}>
+                        {OFFER_ACTION.label}
+                      </span>
+                      {completionStatus.create_offer && (
+                        <Badge className="ml-2 bg-emerald-100 text-emerald-700 text-xs">
+                          {OFFER_ACTION.badge}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex items-center gap-1.5 text-sm font-medium ${
+                      completionStatus.create_offer ? 'text-emerald-600' : 'text-emerald-600'
+                    }`}>
+                      <Sparkles className="w-4 h-4" /> +{OFFER_ACTION.reward} GGG
+                    </div>
+                    {!completionStatus.create_offer && (
+                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-violet-600 group-hover:translate-x-1 transition-transform" />
+                    )}
+                  </div>
+                </motion.div>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="max-w-[200px]">
+                <p className="text-sm">{OFFER_ACTION.tooltip}</p>
+                {!completionStatus.create_offer && (
+                  <p className="text-xs text-violet-600 mt-1">Click to start →</p>
+                )}
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
 
         {/* Completion Celebration */}
