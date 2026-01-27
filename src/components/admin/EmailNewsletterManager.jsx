@@ -407,11 +407,11 @@ Do NOT include HTML tags - plain text only with clear formatting using:
               {/* Send Button */}
               <div className="flex items-center justify-between pt-4 border-t">
                 <p className="text-sm text-slate-500">
-                  Will send to {displayEmails.length} subscribers
+                  Will send to {displayEmails.length} subscribers • {selectedArticles.length} article(s) embedded
                 </p>
                 <Button 
                   onClick={handleSendNewsletter}
-                  disabled={sending || !subject || !body || displayEmails.length === 0}
+                  disabled={sending || !subject || (!body && selectedArticles.length === 0) || displayEmails.length === 0}
                   className="gap-2"
                 >
                   {sending ? (
