@@ -19,14 +19,14 @@ export const VIEW_MODE_CONFIG = {
       'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators',
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
-      'market', 'influence', 'leader', 'dailyops', 'news', 'insights'
+      'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos'
     ],
-    navIds: null // null means show all nav items (includes authority144, topgggmission)
+    navIds: null // null means show all nav items (includes authority144, topgggmission, videos)
   },
   custom: {
     label: 'Custom',
     description: 'Choose your features',
-    cards: ['insights'], // Default includes insights
+    cards: ['insights', 'videos'], // Default includes insights and videos
     navIds: null // null means show all nav items
   }
 };
