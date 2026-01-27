@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import { 
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
@@ -13,21 +14,42 @@ import {
 import { 
   Mail, Send, Eye, MousePointer, UserMinus, TrendingUp, TrendingDown,
   Calendar, BarChart3, PieChart as PieChartIcon, Activity, Users,
-  CheckCircle, AlertCircle, Loader2
+  CheckCircle, AlertCircle, Loader2, RefreshCw, Clock
 } from 'lucide-react';
-import { format, subDays, parseISO, startOfWeek, endOfWeek } from 'date-fns';
+import { format, subDays, parseISO, startOfWeek, endOfWeek, formatDistanceToNow } from 'date-fns';
 
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899'];
 
 export default function NewsletterAnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState('30');
   const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const queryClient = useQueryClient();
 
-  // Fetch newsletter campaigns
-  const { data: campaigns = [], isLoading } = useQuery({
+  // Fetch newsletter campaigns with polling
+  const { data: campaigns = [], isLoading, dataUpdatedAt } = useQuery({
     queryKey: ['newsletterCampaigns'],
-    queryFn: () => base44.entities.NewsletterCampaign.list('-sent_at', 100)
+    queryFn: () => base44.entities.NewsletterCampaign.list('-sent_at', 100),
+    refetchInterval: autoRefresh ? 30000 : false, // Poll every 30 seconds when enabled
+    refetchIntervalInBackground: false
   });
+
+  // Update lastUpdated when data changes
+  useEffect(() => {
+    if (dataUpdatedAt) {
+      setLastUpdated(new Date(dataUpdatedAt));
+    }
+  }, [dataUpdatedAt]);
+
+  // Manual refresh handler
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    await queryClient.invalidateQueries({ queryKey: ['newsletterCampaigns'] });
+    setLastUpdated(new Date());
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
 
   // Calculate overview stats
   const stats = React.useMemo(() => {
@@ -124,23 +146,58 @@ export default function NewsletterAnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Time Filter */}
-      <div className="flex items-center justify-between">
+      {/* Header with Time Filter and Auto-Refresh */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Newsletter Analytics</h2>
-          <p className="text-sm text-slate-500">Track performance and engagement metrics</p>
+          <div className="flex items-center gap-2 mt-1">
+            <Clock className="w-3 h-3 text-slate-400" />
+            <p className="text-xs text-slate-500">
+              Last updated: {formatDistanceToNow(lastUpdated, { addSuffix: true })}
+            </p>
+            {autoRefresh && (
+              <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse" />
+                Live
+              </Badge>
+            )}
+          </div>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-40">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="7">Last 7 days</SelectItem>
-            <SelectItem value="30">Last 30 days</SelectItem>
-            <SelectItem value="90">Last 90 days</SelectItem>
-            <SelectItem value="365">Last year</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-4">
+          {/* Auto-refresh toggle */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-600">Auto-refresh</span>
+            <Switch 
+              checked={autoRefresh} 
+              onCheckedChange={setAutoRefresh}
+            />
+          </div>
+          
+          {/* Manual refresh button */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            className="gap-2"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          
+          {/* Time range selector */}
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="90">Last 90 days</SelectItem>
+              <SelectItem value="365">Last year</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Overview Stats Cards */}
