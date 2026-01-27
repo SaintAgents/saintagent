@@ -849,6 +849,37 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                     color: #475569 !important;
                   }
 
+                  /* Light theme - FORCE all text to be dark/readable */
+                  [data-theme='light'] input,
+                  [data-theme='light'] textarea,
+                  [data-theme='light'] select,
+                  [data-theme='light'] p,
+                  [data-theme='light'] span,
+                  [data-theme='light'] div,
+                  [data-theme='light'] label,
+                  [data-theme='light'] h1,
+                  [data-theme='light'] h2,
+                  [data-theme='light'] h3,
+                  [data-theme='light'] h4,
+                  [data-theme='light'] h5,
+                  [data-theme='light'] h6,
+                  [data-theme='light'] li,
+                  [data-theme='light'] td,
+                  [data-theme='light'] th {
+                    color: #1e293b;
+                  }
+
+                  [data-theme='light'] input::placeholder,
+                  [data-theme='light'] textarea::placeholder {
+                    color: #94a3b8 !important;
+                  }
+
+                  /* Light theme buttons */
+                  [data-theme='light'] button,
+                  [data-theme='light'] [role="button"] {
+                    color: inherit;
+                  }
+
                   /* Dark theme font colors */
                   [data-theme='dark'] {
                     --text-primary: #ffffff;
