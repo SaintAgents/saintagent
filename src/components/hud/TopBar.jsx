@@ -651,7 +651,7 @@ export default function TopBar({
             <DropdownMenuContent 
               align="end" 
               sideOffset={12}
-              className="w-72 z-[9999] bg-white dark:bg-[#050505] [data-theme='dark']_&:bg-[#050505] [data-theme='dark']_&:border-[#00ff88] [data-theme='dark']_&:border [data-theme='dark']_&:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200 p-0"
+              className="w-72 z-[9999] bg-white dark:bg-[#050505] [data-theme='dark']_&:bg-[#050505] [data-theme='dark']_&:border-[#00ff88] [data-theme='dark']_&:border [data-theme='dark']_&:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200 p-0 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
               {/* Avatar Card Header */}
               <div className="flex flex-col items-center py-5 px-4 border-b border-slate-100 dark:border-slate-800">
