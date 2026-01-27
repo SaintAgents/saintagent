@@ -520,6 +520,7 @@ export default function MissionCollaborationBoard({ missionId, mission }) {
   const queryClient = useQueryClient();
   const [newPost, setNewPost] = useState({ content: '', content_type: 'discussion', title: '' });
   const [filter, setFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState('board');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -545,6 +546,17 @@ export default function MissionCollaborationBoard({ missionId, mission }) {
   const { data: profiles = [] } = useQuery({
     queryKey: ['profiles'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 100)
+  });
+
+  // Fetch participants for task assignment
+  const { data: participants = [] } = useQuery({
+    queryKey: ['missionParticipants', missionId],
+    queryFn: async () => {
+      if (!mission?.participant_ids?.length) return [];
+      const allProfiles = await base44.entities.UserProfile.list();
+      return allProfiles.filter(p => mission.participant_ids.includes(p.user_id));
+    },
+    enabled: !!mission?.participant_ids?.length
   });
 
   const createMutation = useMutation({
@@ -582,114 +594,166 @@ export default function MissionCollaborationBoard({ missionId, mission }) {
 
   return (
     <div className="space-y-4">
-      {/* New Post */}
-      <div className="bg-white dark:bg-[#0a0a0a] rounded-xl border p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src={userProfile?.avatar_url} />
-            <AvatarFallback>{user?.full_name?.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <Select value={newPost.content_type} onValueChange={(v) => setNewPost({ ...newPost, content_type: v })}>
-            <SelectTrigger className="w-40 h-8">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(TYPE_CONFIG).map(([key, config]) => (
-                <SelectItem key={key} value={key}>
-                  <div className="flex items-center gap-2">
-                    <config.icon className="w-3.5 h-3.5" />
-                    {config.label}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Tab Navigation */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-4 w-full">
+          <TabsTrigger value="board" className="gap-1.5">
+            <MessageSquare className="w-4 h-4" />
+            Board
+          </TabsTrigger>
+          <TabsTrigger value="tasks" className="gap-1.5">
+            <ListTodo className="w-4 h-4" />
+            Tasks
+          </TabsTrigger>
+          <TabsTrigger value="chat" className="gap-1.5">
+            <Send className="w-4 h-4" />
+            Chat
+          </TabsTrigger>
+          <TabsTrigger value="files" className="gap-1.5">
+            <FileText className="w-4 h-4" />
+            Files
+          </TabsTrigger>
+        </TabsList>
 
-        {(newPost.content_type === 'announcement' || newPost.content_type === 'resource') && (
-          <Input
-            value={newPost.title}
-            onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-            placeholder="Title (optional)"
-            className="mb-2"
-          />
-        )}
-
-        <Textarea
-          value={newPost.content}
-          onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-          placeholder="Share an update, ask a question, or start a discussion..."
-          rows={3}
-        />
-
-        <div className="flex justify-end mt-2">
-          <Button
-            onClick={handlePost}
-            disabled={!newPost.content.trim() || createMutation.isPending}
-            className="bg-violet-600 hover:bg-violet-700"
-          >
-            <Send className="w-4 h-4 mr-1.5" />
-            Post
-          </Button>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <Button
-          variant={filter === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('all')}
-        >
-          All
-        </Button>
-        {Object.entries(TYPE_CONFIG).map(([key, config]) => (
-          <Button
-            key={key}
-            variant={filter === key ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilter(key)}
-            className="gap-1.5"
-          >
-            <config.icon className="w-3.5 h-3.5" />
-            {config.label}
-          </Button>
-        ))}
-      </div>
-
-      {/* Posts */}
-      <ScrollArea className="h-[500px]">
-        <div className="space-y-3">
-          {/* Pinned posts first */}
-          {pinnedPosts.map(post => (
-            <BoardPost
-              key={post.id}
-              post={post}
-              isOwn={post.author_id === user?.email}
-              onDelete={(p) => deleteMutation.mutate(p.id)}
-              profiles={profiles}
-            />
-          ))}
-
-          {/* Regular posts */}
-          {regularPosts.map(post => (
-            <BoardPost
-              key={post.id}
-              post={post}
-              isOwn={post.author_id === user?.email}
-              onDelete={(p) => deleteMutation.mutate(p.id)}
-              profiles={profiles}
-            />
-          ))}
-
-          {filteredPosts.length === 0 && !isLoading && (
-            <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-2" />
-              <p className="text-slate-500">No posts yet. Start the conversation!</p>
+        {/* Board Tab */}
+        <TabsContent value="board" className="mt-4 space-y-4">
+          {/* New Post */}
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-xl border p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={userProfile?.avatar_url} />
+                <AvatarFallback>{user?.full_name?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <Select value={newPost.content_type} onValueChange={(v) => setNewPost({ ...newPost, content_type: v })}>
+                <SelectTrigger className="w-40 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(TYPE_CONFIG).map(([key, config]) => (
+                    <SelectItem key={key} value={key}>
+                      <div className="flex items-center gap-2">
+                        <config.icon className="w-3.5 h-3.5" />
+                        {config.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          )}
-        </div>
-      </ScrollArea>
+
+            {(newPost.content_type === 'announcement' || newPost.content_type === 'resource') && (
+              <Input
+                value={newPost.title}
+                onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                placeholder="Title (optional)"
+                className="mb-2"
+              />
+            )}
+
+            <Textarea
+              value={newPost.content}
+              onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
+              placeholder="Share an update, ask a question, or start a discussion..."
+              rows={3}
+            />
+
+            <div className="flex justify-end mt-2">
+              <Button
+                onClick={handlePost}
+                disabled={!newPost.content.trim() || createMutation.isPending}
+                className="bg-violet-600 hover:bg-violet-700"
+              >
+                <Send className="w-4 h-4 mr-1.5" />
+                Post
+              </Button>
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant={filter === 'all' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setFilter('all')}
+            >
+              All
+            </Button>
+            {Object.entries(TYPE_CONFIG).map(([key, config]) => (
+              <Button
+                key={key}
+                variant={filter === key ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter(key)}
+                className="gap-1.5"
+              >
+                <config.icon className="w-3.5 h-3.5" />
+                {config.label}
+              </Button>
+            ))}
+          </div>
+
+          {/* Posts */}
+          <ScrollArea className="h-[400px]">
+            <div className="space-y-3">
+              {pinnedPosts.map(post => (
+                <BoardPost
+                  key={post.id}
+                  post={post}
+                  isOwn={post.author_id === user?.email}
+                  onDelete={(p) => deleteMutation.mutate(p.id)}
+                  profiles={profiles}
+                />
+              ))}
+              {regularPosts.map(post => (
+                <BoardPost
+                  key={post.id}
+                  post={post}
+                  isOwn={post.author_id === user?.email}
+                  onDelete={(p) => deleteMutation.mutate(p.id)}
+                  profiles={profiles}
+                />
+              ))}
+              {filteredPosts.length === 0 && !isLoading && (
+                <div className="text-center py-8">
+                  <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+                  <p className="text-slate-500">No posts yet. Start the conversation!</p>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+        </TabsContent>
+
+        {/* Tasks Tab */}
+        <TabsContent value="tasks" className="mt-4">
+          <TaskAssignment 
+            mission={mission} 
+            missionId={missionId} 
+            participants={participants}
+            currentUser={user}
+            userProfile={userProfile}
+          />
+        </TabsContent>
+
+        {/* Chat Tab */}
+        <TabsContent value="chat" className="mt-4">
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-xl border overflow-hidden">
+            <MissionChat 
+              missionId={missionId} 
+              currentUser={user} 
+              userProfile={userProfile} 
+            />
+          </div>
+        </TabsContent>
+
+        {/* Files Tab */}
+        <TabsContent value="files" className="mt-4">
+          <MissionFiles 
+            missionId={missionId} 
+            currentUser={user} 
+            userProfile={userProfile} 
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
