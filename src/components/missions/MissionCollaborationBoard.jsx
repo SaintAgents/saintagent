@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { 
   MessageSquare, 
   Pin, 
@@ -21,7 +22,19 @@ import {
   CheckCircle, 
   Link2,
   MoreVertical,
-  Trash2
+  Trash2,
+  ListTodo,
+  Upload,
+  FileText,
+  Image as ImageIcon,
+  File,
+  Download,
+  Users,
+  Clock,
+  CheckSquare,
+  Square,
+  UserPlus,
+  Loader2
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
