@@ -46,34 +46,37 @@ export default function QuickStartChecklist() {
           </div>
         )}
         {ACTIONS.map((action, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200"
-          >
-            <div className="flex items-center gap-3">
-              <Square className="w-5 h-5 text-slate-400" />
-              <span className="text-sm font-medium text-slate-900">{action.label}</span>
+          <div key={i}>
+            <div
+              className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200"
+            >
+              <div className="flex items-center gap-3">
+                <Square className="w-5 h-5 text-slate-400" />
+                <span className="text-sm font-medium text-slate-900">{action.label}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium">
+                <Sparkles className="w-4 h-4" /> +{action.reward} GGG
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium">
-              <Sparkles className="w-4 h-4" /> +{action.reward} GGG
-            </div>
+            {/* Read Me tooltip after step 4 (Join 1 mission) */}
+            {i === 3 && (
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-2 py-2 px-3 cursor-help text-violet-600 hover:text-violet-700 transition-colors bg-violet-50 rounded-lg mt-2 border border-violet-200">
+                      <Info className="w-4 h-4" />
+                      <span className="text-sm font-medium">📖 Read Me - Important Tips!</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-xs p-3 text-sm bg-violet-900 text-white">
+                    <p className="font-semibold mb-1">How to Maximize Your Experience:</p>
+                    <p>Earn GGG for many actions in app. Earn GGG for referrals. Add your projects for funding. Explore in the Advanced view to discover more functions of the app.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </div>
         ))}
-        
-        {/* Read Me tooltip after step 4 */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-2 pt-2 cursor-help text-violet-600 hover:text-violet-700 transition-colors">
-                <Info className="w-4 h-4" />
-                <span className="text-sm font-medium">Read Me</span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="max-w-xs p-3 text-sm">
-              <p>Earn GGG for many actions in app. Earn GGG for referrals. Add your projects for funding. Explore in the Advanced view to discover more functions of the app.</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
     </div>
   );
