@@ -879,10 +879,16 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                   [data-theme='light'] [role="button"],
                   [data-theme='light'] button span,
                   [data-theme='light'] button div,
+                  [data-theme='light'] button p,
                   [data-theme='light'] [role="button"] span,
                   [data-theme='light'] [role="button"] div,
                   [data-theme='light'] [class*="Button"],
-                  [data-theme='light'] [class*="Button"] span {
+                  [data-theme='light'] [class*="Button"] span,
+                  [data-theme='light'] [class*="Button"] div,
+                  html[data-theme='light'] button,
+                  html[data-theme='light'] button *,
+                  html[data-theme='light'] [role="button"],
+                  html[data-theme='light'] [role="button"] * {
                     color: #1e293b !important;
                   }
 
@@ -892,10 +898,22 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                   [data-theme='light'] button[class*="bg-emerald"],
                   [data-theme='light'] button[class*="bg-blue"],
                   [data-theme='light'] button[class*="bg-primary"],
-                  [data-theme='light'] [class*="bg-violet"] span,
-                  [data-theme='light'] [class*="bg-purple"] span,
-                  [data-theme='light'] [class*="bg-emerald"] span,
-                  [data-theme='light'] [class*="bg-blue"] span {
+                  [data-theme='light'] button[class*="bg-slate-800"],
+                  [data-theme='light'] button[class*="bg-slate-900"],
+                  [data-theme='light'] [class*="bg-violet"] *,
+                  [data-theme='light'] [class*="bg-purple"] *,
+                  [data-theme='light'] [class*="bg-emerald"] *,
+                  [data-theme='light'] [class*="bg-blue"] *,
+                  [data-theme='light'] [class*="bg-primary"] *,
+                  [data-theme='light'] [class*="bg-slate-800"] *,
+                  [data-theme='light'] [class*="bg-slate-900"] *,
+                  html[data-theme='light'] button[class*="bg-violet"] *,
+                  html[data-theme='light'] button[class*="bg-purple"] *,
+                  html[data-theme='light'] button[class*="bg-emerald"] *,
+                  html[data-theme='light'] button[class*="bg-blue"] *,
+                  html[data-theme='light'] button[class*="bg-primary"] *,
+                  html[data-theme='light'] button[class*="bg-slate-800"] *,
+                  html[data-theme='light'] button[class*="bg-slate-900"] * {
                     color: #ffffff !important;
                   }
 
