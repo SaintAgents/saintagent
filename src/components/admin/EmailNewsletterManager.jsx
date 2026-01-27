@@ -297,44 +297,69 @@ Do NOT include HTML tags - plain text only with clear formatting using:
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Load from News or Analysis */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="flex items-center gap-2">
-                    <Newspaper className="w-4 h-4" />
-                    Load from News Article
-                  </Label>
-                  <Select value={selectedNews} onValueChange={handleSelectNews}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a news article..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {newsArticles.map((article) => (
-                        <SelectItem key={article.id} value={article.id}>
-                          {article.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              {/* Select Articles to Embed */}
+              <div>
+                <Label className="flex items-center gap-2 mb-2">
+                  <Newspaper className="w-4 h-4" />
+                  Select Articles to Include in Newsletter
+                </Label>
+                <div className="border rounded-lg p-3 max-h-[200px] overflow-y-auto space-y-2">
+                  {newsArticles.length === 0 ? (
+                    <p className="text-sm text-slate-500">No articles available</p>
+                  ) : (
+                    newsArticles.slice(0, 20).map((article) => (
+                      <div 
+                        key={article.id} 
+                        className="flex items-start gap-2 p-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                        onClick={() => toggleArticleSelection(article.id)}
+                      >
+                        <Checkbox 
+                          checked={selectedArticles.includes(article.id)}
+                          onCheckedChange={() => toggleArticleSelection(article.id)}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{article.title}</p>
+                          <p className="text-xs text-slate-500 truncate">{article.summary || 'No summary'}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
-                <div>
-                  <Label className="flex items-center gap-2">
-                    <BarChart className="w-4 h-4" />
-                    Load from Analysis/Press
-                  </Label>
-                  <Select onValueChange={handleSelectPress}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select analysis/press release..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {pressReleases.map((press) => (
-                        <SelectItem key={press.id} value={press.id}>
-                          {press.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                {selectedArticles.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {selectedArticles.map(id => {
+                      const article = newsArticles.find(a => a.id === id);
+                      return (
+                        <Badge key={id} variant="secondary" className="gap-1">
+                          {article?.title?.substring(0, 30)}...
+                          <button onClick={() => toggleArticleSelection(id)} className="ml-1 hover:text-red-500">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Load from Analysis */}
+              <div>
+                <Label className="flex items-center gap-2">
+                  <BarChart className="w-4 h-4" />
+                  Or Load from Analysis/Press Release
+                </Label>
+                <Select onValueChange={handleSelectPress}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select analysis/press release..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {pressReleases.map((press) => (
+                      <SelectItem key={press.id} value={press.id}>
+                        {press.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Subject */}
@@ -347,15 +372,34 @@ Do NOT include HTML tags - plain text only with clear formatting using:
                 />
               </div>
 
-              {/* Body */}
+              {/* Body - custom message */}
               <div>
-                <Label>Email Body *</Label>
+                <div className="flex items-center justify-between mb-1">
+                  <Label>Your Message (optional intro/outro)</Label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAIFormat}
+                    disabled={aiLoading || (!body && selectedArticles.length === 0)}
+                    className="gap-2"
+                  >
+                    {aiLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    AI Format Newsletter
+                  </Button>
+                </div>
                 <Textarea
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  placeholder="Write your newsletter content here..."
-                  className="min-h-[300px] font-mono"
+                  placeholder="Add your personal message, introduction, or additional content here. The selected articles will be embedded below..."
+                  className="min-h-[200px] font-mono"
                 />
+                <p className="text-xs text-slate-500 mt-1">
+                  Selected articles ({selectedArticles.length}) will be automatically embedded in the final email.
+                </p>
               </div>
 
               {/* Send Button */}
