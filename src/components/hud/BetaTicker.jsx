@@ -54,12 +54,15 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentP
     );
   }
   
-  // Beta Ticker when BOTH topbar AND sidebar are collapsed - shows thin bar
-  if (topbarCollapsed && sidebarCollapsed) {
+  // Beta Ticker when topbar is collapsed - shows thin bar below collapsed topbar
+  if (topbarCollapsed) {
     return (
       <div 
-        className="fixed left-20 right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300"
-        style={{ top: '32px' }}
+        className={cn(
+          "fixed right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300",
+          sidebarCollapsed ? "left-0 md:left-20" : "left-0 md:left-64"
+        )}
+        style={{ top: '40px' }}
       >
         <div className="flex items-center justify-center relative">
           <div className="animate-marquee whitespace-nowrap inline-block">
