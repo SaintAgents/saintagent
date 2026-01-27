@@ -1078,7 +1078,11 @@ export default function Sidebar({
                     key={item.id}
                     to={isLocked ? '#' : createPageUrl(item.page)}
                     onClick={(e) => {
-                      if (isLocked) e.preventDefault();
+                      if (isLocked) { e.preventDefault(); return; }
+                      if (item.action === 'openGallery') {
+                        e.preventDefault();
+                        document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
+                      }
                       // Don't close popup on navigation - keep it open until user closes it
                     }}
                     className={cn(
