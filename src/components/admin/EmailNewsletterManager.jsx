@@ -9,18 +9,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart } from 'lucide-react';
+import { Mail, Send, Upload, Users, FileText, Trash2, Eye, Loader2, CheckCircle, AlertCircle, Newspaper, BarChart, Sparkles, Plus, X } from 'lucide-react';
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function EmailNewsletterManager() {
   const queryClient = useQueryClient();
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [selectedNews, setSelectedNews] = useState('');
+  const [selectedArticles, setSelectedArticles] = useState([]); // Multi-select articles to embed
   const [emailList, setEmailList] = useState([]);
   const [csvInput, setCsvInput] = useState('');
   const [sending, setSending] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
 
   // Fetch news articles
   const { data: newsArticles = [] } = useQuery({
