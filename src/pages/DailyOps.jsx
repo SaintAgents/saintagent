@@ -619,6 +619,109 @@ Return JSON with this exact structure:
                 </div>
               )}
 
+              {/* Draft Overview */}
+              {aiSuggestions.draft_overview && (
+                <div>
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-emerald-600" />
+                    Suggested Overview
+                  </h4>
+                  <div className="flex items-start justify-between p-3 rounded-lg border border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 flex-1 italic">"{aiSuggestions.draft_overview}"</p>
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => applyDraftOverview(aiSuggestions.draft_overview)}
+                      className="ml-2 text-emerald-600 hover:text-emerald-700"
+                    >
+                      <Check className="w-4 h-4 mr-1" />
+                      Use
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Suggested In Progress */}
+              {aiSuggestions.suggested_in_progress?.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <ListChecks className="w-4 h-4 text-blue-600" />
+                      Suggested In Progress Items
+                    </span>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => applyAllSuggested('in_progress')}
+                      className="text-xs"
+                    >
+                      Add All
+                    </Button>
+                  </h4>
+                  <div className="space-y-2">
+                    {aiSuggestions.suggested_in_progress.map((item, idx) => (
+                      <div key={idx} className="flex items-start justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/20">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{item.title}</p>
+                          {item.note && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.note}</p>}
+                        </div>
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => addSuggestedInProgress(item)}
+                          className="ml-2 text-blue-600 hover:text-blue-700"
+                        >
+                          <Plus className="w-4 h-4 mr-1" />
+                          Add
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Suggested Completed */}
+              {aiSuggestions.suggested_completed?.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      Suggested Completed Items
+                    </span>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => applyAllSuggested('completed')}
+                      className="text-xs"
+                    >
+                      Add All
+                    </Button>
+                  </h4>
+                  <div className="space-y-2">
+                    {aiSuggestions.suggested_completed.map((item, idx) => (
+                      <div key={idx} className="flex items-start justify-between p-3 rounded-lg border border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                            {item.action}
+                            {item.ggg_earned && <span className="text-amber-600 ml-2">+{item.ggg_earned} GGG</span>}
+                          </p>
+                          {item.note && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.note}</p>}
+                        </div>
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => addSuggestedCompleted(item)}
+                          className="ml-2 text-emerald-600 hover:text-emerald-700"
+                        >
+                          <Plus className="w-4 h-4 mr-1" />
+                          Add
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Motivation */}
               {aiSuggestions.motivation && (
                 <div className="p-4 rounded-xl bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-300 dark:border-violet-600">
