@@ -14,7 +14,14 @@ export default function HeroGalleryViewer() {
   useEffect(() => {
     const handleOpen = (e) => {
       const startIndex = e.detail?.startIndex || 0;
-      setCurrentIndex(startIndex);
+      // If imageId is passed, find the index
+      if (e.detail?.imageId) {
+        const idx = HERO_IMAGES.findIndex(img => img.id === e.detail.imageId);
+        if (idx !== -1) setCurrentIndex(idx);
+        else setCurrentIndex(startIndex);
+      } else {
+        setCurrentIndex(startIndex);
+      }
       setOpen(true);
       setScanning(true);
       setScanProgress(0);
