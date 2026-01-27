@@ -331,7 +331,7 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="w-7 h-7 object-contain"
+                  className={tab.id === 'command' ? "w-7 h-7 object-contain" : "w-8 h-8 object-contain"}
                   data-no-filter="true"
                 />
                 {/* Hover tooltip with label */}
