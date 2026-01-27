@@ -709,12 +709,10 @@ export default function Profile() {
                   <BookOpen className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               }
-              {isOwnProfile &&
               <TabsTrigger value="bank" className="text-xs sm:text-sm px-2 sm:px-3" title="Bank">
                   <span className="hidden sm:inline">Bank</span>
                   <Coins className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
-              }
             </TabsList>
           </div>
 
@@ -1709,11 +1707,9 @@ export default function Profile() {
             </TabsContent>
           )}
 
-          {isOwnProfile && (
-            <TabsContent value="bank" className="space-y-6">
-              <GaiaBankTab />
-            </TabsContent>
-          )}
+          <TabsContent value="bank" className="space-y-6">
+            <GaiaBankTab />
+          </TabsContent>
 
           {isOwnProfile && (
             <TabsContent value="friends" className="space-y-6">
