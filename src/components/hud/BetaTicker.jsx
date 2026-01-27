@@ -59,7 +59,7 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentP
     return (
       <div 
         className={cn(
-          "fixed right-0 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300",
+          "fixed right-0 z-[51] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-0.5 text-xs font-medium overflow-hidden transition-all duration-300",
           sidebarCollapsed ? "left-0 md:left-20" : "left-0 md:left-64"
         )}
         style={{ top: '40px' }}
