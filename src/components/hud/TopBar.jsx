@@ -718,12 +718,15 @@ export default function TopBar({
             >
               {/* Admin Dashboard Banner - TOP OF MENU for admin users */}
               {currentUser?.role === 'admin' && (
-                <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3">
-                  <Link to={createPageUrl('Admin')} onClick={() => document.body.click()} className="flex items-center gap-3 text-white font-bold hover:opacity-90 transition-opacity">
+                <Link 
+                  to={createPageUrl('Admin')} 
+                  className="block bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3"
+                >
+                  <div className="flex items-center gap-3 text-white font-bold hover:opacity-90 transition-opacity">
                     <Shield className="w-5 h-5" />
                     <span>🔐 ADMIN DASHBOARD</span>
-                  </Link>
-                </div>
+                  </div>
+                </Link>
               )}
 
               {/* Avatar Card Header */}
@@ -801,30 +804,19 @@ export default function TopBar({
                   </DropdownMenuItem>
                 </div>
 
-                {/* Admin Dashboard - show for admin users (check both role formats) */}
-                {(currentUser?.role === 'admin' || profile?.user_id === currentUser?.email) && currentUser?.role === 'admin' && (
+                {/* Admin Dashboard - show for admin users */}
+                {currentUser?.role === 'admin' && (
                   <>
                     <DropdownMenuSeparator className="my-0" />
                     <div className="py-2 bg-violet-50 dark:bg-violet-900/20">
                       <DropdownMenuItem asChild>
-                        <Link to={createPageUrl('Admin')} onClick={() => document.body.click()} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold">
+                        <Link to={createPageUrl('Admin')} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold">
                           <Shield className="w-4 h-4" />
                           <span>⚡ Admin Dashboard</span>
                         </Link>
                       </DropdownMenuItem>
                     </div>
                   </>
-                )}
-                {/* Fallback: Also show Admin link at TOP of menu for visibility */}
-                {currentUser?.role === 'admin' && (
-                  <div className="py-2 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-700">
-                    <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Admin')} onClick={() => document.body.click()} className="flex items-center gap-3 px-4 py-2.5 text-amber-700 dark:text-amber-400 font-bold">
-                        <Shield className="w-5 h-5" />
-                        <span>🔐 ADMIN DASHBOARD</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  </div>
                 )}
 
                 <DropdownMenuSeparator className="my-0" />
