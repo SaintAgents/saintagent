@@ -765,14 +765,7 @@ export default function Sidebar({
                   <span className="ml-auto text-xs text-slate-400">(None)</span>
                 </Label>
               </div>
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="grey" id={inPopup ? "theme-grey-pop" : "theme-grey"} className="h-3.5 w-3.5" />
-                <Label htmlFor={inPopup ? "theme-grey-pop" : "theme-grey"} className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5 flex-1">
-                  <Shield className="w-3.5 h-3.5 text-gray-600" /> Grey
-                  <span className="ml-auto text-xs text-slate-400">(Industrial)</span>
-                </Label>
-              </div>
-            </RadioGroup>
+              </RadioGroup>
           </CollapsibleContent>
         </Collapsible>
         )}
@@ -1161,16 +1154,7 @@ export default function Sidebar({
                 )}
                 title="Hacker theme"
               />
-              <button
-                onClick={() => onThemeToggle('grey')}
-                className={cn(
-                  "w-4 h-4 rounded-full border-2 transition-all",
-                  theme === 'grey' 
-                    ? "bg-gray-600 border-red-500 ring-2 ring-red-200" 
-                    : "bg-gray-600 border-gray-700 hover:border-gray-500"
-                )}
-                title="Grey theme"
-              />
+
             </div>
           </div>
         </FloatingPanel>
