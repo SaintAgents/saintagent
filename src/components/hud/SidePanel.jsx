@@ -1162,17 +1162,17 @@ export default function SidePanel({
         </div>
       </div>
 
-      {/* Toggle Button - hidden when popped off */}
+      {/* Toggle Button - always visible when docked */}
       {!isPoppedOff && (
       <button
           onClick={onToggle}
           data-side-panel-handle
           className={cn(
-            "absolute w-5 flex items-center justify-center transition-colors z-[9999]",
-            dockSide === 'right' ? "-left-5 rounded-l-md" : "-right-5 rounded-r-md"
+            "absolute w-8 flex items-center justify-center transition-colors z-[9999]",
+            dockSide === 'right' ? "-left-8 rounded-l-md" : "-right-8 rounded-r-md"
           )}
           style={{ top: '20px', height: '32px', minHeight: '32px', maxHeight: '32px' }}>
-        <div className="w-full rounded-md bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex flex-col items-center justify-center gap-0.5 relative shadow-md hover:shadow-lg" style={{ height: '32px' }}>
+        <div className="w-full h-full rounded-md bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex flex-col items-center justify-center gap-0.5 relative shadow-md hover:shadow-lg">
           <PanelRight className={cn("w-3 h-3 text-white/80 dark:text-[#00ff88] icon-glow", dockSide === 'left' && "rotate-180")} />
           {dockSide === 'right' ?
             isOpen ? <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> :
