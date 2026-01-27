@@ -503,45 +503,47 @@ export default function Sidebar({
       </div>
 
       {/* Leaderboard */}
-      {(!isCollapsed || inPopup) && (
-        <div className="border-t border-slate-100 p-3">
-          <div className="mb-3 px-2">
-            <div className="flex items-center justify-between">
+      {(inPopup || true) && (
+        <div className={cn("border-t border-slate-100 p-3", isCollapsed && !inPopup && "p-1")}>
+          <div className={cn("mb-3 px-2", isCollapsed && !inPopup && "mb-1 px-0")}>
+            <div className={cn("flex items-center justify-between", isCollapsed && !inPopup && "justify-center")}>
               <button
                 onClick={() => setLeaderboardOpen(!leaderboardOpen)}
-                className="flex items-center gap-2 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors"
+                className={cn("flex items-center gap-2 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors", isCollapsed && !inPopup && "p-1 justify-center")}
               >
                 <Trophy className="w-4 h-4 text-amber-500" />
-                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Top Leaders</span>
+                {(!isCollapsed || inPopup) && <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Top Leaders</span>}
               </button>
-              <div className="flex items-center gap-1">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={() => setLeadersPopupOpen(true)}
-                  title="Pop out"
-                >
-                  <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => setLeaderboardOpen(!leaderboardOpen)}
-                >
-                  {leaderboardOpen ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </Button>
-              </div>
+              {(!isCollapsed || inPopup) && (
+                <div className="flex items-center gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={() => setLeadersPopupOpen(true)}
+                    title="Pop out"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+                  >
+                    {leaderboardOpen ? (
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           {/* Collapsed: show avatars only in a row */}
-          {!leaderboardOpen && (
-            <div className="flex flex-wrap gap-1 px-2 py-1">
+          {(!leaderboardOpen || (isCollapsed && !inPopup)) && (
+            <div className={cn("flex flex-wrap gap-1 px-2 py-1", isCollapsed && !inPopup && "flex-col items-center gap-1.5 px-0")}>
               <TooltipProvider delayDuration={200}>
                 {resolvedLeaders.slice(0, 10).map((leader, index) => (
                   <Tooltip key={leader.id}>
@@ -580,7 +582,7 @@ export default function Sidebar({
           )}
 
           {/* Expanded: show full list */}
-          <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}>
+          <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen && (!isCollapsed || inPopup) ? "max-h-56 opacity-100" : "max-h-0 opacity-0")}>
             <ScrollArea className="h-48">
               <TooltipProvider delayDuration={200}>
               <div className="space-y-2">
