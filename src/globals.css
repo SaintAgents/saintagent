@@ -1457,6 +1457,22 @@ html[data-theme='hacker'] [role="button"] * {
   border-color: #333333 !important;
 }
 
+/* Hacker theme sidebar - transparent to show background effects */
+[data-theme='hacker'] [data-sidebar],
+html[data-theme='hacker'] [data-sidebar] {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Dark theme sidebar - semi-transparent */
+[data-theme='dark'] [data-sidebar],
+html[data-theme='dark'] [data-sidebar] {
+  background-color: rgba(5, 5, 5, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
 /* Grey theme code blocks */
 [data-theme='grey'] pre {
   background: #121315 !important;
