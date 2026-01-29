@@ -100,15 +100,28 @@ export default function AdminBetaFeedback() {
     return matchesSearch && matchesStatus && matchesType;
   });
 
-  const handleStatusChange = (id, newStatus) => {
-    updateMutation.mutate({ id, data: { status: newStatus } });
+  const handleStatusChange = (id, newStatus, oldStatus) => {
+    const statusLabel = STATUS_CONFIG[newStatus]?.label || newStatus;
+    const oldStatusLabel = STATUS_CONFIG[oldStatus]?.label || oldStatus;
+    updateMutation.mutate({ 
+      id, 
+      data: { status: newStatus },
+      logMessage: `Changed feedback status from "${oldStatusLabel}" to "${statusLabel}"`,
+      logMeta: { old_status: oldStatus, new_status: newStatus }
+    });
+    // Update local state for the modal
+    if (selectedFeedback?.id === id) {
+      setSelectedFeedback(prev => ({ ...prev, status: newStatus }));
+    }
   };
 
   const handleSaveNotes = () => {
     if (selectedFeedback) {
       updateMutation.mutate({ 
         id: selectedFeedback.id, 
-        data: { admin_notes: adminNotes } 
+        data: { admin_notes: adminNotes },
+        logMessage: 'Updated admin notes on feedback',
+        logMeta: { notes_length: adminNotes?.length || 0 }
       });
     }
   };
