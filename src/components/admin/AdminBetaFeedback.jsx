@@ -44,20 +44,49 @@ export default function AdminBetaFeedback() {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [adminNotes, setAdminNotes] = useState('');
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const { data: feedbackList = [], isLoading } = useQuery({
     queryKey: ['betaFeedback'],
     queryFn: () => base44.entities.BetaFeedback.list('-created_date', 500)
   });
 
+  // Helper to log admin actions to the audit log
+  const logAdminAction = async (actionDetail, feedbackId, metadata = {}) => {
+    try {
+      await base44.entities.UserAuditLog.create({
+        user_id: currentUser?.email || 'admin',
+        action_type: 'update',
+        action_detail: actionDetail,
+        entity_type: 'BetaFeedback',
+        entity_id: feedbackId,
+        page_name: 'Admin - Beta Feedback',
+        metadata
+      });
+    } catch (e) {
+      console.error('Failed to log audit action:', e);
+    }
+  };
+
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.BetaFeedback.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['betaFeedback'] })
+    mutationFn: ({ id, data, logMessage, logMeta }) => 
+      base44.entities.BetaFeedback.update(id, data).then(() => ({ id, logMessage, logMeta })),
+    onSuccess: ({ id, logMessage, logMeta }) => {
+      queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
+      if (logMessage) {
+        logAdminAction(logMessage, id, logMeta);
+      }
+    }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.BetaFeedback.delete(id),
-    onSuccess: () => {
+    mutationFn: (id) => base44.entities.BetaFeedback.delete(id).then(() => id),
+    onSuccess: (id) => {
       queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
+      logAdminAction('Deleted beta feedback entry', id, { action: 'delete' });
       setSelectedFeedback(null);
     }
   });
