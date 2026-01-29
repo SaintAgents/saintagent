@@ -299,7 +299,7 @@ export default function AdminBetaFeedback() {
                   <h4 className="font-medium text-slate-900 mb-1">Update Status</h4>
                   <Select 
                     value={selectedFeedback.status} 
-                    onValueChange={(value) => handleStatusChange(selectedFeedback.id, value)}
+                    onValueChange={(value) => handleStatusChange(selectedFeedback.id, value, selectedFeedback.status)}
                   >
                     <SelectTrigger>
                       <SelectValue />
