@@ -353,14 +353,31 @@ export default function AdminBetaFeedback() {
                   </Select>
                 </div>
 
+                {/* Bug Repair Checklist - only for bugs */}
+                {selectedFeedback.feedback_type === 'bug' && (
+                  <BugRepairChecklist
+                    feedback={selectedFeedback}
+                    currentUser={currentUser}
+                    onUpdate={(data) => {
+                      updateMutation.mutate({
+                        id: selectedFeedback.id,
+                        data,
+                        logMessage: 'Updated bug repair checklist',
+                        logMeta: data
+                      });
+                      setSelectedFeedback(prev => ({ ...prev, ...data }));
+                    }}
+                  />
+                )}
+
                 {/* Admin Notes */}
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-1">Admin Notes / AI Analysis</h4>
+                  <h4 className="font-medium text-slate-900 mb-1">Admin Notes</h4>
                   <Textarea
                     placeholder="Add internal notes..."
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    className="min-h-32 font-mono text-sm"
+                    className="min-h-20"
                   />
                   <Button 
                     size="sm" 
