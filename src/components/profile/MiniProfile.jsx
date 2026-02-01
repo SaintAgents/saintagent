@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { Shield, TrendingUp, BadgeCheck, Users, Coins } from 'lucide-react';
 import HelpHint from '@/components/hud/HelpHint';
 import TipButton from '@/components/creator/TipButton';
+import TestimonialButton from '@/components/TestimonialButton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 
