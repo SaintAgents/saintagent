@@ -137,13 +137,13 @@ main {
   background-image: none !important;
 }
 
-/* Force slate/white backgrounds transparent */
-[data-theme='dark'] [class*='bg-slate-'],
-[data-theme='hacker'] [class*='bg-slate-'],
-[data-theme='dark'] [class*='bg-white'],
-[data-theme='hacker'] [class*='bg-white'],
-[data-theme='dark'] [class*='bg-gray-'],
-[data-theme='hacker'] [class*='bg-gray-'] {
+/* Force slate/white backgrounds transparent - EXCLUDE sidebar */
+[data-theme='dark'] [class*='bg-slate-']:not([data-sidebar]):not([data-sidebar] *),
+[data-theme='hacker'] [class*='bg-slate-']:not([data-sidebar]):not([data-sidebar] *),
+[data-theme='dark'] [class*='bg-white']:not([data-sidebar]):not([data-sidebar] *),
+[data-theme='hacker'] [class*='bg-white']:not([data-sidebar]):not([data-sidebar] *),
+[data-theme='dark'] [class*='bg-gray-']:not([data-sidebar]):not([data-sidebar] *),
+[data-theme='hacker'] [class*='bg-gray-']:not([data-sidebar]):not([data-sidebar] *) {
   background-color: transparent !important;
 }
 
