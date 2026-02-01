@@ -25,7 +25,7 @@ import {
   Trash2
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDistanceToNow, parseISO } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { createPageUrl } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -202,7 +202,7 @@ export default function NotificationBell({ notifications = [], onAction }) {
                       </p>
                       <div className="flex items-center gap-2 mt-1">
                         <p className="text-xs text-slate-400 dark:text-slate-500">
-                          {notif.created_date && formatDistanceToNow(parseISO(notif.created_date), { addSuffix: true })}
+                          {notif.created_date && formatDistanceToNow(new Date(notif.created_date), { addSuffix: true })}
                         </p>
                         {notif.priority === 'high' && (
                           <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">High priority</span>
