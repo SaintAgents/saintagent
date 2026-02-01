@@ -1693,10 +1693,18 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
             {isCardVisible('quickActions') && <CollapsibleCard title="Quick Actions" cardId="quickActions" icon={Zap} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" onPopout={() => setQuickActionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('quickActions')} onToggleHide={() => toggleCardVisibility('quickActions')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="relative z-10 text-zinc-950">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Button className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2" onClick={() => setQuickCreateOpen(true)}>
                     <Plus className="w-4 h-4" />
                     Quick Create
+                  </Button>
+                  <Button variant="outline" className="rounded-xl gap-2" onClick={() => setTuneEngineOpen(true)}>
+                    <Sparkles className="w-4 h-4" />
+                    Tune Engine
+                  </Button>
+                  <Button variant="outline" className="rounded-xl gap-2" onClick={() => setOnlineUsersOpen(true)}>
+                    <Users className="w-4 h-4" />
+                    Online Users
                   </Button>
                 </div>
               </div>
