@@ -96,7 +96,27 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
         status: 'pending'
       });
 
-      toast.success('Thank you for your feedback!');
+      // Award GGG for feedback submission (0.03)
+      try {
+        const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser?.email });
+        const profile = profiles?.[0];
+        if (profile) {
+          const newBalance = (profile.ggg_balance || 0) + 0.03;
+          await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
+          await base44.entities.GGGTransaction.create({
+            user_id: currentUser.email,
+            delta: 0.03,
+            reason_code: 'feedback_submit',
+            description: `Submitted ${feedbackType} feedback`,
+            balance_after: newBalance,
+            source_type: 'reward'
+          });
+        }
+      } catch (e) {
+        console.error('Failed to award feedback GGG:', e);
+      }
+
+      toast.success('Thank you for your feedback! +0.03 GGG earned');
       handleClose();
     } catch (error) {
       console.error('Submit failed:', error);

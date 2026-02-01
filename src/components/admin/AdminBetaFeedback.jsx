@@ -124,15 +124,43 @@ export default function AdminBetaFeedback() {
     return matchesSearch && matchesStatus && matchesType;
   });
 
-  const handleStatusChange = (id, newStatus, oldStatus) => {
+  const handleStatusChange = async (id, newStatus, oldStatus) => {
     const statusLabel = STATUS_CONFIG[newStatus]?.label || newStatus;
     const oldStatusLabel = STATUS_CONFIG[oldStatus]?.label || oldStatus;
+    
+    // Find the feedback to get reporter info
+    const feedback = feedbackList.find(f => f.id === id);
+    
     updateMutation.mutate({ 
       id, 
       data: { status: newStatus },
       logMessage: `Changed feedback status from "${oldStatusLabel}" to "${statusLabel}"`,
       logMeta: { old_status: oldStatus, new_status: newStatus }
     });
+    
+    // Award GGG when resolved (0.03 bonus)
+    if (newStatus === 'resolved' && oldStatus !== 'resolved' && feedback?.reporter_id) {
+      try {
+        const profiles = await base44.entities.UserProfile.filter({ user_id: feedback.reporter_id });
+        const profile = profiles?.[0];
+        if (profile) {
+          const newBalance = (profile.ggg_balance || 0) + 0.03;
+          await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
+          await base44.entities.GGGTransaction.create({
+            user_id: feedback.reporter_id,
+            delta: 0.03,
+            reason_code: 'feedback_resolved',
+            description: `Feedback resolved bonus`,
+            balance_after: newBalance,
+            source_type: 'reward'
+          });
+          toast.success(`Awarded 0.03 GGG to ${feedback.reporter_name || feedback.reporter_id} for resolved feedback`);
+        }
+      } catch (e) {
+        console.error('Failed to award resolved feedback GGG:', e);
+      }
+    }
+    
     // Update local state for the modal
     if (selectedFeedback?.id === id) {
       setSelectedFeedback(prev => ({ ...prev, status: newStatus }));
