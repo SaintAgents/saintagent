@@ -417,8 +417,16 @@ export default function Onboarding() {
           </div>
         </div>
 
+        {/* GGG Rewards Progress */}
+        <div className="mt-6">
+          <OnboardingRewardsBar 
+            currentStep={currentStep} 
+            completedSteps={progress?.completed_steps || []} 
+          />
+        </div>
+
         {/* Section Navigator */}
-        <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
           <p className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wide">Jump to Section</p>
           <div className="flex flex-wrap gap-2">
             {STEPS.slice(currentStep + 1, currentStep + 6).map((step) => (
