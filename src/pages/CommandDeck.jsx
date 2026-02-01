@@ -68,10 +68,11 @@ import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import NewsCard from '@/components/news/NewsCard';
-import { Newspaper, Image } from 'lucide-react';
+import { Newspaper, Image, MessageCircle } from 'lucide-react';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
+import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -278,6 +279,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       communityFeed: 'Community Feed',
       leaderboard: 'Leaderboard',
       affirmations: 'Affirmations',
+      testimonials: 'Community Voices',
       news: 'News & Updates',
       heroGallery: 'Hero Gallery',
       videos: 'SaintTube Videos'
@@ -306,6 +308,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     communityFeed: Sparkles,
     leaderboard: Trophy,
     affirmations: Sparkles,
+    testimonials: MessageCircle,
     news: Newspaper,
     heroGallery: Image,
     videos: Play
@@ -1772,6 +1775,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
             {isCardVisible('affirmations') && <CollapsibleCard title="St. Germain Affirmations" cardId="affirmations" icon={Sparkles} backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('affirmations')} onToggleHide={() => toggleCardVisibility('affirmations')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
               <StGermainAffirmations />
+            </CollapsibleCard>}
+
+            {isCardVisible('testimonials') && <CollapsibleCard title="Community Voices" cardId="testimonials" icon={MessageCircle} badge="Live" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('testimonials')} onToggleHide={() => toggleCardVisibility('testimonials')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+              <TestimonialsCompact limit={3} />
             </CollapsibleCard>}
 
             {isCardVisible('videos') && <CollapsibleCard title="SaintTube Videos" cardId="videos" icon={Play} badge="20 min max" badgeColor="red" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('videos')} onToggleHide={() => toggleCardVisibility('videos')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Videos')}>
