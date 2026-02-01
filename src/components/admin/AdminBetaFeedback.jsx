@@ -93,6 +93,27 @@ export default function AdminBetaFeedback() {
     }
   });
 
+  const [isAutoRepairing, setIsAutoRepairing] = useState(false);
+
+  const handleAutoRepair = async () => {
+    setIsAutoRepairing(true);
+    try {
+      const response = await base44.functions.invoke('autoBugRepair', {});
+      const result = response.data;
+      
+      if (result.processed > 0) {
+        toast.success(`Analyzed ${result.processed} bug reports`);
+        queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
+      } else {
+        toast.info(result.message || 'No pending bugs to process');
+      }
+    } catch (error) {
+      toast.error('Failed to run auto-repair: ' + (error.message || 'Unknown error'));
+    } finally {
+      setIsAutoRepairing(false);
+    }
+  };
+
   const filtered = feedbackList.filter(f => {
     const matchesSearch = !search || 
       f.description?.toLowerCase().includes(search.toLowerCase()) ||
