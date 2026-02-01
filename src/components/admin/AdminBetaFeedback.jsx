@@ -10,9 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   MessageSquare, Bug, Lightbulb, HelpCircle, Search,
-  Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink
+  Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink,
+  Wand2, Bot
 } from "lucide-react";
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 const TYPE_CONFIG = {
   bug: { icon: Bug, color: 'bg-red-100 text-red-700', label: 'Bug' },
