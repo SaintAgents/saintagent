@@ -10,12 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   MessageSquare, Bug, Lightbulb, HelpCircle, Search,
-  Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink,
-  Wand2, Bot
+  Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink
 } from "lucide-react";
 import { format } from 'date-fns';
-import { toast } from 'sonner';
-import BugRepairChecklist from './BugRepairChecklist';
 
 const TYPE_CONFIG = {
   bug: { icon: Bug, color: 'bg-red-100 text-red-700', label: 'Bug' },
@@ -94,27 +91,6 @@ export default function AdminBetaFeedback() {
     }
   });
 
-  const [isAutoRepairing, setIsAutoRepairing] = useState(false);
-
-  const handleAutoRepair = async () => {
-    setIsAutoRepairing(true);
-    try {
-      const response = await base44.functions.invoke('autoBugRepair', {});
-      const result = response.data;
-      
-      if (result.processed > 0) {
-        toast.success(`Analyzed ${result.processed} bug reports`);
-        queryClient.invalidateQueries({ queryKey: ['betaFeedback'] });
-      } else {
-        toast.info(result.message || 'No pending bugs to process');
-      }
-    } catch (error) {
-      toast.error('Failed to run auto-repair: ' + (error.message || 'Unknown error'));
-    } finally {
-      setIsAutoRepairing(false);
-    }
-  };
-
   const filtered = feedbackList.filter(f => {
     const matchesSearch = !search || 
       f.description?.toLowerCase().includes(search.toLowerCase()) ||
@@ -152,23 +128,6 @@ export default function AdminBetaFeedback() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Auto-Repair Button */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-slate-900">Beta Feedback</h3>
-        <Button
-          onClick={handleAutoRepair}
-          disabled={isAutoRepairing}
-          className="bg-violet-600 hover:bg-violet-700"
-        >
-          {isAutoRepairing ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Bot className="w-4 h-4 mr-2" />
-          )}
-          {isAutoRepairing ? 'Analyzing...' : 'Auto-Analyze Bugs'}
-        </Button>
-      </div>
-
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[200px] relative">
@@ -352,23 +311,6 @@ export default function AdminBetaFeedback() {
                     </SelectContent>
                   </Select>
                 </div>
-
-                {/* Bug Repair Checklist - only for bugs */}
-                {selectedFeedback.feedback_type === 'bug' && (
-                  <BugRepairChecklist
-                    feedback={selectedFeedback}
-                    currentUser={currentUser}
-                    onUpdate={(data) => {
-                      updateMutation.mutate({
-                        id: selectedFeedback.id,
-                        data,
-                        logMessage: 'Updated bug repair checklist',
-                        logMeta: data
-                      });
-                      setSelectedFeedback(prev => ({ ...prev, ...data }));
-                    }}
-                  />
-                )}
 
                 {/* Admin Notes */}
                 <div>
