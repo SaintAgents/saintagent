@@ -289,6 +289,166 @@ export default function MasterActivityLog() {
     return typed.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
   }, [gggTransactions, meetings, missions, bookings, profiles, auditLogs, testimonials, boosts, dateRange, searchQuery, filterType, profileMap]);
 
+  // Aggregate activities by user
+  const userSummaries = React.useMemo(() => {
+    const dateFilter = getDateFilter();
+    const userMap = {};
+
+    // Build full activity list (not filtered by search/type)
+    const allActivities = [];
+    
+    // GGG Transactions
+    gggTransactions.forEach(tx => {
+      const profile = profileMap[tx.user_id];
+      if (new Date(tx.created_date) >= dateFilter) {
+        allActivities.push({
+          id: `ggg-${tx.id}`,
+          type: tx.delta > 0 ? 'ggg_earned' : 'ggg_spent',
+          user_id: tx.user_id,
+          user_name: profile?.display_name || tx.user_id,
+          user_avatar: profile?.avatar_url,
+          description: tx.description || tx.reason_code,
+          amount: tx.delta,
+          balance_after: tx.balance_after,
+          created_date: tx.created_date,
+          source_type: tx.source_type,
+        });
+      }
+    });
+
+    // Meetings
+    meetings.forEach(m => {
+      if (new Date(m.created_date) >= dateFilter) {
+        const hostProfile = profileMap[m.host_id];
+        allActivities.push({
+          id: `meeting-${m.id}`,
+          type: m.status === 'completed' ? 'meeting_completed' : 'meeting_scheduled',
+          user_id: m.host_id,
+          user_name: m.host_name || hostProfile?.display_name || m.host_id,
+          user_avatar: m.host_avatar || hostProfile?.avatar_url,
+          description: `Meeting: ${m.title}`,
+          created_date: m.created_date,
+        });
+      }
+    });
+
+    // Missions
+    missions.forEach(m => {
+      if (new Date(m.created_date) >= dateFilter) {
+        const profile = profileMap[m.creator_id];
+        allActivities.push({
+          id: `mission-${m.id}`,
+          type: 'mission_created',
+          user_id: m.creator_id,
+          user_name: m.creator_name || profile?.display_name || m.creator_id,
+          user_avatar: profile?.avatar_url,
+          description: `Created mission: ${m.title}`,
+          created_date: m.created_date,
+        });
+      }
+    });
+
+    // Bookings
+    bookings.forEach(b => {
+      if (new Date(b.created_date) >= dateFilter) {
+        const buyerProfile = profileMap[b.buyer_id];
+        allActivities.push({
+          id: `booking-${b.id}`,
+          type: 'booking_made',
+          user_id: b.buyer_id,
+          user_name: b.buyer_name || buyerProfile?.display_name || b.buyer_id,
+          user_avatar: buyerProfile?.avatar_url,
+          description: `Booking with ${b.seller_name}`,
+          created_date: b.created_date,
+        });
+      }
+    });
+
+    // Messages
+    messages.forEach(m => {
+      if (new Date(m.created_date) >= dateFilter) {
+        const profile = profileMap[m.from_user_id];
+        allActivities.push({
+          id: `message-${m.id}`,
+          type: 'message_sent',
+          user_id: m.from_user_id,
+          user_name: m.from_name || profile?.display_name || m.from_user_id,
+          user_avatar: m.from_avatar || profile?.avatar_url,
+          description: `Sent message`,
+          created_date: m.created_date,
+        });
+      }
+    });
+
+    // Testimonials
+    testimonials.forEach(t => {
+      if (new Date(t.created_date) >= dateFilter) {
+        allActivities.push({
+          id: `testimonial-${t.id}`,
+          type: 'testimonial_given',
+          user_id: t.from_user_id,
+          user_name: t.from_name || t.from_user_id,
+          user_avatar: t.from_avatar,
+          description: `Gave ${t.rating}★ testimonial`,
+          created_date: t.created_date,
+        });
+      }
+    });
+
+    // Boosts
+    boosts.forEach(b => {
+      if (new Date(b.created_date) >= dateFilter) {
+        const profile = profileMap[b.user_id];
+        allActivities.push({
+          id: `boost-${b.id}`,
+          type: 'boost_activated',
+          user_id: b.user_id,
+          user_name: profile?.display_name || b.user_id,
+          user_avatar: profile?.avatar_url,
+          description: `Activated ${b.boost_type} boost`,
+          amount: -b.budget_ggg,
+          created_date: b.created_date,
+        });
+      }
+    });
+
+    // Group by user
+    allActivities.forEach(activity => {
+      if (!activity.user_id) return;
+      
+      if (!userMap[activity.user_id]) {
+        userMap[activity.user_id] = {
+          user_id: activity.user_id,
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          total_ggg_earned: 0,
+          total_activities: 0,
+          activities: [],
+        };
+      }
+
+      userMap[activity.user_id].total_activities += 1;
+      userMap[activity.user_id].activities.push(activity);
+      
+      if (activity.amount && activity.amount > 0) {
+        userMap[activity.user_id].total_ggg_earned += activity.amount;
+      }
+    });
+
+    // Convert to array and sort by activity count
+    const users = Object.values(userMap);
+    
+    // Apply search filter
+    const filtered = searchQuery
+      ? users.filter(u => 
+          u.user_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          u.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : users;
+
+    return filtered.sort((a, b) => b.total_activities - a.total_activities);
+  }, [gggTransactions, meetings, missions, bookings, messages, testimonials, boosts, profiles, dateRange, searchQuery, profileMap]);
+
   // Calculate stats
   const stats = React.useMemo(() => {
     const now = new Date();
