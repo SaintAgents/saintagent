@@ -60,7 +60,7 @@ export default function MasterActivityLog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [dateRange, setDateRange] = useState('7d');
-  const [activeTab, setActiveTab] = useState('all');
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // Fetch GGG Transactions
   const { data: gggTransactions = [], isLoading: loadingGGG, refetch: refetchGGG } = useQuery({
