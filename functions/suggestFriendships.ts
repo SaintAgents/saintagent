@@ -222,7 +222,7 @@ Deno.serve(async (req) => {
           notificationsToCreate.push({
             user_id: userId,
             type: 'follow',
-            title: 'People You May Know',
+            title: 'Suggested Friendship',
             message: `${suggestion.candidateName}: ${suggestion.topReason}`,
             action_url: `/Profile?id=${encodeURIComponent(suggestion.candidateId)}`,
             action_label: 'View Profile',
