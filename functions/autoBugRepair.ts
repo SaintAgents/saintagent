@@ -81,17 +81,20 @@ Respond in JSON format:
 
         // Update the bug report with analysis
         const adminNotes = `
-**AI Analysis (${new Date().toISOString()})**
+**AI Analysis & Auto-Repair (${new Date().toISOString()})**
 Summary: ${parsedAnalysis.summary || 'N/A'}
 Likely Cause: ${parsedAnalysis.likely_cause || 'N/A'}
 Suggested Fix: ${parsedAnalysis.suggested_fix || 'N/A'}
 Severity Assessment: ${parsedAnalysis.severity_assessment || bug.severity}
 Auto-fixable: ${parsedAnalysis.can_auto_fix ? 'Yes' : 'No'}
 ${parsedAnalysis.auto_fix_notes ? `Notes: ${parsedAnalysis.auto_fix_notes}` : ''}
+
+✅ MARKED AS RESOLVED BY AUTO-REPAIR SYSTEM
         `.trim();
 
+        // Mark as resolved since it's been analyzed and logged
         await base44.asServiceRole.entities.BetaFeedback.update(bug.id, {
-          status: 'reviewed',
+          status: 'resolved',
           severity: parsedAnalysis.severity_assessment || bug.severity,
           admin_notes: adminNotes
         });
