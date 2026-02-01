@@ -45,7 +45,9 @@ import {
   X,
   ChevronUp,
   ChevronDown,
-  PoundSterling
+  PoundSterling,
+  ArrowLeft,
+  LayoutDashboard
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -262,6 +264,31 @@ export default function TopBar({
       {/* Masters Messages - shows when topbar is collapsed */}
       {isCollapsed && <MastersMessagesTicker />}
       
+      {/* Navigation buttons - shows when collapsed */}
+      {isCollapsed && (
+        <div className="flex items-center gap-1 mr-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-7 h-7 rounded-lg hover:bg-slate-200/60"
+            onClick={() => window.history.back()}
+            title="Go back"
+          >
+            <ArrowLeft className="w-4 h-4 text-slate-600" />
+          </Button>
+          <Link to={createPageUrl('CommandDeck')}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-7 h-7 rounded-lg hover:bg-slate-200/60"
+              title="Command Deck"
+            >
+              <LayoutDashboard className="w-4 h-4 text-slate-600" />
+            </Button>
+          </Link>
+        </div>
+      )}
+      
       {/* Theme dots - shows when collapsed */}
       {isCollapsed && (
         <div className="flex items-center gap-1.5 mr-2">
@@ -334,7 +361,7 @@ export default function TopBar({
                   alt={tab.label}
                   className={cn(
                     "object-contain topbar-mode-icon",
-                    tab.id === 'command' ? "w-11 h-11" : "w-10 h-10"
+                    tab.id === 'command' ? "w-14 h-14" : "w-12 h-12"
                   )}
                   style={currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : undefined}
                 />

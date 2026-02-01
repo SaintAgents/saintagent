@@ -397,7 +397,7 @@ export default function FloatingNotesWidget() {
             </div>
           </div>
         ) : (
-          <div className="p-2 space-y-2">
+          <div className="p-2 space-y-2" style={{ paddingRight: '8px' }}>
             {pinnedNotes.length > 0 && (
               <>
                 <div className="text-[10px] text-gray-500 px-1 flex items-center gap-1">
@@ -477,13 +477,14 @@ export default function FloatingNotesWidget() {
 function NoteCard({ note, onEdit, onPin, onDelete }) {
   return (
     <div 
-      className={`p-3 rounded-lg border-2 cursor-pointer hover:border-amber-600 transition-colors overflow-hidden ${COLORS[note.color || 'default']}`}
+      className={`p-3 rounded-xl border-2 cursor-pointer hover:border-amber-600 transition-colors ${COLORS[note.color || 'default']}`}
       onClick={onEdit}
+      style={{ maxWidth: '100%', wordWrap: 'break-word', overflowWrap: 'break-word' }}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0" style={{ overflow: 'hidden' }}>
           <div className="font-medium text-slate-800 dark:text-white text-sm truncate">{note.title || 'Untitled'}</div>
-          <div className="text-xs text-slate-600 dark:text-gray-300 line-clamp-2 mt-1 break-words">{note.content}</div>
+          <div className="text-xs text-slate-600 dark:text-gray-300 line-clamp-2 mt-1" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{note.content}</div>
         </div>
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onPin}>
