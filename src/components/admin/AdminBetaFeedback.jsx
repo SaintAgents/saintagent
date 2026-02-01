@@ -151,6 +151,23 @@ export default function AdminBetaFeedback() {
 
   return (
     <div className="space-y-6">
+      {/* Header with Auto-Repair Button */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-slate-900">Beta Feedback</h3>
+        <Button
+          onClick={handleAutoRepair}
+          disabled={isAutoRepairing}
+          className="bg-violet-600 hover:bg-violet-700"
+        >
+          {isAutoRepairing ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Bot className="w-4 h-4 mr-2" />
+          )}
+          {isAutoRepairing ? 'Analyzing...' : 'Auto-Analyze Bugs'}
+        </Button>
+      </div>
+
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[200px] relative">
