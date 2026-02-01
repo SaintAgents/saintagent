@@ -76,16 +76,10 @@ export default function Join() {
     base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
   };
 
-  const handleTryDemo = async () => {
+  const handleTryDemo = () => {
     setDemoLoading(true);
-    // Login as a demo user account
-    try {
-      // Redirect to login with demo hint - the demo account uses a special demo login
-      window.location.href = `${window.location.origin}/auth/demo-login?redirect=${encodeURIComponent(createPageUrl('CommandDeck'))}`;
-    } catch (error) {
-      console.error('Demo login error:', error);
-      setDemoLoading(false);
-    }
+    // Redirect to demo login page
+    window.location.href = createPageUrl('DemoLogin');
   };
 
   return (
