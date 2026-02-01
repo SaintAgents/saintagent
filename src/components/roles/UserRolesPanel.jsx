@@ -10,7 +10,7 @@ import {
   Send, AlertCircle, Crown
 } from 'lucide-react';
 import { toast } from 'sonner';
-import ROLE_DEFS, { ROLE_ORDER, RANK_CODES } from './RoleDefinitions';
+import ROLE_DEFS, { ROLE_ORDER, RANK_ORDER } from './RoleDefinitions';
 
 const RANK_LABELS = {
   seeker: 'Seeker',
@@ -48,12 +48,12 @@ export default function UserRolesPanel({ profile }) {
   const assignedMap = Object.fromEntries((assigned || []).map(r => [r.role_code, r]));
   const pendingMap = Object.fromEntries((pendingRequests || []).map(r => [r.role_code, r]));
   const userRank = profile?.rp_rank_code || 'seeker';
-  const userRankIndex = RANK_CODES.indexOf(userRank);
+  const userRankIndex = RANK_ORDER.indexOf(userRank);
 
   const meetsRankRequirement = (roleCode) => {
     const def = ROLE_DEFS[roleCode];
     if (!def?.minRank) return true;
-    const minRankIndex = RANK_CODES.indexOf(def.minRank);
+    const minRankIndex = RANK_ORDER.indexOf(def.minRank);
     return userRankIndex >= minRankIndex;
   };
 
