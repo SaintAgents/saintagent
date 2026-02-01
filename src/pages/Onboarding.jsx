@@ -199,7 +199,8 @@ export default function Onboarding() {
             console.error('Post-onboarding welcome flow failed', e);
           }
 
-          // Gamification: award points, badge, and GGG tokens for profile completion
+          // Gamification: award points and badge for profile completion
+          // NOTE: GGG reward is handled automatically by the entity automation on OnboardingProgress update
           try {
             const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
             const profileToUpdate = profiles?.[0];
@@ -213,49 +214,6 @@ export default function Onboarding() {
               const existing = await base44.entities.Badge.filter({ user_id: user.email, code: 'profile_complete' });
               if (!(existing && existing.length)) {
                 await base44.entities.Badge.create({ user_id: user.email, code: 'profile_complete', status: 'active' });
-              }
-              
-              // Award GGG tokens for completing onboarding - fetch amount from GGGRewardRule
-              // Default is 0.1 GGG (~$14.50) per the reward rules
-              try {
-                const rules = await base44.entities.GGGRewardRule.filter({ action_type: 'finish_onboard', is_active: true });
-                const gggAmount = rules?.[0]?.ggg_amount || 0.1; // 0.1 GGG = ~$14.50
-                if (gggAmount > 0) {
-                  const eventId = `finish_onboard_${user.email}_${Date.now()}`;
-                  let walletSuccess = false;
-                  
-                  // Try up to 3 times with delays
-                  for (let attempt = 1; attempt <= 3 && !walletSuccess; attempt++) {
-                    try {
-                      if (attempt > 1) {
-                        await new Promise(r => setTimeout(r, 1000 * attempt)); // Wait 1s, 2s, 3s
-                      }
-                      await base44.functions.invoke('walletEngine', {
-                        action: 'credit',
-                        payload: {
-                          user_id: user.email,
-                          amount: gggAmount,
-                          tx_type: 'EARN_REWARD',
-                          memo: 'Welcome bonus for completing profile setup',
-                          event_id: eventId
-                        }
-                      });
-                      walletSuccess = true;
-                      console.log('GGG welcome bonus awarded successfully on attempt', attempt);
-                    } catch (walletErr) {
-                      console.warn(`GGG token award attempt ${attempt} failed:`, walletErr?.message || walletErr);
-                      if (attempt === 3) {
-                        // Final attempt failed - update profile balance directly as fallback
-                        console.warn('All wallet attempts failed, updating profile balance directly');
-                        await base44.entities.UserProfile.update(profileToUpdate.id, {
-                          ggg_balance: (profileToUpdate.ggg_balance || 0) + gggAmount
-                        });
-                      }
-                    }
-                  }
-                }
-              } catch (walletErr) {
-                console.error('GGG token award failed completely:', walletErr);
               }
 
               // Create Starter Mission Quest for new users
