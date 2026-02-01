@@ -1457,20 +1457,20 @@ html[data-theme='hacker'] [role="button"] * {
   border-color: #333333 !important;
 }
 
-/* Hacker theme sidebar - transparent to show background effects */
+/* Hacker theme sidebar - SOLID black background, no transparency */
 [data-theme='hacker'] [data-sidebar],
 html[data-theme='hacker'] [data-sidebar] {
-  background-color: rgba(0, 0, 0, 0.75) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border-color: #00ff00 !important;
 }
 
-/* Dark theme sidebar - semi-transparent */
+/* Dark theme sidebar - SOLID dark background */
 [data-theme='dark'] [data-sidebar],
 html[data-theme='dark'] [data-sidebar] {
-  background-color: rgba(5, 5, 5, 0.85) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background-color: #050505 !important;
+  background: #050505 !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
 }
 
 /* Grey theme code blocks */
