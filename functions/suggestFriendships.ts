@@ -214,25 +214,14 @@ Deno.serve(async (req) => {
       candidates.sort((a, b) => b.score - a.score);
       const topCandidates = candidates.slice(0, limit);
 
-      // Create notifications for each suggestion
+      // Queue notifications for each suggestion (batch create later)
       for (const suggestion of topCandidates) {
-        // Check if we already sent this suggestion recently (within 7 days)
-        const existingNotifications = await base44.asServiceRole.entities.Notification.filter({
-          user_id: userId,
-          type: 'friendship_suggestion',
-          'metadata.suggested_user_id': suggestion.candidateId
-        }, '-created_date', 1);
-
-        const recentlySent = existingNotifications.some(n => {
-          const created = new Date(n.created_date);
-          const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-          return created > weekAgo;
-        });
-
-        if (!recentlySent) {
-          await base44.asServiceRole.entities.Notification.create({
+        const suggestionKey = `${userId}:${suggestion.candidateId}`;
+        
+        if (!recentSuggestionKeys.has(suggestionKey)) {
+          notificationsToCreate.push({
             user_id: userId,
-            type: 'follow', // Using existing type that displays well
+            type: 'follow',
             title: 'People You May Know',
             message: `${suggestion.candidateName}: ${suggestion.topReason}`,
             action_url: `/Profile?id=${encodeURIComponent(suggestion.candidateId)}`,
@@ -255,8 +244,16 @@ Deno.serve(async (req) => {
             score: suggestion.score,
             reasons: suggestion.reasons
           });
+          
+          // Mark as sent to avoid duplicates in this batch
+          recentSuggestionKeys.add(suggestionKey);
         }
       }
+    }
+    
+    // Batch create notifications
+    if (notificationsToCreate.length > 0) {
+      await base44.asServiceRole.entities.Notification.bulkCreate(notificationsToCreate);
     }
 
     return Response.json({
