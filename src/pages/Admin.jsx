@@ -29,6 +29,7 @@ import EmailNewsletterManager from '@/components/admin/EmailNewsletterManager';
 import NewsletterAnalyticsDashboard from '@/components/admin/NewsletterAnalyticsDashboard';
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
 import MasterActivityLog from '@/components/admin/MasterActivityLog';
+import GGGTotalsTab from '@/components/admin/GGGTotalsTab';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -169,6 +170,10 @@ export default function Admin() {
               <Eye className="w-4 h-4" />
               Master Log
             </TabsTrigger>
+            <TabsTrigger value="ggg-totals" className="gap-2 px-3 py-2">
+              <Coins className="w-4 h-4" />
+              GGG Totals
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -279,6 +284,10 @@ export default function Admin() {
 
           <TabsContent value="master-log">
             <MasterActivityLog />
+          </TabsContent>
+
+          <TabsContent value="ggg-totals">
+            <GGGTotalsTab />
           </TabsContent>
         </Tabs>
       </div>
