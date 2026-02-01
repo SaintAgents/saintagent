@@ -65,6 +65,19 @@ export default function GGGTotalsTab() {
     queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
   });
 
+  // Fetch all GGG reward rules to show all action types
+  const { data: rewardRules = [] } = useQuery({
+    queryKey: ['gggRewardRulesAdmin'],
+    queryFn: () => base44.entities.GGGRewardRule.list(),
+  });
+
+  // Filter out demo users (emails ending in @demo.sa)
+  const isDemoUser = (userId) => userId?.includes('@demo.sa') || userId?.includes('@demo.');
+  
+  const realUserTransactions = React.useMemo(() => {
+    return gggTransactions.filter(tx => !isDemoUser(tx.user_id));
+  }, [gggTransactions]);
+
   const profileMap = React.useMemo(() => {
     const map = {};
     profiles.forEach(p => { map[p.user_id] = p; });
@@ -83,12 +96,29 @@ export default function GGGTotalsTab() {
     }
   };
 
-  // Group transactions by action/reason_code
+  // Group transactions by action/reason_code - exclude demo users
   const actionSummaries = React.useMemo(() => {
     const dateFilter = getDateFilter();
     const actionMap = {};
 
-    gggTransactions
+    // First, initialize all action types from reward rules (so they show even with 0 activity)
+    rewardRules.forEach(rule => {
+      if (rule.action_type && !actionMap[rule.action_type]) {
+        actionMap[rule.action_type] = {
+          action_type: rule.action_type,
+          total_earned: 0,
+          total_spent: 0,
+          transaction_count: 0,
+          users: {},
+          transactions: [],
+          ggg_amount: rule.ggg_amount,
+          category: rule.category,
+        };
+      }
+    });
+
+    // Then process real user transactions only (filter out demo users)
+    realUserTransactions
       .filter(tx => new Date(tx.created_date) >= dateFilter)
       .forEach(tx => {
         const actionType = tx.reason_code || tx.source_type || 'unknown';
@@ -136,12 +166,12 @@ export default function GGGTotalsTab() {
       : actions;
 
     return filtered.sort((a, b) => b.total_earned - a.total_earned);
-  }, [gggTransactions, dateRange, searchQuery, profileMap]);
+  }, [realUserTransactions, rewardRules, dateRange, searchQuery, profileMap]);
 
-  // Calculate totals
+  // Calculate totals - exclude demo users
   const totals = React.useMemo(() => {
     const dateFilter = getDateFilter();
-    const filtered = gggTransactions.filter(tx => new Date(tx.created_date) >= dateFilter);
+    const filtered = realUserTransactions.filter(tx => new Date(tx.created_date) >= dateFilter);
     
     return {
       totalEarned: filtered.filter(t => t.delta > 0).reduce((s, t) => s + t.delta, 0),
@@ -149,7 +179,7 @@ export default function GGGTotalsTab() {
       transactionCount: filtered.length,
       uniqueUsers: new Set(filtered.map(t => t.user_id)).size,
     };
-  }, [gggTransactions, dateRange]);
+  }, [realUserTransactions, dateRange]);
 
   const formatGGG = (val) => {
     if (val === 0) return '0';
