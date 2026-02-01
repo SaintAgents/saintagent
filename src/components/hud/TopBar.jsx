@@ -869,15 +869,6 @@ export default function TopBar({
               </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : currentUser && !profile ? (
-          // User logged in but profile still loading - show loading avatar
-          <div className="flex items-center gap-2">
-            <Avatar className="w-7 h-7 md:w-8 md:h-8 animate-pulse">
-              <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                {currentUser?.full_name?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-          </div>
         ) : (
           <div className="flex items-center gap-2">
             <Button 
