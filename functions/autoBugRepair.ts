@@ -79,24 +79,25 @@ Respond in JSON format:
           parsedAnalysis = { summary: analysisText, can_auto_fix: false };
         }
 
-        // Update the bug report with analysis
-        const adminNotes = `
-**AI Analysis & Auto-Repair (${new Date().toISOString()})**
-Summary: ${parsedAnalysis.summary || 'N/A'}
-Likely Cause: ${parsedAnalysis.likely_cause || 'N/A'}
-Suggested Fix: ${parsedAnalysis.suggested_fix || 'N/A'}
-Severity Assessment: ${parsedAnalysis.severity_assessment || bug.severity}
-Auto-fixable: ${parsedAnalysis.can_auto_fix ? 'Yes' : 'No'}
-${parsedAnalysis.auto_fix_notes ? `Notes: ${parsedAnalysis.auto_fix_notes}` : ''}
-
-✅ MARKED AS RESOLVED BY AUTO-REPAIR SYSTEM
-        `.trim();
-
-        // Mark as resolved since it's been analyzed and logged
+        // Update the bug report with analysis - set to in_progress for manual review
         await base44.asServiceRole.entities.BetaFeedback.update(bug.id, {
-          status: 'resolved',
+          status: 'in_progress',
           severity: parsedAnalysis.severity_assessment || bug.severity,
-          admin_notes: adminNotes
+          admin_notes: bug.admin_notes || '',
+          ai_analysis: JSON.stringify(parsedAnalysis),
+          repair_checklist: JSON.stringify({
+            analyzed: true,
+            analyzed_at: new Date().toISOString(),
+            fix_implemented: false,
+            fix_implemented_at: null,
+            fix_implemented_by: null,
+            tested: false,
+            tested_at: null,
+            tested_by: null,
+            confirmed_fixed: false,
+            confirmed_at: null,
+            confirmed_by: null
+          })
         });
 
         // Log to audit
