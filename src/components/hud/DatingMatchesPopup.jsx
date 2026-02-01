@@ -250,10 +250,38 @@ export default function DatingMatchesPopup({ currentUser }) {
   const usedFemaleIdx = new Set();
 
   // Build enriched matches from existing Match records first, then fall back to dating profiles
-  const matchesToEnrich = hasExistingMatches 
-    ? existingMatches.map(m => {
+  // IMPORTANT: Also filter existing matches by gender preference!
+  const filteredExistingMatches = hasExistingMatches 
+    ? existingMatches.filter(m => {
+        // Find the dating profile for this match target to check their gender
+        const targetDatingProfile = datingProfiles.find(dp => dp.user_id === m.target_id);
+        const candidateGender = targetDatingProfile?.gender;
+        
+        // If we can't find their gender, reject them to be safe
+        if (!candidateGender) {
+          console.log(`[Existing Match Filter] Rejected ${m.target_id}: No dating profile/gender found`);
+          return false;
+        }
+        
+        // Check if I'm interested in their gender
+        if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
+          const candidateInterestKey = genderToInterest[candidateGender];
+          if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
+            console.log(`[Existing Match Filter] Rejected ${m.target_id}: I want ${myInterestedIn.join(',')}, they are ${candidateGender}`);
+            return false;
+          }
+        }
+        
+        console.log(`[Existing Match Filter] ACCEPTED ${m.target_id}: gender=${candidateGender}`);
+        return true;
+      })
+    : [];
+    
+  const matchesToEnrich = filteredExistingMatches.length > 0
+    ? filteredExistingMatches.map(m => {
         // Find user profile for this match target
         const userProfile = userProfiles.find(up => up.user_id === m.target_id);
+        const targetDatingProfile = datingProfiles.find(dp => dp.user_id === m.target_id);
         return {
           user_id: m.target_id,
           display_name: m.target_name || userProfile?.display_name,
@@ -268,7 +296,8 @@ export default function DatingMatchesPopup({ currentUser }) {
           conversation_starters: m.conversation_starters,
           shared_values: m.shared_values,
           spiritual_synergies: m.spiritual_synergies,
-          from_match_entity: true
+          from_match_entity: true,
+          gender: targetDatingProfile?.gender
         };
       })
     : otherProfiles;
