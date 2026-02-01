@@ -46,6 +46,7 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ModeCard from '@/components/hud/ModeCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
 import AIDiscoverMatches from '@/components/ai/AIDiscoverMatches';
+import ActivityBasedMatcher from '@/components/ai/ActivityBasedMatcher';
 import LeaderPathway from '@/components/leader/LeaderPathway';
 import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import HelpHint from '@/components/hud/HelpHint';
@@ -1784,7 +1785,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
           <div className="block space-y-6 mt-6">
             {isCardVisible('aiDiscover') && <CollapsibleCard title={<span className="flex items-center gap-1">AI Discover <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
-              <AIDiscoverMatches profile={profile} />
+              <div className="space-y-4">
+                <AIDiscoverMatches profile={profile} />
+                <ActivityBasedMatcher profile={profile} compact={true} />
+              </div>
             </CollapsibleCard>}
 
             {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel}>
