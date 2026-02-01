@@ -991,7 +991,10 @@ export default function Sidebar({
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col transition-all duration-300",
+      "fixed left-0 top-0 h-screen border-r z-50 flex flex-col transition-all duration-300",
+      "bg-white border-slate-200",
+      "dark:bg-[#050505] dark:border-[rgba(0,255,136,0.2)]",
+      "[data-theme='hacker']_&:bg-black [data-theme='hacker']_&:border-[#00ff00]",
       isCollapsed ? "w-16" : "w-64",
       "hidden md:flex" // Hide sidebar on mobile
     )} data-sidebar>
