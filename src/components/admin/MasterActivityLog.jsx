@@ -364,8 +364,8 @@ export default function MasterActivityLog() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-emerald-600 font-medium">GGG Earned (7d)</p>
-                <p className="text-2xl font-bold text-emerald-700">{stats.weekGGGEarned.toLocaleString()}</p>
-                <p className="text-xs text-emerald-500">Today: +{stats.todayGGGEarned}</p>
+                <p className="text-2xl font-bold text-emerald-700">{stats.weekGGGEarned < 1 ? stats.weekGGGEarned.toFixed(4) : stats.weekGGGEarned.toLocaleString()}</p>
+                <p className="text-xs text-emerald-500">Today: +{stats.todayGGGEarned < 1 ? stats.todayGGGEarned.toFixed(4) : stats.todayGGGEarned}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-emerald-400" />
             </div>
@@ -377,8 +377,8 @@ export default function MasterActivityLog() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-rose-600 font-medium">GGG Spent (7d)</p>
-                <p className="text-2xl font-bold text-rose-700">{stats.weekGGGSpent.toLocaleString()}</p>
-                <p className="text-xs text-rose-500">Today: -{stats.todayGGGSpent}</p>
+                <p className="text-2xl font-bold text-rose-700">{stats.weekGGGSpent < 1 ? stats.weekGGGSpent.toFixed(4) : stats.weekGGGSpent.toLocaleString()}</p>
+                <p className="text-xs text-rose-500">Today: -{stats.todayGGGSpent < 1 ? stats.todayGGGSpent.toFixed(4) : stats.todayGGGSpent}</p>
               </div>
               <TrendingDown className="w-8 h-8 text-rose-400" />
             </div>
