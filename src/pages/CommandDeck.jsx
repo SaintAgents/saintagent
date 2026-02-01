@@ -911,7 +911,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   }
 
   return (
-  <div className="min-h-screen cmd-deck-bg pb-20 w-full max-w-full overflow-x-hidden m-0 p-0">
+  <div className="min-h-screen cmd-deck-bg pb-32 md:pb-20 w-full max-w-full overflow-x-hidden m-0 p-0">
     <div className={cn(
       "transition-all duration-300 pb-8 w-full",
       sidePanelOpen ? "md:pr-80" : "md:pr-0",

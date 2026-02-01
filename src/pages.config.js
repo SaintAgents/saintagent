@@ -56,6 +56,7 @@ import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import CommunityFeed from './pages/CommunityFeed';
+import CourseDetail from './pages/CourseDetail';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
 import EvaluationDocs from './pages/EvaluationDocs';
@@ -75,6 +76,7 @@ import Join from './pages/Join';
 import Landing from './pages/Landing';
 import LeaderChannel from './pages/LeaderChannel';
 import Leaderboards from './pages/Leaderboards';
+import LearningHub from './pages/LearningHub';
 import ListingDetail from './pages/ListingDetail';
 import Lottery from './pages/Lottery';
 import Marketplace from './pages/Marketplace';
@@ -108,8 +110,6 @@ import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import LearningHub from './pages/LearningHub';
-import CourseDetail from './pages/CourseDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -123,6 +123,7 @@ export const PAGES = {
     "Circles": Circles,
     "CommandDeck": CommandDeck,
     "CommunityFeed": CommunityFeed,
+    "CourseDetail": CourseDetail,
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
     "EvaluationDocs": EvaluationDocs,
@@ -142,6 +143,7 @@ export const PAGES = {
     "Landing": Landing,
     "LeaderChannel": LeaderChannel,
     "Leaderboards": Leaderboards,
+    "LearningHub": LearningHub,
     "ListingDetail": ListingDetail,
     "Lottery": Lottery,
     "Marketplace": Marketplace,
@@ -175,8 +177,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "LearningHub": LearningHub,
-    "CourseDetail": CourseDetail,
 }
 
 export const pagesConfig = {
