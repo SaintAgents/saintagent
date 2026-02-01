@@ -520,11 +520,11 @@ export default function MasterActivityLog() {
                     {activity.amount !== undefined && activity.amount !== null && (
                       <div className={`text-right shrink-0 ${activity.amount > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         <p className="font-bold text-sm">
-                          {activity.amount > 0 ? '+' : ''}{activity.amount} GGG
+                          {activity.amount > 0 ? '+' : ''}{activity.amount < 1 ? activity.amount.toFixed(4) : activity.amount.toLocaleString()} GGG
                         </p>
                         {activity.balance_after !== undefined && (
                           <p className="text-xs text-slate-400">
-                            Balance: {activity.balance_after}
+                            Balance: {activity.balance_after < 1 ? activity.balance_after.toFixed(4) : activity.balance_after.toLocaleString()}
                           </p>
                         )}
                       </div>
