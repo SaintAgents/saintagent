@@ -209,14 +209,20 @@ export default function DatingMatchesPopup({ currentUser }) {
     
     // STRICT: Candidate MUST have a valid gender set
     const candidateGender = p.gender;
-    if (!candidateGender || candidateGender === '') return false;
+    if (!candidateGender || candidateGender === '') {
+      console.log(`[Dating Filter] Rejected ${p.user_id}: No gender set`);
+      return false;
+    }
     
-    // I must be interested in their gender
+    // STRICT: I must be interested in their gender - NO EXCEPTIONS
     if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
-      const candidateGender = p.gender;
-      if (!candidateGender) return false;
       const candidateInterestKey = genderToInterest[candidateGender];
-      if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
+      if (!candidateInterestKey) {
+        console.log(`[Dating Filter] Rejected ${p.user_id}: Unknown gender "${candidateGender}"`);
+        return false;
+      }
+      if (!myInterestedIn.includes(candidateInterestKey)) {
+        console.log(`[Dating Filter] Rejected ${p.user_id}: I want ${myInterestedIn.join(',')}, they are ${candidateGender} (${candidateInterestKey})`);
         return false;
       }
     }
@@ -226,10 +232,12 @@ export default function DatingMatchesPopup({ currentUser }) {
     if (myGender && theirInterestedIn.length > 0 && !theirInterestedIn.includes('all')) {
       const myInterestKey = genderToInterest[myGender];
       if (!myInterestKey || !theirInterestedIn.includes(myInterestKey)) {
+        console.log(`[Dating Filter] Rejected ${p.user_id}: They want ${theirInterestedIn.join(',')}, I am ${myGender}`);
         return false;
       }
     }
     
+    console.log(`[Dating Filter] ACCEPTED ${p.user_id}: gender=${candidateGender}, I want=${myInterestedIn.join(',')}`);
     return true;
   });
 

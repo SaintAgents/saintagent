@@ -107,12 +107,21 @@ export default function MastersMessagesTicker() {
   
   return (
     <div className="flex-1 overflow-hidden mx-2 md:mx-4 min-w-0">
-      <div className="flex items-center gap-2">
-        <span className="text-xs font-semibold text-violet-600 dark:text-violet-400 whitespace-nowrap">{current.master}:</span>
-        <div className="text-xs text-slate-600 dark:text-violet-300 italic overflow-x-auto whitespace-nowrap scrollbar-hide md:truncate" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="flex items-center gap-2 animate-marquee">
+        <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap">{current.master}:</span>
+        <div className="text-xs text-slate-700 dark:text-amber-200 italic whitespace-nowrap">
           "{current.text}"
         </div>
       </div>
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
