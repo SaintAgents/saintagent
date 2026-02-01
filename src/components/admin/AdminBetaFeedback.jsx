@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import BugRepairChecklist from './BugRepairChecklist';
 
 const TYPE_CONFIG = {
   bug: { icon: Bug, color: 'bg-red-100 text-red-700', label: 'Bug' },
