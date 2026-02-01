@@ -108,6 +108,8 @@ import Terms from './pages/Terms';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
+import LearningHub from './pages/LearningHub';
+import CourseDetail from './pages/CourseDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -173,6 +175,8 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
+    "LearningHub": LearningHub,
+    "CourseDetail": CourseDetail,
 }
 
 export const pagesConfig = {
