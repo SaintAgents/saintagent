@@ -8,7 +8,7 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news'],
+    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu) - excludes insights
     navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'gggcrypto', 'g3dex', 'settings']
   },
@@ -19,14 +19,14 @@ export const VIEW_MODE_CONFIG = {
       'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators',
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
-      'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos'
+      'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos', 'testimonials', 'heroGallery'
     ],
     navIds: null // null means show all nav items (includes authority144, topgggmission, videos)
   },
   custom: {
     label: 'Custom',
     description: 'Choose your features',
-    cards: ['insights', 'videos'], // Default includes insights and videos
+    cards: ['insights', 'videos', 'testimonials'], // Default includes insights, videos, and testimonials
     navIds: null // null means show all nav items
   }
 };
