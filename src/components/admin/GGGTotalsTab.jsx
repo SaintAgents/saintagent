@@ -101,6 +101,14 @@ export default function GGGTotalsTab() {
     const dateFilter = getDateFilter();
     const actionMap = {};
 
+    // Build rules lookup for base amounts
+    const rulesLookup = {};
+    rewardRules.forEach(rule => {
+      if (rule.action_type) {
+        rulesLookup[rule.action_type] = rule;
+      }
+    });
+
     // First, initialize all action types from reward rules (so they show even with 0 activity)
     rewardRules.forEach(rule => {
       if (rule.action_type && !actionMap[rule.action_type]) {
@@ -113,6 +121,7 @@ export default function GGGTotalsTab() {
           transactions: [],
           ggg_amount: rule.ggg_amount,
           category: rule.category,
+          base_amount: rule.ggg_amount,
         };
       }
     });
@@ -124,6 +133,8 @@ export default function GGGTotalsTab() {
         const actionType = tx.reason_code || tx.source_type || 'unknown';
         
         if (!actionMap[actionType]) {
+          // Look up base amount from rules
+          const rule = rulesLookup[actionType];
           actionMap[actionType] = {
             action_type: actionType,
             total_earned: 0,
@@ -131,6 +142,7 @@ export default function GGGTotalsTab() {
             transaction_count: 0,
             users: {},
             transactions: [],
+            base_amount: rule?.ggg_amount || null,
           };
         }
 
@@ -328,9 +340,16 @@ export default function GGGTotalsTab() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 text-sm">
-                        {action.action_type.replace(/_/g, ' ')}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-slate-900 text-sm">
+                          {action.action_type.replace(/_/g, ' ')}
+                        </p>
+                        {action.base_amount !== undefined && action.base_amount !== null && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-violet-50 text-violet-700 border-violet-200">
+                            Base: {formatGGG(action.base_amount)}
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-slate-500">
                         {action.transaction_count} transactions • {userCount} users
                       </p>
