@@ -123,6 +123,17 @@ export default function MasterActivityLog() {
     return map;
   }, [profiles]);
 
+  // Filter out demo users
+  const isDemoUser = (userId) => userId?.includes('@demo.sa') || userId?.includes('@demo.');
+  
+  const realUserGGGTransactions = React.useMemo(() => {
+    return gggTransactions.filter(tx => !isDemoUser(tx.user_id));
+  }, [gggTransactions]);
+  
+  const realUserProfiles = React.useMemo(() => {
+    return profiles.filter(p => !isDemoUser(p.user_id));
+  }, [profiles]);
+
   // Calculate date filter
   const getDateFilter = () => {
     const now = new Date();
@@ -135,13 +146,13 @@ export default function MasterActivityLog() {
     }
   };
 
-  // Build unified activity feed
+  // Build unified activity feed - exclude demo users
   const activityFeed = React.useMemo(() => {
     const activities = [];
     const dateFilter = getDateFilter();
 
-    // GGG Transactions
-    gggTransactions.forEach(tx => {
+    // GGG Transactions (real users only)
+    realUserGGGTransactions.forEach(tx => {
       const profile = profileMap[tx.user_id];
       activities.push({
         id: `ggg-${tx.id}`,
@@ -157,8 +168,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // Meetings
-    meetings.forEach(m => {
+    // Meetings (exclude demo users)
+    meetings.filter(m => !isDemoUser(m.host_id)).forEach(m => {
       const hostProfile = profileMap[m.host_id];
       const guestProfile = profileMap[m.guest_id];
       activities.push({
@@ -174,8 +185,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // Missions
-    missions.forEach(m => {
+    // Missions (exclude demo users)
+    missions.filter(m => !isDemoUser(m.creator_id)).forEach(m => {
       const profile = profileMap[m.creator_id];
       activities.push({
         id: `mission-${m.id}`,
@@ -190,8 +201,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // Bookings
-    bookings.forEach(b => {
+    // Bookings (exclude demo users)
+    bookings.filter(b => !isDemoUser(b.buyer_id)).forEach(b => {
       const buyerProfile = profileMap[b.buyer_id];
       activities.push({
         id: `booking-${b.id}`,
@@ -206,8 +217,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // New user registrations (from profiles created)
-    profiles.forEach(p => {
+    // New user registrations (from profiles created, exclude demo users)
+    realUserProfiles.forEach(p => {
       activities.push({
         id: `user-${p.id}`,
         type: 'user_joined',
@@ -219,8 +230,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // Audit Logs
-    auditLogs.forEach(log => {
+    // Audit Logs (exclude demo users)
+    auditLogs.filter(log => !isDemoUser(log.user_id)).forEach(log => {
       const profile = profileMap[log.user_id];
       activities.push({
         id: `audit-${log.id}`,
@@ -235,8 +246,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // Testimonials
-    testimonials.forEach(t => {
+    // Testimonials (exclude demo users)
+    testimonials.filter(t => !isDemoUser(t.from_user_id)).forEach(t => {
       activities.push({
         id: `testimonial-${t.id}`,
         type: 'testimonial_given',
@@ -249,8 +260,8 @@ export default function MasterActivityLog() {
       });
     });
 
-    // Boosts
-    boosts.forEach(b => {
+    // Boosts (exclude demo users)
+    boosts.filter(b => !isDemoUser(b.user_id)).forEach(b => {
       const profile = profileMap[b.user_id];
       activities.push({
         id: `boost-${b.id}`,
@@ -287,9 +298,9 @@ export default function MasterActivityLog() {
 
     // Sort by date descending
     return typed.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-  }, [gggTransactions, meetings, missions, bookings, profiles, auditLogs, testimonials, boosts, dateRange, searchQuery, filterType, profileMap]);
+  }, [realUserGGGTransactions, meetings, missions, bookings, realUserProfiles, auditLogs, testimonials, boosts, dateRange, searchQuery, filterType, profileMap]);
 
-  // Aggregate activities by user
+  // Aggregate activities by user - exclude demo users
   const userSummaries = React.useMemo(() => {
     const dateFilter = getDateFilter();
     const userMap = {};
@@ -297,8 +308,8 @@ export default function MasterActivityLog() {
     // Build full activity list (not filtered by search/type)
     const allActivities = [];
     
-    // GGG Transactions
-    gggTransactions.forEach(tx => {
+    // GGG Transactions (real users only)
+    realUserGGGTransactions.forEach(tx => {
       const profile = profileMap[tx.user_id];
       if (new Date(tx.created_date) >= dateFilter) {
         allActivities.push({
@@ -316,8 +327,8 @@ export default function MasterActivityLog() {
       }
     });
 
-    // Meetings
-    meetings.forEach(m => {
+    // Meetings (exclude demo users)
+    meetings.filter(m => !isDemoUser(m.host_id)).forEach(m => {
       if (new Date(m.created_date) >= dateFilter) {
         const hostProfile = profileMap[m.host_id];
         allActivities.push({
@@ -332,8 +343,8 @@ export default function MasterActivityLog() {
       }
     });
 
-    // Missions
-    missions.forEach(m => {
+    // Missions (exclude demo users)
+    missions.filter(m => !isDemoUser(m.creator_id)).forEach(m => {
       if (new Date(m.created_date) >= dateFilter) {
         const profile = profileMap[m.creator_id];
         allActivities.push({
@@ -348,8 +359,8 @@ export default function MasterActivityLog() {
       }
     });
 
-    // Bookings
-    bookings.forEach(b => {
+    // Bookings (exclude demo users)
+    bookings.filter(b => !isDemoUser(b.buyer_id)).forEach(b => {
       if (new Date(b.created_date) >= dateFilter) {
         const buyerProfile = profileMap[b.buyer_id];
         allActivities.push({
@@ -364,8 +375,8 @@ export default function MasterActivityLog() {
       }
     });
 
-    // Messages
-    messages.forEach(m => {
+    // Messages (exclude demo users)
+    messages.filter(m => !isDemoUser(m.from_user_id)).forEach(m => {
       if (new Date(m.created_date) >= dateFilter) {
         const profile = profileMap[m.from_user_id];
         allActivities.push({
@@ -380,8 +391,8 @@ export default function MasterActivityLog() {
       }
     });
 
-    // Testimonials
-    testimonials.forEach(t => {
+    // Testimonials (exclude demo users)
+    testimonials.filter(t => !isDemoUser(t.from_user_id)).forEach(t => {
       if (new Date(t.created_date) >= dateFilter) {
         allActivities.push({
           id: `testimonial-${t.id}`,
@@ -395,8 +406,8 @@ export default function MasterActivityLog() {
       }
     });
 
-    // Boosts
-    boosts.forEach(b => {
+    // Boosts (exclude demo users)
+    boosts.filter(b => !isDemoUser(b.user_id)).forEach(b => {
       if (new Date(b.created_date) >= dateFilter) {
         const profile = profileMap[b.user_id];
         allActivities.push({
@@ -447,35 +458,38 @@ export default function MasterActivityLog() {
       : users;
 
     return filtered.sort((a, b) => b.total_activities - a.total_activities);
-  }, [gggTransactions, meetings, missions, bookings, messages, testimonials, boosts, profiles, dateRange, searchQuery, profileMap]);
+  }, [realUserGGGTransactions, meetings, missions, bookings, messages, testimonials, boosts, realUserProfiles, dateRange, searchQuery, profileMap]);
 
-  // Calculate stats
+  // Calculate stats - exclude demo users
   const stats = React.useMemo(() => {
     const now = new Date();
     const today = subDays(now, 1);
     const week = subDays(now, 7);
 
-    const todayGGGEarned = gggTransactions
+    const todayGGGEarned = realUserGGGTransactions
       .filter(t => t.delta > 0 && new Date(t.created_date) >= today)
       .reduce((sum, t) => sum + t.delta, 0);
 
-    const todayGGGSpent = gggTransactions
+    const todayGGGSpent = realUserGGGTransactions
       .filter(t => t.delta < 0 && new Date(t.created_date) >= today)
       .reduce((sum, t) => sum + Math.abs(t.delta), 0);
 
-    const weekGGGEarned = gggTransactions
+    const weekGGGEarned = realUserGGGTransactions
       .filter(t => t.delta > 0 && new Date(t.created_date) >= week)
       .reduce((sum, t) => sum + t.delta, 0);
 
-    const weekGGGSpent = gggTransactions
+    const weekGGGSpent = realUserGGGTransactions
       .filter(t => t.delta < 0 && new Date(t.created_date) >= week)
       .reduce((sum, t) => sum + Math.abs(t.delta), 0);
 
-    const newUsersToday = profiles.filter(p => new Date(p.created_date) >= today).length;
-    const newUsersWeek = profiles.filter(p => new Date(p.created_date) >= week).length;
+    const newUsersToday = realUserProfiles.filter(p => new Date(p.created_date) >= today).length;
+    const newUsersWeek = realUserProfiles.filter(p => new Date(p.created_date) >= week).length;
 
-    const meetingsToday = meetings.filter(m => new Date(m.created_date) >= today).length;
-    const messagesWeek = messages.filter(m => new Date(m.created_date) >= week).length;
+    const realMeetings = meetings.filter(m => !isDemoUser(m.host_id));
+    const realMessages = messages.filter(m => !isDemoUser(m.from_user_id));
+    
+    const meetingsToday = realMeetings.filter(m => new Date(m.created_date) >= today).length;
+    const messagesWeek = realMessages.filter(m => new Date(m.created_date) >= week).length;
 
     return {
       todayGGGEarned,
@@ -486,9 +500,9 @@ export default function MasterActivityLog() {
       newUsersWeek,
       meetingsToday,
       messagesWeek,
-      totalTransactions: gggTransactions.length,
+      totalTransactions: realUserGGGTransactions.length,
     };
-  }, [gggTransactions, profiles, meetings, messages]);
+  }, [realUserGGGTransactions, realUserProfiles, meetings, messages]);
 
   const handleRefresh = () => {
     refetchGGG();
