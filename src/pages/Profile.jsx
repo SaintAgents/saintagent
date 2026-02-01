@@ -932,7 +932,7 @@ export default function Profile() {
             {/* Intentions */}
             <CollapsibleProfileCard 
               title="Intentions" 
-              headerClassName="dark:bg-[#050505]"
+              headerClassName="bg-purple-100 dark:bg-[#050505]"
               headerContent={isOwnProfile ? (
                       !editingIntentions ?
                       <Button
@@ -962,7 +962,7 @@ export default function Profile() {
                       </div>
                       ) : null}
             >
-                  <div className="dark:bg-[#050505]">
+                  <div className="bg-purple-100 dark:bg-[#050505] p-4 rounded-b-xl">
                 {editingIntentions ?
                     <div className="space-y-3">
                     <div className="flex gap-2">
@@ -998,7 +998,7 @@ export default function Profile() {
                       </Badge>
                       )}
                     {(!profile?.intentions || profile.intentions.length === 0) &&
-                      <p className="text-slate-400 dark:!text-[#a0a0a0]">No intentions set</p>
+                      <p className="text-slate-500 dark:!text-[#a0a0a0]">No intentions set</p>
                       }
                   </div>
                     }
