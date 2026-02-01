@@ -354,12 +354,12 @@ export default function AdminBetaFeedback() {
 
                 {/* Admin Notes */}
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-1">Admin Notes</h4>
+                  <h4 className="font-medium text-slate-900 mb-1">Admin Notes / AI Analysis</h4>
                   <Textarea
                     placeholder="Add internal notes..."
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    className="min-h-20"
+                    className="min-h-32 font-mono text-sm"
                   />
                   <Button 
                     size="sm" 
