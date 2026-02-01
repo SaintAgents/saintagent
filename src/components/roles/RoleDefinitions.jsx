@@ -1,9 +1,8 @@
-import React from 'react';
-
-// Rank codes in order of progression
-export const RANK_CODES = ['seeker', 'initiate', 'adept', 'practitioner', 'master', 'sage', 'oracle', 'ascended', 'guardian'];
+// Rank order for comparison
+export const RANK_ORDER = ['seeker', 'initiate', 'adept', 'practitioner', 'master', 'sage', 'oracle', 'ascended', 'guardian'];
 
 export const ROLE_ORDER = [
+  'member',
   'contributor',
   'moderator',
   'guardian_role',
@@ -15,6 +14,21 @@ export const ROLE_ORDER = [
 ];
 
 const ROLE_DEFS = {
+  member: {
+    title: 'Member',
+    who: 'All registered users',
+    purpose: 'Participation',
+    capabilities: [
+      'Create and manage profile',
+      'Earn rank progression',
+      'Submit content, prompts, or actions',
+      'Engage with features based on rank'
+    ],
+    notes: 'Automatically granted upon registration',
+    min_rank: null,
+    requestable: false,
+    admin_only: false
+  },
   contributor: {
     title: 'Contributor',
     who: 'Trusted members with consistent participation',
@@ -25,9 +39,10 @@ const ROLE_DEFS = {
       'Participate in structured discussions',
       'Assist lower-rank users'
     ],
-    minRank: 'adept',
+    notes: 'Request at Adept+; admin approval required',
+    min_rank: 'adept',
     requestable: true,
-    notes: 'Requires Adept rank or higher to request'
+    admin_only: false
   },
   moderator: {
     title: 'Moderator',
@@ -39,9 +54,10 @@ const ROLE_DEFS = {
       'Flag issues for escalation',
       'Temporarily restrict actions (timeouts, warnings)'
     ],
-    minRank: 'master',
+    notes: 'Request at Master+; admin approval required',
+    min_rank: 'master',
     requestable: true,
-    notes: 'Requires Master rank or higher to request'
+    admin_only: false
   },
   guardian_role: {
     title: 'Guardian (Role)',
@@ -53,9 +69,10 @@ const ROLE_DEFS = {
       'Safeguard platform values',
       'Final human judgment before Admin escalation'
     ],
-    minRank: 'sage',
-    requestable: true,
-    notes: 'Requires Sage rank or higher; distinct from Guardian rank'
+    notes: 'Admin assignment only; Sage+ recommended',
+    min_rank: 'sage',
+    requestable: false,
+    admin_only: true
   },
   reviewer: {
     title: 'Reviewer',
@@ -67,9 +84,10 @@ const ROLE_DEFS = {
       'Participate in governance workflows',
       'Flag ethical or technical issues'
     ],
-    minRank: 'practitioner',
+    notes: 'Request at Practitioner+; admin approval required',
+    min_rank: 'practitioner',
     requestable: true,
-    notes: 'Requires Practitioner rank or higher'
+    admin_only: false
   },
   council_member: {
     title: 'Council Member',
@@ -81,9 +99,10 @@ const ROLE_DEFS = {
       'Resolve high-level disputes',
       'Approve major changes'
     ],
-    minRank: 'oracle',
+    notes: 'Invite-only; admin assignment only',
+    min_rank: 'oracle',
     requestable: false,
-    notes: 'Invite-only by admin. Requires Oracle rank or higher.'
+    admin_only: true
   },
   administrator: {
     title: 'Administrator',
@@ -95,9 +114,10 @@ const ROLE_DEFS = {
       'Deploy updates',
       'Access logs and infrastructure tools'
     ],
-    minRank: null,
+    notes: 'Admin assignment only',
+    min_rank: null,
     requestable: false,
-    notes: 'Admin-assigned only. Technical power, not rank superiority.'
+    admin_only: true
   },
   architect: {
     title: 'Architect',
@@ -108,9 +128,10 @@ const ROLE_DEFS = {
       'Define schemas, logic, or models',
       'Influence long-term platform architecture'
     ],
-    minRank: 'ascended',
+    notes: 'Admin assignment only; Ascended+ recommended',
+    min_rank: 'ascended',
     requestable: false,
-    notes: 'Admin-assigned only. Requires Ascended rank or higher.'
+    admin_only: true
   },
   founder_custodian: {
     title: 'Founder / Custodian',
@@ -121,9 +142,11 @@ const ROLE_DEFS = {
       'Long-term guardianship',
       'Emergency override (rare, restrained)'
     ],
-    minRank: null,
+    notes: 'Non-assignable; reserved for platform originators',
+    min_rank: null,
     requestable: false,
-    notes: 'Admin-assigned only. Reserved for platform founders.'
+    admin_only: true,
+    locked: true
   }
 };
 
