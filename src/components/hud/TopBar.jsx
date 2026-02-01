@@ -710,10 +710,14 @@ export default function TopBar({
 
 
         {/* Profile Menu / Auth */}
-        {currentUser && profile ? (
+        {currentUser ? (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl">
+              <Button 
+                variant="ghost" 
+                className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl"
+                style={{ zIndex: 10001, pointerEvents: 'auto' }}
+              >
                 <div className={cn(
                   "relative",
                   isBoostActive && "animate-pulse"
@@ -726,10 +730,12 @@ export default function TopBar({
                     "w-7 h-7 md:w-8 md:h-8 relative",
                     isBoostActive && "ring-2 ring-amber-400 ring-offset-2 ring-offset-white"
                   )}>
-                    <AvatarImage 
-                      src={profile?.avatar_url || ''} 
-                      alt={profile?.display_name || ''} 
-                    />
+                    {profile?.avatar_url && (
+                      <AvatarImage 
+                        src={profile.avatar_url} 
+                        alt={profile?.display_name || ''} 
+                      />
+                    )}
                     <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
                       {(profile?.display_name || currentUser?.full_name || 'U').charAt(0)}
                     </AvatarFallback>
