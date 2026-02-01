@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Coins, RefreshCw } from 'lucide-react';
+import { Coins, RefreshCw, Zap } from 'lucide-react';
 
 export default function PlatformSettings() {
   const qc = useQueryClient();
@@ -32,6 +32,9 @@ export default function PlatformSettings() {
     synchronicity_engine_enabled: true,
     mission_reward_cap_usd: 55,
     mission_cap_override_emails: [],
+    beta_bonus_active: false,
+    beta_bonus_multiplier: 2,
+    beta_bonus_end_time: '',
   });
 
   const [overrideEmailInput, setOverrideEmailInput] = React.useState('');
@@ -192,6 +195,60 @@ export default function PlatformSettings() {
               <Input value={form.announcement_banner} onChange={(e) => handleChange('announcement_banner', e.target.value)} placeholder="Optional announcement shown across the app" />
             </div>
             <ToggleRow label="Maintenance Mode" value={form.maintenance_mode} onChange={(v) => handleChange('maintenance_mode', v)} />
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2 border-amber-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-500" />
+              Beta Bonus Period
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-lg border bg-amber-50">
+              <div>
+                <p className="text-sm font-medium text-slate-700">Bonus Test Period</p>
+                <p className="text-xs text-slate-500">When active, feedback rewards are multiplied</p>
+              </div>
+              <Switch 
+                checked={!!form.beta_bonus_active} 
+                onCheckedChange={(v) => handleChange('beta_bonus_active', v)} 
+              />
+            </div>
+            {form.beta_bonus_active && (
+              <>
+                <div>
+                  <Label>Reward Multiplier</Label>
+                  <Input 
+                    type="number" 
+                    step="0.5"
+                    min="1"
+                    max="10"
+                    value={form.beta_bonus_multiplier || 2} 
+                    onChange={(e) => handleChange('beta_bonus_multiplier', parseFloat(e.target.value) || 2)} 
+                    placeholder="2"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Feedback rewards × this multiplier (default: 2x = 0.06 GGG)</p>
+                </div>
+                <div>
+                  <Label>Bonus End Time (optional)</Label>
+                  <Input 
+                    type="datetime-local"
+                    value={form.beta_bonus_end_time ? form.beta_bonus_end_time.slice(0, 16) : ''} 
+                    onChange={(e) => handleChange('beta_bonus_end_time', e.target.value ? new Date(e.target.value).toISOString() : '')} 
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Leave empty for no automatic end</p>
+                </div>
+              </>
+            )}
+            {current?.beta_last_period_earnings > 0 && (
+              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                <p className="text-xs text-emerald-600 font-medium">Last Period Stats</p>
+                <p className="text-lg font-bold text-emerald-700">{current.beta_last_period_earnings?.toFixed(2)} GGG earned</p>
+                <p className="text-xs text-emerald-600">{current.beta_last_period_feedback_count || 0} feedback submissions</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
