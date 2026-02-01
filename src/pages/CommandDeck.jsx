@@ -71,71 +71,6 @@ import { Newspaper, Image } from 'lucide-react';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
-import { ChevronUp, ChevronDown, MessageSquare, Settings, Sliders } from 'lucide-react';
-
-// Bottom expandable section component
-function BottomExpandSection({ onQuickCreate, onTuneEngine, onOnlineUsers }) {
-  const [expanded, setExpanded] = React.useState(false);
-  
-  return (
-    <div className={cn(
-      "fixed left-0 right-0 z-50 transition-all duration-300",
-      "bottom-16 md:bottom-0", // Above mobile tab bar on mobile, at bottom on desktop
-      "md:left-16 lg:left-64" // Account for sidebar on desktop
-    )}>
-      {/* Chevron handle - always visible */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className={cn(
-          "w-full h-10 flex items-center justify-center gap-2",
-          "bg-gradient-to-t from-violet-600 to-violet-500 dark:from-violet-800 dark:to-violet-700",
-          "border-t border-violet-400 dark:border-violet-600",
-          "hover:from-violet-700 hover:to-violet-600 dark:hover:from-violet-700 transition-colors",
-          "shadow-lg"
-        )}
-      >
-        {expanded ? (
-          <ChevronDown className="w-5 h-5 text-white" />
-        ) : (
-          <>
-            <ChevronUp className="w-5 h-5 text-white" />
-            <span className="text-white text-sm font-medium">Quick Actions</span>
-          </>
-        )}
-      </button>
-      
-      {/* Expanded content */}
-      <div className={cn(
-        "bg-white/98 dark:bg-slate-900/98 backdrop-blur-md border-t border-slate-200 dark:border-slate-700 shadow-2xl transition-all duration-300 overflow-hidden",
-        expanded ? "max-h-40 py-4 px-4" : "max-h-0 py-0"
-      )}>
-        <div className="flex items-center justify-center gap-3 flex-wrap">
-          <Button size="sm" className="bg-violet-600 hover:bg-violet-700 rounded-lg gap-2" onClick={onQuickCreate}>
-            <Plus className="w-4 h-4" />
-            Quick Create
-          </Button>
-          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={onTuneEngine}>
-            <Sliders className="w-4 h-4" />
-            Tune Engine
-          </Button>
-          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={onOnlineUsers}>
-            <Users className="w-4 h-4" />
-            Online Users
-          </Button>
-          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={() => window.location.href = createPageUrl('Messages')}>
-            <MessageSquare className="w-4 h-4" />
-            Messages
-          </Button>
-          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={() => window.location.href = createPageUrl('Settings')}>
-            <Settings className="w-4 h-4" />
-            Settings
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -2132,13 +2067,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         
         {/* Command Deck Tour */}
         <CommandDeckTour autoStart={showTour} onComplete={handleTourComplete} />
-        
-        {/* Bottom Expandable Section */}
-        <BottomExpandSection 
-          onQuickCreate={() => setQuickCreateOpen(true)}
-          onTuneEngine={() => setTuneEngineOpen(true)}
-          onOnlineUsers={() => setOnlineUsersOpen(true)}
-        />
       </div>
     </div>);
 
