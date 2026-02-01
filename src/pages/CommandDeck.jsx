@@ -71,6 +71,65 @@ import { Newspaper, Image } from 'lucide-react';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
+import { ChevronUp, ChevronDown, MessageSquare, Settings, Sliders } from 'lucide-react';
+
+// Bottom expandable section component
+function BottomExpandSection({ onQuickCreate, onTuneEngine, onOnlineUsers }) {
+  const [expanded, setExpanded] = React.useState(false);
+  
+  return (
+    <div className={cn(
+      "fixed bottom-0 left-0 right-0 z-40 transition-all duration-300",
+      "md:left-16 lg:left-64" // Account for sidebar
+    )}>
+      {/* Expanded content */}
+      <div className={cn(
+        "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-700 shadow-lg transition-all duration-300 overflow-hidden",
+        expanded ? "max-h-32 py-3 px-4" : "max-h-0 py-0"
+      )}>
+        <div className="flex items-center justify-center gap-3 flex-wrap">
+          <Button size="sm" className="bg-violet-600 hover:bg-violet-700 rounded-lg gap-2" onClick={onQuickCreate}>
+            <Plus className="w-4 h-4" />
+            Quick Create
+          </Button>
+          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={onTuneEngine}>
+            <Sliders className="w-4 h-4" />
+            Tune Engine
+          </Button>
+          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={onOnlineUsers}>
+            <Users className="w-4 h-4" />
+            Online Users
+          </Button>
+          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={() => window.location.href = createPageUrl('Messages')}>
+            <MessageSquare className="w-4 h-4" />
+            Messages
+          </Button>
+          <Button size="sm" variant="outline" className="rounded-lg gap-2" onClick={() => window.location.href = createPageUrl('Settings')}>
+            <Settings className="w-4 h-4" />
+            Settings
+          </Button>
+        </div>
+      </div>
+      
+      {/* Chevron handle */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className={cn(
+          "w-full h-8 flex items-center justify-center",
+          "bg-gradient-to-t from-violet-100 to-white/90 dark:from-slate-800 dark:to-slate-900/90",
+          "border-t border-slate-200 dark:border-slate-700",
+          "hover:from-violet-200 dark:hover:from-slate-700 transition-colors"
+        )}
+      >
+        {expanded ? (
+          <ChevronDown className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+        ) : (
+          <ChevronUp className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+        )}
+      </button>
+    </div>
+  );
+}
 
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
