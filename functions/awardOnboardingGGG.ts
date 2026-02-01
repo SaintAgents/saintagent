@@ -38,11 +38,18 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true, reason: 'Reward already granted' });
     }
     
-    // Fetch the GGG rule for finish_onboard
-    const rules = await base44.asServiceRole.entities.GGGRewardRule.filter({ 
-      action_type: 'finish_onboard', 
+    // Fetch the GGG rule for profile_completed (standardized name)
+    let rules = await base44.asServiceRole.entities.GGGRewardRule.filter({ 
+      action_type: 'profile_completed', 
       is_active: true 
     });
+    // Fallback to old name if not found
+    if (!rules?.length) {
+      rules = await base44.asServiceRole.entities.GGGRewardRule.filter({ 
+        action_type: 'finish_onboard', 
+        is_active: true 
+      });
+    }
     const gggAmount = rules?.[0]?.ggg_amount || 0.1122;
     
     if (gggAmount <= 0) {
@@ -109,7 +116,7 @@ Deno.serve(async (req) => {
       user_id: userId,
       source_type: 'reward',
       delta: gggAmount,
-      reason_code: 'finish_onboard',
+      reason_code: 'profile_completed',
       description: 'Completed onboarding profile setup',
       balance_after: newBalance,
     });
