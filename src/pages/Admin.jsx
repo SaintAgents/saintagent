@@ -165,6 +165,10 @@ export default function Admin() {
               <Activity className="w-4 h-4" />
               Audit Log
             </TabsTrigger>
+            <TabsTrigger value="master-log" className="gap-2 px-3 py-2">
+              <Eye className="w-4 h-4" />
+              Master Log
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -271,6 +275,10 @@ export default function Admin() {
 
           <TabsContent value="audit">
             <AdminAuditLog />
+          </TabsContent>
+
+          <TabsContent value="master-log">
+            <MasterActivityLog />
           </TabsContent>
         </Tabs>
       </div>
