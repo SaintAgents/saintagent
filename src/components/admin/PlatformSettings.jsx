@@ -223,13 +223,13 @@ export default function PlatformSettings() {
                   <Input 
                     type="number" 
                     step="0.5"
-                    min="1"
-                    max="10"
+                    min="2"
+                    max="5"
                     value={form.beta_bonus_multiplier || 2} 
-                    onChange={(e) => handleChange('beta_bonus_multiplier', parseFloat(e.target.value) || 2)} 
+                    onChange={(e) => handleChange('beta_bonus_multiplier', Math.min(5, Math.max(2, parseFloat(e.target.value) || 2)))} 
                     placeholder="2"
                   />
-                  <p className="text-xs text-slate-500 mt-1">Feedback rewards × this multiplier (default: 2x = 0.06 GGG)</p>
+                  <p className="text-xs text-slate-500 mt-1">Feedback rewards × this multiplier (2x-5x, e.g., 2x = 0.06 GGG)</p>
                 </div>
                 <div>
                   <Label>Bonus End Time (optional)</Label>
