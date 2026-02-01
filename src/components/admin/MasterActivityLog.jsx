@@ -637,74 +637,147 @@ export default function MasterActivityLog() {
           </div>
 
           <p className="text-sm text-slate-500 mb-3">
-            Showing {activityFeed.length} activities
+            Showing {userSummaries.length} users
           </p>
 
           <ScrollArea className="h-[600px]">
             <div className="space-y-2">
-              {activityFeed.map((activity) => {
-                const config = EVENT_TYPES[activity.type] || EVENT_TYPES.admin_action;
-                const Icon = config.icon;
+              {userSummaries.map((user) => (
+                <div
+                  key={user.user_id}
+                  onClick={() => setSelectedUser(user)}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-slate-100 cursor-pointer"
+                >
+                  <Avatar className="w-10 h-10 shrink-0">
+                    <AvatarImage src={user.user_avatar} />
+                    <AvatarFallback className="bg-slate-100 text-slate-600 text-sm">
+                      {user.user_name?.charAt(0) || '?'}
+                    </AvatarFallback>
+                  </Avatar>
 
-                return (
-                  <div
-                    key={activity.id}
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-slate-100"
-                  >
-                    <div className={`p-2 rounded-lg ${config.bg}`}>
-                      <Icon className={`w-4 h-4 ${config.color}`} />
-                    </div>
-
-                    <Avatar className="w-8 h-8 shrink-0">
-                      <AvatarImage src={activity.user_avatar} />
-                      <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
-                        {activity.user_name?.charAt(0) || '?'}
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-slate-900 text-sm">
-                          {activity.user_name}
-                        </span>
-                        <Badge variant="outline" className={`text-xs ${config.color}`}>
-                          {config.label}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-slate-600 truncate">
-                        {activity.description}
-                      </p>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {activity.created_date && formatDistanceToNow(parseISO(activity.created_date), { addSuffix: true })}
-                      </p>
-                    </div>
-
-                    {activity.amount !== undefined && activity.amount !== null && (
-                      <div className={`text-right shrink-0 ${activity.amount > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                        <p className="font-bold text-sm">
-                          {activity.amount > 0 ? '+' : ''}{activity.amount < 1 ? activity.amount.toFixed(4) : activity.amount.toLocaleString()} GGG
-                        </p>
-                        {activity.balance_after !== undefined && (
-                          <p className="text-xs text-slate-400">
-                            Balance: {activity.balance_after < 1 ? activity.balance_after.toFixed(4) : activity.balance_after.toLocaleString()}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-slate-900 text-sm truncate">
+                      {user.user_name}
+                    </p>
+                    <p className="text-xs text-slate-500 truncate">
+                      {user.user_id}
+                    </p>
                   </div>
-                );
-              })}
 
-              {activityFeed.length === 0 && (
+                  <div className="text-right shrink-0 flex items-center gap-4">
+                    <div>
+                      <p className="text-xs text-slate-500">Activities</p>
+                      <p className="font-semibold text-slate-700">{user.total_activities}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">GGG Earned</p>
+                      <p className="font-semibold text-emerald-600">
+                        {user.total_ggg_earned < 1 
+                          ? user.total_ggg_earned.toFixed(4) 
+                          : user.total_ggg_earned.toLocaleString()}
+                      </p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-slate-400" />
+                  </div>
+                </div>
+              ))}
+
+              {userSummaries.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
-                  <Activity className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No activities found</p>
+                  <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>No users found</p>
                 </div>
               )}
             </div>
           </ScrollArea>
         </CardContent>
       </Card>
+
+      {/* User Detail Modal */}
+      <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              <Avatar className="w-10 h-10">
+                <AvatarImage src={selectedUser?.user_avatar} />
+                <AvatarFallback className="bg-slate-100 text-slate-600">
+                  {selectedUser?.user_name?.charAt(0) || '?'}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold">{selectedUser?.user_name}</p>
+                <p className="text-sm text-slate-500 font-normal">{selectedUser?.user_id}</p>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedUser && (
+            <div className="flex-1 overflow-hidden">
+              {/* Summary stats */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  <p className="text-xs text-slate-500">Total Activities</p>
+                  <p className="text-xl font-bold text-slate-700">{selectedUser.total_activities}</p>
+                </div>
+                <div className="p-3 bg-emerald-50 rounded-lg">
+                  <p className="text-xs text-emerald-600">Total GGG Earned</p>
+                  <p className="text-xl font-bold text-emerald-700">
+                    {selectedUser.total_ggg_earned < 1 
+                      ? selectedUser.total_ggg_earned.toFixed(4) 
+                      : selectedUser.total_ggg_earned.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              {/* Activity list */}
+              <p className="text-sm font-medium text-slate-700 mb-2">Activity Details</p>
+              <ScrollArea className="h-[350px]">
+                <div className="space-y-2 pr-4">
+                  {selectedUser.activities
+                    .sort((a, b) => new Date(b.created_date) - new Date(a.created_date))
+                    .map((activity) => {
+                      const config = EVENT_TYPES[activity.type] || EVENT_TYPES.admin_action;
+                      const Icon = config.icon;
+
+                      return (
+                        <div
+                          key={activity.id}
+                          className="flex items-start gap-3 p-2 rounded-lg bg-slate-50 border border-slate-100"
+                        >
+                          <div className={`p-1.5 rounded ${config.bg}`}>
+                            <Icon className={`w-3 h-3 ${config.color}`} />
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className={`text-xs ${config.color}`}>
+                                {config.label}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-slate-600 mt-1">
+                              {activity.description}
+                            </p>
+                            <p className="text-xs text-slate-400 mt-0.5">
+                              {activity.created_date && formatDistanceToNow(parseISO(activity.created_date), { addSuffix: true })}
+                            </p>
+                          </div>
+
+                          {activity.amount !== undefined && activity.amount !== null && (
+                            <div className={`text-right shrink-0 ${activity.amount > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                              <p className="font-bold text-sm">
+                                {activity.amount > 0 ? '+' : ''}{activity.amount < 1 && activity.amount > -1 ? activity.amount.toFixed(4) : activity.amount.toLocaleString()} GGG
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
