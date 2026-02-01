@@ -22,7 +22,8 @@ import {
   Heart,
   Crown,
   HelpCircle,
-  BookOpen
+  BookOpen,
+  Play
 } from 'lucide-react';
 import {
   Dialog,
@@ -65,6 +66,7 @@ const TRUST_FEATURES = [
 
 export default function Join() {
   const [learnMoreOpen, setLearnMoreOpen] = React.useState(false);
+  const [demoLoading, setDemoLoading] = React.useState(false);
 
   const handleJoin = () => {
     base44.auth.redirectToLogin(createPageUrl('Onboarding'));
@@ -72,6 +74,18 @@ export default function Join() {
 
   const handleSignIn = () => {
     base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+  };
+
+  const handleTryDemo = async () => {
+    setDemoLoading(true);
+    // Login as a demo user account
+    try {
+      // Redirect to login with demo hint - the demo account uses a special demo login
+      window.location.href = `${window.location.origin}/auth/demo-login?redirect=${encodeURIComponent(createPageUrl('CommandDeck'))}`;
+    } catch (error) {
+      console.error('Demo login error:', error);
+      setDemoLoading(false);
+    }
   };
 
   return (
@@ -232,6 +246,25 @@ export default function Join() {
             >
               Become a Saint Agent
               <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-emerald-500/50 bg-emerald-900/30 text-emerald-200 hover:bg-emerald-800/50 hover:border-emerald-400 text-lg px-8 py-6 rounded-xl"
+              onClick={handleTryDemo}
+              disabled={demoLoading}
+            >
+              {demoLoading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-emerald-300 border-t-transparent rounded-full animate-spin mr-2" />
+                  Loading Demo...
+                </>
+              ) : (
+                <>
+                  <Play className="w-5 h-5 mr-2" />
+                  Try Demo
+                </>
+              )}
             </Button>
             <Button 
               size="lg" 
