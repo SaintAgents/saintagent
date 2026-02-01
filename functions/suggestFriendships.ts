@@ -75,9 +75,24 @@ Deno.serve(async (req) => {
     // Get users to process (either specific user or all active non-demo users)
     const usersToProcess = targetUserId 
       ? [profileMap[targetUserId]].filter(Boolean)
-      : userProfiles.filter(p => !p.is_demo && p.user_id);
+      : userProfiles.filter(p => !p.is_demo && p.user_id).slice(0, 50); // Limit batch size
+
+    // Pre-fetch recent friendship suggestion notifications to avoid duplicates
+    const recentNotifications = await base44.asServiceRole.entities.Notification.filter({
+      type: 'follow'
+    }, '-created_date', 500);
+    
+    // Build a set of recent suggestions (within 7 days)
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const recentSuggestionKeys = new Set();
+    recentNotifications.forEach(n => {
+      if (n.metadata?.suggestion_type === 'friendship' && new Date(n.created_date) > weekAgo) {
+        recentSuggestionKeys.add(`${n.user_id}:${n.metadata.suggested_user_id}`);
+      }
+    });
 
     const allSuggestions = [];
+    const notificationsToCreate = [];
 
     for (const userProfile of usersToProcess) {
       const userId = userProfile.user_id;
