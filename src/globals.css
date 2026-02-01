@@ -1692,14 +1692,6 @@ html[data-theme='dark'] [data-sidebar] {
       padding-left: 0 !important;
     }
 
-    /* DESKTOP: Ensure main content respects sidebar width */
-    @media (min-width: 768px) {
-    [data-theme='hacker'] main,
-    [data-theme='dark'] main {
-    margin-left: 0 !important;
-    }
-    }
-
     /* Hacker theme inputs - solid black background */
     [data-theme='hacker'] input,
     [data-theme='hacker'] textarea,
