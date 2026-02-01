@@ -13,7 +13,6 @@ import {
   Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink,
   Wand2, Bot, Copy
 } from "lucide-react";
-import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import BugRepairChecklist from './BugRepairChecklist';
