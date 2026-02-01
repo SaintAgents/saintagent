@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -28,6 +28,7 @@ import HeroImageManager from '@/components/admin/HeroImageManager';
 import EmailNewsletterManager from '@/components/admin/EmailNewsletterManager';
 import NewsletterAnalyticsDashboard from '@/components/admin/NewsletterAnalyticsDashboard';
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
+import MasterActivityLog from '@/components/admin/MasterActivityLog';
 
 export default function Admin() {
   const { data: user } = useQuery({
