@@ -200,6 +200,9 @@ export default function BetaFeedback() {
                     Submit feedback: <span className="font-bold text-emerald-600">+{bonusActive ? (0.03 * bonusMultiplier).toFixed(2) : '0.03'} GGG</span>
                     {' • '}Bug fixed bonus: <span className="font-bold text-emerald-600">+{bonusActive ? (0.03 * bonusMultiplier).toFixed(2) : '0.03'} GGG</span>
                   </p>
+                  <p className="text-xs text-amber-600 mt-1 font-medium">
+                    💡 Watch for bonus test periods with {bonusMultiplier}x rewards!
+                  </p>
                 </div>
               </div>
               {lastPeriodEarnings > 0 && (
