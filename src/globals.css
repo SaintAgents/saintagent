@@ -1457,6 +1457,23 @@ html[data-theme='hacker'] [role="button"] * {
   border-color: #333333 !important;
 }
 
+/* =====================================================
+   SIDEBAR Z-INDEX AND OVERLAP FIX
+   ===================================================== */
+
+/* Ensure sidebar is always above main content but below modals */
+[data-sidebar] {
+  z-index: 50 !important;
+}
+
+/* Main content should not overlap sidebar on desktop */
+@media (min-width: 768px) {
+  main {
+    position: relative;
+    z-index: 1;
+  }
+}
+
 /* Hacker theme sidebar - SOLID black background, no transparency */
 [data-theme='hacker'] [data-sidebar],
 html[data-theme='hacker'] [data-sidebar] {
