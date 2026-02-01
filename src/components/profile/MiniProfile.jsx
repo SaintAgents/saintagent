@@ -391,13 +391,22 @@ export default function MiniProfile({
                   <BadgesBar badges={miniBadges} max={4} defaultIfEmpty={false} />
                 </div>
               )}
-              {showTipButton && userId && (
-                <div className="mt-2">
+              {/* Action buttons row - anchored left */}
+              {(showTipButton && userId) && (
+                <div className="flex items-center gap-2 mt-2">
                   <TipButton
                     toUserId={userId}
                     toUserName={displayName}
                     variant="icon"
                     className="h-7 w-7"
+                  />
+                  <TestimonialButton
+                    toUserId={userId}
+                    toUserName={displayName}
+                    toUserAvatar={avatar || profile?.avatar_url}
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs px-2"
                   />
                 </div>
               )}
