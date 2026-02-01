@@ -37,6 +37,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import TestimonialsMarquee from '@/components/testimonials/TestimonialsMarquee';
 
 const PILLARS = [
   { id: 'earn', label: 'Earn', icon: DollarSign, color: 'from-emerald-500 to-teal-600', description: 'Monetize your skills and services in our trusted marketplace' },
@@ -336,6 +337,15 @@ export default function Join() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Testimonials Marquee */}
+      <div className="py-16 bg-slate-900/50">
+        <div className="max-w-6xl mx-auto px-6 mb-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Agents Say</h2>
+          <p className="text-cyan-400">Real stories from our conscious community</p>
+        </div>
+        <TestimonialsMarquee />
       </div>
 
       {/* Final CTA */}
