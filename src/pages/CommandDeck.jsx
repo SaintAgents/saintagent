@@ -79,13 +79,35 @@ function BottomExpandSection({ onQuickCreate, onTuneEngine, onOnlineUsers }) {
   
   return (
     <div className={cn(
-      "fixed bottom-0 left-0 right-0 z-40 transition-all duration-300",
-      "md:left-16 lg:left-64" // Account for sidebar
+      "fixed left-0 right-0 z-50 transition-all duration-300",
+      "bottom-16 md:bottom-0", // Above mobile tab bar on mobile, at bottom on desktop
+      "md:left-16 lg:left-64" // Account for sidebar on desktop
     )}>
+      {/* Chevron handle - always visible */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className={cn(
+          "w-full h-10 flex items-center justify-center gap-2",
+          "bg-gradient-to-t from-violet-600 to-violet-500 dark:from-violet-800 dark:to-violet-700",
+          "border-t border-violet-400 dark:border-violet-600",
+          "hover:from-violet-700 hover:to-violet-600 dark:hover:from-violet-700 transition-colors",
+          "shadow-lg"
+        )}
+      >
+        {expanded ? (
+          <ChevronDown className="w-5 h-5 text-white" />
+        ) : (
+          <>
+            <ChevronUp className="w-5 h-5 text-white" />
+            <span className="text-white text-sm font-medium">Quick Actions</span>
+          </>
+        )}
+      </button>
+      
       {/* Expanded content */}
       <div className={cn(
-        "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-700 shadow-lg transition-all duration-300 overflow-hidden",
-        expanded ? "max-h-32 py-3 px-4" : "max-h-0 py-0"
+        "bg-white/98 dark:bg-slate-900/98 backdrop-blur-md border-t border-slate-200 dark:border-slate-700 shadow-2xl transition-all duration-300 overflow-hidden",
+        expanded ? "max-h-40 py-4 px-4" : "max-h-0 py-0"
       )}>
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <Button size="sm" className="bg-violet-600 hover:bg-violet-700 rounded-lg gap-2" onClick={onQuickCreate}>
@@ -110,23 +132,6 @@ function BottomExpandSection({ onQuickCreate, onTuneEngine, onOnlineUsers }) {
           </Button>
         </div>
       </div>
-      
-      {/* Chevron handle */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className={cn(
-          "w-full h-8 flex items-center justify-center",
-          "bg-gradient-to-t from-violet-100 to-white/90 dark:from-slate-800 dark:to-slate-900/90",
-          "border-t border-slate-200 dark:border-slate-700",
-          "hover:from-violet-200 dark:hover:from-slate-700 transition-colors"
-        )}
-      >
-        {expanded ? (
-          <ChevronDown className="w-5 h-5 text-violet-600 dark:text-violet-400" />
-        ) : (
-          <ChevronUp className="w-5 h-5 text-violet-600 dark:text-violet-400" />
-        )}
-      </button>
     </div>
   );
 }
