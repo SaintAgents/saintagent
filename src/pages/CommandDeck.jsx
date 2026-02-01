@@ -946,7 +946,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[9px] font-bold text-amber-600 whitespace-nowrap">READ ME</span>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-72 p-4" align="end">
+              <PopoverContent className="w-72 p-4" align="end" side="bottom" sideOffset={5} collisionPadding={16}>
                 <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-amber-500" />
                   Quick Start Guide
