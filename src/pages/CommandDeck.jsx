@@ -2068,6 +2068,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         
         {/* Command Deck Tour */}
         <CommandDeckTour autoStart={showTour} onComplete={handleTourComplete} />
+        
+        {/* Bottom Expandable Section */}
+        <BottomExpandSection 
+          onQuickCreate={() => setQuickCreateOpen(true)}
+          onTuneEngine={() => setTuneEngineOpen(true)}
+          onOnlineUsers={() => setOnlineUsersOpen(true)}
+        />
       </div>
     </div>);
 
