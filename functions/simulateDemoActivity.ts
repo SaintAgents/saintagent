@@ -298,19 +298,33 @@ Deno.serve(async (req) => {
     }
     
     // 7. Create some GGG transactions for activity (limited)
+    // Fetch actual GGG rules to use proper amounts
+    const gggRules = await base44.asServiceRole.entities.GGGRewardRule.filter({ is_active: true });
+    const activeRules = gggRules.filter(r => r.ggg_amount > 0);
+    
     for (const demo of DEMO_USERS.slice(0, 2)) {
       const profile = demoProfiles.find(p => p.user_id === demo.email);
       if (!profile) continue;
       
+      // Pick a random rule to simulate
+      const rule = randomItem(activeRules);
+      const amount = rule?.ggg_amount || 0.01; // Default to 0.01 if no rules
+      const newBalance = Math.round(((profile.ggg_balance || 0) + amount) * 10000) / 10000;
+      
       await base44.asServiceRole.entities.GGGTransaction.create({
         user_id: demo.email,
-        source_type: randomItem(['meeting', 'mission', 'referral', 'reward']),
-        delta: Math.floor(Math.random() * 50) + 5,
-        reason_code: randomItem(['meeting_completed', 'mission_progress', 'daily_login', 'referral_bonus']),
-        description: randomItem(['Daily activity reward', 'Meeting completed', 'Mission milestone', 'Community contribution']),
-        balance_after: (profile.ggg_balance || 0) + Math.floor(Math.random() * 50),
+        source_type: rule?.category || 'reward',
+        delta: amount,
+        reason_code: rule?.action_type || 'activity_reward',
+        description: rule?.description || 'Activity reward',
+        balance_after: newBalance,
       });
       results.ggg_transactions++;
+      
+      // Update profile balance
+      await base44.asServiceRole.entities.UserProfile.update(profile.id, {
+        ggg_balance: newBalance
+      });
     }
     
     return Response.json({ 
