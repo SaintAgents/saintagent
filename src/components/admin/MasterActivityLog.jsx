@@ -54,6 +54,8 @@ const EVENT_TYPES = {
   referral: { icon: Users, color: 'text-purple-600', bg: 'bg-purple-100', label: 'Referral' },
   badge_earned: { icon: Award, color: 'text-orange-600', bg: 'bg-orange-100', label: 'Badge Earned' },
   admin_action: { icon: Activity, color: 'text-red-600', bg: 'bg-red-100', label: 'Admin Action' },
+  feedback_submit: { icon: MessageSquare, color: 'text-violet-600', bg: 'bg-violet-100', label: 'Feedback Submitted' },
+  feedback_resolved: { icon: Star, color: 'text-green-600', bg: 'bg-green-100', label: 'Feedback Resolved' },
 };
 
 export default function MasterActivityLog() {
@@ -633,6 +635,8 @@ export default function MasterActivityLog() {
                 <SelectItem value="meeting_scheduled">Meetings</SelectItem>
                 <SelectItem value="booking_made">Bookings</SelectItem>
                 <SelectItem value="testimonial_given">Testimonials</SelectItem>
+                <SelectItem value="feedback_submit">Feedback Submitted</SelectItem>
+                <SelectItem value="feedback_resolved">Feedback Resolved</SelectItem>
                 <SelectItem value="admin_action">Admin Actions</SelectItem>
               </SelectContent>
             </Select>

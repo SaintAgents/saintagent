@@ -9,9 +9,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   MessageSquare, Bug, Lightbulb, HelpCircle, Plus, CheckCircle2, Clock,
-  ThumbsUp, Heart, Send, Eye, ChevronDown, ChevronUp
+  ThumbsUp, Heart, Send, Eye, ChevronDown, ChevronUp, Zap, Coins, Trophy
 } from "lucide-react";
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 
@@ -57,6 +57,21 @@ export default function BetaFeedback() {
     queryKey: ['allBetaFeedback'],
     queryFn: () => base44.entities.BetaFeedback.list('-created_date', 100)
   });
+
+  // Fetch platform settings for bonus period
+  const { data: platformSettings } = useQuery({
+    queryKey: ['platformSettings'],
+    queryFn: async () => {
+      const settings = await base44.entities.PlatformSetting.list();
+      return settings?.[0] || {};
+    }
+  });
+
+  const bonusActive = platformSettings?.beta_bonus_active;
+  const bonusMultiplier = platformSettings?.beta_bonus_multiplier || 2;
+  const bonusEndTime = platformSettings?.beta_bonus_end_time;
+  const lastPeriodEarnings = platformSettings?.beta_last_period_earnings || 0;
+  const lastPeriodCount = platformSettings?.beta_last_period_feedback_count || 0;
 
   // Like mutation
   const likeMutation = useMutation({
@@ -150,6 +165,57 @@ export default function BetaFeedback() {
 
       <div className="max-w-3xl mx-auto px-6 pt-6">
 
+        {/* Bonus Period Banner */}
+        {bonusActive && (
+          <Card className="mb-4 border-amber-300 bg-gradient-to-r from-amber-50 to-yellow-50 overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-amber-100 rounded-full animate-pulse">
+                  <Zap className="w-6 h-6 text-amber-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-amber-800">🎉 BONUS TEST PERIOD ACTIVE!</h3>
+                    <Badge className="bg-amber-500 text-white">{bonusMultiplier}x Rewards</Badge>
+                  </div>
+                  <p className="text-sm text-amber-700">
+                    Earn {(0.03 * bonusMultiplier).toFixed(2)} GGG per feedback (normally 0.03)
+                    {bonusEndTime && ` • Ends ${formatDistanceToNow(new Date(bonusEndTime), { addSuffix: true })}`}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Earnings Info Card */}
+        <Card className="mb-4 border-emerald-200 bg-emerald-50/50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Coins className="w-8 h-8 text-emerald-600" />
+                <div>
+                  <h3 className="font-semibold text-slate-900">Beta Testing Earns GGG!</h3>
+                  <p className="text-sm text-slate-600">
+                    Submit feedback: <span className="font-bold text-emerald-600">+{bonusActive ? (0.03 * bonusMultiplier).toFixed(2) : '0.03'} GGG</span>
+                    {' • '}Bug fixed bonus: <span className="font-bold text-emerald-600">+{bonusActive ? (0.03 * bonusMultiplier).toFixed(2) : '0.03'} GGG</span>
+                  </p>
+                </div>
+              </div>
+              {lastPeriodEarnings > 0 && (
+                <div className="text-right hidden sm:block">
+                  <div className="flex items-center gap-1 text-amber-600">
+                    <Trophy className="w-4 h-4" />
+                    <span className="text-xs font-medium">Last Period</span>
+                  </div>
+                  <p className="text-sm font-bold text-slate-700">{lastPeriodEarnings.toFixed(2)} GGG</p>
+                  <p className="text-xs text-slate-500">{lastPeriodCount} submissions</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Submit CTA */}
         <Card className="mb-6 border-violet-200 bg-violet-50/50">
           <CardContent className="p-6 text-center">
@@ -162,6 +228,7 @@ export default function BetaFeedback() {
             >
               <Plus className="w-4 h-4" />
               Submit Feedback
+              {bonusActive && <Badge className="ml-1 bg-amber-500 text-white text-xs">{bonusMultiplier}x</Badge>}
             </Button>
           </CardContent>
         </Card>

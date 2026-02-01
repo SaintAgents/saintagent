@@ -138,23 +138,29 @@ export default function AdminBetaFeedback() {
       logMeta: { old_status: oldStatus, new_status: newStatus }
     });
     
-    // Award GGG when resolved (0.03 bonus)
+    // Award GGG when resolved (0.03 bonus, multiplied if bonus active)
     if (newStatus === 'resolved' && oldStatus !== 'resolved' && feedback?.reporter_id) {
       try {
         const profiles = await base44.entities.UserProfile.filter({ user_id: feedback.reporter_id });
         const profile = profiles?.[0];
+        const platformSettings = await base44.entities.PlatformSetting.list();
+        const settings = platformSettings?.[0] || {};
+        const bonusActive = settings.beta_bonus_active;
+        const multiplier = bonusActive ? (settings.beta_bonus_multiplier || 2) : 1;
+        const reward = 0.03 * multiplier;
+        
         if (profile) {
-          const newBalance = (profile.ggg_balance || 0) + 0.03;
+          const newBalance = (profile.ggg_balance || 0) + reward;
           await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
           await base44.entities.GGGTransaction.create({
             user_id: feedback.reporter_id,
-            delta: 0.03,
+            delta: reward,
             reason_code: 'feedback_resolved',
-            description: `Feedback resolved bonus`,
+            description: `Feedback resolved bonus${bonusActive ? ' (bonus period)' : ''}`,
             balance_after: newBalance,
             source_type: 'reward'
           });
-          toast.success(`Awarded 0.03 GGG to ${feedback.reporter_name || feedback.reporter_id} for resolved feedback`);
+          toast.success(`Awarded ${reward.toFixed(2)} GGG to ${feedback.reporter_name || feedback.reporter_id} for resolved feedback${bonusActive ? ' (bonus!)' : ''}`);
         }
       } catch (e) {
         console.error('Failed to award resolved feedback GGG:', e);

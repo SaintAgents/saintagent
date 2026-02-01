@@ -96,27 +96,33 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
         status: 'pending'
       });
 
-      // Award GGG for feedback submission (0.03)
+      // Award GGG for feedback submission (0.03 base, multiplied if bonus active)
       try {
         const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser?.email });
         const profile = profiles?.[0];
+        const platformSettings = await base44.entities.PlatformSetting.list();
+        const settings = platformSettings?.[0] || {};
+        const bonusActive = settings.beta_bonus_active;
+        const multiplier = bonusActive ? (settings.beta_bonus_multiplier || 2) : 1;
+        const reward = 0.03 * multiplier;
+        
         if (profile) {
-          const newBalance = (profile.ggg_balance || 0) + 0.03;
+          const newBalance = (profile.ggg_balance || 0) + reward;
           await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
           await base44.entities.GGGTransaction.create({
             user_id: currentUser.email,
-            delta: 0.03,
+            delta: reward,
             reason_code: 'feedback_submit',
-            description: `Submitted ${feedbackType} feedback`,
+            description: `Submitted ${feedbackType} feedback${bonusActive ? ' (bonus period)' : ''}`,
             balance_after: newBalance,
             source_type: 'reward'
           });
         }
+        toast.success(`Thank you for your feedback! +${reward.toFixed(2)} GGG earned${bonusActive ? ' (bonus!)' : ''}`);
       } catch (e) {
         console.error('Failed to award feedback GGG:', e);
+        toast.success('Thank you for your feedback!');
       }
-
-      toast.success('Thank you for your feedback! +0.03 GGG earned');
       handleClose();
     } catch (error) {
       console.error('Submit failed:', error);
