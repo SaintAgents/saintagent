@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Activity,
   Coins,
@@ -31,7 +31,9 @@ import {
   Heart,
   Award,
   Zap,
-  Clock
+  Clock,
+  ChevronRight,
+  X
 } from 'lucide-react';
 import { format, formatDistanceToNow, parseISO, subDays } from 'date-fns';
 
