@@ -247,16 +247,7 @@ export default function HeroImageManager() {
           </p>
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
             {HERO_IMAGES.map((img) => (
-              <div key={img.id} className="relative group rounded-lg overflow-hidden">
-                <img 
-                  src={img.url} 
-                  alt={img.title}
-                  className="w-full aspect-video object-cover"
-                />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-1">
-                  <p className="text-white text-xs text-center">{img.title}</p>
-                </div>
-              </div>
+              <HeroImageThumbnail key={img.id} img={img} />
             ))}
           </div>
         </CardContent>
