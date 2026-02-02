@@ -8,7 +8,7 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials'],
+    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu) - excludes insights
     navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'gggcrypto', 'g3dex', 'settings']
   },
@@ -26,7 +26,7 @@ export const VIEW_MODE_CONFIG = {
   custom: {
     label: 'Custom',
     description: 'Choose your features',
-    cards: ['insights', 'videos', 'testimonials'], // Default includes insights, videos, and testimonials
+    cards: ['insights', 'videos', 'testimonials', 'communityFeed'], // Default includes insights, videos, testimonials, and communityFeed
     navIds: null // null means show all nav items
   }
 };
