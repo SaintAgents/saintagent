@@ -155,13 +155,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   
   // Set default view mode based on rank when profile loads (only if not already set)
   useEffect(() => {
-    if (deckViewMode === null && profile) {
-      const rankCode = profile?.rp_rank_code || 'seeker';
+    if (deckViewMode === null && profiles?.[0]) {
+      const rankCode = profiles[0]?.rp_rank_code || 'seeker';
       // Default to advanced for all ranks above seeker
       const defaultMode = rankCode !== 'seeker' ? 'advanced' : 'simple';
       setDeckViewMode(defaultMode);
     }
-  }, [profile, deckViewMode]);
+  }, [profiles, deckViewMode]);
 
   // Persist deck view mode and notify other components
   useEffect(() => {
