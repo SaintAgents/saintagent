@@ -125,7 +125,7 @@ export default function HeroGalleryViewer() {
       <button
         onClick={handleClose}
         className={cn(
-          "absolute top-4 right-4 p-2 rounded-lg transition-all z-10",
+          "absolute top-[60px] right-4 p-2 rounded-lg transition-all z-10",
           "bg-slate-800/80 hover:bg-slate-700 text-white",
           "dark:bg-[#0a0a0a] dark:border dark:border-[#00ff88]/50 dark:hover:border-[#00ff88]",
           "dark:hover:shadow-[0_0_15px_rgba(0,255,136,0.4)]"
