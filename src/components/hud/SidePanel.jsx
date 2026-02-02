@@ -1177,8 +1177,8 @@ export default function SidePanel({
         <div className="w-full h-full rounded-md bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex flex-col items-center justify-center gap-0.5 relative shadow-md hover:shadow-lg">
           <PanelRight className={cn("w-3 h-3 text-white/80 dark:text-[#00ff88] icon-glow", dockSide === 'left' && "rotate-180")} />
           {dockSide === 'right' ?
-            isOpen ? <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> :
-            isOpen ? <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" />
+            isOpen ? <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> :
+            isOpen ? <ChevronRight className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" /> : <ChevronLeft className="w-2.5 h-2.5 text-white dark:text-[#00ff88] icon-glow" />
           }
         </div>
       </button>
