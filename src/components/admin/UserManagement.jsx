@@ -29,6 +29,8 @@ export default function UserManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [sortOrder, setSortOrder] = useState('date'); // 'date', 'alpha', 'sa'
+  const [testimonialsOpen, setTestimonialsOpen] = useState(false);
+  const [editingTestimonial, setEditingTestimonial] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: profiles = [], isLoading, error } = useQuery({
