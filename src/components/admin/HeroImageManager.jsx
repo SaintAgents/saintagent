@@ -10,6 +10,34 @@ import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Image, Clock, Upload, Save, Trash2, Plus, Eye, Settings2 } from 'lucide-react';
 import { toast } from "sonner";
 
+// Thumbnail component with error handling
+function HeroImageThumbnail({ img }) {
+  const [hasError, setHasError] = useState(false);
+  
+  return (
+    <div className="relative group rounded-lg overflow-hidden bg-slate-100">
+      {hasError ? (
+        <div className="w-full aspect-video flex items-center justify-center bg-slate-200">
+          <div className="text-center p-2">
+            <Image className="w-6 h-6 text-slate-400 mx-auto mb-1" />
+            <p className="text-xs text-slate-500 truncate max-w-full">{img.title}</p>
+          </div>
+        </div>
+      ) : (
+        <img 
+          src={img.url} 
+          alt={img.title}
+          className="w-full aspect-video object-cover"
+          onError={() => setHasError(true)}
+        />
+      )}
+      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-1">
+        <p className="text-white text-xs text-center">{img.title}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function HeroImageManager() {
   const queryClient = useQueryClient();
   const [newImage, setNewImage] = useState({ title: '', description: '', url: '', page: '' });
