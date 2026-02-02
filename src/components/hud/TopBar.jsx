@@ -744,6 +744,11 @@ export default function TopBar({
                 variant="ghost" 
                 className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl"
                 style={{ zIndex: 10001, pointerEvents: 'auto' }}
+                onDoubleClick={() => {
+                  if (currentUser?.role === 'admin') {
+                    window.location.href = createPageUrl('Admin');
+                  }
+                }}
               >
                 <div className={cn(
                   "relative",
