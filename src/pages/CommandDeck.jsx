@@ -1777,8 +1777,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <StGermainAffirmations />
             </CollapsibleCard>}
 
-            {isCardVisible('testimonials') && <CollapsibleCard title="Community Voices" cardId="testimonials" icon={MessageCircle} badge="Live" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('testimonials')} onToggleHide={() => toggleCardVisibility('testimonials')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
-              <TestimonialsCompact limit={3} />
+            {isCardVisible('testimonials') && <CollapsibleCard title="Community Voices" cardId="testimonials" icon={MessageCircle} badge="Live" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('testimonials')} onToggleHide={() => toggleCardVisibility('testimonials')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Profiles')}>
+              <TestimonialsCompact limit={5} />
             </CollapsibleCard>}
 
             {isCardVisible('videos') && <CollapsibleCard title="SaintTube Videos" cardId="videos" icon={Play} badge="20 min max" badgeColor="red" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('videos')} onToggleHide={() => toggleCardVisibility('videos')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Videos')}>
