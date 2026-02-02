@@ -524,11 +524,11 @@ export default function UserManagement() {
                     {walletAvailable?.toFixed?.(6) || 0}
                   </p>
                   <div className="flex gap-2 flex-wrap">
-                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -10)}>
-                      -10
-                    </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -1)}>
                       -1
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -0.5)}>
+                      -0.5
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, -0.1)}>
                       -0.1
@@ -536,11 +536,11 @@ export default function UserManagement() {
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 0.1)}>
                       +0.1
                     </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 0.5)}>
+                      +0.5
+                    </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 1)}>
                       +1
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleAdjustGGG(selectedUser, 10)}>
-                      +10
                     </Button>
                   </div>
                 </div>
