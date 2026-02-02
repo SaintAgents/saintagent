@@ -7,7 +7,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Star, Search, Edit, Trash2, CheckCircle, XCircle, Sparkles } from "lucide-react";
+import { Star, Search, Edit, Trash2, CheckCircle, XCircle, Sparkles, Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from 'date-fns';
 import { DEMO_TESTIMONIALS } from '@/components/testimonials/TestimonialsMarquee';
@@ -16,6 +19,14 @@ export default function AdminTestimonialsTab() {
   const [searchQuery, setSearchQuery] = useState('');
   const [editingTestimonial, setEditingTestimonial] = useState(null);
   const [showFeatured, setShowFeatured] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [newTestimonial, setNewTestimonial] = useState({
+    from_user_id: '',
+    from_name: '',
+    to_user_id: '',
+    text: '',
+    rating: 5
+  });
   const queryClient = useQueryClient();
 
   // Fetch all testimonials
@@ -36,6 +47,15 @@ export default function AdminTestimonialsTab() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminTestimonials'] });
       setEditingTestimonial(null);
+    }
+  });
+
+  const createTestimonialMutation = useMutation({
+    mutationFn: (data) => base44.entities.Testimonial.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminTestimonials'] });
+      setAddDialogOpen(false);
+      setNewTestimonial({ from_user_id: '', from_name: '', to_user_id: '', text: '', rating: 5 });
     }
   });
 
@@ -60,7 +80,7 @@ export default function AdminTestimonialsTab() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {/* Search and Toggle */}
+        {/* Search and Actions */}
         <div className="flex gap-4 mb-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -79,6 +99,82 @@ export default function AdminTestimonialsTab() {
             <Sparkles className="w-4 h-4" />
             Featured ({DEMO_TESTIMONIALS.length})
           </Button>
+          <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="w-4 h-4" />
+                Add Testimonial
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Testimonial</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <div>
+                  <Label>From User Email</Label>
+                  <Input
+                    placeholder="user@example.com"
+                    value={newTestimonial.from_user_id}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, from_user_id: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>From Name</Label>
+                  <Input
+                    placeholder="John Doe"
+                    value={newTestimonial.from_name}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, from_name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>To User Email</Label>
+                  <Input
+                    placeholder="recipient@example.com"
+                    value={newTestimonial.to_user_id}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, to_user_id: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Rating</Label>
+                  <Select
+                    value={String(newTestimonial.rating)}
+                    onValueChange={(v) => setNewTestimonial({ ...newTestimonial, rating: Number(v) })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5].map(r => (
+                        <SelectItem key={r} value={String(r)}>
+                          {r} Star{r > 1 ? 's' : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Testimonial Text</Label>
+                  <textarea
+                    className="w-full p-2 border rounded-lg text-sm"
+                    rows={4}
+                    placeholder="Write the testimonial..."
+                    value={newTestimonial.text}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, text: e.target.value })}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setAddDialogOpen(false)}>Cancel</Button>
+                  <Button 
+                    onClick={() => createTestimonialMutation.mutate(newTestimonial)}
+                    disabled={!newTestimonial.from_user_id || !newTestimonial.to_user_id || !newTestimonial.text}
+                  >
+                    Create Testimonial
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Featured Testimonials Section */}
