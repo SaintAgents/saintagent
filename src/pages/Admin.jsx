@@ -55,7 +55,7 @@ export default function Admin() {
       {/* Hero Image */}
       <div className="page-hero relative w-full overflow-hidden bg-slate-900">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c5e67d97a_universal_upscale_0_8b871d44-8964-4f37-bc81-87b7b516b155_01.jpg"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39d5258fa_settings.jpg"
           alt="Admin Dashboard Hero"
           data-no-filter="true"
           className="w-full h-full object-cover object-center hero-image"
