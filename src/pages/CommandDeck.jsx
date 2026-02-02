@@ -174,7 +174,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   
   // Get visible cards based on view mode
   const visibleCards = React.useMemo(() => {
-    if (deckViewMode === 'simple') return new Set(VIEW_MODE_CONFIG.simple.cards);
+    if (!deckViewMode || deckViewMode === 'simple') return new Set(VIEW_MODE_CONFIG.simple.cards);
     if (deckViewMode === 'advanced') return new Set(VIEW_MODE_CONFIG.advanced.cards);
     return new Set(customCards);
   }, [deckViewMode, customCards]);
