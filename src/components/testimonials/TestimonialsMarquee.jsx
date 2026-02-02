@@ -60,11 +60,11 @@ const DEMO_TESTIMONIALS = [
   },
   {
     id: 7,
-    name: "Maya P.",
+    name: "Sarah Mitchell",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop",
-    role: "Wellness Practitioner",
+    role: "Top Contributor",
     rank: "Sage",
-    text: "The GGG system is genius. Getting rewarded for genuine connection and contribution? Sign me up forever!",
+    text: "So excited about the opportunities here! Already made my first 500 GGG in just two days.",
     rating: 5
   },
   {
