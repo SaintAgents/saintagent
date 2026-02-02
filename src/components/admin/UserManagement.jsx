@@ -107,12 +107,25 @@ export default function UserManagement() {
   const handleAdjustGGG = async (profile, amount) => {
     const direction = amount >= 0 ? 'CREDIT' : 'DEBIT';
     const absAmount = Math.abs(amount);
-    await base44.functions.invoke('walletEngine', {
-      action: 'adjustment',
-      payload: { user_id: profile.user_id, amount: absAmount, direction, memo: 'Admin adjustment' }
-    });
-    await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
-    await queryClient.invalidateQueries({ queryKey: ['wallet', profile.user_id] });
+    try {
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'adjustment',
+        payload: { user_id: profile.user_id, amount: absAmount, direction, memo: 'Admin adjustment' }
+      });
+      // Update the UserProfile.ggg_balance to stay in sync
+      if (data?.wallet?.available_balance !== undefined) {
+        await base44.entities.UserProfile.update(profile.id, { 
+          ggg_balance: data.wallet.available_balance 
+        });
+      }
+      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
+      await queryClient.invalidateQueries({ queryKey: ['wallet', profile.user_id] });
+      // Update selectedUser state to reflect change immediately
+      setSelectedUser(prev => prev ? { ...prev, ggg_balance: data?.wallet?.available_balance ?? prev.ggg_balance } : null);
+      alert(`✓ GGG ${direction === 'CREDIT' ? 'added' : 'removed'}: ${absAmount.toFixed(6)}\nNew balance: ${data?.wallet?.available_balance?.toFixed(6) || 'updated'}`);
+    } catch (err) {
+      alert('Error adjusting GGG: ' + (err.message || 'Unknown error'));
+    }
   };
 
   const handleProfileSave = () => {
