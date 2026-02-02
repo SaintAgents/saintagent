@@ -121,6 +121,13 @@ export const HERO_IMAGES = [
     url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/b85f8b778_c187ff4c-c910-4f5d-aed1-62a6e76b4751.png',
     title: 'News & Updates',
     description: 'Breaking news and platform announcements'
+  },
+  {
+    id: 'admin',
+    page: 'Admin',
+    url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d702dc79_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg',
+    title: 'Admin Dashboard',
+    description: 'Platform management and controls'
   }
 ];
 
