@@ -113,6 +113,8 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
+import ContentStudio from './pages/ContentStudio';
+import ContentEditor from './pages/ContentEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -183,6 +185,8 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
+    "ContentStudio": ContentStudio,
+    "ContentEditor": ContentEditor,
 }
 
 export const pagesConfig = {
