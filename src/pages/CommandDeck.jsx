@@ -138,8 +138,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Deck view mode (simple/advanced/custom)
   const [deckViewMode, setDeckViewMode] = useState(() => {
     try {
-      return localStorage.getItem('deckViewMode') || 'simple';
-    } catch { return 'simple'; }
+      const saved = localStorage.getItem('deckViewMode');
+      if (saved) return saved;
+      // Default will be set after profile loads
+      return null;
+    } catch { return null; }
   });
   
   // Custom cards selection (for custom mode)
