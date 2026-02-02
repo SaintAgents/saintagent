@@ -208,31 +208,6 @@ export default function UserManagement() {
     }
   };
 
-  const handleAssignSAFromPool = async (profileId, saNumber) => {
-    if (!profileId || !saNumber) return;
-    setAssigningSA(true);
-    try {
-      await base44.entities.UserProfile.update(profileId, { sa_number: saNumber });
-      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
-      await queryClient.invalidateQueries({ queryKey: ['unassignedSAPool'] });
-      setSelectedSAToAssign('');
-      alert(`SA#${saNumber} assigned successfully!`);
-    } catch (e) {
-      alert('Error: ' + (e.message || 'Failed to assign SA number'));
-    } finally {
-      setAssigningSA(false);
-    }
-  };
-
-  const handleRemoveSA = async (profile) => {
-    if (!profile?.id || !profile?.sa_number) return;
-    if (confirm(`Remove SA#${profile.sa_number} from ${profile.display_name}? It will return to the unassigned pool.`)) {
-      await base44.entities.UserProfile.update(profile.id, { sa_number: null });
-      await queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
-      await queryClient.invalidateQueries({ queryKey: ['unassignedSAPool'] });
-    }
-  };
-
   const handlePurgeData = async () => {
     const email = selectedUser?.user_id;
     if (!email) return;
@@ -246,50 +221,7 @@ export default function UserManagement() {
     await Promise.all((notifs || []).map((n) => base44.entities.Notification.delete(n.id)));
   };
 
-  const [resettingSA, setResettingSA] = useState(false);
   const [customGGGAmount, setCustomGGGAmount] = useState('');
-  const [showUnassignedPool, setShowUnassignedPool] = useState(false);
-  const [assigningSA, setAssigningSA] = useState(false);
-  const [selectedSAToAssign, setSelectedSAToAssign] = useState('');
-  const [customSANumber, setCustomSANumber] = useState('');
-
-  // Fetch unassigned SA numbers pool
-  const { data: unassignedPool = [], refetch: refetchPool } = useQuery({
-    queryKey: ['unassignedSAPool'],
-    queryFn: async () => {
-      // Get all assigned SA numbers
-      const allProfiles = await base44.entities.UserProfile.list('-created_date', 1000);
-      const assignedNumbers = new Set(
-        allProfiles
-          .filter(p => p.sa_number && !p.sa_number.startsWith('Demo'))
-          .map(p => p.sa_number)
-      );
-      
-      // Find gaps in sequence (numbers that were deleted)
-      const maxNumber = Math.max(0, ...Array.from(assignedNumbers).map(n => parseInt(n) || 0));
-      const unassigned = [];
-      for (let i = 1; i <= maxNumber; i++) {
-        const numStr = String(i).padStart(6, '0');
-        if (!assignedNumbers.has(numStr)) {
-          unassigned.push(numStr);
-        }
-      }
-      return unassigned;
-    }
-  });
-  const handleResetSANumbers = async () => {
-    if (!confirm('Reset and reassign ALL SA numbers in order by join date? This cannot be undone.')) return;
-    setResettingSA(true);
-    try {
-      const { data } = await base44.functions.invoke('resetSaNumbers', {});
-      alert(`Done! Assigned ${data.totalAssigned} SA numbers. Next new user will get SA#${String(data.nextNumber).padStart(6, '0')}`);
-      queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
-    } catch (e) {
-      alert('Error: ' + (e.message || 'Failed to reset SA numbers'));
-    } finally {
-      setResettingSA(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -317,105 +249,6 @@ export default function UserManagement() {
               {isLoading ? 'Loading...' : 'Total Users'}
             </p>
             {error && <p className="text-red-500 text-xs mt-1">Error loading</p>}
-          </CardContent>
-        </Card>
-        <Card className="col-span-4">
-          <CardContent className="bg-violet-50 pt-4 p-4 flex items-center justify-between">
-            <div>
-              <p className="font-medium text-slate-900">SA# Management</p>
-              <p className="text-xs text-slate-500">Reset and reassign all SA numbers in join order</p>
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleResetSANumbers}
-              disabled={resettingSA}
-              className="gap-2"
-            >
-              <RefreshCw className={cn("w-4 h-4", resettingSA && "animate-spin")} />
-              {resettingSA ? 'Resetting...' : 'Reset All SA#'}
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="col-span-4">
-          <CardContent className="bg-amber-50 pt-4 p-4 flex items-center justify-between">
-            <div>
-              <p className="font-medium text-slate-900">Demo SA# Assignment</p>
-              <p className="text-xs text-slate-500">Assign sequential Demo-001, Demo-002, etc. to all demo profiles</p>
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={async () => {
-                if (!confirm('Assign Demo-XXX SA numbers to all demo profiles?')) return;
-                try {
-                  const { data } = await base44.functions.invoke('assignDemoSaNumbers', {});
-                  alert(`Done! Assigned ${data.updates?.length || 0} demo SA numbers.`);
-                  queryClient.invalidateQueries({ queryKey: ['allProfiles'] });
-                } catch (e) {
-                  alert('Error: ' + (e.message || 'Failed'));
-                }
-              }}
-              className="gap-2"
-            >
-              <Hash className="w-4 h-4" />
-              Assign Demo SA#
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="col-span-4">
-          <CardContent className="bg-emerald-50 pt-4 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="font-medium text-slate-900">Unassigned SA# Pool</p>
-                <p className="text-xs text-slate-500">
-                  {unassignedPool.length} SA numbers available for reassignment from deleted users
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => refetchPool()}
-                  className="gap-2"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  Refresh
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setShowUnassignedPool(!showUnassignedPool)}
-                  className="gap-2"
-                >
-                  <Package className="w-4 h-4" />
-                  {showUnassignedPool ? 'Hide Pool' : 'View Pool'}
-                </Button>
-              </div>
-            </div>
-            {showUnassignedPool && (
-              <div className="mt-3 p-3 bg-white rounded-lg border border-emerald-200">
-                {unassignedPool.length === 0 ? (
-                  <p className="text-sm text-slate-500 text-center py-4">No unassigned SA numbers available</p>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {unassignedPool.map(saNum => (
-                      <Badge 
-                        key={saNum} 
-                        variant="outline" 
-                        className="bg-emerald-100 text-emerald-700 cursor-pointer hover:bg-emerald-200"
-                        onClick={() => {
-                          setSelectedSAToAssign(saNum);
-                          alert(`SA#${saNum} selected. Open a user's Manage panel to assign it.`);
-                        }}
-                      >
-                        SA#{saNum}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>
@@ -614,90 +447,6 @@ export default function UserManagement() {
                     <SelectItem value="verified144k">144K Verified Leader</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-
-              {/* SA Number Management */}
-              <div>
-                <h3 className="font-semibold text-slate-900 mb-3">SA# Management</h3>
-                <div className="p-3 rounded-lg bg-slate-50 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-slate-600">Current SA#:</p>
-                      <p className="font-semibold text-lg text-slate-900">
-                        {selectedUser.sa_number ? `SA#${selectedUser.sa_number}` : 'Not assigned'}
-                      </p>
-                    </div>
-                    {selectedUser.sa_number && !selectedUser.sa_number.startsWith('Demo') && (
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="border-rose-300 text-rose-700 hover:bg-rose-100"
-                        onClick={() => handleRemoveSA(selectedUser)}
-                      >
-                        <Recycle className="w-4 h-4 mr-1" />
-                        Return to Pool
-                      </Button>
-                    )}
-                  </div>
-                  
-                  {/* Manual SA# Override */}
-                  <div className="border-t pt-3">
-                    <p className="text-sm text-slate-600 mb-2">Manual SA# Override:</p>
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="e.g. 000025"
-                        value={customSANumber}
-                        onChange={(e) => setCustomSANumber(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
-                        className="w-32"
-                      />
-                      <Button 
-                        size="sm" 
-                        disabled={!customSANumber || assigningSA}
-                        onClick={async () => {
-                          const padded = customSANumber.padStart(6, '0');
-                          // Check if already taken
-                          const existing = await base44.entities.UserProfile.filter({ sa_number: padded });
-                          if (existing?.length && existing[0].id !== selectedUser.id) {
-                            alert(`SA#${padded} is already assigned to ${existing[0].display_name}`);
-                            return;
-                          }
-                          await handleAssignSAFromPool(selectedUser.id, padded);
-                          setCustomSANumber('');
-                        }}
-                      >
-                        Set SA#
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  {!selectedUser.sa_number && unassignedPool.length > 0 && (
-                    <div className="border-t pt-3">
-                      <p className="text-sm text-slate-600 mb-2">Or assign from pool ({unassignedPool.length} available):</p>
-                      <div className="flex gap-2">
-                        <Select
-                          value={selectedSAToAssign}
-                          onValueChange={setSelectedSAToAssign}
-                        >
-                          <SelectTrigger className="w-48">
-                            <SelectValue placeholder="Select SA#" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {unassignedPool.map(saNum => (
-                              <SelectItem key={saNum} value={saNum}>SA#{saNum}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Button 
-                          size="sm" 
-                          disabled={!selectedSAToAssign || assigningSA}
-                          onClick={() => handleAssignSAFromPool(selectedUser.id, selectedSAToAssign)}
-                        >
-                          {assigningSA ? 'Assigning...' : 'Assign'}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
 
               {/* Profile Basics */}
