@@ -41,7 +41,7 @@ function HeroImageThumbnail({ img }) {
 export default function HeroImageManager() {
   const queryClient = useQueryClient();
   const [newImage, setNewImage] = useState({ title: '', description: '', url: '', page: '' });
-  const [intervalMinutes, setIntervalMinutes] = useState(3.33);
+  const [intervalMinutes, setIntervalMinutes] = useState(7);
 
   // Fetch current interval setting
   const { data: settings } = useQuery({
@@ -145,7 +145,7 @@ export default function HeroImageManager() {
               className="mt-2"
             />
             <p className="text-xs text-slate-500 mt-1">
-              Default: 3.33 minutes (199.8 seconds)
+              Default: 7 minutes (420 seconds)
             </p>
           </div>
           <Button onClick={handleSaveInterval} disabled={saveIntervalMutation.isPending}>

@@ -6,8 +6,8 @@ import { Play, Pause, SkipForward, Clock, Image, Maximize2 } from 'lucide-react'
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-// Default rotation interval in ms (30 seconds = 30000ms)
-const DEFAULT_INTERVAL = 30000;
+// Default rotation interval in ms (7 minutes = 420000ms)
+const DEFAULT_INTERVAL = 420000;
 
 export default function HeroImageSlideshow({ className }) {
   const [currentIndex, setCurrentIndex] = useState(() => 
