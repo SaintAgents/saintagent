@@ -30,7 +30,7 @@ import BetaTicker from '@/components/hud/BetaTicker.jsx';
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
 import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
 
-const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home'];
+const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home', 'DemoPreview'];
 
 // Global hacker theme draggable popup handler
 function useHackerDraggablePopups() {
