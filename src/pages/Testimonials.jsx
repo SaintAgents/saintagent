@@ -8,11 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, Search, Edit, Trash2, CheckCircle, XCircle, ArrowLeft } from "lucide-react";
+import { Star, Search, Edit, Trash2, CheckCircle, XCircle, ArrowLeft, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
+import { DEMO_TESTIMONIALS } from '@/components/testimonials/TestimonialsMarquee';
 
 export default function Testimonials() {
   const [searchQuery, setSearchQuery] = useState('');
