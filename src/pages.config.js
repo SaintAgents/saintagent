@@ -60,6 +60,7 @@ import CourseDetail from './pages/CourseDetail';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
 import DemoLogin from './pages/DemoLogin';
+import DemoPreview from './pages/DemoPreview';
 import EvaluationDocs from './pages/EvaluationDocs';
 import EvaluationSpec from './pages/EvaluationSpec';
 import EventDetail from './pages/EventDetail';
@@ -108,11 +109,10 @@ import Studio from './pages/Studio';
 import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
 import Terms from './pages/Terms';
+import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import DemoPreview from './pages/DemoPreview';
-import Testimonials from './pages/Testimonials';
 import __Layout from './Layout.jsx';
 
 
@@ -130,6 +130,7 @@ export const PAGES = {
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
     "DemoLogin": DemoLogin,
+    "DemoPreview": DemoPreview,
     "EvaluationDocs": EvaluationDocs,
     "EvaluationSpec": EvaluationSpec,
     "EventDetail": EventDetail,
@@ -178,11 +179,10 @@ export const PAGES = {
     "SynchronicityEngine": SynchronicityEngine,
     "Teams": Teams,
     "Terms": Terms,
+    "Testimonials": Testimonials,
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "DemoPreview": DemoPreview,
-    "Testimonials": Testimonials,
 }
 
 export const pagesConfig = {
