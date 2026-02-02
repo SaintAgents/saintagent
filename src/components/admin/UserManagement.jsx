@@ -793,6 +793,182 @@ export default function UserManagement() {
                   </div>
                 </div>
               </div>
+
+              {/* Testimonials Management */}
+              <div>
+                <button 
+                  onClick={() => setTestimonialsOpen(!testimonialsOpen)}
+                  className="flex items-center gap-2 font-semibold text-slate-900 mb-3 hover:text-violet-600 transition-colors"
+                >
+                  <Star className="w-4 h-4 text-amber-500" />
+                  Testimonials
+                  <Badge variant="outline" className="ml-2">
+                    {testimonialsOpen ? 'Hide' : 'Show'}
+                  </Badge>
+                </button>
+                
+                {testimonialsOpen && (
+                  <div className="space-y-4">
+                    {/* Received Testimonials */}
+                    <div>
+                      <p className="text-sm font-medium text-slate-600 mb-2">Received ({userTestimonials.received?.length || 0})</p>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {userTestimonials.received?.length === 0 && (
+                          <p className="text-xs text-slate-400">No testimonials received</p>
+                        )}
+                        {userTestimonials.received?.map((t) => (
+                          <div key={t.id} className="p-2 rounded-lg bg-amber-50 border border-amber-100">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-slate-700">From: {t.from_name}</p>
+                                <div className="flex items-center gap-1 my-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star key={i} className={cn("w-3 h-3", i < t.rating ? "fill-amber-400 text-amber-400" : "text-slate-300")} />
+                                  ))}
+                                </div>
+                                {editingTestimonial?.id === t.id ? (
+                                  <textarea
+                                    value={editingTestimonial.text}
+                                    onChange={(e) => setEditingTestimonial({ ...editingTestimonial, text: e.target.value })}
+                                    className="w-full text-xs p-1 border rounded"
+                                    rows={2}
+                                  />
+                                ) : (
+                                  <p className="text-xs text-slate-600 line-clamp-2">{t.text}</p>
+                                )}
+                              </div>
+                              <div className="flex gap-1 shrink-0">
+                                {editingTestimonial?.id === t.id ? (
+                                  <>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => updateTestimonialMutation.mutate({ id: t.id, data: { text: editingTestimonial.text } })}
+                                    >
+                                      <CheckCircle className="w-3 h-3 text-green-600" />
+                                    </Button>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => setEditingTestimonial(null)}
+                                    >
+                                      <XCircle className="w-3 h-3 text-slate-400" />
+                                    </Button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => setEditingTestimonial({ id: t.id, text: t.text })}
+                                    >
+                                      <Edit className="w-3 h-3 text-slate-400" />
+                                    </Button>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => {
+                                        if (confirm('Delete this testimonial?')) {
+                                          deleteTestimonialMutation.mutate(t.id);
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="w-3 h-3 text-rose-400" />
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Given Testimonials */}
+                    <div>
+                      <p className="text-sm font-medium text-slate-600 mb-2">Given ({userTestimonials.given?.length || 0})</p>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {userTestimonials.given?.length === 0 && (
+                          <p className="text-xs text-slate-400">No testimonials given</p>
+                        )}
+                        {userTestimonials.given?.map((t) => (
+                          <div key={t.id} className="p-2 rounded-lg bg-slate-50 border border-slate-100">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-slate-700">To: {t.to_user_id}</p>
+                                <div className="flex items-center gap-1 my-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star key={i} className={cn("w-3 h-3", i < t.rating ? "fill-amber-400 text-amber-400" : "text-slate-300")} />
+                                  ))}
+                                </div>
+                                {editingTestimonial?.id === t.id ? (
+                                  <textarea
+                                    value={editingTestimonial.text}
+                                    onChange={(e) => setEditingTestimonial({ ...editingTestimonial, text: e.target.value })}
+                                    className="w-full text-xs p-1 border rounded"
+                                    rows={2}
+                                  />
+                                ) : (
+                                  <p className="text-xs text-slate-600 line-clamp-2">{t.text}</p>
+                                )}
+                              </div>
+                              <div className="flex gap-1 shrink-0">
+                                {editingTestimonial?.id === t.id ? (
+                                  <>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => updateTestimonialMutation.mutate({ id: t.id, data: { text: editingTestimonial.text } })}
+                                    >
+                                      <CheckCircle className="w-3 h-3 text-green-600" />
+                                    </Button>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => setEditingTestimonial(null)}
+                                    >
+                                      <XCircle className="w-3 h-3 text-slate-400" />
+                                    </Button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => setEditingTestimonial({ id: t.id, text: t.text })}
+                                    >
+                                      <Edit className="w-3 h-3 text-slate-400" />
+                                    </Button>
+                                    <Button 
+                                      size="icon" 
+                                      variant="ghost" 
+                                      className="h-6 w-6"
+                                      onClick={() => {
+                                        if (confirm('Delete this testimonial?')) {
+                                          deleteTestimonialMutation.mutate(t.id);
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="w-3 h-3 text-rose-400" />
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </ScrollArea>
           }
