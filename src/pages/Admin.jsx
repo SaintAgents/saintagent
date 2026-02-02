@@ -294,6 +294,10 @@ export default function Admin() {
           <TabsContent value="ggg-totals">
             <GGGTotalsTab />
           </TabsContent>
+
+          <TabsContent value="testimonials">
+            <AdminTestimonialsTab />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
