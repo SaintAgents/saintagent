@@ -175,6 +175,10 @@ export default function Admin() {
               <Coins className="w-4 h-4" />
               GGG Totals
             </TabsTrigger>
+            <TabsTrigger value="testimonials" className="gap-2 px-3 py-2">
+              <Star className="w-4 h-4" />
+              Testimonials
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
