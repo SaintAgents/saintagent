@@ -1,20 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
-  Save, Undo, Redo, Eye, Settings, Users, History, 
-  MessageSquare, Sparkles, Upload, Image, Video, Music,
-  Bold, Italic, Underline, List, ListOrdered, Link,
-  AlignLeft, AlignCenter, AlignRight, Quote, Code,
-  ChevronLeft, MoreVertical, Send, Check, X, Loader2,
-  Wand2, FileText, Download, Share2
+  Save, Eye, Settings, Users, History, MessageSquare, 
+  Sparkles, ChevronLeft, Loader2, Wand2, Download
 } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { createPageUrl } from '@/utils';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -32,7 +27,7 @@ export default function ContentEditor() {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [rightPanel, setRightPanel] = useState('ai'); // ai, comments, collaborators, history
+  const [rightPanel, setRightPanel] = useState('ai');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -60,19 +55,6 @@ export default function ContentEditor() {
     enabled: !!projectId
   });
 
-  const { data: versions = [] } = useQuery({
-    queryKey: ['contentVersions', projectId],
-    queryFn: () => base44.entities.ContentVersion.filter({ project_id: projectId }, '-version_number', 50),
-    enabled: !!projectId
-  });
-
-  const { data: comments = [] } = useQuery({
-    queryKey: ['contentComments', projectId],
-    queryFn: () => base44.entities.ContentComment.filter({ project_id: projectId }, '-created_date', 100),
-    enabled: !!projectId
-  });
-
-  // Initialize content from project
   useEffect(() => {
     if (project) {
       setTitle(project.title || '');
@@ -80,7 +62,6 @@ export default function ContentEditor() {
     }
   }, [project]);
 
-  // Track changes
   useEffect(() => {
     if (project) {
       const changed = content !== (project.content || '') || title !== (project.title || '');
@@ -88,12 +69,9 @@ export default function ContentEditor() {
     }
   }, [content, title, project]);
 
-  // Auto-save every 30 seconds
   useEffect(() => {
     if (!hasUnsavedChanges || !project) return;
-    const timer = setTimeout(() => {
-      handleSave(true);
-    }, 30000);
+    const timer = setTimeout(() => handleSave(true), 30000);
     return () => clearTimeout(timer);
   }, [content, title, hasUnsavedChanges]);
 
@@ -140,17 +118,17 @@ export default function ContentEditor() {
     }
   };
 
-  const handleStatusChange = async (newStatus) => {
+  const handlePublish = async () => {
+    await handleSave(true);
     await base44.entities.ContentProject.update(projectId, { 
-      status: newStatus,
-      ...(newStatus === 'published' ? { published_at: new Date().toISOString() } : {})
+      status: 'published',
+      published_at: new Date().toISOString()
     });
     queryClient.invalidateQueries({ queryKey: ['contentProject', projectId] });
   };
 
   const isOwner = project?.owner_id === currentUser?.email;
-  const isCollaborator = project?.collaborator_ids?.includes(currentUser?.email);
-  const canEdit = isOwner || isCollaborator;
+  const canEdit = isOwner || project?.collaborator_ids?.includes(currentUser?.email);
 
   if (isLoading) {
     return (
@@ -164,8 +142,7 @@ export default function ContentEditor() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <FileText className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">Project not found</h2>
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">Project not found</h2>
           <Button onClick={() => window.location.href = createPageUrl('ContentStudio')}>
             Back to Studio
           </Button>
@@ -174,10 +151,12 @@ export default function ContentEditor() {
     );
   }
 
+  const wordCount = content.replace(/<[^>]*>/g, '').split(/\s+/).filter(w => w).length;
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      {/* Top Toolbar */}
-      <div className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 sticky top-0 z-40">
+    <div className="min-h-screen bg-slate-50 flex flex-col h-screen overflow-hidden">
+      {/* Toolbar */}
+      <div className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-4">
           <Button 
             variant="ghost" 
@@ -185,25 +164,26 @@ export default function ContentEditor() {
             onClick={() => window.location.href = createPageUrl('ContentStudio')}
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
-            Back
+            Studio
           </Button>
           <div className="h-6 w-px bg-slate-200" />
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="border-0 text-lg font-semibold focus-visible:ring-0 w-64"
-            placeholder="Untitled"
+            className="border-0 text-lg font-semibold focus-visible:ring-0 w-96"
+            placeholder="Untitled Project"
             disabled={!canEdit}
           />
-          <Badge variant={hasUnsavedChanges ? 'outline' : 'secondary'}>
-            {hasUnsavedChanges ? 'Unsaved changes' : 'Saved'}
+          <Badge className={hasUnsavedChanges ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}>
+            {hasUnsavedChanges ? 'Unsaved' : 'Saved'}
           </Badge>
+          <Badge className="text-xs">{wordCount} words</Badge>
         </div>
 
         <div className="flex items-center gap-2">
           {lastSaved && (
             <span className="text-xs text-slate-500">
-              Last saved {format(lastSaved, 'h:mm a')}
+              {format(lastSaved, 'h:mm a')}
             </span>
           )}
           <Button 
@@ -212,12 +192,7 @@ export default function ContentEditor() {
             onClick={() => handleSave(false)}
             disabled={!hasUnsavedChanges || isSaving || !canEdit}
           >
-            {isSaving ? (
-              <Loader2 className="w-4 h-4 animate-spin mr-1" />
-            ) : (
-              <Save className="w-4 h-4 mr-1" />
-            )}
-            Save
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           </Button>
           <Button 
             variant="outline" 
@@ -229,7 +204,7 @@ export default function ContentEditor() {
           {project.status === 'draft' && isOwner && (
             <Button 
               size="sm"
-              onClick={() => handleStatusChange('published')}
+              onClick={handlePublish}
               className="bg-emerald-600 hover:bg-emerald-700"
             >
               Publish
@@ -238,16 +213,74 @@ export default function ContentEditor() {
         </div>
       </div>
 
-      <div className="flex-1 flex">
-        {/* Main Editor */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 max-w-4xl mx-auto w-full p-8">
+      <div className="flex-1 flex overflow-hidden">
+        {/* Editor */}
+        <div className="flex-1 overflow-auto">
+          <div className="max-w-4xl mx-auto p-8">
             <ReactQuill
               value={content}
               onChange={setContent}
               theme="snow"
               readOnly={!canEdit}
-              modules={{
-                toolbar: [
-                  [{ 'header': [1, 2, 3, false] }],
-                  ['bold',
+              className="bg-white rounded-lg shadow-sm"
+              style={{ minHeight: '500px' }}
+            />
+          </div>
+        </div>
+
+        {/* Right Panel */}
+        <div className="w-80 border-l border-slate-200 bg-white flex flex-col shrink-0">
+          <Tabs value={rightPanel} onValueChange={setRightPanel} className="flex-1 flex flex-col">
+            <TabsList className="w-full grid grid-cols-4 rounded-none border-b">
+              <TabsTrigger value="ai" className="gap-1">
+                <Sparkles className="w-4 h-4" />
+                AI
+              </TabsTrigger>
+              <TabsTrigger value="comments" className="gap-1">
+                <MessageSquare className="w-4 h-4" />
+              </TabsTrigger>
+              <TabsTrigger value="team" className="gap-1">
+                <Users className="w-4 h-4" />
+              </TabsTrigger>
+              <TabsTrigger value="history" className="gap-1">
+                <History className="w-4 h-4" />
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="ai" className="flex-1 m-0 p-4 overflow-auto">
+              <AIWritingAssistant 
+                projectId={projectId}
+                content={content}
+                onApplySuggestion={(newContent) => setContent(newContent)}
+              />
+            </TabsContent>
+
+            <TabsContent value="comments" className="flex-1 m-0 overflow-hidden">
+              <CommentsPanel projectId={projectId} profile={profile} />
+            </TabsContent>
+
+            <TabsContent value="team" className="flex-1 m-0 overflow-hidden">
+              <CollaboratorPanel project={project} profile={profile} />
+            </TabsContent>
+
+            <TabsContent value="history" className="flex-1 m-0 overflow-hidden">
+              <VersionHistoryPanel 
+                projectId={projectId}
+                onRestore={(version) => {
+                  setContent(version.content);
+                  setHasUnsavedChanges(true);
+                }}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+
+      <ContentSettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        project={project}
+      />
+    </div>
+  );
+}
