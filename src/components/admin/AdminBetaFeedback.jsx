@@ -295,20 +295,7 @@ export default function AdminBetaFeedback() {
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="shrink-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const copyText = `**${typeConfig.label}** (${statusConfig.label}) - ${feedback.severity || 'N/A'} severity\n\n**Reporter:** ${feedback.reporter_name || feedback.reporter_id}\n**Date:** ${format(new Date(feedback.created_date), 'MMM d, yyyy h:mm a')}\n**Page:** ${feedback.page_url || 'N/A'}\n\n**Description:**\n${feedback.description}${feedback.screenshot_url ? `\n\n**Screenshot:** ${feedback.screenshot_url}` : ''}`;
-                        navigator.clipboard.writeText(copyText);
-                        toast.success('Copied feedback to clipboard');
-                      }}
-                    >
-                      <Copy className="w-4 h-4 mr-1" />
-                      Copy
-                    </Button>
+                    <CopyButton feedback={feedback} typeConfig={typeConfig} statusConfig={statusConfig} />
                   </div>
                 </CardContent>
               </Card>
