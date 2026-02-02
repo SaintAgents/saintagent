@@ -31,7 +31,7 @@ import NewsletterAnalyticsDashboard from '@/components/admin/NewsletterAnalytics
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
 import MasterActivityLog from '@/components/admin/MasterActivityLog';
 import GGGTotalsTab from '@/components/admin/GGGTotalsTab';
-import AdminTestimonialsTab from '@/components/admin/AdminTestimonialsTab';
+import AdminTestimonialsTab from '@/components/admin/AdminTestimonialsTab.jsx';
 
 export default function Admin() {
   const { data: user } = useQuery({
