@@ -195,6 +195,7 @@ export default function Testimonials() {
             <TabsTrigger value="all">All ({allTestimonials.length})</TabsTrigger>
             <TabsTrigger value="received">Received ({myReceived.length})</TabsTrigger>
             <TabsTrigger value="given">Given ({myGiven.length})</TabsTrigger>
+            <TabsTrigger value="featured">Featured ({DEMO_TESTIMONIALS.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
