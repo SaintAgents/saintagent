@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Save, Eye, Settings, Users, History, MessageSquare, 
-  Sparkles, ChevronLeft, Loader2, Wand2, Download
+  Save, Settings, Users, History, MessageSquare, 
+  Sparkles, ChevronLeft, Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { createPageUrl } from '@/utils';
@@ -155,7 +155,6 @@ export default function ContentEditor() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col h-screen overflow-hidden">
-      {/* Toolbar */}
       <div className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-4">
           <Button 
@@ -214,7 +213,6 @@ export default function ContentEditor() {
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Editor */}
         <div className="flex-1 overflow-auto">
           <div className="max-w-4xl mx-auto p-8">
             <ReactQuill
@@ -228,23 +226,13 @@ export default function ContentEditor() {
           </div>
         </div>
 
-        {/* Right Panel */}
         <div className="w-80 border-l border-slate-200 bg-white flex flex-col shrink-0">
           <Tabs value={rightPanel} onValueChange={setRightPanel} className="flex-1 flex flex-col">
             <TabsList className="w-full grid grid-cols-4 rounded-none border-b">
-              <TabsTrigger value="ai" className="gap-1">
-                <Sparkles className="w-4 h-4" />
-                AI
-              </TabsTrigger>
-              <TabsTrigger value="comments" className="gap-1">
-                <MessageSquare className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="team" className="gap-1">
-                <Users className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="history" className="gap-1">
-                <History className="w-4 h-4" />
-              </TabsTrigger>
+              <TabsTrigger value="ai"><Sparkles className="w-4 h-4" /></TabsTrigger>
+              <TabsTrigger value="comments"><MessageSquare className="w-4 h-4" /></TabsTrigger>
+              <TabsTrigger value="team"><Users className="w-4 h-4" /></TabsTrigger>
+              <TabsTrigger value="history"><History className="w-4 h-4" /></TabsTrigger>
             </TabsList>
 
             <TabsContent value="ai" className="flex-1 m-0 p-4 overflow-auto">
