@@ -112,6 +112,7 @@ import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
 import DemoPreview from './pages/DemoPreview';
+import Testimonials from './pages/Testimonials';
 import __Layout from './Layout.jsx';
 
 
@@ -181,6 +182,7 @@ export const PAGES = {
     "UserGuide": UserGuide,
     "Videos": Videos,
     "DemoPreview": DemoPreview,
+    "Testimonials": Testimonials,
 }
 
 export const pagesConfig = {
