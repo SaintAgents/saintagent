@@ -252,6 +252,15 @@ export default function ActivityFeed() {
                 Your feed will populate with listings, missions, testimonials, and platform updates as you engage.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
+                <Button 
+                  variant="outline" 
+                  className="gap-2 border-slate-300"
+                  onClick={() => refetch()}
+                  disabled={isFetching}
+                >
+                  <RefreshCcw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+                  {isFetching ? 'Refreshing…' : 'Refresh'}
+                </Button>
                 <Link to={createPageUrl('Marketplace')}>
                   <Button variant="outline" className="gap-2 border-slate-300">
                     <Briefcase className="w-4 h-4" /> Browse Marketplace
