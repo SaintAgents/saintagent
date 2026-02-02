@@ -79,6 +79,32 @@ export default function UserManagement() {
     }
   });
 
+  // Testimonials for selected user
+  const { data: userTestimonials = [] } = useQuery({
+    queryKey: ['userTestimonials', selectedUser?.user_id],
+    queryFn: async () => {
+      const given = await base44.entities.Testimonial.filter({ from_user_id: selectedUser.user_id }, '-created_date', 50);
+      const received = await base44.entities.Testimonial.filter({ to_user_id: selectedUser.user_id }, '-created_date', 50);
+      return { given: given || [], received: received || [] };
+    },
+    enabled: !!selectedUser?.user_id && testimonialsOpen
+  });
+
+  const deleteTestimonialMutation = useMutation({
+    mutationFn: (id) => base44.entities.Testimonial.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userTestimonials'] });
+    }
+  });
+
+  const updateTestimonialMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Testimonial.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userTestimonials'] });
+      setEditingTestimonial(null);
+    }
+  });
+
   const filteredProfiles = profiles
     .filter((p) =>
       p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
