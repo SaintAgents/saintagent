@@ -153,11 +153,23 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } catch { return getDefaultCustomCards(); }
   });
   
+  // Set default view mode based on rank when profile loads (only if not already set)
+  useEffect(() => {
+    if (deckViewMode === null && profile) {
+      const rankCode = profile?.rp_rank_code || 'seeker';
+      // Default to advanced for all ranks above seeker
+      const defaultMode = rankCode !== 'seeker' ? 'advanced' : 'simple';
+      setDeckViewMode(defaultMode);
+    }
+  }, [profile, deckViewMode]);
+
   // Persist deck view mode and notify other components
   useEffect(() => {
-    try { localStorage.setItem('deckViewMode', deckViewMode); } catch {}
-    // Dispatch event for Sidebar and MobileMenu to sync
-    document.dispatchEvent(new CustomEvent('viewModeChange', { detail: { viewMode: deckViewMode } }));
+    if (deckViewMode) {
+      try { localStorage.setItem('deckViewMode', deckViewMode); } catch {}
+      // Dispatch event for Sidebar and MobileMenu to sync
+      document.dispatchEvent(new CustomEvent('viewModeChange', { detail: { viewMode: deckViewMode } }));
+    }
   }, [deckViewMode]);
   
   // Get visible cards based on view mode
