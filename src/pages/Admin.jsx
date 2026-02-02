@@ -56,7 +56,7 @@ export default function Admin() {
       {/* Hero Image */}
       <div className="page-hero relative w-full overflow-hidden bg-slate-900">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d702dc79_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg"
+          src={HERO_IMAGES.find(h => h.id === 'admin')?.url || HERO_IMAGES[0]?.url}
           alt="Admin Dashboard Hero"
           data-no-filter="true"
           className="w-full h-full object-cover object-center hero-image"
