@@ -131,7 +131,7 @@ export default function StepValues({ profile, onUpdate, onNext }) {
                   <p className="text-sm text-slate-600">{value.description}</p>
                 </div>
                 <div className={cn(
-                  "w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
+                  "w-6 h-6 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors",
                   isSelected
                     ? "border-violet-500 bg-violet-500"
                     : "border-slate-300 bg-white"
