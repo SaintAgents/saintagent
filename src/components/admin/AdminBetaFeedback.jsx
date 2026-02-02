@@ -39,6 +39,41 @@ const SEVERITY_CONFIG = {
   critical: 'bg-red-100 text-red-700'
 };
 
+// Copy button with visual feedback
+function CopyButton({ feedback, typeConfig, statusConfig }) {
+  const [copied, setCopied] = useState(false);
+  
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    const copyText = `**${typeConfig.label}** (${statusConfig.label}) - ${feedback.severity || 'N/A'} severity\n\n**Reporter:** ${feedback.reporter_name || feedback.reporter_id}\n**Date:** ${format(new Date(feedback.created_date), 'MMM d, yyyy h:mm a')}\n**Page:** ${feedback.page_url || 'N/A'}\n\n**Description:**\n${feedback.description}${feedback.screenshot_url ? `\n\n**Screenshot:** ${feedback.screenshot_url}` : ''}`;
+    navigator.clipboard.writeText(copyText);
+    setCopied(true);
+    toast.success('Copied feedback to clipboard');
+    setTimeout(() => setCopied(false), 2000);
+  };
+  
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      className={`shrink-0 transition-all ${copied ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
+      onClick={handleCopy}
+    >
+      {copied ? (
+        <>
+          <CheckCircle2 className="w-4 h-4 mr-1" />
+          Copied!
+        </>
+      ) : (
+        <>
+          <Copy className="w-4 h-4 mr-1" />
+          Copy
+        </>
+      )}
+    </Button>
+  );
+}
+
 export default function AdminBetaFeedback() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
