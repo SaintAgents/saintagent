@@ -78,8 +78,8 @@ export default function Join() {
 
   const handleTryDemo = () => {
     setDemoLoading(true);
-    // Redirect directly to Command Deck (login will be triggered if needed)
-    base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
+    // Redirect to demo preview page (no login required)
+    window.location.href = createPageUrl('DemoPreview');
   };
 
   return (
