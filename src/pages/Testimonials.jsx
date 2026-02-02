@@ -229,6 +229,46 @@ export default function Testimonials() {
               </ScrollArea>
             )}
           </TabsContent>
+
+          <TabsContent value="featured">
+            <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-violet-100 to-amber-100 border border-violet-200">
+              <div className="flex items-center gap-2 text-violet-700">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm font-medium">Featured testimonials from the Join page</span>
+              </div>
+            </div>
+            <ScrollArea className="h-[calc(100vh-320px)]">
+              {DEMO_TESTIMONIALS.map(t => (
+                <Card key={t.id} className="mb-3">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={t.avatar} />
+                        <AvatarFallback>{t.name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <div>
+                            <p className="font-medium text-slate-900">{t.name}</p>
+                            <p className="text-xs text-slate-500">{t.role} · {t.rank}</p>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className={cn("w-4 h-4", i < t.rating ? "fill-amber-400 text-amber-400" : "text-slate-200")} />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="mt-2 text-slate-600">{t.text}</p>
+                        <Badge variant="outline" className="mt-2 text-xs text-violet-600 border-violet-300">
+                          Featured
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </ScrollArea>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
