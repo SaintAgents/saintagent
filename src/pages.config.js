@@ -56,6 +56,8 @@ import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
 import CommunityFeed from './pages/CommunityFeed';
+import ContentEditor from './pages/ContentEditor';
+import ContentStudio from './pages/ContentStudio';
 import CourseDetail from './pages/CourseDetail';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
@@ -113,8 +115,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import ContentStudio from './pages/ContentStudio';
-import ContentEditor from './pages/ContentEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -128,6 +128,8 @@ export const PAGES = {
     "Circles": Circles,
     "CommandDeck": CommandDeck,
     "CommunityFeed": CommunityFeed,
+    "ContentEditor": ContentEditor,
+    "ContentStudio": ContentStudio,
     "CourseDetail": CourseDetail,
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
@@ -185,8 +187,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "ContentStudio": ContentStudio,
-    "ContentEditor": ContentEditor,
 }
 
 export const pagesConfig = {

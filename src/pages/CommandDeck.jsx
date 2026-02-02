@@ -153,15 +153,36 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } catch { return getDefaultCustomCards(); }
   });
   
+  // Fetch user profile (only when authenticated)
+  const { data: profiles, isLoading: profileLoading } = useQuery({
+    queryKey: ['userProfile', currentUser?.email],
+    queryFn: async () => {
+      const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+      console.log('Fetched profile:', {
+        ggg: byEmail?.[0]?.ggg_balance,
+        rp: byEmail?.[0]?.rp_points, 
+        rank: byEmail?.[0]?.rp_rank_code,
+        trust: byEmail?.[0]?.trust_score,
+        name: byEmail?.[0]?.display_name
+      });
+      return byEmail;
+    },
+    enabled: !!currentUser?.email,
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true
+  });
+  const profile = profiles?.[0];
+
   // Set default view mode based on rank when profile loads (only if not already set)
   useEffect(() => {
-    if (deckViewMode === null && profiles?.[0]) {
-      const rankCode = profiles[0]?.rp_rank_code || 'seeker';
+    if (deckViewMode === null && profile) {
+      const rankCode = profile?.rp_rank_code || 'seeker';
       // Default to advanced for all ranks above seeker
       const defaultMode = rankCode !== 'seeker' ? 'advanced' : 'simple';
       setDeckViewMode(defaultMode);
     }
-  }, [profiles, deckViewMode]);
+  }, [profile, deckViewMode]);
 
   // Persist deck view mode and notify other components
   useEffect(() => {
@@ -374,27 +395,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       }
     }
   });
-
-  // Fetch user profile (only when authenticated)
-  const { data: profiles, isLoading: profileLoading } = useQuery({
-    queryKey: ['userProfile', currentUser?.email],
-    queryFn: async () => {
-      const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
-      console.log('Fetched profile:', {
-        ggg: byEmail?.[0]?.ggg_balance,
-        rp: byEmail?.[0]?.rp_points, 
-        rank: byEmail?.[0]?.rp_rank_code,
-        trust: byEmail?.[0]?.trust_score,
-        name: byEmail?.[0]?.display_name
-      });
-      return byEmail;
-    },
-    enabled: !!currentUser?.email,
-    staleTime: 30000, // 30 seconds - reduce API calls
-    refetchOnWindowFocus: false,
-    refetchOnMount: true
-  });
-  const profile = profiles?.[0];
   
   // Use SA# for all database queries if available, fallback to email
   const userIdentifier = profile?.sa_number || currentUser?.email;
