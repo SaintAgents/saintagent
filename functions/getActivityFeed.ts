@@ -226,6 +226,8 @@ Deno.serve(async (req) => {
 
     return Response.json({ items: sliced });
   } catch (err) {
-    return Response.json({ error: err?.message || 'Internal error' }, { status: 500 });
+    console.error('getActivityFeed error:', err);
+    // Return empty array on error instead of 500 to allow page to load
+    return Response.json({ items: [], error: err?.message || 'Internal error' });
   }
 });
