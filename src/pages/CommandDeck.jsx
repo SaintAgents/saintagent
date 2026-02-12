@@ -73,6 +73,7 @@ import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
 import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
+import SpiritTubeCard from '@/components/videos/SpiritTubeCard';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -249,7 +250,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Store all cards to side panel
   const storeAllCards = () => {
-    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news'];
+    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube'];
     // Create fresh array with all cards (icons will be resolved when rendering)
     const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
     console.log('Stowing all cards:', newStoredCards);
@@ -290,7 +291,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       testimonials: 'Community Voices',
       news: 'News & Updates',
       heroGallery: 'Hero Gallery',
-      videos: 'SaintTube Videos'
+      videos: 'SaintTube Videos',
+      spiritTube: 'SpiritTube'
     };
     return titles[id] || id;
   };
@@ -319,7 +321,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     testimonials: MessageCircle,
     news: Newspaper,
     heroGallery: Image,
-    videos: Play
+    videos: Play,
+    spiritTube: Play
   };
 
   // Toss card to side panel storage
@@ -1801,6 +1804,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
             {isCardVisible('videos') && <CollapsibleCard title="SaintTube Videos" cardId="videos" icon={Play} badge="20 min max" badgeColor="red" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('videos')} onToggleHide={() => toggleCardVisibility('videos')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Videos')}>
               <VideosDashboardCard profile={profile} currentUser={currentUser} />
+            </CollapsibleCard>}
+
+            {isCardVisible('spiritTube') && <CollapsibleCard title="SpiritTube" cardId="spiritTube" icon={Play} badge="Spiritual" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('spiritTube')} onToggleHide={() => toggleCardVisibility('spiritTube')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('SpiritTube')}>
+              <SpiritTubeCard />
             </CollapsibleCard>}
 
             {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
