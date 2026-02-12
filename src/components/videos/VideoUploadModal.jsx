@@ -24,9 +24,11 @@ const CATEGORIES = [
 const MAX_DURATION_SECONDS = 1200; // 20 minutes
 
 export default function VideoUploadModal({ open, onClose, currentUser, profile }) {
+  const [uploadMode, setUploadMode] = useState('file'); // 'file' or 'url'
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [videoDuration, setVideoDuration] = useState(0);
+  const [videoUrl, setVideoUrl] = useState('');
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [title, setTitle] = useState('');
@@ -87,8 +89,16 @@ export default function VideoUploadModal({ open, onClose, currentUser, profile }
     mutationFn: async () => {
       setUploading(true);
       
-      // Upload video
-      const videoResult = await base44.integrations.Core.UploadFile({ file: videoFile });
+      let finalVideoUrl;
+      
+      if (uploadMode === 'file') {
+        // Upload video file
+        const videoResult = await base44.integrations.Core.UploadFile({ file: videoFile });
+        finalVideoUrl = videoResult.file_url;
+      } else {
+        // Use provided URL directly
+        finalVideoUrl = videoUrl.trim();
+      }
       
       // Upload thumbnail if provided
       let thumbnailUrl = null;
@@ -101,9 +111,9 @@ export default function VideoUploadModal({ open, onClose, currentUser, profile }
       await base44.entities.Video.create({
         title,
         description,
-        video_url: videoResult.file_url,
+        video_url: finalVideoUrl,
         thumbnail_url: thumbnailUrl,
-        duration_seconds: Math.floor(videoDuration),
+        duration_seconds: uploadMode === 'file' ? Math.floor(videoDuration) : 0,
         uploader_id: currentUser.email,
         uploader_name: profile?.display_name || currentUser.full_name,
         uploader_avatar: profile?.avatar_url,
@@ -126,9 +136,11 @@ export default function VideoUploadModal({ open, onClose, currentUser, profile }
   });
 
   const resetForm = () => {
+    setUploadMode('file');
     setVideoFile(null);
     setVideoPreview(null);
     setVideoDuration(0);
+    setVideoUrl('');
     setThumbnailFile(null);
     setThumbnailPreview(null);
     setTitle('');
@@ -141,11 +153,19 @@ export default function VideoUploadModal({ open, onClose, currentUser, profile }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!videoFile || !title.trim()) {
-      setError('Please provide a video and title');
+    if (!title.trim()) {
+      setError('Please provide a title');
       return;
     }
-    if (videoDuration > MAX_DURATION_SECONDS) {
+    if (uploadMode === 'file' && !videoFile) {
+      setError('Please select a video file');
+      return;
+    }
+    if (uploadMode === 'url' && !videoUrl.trim()) {
+      setError('Please provide a video URL');
+      return;
+    }
+    if (uploadMode === 'file' && videoDuration > MAX_DURATION_SECONDS) {
       setError('Video must be 20 minutes or less');
       return;
     }
@@ -176,45 +196,85 @@ export default function VideoUploadModal({ open, onClose, currentUser, profile }
             </div>
           )}
 
-          {/* Video Upload */}
+          {/* Upload Mode Toggle */}
           <div className="space-y-2">
-            <Label>Video (max 20 minutes)</Label>
-            {!videoPreview ? (
-              <div
-                onClick={() => videoInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center cursor-pointer hover:border-red-300 hover:bg-red-50/50 transition-colors"
+            <Label>Video Source</Label>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant={uploadMode === 'file' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setUploadMode('file')}
+                className={uploadMode === 'file' ? 'bg-violet-600 hover:bg-violet-700' : ''}
               >
-                <Video className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-                <p className="text-sm text-slate-600">Click to select a video</p>
-                <p className="text-xs text-slate-400 mt-1">MP4, WebM, MOV • Max 20 minutes</p>
-              </div>
-            ) : (
-              <div className="relative rounded-xl overflow-hidden bg-black">
-                <video
-                  src={videoPreview}
-                  className="w-full max-h-64 object-contain"
-                  controls
-                />
-                <button
-                  type="button"
-                  onClick={() => { setVideoFile(null); setVideoPreview(null); setVideoDuration(0); }}
-                  className="absolute top-2 right-2 p-1.5 bg-black/60 rounded-full hover:bg-black/80"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
-                <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/60 rounded text-white text-xs">
-                  {formatDuration(videoDuration)}
-                </div>
-              </div>
-            )}
-            <input
-              ref={videoInputRef}
-              type="file"
-              accept="video/*"
-              onChange={handleVideoSelect}
-              className="hidden"
-            />
+                <Upload className="w-4 h-4 mr-1" />
+                Upload File
+              </Button>
+              <Button
+                type="button"
+                variant={uploadMode === 'url' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setUploadMode('url')}
+                className={uploadMode === 'url' ? 'bg-violet-600 hover:bg-violet-700' : ''}
+              >
+                🔗 Paste URL
+              </Button>
+            </div>
           </div>
+
+          {/* Video Upload or URL */}
+          {uploadMode === 'file' ? (
+            <div className="space-y-2">
+              <Label>Video File (max 20 minutes)</Label>
+              {!videoPreview ? (
+                <div
+                  onClick={() => videoInputRef.current?.click()}
+                  className="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center cursor-pointer hover:border-violet-300 hover:bg-violet-50/50 transition-colors"
+                >
+                  <Video className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                  <p className="text-sm text-slate-600">Click to select a video</p>
+                  <p className="text-xs text-slate-400 mt-1">MP4, WebM, MOV • Max 20 minutes</p>
+                </div>
+              ) : (
+                <div className="relative rounded-xl overflow-hidden bg-black">
+                  <video
+                    src={videoPreview}
+                    className="w-full max-h-64 object-contain"
+                    controls
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { setVideoFile(null); setVideoPreview(null); setVideoDuration(0); }}
+                    className="absolute top-2 right-2 p-1.5 bg-black/60 rounded-full hover:bg-black/80"
+                  >
+                    <X className="w-4 h-4 text-white" />
+                  </button>
+                  <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/60 rounded text-white text-xs">
+                    {formatDuration(videoDuration)}
+                  </div>
+                </div>
+              )}
+              <input
+                ref={videoInputRef}
+                type="file"
+                accept="video/*"
+                onChange={handleVideoSelect}
+                className="hidden"
+              />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label>Video URL</Label>
+              <Input
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="https://youtube.com/watch?v=... or direct video link"
+              />
+              <p className="text-xs text-slate-500">
+                Supports YouTube, Vimeo, or direct video file URLs
+              </p>
+            </div>
+          )}
 
           {/* Thumbnail */}
           <div className="space-y-2">
@@ -308,8 +368,8 @@ export default function VideoUploadModal({ open, onClose, currentUser, profile }
             </Button>
             <Button 
               type="submit" 
-              disabled={uploading || !videoFile || !title.trim()}
-              className="bg-red-600 hover:bg-red-700"
+              disabled={uploading || !title.trim() || (uploadMode === 'file' ? !videoFile : !videoUrl.trim())}
+              className="bg-violet-600 hover:bg-violet-700"
             >
               {uploading ? (
                 <>
