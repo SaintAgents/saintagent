@@ -158,9 +158,11 @@ export default function TopBar({
 
   const { data: unreadMessages = [] } = useQuery({
     queryKey: ['unreadMessages', currentUser?.email],
-    queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 1000),
+    queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 50),
     enabled: !!currentUser?.email,
-    refetchInterval: 5000
+    staleTime: 60000, // Cache for 1 minute
+    refetchInterval: 60000, // Only poll every 60 seconds instead of 5
+    refetchOnWindowFocus: false
   });
 
   // Search data
