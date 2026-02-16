@@ -707,6 +707,47 @@ export default function DemoUsersManager() {
                     <p className="text-xs text-slate-500">{user.user_id}</p>
                   </div>
                   <Badge variant="outline">{user.rp_rank_code || 'seeker'}</Badge>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        disabled={deletingUserId === user.id}
+                      >
+                        {deletingUserId === user.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete {user.display_name}?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently delete this user and ALL their data including:
+                          <ul className="list-disc ml-6 mt-2 text-sm">
+                            <li>Marketplace listings</li>
+                            <li>Meetings & bookings</li>
+                            <li>Messages</li>
+                            <li>Badges & testimonials</li>
+                            <li>Follows & notifications</li>
+                            <li>GGG transactions</li>
+                          </ul>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => deleteSingleDemoUser(user)} 
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Delete User & All Data
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               ))}
             </div>
