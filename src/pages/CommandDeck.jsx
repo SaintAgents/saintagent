@@ -519,75 +519,91 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       console.log('Badges fetched:', results?.length, 'for user:', badgeUserId);
       return results || [];
     },
-    enabled: !!badgeUserId,
-    staleTime: 300000, // 5 minutes for badges
+    enabled: !!badgeUserId && !!profile, // Wait for profile first
+    staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: 1
+    retry: false // Don't retry - prevents cascade
   });
 
-  // Fetch matches - mobile-optimized
+  // Stagger queries - wait for profile before fetching secondary data
+  // This prevents all queries from firing simultaneously and hitting rate limits
+  
+  const { data: badges = [] } = useQuery({
+    queryKey: ['userBadges', badgeUserId, badgeLimit],
+    queryFn: async () => {
+      let results = await base44.entities.Badge.filter({ user_id: badgeUserId, status: 'active' }, '-created_date', badgeLimit);
+      if ((!results || results.length === 0) && profile?.sa_number) {
+        results = await base44.entities.Badge.filter({ user_id: profile.sa_number, status: 'active' }, '-created_date', badgeLimit);
+      }
+      return results || [];
+    },
+    enabled: !!badgeUserId && !!profile,
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    retry: false
+  });
+
   const { data: matches = [] } = useQuery({
     queryKey: ['matches', matchLimit],
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit),
+    enabled: !!profile, // Wait for profile
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
-  // Fetch meetings - mobile-optimized
   const { data: meetings = [] } = useQuery({
     queryKey: ['meetings', meetingLimit],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', meetingLimit),
+    enabled: !!profile,
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
-  // Fetch missions - mobile-optimized
   const { data: missions = [] } = useQuery({
     queryKey: ['missions', missionLimit],
     queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit),
+    enabled: !!profile,
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
-  // Fetch listings - mobile-optimized
   const { data: listings = [] } = useQuery({
     queryKey: ['listings', listingLimit],
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', listingLimit),
+    enabled: !!profile,
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
-  // Fetch projects - mobile-optimized
   const { data: projects = [] } = useQuery({
     queryKey: ['projects', projectLimit],
     queryFn: () => base44.entities.Project.list('-created_date', projectLimit),
+    enabled: !!profile,
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
-  // Fetch notifications - mobile-optimized
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', notificationLimit],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', notificationLimit),
+    enabled: !!profile,
     staleTime: 180000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
-  // Fetch challenges - mobile-optimized
   const { data: challenges = [] } = useQuery({
     queryKey: ['challenges', userIdentifier, challengeLimit],
     queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', challengeLimit),
-    enabled: !!userIdentifier,
+    enabled: !!userIdentifier && !!profile,
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    retry: 1
+    retry: false
   });
 
   // Daily Ops data (today)
