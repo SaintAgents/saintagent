@@ -26,11 +26,18 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
   const { data: liveStatus } = useQuery({
     queryKey: ['liveStatus', userId],
     queryFn: async () => {
-      const statuses = await base44.entities.LiveStatus.filter({ user_id: userId });
-      return statuses?.[0];
+      try {
+        const statuses = await base44.entities.LiveStatus.filter({ user_id: userId });
+        return statuses?.[0];
+      } catch (err) {
+        console.warn('LiveStatus fetch error:', err?.message);
+        return null;
+      }
     },
     enabled: !!userId,
-    refetchInterval: 10000 // Poll every 10s
+    refetchInterval: 60000, // Poll every 60s instead of 10s to reduce API calls
+    staleTime: 30000,
+    retry: false,
   });
 
   const { data: currentUser } = useQuery({
@@ -59,20 +66,25 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
     }
   });
 
-  // Heartbeat effect - update every 30s when online
+  // Heartbeat effect - update every 2 minutes when online (reduced from 30s)
   useEffect(() => {
     if (!currentUser?.email || userId !== currentUser.email) return;
     
     const heartbeat = async () => {
-      const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
-      if (existing?.[0] && existing[0].status !== 'offline') {
-        await base44.entities.LiveStatus.update(existing[0].id, {
-          last_heartbeat: new Date().toISOString()
-        });
+      try {
+        const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
+        if (existing?.[0] && existing[0].status !== 'offline') {
+          await base44.entities.LiveStatus.update(existing[0].id, {
+            last_heartbeat: new Date().toISOString()
+          });
+        }
+      } catch (err) {
+        // Silently skip on rate limit
+        console.warn('LiveStatus heartbeat skipped:', err?.message);
       }
     };
 
-    const interval = setInterval(heartbeat, 30000);
+    const interval = setInterval(heartbeat, 120000); // 2 minutes instead of 30s
     return () => clearInterval(interval);
   }, [currentUser?.email, userId]);
 
@@ -139,10 +151,13 @@ export function useLiveStatus() {
 
   useEffect(() => {
     if (!currentUser?.email) return;
+    let isMounted = true;
 
     const initStatus = async () => {
       try {
         const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
+        if (!isMounted) return;
+        
         if (!existing?.length) {
           await base44.entities.LiveStatus.create({
             user_id: currentUser.email,
@@ -155,7 +170,9 @@ export function useLiveStatus() {
             last_heartbeat: new Date().toISOString()
           });
         }
-        queryClient.invalidateQueries({ queryKey: ['liveStatus', currentUser.email] });
+        if (isMounted) {
+          queryClient.invalidateQueries({ queryKey: ['liveStatus', currentUser.email] });
+        }
       } catch (err) {
         // Silently ignore rate limit or other errors - non-critical feature
         console.warn('LiveStatus init skipped:', err?.message);
@@ -170,6 +187,9 @@ export function useLiveStatus() {
     };
 
     window.addEventListener('beforeunload', handleUnload);
-    return () => window.removeEventListener('beforeunload', handleUnload);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('beforeunload', handleUnload);
+    };
   }, [currentUser?.email]);
 }
