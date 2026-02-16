@@ -297,10 +297,16 @@ export default function DemoUsersManager() {
         profile_visibility: 'public'
       });
 
-      toast.success(newDemoPassword 
+      const successMsg = newDemoPassword 
         ? `Created ${newDemoEmail} with password "${newDemoPassword}". Ready to sign in!`
-        : `Invited ${newDemoEmail}. They will receive an email to set their password.`
-      );
+        : `Invited ${newDemoEmail}. They will receive an email to set their password.`;
+      
+      setSuccessDialog({
+        open: true,
+        title: '✅ Demo User Created!',
+        message: successMsg
+      });
+      
       setNewDemoEmail('');
       setNewDemoName('');
       setNewDemoPassword('');
