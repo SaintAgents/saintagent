@@ -571,7 +571,7 @@ export default function DemoUsersManager() {
             </Button>
           </div>
           <p className="text-xs text-slate-500">
-            <strong>Invite:</strong> Sends email to set password (can sign in). <strong>Create:</strong> Profile only, no login.
+            <strong>Invite:</strong> Creates login account {newDemoPassword ? 'with specified password' : '(sends email to set password)'}. <strong>Create:</strong> Profile only, no login.
           </p>
         </CardContent>
       </Card>
