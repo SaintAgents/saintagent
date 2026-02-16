@@ -43,19 +43,26 @@ export default function BetaFeedback() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: profile } = useQuery({
-    queryKey: ['userProfile', currentUser?.email],
+  const { data: profiles } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
     queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
-      return profiles?.[0];
+      return base44.entities.UserProfile.filter({ user_id: currentUser.email });
     },
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 600000,
+    gcTime: 900000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
+  const profile = profiles?.[0];
 
   // Fetch ALL feedback (public feed)
   const { data: allFeedback = [], isLoading } = useQuery({
     queryKey: ['allBetaFeedback'],
-    queryFn: () => base44.entities.BetaFeedback.list('-created_date', 100)
+    queryFn: () => base44.entities.BetaFeedback.list('-created_date', 100),
+    staleTime: 120000,
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
   // Fetch platform settings for bonus period
@@ -64,7 +71,10 @@ export default function BetaFeedback() {
     queryFn: async () => {
       const settings = await base44.entities.PlatformSetting.list();
       return settings?.[0] || {};
-    }
+    },
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
   const bonusActive = platformSettings?.beta_bonus_active;
