@@ -257,6 +257,111 @@ export default function DemoUsersManager() {
     }
   };
 
+  // Invite a new demo user with login credentials
+  const inviteDemoUser = async () => {
+    if (!newDemoEmail || !newDemoName) {
+      toast.error('Please enter email and display name');
+      return;
+    }
+
+    setIsInviting(true);
+    try {
+      // Invite user via Base44 - this creates a real user with login credentials
+      await base44.users.inviteUser(newDemoEmail, 'user');
+      
+      // Get template defaults based on selected tier
+      const tierTemplates = selectedTier === 'top' ? MASTER_DEMO_TEMPLATES.top_tier : MASTER_DEMO_TEMPLATES.mid_tier;
+      const template = tierTemplates[0]; // Use first template of selected tier as base
+      
+      // Create their profile with demo-like attributes
+      await base44.entities.UserProfile.create({
+        user_id: newDemoEmail,
+        handle: newDemoEmail.split('@')[0].replace(/[^a-z0-9]/gi, ''),
+        display_name: newDemoName,
+        rp_rank_code: template.defaults.rp_rank_code,
+        rp_points: template.defaults.rp_points,
+        trust_score: template.defaults.trust_score,
+        ggg_balance: template.defaults.ggg_balance,
+        leader_tier: template.defaults.leader_tier,
+        status: 'online',
+        bio: `Demo user - ${newDemoName}`,
+        profile_visibility: 'public'
+      });
+
+      toast.success(`Invited ${newDemoEmail}. They will receive an email to set their password.`);
+      setNewDemoEmail('');
+      setNewDemoName('');
+      refetchUsers();
+    } catch (error) {
+      console.error('Error inviting demo user:', error);
+      toast.error(error.message || 'Failed to invite demo user');
+    } finally {
+      setIsInviting(false);
+    }
+  };
+
+  // Delete a single demo user and all their data
+  const deleteSingleDemoUser = async (user) => {
+    setDeletingUserId(user.id);
+    try {
+      const userId = user.user_id;
+      
+      // Delete all related data in parallel
+      const [
+        listings, bookings, meetings, missions, messages,
+        badges, testimonials, follows, notifications, gggTransactions
+      ] = await Promise.all([
+        base44.entities.Listing.filter({ owner_id: userId }),
+        base44.entities.Booking.filter({ user_id: userId }),
+        base44.entities.Meeting.filter({ host_id: userId }),
+        base44.entities.Mission.filter({ creator_id: userId }),
+        base44.entities.Message.filter({ from_user_id: userId }),
+        base44.entities.Badge.filter({ user_id: userId }),
+        base44.entities.Testimonial.filter({ to_user_id: userId }),
+        base44.entities.Follow.filter({ follower_id: userId }),
+        base44.entities.Notification.filter({ user_id: userId }),
+        base44.entities.GGGTransaction.filter({ user_id: userId })
+      ]);
+
+      // Also get meetings where they are guest
+      const guestMeetings = await base44.entities.Meeting.filter({ guest_id: userId });
+      // Get follows where they are being followed
+      const followsAsTarget = await base44.entities.Follow.filter({ following_id: userId });
+      // Get testimonials they gave
+      const testimonialsByUser = await base44.entities.Testimonial.filter({ from_user_id: userId });
+
+      // Delete all related data
+      const deletePromises = [
+        ...listings.map(l => base44.entities.Listing.delete(l.id)),
+        ...bookings.map(b => base44.entities.Booking.delete(b.id)),
+        ...meetings.map(m => base44.entities.Meeting.delete(m.id)),
+        ...guestMeetings.map(m => base44.entities.Meeting.delete(m.id)),
+        ...missions.map(m => base44.entities.Mission.delete(m.id)),
+        ...messages.map(m => base44.entities.Message.delete(m.id)),
+        ...badges.map(b => base44.entities.Badge.delete(b.id)),
+        ...testimonials.map(t => base44.entities.Testimonial.delete(t.id)),
+        ...testimonialsByUser.map(t => base44.entities.Testimonial.delete(t.id)),
+        ...follows.map(f => base44.entities.Follow.delete(f.id)),
+        ...followsAsTarget.map(f => base44.entities.Follow.delete(f.id)),
+        ...notifications.map(n => base44.entities.Notification.delete(n.id)),
+        ...gggTransactions.map(t => base44.entities.GGGTransaction.delete(t.id))
+      ];
+
+      await Promise.all(deletePromises);
+
+      // Finally delete the user profile
+      await base44.entities.UserProfile.delete(user.id);
+
+      toast.success(`Deleted ${user.display_name} and all related data`);
+      refetchUsers();
+    } catch (error) {
+      console.error('Error deleting demo user:', error);
+      toast.error('Failed to delete demo user completely');
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
+
   // Create master template users if they don't exist
   const createMasterTemplates = async () => {
     setIsCreating(true);
