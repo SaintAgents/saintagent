@@ -77,6 +77,16 @@ export default function BetaFeedback() {
     retry: false
   });
 
+  // Fetch current user's feedback
+  const { data: myFeedback = [] } = useQuery({
+    queryKey: ['myBetaFeedback', currentUser?.email],
+    queryFn: () => base44.entities.BetaFeedback.filter({ reporter_id: currentUser.email }, '-created_date', 50),
+    enabled: !!currentUser?.email,
+    staleTime: 120000,
+    refetchOnWindowFocus: false,
+    retry: false
+  });
+
   const bonusActive = platformSettings?.beta_bonus_active;
   const bonusMultiplier = platformSettings?.beta_bonus_multiplier || 2;
   const bonusEndTime = platformSettings?.beta_bonus_end_time;
