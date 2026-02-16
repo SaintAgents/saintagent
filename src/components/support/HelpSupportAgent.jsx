@@ -291,11 +291,17 @@ export default function HelpSupportAgent() {
     document.addEventListener('mouseup', handleUp);
   };
 
+  // Auto-scroll to bottom when messages change (new message or loading state)
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
+    // Use a small timeout to ensure content is rendered before scrolling
+    const timeoutId = setTimeout(() => {
+      if (scrollRef.current) {
+        const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]') || scrollRef.current;
+        scrollElement.scrollTop = scrollElement.scrollHeight;
+      }
+    }, 50);
+    return () => clearTimeout(timeoutId);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     if (isOpen && !isMinimized && inputRef.current) {
