@@ -43,8 +43,24 @@ export default function NotificationBell({ notifications = [], onAction }) {
     } catch { return []; }
   });
   
-  // Filter out cleared notifications
-  const displayNotifications = notifications.filter(n => !clearedIds.includes(n.id));
+  // Track when all notifications were last cleared (timestamp)
+  const [clearedAllTimestamp, setClearedAllTimestamp] = useState(() => {
+    try {
+      return parseInt(sessionStorage.getItem('clearedNotificationsTimestamp') || '0', 10);
+    } catch { return 0; }
+  });
+  
+  // Filter out cleared notifications AND any notifications created before the "clear all" timestamp
+  const displayNotifications = notifications.filter(n => {
+    // Filter out individually cleared notifications
+    if (clearedIds.includes(n.id)) return false;
+    // Filter out notifications that existed before "clear all" was clicked
+    if (clearedAllTimestamp && n.created_date) {
+      const notifTime = new Date(n.created_date).getTime();
+      if (notifTime <= clearedAllTimestamp) return false;
+    }
+    return true;
+  });
   const unreadCount = displayNotifications.filter(n => !n.is_read).length;
 
   const typeIcons = {
