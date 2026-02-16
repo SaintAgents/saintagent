@@ -93,6 +93,16 @@ export default function Landing() {
               Learn More
             </Button>
           </div>
+
+          {/* Demo Account Info */}
+          <div className="mt-8 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-amber-500/30 max-w-md mx-auto">
+            <p className="text-amber-300 text-sm font-semibold mb-2">🎮 Try a Demo Account</p>
+            <div className="text-white/90 text-sm space-y-1">
+              <p><span className="text-white/60">User ID:</span> <code className="bg-white/20 px-2 py-0.5 rounded">DemoUser000</code></p>
+              <p><span className="text-white/60">Password:</span> <code className="bg-white/20 px-2 py-0.5 rounded">GaiaLove</code></p>
+            </div>
+            <p className="text-white/50 text-xs mt-2">Experience the platform before creating your own account</p>
+          </div>
         </div>
       </div>
 
