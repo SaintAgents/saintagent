@@ -24,7 +24,7 @@ import MobileCloseButton from '@/components/hud/MobileCloseButton';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
-import UserTourModal from '@/components/hud/UserTourModal';
+import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import BetaTicker from '@/components/hud/BetaTicker.jsx';
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
