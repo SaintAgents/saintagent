@@ -141,20 +141,25 @@ export function useLiveStatus() {
     if (!currentUser?.email) return;
 
     const initStatus = async () => {
-      const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
-      if (!existing?.length) {
-        await base44.entities.LiveStatus.create({
-          user_id: currentUser.email,
-          status: 'online',
-          last_heartbeat: new Date().toISOString()
-        });
-      } else {
-        await base44.entities.LiveStatus.update(existing[0].id, {
-          status: 'online',
-          last_heartbeat: new Date().toISOString()
-        });
+      try {
+        const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
+        if (!existing?.length) {
+          await base44.entities.LiveStatus.create({
+            user_id: currentUser.email,
+            status: 'online',
+            last_heartbeat: new Date().toISOString()
+          });
+        } else {
+          await base44.entities.LiveStatus.update(existing[0].id, {
+            status: 'online',
+            last_heartbeat: new Date().toISOString()
+          });
+        }
+        queryClient.invalidateQueries({ queryKey: ['liveStatus', currentUser.email] });
+      } catch (err) {
+        // Silently ignore rate limit or other errors - non-critical feature
+        console.warn('LiveStatus init skipped:', err?.message);
       }
-      queryClient.invalidateQueries({ queryKey: ['liveStatus', currentUser.email] });
     };
 
     initStatus();
