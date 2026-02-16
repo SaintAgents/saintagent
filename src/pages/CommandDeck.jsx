@@ -405,37 +405,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Use SA# for all database queries if available, fallback to email
   const userIdentifier = profile?.sa_number || currentUser?.email;
 
-  // GGG Balance - profile is primary source, wallet is secondary/verification
-  // Profile loads instantly, wallet API is slower - always show profile balance first
-  const walletUserId = currentUser?.email;
-  const { data: walletRes, refetch: refetchWallet } = useQuery({
-    queryKey: ['wallet', walletUserId],
-    queryFn: async () => {
-      try {
-        const response = await base44.functions.invoke('walletEngine', {
-          action: 'getWallet',
-          payload: { user_id: walletUserId }
-        });
-        const walletData = response?.data || response;
-        return walletData;
-      } catch (e) {
-        console.error('Wallet fetch error:', e);
-        return null;
-      }
-    },
-    enabled: !!walletUserId && !!profile, // Only fetch wallet AFTER profile loads
-    refetchInterval: 120000, // Less frequent - wallet is backup only
-    retry: 1,
-    staleTime: 60000
-  });
-  
-  // PRIORITY: Always use profile.ggg_balance as primary source (loads instantly)
-  // Wallet is only for verification/sync, not primary display
-  const profileGGG = profile?.ggg_balance ?? 0;
-  const walletGGG = walletRes?.wallet?.available_balance ?? 0;
-  // Use profile balance - it's authoritative and loads with profile
-  // If profile has a balance, use it. Otherwise try wallet.
-  const walletAvailable = profileGGG > 0 ? profileGGG : (walletGGG > 0 ? walletGGG : profileGGG);
+  // GGG Balance - ALWAYS use profile as source, NEVER query wallet (causes rate limits)
+  // Profile is the authoritative source and loads instantly with user data
+  const walletAvailable = profile?.ggg_balance ?? 0;
   // Use rp_points for calculation, but also check rank_points as fallback
   const rpPoints = profile?.rp_points || profile?.rank_points || 0;
   const rpInfo = getRPRank(rpPoints);
@@ -1229,8 +1201,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     <button
                       onClick={() => {
                         queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-                        queryClient.invalidateQueries({ queryKey: ['wallet'] });
-                        refetchWallet();
                       }}
                       disabled={profileLoading}
                       className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group disabled:opacity-50"
