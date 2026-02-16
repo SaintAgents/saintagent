@@ -121,8 +121,14 @@ export default function NotificationBell({ notifications = [], onAction }) {
                   const idsToClear = displayNotifications.map(n => n.id);
                   const newClearedIds = [...clearedIds, ...idsToClear];
                   setClearedIds(newClearedIds);
+                  
+                  // Also store a timestamp so any notifications that existed before this moment are hidden
+                  const clearTimestamp = Date.now();
+                  setClearedAllTimestamp(clearTimestamp);
+                  
                   try {
                     sessionStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds));
+                    sessionStorage.setItem('clearedNotificationsTimestamp', String(clearTimestamp));
                   } catch {}
                   
                   // Delete notifications in background (don't wait)
