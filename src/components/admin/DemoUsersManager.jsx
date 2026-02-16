@@ -116,6 +116,13 @@ export default function DemoUsersManager() {
   const [isCreating, setIsCreating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteMastersConfirm, setDeleteMastersConfirm] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState(null);
+  
+  // New demo user with login credentials
+  const [newDemoEmail, setNewDemoEmail] = useState('');
+  const [newDemoName, setNewDemoName] = useState('');
+  const [selectedTier, setSelectedTier] = useState('mid');
+  const [isInviting, setIsInviting] = useState(false);
 
   // Fetch all demo users (emails containing 'demo')
   const { data: demoUsers = [], isLoading: loadingUsers, refetch: refetchUsers } = useQuery({
