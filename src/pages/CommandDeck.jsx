@@ -1299,45 +1299,27 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
                   {/* Sigils Section */}
                   <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
-                    <p className="text-fuchsia-500 dark:text-fuchsia-400 text-xs font-medium mb-3">✨ Sacred Sigils</p>
-                    <div className="grid grid-cols-3 gap-3">
-                      {/* Sigil 1 - Eye of Horus */}
-                      <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200 dark:border-indigo-700">
-                        <div className="w-12 h-12 mb-2">
-                          <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/eye_of_horus_sigil.png"
-                            alt="Eye of Horus"
-                            className="w-full h-full object-contain"
-                            data-no-filter="true"
-                          />
-                        </div>
-                        <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 text-center">Protection</p>
+                    <p className="text-fuchsia-500 dark:text-fuchsia-400 text-xs font-medium mb-3">✨ Sigils</p>
+                    <div className="flex flex-wrap gap-2">
+                      {/* Trust Shield */}
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-emerald-200 dark:border-emerald-700">
+                        <span className="text-emerald-600">🛡️</span>
+                        <span className="capitalize">Trust Shield</span>
                       </div>
-
-                      {/* Sigil 2 - Ankh */}
-                      <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-700">
-                        <div className="w-12 h-12 mb-2">
-                          <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ankh_sigil.png"
-                            alt="Ankh"
-                            className="w-full h-full object-contain"
-                            data-no-filter="true"
-                          />
-                        </div>
-                        <p className="text-xs font-semibold text-amber-700 dark:text-amber-300 text-center">Eternal Life</p>
+                      {/* Bronze Affiliate */}
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-amber-200 dark:border-amber-700">
+                        <span className="text-amber-600">🛡️</span>
+                        <span className="capitalize">Bronze Affiliate</span>
                       </div>
-
-                      {/* Sigil 3 - Flower of Life */}
-                      <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-700">
-                        <div className="w-12 h-12 mb-2">
-                          <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/flower_of_life_sigil.png"
-                            alt="Flower of Life"
-                            className="w-full h-full object-contain"
-                            data-no-filter="true"
-                          />
-                        </div>
-                        <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 text-center">Unity</p>
+                      {/* Silver Affiliate */}
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-600">
+                        <span className="text-slate-500">🛡️</span>
+                        <span className="capitalize">Silver Affiliate</span>
+                      </div>
+                      {/* Gold Affiliate */}
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-yellow-300 dark:border-yellow-600">
+                        <span className="text-yellow-500">🛡️</span>
+                        <span className="capitalize">Gold Affiliate</span>
                       </div>
                     </div>
                   </div>
