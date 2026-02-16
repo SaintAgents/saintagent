@@ -575,7 +575,7 @@ export default function Join() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">Password:</span>
-                    <span className="text-emerald-400 select-all">guyIlove</span>
+                    <span className="text-emerald-400 select-all">GaiaLove</span>
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 mt-3">
