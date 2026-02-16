@@ -256,6 +256,45 @@ export default function BetaFeedback() {
           </CardContent>
         </Card>
 
+        {/* My Feedback Section */}
+        {myFeedback.length > 0 && (
+          <>
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">My Feedback ({myFeedback.length})</h3>
+            <div className="space-y-4 mb-8">
+              {myFeedback.map((feedback) => {
+                const typeConfig = TYPE_CONFIG[feedback.feedback_type] || TYPE_CONFIG.other;
+                const statusConfig = STATUS_CONFIG[feedback.status] || STATUS_CONFIG.pending;
+                const TypeIcon = typeConfig.icon;
+
+                return (
+                  <Card key={feedback.id} className="overflow-hidden border-violet-200 bg-violet-50/30">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-lg ${typeConfig.color}`}>
+                          <TypeIcon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <Badge className={typeConfig.color} variant="secondary">{typeConfig.label}</Badge>
+                            <Badge className={statusConfig.color} variant="secondary">{statusConfig.label}</Badge>
+                            <Badge variant="outline" className="text-xs">Mine</Badge>
+                          </div>
+                          <p className="text-slate-700 text-sm">{feedback.description}</p>
+                          <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
+                            <span>{format(new Date(feedback.created_date), 'MMM d, yyyy')}</span>
+                            <span className="flex items-center gap-1"><ThumbsUp className="w-3 h-3" />{feedback.likes_count || 0}</span>
+                            <span className="flex items-center gap-1"><Heart className="w-3 h-3" />{feedback.loves_count || 0}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </>
+        )}
+
         {/* Community Feedback Feed */}
         <h3 className="text-lg font-semibold text-slate-900 mb-4">Community Feedback</h3>
         
