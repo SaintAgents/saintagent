@@ -298,14 +298,15 @@ function AuthenticatedLayout({ children, currentPageName }) {
   });
 
   const { data: profiles } = useQuery({
-    queryKey: ['userProfile'],
+    queryKey: ['myProfile', currentUser?.email],
     queryFn: async () => {
-              const user = await base44.auth.me();
-              return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
+              return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
             },
-    enabled: !!currentUser,
-    staleTime: 300000, // Cache for 5 minutes
-    refetchOnWindowFocus: false
+    enabled: !!currentUser?.email,
+    staleTime: 600000, // Cache for 10 minutes
+    gcTime: 900000, // Keep in cache for 15 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch on every mount - use cache
   });
   const profile = profiles?.[0];
   const cmdViewMode = profile?.command_deck_layout?.view_mode;
