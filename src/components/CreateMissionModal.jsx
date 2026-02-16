@@ -110,6 +110,10 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
         roles_needed: [],
         tasks: []
       });
+    },
+    onError: (err) => {
+      console.error('Failed to create mission:', err);
+      alert('Failed to create mission. Please try again in a moment.');
     }
   });
 
@@ -125,7 +129,7 @@ export default function CreateMissionModal({ open, onClose, prefillData }) {
           <DialogTitle>Create New Mission</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto flex-1 pr-2">
+        <form id="mission-form" onSubmit={handleSubmit} className="space-y-4 overflow-y-auto flex-1 pr-2">
           <div>
             <Label>Mission Title</Label>
             <Input
