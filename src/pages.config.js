@@ -107,6 +107,7 @@ import Quests from './pages/Quests';
 import ResourceHub from './pages/ResourceHub';
 import Settings from './pages/Settings';
 import SovereignAlliance from './pages/SovereignAlliance';
+import SpiritTube from './pages/SpiritTube';
 import Studio from './pages/Studio';
 import SynchronicityEngine from './pages/SynchronicityEngine';
 import Teams from './pages/Teams';
@@ -115,7 +116,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import SpiritTube from './pages/SpiritTube';
 import __Layout from './Layout.jsx';
 
 
@@ -180,6 +180,7 @@ export const PAGES = {
     "ResourceHub": ResourceHub,
     "Settings": Settings,
     "SovereignAlliance": SovereignAlliance,
+    "SpiritTube": SpiritTube,
     "Studio": Studio,
     "SynchronicityEngine": SynchronicityEngine,
     "Teams": Teams,
@@ -188,7 +189,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "SpiritTube": SpiritTube,
 }
 
 export const pagesConfig = {

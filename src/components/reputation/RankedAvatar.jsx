@@ -71,21 +71,37 @@ export default function RankedAvatar({
   const needsFetch = !!userId && !src && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null || saNumber == null);
   const { data: fetched = [] } = useQuery({
     queryKey: ['rankedAvatarProfile', userId || 'none'],
-    queryFn: () => {
+    queryFn: async () => {
       if (!userId) return null;
-      // Ensure we refetch if userId changes
-      return base44.entities.UserProfile.filter({ user_id: userId });
+      try {
+        return await base44.entities.UserProfile.filter({ user_id: userId });
+      } catch (err) {
+        console.warn('RankedAvatar profile fetch error:', err?.message);
+        return []; // Return empty on error to prevent crashes
+      }
     },
     enabled: needsFetch,
-    staleTime: 60000, // 1 minute - prevent excessive refetching
+    staleTime: 300000, // 5 minutes - reduce API calls
+    gcTime: 600000, // 10 minutes cache
+    retry: false, // Don't retry on rate limit
   });
   const fetchedProfile = fetched?.[0];
   
   // Fetch affiliate stats for affiliate badge
   const { data: affiliateCodes = [] } = useQuery({
     queryKey: ['affiliateCodeForAvatar', userId || 'none'],
-    queryFn: () => base44.entities.AffiliateCode.filter({ user_id: userId }),
+    queryFn: async () => {
+      try {
+        return await base44.entities.AffiliateCode.filter({ user_id: userId });
+      } catch (err) {
+        console.warn('RankedAvatar affiliate fetch error:', err?.message);
+        return [];
+      }
+    },
     enabled: !!userId && affiliatePaidCount == null,
+    staleTime: 300000,
+    gcTime: 600000,
+    retry: false,
   });
   const affiliateCode = affiliateCodes?.[0];
   const affiliatePaidFinal = affiliatePaidCount ?? affiliateCode?.total_paid ?? 0;
@@ -131,15 +147,23 @@ export default function RankedAvatar({
   const { data: userBadges = [] } = useQuery({
     queryKey: ['rankedAvatarBadges', userId || saNumberFinal || 'none'],
     queryFn: async () => {
-      // Try email (userId) first since badges are stored with email
-      let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 20);
-      // If no results and we have SA#, try with SA#
-      if ((!results || results.length === 0) && saNumberFinal && saNumberFinal !== userId) {
-        results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 20);
+      try {
+        // Try email (userId) first since badges are stored with email
+        let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 20);
+        // If no results and we have SA#, try with SA#
+        if ((!results || results.length === 0) && saNumberFinal && saNumberFinal !== userId) {
+          results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 20);
+        }
+        return results || [];
+      } catch (err) {
+        console.warn('RankedAvatar badges fetch error:', err?.message);
+        return [];
       }
-      return results || [];
     },
     enabled: !!(userId || saNumberFinal),
+    staleTime: 300000,
+    gcTime: 600000,
+    retry: false,
   });
 
   // Determine which sigils to show

@@ -128,8 +128,8 @@ export default function ActivityFeed() {
         return [];
       }
     },
-    refetchInterval: 120000,
-    retry: 1,
+    refetchInterval: 300000, // 5 minutes instead of 2 to reduce API calls
+    retry: false, // Don't retry on rate limit
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
