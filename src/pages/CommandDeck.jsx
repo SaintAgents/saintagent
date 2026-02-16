@@ -528,21 +528,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stagger queries - wait for profile before fetching secondary data
   // This prevents all queries from firing simultaneously and hitting rate limits
   
-  const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', badgeUserId, badgeLimit],
-    queryFn: async () => {
-      let results = await base44.entities.Badge.filter({ user_id: badgeUserId, status: 'active' }, '-created_date', badgeLimit);
-      if ((!results || results.length === 0) && profile?.sa_number) {
-        results = await base44.entities.Badge.filter({ user_id: profile.sa_number, status: 'active' }, '-created_date', badgeLimit);
-      }
-      return results || [];
-    },
-    enabled: !!badgeUserId && !!profile,
-    staleTime: 300000,
-    refetchOnWindowFocus: false,
-    retry: false
-  });
-
   const { data: matches = [] } = useQuery({
     queryKey: ['matches', matchLimit],
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit),
