@@ -294,9 +294,13 @@ export default function DemoUsersManager() {
         profile_visibility: 'public'
       });
 
-      toast.success(`Invited ${newDemoEmail}. They will receive an email to set their password.`);
+      toast.success(newDemoPassword 
+        ? `Created ${newDemoEmail} with password "${newDemoPassword}". Ready to sign in!`
+        : `Invited ${newDemoEmail}. They will receive an email to set their password.`
+      );
       setNewDemoEmail('');
       setNewDemoName('');
+      setNewDemoPassword('');
       refetchUsers();
     } catch (error) {
       console.error('Error inviting demo user:', error);
