@@ -559,6 +559,30 @@ export default function Join() {
                 </div>
               </div>
 
+              {/* Demo Credentials */}
+              <div className="p-6 rounded-xl bg-gradient-to-r from-emerald-900/40 to-teal-900/40 border border-emerald-500/30">
+                <h3 className="text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                  <Play className="w-5 h-5" />
+                  Test the System
+                </h3>
+                <p className="text-slate-300 mb-4">
+                  Want to explore before signing up? Use these demo credentials to experience the platform:
+                </p>
+                <div className="bg-slate-800/80 rounded-lg p-4 font-mono text-sm space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-400">Email:</span>
+                    <span className="text-emerald-400 select-all">demouser000@saintag.world</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-400">Password:</span>
+                    <span className="text-emerald-400 select-all">guyIlove</span>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 mt-3">
+                  This is a demo account with limited permissions. Create your own account for the full experience.
+                </p>
+              </div>
+
               {/* Final CTA */}
               <div className="text-center pt-4">
                 <Button 
