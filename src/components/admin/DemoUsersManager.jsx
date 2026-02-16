@@ -906,6 +906,26 @@ export default function DemoUsersManager() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Success Confirmation Dialog */}
+      <AlertDialog open={successDialog.open} onOpenChange={(open) => setSuccessDialog(prev => ({ ...prev, open }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-emerald-600">{successDialog.title}</AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              {successDialog.message}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction 
+              onClick={() => setSuccessDialog({ open: false, title: '', message: '' })}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              Got it!
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
