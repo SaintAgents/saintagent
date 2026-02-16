@@ -293,7 +293,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
       } catch (error) {
         return null;
       }
-    }
+    },
+    staleTime: 300000 // Cache for 5 minutes
   });
 
   const { data: profiles } = useQuery({
@@ -302,7 +303,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
               const user = await base44.auth.me();
               return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
             },
-    enabled: !!currentUser
+    enabled: !!currentUser,
+    staleTime: 60000 // Cache for 1 minute
   });
   const profile = profiles?.[0];
   const cmdViewMode = profile?.command_deck_layout?.view_mode;
@@ -314,7 +316,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       await base44.entities.UserProfile.update(profile.id, { last_seen_at: new Date().toISOString() });
     };
     update();
-    const i = setInterval(update, 60000);
+    const i = setInterval(update, 300000); // Every 5 minutes
     return () => clearInterval(i);
   }, [profile?.id]);
 
@@ -325,7 +327,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications'],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20),
-    enabled: !!currentUser
+    enabled: !!currentUser,
+    staleTime: 120000 // Cache for 2 minutes
   });
 
   // Onboarding progress for redirect

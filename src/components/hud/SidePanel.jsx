@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import EmojiPicker from "@/components/messages/EmojiPicker";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -20,16 +19,11 @@ import {
   HelpCircle,
   Clock,
   ArrowRight,
-  Heart,
-  MessageCircle,
-  Share2,
-  Send,
+
   ArrowUpRight,
   ArrowDownRight,
   Activity,
   List,
-  Video,
-  Mic,
   ExternalLink,
   Maximize2,
   Minimize2,
@@ -117,15 +111,7 @@ export default function SidePanel({
   onRestoreCard, // Callback to restore a card to main deck
   onRemoveStoredCard // Callback to remove from storage
 }) {
-  const [commentText, setCommentText] = useState({});
-  const [expandedComments, setExpandedComments] = useState({});
-  const [newPostText, setNewPostText] = useState('');
-  const [videoFile, setVideoFile] = useState(null);
-  const [videoPreview, setVideoPreview] = useState(null);
-  const [videoDuration, setVideoDuration] = useState(0);
-  const [videoError, setVideoError] = useState('');
-  const [audioFile, setAudioFile] = useState(null);
-  const [audioPreview, setAudioPreview] = useState(null);
+  // Community feed state removed
   const queryClient = useQueryClient();
 
   // Note: We no longer auto-restore sidePanelOpen from localStorage on mount
@@ -354,23 +340,7 @@ export default function SidePanel({
     };
   }, []);
 
-  // Fetch posts
-  const { data: posts = [] } = useQuery({
-    queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 10)
-  });
-
-  // Fetch likes
-  const { data: allLikes = [] } = useQuery({
-    queryKey: ['postLikes'],
-    queryFn: () => base44.entities.PostLike.list()
-  });
-
-  // Fetch comments
-  const { data: allComments = [] } = useQuery({
-    queryKey: ['postComments'],
-    queryFn: () => base44.entities.PostComment.list('-created_date')
-  });
+  // Community feed removed - exists as card in main deck
 
   // Use SA# for display, but email (user_id) for queries
   const userIdentifier = profile?.sa_number || profile?.user_id;
@@ -381,19 +351,25 @@ export default function SidePanel({
   const { data: gggTx = [] } = useQuery({
     queryKey: ['gggTx', userEmail],
     queryFn: () => base44.entities.GGGTransaction.filter({ user_id: userEmail }, '-created_date', 100),
-    enabled: !!userEmail
+    enabled: !!userEmail,
+    staleTime: 300000, // Cache for 5 minutes
+    retry: 1
   });
 
   const { data: rpEvents = [] } = useQuery({
     queryKey: ['rpEvents', userEmail],
     queryFn: () => base44.entities.ReputationEvent.filter({ user_id: userEmail }, '-created_date', 100),
-    enabled: !!userEmail
+    enabled: !!userEmail,
+    staleTime: 300000, // Cache for 5 minutes
+    retry: 1
   });
 
   const { data: trustEvents = [] } = useQuery({
     queryKey: ['trustEvents', userEmail],
     queryFn: () => base44.entities.TrustEvent.filter({ user_id: userEmail }, '-created_date', 100),
-    enabled: !!userEmail
+    enabled: !!userEmail,
+    staleTime: 300000, // Cache for 5 minutes
+    retry: 1
   });
 
   const auditItems = React.useMemo(() => {
@@ -402,129 +378,6 @@ export default function SidePanel({
     const trs = (trustEvents || []).map((it) => ({ ...it, _type: 'trust' }));
     return [...txs, ...rps, ...trs].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
   }, [gggTx, rpEvents, trustEvents]);
-
-  const likeMutation = useMutation({
-    mutationFn: async ({ postId, userId }) => {
-      const existing = allLikes.find((l) => l.post_id === postId && l.user_id === userId);
-      if (existing) {
-        await base44.entities.PostLike.delete(existing.id);
-        const post = posts.find((p) => p.id === postId);
-        if (post) {
-          await base44.entities.Post.update(postId, { likes_count: Math.max(0, (post.likes_count || 0) - 1) });
-        }
-      } else {
-        await base44.entities.PostLike.create({ post_id: postId, user_id: userId });
-        const post = posts.find((p) => p.id === postId);
-        if (post) {
-          await base44.entities.Post.update(postId, { likes_count: (post.likes_count || 0) + 1 });
-          if (post.author_id && post.author_id !== userIdentifier) {
-            await base44.entities.Notification.create({
-              user_id: post.author_id,
-              type: 'system',
-              title: 'New like on your post',
-              message: `${profile?.display_name || 'Someone'} liked your post`,
-              action_url: createPageUrl('CommandDeck')
-            });
-          }
-        }
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      queryClient.invalidateQueries({ queryKey: ['postLikes'] });
-    }
-  });
-
-  const commentMutation = useMutation({
-    mutationFn: async ({ postId, content }) => {
-      await base44.entities.PostComment.create({
-        post_id: postId,
-        author_id: userIdentifier,
-        author_name: profile.display_name,
-        author_avatar: profile.avatar_url,
-        content
-      });
-      const post = posts.find((p) => p.id === postId);
-      if (post) {
-        await base44.entities.Post.update(postId, { comments_count: (post.comments_count || 0) + 1 });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      queryClient.invalidateQueries({ queryKey: ['postComments'] });
-    }
-  });
-
-  const createPostMutation = useMutation({
-    mutationFn: async (payload) => {
-      await base44.entities.Post.create({
-        author_id: userIdentifier,
-        author_name: profile.display_name,
-        author_avatar: profile.avatar_url,
-        content: payload.content || '',
-        video_url: payload.video_url,
-        video_duration_seconds: payload.video_duration_seconds,
-        audio_url: payload.audio_url
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      setNewPostText('');
-      if (videoPreview) {try {URL.revokeObjectURL(videoPreview);} catch {}
-      }
-      setVideoFile(null);
-      setVideoPreview(null);
-      setVideoDuration(0);
-      setVideoError('');
-      if (audioPreview) {try {URL.revokeObjectURL(audioPreview);} catch {}}
-      setAudioFile(null);
-      setAudioPreview(null);
-    }
-  });
-
-  const handleLike = (postId) => {
-    likeMutation.mutate({ postId, userId: userIdentifier });
-  };
-
-  const handleComment = (postId) => {
-    const text = commentText[postId];
-    if (text?.trim()) {
-      commentMutation.mutate({ postId, content: text.trim() });
-      setCommentText({ ...commentText, [postId]: '' });
-    }
-  };
-
-  const handleCreatePost = async () => {
-    if (!newPostText.trim() && !videoFile && !audioFile) return;
-    let video_url;
-    let audio_url;
-    if (videoFile) {
-      const up = await base44.integrations.Core.UploadFile({ file: videoFile });
-      video_url = up.file_url;
-    }
-    if (audioFile) {
-      const up = await base44.integrations.Core.UploadFile({ file: audioFile });
-      audio_url = up.file_url;
-    }
-    createPostMutation.mutate({
-      content: newPostText.trim(),
-      video_url,
-      video_duration_seconds: videoFile ? Math.round(videoDuration || 0) : undefined,
-      audio_url
-    });
-  };
-
-  const onAudioChange = (e) => {
-    const f = e.target.files?.[0];
-    if (!f) {setAudioFile(null);setAudioPreview(null);return;}
-    const url = URL.createObjectURL(f);
-    setAudioFile(f);
-    setAudioPreview(url);
-  };
-
-  const isLikedByUser = (postId) => {
-    return allLikes.some((l) => l.post_id === postId && l.user_id === userIdentifier);
-  };
 
   // Rank milestones from RP events
   const rankMilestones = React.useMemo(() => {
@@ -541,32 +394,6 @@ export default function SidePanel({
     return milestones;
   }, [rpEvents]);
 
-  const onVideoChange = (e) => {
-    const f = e.target.files?.[0];
-    if (!f) {setVideoFile(null);setVideoPreview(null);setVideoDuration(0);setVideoError('');return;}
-    const url = URL.createObjectURL(f);
-    setVideoFile(f);
-    setVideoPreview(url);
-    setVideoError('');
-    const v = document.createElement('video');
-    v.preload = 'metadata';
-    v.src = url;
-    v.onloadedmetadata = () => {
-      const dur = Number(v.duration || 0);
-      setVideoDuration(dur);
-      if (dur > 120) {
-        setVideoError('Video must be 2 minutes max');
-        setVideoFile(null);
-        setVideoPreview(null);
-        try {URL.revokeObjectURL(url);} catch {}
-      }
-    };
-  };
-
-  const computePostComments = (postId) => {
-    return allComments.filter((c) => c.post_id === postId);
-  };
-
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
     const date = parseISO(dateStr);
@@ -575,38 +402,17 @@ export default function SidePanel({
     return format(date, "MMM d, h:mm a");
   };
 
-  // Wallet query - MUST use email (user_id) not SA# - with error handling
-  const walletUserId = profile?.user_id;
-  const { data: walletRes } = useQuery({
-    queryKey: ['wallet', walletUserId],
-    queryFn: async () => {
-      try {
-        const response = await base44.functions.invoke('walletEngine', {
-          action: 'getWallet',
-          payload: { user_id: walletUserId }
-        });
-        // response is axios response, data is in response.data
-        return response?.data || response;
-      } catch (err) {
-        console.warn('WalletEngine fetch error:', err?.message);
-        // Return fallback with profile balance to prevent showing zero
-        return { wallet: { available_balance: profile?.ggg_balance || 0 } };
-      }
-    },
-    enabled: !!walletUserId,
-    staleTime: 60000, // Cache for 1 minute to reduce API calls
-    retry: false, // Don't retry on rate limit errors
-  });
-  const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
-  const rpInfo = getRPRank(profile?.rp_points || 0);
-  const rankProgress = profile?.rp_points || 0;
-  const nextRankAt = rpInfo?.nextMin || 1000;
+  // Use profile.ggg_balance directly (no API call needed)
+  const walletAvailable = profile?.ggg_balance ?? 0;
+  // RP info no longer needed in wallet display
 
-  // Fetch total users and online users (realtime polling every 10s)
+  // Fetch total users and online users (polling every 60s)
   const { data: allUserProfiles = [] } = useQuery({
     queryKey: ['allUserProfilesCount'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
-    refetchInterval: 10000
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 150),
+    staleTime: 60000, // Cache for 1 minute
+    refetchInterval: 60000, // Refetch every 60 seconds
+    retry: 1
   });
 
   const totalUsers = allUserProfiles.length;
@@ -780,50 +586,17 @@ export default function SidePanel({
                 </div>
               </div>
 
-              {/* GGG & Rank */}
-              <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
+              {/* GGG Balance */}
+              <CollapsibleCard title="GGG Balance" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
                 <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
-                      <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
-                        <Coins className="w-5 h-5 text-amber-500" />
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="text-center">
+                      <p className="text-xs font-medium text-violet-600 uppercase tracking-wider mb-2">GGG Balance</p>
+                      <p className="text-4xl font-bold text-violet-900 flex items-center gap-2 justify-center">
+                        <Coins className="w-8 h-8 text-amber-500" />
                         {walletAvailable?.toLocaleString?.() || 0}
                       </p>
                     </div>
-                    <div className="relative w-16 h-16">
-                      {/* Background ring */}
-                      <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
-                        <circle 
-                          cx="32" cy="32" r="28" 
-                          stroke="currentColor"
-                          className="text-violet-600"
-                          strokeWidth="5" 
-                          fill="none" 
-                          strokeDasharray={`${2 * Math.PI * 28}`} 
-                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
-                          style={{ transition: 'all 0.7s' }}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      {/* Badge image centered - show NEXT rank badge */}
-                      <img 
-                        src={(() => {
-                          // Find the next tier's code based on current rank
-                          const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
-                          const nextTier = RP_LADDER[currentIdx + 1];
-                          return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
-                        })()}
-                        alt={rpInfo.nextTitle || 'Next Rank'}
-                        className="absolute inset-0 w-full h-full object-contain p-2"
-                        data-no-filter="true"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-600">To next rank</span>
-                    <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
                   </div>
                   <div className="flex justify-between mt-3">
                     <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
@@ -1276,51 +1049,17 @@ export default function SidePanel({
             </div>
           </div>
 
-          {/* GGG & Rank */}
-          <CollapsibleCard title="GGG & Rank" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
+          {/* GGG Balance */}
+          <CollapsibleCard title="GGG Balance" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
             <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a1f0a] dark:to-[#051505] border border-violet-100 dark:border-[rgba(0,255,136,0.2)]" data-wallet-panel>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-xs font-medium text-violet-600 dark:text-[#00ff88] uppercase tracking-wider">GGG BALANCE</p>
-                  <p className="text-2xl font-bold text-violet-900 dark:text-white flex items-center gap-1.5">
-                    <Coins className="w-5 h-5 text-amber-500" />
+              <div className="flex items-center justify-center mb-4">
+                <div className="text-center">
+                  <p className="text-xs font-medium text-violet-600 dark:text-[#00ff88] uppercase tracking-wider mb-2">GGG BALANCE</p>
+                  <p className="text-4xl font-bold text-violet-900 dark:text-white flex items-center gap-2 justify-center">
+                    <Coins className="w-8 h-8 text-amber-500" />
                     {walletAvailable?.toLocaleString?.() || 0}
                   </p>
                 </div>
-                <div className="relative w-16 h-16">
-                  {/* Background ring */}
-                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                    <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200 dark:text-[rgba(0,255,136,0.2)]" />
-                    <circle 
-                      cx="32" cy="32" r="28" 
-                      stroke="currentColor"
-                      className="text-violet-600 dark:text-[#00ff88]"
-                      strokeWidth="5" 
-                      fill="none" 
-                      strokeDasharray={`${2 * Math.PI * 28}`} 
-                      strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
-                      style={{ transition: 'all 0.7s' }}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  {/* Badge image centered - show NEXT rank badge */}
-                  <img 
-                    src={(() => {
-                      // Find the next tier's code based on current rank
-                      const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
-                      const nextTier = RP_LADDER[currentIdx + 1];
-                      return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
-                    })()}
-                    alt={rpInfo.nextTitle || 'Next Rank'}
-                    className="absolute inset-0 w-full h-full object-contain p-2"
-                    data-no-filter="true"
-                  />
-                </div>
-
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-600 dark:text-slate-400">To {rpInfo.nextTitle || 'next rank'}</span>
-                <span className="font-medium text-violet-700 dark:text-[#00ff88]">{Math.max(0, (rpInfo.nextMin || 0) - (profile?.rp_points || 0))} RP</span>
               </div>
               <div className="flex justify-between mt-3">
                 <Button variant="outline" size="sm" className="bg-white dark:bg-black border-violet-300 dark:border-[#00ff88]/40 text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[#00ff88]/20 rounded-lg" onClick={() => setWalletPopupOpen(true)}>
@@ -1567,215 +1306,20 @@ export default function SidePanel({
               </div>
             </div>
           </CollapsibleCard>
-
-          {/* Community Feed */}
-          <CollapsibleCard title="Community Feed" icon={MessageCircle} defaultOpen={true} onPopout={() => setFeedPopupOpen(true)}>
-            {/* Create Post */}
-            <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-              <div className="flex items-start gap-3">
-                <Avatar className="w-9 h-9 cursor-pointer" data-user-id={profile?.user_id}>
-                  <AvatarImage src={profile?.avatar_url} />
-                  <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                    {profile?.display_name?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <Textarea
-                    value={newPostText}
-                    onChange={(e) => setNewPostText(e.target.value)}
-                    placeholder="What's on your mind?"
-                    className="flex-1 resize-none text-sm"
-                    rows={3} />
-
-              </div>
-              {/* Video & Audio upload */}
-              <div className="flex items-center gap-3 flex-wrap">
-                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
-                  <Video className="w-4 h-4" />
-                  Video
-                  <input type="file" accept="video/*" onChange={onVideoChange} className="hidden" />
-                </label>
-                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
-                  <Mic className="w-4 h-4" />
-                  Audio
-                  <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
-                </label>
-                {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
-              </div>
-              {videoPreview && !videoError &&
-                <video src={videoPreview} controls className="w-full rounded-lg" />
-                }
-              {audioPreview &&
-                <audio src={audioPreview} controls className="w-full" />
-                }
-              <div className="flex items-center justify-between">
-                <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
-                <Button
-                    onClick={handleCreatePost}
-                    disabled={(!newPostText.trim() && !videoFile && !audioFile) || createPostMutation.isPending}
-                    className="bg-violet-600 hover:bg-violet-700"
-                    size="sm">
-
-                  <Send className="w-3 h-3 mr-1" />
-                  Post
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {posts.length === 0 ?
-                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p> :
-
-                posts.map((post) => {
-                  const postComments = computePostComments(post.id);
-                  const isLiked = isLikedByUser(post.id);
-                  const showComments = expandedComments[post.id];
-
-                  return (
-                    <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-                      {/* Post Header */}
-                      <div className="flex items-center justify-between gap-3">
-                        <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={36} />
-                        <p className="text-xs text-slate-500">
-                          {format(parseISO(post.created_date), 'MMM d, h:mm a')}
-                        </p>
-                      </div>
-
-                      {/* Post Content */}
-                      <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
-
-                      {post.video_url ?
-                      <video src={post.video_url} controls className="w-full rounded-lg" /> :
-                      post.audio_url ?
-                      <audio src={post.audio_url} controls className="w-full" /> :
-                      post.image_urls && post.image_urls.length > 0 ?
-                      <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> :
-                      null}
-
-                      {/* Post Actions */}
-                      <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
-                        <button
-                          onClick={() => handleLike(post.id)}
-                          className={cn(
-                            "flex items-center gap-1.5 text-xs transition-colors",
-                            isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600"
-                          )}>
-
-                          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
-                          <span className="font-medium">{post.likes_count || 0}</span>
-                        </button>
-                        <button
-                          onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
-                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors">
-
-                          <MessageCircle className="w-4 h-4" />
-                          <span className="font-medium">{post.comments_count || 0}</span>
-                        </button>
-                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors">
-                          <Share2 className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      {/* Comments Section */}
-                      {showComments &&
-                      <div className="space-y-3 pt-2">
-                          {/* Existing Comments */}
-                          {postComments.map((comment) =>
-                        <div key={comment.id} className="flex items-start gap-2">
-                              <Avatar className="w-7 h-7 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={comment.author_id}>
-                                <AvatarImage src={comment.author_avatar} />
-                                <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
-                                  {comment.author_name?.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1 p-2 rounded-lg bg-slate-50">
-                                <p className="text-xs font-medium text-slate-900">{comment.author_name}</p>
-                                <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
-                              </div>
-                            </div>
-                        )}
-
-                          {/* Comment Input */}
-                          <div className="flex items-start gap-2">
-                            <Avatar className="w-7 h-7 cursor-pointer" data-user-id={profile?.user_id}>
-                              <AvatarImage src={profile?.avatar_url} />
-                              <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">
-                                {profile?.display_name?.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 flex items-end gap-2">
-                              <Textarea
-                              value={commentText[post.id] || ''}
-                              onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
-                              placeholder="Write a comment..."
-                              className="text-xs h-8 resize-none"
-                              rows={1} />
-
-                              <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
-                              <Button
-                              size="sm"
-                              onClick={() => handleComment(post.id)}
-                              disabled={!commentText[post.id]?.trim()}
-                              className="h-8 w-8 p-0">
-
-                                <Send className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      }
-                    </div>);
-
-                })
-                }
-            </div>
-          </CollapsibleCard>
         </div>
+
       {/* Popout Panels */}
       {gggPopupOpen &&
-          <FloatingPanel title="GGG & Rank" onClose={() => setGggPopupOpen(false)}>
+          <FloatingPanel title="GGG Balance" onClose={() => setGggPopupOpen(false)}>
           <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-xs font-medium text-violet-600 uppercase tracking-wider">GGG Balance</p>
-                <p className="text-2xl font-bold text-violet-900 flex items-center gap-1.5">
+            <div className="flex items-center justify-center mb-4">
+              <div className="text-center">
+                <p className="text-xs font-medium text-violet-600 uppercase tracking-wider mb-2">GGG Balance</p>
+                <p className="text-4xl font-bold text-violet-900 flex items-center gap-2 justify-center">
                   <Coins className="w-5 h-5 text-amber-500" />
                   {walletAvailable?.toLocaleString?.() || 0}
                 </p>
               </div>
-              <div className="relative w-16 h-16">
-                {/* Background ring */}
-                <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                  <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="5" fill="none" className="text-violet-200" />
-                  <circle 
-                    cx="32" cy="32" r="28" 
-                    stroke="currentColor"
-                    className="text-violet-600"
-                    strokeWidth="5" 
-                    fill="none" 
-                    strokeDasharray={`${2 * Math.PI * 28}`} 
-                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - (profile?.rp_points || 0) / (rpInfo.nextMin || 1000))}`}
-                    style={{ transition: 'all 0.7s' }}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {/* Badge image centered - show NEXT rank badge */}
-                <img 
-                  src={(() => {
-                    // Find the next tier's code based on current rank
-                    const currentIdx = RP_LADDER.findIndex(t => t.code === rpInfo.code);
-                    const nextTier = RP_LADDER[currentIdx + 1];
-                    return nextTier ? RANK_BADGE_IMAGES[nextTier.code] : RANK_BADGE_IMAGES[rpInfo.code];
-                  })()}
-                  alt={rpInfo.nextTitle || 'Next Rank'}
-                  className="absolute inset-0 w-full h-full object-contain p-2"
-                  data-no-filter="true"
-                />
-              </div>
-
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-600">To next rank</span>
-              <span className="font-medium text-violet-700">{Math.max(0, nextRankAt - rankProgress)} pts</span>
             </div>
             <div className="flex justify-between mt-3">
               <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setWalletPopupOpen(true)}>
@@ -2098,147 +1642,7 @@ export default function SidePanel({
           </FloatingPanel>
           }
 
-      {feedPopupOpen &&
-          <FloatingPanel title="Community Feed" onClose={() => setFeedPopupOpen(false)}>
-          <div className="space-y-4">
-            {/* Create Post */}
-            <div className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-              <div className="flex items-start gap-3">
-                <Avatar className="w-9 h-9">
-                  <AvatarImage src={profile?.avatar_url} />
-                  <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                    {profile?.display_name?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <Textarea
-                    value={newPostText}
-                    onChange={(e) => setNewPostText(e.target.value)}
-                    placeholder="What's on your mind?"
-                    className="flex-1 resize-none text-sm"
-                    rows={3} />
 
-              </div>
-              {/* Video & Audio upload */}
-              <div className="flex items-center gap-3 flex-wrap">
-                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
-                  <Video className="w-4 h-4" />
-                  Video
-                  <input type="file" accept="video/*" onChange={onVideoChange} className="hidden" />
-                </label>
-                <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
-                  <Mic className="w-4 h-4" />
-                  Audio
-                  <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
-                </label>
-                {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
-              </div>
-              {videoPreview && !videoError &&
-                <video src={videoPreview} controls className="w-full rounded-lg" />
-              }
-              {audioPreview &&
-                <audio src={audioPreview} controls className="w-full" />
-              }
-              <div className="flex items-center justify-between">
-                <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
-                <Button
-                    onClick={handleCreatePost}
-                    disabled={(!newPostText.trim() && !videoFile && !audioFile) || createPostMutation.isPending}
-                    className="bg-violet-600 hover:bg-violet-700"
-                    size="sm">
-
-                  <Send className="w-3 h-3 mr-1" />
-                  Post
-                </Button>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {posts.length === 0 ?
-                <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p> :
-
-                posts.map((post) => {
-                  const postComments = computePostComments(post.id);
-                  const isLiked = isLikedByUser(post.id);
-                  const showComments = expandedComments[post.id];
-                  return (
-                    <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={36} />
-                        <p className="text-xs text-slate-500">{format(parseISO(post.created_date), 'MMM d, h:mm a')}</p>
-                      </div>
-                      <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
-                      {post.video_url ?
-                      <video src={post.video_url} controls className="w-full rounded-lg" /> :
-                      post.audio_url ?
-                      <audio src={post.audio_url} controls className="w-full" /> :
-                      post.image_urls && post.image_urls.length > 0 ?
-                      <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> :
-                      null}
-                      <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
-                        <button
-                          onClick={() => handleLike(post.id)}
-                          className={cn("flex items-center gap-1.5 text-xs transition-colors", isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600")}>
-
-                          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
-                          <span className="font-medium">{post.likes_count || 0}</span>
-                        </button>
-                        <button
-                          onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })}
-                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors">
-
-                          <MessageCircle className="w-4 h-4" />
-                          <span className="font-medium">{post.comments_count || 0}</span>
-                        </button>
-                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors">
-                          <Share2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                      {showComments &&
-                      <div className="space-y-3 pt-2">
-                          {postComments.map((comment) =>
-                        <div key={comment.id} className="flex items-start gap-2">
-                              <Avatar className="w-7 h-7">
-                                <AvatarImage src={comment.author_avatar} />
-                                <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">
-                                  {comment.author_name?.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1 p-2 rounded-lg bg-slate-50">
-                                <p className="text-xs font-medium text-slate-900">{comment.author_name}</p>
-                                <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
-                              </div>
-                            </div>
-                        )}
-                          <div className="flex items-start gap-2">
-                            <Avatar className="w-7 h-7">
-                              <AvatarImage src={profile?.avatar_url} />
-                              <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">
-                                {profile?.display_name?.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 flex items-end gap-2">
-                             <Textarea
-                              value={commentText[post.id] || ''}
-                              onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
-                              placeholder="Write a comment..."
-                              className="text-xs h-8 resize-none"
-                              rows={1} />
-
-                             <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
-                             <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
-                               <Send className="w-3 h-3" />
-                             </Button>
-                            </div>
-                          </div>
-                        </div>
-                      }
-                    </div>);
-
-                })
-                }
-            </div>
-          </div>
-        </FloatingPanel>
-          }
       </ScrollArea>
     </div>
   </>);
