@@ -170,7 +170,9 @@ export default function Messages() {
     queryKey: ['typing', selectedConversation?.id],
     queryFn: () => base44.entities.TypingStatus.filter({ conversation_id: selectedConversation.id, is_typing: true }),
     enabled: !!selectedConversation?.id,
-    refetchInterval: 2000 // Poll every 2s for typing indicators
+    refetchInterval: 5000, // Poll every 5s instead of 2s
+    staleTime: 3000,
+    retry: false
   });
   const typingUsers = React.useMemo(() => {
     const now = Date.now();
