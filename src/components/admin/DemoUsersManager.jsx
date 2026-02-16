@@ -561,7 +561,11 @@ export default function DemoUsersManager() {
                     bio: `Demo user - ${newDemoName}`,
                     profile_visibility: 'public'
                   });
-                  toast.success(`Created profile for ${newDemoName} (no login)`);
+                  setSuccessDialog({
+                    open: true,
+                    title: '✅ Profile Created!',
+                    message: `Created profile for ${newDemoName} (profile only, no login credentials)`
+                  });
                   setNewDemoEmail('');
                   setNewDemoName('');
                   refetchUsers();
