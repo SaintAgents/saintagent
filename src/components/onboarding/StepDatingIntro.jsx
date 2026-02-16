@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Heart, Sparkles, Shield, Target, MessageCircle } from "lucide-react";
+import { Heart, Sparkles, Shield, Target, MessageCircle, Zap, ToggleRight } from "lucide-react";
 
 export default function StepDatingIntro({ onComplete }) {
   return (
@@ -9,21 +9,39 @@ export default function StepDatingIntro({ onComplete }) {
         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-rose-100 to-pink-200 flex items-center justify-center mx-auto mb-4">
           <Heart className="w-10 h-10 text-rose-600" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Finding Your Match</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Finding Your Divine Reflection</h2>
         <p className="text-slate-600 max-w-md mx-auto">
-          We use a multi-dimensional compatibility system to help you find meaningful connections. 
-          Let's set up your dating profile.
+          If you're single and seeking a divine reflection — a twin flame, soul mate, or meaningful partner — 
+          our Synergy Engine can help you find them.
         </p>
       </div>
 
       <div className="grid gap-4">
+        {/* New Synergy Engine Card */}
+        <div className="p-4 rounded-xl bg-gradient-to-r from-fuchsia-50 to-violet-50 border-2 border-fuchsia-200 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-violet-500 flex items-center justify-center shrink-0">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-900">AI-Powered Synergy Engine</h3>
+              <p className="text-sm text-slate-600 mt-1">
+                Our super app analyzes <strong>all variables</strong> across all users — values, spiritual alignment, 
+                communication style, life goals, attachment patterns, and mystical compatibility — 
+                to present you with matches that meet your personal thresholds. 
+                Set your minimum match score (e.g., 90%+) and only see connections truly aligned with you.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="p-4 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-100">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center shrink-0">
               <Target className="w-5 h-5 text-rose-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900">Compatibility Matching</h3>
+              <h3 className="font-semibold text-slate-900">Multi-Dimensional Compatibility</h3>
               <p className="text-sm text-slate-600 mt-1">
                 Our algorithm considers values, attachment styles, communication preferences, 
                 and life goals to find your most compatible matches.
@@ -57,6 +75,22 @@ export default function StepDatingIntro({ onComplete }) {
               <p className="text-sm text-slate-600 mt-1">
                 Get conversation starters and AI-generated insights about why 
                 you might be a good match with someone.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Turn Off Anytime Card */}
+        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+              <ToggleRight className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-900">Turn Off Anytime</h3>
+              <p className="text-sm text-slate-600 mt-1">
+                This feature can be turned off at any time from your Settings. 
+                You're always in control of your dating visibility and match preferences.
               </p>
             </div>
           </div>
