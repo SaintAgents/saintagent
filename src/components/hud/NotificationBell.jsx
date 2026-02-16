@@ -101,19 +101,21 @@ export default function NotificationBell({ notifications = [], onAction }) {
               onClick={async () => {
                 setIsClearing(true);
                 try {
-                  // Delete all notifications directly here
-                  for (const n of displayNotifications) {
-                    try {
-                      await base44.entities.Notification.delete(n.id);
-                    } catch (err) {
-                      console.warn('Failed to delete notification:', n.id, err);
-                    }
-                  }
-                  // Clear local state immediately to update UI
-                  setLocalNotifications([]);
-                  // Invalidate and refetch queries
-                  await queryClient.invalidateQueries({ queryKey: ['notifications'] });
-                  await queryClient.refetchQueries({ queryKey: ['notifications'] });
+                  // Store IDs to clear in session storage to persist across navigation
+                  const idsToClear = displayNotifications.map(n => n.id);
+                  const newClearedIds = [...clearedIds, ...idsToClear];
+                  setClearedIds(newClearedIds);
+                  try {
+                    sessionStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds));
+                  } catch {}
+                  
+                  // Delete notifications in background (don't wait)
+                  Promise.all(displayNotifications.map(n => 
+                    base44.entities.Notification.delete(n.id).catch(() => {})
+                  )).then(() => {
+                    queryClient.invalidateQueries({ queryKey: ['notifications'] });
+                  });
+                  
                   setIsClearing(false);
                   setOpen(false);
                 } catch (err) {
