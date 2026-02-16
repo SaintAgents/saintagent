@@ -11,8 +11,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Users, Plus, Trash2, Copy, AlertTriangle, 
   Crown, Star, Shield, UserPlus, RefreshCw,
-  CheckCircle, Loader2
+  CheckCircle, Loader2, Mail, Key, User
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
