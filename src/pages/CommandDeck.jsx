@@ -1197,10 +1197,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     </div>
                   )}
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    {/* Refresh Button */}
+                    {/* Refresh Button - refetch profile only, don't trigger cascade */}
                     <button
-                      onClick={() => {
-                        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+                      onClick={async () => {
+                        // Directly refetch just the profile query without invalidating cache
+                        // This prevents cascade of re-fetches that cause rate limits
+                        await queryClient.refetchQueries({ queryKey: ['userProfile', currentUser?.email], exact: true });
                       }}
                       disabled={profileLoading}
                       className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group disabled:opacity-50"
