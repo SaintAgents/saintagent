@@ -33,11 +33,18 @@ import { base44 } from "@/api/base44Client";
 export default function NotificationBell({ notifications = [], onAction }) {
   const [open, setOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
-  const [localNotifications, setLocalNotifications] = useState(null);
   const queryClient = useQueryClient();
   
-  // Use local state if we've cleared, otherwise use props
-  const displayNotifications = localNotifications !== null ? localNotifications : notifications;
+  // Track cleared notification IDs in session to prevent them from reappearing
+  const [clearedIds, setClearedIds] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('clearedNotificationIds');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+  
+  // Filter out cleared notifications
+  const displayNotifications = notifications.filter(n => !clearedIds.includes(n.id));
   const unreadCount = displayNotifications.filter(n => !n.is_read).length;
 
   const typeIcons = {
