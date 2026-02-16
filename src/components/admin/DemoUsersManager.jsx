@@ -462,7 +462,7 @@ export default function DemoUsersManager() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <Label htmlFor="demoEmail" className="flex items-center gap-1">
                 <Mail className="w-3 h-3" /> Email
@@ -484,6 +484,18 @@ export default function DemoUsersManager() {
                 placeholder="Demo User Name"
                 value={newDemoName}
                 onChange={(e) => setNewDemoName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="demoPassword" className="flex items-center gap-1">
+                <Key className="w-3 h-3" /> Password
+              </Label>
+              <Input
+                id="demoPassword"
+                type="text"
+                placeholder="demo123"
+                value={newDemoPassword}
+                onChange={(e) => setNewDemoPassword(e.target.value)}
               />
             </div>
             <div>
