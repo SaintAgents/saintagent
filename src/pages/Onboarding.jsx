@@ -29,24 +29,37 @@ import OnboardingRewardsBar from '@/components/onboarding/OnboardingRewardsBar';
 import OnboardingTrackSelector from '@/components/onboarding/OnboardingTrackSelector';
 import EmailConfirmationBanner from '@/components/onboarding/EmailConfirmationBanner';
 
+// Step for selecting onboarding track
+const StepTrackSelector = ({ data, onComplete }) => {
+  const [selectedTrack, setSelectedTrack] = React.useState(data?.track || null);
+  return (
+    <OnboardingTrackSelector 
+      selectedTrack={selectedTrack}
+      onSelectTrack={setSelectedTrack}
+      onContinue={() => onComplete({ track: selectedTrack })}
+    />
+  );
+};
+
 const STEPS = [
   { id: 0, title: "Welcome", component: Step0Welcome, skippable: false },
-  { id: 1, title: "Identity", component: Step1Identity, skippable: false },
-  { id: 2, title: "Mystical", component: StepMystical, skippable: true },
-  { id: 3, title: "Region", component: Step2Region, skippable: true },
-  { id: 4, title: "Values", component: StepValues, skippable: false },
-  { id: 5, title: "Skills", component: Step3Skills, skippable: false },
-  { id: 6, title: "Desires", component: Step4Desires, skippable: false },
-  { id: 7, title: "Hopes", component: Step5Hopes, skippable: true },
+  { id: 1, title: "Your Path", component: StepTrackSelector, skippable: false },
+  { id: 2, title: "Identity", component: Step1Identity, skippable: false },
+  { id: 3, title: "Mystical", component: StepMystical, skippable: true },
+  { id: 4, title: "Region", component: Step2Region, skippable: true },
+  { id: 5, title: "Values", component: StepValues, skippable: false },
+  { id: 6, title: "Skills", component: Step3Skills, skippable: false },
+  { id: 7, title: "Desires", component: Step4Desires, skippable: false },
+  { id: 8, title: "Hopes", component: Step5Hopes, skippable: true },
   // Dating onboarding flow with explanations
-  { id: 8, title: "Dating Intro", component: StepDatingIntro, skippable: true },
-  { id: 9, title: "Attachment", component: StepAttachmentStyle, skippable: true },
-  { id: 10, title: "Conflict Style", component: StepConflictStyle, skippable: true },
-  { id: 11, title: "Relationship Values", component: StepRelationshipValues, skippable: true },
-  { id: 12, title: "Connection", component: Step7Dating, skippable: true },
-  { id: 13, title: "Partner Preferences", component: StepPartnerPreferences, skippable: true },
-  { id: 14, title: "Match Tutorial", component: StepCompatibilityTutorial, skippable: true },
-  { id: 15, title: "Actions", component: Step6Actions, skippable: false }
+  { id: 9, title: "Dating Intro", component: StepDatingIntro, skippable: true },
+  { id: 10, title: "Attachment", component: StepAttachmentStyle, skippable: true },
+  { id: 11, title: "Conflict Style", component: StepConflictStyle, skippable: true },
+  { id: 12, title: "Relationship Values", component: StepRelationshipValues, skippable: true },
+  { id: 13, title: "Connection", component: Step7Dating, skippable: true },
+  { id: 14, title: "Partner Preferences", component: StepPartnerPreferences, skippable: true },
+  { id: 15, title: "Match Tutorial", component: StepCompatibilityTutorial, skippable: true },
+  { id: 16, title: "Actions", component: Step6Actions, skippable: false }
 ];
 
 export default function Onboarding() {
