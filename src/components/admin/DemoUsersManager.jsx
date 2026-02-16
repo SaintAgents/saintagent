@@ -128,6 +128,7 @@ export default function DemoUsersManager() {
   // New demo user with login credentials
   const [newDemoEmail, setNewDemoEmail] = useState('');
   const [newDemoName, setNewDemoName] = useState('');
+  const [newDemoPassword, setNewDemoPassword] = useState('');
   const [selectedTier, setSelectedTier] = useState('mid');
   const [isInviting, setIsInviting] = useState(false);
 
