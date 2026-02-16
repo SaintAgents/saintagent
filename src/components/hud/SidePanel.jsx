@@ -406,12 +406,14 @@ export default function SidePanel({
   const walletAvailable = profile?.ggg_balance ?? 0;
   // RP info no longer needed in wallet display
 
-  // Fetch total users and online users (polling every 60s)
+  // Fetch total users and online users - DRASTICALLY reduced to prevent rate limits
   const { data: allUserProfiles = [] } = useQuery({
     queryKey: ['allUserProfilesCount'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 150),
-    staleTime: 60000, // Cache for 1 minute
-    refetchInterval: 60000, // Refetch every 60 seconds
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
+    staleTime: 600000, // Cache for 10 minutes
+    refetchInterval: 600000, // Only refetch every 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: 1
   });
 

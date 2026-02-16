@@ -386,9 +386,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 30000,
+    staleTime: 300000, // Cache for 5 minutes
     refetchOnWindowFocus: false,
-    refetchOnMount: true
+    refetchOnMount: false, // Don't refetch on mount - use cache
+    retry: 1
   });
   const profile = profiles?.[0];
 

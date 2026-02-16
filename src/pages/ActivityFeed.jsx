@@ -128,10 +128,12 @@ export default function ActivityFeed() {
         return [];
       }
     },
-    refetchInterval: 300000, // 5 minutes instead of 2 to reduce API calls
+    refetchInterval: false, // Disable auto-refetch - user can manually refresh
     retry: false, // Don't retry on rate limit
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 600000, // Cache for 10 minutes
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 
   const items = data || [];
