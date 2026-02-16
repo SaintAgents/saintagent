@@ -128,12 +128,11 @@ export default function ActivityFeed() {
         return [];
       }
     },
-    refetchInterval: false, // Disable auto-refetch - user can manually refresh
-    retry: false, // Don't retry on rate limit
-    staleTime: 600000, // Cache for 10 minutes
+    refetchInterval: false,
+    retry: false,
+    staleTime: 600000,
     gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false
+    refetchOnWindowFocus: false
   });
 
   const items = data || [];

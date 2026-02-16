@@ -410,10 +410,9 @@ export default function SidePanel({
   const { data: allUserProfiles = [] } = useQuery({
     queryKey: ['allUserProfilesCount'],
     queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
-    staleTime: 600000, // Cache for 10 minutes
-    refetchInterval: 600000, // Only refetch every 10 minutes
+    staleTime: 600000,
+    refetchInterval: 600000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 

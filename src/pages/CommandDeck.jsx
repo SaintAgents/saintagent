@@ -386,9 +386,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 300000, // Cache for 5 minutes
+    staleTime: 300000, // Cache for 5 minutes - query won't refetch until stale
     refetchOnWindowFocus: false,
-    refetchOnMount: false, // Don't refetch on mount - use cache
     retry: 1
   });
   const profile = profiles?.[0];
@@ -531,9 +530,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: matches = [] } = useQuery({
     queryKey: ['matches', matchLimit],
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit),
-    staleTime: 300000, // Increased to 5 minutes
+    staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 
@@ -543,7 +541,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', meetingLimit),
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 
@@ -553,7 +550,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit),
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 
@@ -563,7 +559,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', listingLimit),
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 
@@ -573,7 +568,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryFn: () => base44.entities.Project.list('-created_date', projectLimit),
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 
@@ -581,9 +575,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', notificationLimit],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', notificationLimit),
-    staleTime: 180000, // 3 minutes for notifications
+    staleTime: 180000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 
@@ -594,7 +587,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     enabled: !!userIdentifier,
     staleTime: 300000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: 1
   });
 

@@ -304,7 +304,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
               return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
             },
     enabled: !!currentUser,
-    staleTime: 60000 // Cache for 1 minute
+    staleTime: 300000, // Cache for 5 minutes
+    refetchOnWindowFocus: false
   });
   const profile = profiles?.[0];
   const cmdViewMode = profile?.command_deck_layout?.view_mode;
