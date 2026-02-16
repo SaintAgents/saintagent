@@ -372,8 +372,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   });
 
   // Fetch user profile (only when authenticated)
+  // IMPORTANT: Use same queryKey as Layout to share cache and prevent duplicate fetches
   const { data: profiles, isLoading: profileLoading } = useQuery({
-    queryKey: ['userProfile', currentUser?.email],
+    queryKey: ['myProfile', currentUser?.email],
     queryFn: async () => {
       const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
       console.log('Fetched profile:', {
@@ -386,9 +387,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 300000, // Cache for 5 minutes - query won't refetch until stale
+    staleTime: 600000, // Cache for 10 minutes - same as Layout
+    gcTime: 900000, // Keep in cache for 15 minutes
     refetchOnWindowFocus: false,
-    retry: 1
+    refetchOnMount: false, // Use cached data when navigating back
   });
   const profile = profiles?.[0];
 
@@ -1196,7 +1198,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       onClick={async () => {
                         // Directly refetch just the profile query without invalidating cache
                         // This prevents cascade of re-fetches that cause rate limits
-                        await queryClient.refetchQueries({ queryKey: ['userProfile', currentUser?.email], exact: true });
+                        await queryClient.refetchQueries({ queryKey: ['myProfile', currentUser?.email], exact: true });
                       }}
                       disabled={profileLoading}
                       className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group disabled:opacity-50"
