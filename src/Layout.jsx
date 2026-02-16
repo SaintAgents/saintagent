@@ -1797,9 +1797,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
                 onClose={() => setFullscreenMatchesOpen(false)}
               />
 
-      {/* User Tour Modal */}
+      {/* Interactive Onboarding Tour */}
       {userTourOpen && (
-        <UserTourModal 
+        <InteractiveOnboardingTour 
           open={userTourOpen} 
           onClose={async () => {
             setUserTourOpen(false);
@@ -1814,6 +1814,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               window.location.href = createPageUrl('CommandDeck');
             }
           }}
+          userTrack={onboarding?.step_data?.[1]?.track}
         />
       )}
     </div>
