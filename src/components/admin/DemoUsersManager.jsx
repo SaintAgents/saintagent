@@ -131,6 +131,9 @@ export default function DemoUsersManager() {
   const [newDemoPassword, setNewDemoPassword] = useState('');
   const [selectedTier, setSelectedTier] = useState('mid');
   const [isInviting, setIsInviting] = useState(false);
+  
+  // Success confirmation dialog
+  const [successDialog, setSuccessDialog] = useState({ open: false, title: '', message: '' });
 
   // Fetch all demo users (emails containing 'demo')
   const { data: demoUsers = [], isLoading: loadingUsers, refetch: refetchUsers } = useQuery({
