@@ -449,15 +449,78 @@ export default function DemoUsersManager() {
         </Card>
       </div>
 
-      {/* Create Demo User Section */}
+      {/* Invite Real Demo User with Login */}
+      <Card className="border-violet-200 bg-violet-50/50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-violet-800">
+            <Key className="w-5 h-5" />
+            Invite Demo User (With Login)
+          </CardTitle>
+          <CardDescription>
+            Create a real user account you can sign in as. They'll receive an email to set their password.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="demoEmail" className="flex items-center gap-1">
+                <Mail className="w-3 h-3" /> Email
+              </Label>
+              <Input
+                id="demoEmail"
+                type="email"
+                placeholder="demo@yourdomain.com"
+                value={newDemoEmail}
+                onChange={(e) => setNewDemoEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="demoName" className="flex items-center gap-1">
+                <User className="w-3 h-3" /> Display Name
+              </Label>
+              <Input
+                id="demoName"
+                placeholder="Demo User Name"
+                value={newDemoName}
+                onChange={(e) => setNewDemoName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Starting Tier</Label>
+              <Select value={selectedTier} onValueChange={setSelectedTier}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="top">Top Tier (Guardian/Ascended)</SelectItem>
+                  <SelectItem value="mid">Mid Tier (Practitioner/Adept)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <Button 
+            onClick={inviteDemoUser}
+            disabled={isInviting || !newDemoEmail || !newDemoName}
+            className="gap-2 bg-violet-600 hover:bg-violet-700"
+          >
+            {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+            Invite Demo User
+          </Button>
+          <p className="text-xs text-slate-500">
+            After inviting, check the email inbox to set a password. Then you can sign in as this user.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Create Demo User Section (Profile Only) */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <UserPlus className="w-5 h-5" />
-            Create Demo User
+            Create Demo Profile (No Login)
           </CardTitle>
           <CardDescription>
-            Select template(s) and create new demo users based on master profiles
+            Create demo profiles from templates - these don't have login credentials
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
