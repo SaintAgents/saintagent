@@ -498,16 +498,58 @@ export default function DemoUsersManager() {
               </Select>
             </div>
           </div>
-          <Button 
-            onClick={inviteDemoUser}
-            disabled={isInviting || !newDemoEmail || !newDemoName}
-            className="gap-2 bg-violet-600 hover:bg-violet-700"
-          >
-            {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
-            Invite Demo User
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={inviteDemoUser}
+              disabled={isInviting || !newDemoEmail || !newDemoName}
+              className="gap-2 bg-violet-600 hover:bg-violet-700"
+            >
+              {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+              Invite (With Email)
+            </Button>
+            <Button 
+              onClick={async () => {
+                if (!newDemoEmail || !newDemoName) {
+                  toast.error('Please enter email and display name');
+                  return;
+                }
+                setIsInviting(true);
+                try {
+                  const tierTemplates = selectedTier === 'top' ? MASTER_DEMO_TEMPLATES.top_tier : MASTER_DEMO_TEMPLATES.mid_tier;
+                  const template = tierTemplates[0];
+                  await base44.entities.UserProfile.create({
+                    user_id: newDemoEmail,
+                    handle: newDemoEmail.split('@')[0].replace(/[^a-z0-9]/gi, ''),
+                    display_name: newDemoName,
+                    rp_rank_code: template.defaults.rp_rank_code,
+                    rp_points: template.defaults.rp_points,
+                    trust_score: template.defaults.trust_score,
+                    ggg_balance: template.defaults.ggg_balance,
+                    leader_tier: template.defaults.leader_tier,
+                    status: 'online',
+                    bio: `Demo user - ${newDemoName}`,
+                    profile_visibility: 'public'
+                  });
+                  toast.success(`Created profile for ${newDemoName} (no login)`);
+                  setNewDemoEmail('');
+                  setNewDemoName('');
+                  refetchUsers();
+                } catch (error) {
+                  toast.error(error.message || 'Failed to create profile');
+                } finally {
+                  setIsInviting(false);
+                }
+              }}
+              disabled={isInviting || !newDemoEmail || !newDemoName}
+              variant="outline"
+              className="gap-2"
+            >
+              {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+              Create (Profile Only)
+            </Button>
+          </div>
           <p className="text-xs text-slate-500">
-            After inviting, check the email inbox to set a password. Then you can sign in as this user.
+            <strong>Invite:</strong> Sends email to set password (can sign in). <strong>Create:</strong> Profile only, no login.
           </p>
         </CardContent>
       </Card>
