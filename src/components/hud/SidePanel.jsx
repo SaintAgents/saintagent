@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -574,19 +575,27 @@ export default function SidePanel({
     return format(date, "MMM d, h:mm a");
   };
 
-  // Wallet query - MUST use email (user_id) not SA#
+  // Wallet query - MUST use email (user_id) not SA# - with error handling
   const walletUserId = profile?.user_id;
   const { data: walletRes } = useQuery({
     queryKey: ['wallet', walletUserId],
     queryFn: async () => {
-      const response = await base44.functions.invoke('walletEngine', {
-        action: 'getWallet',
-        payload: { user_id: walletUserId }
-      });
-      // response is axios response, data is in response.data
-      return response?.data || response;
+      try {
+        const response = await base44.functions.invoke('walletEngine', {
+          action: 'getWallet',
+          payload: { user_id: walletUserId }
+        });
+        // response is axios response, data is in response.data
+        return response?.data || response;
+      } catch (err) {
+        console.warn('WalletEngine fetch error:', err?.message);
+        // Return fallback with profile balance to prevent showing zero
+        return { wallet: { available_balance: profile?.ggg_balance || 0 } };
+      }
     },
-    enabled: !!walletUserId
+    enabled: !!walletUserId,
+    staleTime: 60000, // Cache for 1 minute to reduce API calls
+    retry: false, // Don't retry on rate limit errors
   });
   const walletAvailable = walletRes?.wallet?.available_balance ?? profile?.ggg_balance ?? 0;
   const rpInfo = getRPRank(profile?.rp_points || 0);
