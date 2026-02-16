@@ -107,6 +107,7 @@ export default function MiniProfile({
   const handleAvatarClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    // Open profile drawer, not navigate to page
     if (userId) {
       document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
     }

@@ -206,7 +206,7 @@ export default function RankedAvatar({
   const rankTitle = RANK_TITLES[rpRankCodeFinal] || 'Seeker';
 
   return (
-    <div className={`relative ${className}`} style={{ width: size, height: size }} data-user-id={userId}>
+    <div className={`relative ${className}`} style={{ width: size, height: size }}>
       {/* Main Avatar with Rank Ring */}
       <div
         className="rounded-full"
