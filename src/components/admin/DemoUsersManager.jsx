@@ -268,7 +268,12 @@ export default function DemoUsersManager() {
     setIsInviting(true);
     try {
       // Invite user via Base44 - this creates a real user with login credentials
-      await base44.users.inviteUser(newDemoEmail, 'user');
+      // If password is provided, include it in the invite
+      if (newDemoPassword) {
+        await base44.users.inviteUser(newDemoEmail, 'user', { password: newDemoPassword });
+      } else {
+        await base44.users.inviteUser(newDemoEmail, 'user');
+      }
       
       // Get template defaults based on selected tier
       const tierTemplates = selectedTier === 'top' ? MASTER_DEMO_TEMPLATES.top_tier : MASTER_DEMO_TEMPLATES.mid_tier;
