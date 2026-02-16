@@ -48,19 +48,27 @@ export default function Messages() {
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages'],
     queryFn: () => base44.entities.Message.list('-created_date', 200),
-    refetchInterval: 3000 // Poll every 3s for near real-time updates
+    refetchInterval: 10000, // Poll every 10s instead of 3s to reduce rate limits
+    staleTime: 5000,
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations'],
     queryFn: () => base44.entities.Conversation.list('-updated_date', 100),
-    refetchInterval: 5000 // Poll every 5s for conversation updates
+    refetchInterval: 15000, // Poll every 15s instead of 5s
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['profiles'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 100),
-    refetchInterval: 30000
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
   const sendMutation = useMutation({
