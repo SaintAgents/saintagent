@@ -17,14 +17,17 @@ export default function HeroImageSlideshow({ className }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Fetch custom interval from platform settings
-  const { data: settings } = useQuery({
-    queryKey: ['platformSettings'],
-    queryFn: () => base44.entities.PlatformSetting.filter({ key: 'hero_slideshow_interval' }),
-    staleTime: 60000
+  // Fetch custom interval from platform settings - check all settings and find by key
+  const { data: allSettings } = useQuery({
+    queryKey: ['allPlatformSettings'],
+    queryFn: () => base44.entities.PlatformSetting.list('-updated_date', 50),
+    staleTime: 300000, // Cache for 5 minutes
+    retry: false,
   });
 
-  const interval = settings?.[0]?.value ? parseInt(settings[0].value) : DEFAULT_INTERVAL;
+  // Find the slideshow interval setting by key field
+  const slideshowSetting = allSettings?.find(s => s.key === 'hero_slideshow_interval');
+  const interval = slideshowSetting?.value ? parseInt(slideshowSetting.value) : DEFAULT_INTERVAL;
 
   const nextImage = () => {
     setIsTransitioning(true);
