@@ -32,7 +32,7 @@ import {
   Sparkles,
   Crown,
   Shield,
-  LogOut,
+  DoorOpen,
   Globe,
   HelpCircle,
   BookOpen,
