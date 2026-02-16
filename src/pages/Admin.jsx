@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -33,6 +33,7 @@ import MasterActivityLog from '@/components/admin/MasterActivityLog';
 import GGGTotalsTab from '@/components/admin/GGGTotalsTab';
 import AdminTestimonialsTab from '@/components/admin/AdminTestimonialsTab.jsx';
 import ModeratorReviewPanel from '@/components/admin/ModeratorReviewPanel';
+import DemoUsersManager from '@/components/admin/DemoUsersManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -185,6 +186,10 @@ export default function Admin() {
               <AlertTriangle className="w-4 h-4" />
               Moderation
             </TabsTrigger>
+            <TabsTrigger value="demo-users" className="gap-2 px-3 py-2">
+              <UserPlus className="w-4 h-4" />
+              Demo Users
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -307,6 +312,10 @@ export default function Admin() {
 
           <TabsContent value="moderation">
             <ModeratorReviewPanel />
+          </TabsContent>
+
+          <TabsContent value="demo-users">
+            <DemoUsersManager />
           </TabsContent>
         </Tabs>
       </div>
