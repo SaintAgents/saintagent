@@ -26,6 +26,8 @@ import StepPartnerPreferences from '@/components/onboarding/StepPartnerPreferenc
 import { attachAffiliateToUser, activateReferral } from '@/components/affiliate/AffiliateTracker';
 import AIOnboardingAssistant from '@/components/ai/AIOnboardingAssistant';
 import OnboardingRewardsBar from '@/components/onboarding/OnboardingRewardsBar';
+import OnboardingTrackSelector from '@/components/onboarding/OnboardingTrackSelector';
+import EmailConfirmationBanner from '@/components/onboarding/EmailConfirmationBanner';
 
 const STEPS = [
   { id: 0, title: "Welcome", component: Step0Welcome, skippable: false },
