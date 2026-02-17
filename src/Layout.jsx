@@ -404,21 +404,22 @@ function AuthenticatedLayout({ children, currentPageName }) {
     } else if (action === 'clearAll') {
       const all = notifications || [];
       if (all.length === 0) return;
+
+      // Immediately set cache to empty to update UI
+      queryClient.setQueryData(['notifications'], []);
+
       try {
-        // Delete all notifications one by one
-        for (const n of all) {
-          try {
-            await base44.entities.Notification.delete(n.id);
-          } catch (err) {
+        // Delete all notifications in parallel
+        await Promise.all(all.map(n => 
+          base44.entities.Notification.delete(n.id).catch(err => {
             console.warn('Failed to delete notification:', n.id, err);
-          }
-        }
+          })
+        ));
       } catch (e) {
         console.error('Failed to clear notifications:', e);
       }
-      // Force immediate refetch to update count
-      await queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      await queryClient.refetchQueries({ queryKey: ['notifications'] });
+      // Force refetch after deletion
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     } else if (action === 'click' && notif?.action_url) {
       window.location.href = notif.action_url;
     }
