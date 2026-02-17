@@ -327,10 +327,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   // Fetch notifications
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications'],
-    queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', 20),
-    enabled: !!currentUser,
-    staleTime: 120000 // Cache for 2 minutes
+    queryKey: ['notifications', currentUser?.email],
+    queryFn: () => base44.entities.Notification.filter({ user_id: currentUser.email, is_read: false }, '-created_date', 20),
+    enabled: !!currentUser?.email,
+    staleTime: 120000, // Cache for 2 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 
   // Onboarding progress for redirect
