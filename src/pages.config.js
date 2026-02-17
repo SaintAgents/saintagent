@@ -117,6 +117,7 @@ import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
 import Broadcast from './pages/Broadcast';
+import Schedule from './pages/Schedule';
 import __Layout from './Layout.jsx';
 
 
@@ -191,6 +192,7 @@ export const PAGES = {
     "UserGuide": UserGuide,
     "Videos": Videos,
     "Broadcast": Broadcast,
+    "Schedule": Schedule,
 }
 
 export const pagesConfig = {
