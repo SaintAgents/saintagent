@@ -43,7 +43,8 @@ export default function VideoMeetingModal({ meeting, open, onClose }) {
     confirmMutation.mutate();
   };
 
-  const isExternal = meeting?.online_link && !meeting.online_link.includes('saintagent');
+  // Check if this is a Zoom meeting
+  const isZoomMeeting = meeting?.online_link?.includes('zoom');
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -59,15 +60,28 @@ export default function VideoMeetingModal({ meeting, open, onClose }) {
 
           {/* Video Area */}
           <div className="flex-1 bg-slate-900 relative">
-            {isExternal ? (
+            {meeting?.online_link ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <ExternalLink className="w-16 h-16 text-white mb-4" />
-                <p className="text-white mb-4">This meeting uses an external service</p>
+                {meeting.online_link.includes('zoom') ? (
+                  <>
+                    <div className="w-20 h-20 rounded-2xl bg-blue-500 flex items-center justify-center mb-4">
+                      <Video className="w-10 h-10 text-white" />
+                    </div>
+                    <p className="text-white text-xl mb-2">Zoom Meeting Ready</p>
+                    <p className="text-slate-400 mb-4">Click below to join the video call</p>
+                  </>
+                ) : (
+                  <>
+                    <ExternalLink className="w-16 h-16 text-white mb-4" />
+                    <p className="text-white mb-4">This meeting uses an external service</p>
+                  </>
+                )}
                 <Button 
                   onClick={() => window.open(meeting.online_link, '_blank')}
-                  className="bg-violet-600 hover:bg-violet-700"
+                  className="bg-blue-600 hover:bg-blue-700 gap-2"
                 >
-                  Open Meeting Link
+                  <Video className="w-4 h-4" />
+                  {meeting.online_link.includes('zoom') ? 'Join Zoom Meeting' : 'Open Meeting Link'}
                 </Button>
               </div>
             ) : (
@@ -78,7 +92,7 @@ export default function VideoMeetingModal({ meeting, open, onClose }) {
                     <AvatarFallback className="text-4xl">{meeting?.host_name?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <p className="text-white text-xl">{meeting?.host_name}</p>
-                  <p className="text-slate-400">In-platform video coming soon</p>
+                  <p className="text-slate-400">No video link has been set for this meeting</p>
                 </div>
               </div>
             )}

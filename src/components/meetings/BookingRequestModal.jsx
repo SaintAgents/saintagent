@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin, Loader2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +38,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   const [title, setTitle] = useState('');
   const [duration, setDuration] = useState(30);
   const [submitting, setSubmitting] = useState(false);
+  const [createZoomLink, setCreateZoomLink] = useState(true);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -96,6 +98,34 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
       const me = myProfile?.[0];
       const guestName = selectedUser.display_name || selectedUser.name || 'User';
 
+      // Create Zoom meeting if online and createZoomLink is enabled
+      let zoomJoinUrl = '';
+      let zoomStartUrl = '';
+      let zoomMeetingId = '';
+      
+      if (locationType === 'online' && createZoomLink) {
+        try {
+          const zoomResponse = await base44.functions.invoke('zoomMeeting', {
+            action: 'create',
+            meetingDetails: {
+              topic: title || `Meeting with ${guestName}`,
+              start_time: scheduledTime.toISOString(),
+              duration: duration,
+              agenda: message || `${meetingType} meeting between ${currentUser.full_name || me?.display_name} and ${guestName}`
+            }
+          });
+          
+          if (zoomResponse.data?.success) {
+            zoomJoinUrl = zoomResponse.data.meeting.join_url;
+            zoomStartUrl = zoomResponse.data.meeting.start_url;
+            zoomMeetingId = zoomResponse.data.meeting.id?.toString();
+          }
+        } catch (zoomError) {
+          console.error('Failed to create Zoom meeting:', zoomError);
+          // Continue without Zoom link - meeting can still be created
+        }
+      }
+
       // Create the meeting request
       await base44.entities.Meeting.create({
         title: title || `Meeting with ${guestName}`,
@@ -109,6 +139,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
         duration_minutes: duration,
         meeting_type: meetingType,
         location: locationType === 'online' ? 'Online' : '',
+        online_link: zoomJoinUrl || '',
         notes: message,
         status: 'pending'
       });
@@ -331,6 +362,23 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               </div>
             </div>
 
+            {/* Zoom Link Option - only show for online meetings */}
+            {locationType === 'online' && (
+              <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-100">
+                <div className="flex items-center gap-2">
+                  <Video className="w-4 h-4 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900">Create Zoom Meeting</p>
+                    <p className="text-xs text-blue-600">Automatically generate a Zoom link</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={createZoomLink}
+                  onCheckedChange={setCreateZoomLink}
+                />
+              </div>
+            )}
+
             {/* Message */}
             <div className="space-y-2">
               <Label>Message (optional)</Label>
@@ -348,8 +396,17 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               disabled={!selectedDate || submitting}
               className="w-full bg-violet-600 hover:bg-violet-700 gap-2"
             >
-              <Send className="w-4 h-4" />
-              {submitting ? 'Sending Request...' : 'Send Meeting Request'}
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {locationType === 'online' && createZoomLink ? 'Creating Zoom Meeting...' : 'Sending Request...'}
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  Send Meeting Request
+                </>
+              )}
             </Button>
           </div>
         )}
