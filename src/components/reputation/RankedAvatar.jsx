@@ -119,7 +119,7 @@ export default function RankedAvatar({
     dnd: 'Do Not Disturb',
     offline: 'Offline',
   };
-  const statusFinal = status ?? fetchedProfile?.status ?? 'online';
+  const statusFinal = status ?? 'online';
 
   const cfg = getRingConfig(rpRankCodeFinal);
   const basePad = cfg.pad; // thickness tuned for 96px
