@@ -295,16 +295,9 @@ export const BADGE_SECTIONS = [
     ]
   },
   {
-    id: 'sigils',
-    title: 'SIGILS',
+    id: 'affiliate',
+    title: 'AFFILIATE',
     items: [
-      {
-        code: 'trust_shield',
-        label: 'Trust Shield',
-        icon_desc: 'Emerald shield with checkmark',
-        definition: 'Perfect trust score badge—signals 100% verified trust.',
-        iconKey: 'shield'
-      },
       {
         code: 'affiliate_bronze',
         label: 'Bronze Affiliate',
@@ -324,6 +317,27 @@ export const BADGE_SECTIONS = [
         label: 'Gold Affiliate',
         icon_desc: 'Gold shield with "A" emblem',
         definition: 'Top-tier affiliate status—signals 20+ paid referrals.',
+        iconKey: 'shield'
+      }
+    ]
+  },
+  {
+    id: 'sigils',
+    title: 'SIGILS',
+    items: [
+      // Sigils are mystical/symbolic marks - coming soon
+      // These will be special earned insignia separate from achievement badges
+    ]
+  },
+  {
+    id: 'trust',
+    title: 'TRUST',
+    items: [
+      {
+        code: 'trust_shield',
+        label: 'Trust Shield',
+        icon_desc: 'Emerald shield with checkmark',
+        definition: 'Perfect trust score badge—signals 100% verified trust.',
         iconKey: 'shield'
       }
     ]
