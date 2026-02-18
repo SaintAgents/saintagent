@@ -83,16 +83,7 @@ export default function RankedAvatar({
     ? avatarUrl 
     : DEFAULT_AVATAR;
   
-  // Debug logging for avatar issues
-  if (typeof window !== 'undefined' && window.location.pathname.includes('CommandDeck')) {
-    console.log('RankedAvatar debug:', { 
-      srcProp: src, 
-      fetchedAvatar: fetchedProfile?.avatar_url, 
-      finalAvatarUrl,
-      userId,
-      needsFetch
-    });
-  }
+
   // Filter out hero images from personal gallery
   const allImages = [finalAvatarUrl, ...combinedGallery]
     .filter(url => url && !HERO_IMAGE_URLS.has(url))
