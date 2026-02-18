@@ -89,14 +89,14 @@ export default function RankedAvatar({
     .filter(url => url && !HERO_IMAGE_URLS.has(url))
     .slice(0, 6);
 
-  const leaderTierFinal = leaderTier ?? fetchedProfile?.leader_tier;
-  const rpPointsFinal = rpPoints ?? fetchedProfile?.rp_points;
-  const rpRankCodeFinal = rpRankCode ?? fetchedProfile?.rp_rank_code ?? (getRPRank(rpPointsFinal || 0)?.code || 'seeker');
-  const trustScoreFinal = trustScore ?? fetchedProfile?.trust_score ?? 0;
-  const rpInfo = getRPRank(rpPointsFinal || 0);
-  const statusMessageFinal = statusMessage ?? fetchedProfile?.status_message;
-  const saNumberFinal = saNumber ?? fetchedProfile?.sa_number;
-  const mysticalIdImage = fetchedProfile?.mystical_id_image;
+  // Use props directly - no fetching fallbacks
+  const leaderTierFinal = leaderTier;
+  const rpPointsFinal = rpPoints ?? 0;
+  const rpRankCodeFinal = rpRankCode ?? (getRPRank(rpPointsFinal)?.code || 'seeker');
+  const trustScoreFinal = trustScore ?? 0;
+  const rpInfo = getRPRank(rpPointsFinal);
+  const statusMessageFinal = statusMessage;
+  const saNumberFinal = saNumber;
 
   // DISABLE badge fetch - badges should be passed from parent component via CommandDeck's badges query
   // This prevents additional API calls that cause rate limits
