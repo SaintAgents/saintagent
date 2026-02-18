@@ -64,32 +64,24 @@ export default function MiniProfile({
   showHelpHint = true,
   showTipButton = true
 }) {
-  // Always call hooks unconditionally with stable keys
-  // Use longer stale times to reduce API calls and prevent rate limiting
+  // DRASTICALLY reduced API calls - cache for 30 min, don't refetch on mount
   const { data: profs = [] } = useQuery({
     queryKey: ['miniProfile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
     enabled: !!userId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes cache
+    staleTime: 30 * 60 * 1000, // 30 minutes
+    gcTime: 60 * 60 * 1000, // 1 hour cache
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 0
   });
   const profile = profs?.[0];
 
-  const { data: roles = [] } = useQuery({
-    queryKey: ['miniProfileRoles', userId || 'none'],
-    queryFn: () => base44.entities.UserRole.filter({ user_id: userId, status: 'active' }),
-    enabled: !!userId,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  });
+  // DISABLED - roles fetching causes too many API calls
+  const roles = [];
 
-  const { data: miniBadges = [] } = useQuery({
-    queryKey: ['miniProfileBadges', userId || 'none'],
-    queryFn: () => base44.entities.Badge.filter({ user_id: userId, status: 'active' }),
-    enabled: !!userId,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  });
+  // DISABLED - badges fetching causes too many API calls  
+  const miniBadges = [];
 
   const displayName = name || profile?.display_name || userId || 'User';
   const handle = profile?.handle;

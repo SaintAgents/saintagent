@@ -20,20 +20,20 @@ import { createPageUrl } from '@/utils';
 export default function CollaborationSuggestions({ profile, compact = false }) {
   const queryClient = useQueryClient();
 
-  // Fetch all user profiles
+  // DRASTICALLY reduced API calls to prevent rate limiting
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['collaborationProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-last_seen_at', 100),
-    refetchInterval: 60000, // Refresh every minute
+    queryFn: () => base44.entities.UserProfile.list('-last_seen_at', 50),
+    staleTime: 30 * 60 * 1000, // 30 minutes cache
+    gcTime: 60 * 60 * 1000, // 1 hour
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 0,
     enabled: !!profile?.user_id
   });
 
-  // Get user's skills
-  const { data: mySkills = [] } = useQuery({
-    queryKey: ['mySkills', profile?.user_id],
-    queryFn: () => base44.entities.Skill.filter({ user_id: profile.user_id }),
-    enabled: !!profile?.user_id
-  });
+  // DISABLED - skills fetching causes too many API calls
+  const mySkills = [];
 
   // Calculate collaboration suggestions
   const suggestions = React.useMemo(() => {
