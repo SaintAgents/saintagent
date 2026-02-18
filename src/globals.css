@@ -274,11 +274,11 @@ main {
   border-color: #00ff00 !important;
 }
 
-/* All images get green filter EXCEPT gauge images */
-[data-theme='hacker'] img:not(.gauge-image):not([alt="Trust Gauge"]):not([data-no-filter="true"]) {
+/* DISABLED - images should display normally */
+/* [data-theme='hacker'] img:not(.gauge-image):not([alt="Trust Gauge"]):not([data-no-filter="true"]) {
   filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
   -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-}
+} */
 
 /* =====================================================
    HERO IMAGES - PRESERVE
@@ -293,12 +293,15 @@ img[data-no-filter="true"],
   visibility: visible !important;
 }
 
-/* Dark theme - no filter on hero images */
-[data-theme='dark'] .hero-image,
-[data-theme='dark'] img.hero-image,
-[data-theme='dark'] img[data-no-filter="true"] {
+/* ALL images visible - no filters */
+.hero-image,
+img.hero-image,
+img[data-no-filter="true"],
+img {
   filter: none !important;
   -webkit-filter: none !important;
+  display: block !important;
+  opacity: 1 !important;
 }
 
 /* Gauge images always preserved */
