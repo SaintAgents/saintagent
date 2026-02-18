@@ -25,11 +25,8 @@ export default function GamificationWidget({ profile, compact = false }) {
 
   const userIdentifier = profile?.sa_number || profile?.user_id;
 
-  const { data: challenges = [] } = useQuery({
-    queryKey: ['challenges', userIdentifier],
-    queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 5),
-    enabled: !!userIdentifier
-  });
+  // DISABLED to prevent rate limits - challenges show empty state
+  const challenges = [];
 
   const activeChallenges = challenges.filter(c => c.status === 'active');
   const pendingRewards = challenges.filter(c => c.current_count >= c.target_count && c.status === 'active');

@@ -27,29 +27,54 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 1800000,
+    gcTime: 3600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
 
   const { data: profiles } = useQuery({
-    queryKey: ['userProfile', currentUser?.email],
+    queryKey: ['myProfile', currentUser?.email],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 1800000,
+    gcTime: 3600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
   const profile = profiles?.[0];
 
   const { data: posts = [] } = useQuery({
     queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 20)
+    queryFn: () => base44.entities.Post.list('-created_date', 20),
+    staleTime: 300000, // 5 min cache
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
 
   const { data: allLikes = [] } = useQuery({
     queryKey: ['postLikes'],
-    queryFn: () => base44.entities.PostLike.list()
+    queryFn: () => base44.entities.PostLike.list(),
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
 
   const { data: allComments = [] } = useQuery({
     queryKey: ['postComments'],
-    queryFn: () => base44.entities.PostComment.list('-created_date')
+    queryFn: () => base44.entities.PostComment.list('-created_date'),
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
 
   const createPostMutation = useMutation({
