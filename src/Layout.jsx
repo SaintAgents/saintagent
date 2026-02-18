@@ -303,43 +303,43 @@ function AuthenticatedLayout({ children, currentPageName }) {
               return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
             },
     enabled: !!currentUser?.email,
-    staleTime: 600000, // Cache for 10 minutes
-    gcTime: 900000, // Keep in cache for 15 minutes
+    staleTime: 1800000, // Cache for 30 minutes
+    gcTime: 3600000, // Keep in cache for 60 minutes
     refetchOnWindowFocus: false,
-    refetchOnMount: false, // Don't refetch on every mount - use cache
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
   const profile = profiles?.[0];
   const cmdViewMode = profile?.command_deck_layout?.view_mode;
 
-  // Heartbeat: update last_seen_at periodically for online indicator
-  useEffect(() => {
-    if (!profile?.id) return;
-    const update = async () => {
-      await base44.entities.UserProfile.update(profile.id, { last_seen_at: new Date().toISOString() });
-    };
-    update();
-    const i = setInterval(update, 300000); // Every 5 minutes
-    return () => clearInterval(i);
-  }, [profile?.id]);
+  // Heartbeat DISABLED to reduce rate limits
+  // useEffect(() => {
+  //   if (!profile?.id) return;
+  //   const update = async () => {
+  //     await base44.entities.UserProfile.update(profile.id, { last_seen_at: new Date().toISOString() });
+  //   };
+  //   update();
+  //   const i = setInterval(update, 300000);
+  //   return () => clearInterval(i);
+  // }, [profile?.id]);
 
   // Initialize live status tracking
   useLiveStatus();
 
-  // Fetch notifications
-  const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', currentUser?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_id: currentUser.email, is_read: false }, '-created_date', 20),
-    enabled: !!currentUser?.email,
-    staleTime: 120000, // Cache for 2 minutes
-    refetchOnWindowFocus: false,
-    refetchOnMount: false
-  });
+  // Fetch notifications - DISABLED to reduce rate limits
+  const notifications = [];
 
-  // Onboarding progress for redirect
+  // Onboarding progress for redirect - cached heavily
   const { data: onboardingRecords, isLoading: onboardingLoading } = useQuery({
     queryKey: ['onboardingProgress', currentUser?.email],
     queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 3600000, // Cache for 60 minutes
+    gcTime: 7200000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
   const onboarding = onboardingRecords?.[0];
 
