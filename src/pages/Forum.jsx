@@ -15,7 +15,7 @@ import {
   MessageSquare, Search, Plus, Pin, ThumbsUp, Eye, Clock, 
   Filter, TrendingUp, Users, Megaphone, HelpCircle, Sparkles, 
   Share2, Award, ArrowRight, MessageCircle, Flag, CheckCircle,
-  MoreVertical, Shield, XCircle
+  MoreVertical, Shield, XCircle, Image as ImageIcon, Video, X
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -29,6 +29,8 @@ import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import AIWritingAssistant from '@/components/ai/AIWritingAssistant';
 import { formatDistanceToNow } from 'date-fns';
+import { toast } from 'sonner';
+import { useRef } from 'react';
 
 const CATEGORIES = [
   { id: 'general', label: 'General Discussion', icon: MessageSquare, color: 'bg-slate-100 text-slate-700' },
@@ -46,8 +48,17 @@ export default function Forum() {
   const [sortBy, setSortBy] = useState('recent');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [newPost, setNewPost] = useState({ title: '', content: '', category: 'general', tags: '' });
+  const [newPost, setNewPost] = useState({ title: '', content: '', category: 'general', tags: '', image_urls: [], video_url: null });
   const [replyContent, setReplyContent] = useState('');
+  const [replyMedia, setReplyMedia] = useState({ image_url: null, video_url: null });
+  const [uploadingPostImage, setUploadingPostImage] = useState(false);
+  const [uploadingPostVideo, setUploadingPostVideo] = useState(false);
+  const [uploadingReplyImage, setUploadingReplyImage] = useState(false);
+  const [uploadingReplyVideo, setUploadingReplyVideo] = useState(false);
+  const postImageRef = useRef(null);
+  const postVideoRef = useRef(null);
+  const replyImageRef = useRef(null);
+  const replyVideoRef = useRef(null);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [reportTarget, setReportTarget] = useState(null); // { type: 'post'|'reply', id, authorId }
   const [reportReason, setReportReason] = useState('other');
@@ -85,7 +96,7 @@ export default function Forum() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
       setCreateModalOpen(false);
-      setNewPost({ title: '', content: '', category: 'general', tags: '' });
+      setNewPost({ title: '', content: '', category: 'general', tags: '', image_urls: [], video_url: null });
     }
   });
 
@@ -100,8 +111,98 @@ export default function Forum() {
       queryClient.invalidateQueries({ queryKey: ['forumReplies'] });
       queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
       setReplyContent('');
+      setReplyMedia({ image_url: null, video_url: null });
     }
   });
+
+  // Media upload handlers
+  const handlePostImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingPostImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setNewPost(prev => ({ ...prev, image_urls: [...prev.image_urls, file_url] }));
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingPostImage(false);
+      if (postImageRef.current) postImageRef.current.value = '';
+    }
+  };
+
+  const handlePostVideoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.src = URL.createObjectURL(file);
+    
+    video.onloadedmetadata = async () => {
+      URL.revokeObjectURL(video.src);
+      if (video.duration > 15 * 60) {
+        toast.error('Video must be 15 minutes or less');
+        if (postVideoRef.current) postVideoRef.current.value = '';
+        return;
+      }
+      
+      setUploadingPostVideo(true);
+      try {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setNewPost(prev => ({ ...prev, video_url: file_url }));
+      } catch (error) {
+        toast.error('Failed to upload video');
+      } finally {
+        setUploadingPostVideo(false);
+        if (postVideoRef.current) postVideoRef.current.value = '';
+      }
+    };
+  };
+
+  const handleReplyImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingReplyImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setReplyMedia(prev => ({ ...prev, image_url: file_url }));
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingReplyImage(false);
+      if (replyImageRef.current) replyImageRef.current.value = '';
+    }
+  };
+
+  const handleReplyVideoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.src = URL.createObjectURL(file);
+    
+    video.onloadedmetadata = async () => {
+      URL.revokeObjectURL(video.src);
+      if (video.duration > 15 * 60) {
+        toast.error('Video must be 15 minutes or less');
+        if (replyVideoRef.current) replyVideoRef.current.value = '';
+        return;
+      }
+      
+      setUploadingReplyVideo(true);
+      try {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setReplyMedia(prev => ({ ...prev, video_url: file_url }));
+      } catch (error) {
+        toast.error('Failed to upload video');
+      } finally {
+        setUploadingReplyVideo(false);
+        if (replyVideoRef.current) replyVideoRef.current.value = '';
+      }
+    };
+  };
 
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
@@ -182,18 +283,22 @@ export default function Forum() {
       title: newPost.title,
       content: newPost.content,
       category: newPost.category,
-      tags: newPost.tags.split(',').map(t => t.trim()).filter(Boolean)
+      tags: newPost.tags.split(',').map(t => t.trim()).filter(Boolean),
+      image_urls: newPost.image_urls,
+      video_url: newPost.video_url
     });
   };
 
   const handleReply = () => {
-    if (!replyContent.trim()) return;
+    if (!replyContent.trim() && !replyMedia.image_url && !replyMedia.video_url) return;
     createReplyMutation.mutate({
       post_id: selectedPost.id,
       author_id: profile?.user_id,
       author_name: profile?.display_name,
       author_avatar: profile?.avatar_url,
-      content: replyContent
+      content: replyContent,
+      image_url: replyMedia.image_url,
+      video_url: replyMedia.video_url
     });
   };
 
@@ -479,6 +584,53 @@ export default function Forum() {
                 className="mt-1"
               />
             </div>
+            
+            {/* Media Upload Section */}
+            <div>
+              <label className="text-sm font-medium">Media</label>
+              <div className="flex items-center gap-2 mt-1">
+                <input ref={postImageRef} type="file" accept="image/*" onChange={handlePostImageUpload} className="hidden" />
+                <input ref={postVideoRef} type="file" accept="video/*" onChange={handlePostVideoUpload} className="hidden" />
+                <Button type="button" variant="outline" size="sm" onClick={() => postImageRef.current?.click()} disabled={uploadingPostImage}>
+                  <ImageIcon className={`w-4 h-4 mr-2 ${uploadingPostImage ? 'animate-pulse' : ''}`} />
+                  Image
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={() => postVideoRef.current?.click()} disabled={uploadingPostVideo || newPost.video_url}>
+                  <Video className={`w-4 h-4 mr-2 ${uploadingPostVideo ? 'animate-pulse' : ''}`} />
+                  Video (max 15 min)
+                </Button>
+              </div>
+              
+              {/* Preview uploaded media */}
+              {(newPost.image_urls.length > 0 || newPost.video_url) && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {newPost.image_urls.map((url, idx) => (
+                    <div key={idx} className="relative">
+                      <img src={url} alt="Upload" className="h-16 w-auto rounded-lg object-cover border" />
+                      <button
+                        type="button"
+                        onClick={() => setNewPost(prev => ({ ...prev, image_urls: prev.image_urls.filter((_, i) => i !== idx) }))}
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {newPost.video_url && (
+                    <div className="relative">
+                      <video src={newPost.video_url} className="h-16 w-auto rounded-lg border" muted />
+                      <button
+                        type="button"
+                        onClick={() => setNewPost(prev => ({ ...prev, video_url: null }))}
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateModalOpen(false)}>Cancel</Button>
@@ -568,6 +720,22 @@ export default function Forum() {
                 <div className="mt-4 prose prose-sm dark:prose-invert max-w-none">
                   {selectedPost.content}
                 </div>
+                
+                {/* Post Images */}
+                {selectedPost.image_urls?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {selectedPost.image_urls.map((url, idx) => (
+                      <img key={idx} src={url} alt="Post image" className="rounded-lg max-h-64 w-auto object-cover" />
+                    ))}
+                  </div>
+                )}
+                
+                {/* Post Video */}
+                {selectedPost.video_url && (
+                  <div className="mt-4">
+                    <video src={selectedPost.video_url} controls className="rounded-lg max-h-64 w-auto" />
+                  </div>
+                )}
                 <div className="flex items-center gap-4 mt-4 pt-4 border-t">
                   <Button 
                     variant="ghost" 
@@ -615,6 +783,12 @@ export default function Forum() {
                             )}
                           </div>
                           <p className="text-sm text-slate-700 dark:text-slate-300">{reply.content}</p>
+                          {reply.image_url && (
+                            <img src={reply.image_url} alt="Reply image" className="rounded-lg max-h-48 w-auto mt-2" />
+                          )}
+                          {reply.video_url && (
+                            <video src={reply.video_url} controls className="rounded-lg max-h-48 w-auto mt-2" />
+                          )}
                           <div className="flex items-center gap-2 mt-2">
                             {/* Mark as solution - only post author or admin can do this */}
                             {(selectedPost?.author_id === profile?.user_id || isAdmin) && selectedPost?.category === 'questions' && (
@@ -650,6 +824,49 @@ export default function Forum() {
                     placeholder="Write a reply..."
                     className="min-h-[80px]"
                   />
+                  
+                  {/* Reply media upload */}
+                  <div className="flex items-center gap-2">
+                    <input ref={replyImageRef} type="file" accept="image/*" onChange={handleReplyImageUpload} className="hidden" />
+                    <input ref={replyVideoRef} type="file" accept="video/*" onChange={handleReplyVideoUpload} className="hidden" />
+                    <Button type="button" variant="ghost" size="sm" onClick={() => replyImageRef.current?.click()} disabled={uploadingReplyImage}>
+                      <ImageIcon className={`w-4 h-4 ${uploadingReplyImage ? 'animate-pulse' : ''}`} />
+                    </Button>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => replyVideoRef.current?.click()} disabled={uploadingReplyVideo || replyMedia.video_url}>
+                      <Video className={`w-4 h-4 ${uploadingReplyVideo ? 'animate-pulse' : ''}`} />
+                    </Button>
+                  </div>
+                  
+                  {/* Reply media preview */}
+                  {(replyMedia.image_url || replyMedia.video_url) && (
+                    <div className="flex gap-2">
+                      {replyMedia.image_url && (
+                        <div className="relative">
+                          <img src={replyMedia.image_url} alt="Reply upload" className="h-16 w-auto rounded-lg border" />
+                          <button
+                            type="button"
+                            onClick={() => setReplyMedia(prev => ({ ...prev, image_url: null }))}
+                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                      {replyMedia.video_url && (
+                        <div className="relative">
+                          <video src={replyMedia.video_url} className="h-16 w-auto rounded-lg border" muted />
+                          <button
+                            type="button"
+                            onClick={() => setReplyMedia(prev => ({ ...prev, video_url: null }))}
+                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
                   <div className="flex items-center justify-between">
                     <AIWritingAssistant 
                       text={replyContent} 
@@ -658,7 +875,7 @@ export default function Forum() {
                     />
                     <Button 
                       onClick={handleReply}
-                      disabled={!replyContent.trim() || createReplyMutation.isPending}
+                      disabled={(!replyContent.trim() && !replyMedia.image_url && !replyMedia.video_url) || createReplyMutation.isPending}
                       className="bg-violet-600 hover:bg-violet-700"
                     >
                       Reply
