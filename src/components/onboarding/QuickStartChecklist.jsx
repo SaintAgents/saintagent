@@ -88,35 +88,46 @@ const MILESTONE_BADGES = [
 
 export default function QuickStartChecklist() {
   const queryClient = useQueryClient();
-  const { data: user } = useQuery({ 
-    queryKey: ['currentUser'], 
-    queryFn: () => base44.auth.me(),
-    staleTime: 1800000,
-    gcTime: 3600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
-  });
+  const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
   const { data: profile } = useQuery({ 
-    queryKey: ['myProfile', user?.email], 
+    queryKey: ['userProfile', user?.email], 
     queryFn: async () => {
       const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
       return profiles?.[0];
     },
-    enabled: !!user?.email,
-    staleTime: 1800000,
-    gcTime: 3600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
+    enabled: !!user?.email
   });
   
-  // DISABLED all completion status queries to prevent rate limits
-  const follows = [];
-  const messages = [];
-  const meetings = [];
-  const missionJoins = [];
-  const listings = [];
+  // Fetch completion status from various entities
+  const { data: follows = [] } = useQuery({
+    queryKey: ['myFollows', user?.email],
+    queryFn: () => base44.entities.Follow.filter({ follower_id: user.email }),
+    enabled: !!user?.email
+  });
+  
+  const { data: messages = [] } = useQuery({
+    queryKey: ['myMessages', user?.email],
+    queryFn: () => base44.entities.Message.filter({ from_user_id: user.email }),
+    enabled: !!user?.email
+  });
+  
+  const { data: meetings = [] } = useQuery({
+    queryKey: ['myMeetings', user?.email],
+    queryFn: () => base44.entities.Meeting.filter({ host_id: user.email }),
+    enabled: !!user?.email
+  });
+  
+  const { data: missionJoins = [] } = useQuery({
+    queryKey: ['myMissionJoins', user?.email],
+    queryFn: () => base44.entities.MissionJoinRequest.filter({ user_id: user.email, status: 'approved' }),
+    enabled: !!user?.email
+  });
+  
+  const { data: listings = [] } = useQuery({
+    queryKey: ['myListings', user?.email],
+    queryFn: () => base44.entities.Listing.filter({ owner_id: user.email }),
+    enabled: !!user?.email
+  });
 
   // Calculate completion status
   const completionStatus = {
