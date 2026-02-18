@@ -1,7 +1,6 @@
 import React from 'react';
-// useQuery and base44 imports kept for future re-enablement
-// import { useQuery } from '@tanstack/react-query';
-// import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Trophy, Coins, Star, Target, Calendar, Users, Flame, Crown, Medal } from 'lucide-react';
@@ -64,10 +63,23 @@ function MiniRow({ idx, profile, valueLabel, metric }) {
 }
 
 export default function LeaderboardMiniCard() {
-  // DISABLED all queries to prevent rate limits - show empty state
-  const profiles = [];
-  const missions = [];
-  const meetings = [];
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['leaderboard_profiles_mini'],
+    queryFn: () => base44.entities.UserProfile.list('-updated_date', 100),
+    staleTime: 300000,
+  });
+
+  const { data: missions = [] } = useQuery({
+    queryKey: ['leaderboard_missions_mini'],
+    queryFn: () => base44.entities.Mission.filter({ status: 'completed' }, '-created_date', 200),
+    staleTime: 300000,
+  });
+
+  const { data: meetings = [] } = useQuery({
+    queryKey: ['leaderboard_meetings_mini'],
+    queryFn: () => base44.entities.Meeting.filter({ status: 'completed' }, '-created_date', 200),
+    staleTime: 300000,
+  });
 
   const missionCounts = React.useMemo(() => {
     const counts = {};
