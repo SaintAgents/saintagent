@@ -507,24 +507,23 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const challengeLimit = isMobile ? DATA_LIMITS.challenges.mobile : DATA_LIMITS.challenges.desktop;
   const projectLimit = isMobile ? DATA_LIMITS.projects.mobile : DATA_LIMITS.projects.desktop;
 
-  // Fetch user badges by email (primary) with SA# fallback - mobile-optimized
+  // DRASTICALLY reduced - cache badges for 30 minutes
   const badgeUserId = currentUser?.email;
   const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', badgeUserId, badgeLimit],
+    queryKey: ['userBadges', badgeUserId],
     queryFn: async () => {
-      // Try email first, then SA#
       let results = await base44.entities.Badge.filter({ user_id: badgeUserId, status: 'active' }, '-created_date', badgeLimit);
-      // If no results and we have SA#, try with SA#
       if ((!results || results.length === 0) && profile?.sa_number) {
         results = await base44.entities.Badge.filter({ user_id: profile.sa_number, status: 'active' }, '-created_date', badgeLimit);
       }
-      console.log('Badges fetched:', results?.length, 'for user:', badgeUserId);
       return results || [];
     },
-    enabled: !!badgeUserId && !!profile, // Wait for profile first
-    staleTime: 300000,
+    enabled: !!badgeUserId && !!profile,
+    staleTime: 30 * 60 * 1000, // 30 min cache
+    gcTime: 60 * 60 * 1000,
     refetchOnWindowFocus: false,
-    retry: false // Don't retry - prevents cascade
+    refetchOnMount: false,
+    retry: 0
   });
 
   // Stagger queries - wait for profile before fetching secondary data
@@ -558,82 +557,26 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   }, [queryStage]);
 
-  const { data: matches = [] } = useQuery({
-    queryKey: ['matches', matchLimit],
-    queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit),
-    enabled: queryStage >= 1,
-    staleTime: 600000, // 10 min cache
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE matches - causing rate limits
+  const matches = [];
 
-  const { data: meetings = [] } = useQuery({
-    queryKey: ['meetings', meetingLimit],
-    queryFn: () => base44.entities.Meeting.list('-scheduled_time', meetingLimit),
-    enabled: queryStage >= 1,
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE meetings - causing rate limits  
+  const meetings = [];
 
-  const { data: missions = [] } = useQuery({
-    queryKey: ['missions', missionLimit],
-    queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit),
-    enabled: queryStage >= 2,
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE missions - causing rate limits
+  const missions = [];
 
-  const { data: listings = [] } = useQuery({
-    queryKey: ['listings', listingLimit],
-    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', listingLimit),
-    enabled: queryStage >= 2,
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE listings - causing rate limits
+  const listings = [];
 
-  const { data: projects = [] } = useQuery({
-    queryKey: ['projects', projectLimit],
-    queryFn: () => base44.entities.Project.list('-created_date', projectLimit),
-    enabled: queryStage >= 3,
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE projects - causing rate limits
+  const projects = [];
 
-  const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', notificationLimit],
-    queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', notificationLimit),
-    enabled: queryStage >= 2,
-    staleTime: 300000,
-    gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE notifications - causing rate limits
+  const notifications = [];
 
-  const { data: challenges = [] } = useQuery({
-    queryKey: ['challenges', userIdentifier, challengeLimit],
-    queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', challengeLimit),
-    enabled: !!userIdentifier && queryStage >= 3,
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false
-  });
+  // DISABLE challenges - causing rate limits
+  const challenges = [];
 
   // Daily Ops data (today)
   const todayStr = new Date().toISOString().slice(0, 10);
