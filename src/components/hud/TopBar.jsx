@@ -363,7 +363,7 @@ export default function TopBar({
                   alt={tab.label}
                   className={cn(
                     "object-contain topbar-mode-icon",
-                    tab.id === 'command' ? "w-14 h-14" : "w-14 h-14"
+                    tab.id === 'command' ? "w-14 h-14" : "w-16 h-16"
                   )}
                   style={currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : undefined}
                 />
