@@ -47,35 +47,10 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   });
   const profile = profiles?.[0];
 
-  const { data: posts = [] } = useQuery({
-    queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 20),
-    staleTime: 300000, // 5 min cache
-    gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
-  });
-
-  const { data: allLikes = [] } = useQuery({
-    queryKey: ['postLikes'],
-    queryFn: () => base44.entities.PostLike.list(),
-    staleTime: 300000,
-    gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
-  });
-
-  const { data: allComments = [] } = useQuery({
-    queryKey: ['postComments'],
-    queryFn: () => base44.entities.PostComment.list('-created_date'),
-    staleTime: 300000,
-    gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
-  });
+  // DISABLED to prevent rate limits in preview sandbox
+  const posts = [];
+  const allLikes = [];
+  const allComments = [];
 
   const createPostMutation = useMutation({
     mutationFn: async (payload) => {
