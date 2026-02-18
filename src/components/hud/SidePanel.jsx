@@ -445,24 +445,24 @@ export default function SidePanel({
       .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
   }, [allUserProfiles]);
 
-  // Seed demo data once for Mathues
-  React.useEffect(() => {
-    (async () => {
-      try {
-        const key = 'rankDemoSeeded_v1';
-        if (!userIdentifier) return;
-        if (typeof window !== 'undefined' && localStorage.getItem(key)) return;
-        const me = await base44.auth.me();
-        if (!me || (me.email || '').toLowerCase() !== 'germaintrust@gmail.com') return;
-        await base44.functions.invoke('seedRankDemo', { target_email: me.email });
-        try { localStorage.setItem(key, '1'); } catch {}
-        queryClient.invalidateQueries({ queryKey: ['rpEvents', userIdentifier] });
-        queryClient.invalidateQueries({ queryKey: ['trustEvents', userIdentifier] });
-      } catch (e) {
-        console.warn('Seed demo failed', e);
-      }
-    })();
-  }, [userIdentifier]);
+  // Seed demo data - DISABLED to prevent 500 errors and rate limits
+  // React.useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const key = 'rankDemoSeeded_v1';
+  //       if (!userIdentifier) return;
+  //       if (typeof window !== 'undefined' && localStorage.getItem(key)) return;
+  //       const me = await base44.auth.me();
+  //       if (!me || (me.email || '').toLowerCase() !== 'germaintrust@gmail.com') return;
+  //       await base44.functions.invoke('seedRankDemo', { target_email: me.email });
+  //       try { localStorage.setItem(key, '1'); } catch {}
+  //       queryClient.invalidateQueries({ queryKey: ['rpEvents', userIdentifier] });
+  //       queryClient.invalidateQueries({ queryKey: ['trustEvents', userIdentifier] });
+  //     } catch (e) {
+  //       console.warn('Seed demo failed', e);
+  //     }
+  //   })();
+  // }, [userIdentifier]);
 
   // Popped-off panel render
   if (isPoppedOff && isOpen) {
