@@ -65,45 +65,11 @@ export default function RankedAvatar({
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
-  // Always call useQuery unconditionally to avoid hook order issues
-  // The enabled flag controls whether it actually fetches
-  // IMPORTANT: Only fetch if we DON'T have the src prop - prevents overriding passed avatar
-  const needsFetch = !!userId && !src && (rpRankCode == null || leaderTier == null || rpPoints == null || showPhotoIcon || affiliatePaidCount == null || saNumber == null);
-  const { data: fetched = [] } = useQuery({
-    queryKey: ['rankedAvatarProfile', userId || 'none'],
-    queryFn: async () => {
-      if (!userId) return null;
-      try {
-        return await base44.entities.UserProfile.filter({ user_id: userId });
-      } catch (err) {
-        console.warn('RankedAvatar profile fetch error:', err?.message);
-        return []; // Return empty on error to prevent crashes
-      }
-    },
-    enabled: needsFetch,
-    staleTime: 300000, // 5 minutes - reduce API calls
-    gcTime: 600000, // 10 minutes cache
-    retry: false, // Don't retry on rate limit
-  });
-  const fetchedProfile = fetched?.[0];
-  
-  // Fetch affiliate stats for affiliate badge
-  const { data: affiliateCodes = [] } = useQuery({
-    queryKey: ['affiliateCodeForAvatar', userId || 'none'],
-    queryFn: async () => {
-      try {
-        return await base44.entities.AffiliateCode.filter({ user_id: userId });
-      } catch (err) {
-        console.warn('RankedAvatar affiliate fetch error:', err?.message);
-        return [];
-      }
-    },
-    enabled: !!userId && affiliatePaidCount == null,
-    staleTime: 300000,
-    gcTime: 600000,
-    retry: false,
-  });
-  const affiliateCode = affiliateCodes?.[0];
+  // DISABLE ALL FETCHES - RankedAvatar should ONLY use props passed to it
+  // This prevents cascade of API calls that cause rate limits
+  // Parent components (CommandDeck, ProfileDrawer, etc.) should pass all needed data
+  const fetchedProfile = null;
+  const affiliateCode = null;
   const affiliatePaidFinal = affiliatePaidCount ?? affiliateCode?.total_paid ?? 0;
   const affiliateTier = getAffiliateTier(affiliatePaidFinal);
   
