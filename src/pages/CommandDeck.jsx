@@ -484,17 +484,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   };
 
-  // Onboarding progress
-  const { data: onboardingRecords } = useQuery({
-    queryKey: ['onboardingProgress', currentUser?.email],
-    queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email,
-    staleTime: 300000, // 5 minutes
-    refetchOnWindowFocus: false
-  });
-  const onboarding = onboardingRecords?.[0];
-  const ONBOARDING_STEPS = 10;
-  const setupPercent = onboarding ? Math.round(((onboarding.current_step || 0) + 1) / ONBOARDING_STEPS * 100) : 0;
+  // DISABLED onboarding query - assume complete to prevent rate limits
+  const onboarding = { status: 'complete' };
+  const setupPercent = 100;
 
   // Mobile-optimized limits
   const isMobile = useMemo(() => isMobileDevice(), []);
@@ -507,24 +499,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const challengeLimit = isMobile ? DATA_LIMITS.challenges.mobile : DATA_LIMITS.challenges.desktop;
   const projectLimit = isMobile ? DATA_LIMITS.projects.mobile : DATA_LIMITS.projects.desktop;
 
-  // DRASTICALLY reduced - cache badges for 30 minutes
-  const badgeUserId = currentUser?.email;
-  const { data: badges = [] } = useQuery({
-    queryKey: ['userBadges', badgeUserId],
-    queryFn: async () => {
-      let results = await base44.entities.Badge.filter({ user_id: badgeUserId, status: 'active' }, '-created_date', badgeLimit);
-      if ((!results || results.length === 0) && profile?.sa_number) {
-        results = await base44.entities.Badge.filter({ user_id: profile.sa_number, status: 'active' }, '-created_date', badgeLimit);
-      }
-      return results || [];
-    },
-    enabled: !!badgeUserId && !!profile,
-    staleTime: 30 * 60 * 1000, // 30 min cache
-    gcTime: 60 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: 0
-  });
+  // DISABLED badges query to prevent rate limits
+  const badges = [];
 
   // Stagger queries - wait for profile before fetching secondary data
   // This prevents all queries from firing simultaneously and hitting rate limits
@@ -578,19 +554,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // DISABLE challenges - causing rate limits
   const challenges = [];
 
-  // Daily Ops data (today)
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const { data: dailyLogToday = [] } = useQuery({
-    queryKey: ['dailyLog', userIdentifier, todayStr],
-    queryFn: () => base44.entities.DailyLog.filter({ user_id: userIdentifier, date: todayStr }),
-    enabled: !!userIdentifier,
-    staleTime: 120000,
-    refetchOnWindowFocus: false
-  });
-  const dailyLog = dailyLogToday?.[0];
-  const dailyCompleted = dailyLog?.completed?.length || 0;
-  const dailyInProgress = dailyLog?.in_progress?.length || 0;
-  const dailyGGG = (dailyLog?.completed || []).reduce((s, c) => s + (Number(c.ggg_earned) || 0), 0);
+  // DISABLED daily ops query to prevent rate limits
+  const dailyCompleted = 0;
+  const dailyInProgress = 0;
+  const dailyGGG = 0;
 
   // Drag-and-drop ordering (Column C) - load from localStorage if available
   const [colCOrder, setColCOrder] = useState(() => {
