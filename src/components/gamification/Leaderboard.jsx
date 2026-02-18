@@ -36,14 +36,16 @@ export default function Leaderboard({ category = 'overall', compact = false }) {
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 1800000,
+    gcTime: 3600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
 
-  // For demo, we'll generate leaderboard from UserProfiles
-  const { data: profiles = [] } = useQuery({
-    queryKey: ['leaderboardProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-engagement_points', 20)
-  });
+  // DISABLED to prevent rate limits - leaderboard shows empty state
+  const profiles = [];
 
   // Sort and rank profiles
   const leaderboardData = profiles

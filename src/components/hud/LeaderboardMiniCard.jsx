@@ -63,23 +63,10 @@ function MiniRow({ idx, profile, valueLabel, metric }) {
 }
 
 export default function LeaderboardMiniCard() {
-  const { data: profiles = [] } = useQuery({
-    queryKey: ['leaderboard_profiles_mini'],
-    queryFn: () => base44.entities.UserProfile.list('-updated_date', 100),
-    staleTime: 300000,
-  });
-
-  const { data: missions = [] } = useQuery({
-    queryKey: ['leaderboard_missions_mini'],
-    queryFn: () => base44.entities.Mission.filter({ status: 'completed' }, '-created_date', 200),
-    staleTime: 300000,
-  });
-
-  const { data: meetings = [] } = useQuery({
-    queryKey: ['leaderboard_meetings_mini'],
-    queryFn: () => base44.entities.Meeting.filter({ status: 'completed' }, '-created_date', 200),
-    staleTime: 300000,
-  });
+  // DISABLED to reduce rate limits in preview - use empty arrays
+  const profiles = [];
+  const missions = [];
+  const meetings = [];
 
   const missionCounts = React.useMemo(() => {
     const counts = {};
