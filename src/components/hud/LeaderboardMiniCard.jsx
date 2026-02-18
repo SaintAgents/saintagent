@@ -1,6 +1,7 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+// useQuery and base44 imports kept for future re-enablement
+// import { useQuery } from '@tanstack/react-query';
+// import { base44 } from '@/api/base44Client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Trophy, Coins, Star, Target, Calendar, Users, Flame, Crown, Medal } from 'lucide-react';
