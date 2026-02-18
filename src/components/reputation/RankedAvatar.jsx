@@ -80,6 +80,11 @@ export default function RankedAvatar({
   const finalAvatarUrl = (avatarUrl && typeof avatarUrl === 'string' && avatarUrl.trim() !== '' && avatarUrl !== 'null' && avatarUrl !== 'undefined') 
     ? avatarUrl 
     : DEFAULT_AVATAR;
+    
+  // Debug: Log what's being rendered (only in dev)
+  if (typeof window !== 'undefined' && !avatarUrl && src !== null) {
+    console.log('RankedAvatar: No src provided, using default. Name:', name);
+  }
   
 
   // Filter out hero images from personal gallery
