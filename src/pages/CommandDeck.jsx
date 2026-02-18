@@ -1297,32 +1297,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     emptySlotCount={Math.max(0, 5 - badges.length)}
                     onMore={() => setBadgeGlossaryOpen(true)} />
 
-                  {/* Sigils Section */}
-                  <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
-                    <p className="text-fuchsia-500 dark:text-fuchsia-400 text-xs font-medium mb-3">✨ Sigils</p>
-                    <div className="flex flex-wrap gap-2">
-                      {/* Trust Shield */}
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-emerald-200 dark:border-emerald-700">
-                        <span className="text-emerald-600">🛡️</span>
-                        <span className="capitalize">Trust Shield</span>
-                      </div>
-                      {/* Bronze Affiliate */}
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-amber-200 dark:border-amber-700">
-                        <span className="text-amber-600">🛡️</span>
-                        <span className="capitalize">Bronze Affiliate</span>
-                      </div>
-                      {/* Silver Affiliate */}
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-600">
-                        <span className="text-slate-500">🛡️</span>
-                        <span className="capitalize">Silver Affiliate</span>
-                      </div>
-                      {/* Gold Affiliate */}
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 border border-yellow-300 dark:border-yellow-600">
-                        <span className="text-yellow-500">🛡️</span>
-                        <span className="capitalize">Gold Affiliate</span>
-                      </div>
-                    </div>
-                  </div>
+
 
                 </div>
 
