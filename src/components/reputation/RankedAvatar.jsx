@@ -71,10 +71,8 @@ export default function RankedAvatar({
   const affiliatePaidFinal = affiliatePaidCount ?? 0;
   const affiliateTier = getAffiliateTier(affiliatePaidFinal);
   
-  // Combine gallery images - use fetched profile gallery if available
-  const fetchedGallery = fetchedProfile?.gallery_images || [];
-  const propsGallery = galleryImages || [];
-  const combinedGallery = fetchedGallery.length > 0 ? fetchedGallery : propsGallery;
+  // Use gallery images from props only - no fetching
+  const combinedGallery = galleryImages || [];
   
   // Use src directly - no fetching
   const avatarUrl = src;
