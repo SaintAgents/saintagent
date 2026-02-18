@@ -68,7 +68,7 @@ export default function RankedAvatar({
   // Parent components (CommandDeck, ProfileDrawer, etc.) should pass all needed data
   const fetchedProfile = null;
   const affiliateCode = null;
-  const affiliatePaidFinal = affiliatePaidCount ?? affiliateCode?.total_paid ?? 0;
+  const affiliatePaidFinal = affiliatePaidCount ?? 0;
   const affiliateTier = getAffiliateTier(affiliatePaidFinal);
   
   // Combine gallery images - use fetched profile gallery if available
