@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, Image, Shield, Award } from 'lucide-react';
 import { getRPRank } from '@/components/reputation/rpUtils';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
