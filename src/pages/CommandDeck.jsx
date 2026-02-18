@@ -530,66 +530,108 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stagger queries - wait for profile before fetching secondary data
   // This prevents all queries from firing simultaneously and hitting rate limits
   
+  // STAGGERED QUERIES - Use delays to prevent rate limiting
+  // Each query waits for previous data to be loaded before firing
+  const [queryStage, setQueryStage] = useState(0);
+  
+  // Stage 1: Essential data (matches, meetings) - loads after profile
+  useEffect(() => {
+    if (profile && queryStage === 0) {
+      const timer = setTimeout(() => setQueryStage(1), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [profile, queryStage]);
+  
+  // Stage 2: Secondary data - loads after stage 1
+  useEffect(() => {
+    if (queryStage === 1) {
+      const timer = setTimeout(() => setQueryStage(2), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [queryStage]);
+  
+  // Stage 3: Tertiary data - loads after stage 2
+  useEffect(() => {
+    if (queryStage === 2) {
+      const timer = setTimeout(() => setQueryStage(3), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [queryStage]);
+
   const { data: matches = [] } = useQuery({
     queryKey: ['matches', matchLimit],
     queryFn: () => base44.entities.Match.filter({ status: 'active' }, '-match_score', matchLimit),
-    enabled: !!profile, // Wait for profile
-    staleTime: 300000,
+    enabled: queryStage >= 1,
+    staleTime: 600000, // 10 min cache
+    gcTime: 900000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
   const { data: meetings = [] } = useQuery({
     queryKey: ['meetings', meetingLimit],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', meetingLimit),
-    enabled: !!profile,
-    staleTime: 300000,
+    enabled: queryStage >= 1,
+    staleTime: 600000,
+    gcTime: 900000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
   const { data: missions = [] } = useQuery({
     queryKey: ['missions', missionLimit],
     queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', missionLimit),
-    enabled: !!profile,
-    staleTime: 300000,
+    enabled: queryStage >= 2,
+    staleTime: 600000,
+    gcTime: 900000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
   const { data: listings = [] } = useQuery({
     queryKey: ['listings', listingLimit],
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', listingLimit),
-    enabled: !!profile,
-    staleTime: 300000,
+    enabled: queryStage >= 2,
+    staleTime: 600000,
+    gcTime: 900000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
   const { data: projects = [] } = useQuery({
     queryKey: ['projects', projectLimit],
     queryFn: () => base44.entities.Project.list('-created_date', projectLimit),
-    enabled: !!profile,
-    staleTime: 300000,
+    enabled: queryStage >= 3,
+    staleTime: 600000,
+    gcTime: 900000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', notificationLimit],
     queryFn: () => base44.entities.Notification.filter({ is_read: false }, '-created_date', notificationLimit),
-    enabled: !!profile,
-    staleTime: 180000,
+    enabled: queryStage >= 2,
+    staleTime: 300000,
+    gcTime: 600000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
   const { data: challenges = [] } = useQuery({
     queryKey: ['challenges', userIdentifier, challengeLimit],
     queryFn: () => base44.entities.Challenge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', challengeLimit),
-    enabled: !!userIdentifier && !!profile,
-    staleTime: 300000,
+    enabled: !!userIdentifier && queryStage >= 3,
+    staleTime: 600000,
+    gcTime: 900000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false
   });
 
