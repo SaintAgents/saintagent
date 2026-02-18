@@ -369,7 +369,7 @@ export default function RankedAvatar({
 
 
       {/* Photo gallery icon (bottom-center) - positioned to touch avatar circle */}
-      {showPhotoIcon && (allImages.length > 0 || needsFetch) && (
+      {showPhotoIcon && allImages.length > 0 && (
         <button
           onClick={(e) => {
             e.stopPropagation();
