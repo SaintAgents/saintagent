@@ -76,8 +76,8 @@ export default function RankedAvatar({
   const propsGallery = galleryImages || [];
   const combinedGallery = fetchedGallery.length > 0 ? fetchedGallery : propsGallery;
   
-  // Debug: Log avatar URL sources
-  const avatarUrl = src || fetchedProfile?.avatar_url;
+  // Use src directly - no fetching
+  const avatarUrl = src;
   // Only use default if no avatar URL provided - never override a valid URL
   const finalAvatarUrl = (avatarUrl && typeof avatarUrl === 'string' && avatarUrl.trim() !== '' && avatarUrl !== 'null' && avatarUrl !== 'undefined') 
     ? avatarUrl 
