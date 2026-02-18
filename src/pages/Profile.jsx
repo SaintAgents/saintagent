@@ -1061,9 +1061,9 @@ export default function Profile() {
               </div>
             </CollapsibleProfileCard>
 
-            {/* Sigils - Large badge icons in a row */}
+            {/* Sigils - Large badge icons in a row (excluding affiliate badges) */}
             <CollapsibleProfileCard 
-              title="Sigils & Badges" 
+              title="Sigils" 
               icon={Award}
               headerContent={isOwnProfile && (
                     <Button
@@ -1075,77 +1075,88 @@ export default function Profile() {
                   </Button>
                     )}
             >
-              <div className="space-y-4">
-                {/* Badge placeholders row - always show 5 slots */}
-                <div>
-                  <p className="text-xs text-slate-500 mb-2 font-medium">Featured Badges</p>
-                  <div className="flex flex-wrap gap-4 items-center">
-                    {Array.from({ length: 5 }).map((_, idx) => {
-                      const badge = profileBadges[idx];
-                      return badge ? (
-                        <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
-                          {badge.image_url || badge.icon_url ? (
-                            <img 
-                              src={badge.image_url || badge.icon_url} 
-                              alt={badge.badge_type || 'Badge'} 
-                              className="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform"
-                              data-no-filter="true"
-                            />
-                          ) : (
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
-                              {badge.badge_type?.[0]?.toUpperCase() || '★'}
+              {(() => {
+                // Filter out affiliate badges - they are displayed separately in the Stats tab
+                const affiliateBadgeTypes = ['bronze_affiliate', 'silver_affiliate', 'gold_affiliate', 'platinum_affiliate', 'diamond_affiliate'];
+                const sigilBadges = profileBadges.filter(b => {
+                  const badgeType = (b.badge_type || b.badge_code || '').toLowerCase();
+                  return !affiliateBadgeTypes.some(aff => badgeType.includes(aff) || badgeType.includes('affiliate'));
+                });
+                
+                return (
+                  <div className="space-y-4">
+                    {/* Badge placeholders row - always show 5 slots */}
+                    <div>
+                      <p className="text-xs text-slate-500 mb-2 font-medium">Featured Sigils</p>
+                      <div className="flex flex-wrap gap-4 items-center">
+                        {Array.from({ length: 5 }).map((_, idx) => {
+                          const badge = sigilBadges[idx];
+                          return badge ? (
+                            <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
+                              {badge.image_url || badge.icon_url ? (
+                                <img 
+                                  src={badge.image_url || badge.icon_url} 
+                                  alt={badge.badge_type || 'Badge'} 
+                                  className="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform"
+                                  data-no-filter="true"
+                                />
+                              ) : (
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                                  {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div key={`empty-${idx}`} className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-600">
-                          <Award className="w-8 h-8 text-slate-400" />
-                        </div>
-                      );
-                    })}
-                    {profileBadges.length > 5 && (
-                      <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
-                        +{profileBadges.length - 5} more
-                      </Button>
-                    )}
-                  </div>
-                </div>
+                          ) : (
+                            <div key={`empty-${idx}`} className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-600">
+                              <Award className="w-8 h-8 text-slate-400" />
+                            </div>
+                          );
+                        })}
+                        {sigilBadges.length > 5 && (
+                          <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
+                            +{sigilBadges.length - 5} more
+                          </Button>
+                        )}
+                      </div>
+                    </div>
 
-                {/* Sigils row - show all earned sigils with images */}
-                <div>
-                  <p className="text-xs text-slate-500 mb-2 font-medium">Earned Sigils ({profileBadges.length})</p>
-                  <div className="flex flex-wrap gap-3 items-center">
-                    {profileBadges.length > 0 ? (
-                      profileBadges.slice(0, 12).map((badge) => (
-                        <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
-                          {badge.image_url || badge.icon_url ? (
-                            <img 
-                              src={badge.image_url || badge.icon_url} 
-                              alt={badge.badge_type || 'Badge'} 
-                              className="w-12 h-12 object-contain drop-shadow-sm hover:scale-110 transition-transform"
-                              data-no-filter="true"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                              {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                    {/* Sigils row - show all earned sigils with images */}
+                    <div>
+                      <p className="text-xs text-slate-500 mb-2 font-medium">Earned Sigils ({sigilBadges.length})</p>
+                      <div className="flex flex-wrap gap-3 items-center">
+                        {sigilBadges.length > 0 ? (
+                          sigilBadges.slice(0, 12).map((badge) => (
+                            <div key={badge.id} className="group relative cursor-pointer" title={badge.badge_type?.replace(/_/g, ' ')}>
+                              {badge.image_url || badge.icon_url ? (
+                                <img 
+                                  src={badge.image_url || badge.icon_url} 
+                                  alt={badge.badge_type || 'Badge'} 
+                                  className="w-12 h-12 object-contain drop-shadow-sm hover:scale-110 transition-transform"
+                                  data-no-filter="true"
+                                />
+                              ) : (
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                                  {badge.badge_type?.[0]?.toUpperCase() || '★'}
+                                </div>
+                              )}
+                              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-20">
+                                {badge.badge_type?.replace(/_/g, ' ')}
+                              </div>
                             </div>
-                          )}
-                          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-20">
-                            {badge.badge_type?.replace(/_/g, ' ')}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-slate-400 text-sm italic">No sigils earned yet</p>
-                    )}
-                    {profileBadges.length > 12 && (
-                      <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
-                        +{profileBadges.length - 12} more
-                      </Button>
-                    )}
+                          ))
+                        ) : (
+                          <p className="text-slate-400 text-sm italic">No sigils earned yet</p>
+                        )}
+                        {sigilBadges.length > 12 && (
+                          <Button variant="ghost" size="sm" onClick={() => setBadgeGlossaryOpen(true)} className="text-violet-600">
+                            +{sigilBadges.length - 12} more
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
             </CollapsibleProfileCard>
 
             {/* Recent Badges - compact badge bar */}

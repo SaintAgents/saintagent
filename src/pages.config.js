@@ -52,6 +52,7 @@ import Admin from './pages/Admin';
 import AffiliateCenter from './pages/AffiliateCenter';
 import Authority144 from './pages/Authority144';
 import BetaFeedback from './pages/BetaFeedback';
+import Broadcast from './pages/Broadcast';
 import CRM from './pages/CRM';
 import Circles from './pages/Circles';
 import CommandDeck from './pages/CommandDeck';
@@ -105,6 +106,7 @@ import ProjectOnboard from './pages/ProjectOnboard';
 import Projects from './pages/Projects';
 import Quests from './pages/Quests';
 import ResourceHub from './pages/ResourceHub';
+import Schedule from './pages/Schedule';
 import Settings from './pages/Settings';
 import SovereignAlliance from './pages/SovereignAlliance';
 import SpiritTube from './pages/SpiritTube';
@@ -116,8 +118,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import Broadcast from './pages/Broadcast';
-import Schedule from './pages/Schedule';
 import __Layout from './Layout.jsx';
 
 
@@ -127,6 +127,7 @@ export const PAGES = {
     "AffiliateCenter": AffiliateCenter,
     "Authority144": Authority144,
     "BetaFeedback": BetaFeedback,
+    "Broadcast": Broadcast,
     "CRM": CRM,
     "Circles": Circles,
     "CommandDeck": CommandDeck,
@@ -180,6 +181,7 @@ export const PAGES = {
     "Projects": Projects,
     "Quests": Quests,
     "ResourceHub": ResourceHub,
+    "Schedule": Schedule,
     "Settings": Settings,
     "SovereignAlliance": SovereignAlliance,
     "SpiritTube": SpiritTube,
@@ -191,8 +193,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "Broadcast": Broadcast,
-    "Schedule": Schedule,
 }
 
 export const pagesConfig = {
