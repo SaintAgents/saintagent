@@ -382,15 +382,18 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         rp: byEmail?.[0]?.rp_points, 
         rank: byEmail?.[0]?.rp_rank_code,
         trust: byEmail?.[0]?.trust_score,
-        name: byEmail?.[0]?.display_name
+        name: byEmail?.[0]?.display_name,
+        avatar_url: byEmail?.[0]?.avatar_url
       });
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 600000, // Cache for 10 minutes - same as Layout
-    gcTime: 900000, // Keep in cache for 15 minutes
+    staleTime: 1800000, // Cache for 30 minutes - synchronized with Layout
+    gcTime: 3600000, // Keep in cache for 60 minutes - synchronized with Layout
     refetchOnWindowFocus: false,
     refetchOnMount: false, // Use cached data when navigating back
+    refetchInterval: false,
+    retry: false,
   });
   const profile = profiles?.[0];
 
