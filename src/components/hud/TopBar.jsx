@@ -807,7 +807,15 @@ export default function TopBar({
               )}
 
               {/* Avatar Card Header */}
-              <div className="flex flex-col items-center py-5 px-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="relative flex flex-col items-center py-5 px-4 border-b border-slate-100 dark:border-slate-800">
+                {/* Logout icon top-right */}
+                <button
+                  onClick={() => base44.auth.logout(createPageUrl('Landing'))}
+                  className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors group"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4 text-rose-500 group-hover:text-rose-600" />
+                </button>
                 <Avatar className="w-16 h-16 mb-3 ring-2 ring-violet-100 dark:ring-violet-900">
                   <AvatarImage src={profile?.avatar_url} alt={profile?.display_name || ''} />
                   <AvatarFallback className="bg-violet-100 text-violet-600 text-xl">
