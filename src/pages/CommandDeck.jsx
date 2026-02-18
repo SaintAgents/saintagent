@@ -1305,11 +1305,23 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     {/* Eternal Flame Feature Badge - 3x Size */}
                     <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-amber-300 shadow-lg shadow-amber-200/50">
-                      <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
-                        alt="Eternal Flame"
-                        className="w-36 h-36 object-contain drop-shadow-xl"
-                        data-no-filter="true" />
+                      <div className="w-36 h-36 flex items-center justify-center">
+                        <img
+                          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
+                          alt="Eternal Flame"
+                          className="w-full h-full object-contain drop-shadow-xl"
+                          data-no-filter="true"
+                          style={{ filter: 'none !important', display: 'block', visibility: 'visible' }}
+                          onError={(e) => {
+                            console.error('Eternal Flame image failed to load');
+                            e.target.style.display = 'none';
+                            e.target.nextSibling?.classList?.remove('hidden');
+                          }}
+                        />
+                        <div className="hidden flex items-center justify-center w-full h-full">
+                          <Flame className="w-20 h-20 text-amber-500" />
+                        </div>
+                      </div>
                       <div className="text-center mt-3">
                         <p className="font-bold text-amber-900 text-base">Eternal Flame</p>
                         <p className="text-sm text-amber-700">Living Agent</p>
@@ -1318,13 +1330,24 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     
                     {/* Social Butterfly Badge - 3x Size */}
                     <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-violet-50 via-purple-50 to-violet-100 border-2 border-violet-300 shadow-lg shadow-violet-200/50">
-                      <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png"
-                        alt="Social Butterfly"
-                        className="w-36 h-36 object-contain drop-shadow-xl"
-                        data-no-filter="true"
-                        title="Earned by: 50+ connections, 100+ messages sent, active in Global Chat"
-                      />
+                      <div className="w-36 h-36 flex items-center justify-center">
+                        <img
+                          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png"
+                          alt="Social Butterfly"
+                          className="w-full h-full object-contain drop-shadow-xl"
+                          data-no-filter="true"
+                          style={{ filter: 'none !important', display: 'block', visibility: 'visible' }}
+                          title="Earned by: 50+ connections, 100+ messages sent, active in Global Chat"
+                          onError={(e) => {
+                            console.error('Social Butterfly image failed to load');
+                            e.target.style.display = 'none';
+                            e.target.nextSibling?.classList?.remove('hidden');
+                          }}
+                        />
+                        <div className="hidden flex items-center justify-center w-full h-full">
+                          <Users className="w-20 h-20 text-violet-500" />
+                        </div>
+                      </div>
                       <div className="text-center mt-3">
                         <p className="font-bold text-violet-900 text-base">Social Butterfly</p>
                         <p className="text-sm text-violet-700">Connector</p>
