@@ -109,28 +109,9 @@ export default function RankedAvatar({
   const saNumberFinal = saNumber ?? fetchedProfile?.sa_number;
   const mysticalIdImage = fetchedProfile?.mystical_id_image;
 
-  // Fetch user badges for sigil display - try email first, then SA#
-  const { data: userBadges = [] } = useQuery({
-    queryKey: ['rankedAvatarBadges', userId || saNumberFinal || 'none'],
-    queryFn: async () => {
-      try {
-        // Try email (userId) first since badges are stored with email
-        let results = await base44.entities.Badge.filter({ user_id: userId, status: 'active' }, '-created_date', 20);
-        // If no results and we have SA#, try with SA#
-        if ((!results || results.length === 0) && saNumberFinal && saNumberFinal !== userId) {
-          results = await base44.entities.Badge.filter({ user_id: saNumberFinal, status: 'active' }, '-created_date', 20);
-        }
-        return results || [];
-      } catch (err) {
-        console.warn('RankedAvatar badges fetch error:', err?.message);
-        return [];
-      }
-    },
-    enabled: !!(userId || saNumberFinal),
-    staleTime: 300000,
-    gcTime: 600000,
-    retry: false,
-  });
+  // DISABLE badge fetch - badges should be passed from parent component via CommandDeck's badges query
+  // This prevents additional API calls that cause rate limits
+  const userBadges = [];
 
   // Determine which sigils to show
   // Trust shield only shows at 100% trust (perfect score badge)
