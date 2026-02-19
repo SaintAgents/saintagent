@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -148,6 +148,9 @@ export default function RecipientSelectorModal({
             <Users className="w-5 h-5 text-violet-600" />
             Select Recipients
           </DialogTitle>
+          <DialogDescription>
+            Choose users or teams to receive email invitations
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 flex flex-col min-h-0 space-y-4">
@@ -244,7 +247,11 @@ export default function RecipientSelectorModal({
                     collaborators.map(profile => (
                       <div
                         key={profile.id}
-                        onClick={() => toggleUser(profile.user_id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleUser(profile.user_id);
+                        }}
                         className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
                           selectedUserIds.has(profile.user_id) 
                             ? 'bg-violet-50 border border-violet-200' 
@@ -254,6 +261,7 @@ export default function RecipientSelectorModal({
                         <Checkbox 
                           checked={selectedUserIds.has(profile.user_id)}
                           onCheckedChange={() => toggleUser(profile.user_id)}
+                          onClick={(e) => e.stopPropagation()}
                         />
                         <Avatar className="w-8 h-8">
                           <AvatarImage src={profile.avatar_url} />
