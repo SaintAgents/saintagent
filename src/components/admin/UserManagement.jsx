@@ -105,12 +105,17 @@ export default function UserManagement() {
     }
   });
 
+  const searchLower = searchQuery.toLowerCase().trim();
   const filteredProfiles = profiles
-    .filter((p) =>
-      p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.user_id?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    .filter((p) => {
+      if (!searchLower) return true;
+      return (
+        p.display_name?.toLowerCase().includes(searchLower) ||
+        p.handle?.toLowerCase().includes(searchLower) ||
+        p.user_id?.toLowerCase().includes(searchLower) ||
+        p.sa_number?.toLowerCase().includes(searchLower)
+      );
+    })
     .sort((a, b) => {
       if (sortOrder === 'alpha') {
         return (a.display_name || '').localeCompare(b.display_name || '');
