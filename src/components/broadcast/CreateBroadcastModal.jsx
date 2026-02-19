@@ -26,6 +26,8 @@ export default function CreateBroadcastModal({ open, onClose }) {
   const [createZoomLink, setCreateZoomLink] = useState(true);
   const [notifyAll, setNotifyAll] = useState(true);
   const [emailAll, setEmailAll] = useState(false);
+  const [emailRecipientType, setEmailRecipientType] = useState('all'); // 'all', 'collaborators', 'team'
+  const [selectedTeamId, setSelectedTeamId] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const queryClient = useQueryClient();
@@ -39,6 +41,13 @@ export default function CreateBroadcastModal({ open, onClose }) {
     queryKey: ['myProfile', currentUser?.email],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email
+  });
+
+  // Fetch teams for admin recipient selection
+  const { data: teams = [] } = useQuery({
+    queryKey: ['teams'],
+    queryFn: () => base44.entities.Team.list('-created_date', 50),
+    enabled: currentUser?.role === 'admin'
   });
 
   const timeSlots = [];
@@ -91,40 +100,64 @@ export default function CreateBroadcastModal({ open, onClose }) {
           zoomMeetingId = zoomResponse.data.meeting.id?.toString();
         }
 
-        // If email all is enabled, send individual emails to all users
-        if (emailAll && zoomJoinUrl) {
-          const emailPromises = allProfiles
-            .filter(p => p.user_id !== currentUser.email)
-            .slice(0, 100) // Limit to 100 emails
-            .map(p => 
-              base44.integrations.Core.SendEmail({
-                to: p.user_id,
-                subject: `📡 Broadcast Invitation: ${title}`,
-                body: `
-                  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
-                      <h1 style="margin: 0;">📡 You're Invited!</h1>
-                    </div>
-                    <div style="background: #f8fafc; padding: 30px; border-radius: 0 0 12px 12px;">
-                      <p>Hi ${p.display_name || 'there'},</p>
-                      <p><strong>${currentUser.full_name || me?.display_name}</strong> has scheduled a broadcast and you're invited to join!</p>
-                      <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #7c3aed;">
-                        <p><strong>📌 ${title}</strong></p>
-                        <p><strong>🕐 When:</strong> ${format(scheduledTime, 'EEEE, MMMM d, yyyy')} at ${format(scheduledTime, 'h:mm a')}</p>
-                        <p><strong>⏱️ Duration:</strong> ${duration} minutes</p>
-                        <p><strong>📺 Type:</strong> ${broadcastType}</p>
-                      </div>
-                      <div style="text-align: center;">
-                        <a href="${zoomJoinUrl}" style="display: inline-block; background: #7c3aed; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold;">Join Broadcast</a>
-                      </div>
-                    </div>
-                  </div>
-                `
-              }).catch(err => console.error('Email failed:', err))
-            );
+        // If email is enabled, send individual emails based on recipient type
+          if (emailAll && zoomJoinUrl) {
+            let recipientProfiles = [];
 
-          await Promise.allSettled(emailPromises);
-        }
+            if (emailRecipientType === 'all') {
+              recipientProfiles = allProfiles.filter(p => p.user_id !== currentUser.email);
+            } else if (emailRecipientType === 'collaborators') {
+              // Get collaborators from meetings
+              const meetings = await base44.entities.Meeting.filter({
+                $or: [{ host_id: currentUser.email }, { guest_id: currentUser.email }],
+                status: 'completed'
+              }, '-created_date', 100);
+              const collaboratorIds = new Set();
+              meetings.forEach(m => {
+                if (m.host_id !== currentUser.email) collaboratorIds.add(m.host_id);
+                if (m.guest_id !== currentUser.email) collaboratorIds.add(m.guest_id);
+              });
+              recipientProfiles = allProfiles.filter(p => collaboratorIds.has(p.user_id));
+            } else if (emailRecipientType === 'team' && selectedTeamId) {
+              const selectedTeam = teams.find(t => t.id === selectedTeamId);
+              if (selectedTeam?.member_ids) {
+                recipientProfiles = allProfiles.filter(p => 
+                  selectedTeam.member_ids.includes(p.user_id) && p.user_id !== currentUser.email
+                );
+              }
+            }
+
+            const emailPromises = recipientProfiles
+              .slice(0, 100) // Limit to 100 emails
+              .map(p => 
+                base44.integrations.Core.SendEmail({
+                  to: p.user_id,
+                  subject: `📡 Broadcast Invitation: ${title}`,
+                  body: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                      <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+                        <h1 style="margin: 0;">📡 You're Invited!</h1>
+                      </div>
+                      <div style="background: #f8fafc; padding: 30px; border-radius: 0 0 12px 12px;">
+                        <p>Hi ${p.display_name || 'there'},</p>
+                        <p><strong>${currentUser.full_name || me?.display_name}</strong> has scheduled a broadcast and you're invited to join!</p>
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #7c3aed;">
+                          <p><strong>📌 ${title}</strong></p>
+                          <p><strong>🕐 When:</strong> ${format(scheduledTime, 'EEEE, MMMM d, yyyy')} at ${format(scheduledTime, 'h:mm a')}</p>
+                          <p><strong>⏱️ Duration:</strong> ${duration} minutes</p>
+                          <p><strong>📺 Type:</strong> ${broadcastType}</p>
+                        </div>
+                        <div style="text-align: center;">
+                          <a href="${zoomJoinUrl}" style="display: inline-block; background: #7c3aed; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold;">Join Broadcast</a>
+                        </div>
+                      </div>
+                    </div>
+                  `
+                }).catch(err => console.error('Email failed:', err))
+              );
+
+            await Promise.allSettled(emailPromises);
+          }
       } catch (zoomError) {
         console.error('Failed to create Zoom meeting:', zoomError);
       }
@@ -357,20 +390,62 @@ export default function CreateBroadcastModal({ open, onClose }) {
             />
           </div>
 
-          {/* Email All Toggle - Admin only */}
+          {/* Email Invites - Admin only */}
           {currentUser?.role === 'admin' && (
-            <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-100">
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-emerald-600" />
-                <div>
-                  <p className="text-sm font-medium text-emerald-900">Email All Users</p>
-                  <p className="text-xs text-emerald-600">Send email invitations to all members</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-100">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-emerald-600" />
+                  <div>
+                    <p className="text-sm font-medium text-emerald-900">Send Email Invitations</p>
+                    <p className="text-xs text-emerald-600">Email invites with Zoom link to recipients</p>
+                  </div>
                 </div>
+                <Switch
+                  checked={emailAll}
+                  onCheckedChange={setEmailAll}
+                />
               </div>
-              <Switch
-                checked={emailAll}
-                onCheckedChange={setEmailAll}
-              />
+
+              {/* Recipient Selection - only show when email is enabled */}
+              {emailAll && (
+                <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                  <Label className="text-sm font-medium">Select Recipients</Label>
+                  <Select value={emailRecipientType} onValueChange={setEmailRecipientType}>
+                    <SelectTrigger>
+                      <Users className="w-4 h-4 mr-2" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Users</SelectItem>
+                      <SelectItem value="collaborators">My Collaborators</SelectItem>
+                      <SelectItem value="team">Specific Team</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Team selector - only show when team is selected */}
+                  {emailRecipientType === 'team' && (
+                    <Select value={selectedTeamId} onValueChange={setSelectedTeamId}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a team..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {teams.map(team => (
+                          <SelectItem key={team.id} value={team.id}>
+                            {team.name} ({team.member_count || 1} members)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  <p className="text-xs text-slate-500">
+                    {emailRecipientType === 'all' && 'Emails will be sent to all platform members'}
+                    {emailRecipientType === 'collaborators' && 'Emails will be sent to users you have collaborated with'}
+                    {emailRecipientType === 'team' && 'Emails will be sent to all team members'}
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
