@@ -212,14 +212,10 @@ export default function FloatingNotesWidget() {
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-[115px] right-0 z-[100] w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-400 text-black shadow-lg shadow-amber-500/30"
-        style={{ 
-          backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' || document.documentElement.getAttribute('data-theme') === 'hacker' ? '#10b981' : undefined,
-          color: document.documentElement.getAttribute('data-theme') === 'dark' || document.documentElement.getAttribute('data-theme') === 'hacker' ? '#000' : undefined
-        }}
+        className="fixed bottom-[115px] right-0 z-[100] w-12 h-12 rounded-full shadow-lg notes-fab-button"
         title="Notes (Ctrl+Shift+N)"
       >
-        <StickyNote className="w-5 h-5" style={{ color: 'inherit' }} />
+        <StickyNote className="w-5 h-5" />
       </Button>
     );
   }
