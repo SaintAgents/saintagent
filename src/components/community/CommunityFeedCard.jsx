@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X, Video } from 'lucide-react';
+import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X, Video, Link2 } from 'lucide-react';
 import SocialShareButtons from '@/components/affiliate/SocialShareButtons';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
@@ -21,6 +21,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   const [expandedComments, setExpandedComments] = useState({});
   const [pendingImage, setPendingImage] = useState(null);
   const [pendingVideo, setPendingVideo] = useState(null);
+  const [pendingUrl, setPendingUrl] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [videoUploadProgress, setVideoUploadProgress] = useState(0);
@@ -64,7 +65,8 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
         author_avatar: profile.avatar_url,
         content: payload.content || '',
         image_urls: payload.image_urls || [],
-        video_url: payload.video_url || null
+        video_url: payload.video_url || null,
+        link_url: payload.link_url || null
       });
     },
     onSuccess: () => {
@@ -72,6 +74,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
       setNewPostText('');
       setPendingImage(null);
       setPendingVideo(null);
+      setPendingUrl('');
     }
   });
 
@@ -188,12 +191,14 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   });
 
   const handleCreatePost = async () => {
-    if (!newPostText.trim() && !pendingImage && !pendingVideo) return;
+    if (!newPostText.trim() && !pendingImage && !pendingVideo && !pendingUrl.trim()) return;
     createPostMutation.mutate({ 
       content: newPostText.trim(),
       image_urls: pendingImage ? [pendingImage] : [],
-      video_url: pendingVideo || null
+      video_url: pendingVideo || null,
+      link_url: pendingUrl.trim() || null
     });
+    setPendingUrl('');
   };
 
   const handleLike = (postId) => {
@@ -290,6 +295,27 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
               </div>
             )}
             
+            {/* Pending URL Input */}
+            {pendingUrl !== null && pendingUrl !== undefined && (
+              <div className="flex items-center gap-2">
+                <Link2 className="w-4 h-4 text-slate-400 shrink-0" />
+                <Input
+                  value={pendingUrl}
+                  onChange={(e) => setPendingUrl(e.target.value)}
+                  placeholder="Paste a URL (video, article, etc.)"
+                  className="text-xs h-8 flex-1"
+                />
+                {pendingUrl && (
+                  <button
+                    onClick={() => setPendingUrl('')}
+                    className="w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            )}
+            
             <div className="flex items-center justify-end gap-2">
               <input
                 ref={fileInputRef}
@@ -340,7 +366,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
               <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
               <Button
                 onClick={handleCreatePost}
-                disabled={(!newPostText.trim() && !pendingImage && !pendingVideo) || createPostMutation.isPending}
+                disabled={(!newPostText.trim() && !pendingImage && !pendingVideo && !pendingUrl.trim()) || createPostMutation.isPending}
                 size="sm"
                 className="bg-violet-600 hover:bg-violet-700 h-7 text-xs"
               >
@@ -408,6 +434,20 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                           className="rounded-lg max-h-48 w-auto"
                         />
                       </div>
+                    )}
+                    
+                    {/* Post Link */}
+                    {post.link_url && (
+                      <a 
+                        href={post.link_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="mt-2 flex items-center gap-2 text-xs text-violet-600 hover:text-violet-700 hover:underline truncate"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Link2 className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{post.link_url}</span>
+                      </a>
                     )}
 
                     {/* Post Actions */}
