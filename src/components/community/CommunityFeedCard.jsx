@@ -23,6 +23,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   const [pendingVideo, setPendingVideo] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [videoUploadProgress, setVideoUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const scrollRef = useRef(null);
@@ -112,13 +113,28 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
       }
       
       setUploadingVideo(true);
+      setVideoUploadProgress(0);
+      
+      // Simulate progress while uploading
+      const progressInterval = setInterval(() => {
+        setVideoUploadProgress(prev => {
+          if (prev >= 90) return prev;
+          return prev + Math.random() * 15;
+        });
+      }, 500);
+      
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setVideoUploadProgress(100);
         setPendingVideo(file_url);
       } catch (error) {
         toast.error('Failed to upload video');
       } finally {
-        setUploadingVideo(false);
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          setUploadingVideo(false);
+          setVideoUploadProgress(0);
+        }, 500);
         if (videoInputRef.current) videoInputRef.current.value = '';
       }
     };
@@ -300,17 +316,27 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
               >
                 <ImageIcon className={cn("w-4 h-4", uploadingImage && "animate-pulse")} />
               </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-7 w-7 p-0"
-                onClick={() => videoInputRef.current?.click()}
-                disabled={uploadingVideo}
-                title="Add video (max 15 min)"
-              >
-                <Video className={cn("w-4 h-4", uploadingVideo && "animate-pulse")} />
-              </Button>
+              <div className="relative">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  onClick={() => videoInputRef.current?.click()}
+                  disabled={uploadingVideo}
+                  title="Add video (max 15 min)"
+                >
+                  <Video className={cn("w-4 h-4", uploadingVideo && "animate-pulse")} />
+                </Button>
+                {uploadingVideo && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-1 bg-slate-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-violet-500 transition-all duration-300"
+                      style={{ width: `${videoUploadProgress}%` }}
+                    />
+                  </div>
+                )}
+              </div>
               <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
               <Button
                 onClick={handleCreatePost}

@@ -55,6 +55,8 @@ export default function Forum() {
   const [uploadingPostVideo, setUploadingPostVideo] = useState(false);
   const [uploadingReplyImage, setUploadingReplyImage] = useState(false);
   const [uploadingReplyVideo, setUploadingReplyVideo] = useState(false);
+  const [postVideoProgress, setPostVideoProgress] = useState(0);
+  const [replyVideoProgress, setReplyVideoProgress] = useState(0);
   const postImageRef = useRef(null);
   const postVideoRef = useRef(null);
   const replyImageRef = useRef(null);
@@ -148,13 +150,24 @@ export default function Forum() {
       }
       
       setUploadingPostVideo(true);
+      setPostVideoProgress(0);
+      
+      const progressInterval = setInterval(() => {
+        setPostVideoProgress(prev => prev >= 90 ? prev : prev + Math.random() * 15);
+      }, 500);
+      
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setPostVideoProgress(100);
         setNewPost(prev => ({ ...prev, video_url: file_url }));
       } catch (error) {
         toast.error('Failed to upload video');
       } finally {
-        setUploadingPostVideo(false);
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          setUploadingPostVideo(false);
+          setPostVideoProgress(0);
+        }, 500);
         if (postVideoRef.current) postVideoRef.current.value = '';
       }
     };
@@ -192,13 +205,24 @@ export default function Forum() {
       }
       
       setUploadingReplyVideo(true);
+      setReplyVideoProgress(0);
+      
+      const progressInterval = setInterval(() => {
+        setReplyVideoProgress(prev => prev >= 90 ? prev : prev + Math.random() * 15);
+      }, 500);
+      
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setReplyVideoProgress(100);
         setReplyMedia(prev => ({ ...prev, video_url: file_url }));
       } catch (error) {
         toast.error('Failed to upload video');
       } finally {
-        setUploadingReplyVideo(false);
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          setUploadingReplyVideo(false);
+          setReplyVideoProgress(0);
+        }, 500);
         if (replyVideoRef.current) replyVideoRef.current.value = '';
       }
     };
@@ -595,10 +619,17 @@ export default function Forum() {
                   <ImageIcon className={`w-4 h-4 mr-2 ${uploadingPostImage ? 'animate-pulse' : ''}`} />
                   Image
                 </Button>
-                <Button type="button" variant="outline" size="sm" onClick={() => postVideoRef.current?.click()} disabled={uploadingPostVideo || newPost.video_url}>
-                  <Video className={`w-4 h-4 mr-2 ${uploadingPostVideo ? 'animate-pulse' : ''}`} />
-                  Video (max 15 min)
-                </Button>
+                <div className="relative">
+                  <Button type="button" variant="outline" size="sm" onClick={() => postVideoRef.current?.click()} disabled={uploadingPostVideo || newPost.video_url}>
+                    <Video className={`w-4 h-4 mr-2 ${uploadingPostVideo ? 'animate-pulse' : ''}`} />
+                    {uploadingPostVideo ? `${Math.round(postVideoProgress)}%` : 'Video (max 15 min)'}
+                  </Button>
+                  {uploadingPostVideo && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-1 bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-violet-500 transition-all duration-300" style={{ width: `${postVideoProgress}%` }} />
+                    </div>
+                  )}
+                </div>
               </div>
               
               {/* Preview uploaded media */}
@@ -832,9 +863,16 @@ export default function Forum() {
                     <Button type="button" variant="ghost" size="sm" onClick={() => replyImageRef.current?.click()} disabled={uploadingReplyImage}>
                       <ImageIcon className={`w-4 h-4 ${uploadingReplyImage ? 'animate-pulse' : ''}`} />
                     </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => replyVideoRef.current?.click()} disabled={uploadingReplyVideo || replyMedia.video_url}>
-                      <Video className={`w-4 h-4 ${uploadingReplyVideo ? 'animate-pulse' : ''}`} />
-                    </Button>
+                    <div className="relative">
+                      <Button type="button" variant="ghost" size="sm" onClick={() => replyVideoRef.current?.click()} disabled={uploadingReplyVideo || replyMedia.video_url}>
+                        <Video className={`w-4 h-4 ${uploadingReplyVideo ? 'animate-pulse' : ''}`} />
+                      </Button>
+                      {uploadingReplyVideo && (
+                        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-slate-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-violet-500 transition-all duration-300" style={{ width: `${replyVideoProgress}%` }} />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
                   {/* Reply media preview */}
