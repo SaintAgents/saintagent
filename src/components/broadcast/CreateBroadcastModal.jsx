@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Calendar as CalendarIcon, Clock, Radio, Loader2, Video, Bell, Mail, Users } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import RecipientSelectorModal from './RecipientSelectorModal';
 
 export default function CreateBroadcastModal({ open, onClose }) {
   const [title, setTitle] = useState('');
@@ -26,8 +27,8 @@ export default function CreateBroadcastModal({ open, onClose }) {
   const [createZoomLink, setCreateZoomLink] = useState(true);
   const [notifyAll, setNotifyAll] = useState(true);
   const [emailAll, setEmailAll] = useState(false);
-  const [emailRecipientType, setEmailRecipientType] = useState('all'); // 'all', 'collaborators', 'team'
-  const [selectedTeamId, setSelectedTeamId] = useState('');
+  const [selectedRecipients, setSelectedRecipients] = useState(null); // { userIds, profiles, teamIds }
+  const [showRecipientModal, setShowRecipientModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const queryClient = useQueryClient();
@@ -43,12 +44,7 @@ export default function CreateBroadcastModal({ open, onClose }) {
     enabled: !!currentUser?.email
   });
 
-  // Fetch teams for admin recipient selection
-  const { data: teams = [] } = useQuery({
-    queryKey: ['teams'],
-    queryFn: () => base44.entities.Team.list('-created_date', 50),
-    enabled: currentUser?.role === 'admin'
-  });
+
 
   const timeSlots = [];
   for (let h = 6; h <= 22; h++) {
@@ -100,34 +96,9 @@ export default function CreateBroadcastModal({ open, onClose }) {
           zoomMeetingId = zoomResponse.data.meeting.id?.toString();
         }
 
-        // If email is enabled, send individual emails based on recipient type
-          if (emailAll && zoomJoinUrl) {
-            let recipientProfiles = [];
-
-            if (emailRecipientType === 'all') {
-              recipientProfiles = allProfiles.filter(p => p.user_id !== currentUser.email);
-            } else if (emailRecipientType === 'collaborators') {
-              // Get collaborators from meetings
-              const meetings = await base44.entities.Meeting.filter({
-                $or: [{ host_id: currentUser.email }, { guest_id: currentUser.email }],
-                status: 'completed'
-              }, '-created_date', 100);
-              const collaboratorIds = new Set();
-              meetings.forEach(m => {
-                if (m.host_id !== currentUser.email) collaboratorIds.add(m.host_id);
-                if (m.guest_id !== currentUser.email) collaboratorIds.add(m.guest_id);
-              });
-              recipientProfiles = allProfiles.filter(p => collaboratorIds.has(p.user_id));
-            } else if (emailRecipientType === 'team' && selectedTeamId) {
-              const selectedTeam = teams.find(t => t.id === selectedTeamId);
-              if (selectedTeam?.member_ids) {
-                recipientProfiles = allProfiles.filter(p => 
-                  selectedTeam.member_ids.includes(p.user_id) && p.user_id !== currentUser.email
-                );
-              }
-            }
-
-            const emailPromises = recipientProfiles
+        // If email is enabled, send individual emails to selected recipients
+          if (emailAll && zoomJoinUrl && selectedRecipients?.profiles?.length > 0) {
+            const emailPromises = selectedRecipients.profiles
               .slice(0, 100) // Limit to 100 emails
               .map(p => 
                 base44.integrations.Core.SendEmail({
@@ -407,51 +378,58 @@ export default function CreateBroadcastModal({ open, onClose }) {
                 </div>
                 <Switch
                   checked={emailAll}
-                  onCheckedChange={setEmailAll}
+                  onCheckedChange={(checked) => {
+                    setEmailAll(checked);
+                    if (checked && !selectedRecipients) {
+                      setShowRecipientModal(true);
+                    }
+                  }}
                 />
               </div>
 
               {/* Recipient Selection - only show when email is enabled */}
               {emailAll && (
                 <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
-                  <Label className="text-sm font-medium">Select Recipients</Label>
-                  <Select value={emailRecipientType} onValueChange={setEmailRecipientType}>
-                    <SelectTrigger>
-                      <Users className="w-4 h-4 mr-2" />
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Users</SelectItem>
-                      <SelectItem value="collaborators">My Collaborators</SelectItem>
-                      <SelectItem value="team">Specific Team</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Team selector - only show when team is selected */}
-                  {emailRecipientType === 'team' && (
-                    <Select value={selectedTeamId} onValueChange={setSelectedTeamId}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a team..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {teams.map(team => (
-                          <SelectItem key={team.id} value={team.id}>
-                            {team.name} ({team.member_count || 1} members)
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Recipients</Label>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowRecipientModal(true)}
+                      className="gap-1"
+                    >
+                      <Users className="w-3 h-3" />
+                      {selectedRecipients ? 'Change' : 'Select'}
+                    </Button>
+                  </div>
+                  
+                  {selectedRecipients ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="secondary" className="gap-1">
+                        <Users className="w-3 h-3" />
+                        {selectedRecipients.userIds?.length || 0} users
+                      </Badge>
+                      {selectedRecipients.teamIds?.length > 0 && (
+                        <Badge variant="secondary" className="gap-1">
+                          {selectedRecipients.teamIds.length} teams
+                        </Badge>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500">Click "Select" to choose recipients</p>
                   )}
-
-                  <p className="text-xs text-slate-500">
-                    {emailRecipientType === 'all' && 'Emails will be sent to all platform members'}
-                    {emailRecipientType === 'collaborators' && 'Emails will be sent to users you have collaborated with'}
-                    {emailRecipientType === 'team' && 'Emails will be sent to all team members'}
-                  </p>
                 </div>
               )}
             </div>
           )}
+
+          {/* Recipient Selector Modal */}
+          <RecipientSelectorModal
+            open={showRecipientModal}
+            onClose={() => setShowRecipientModal(false)}
+            onConfirm={setSelectedRecipients}
+            currentUserEmail={currentUser?.email}
+          />
 
           {/* Submit */}
           <Button
