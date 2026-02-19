@@ -571,7 +571,7 @@ export default function Join() {
                 <div className="bg-slate-800/80 rounded-lg p-4 font-mono text-sm space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">Email:</span>
-                    <span className="text-emerald-400 select-all">demouser000@saintag.world</span>
+                    <span className="text-emerald-400 select-all">demouser000@saintagent.world</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">Password:</span>
