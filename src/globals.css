@@ -436,40 +436,61 @@ html[data-theme='hacker'] [data-no-top] img {
 }
 
 /* =====================================================
-   FLOATING NOTES BUTTON - DARK THEME FIX
+   FLOATING NOTES BUTTON - ALL THEMES
    ===================================================== */
 
-html[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"],
-html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"],
-[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"],
-[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"] {
+/* Light theme - amber */
+.notes-fab-button {
+  background-color: #f59e0b !important;
+  color: #000000 !important;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4) !important;
+}
+
+.notes-fab-button:hover {
+  background-color: #fbbf24 !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.6) !important;
+}
+
+.notes-fab-button svg {
+  color: #000000 !important;
+}
+
+/* Dark theme - emerald green */
+html[data-theme='dark'] .notes-fab-button,
+[data-theme='dark'] .notes-fab-button {
   background-color: #10b981 !important;
-  background: #10b981 !important;
   color: #000000 !important;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.5) !important;
 }
 
-html[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"]:hover,
-html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover,
-[data-theme='dark'] button[title="Notes (Ctrl+Shift+N)"]:hover,
-[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover {
+html[data-theme='dark'] .notes-fab-button:hover,
+[data-theme='dark'] .notes-fab-button:hover {
   background-color: #34d399 !important;
-  background: #34d399 !important;
   box-shadow: 0 0 20px rgba(16, 185, 129, 0.7) !important;
 }
 
-html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"],
-[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"] {
+html[data-theme='dark'] .notes-fab-button svg,
+[data-theme='dark'] .notes-fab-button svg {
+  color: #000000 !important;
+}
+
+/* Hacker theme - bright green */
+html[data-theme='hacker'] .notes-fab-button,
+[data-theme='hacker'] .notes-fab-button {
   background-color: #00ff00 !important;
-  background: #00ff00 !important;
+  color: #000000 !important;
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
 }
 
-html[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover,
-[data-theme='hacker'] button[title="Notes (Ctrl+Shift+N)"]:hover {
+html[data-theme='hacker'] .notes-fab-button:hover,
+[data-theme='hacker'] .notes-fab-button:hover {
   background-color: #00ff00 !important;
-  background: #00ff00 !important;
   box-shadow: 0 0 25px rgba(0, 255, 0, 0.8) !important;
+}
+
+html[data-theme='hacker'] .notes-fab-button svg,
+[data-theme='hacker'] .notes-fab-button svg {
+  color: #000000 !important;
 }
 
 /* =====================================================
