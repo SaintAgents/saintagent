@@ -194,6 +194,40 @@ Deno.serve(async (req) => {
     switch (action) {
       case 'create':
         result = await createZoomMeeting(accessToken, meetingDetails || {});
+        
+        // Send email notifications if requested
+        const emailsSent = { host: false, guest: false };
+        if (sendEmails) {
+          const emailData = {
+            topic: result.topic,
+            startTime: result.start_time,
+            duration: result.duration,
+            joinUrl: result.join_url,
+            hostName: hostName,
+            guestName: guestName
+          };
+          
+          // Send to host
+          if (hostEmail) {
+            emailsSent.host = await sendMeetingEmail(base44, {
+              ...emailData,
+              to: hostEmail,
+              toName: hostName,
+              isHost: true
+            });
+          }
+          
+          // Send to guest
+          if (guestEmail) {
+            emailsSent.guest = await sendMeetingEmail(base44, {
+              ...emailData,
+              to: guestEmail,
+              toName: guestName,
+              isHost: false
+            });
+          }
+        }
+        
         // Return useful meeting info
         return Response.json({
           success: true,
@@ -205,7 +239,8 @@ Deno.serve(async (req) => {
             password: result.password,
             start_time: result.start_time,
             duration: result.duration
-          }
+          },
+          emailsSent
         });
         
       case 'get':
