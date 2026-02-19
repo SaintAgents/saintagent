@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin, Loader2, Mail } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -39,6 +39,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   const [duration, setDuration] = useState(30);
   const [submitting, setSubmitting] = useState(false);
   const [createZoomLink, setCreateZoomLink] = useState(true);
+  const [sendEmailInvite, setSendEmailInvite] = useState(true);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -112,7 +113,13 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               start_time: scheduledTime.toISOString(),
               duration: duration,
               agenda: message || `${meetingType} meeting between ${currentUser.full_name || me?.display_name} and ${guestName}`
-            }
+            },
+            // Send email invites to both host and guest
+            sendEmails: sendEmailInvite,
+            hostEmail: currentUser.email,
+            hostName: currentUser.full_name || me?.display_name,
+            guestEmail: guestUserId,
+            guestName: guestName
           });
           
           if (zoomResponse.data?.success) {
@@ -364,19 +371,38 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
 
             {/* Zoom Link Option - only show for online meetings */}
             {locationType === 'online' && (
-              <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-100">
-                <div className="flex items-center gap-2">
-                  <Video className="w-4 h-4 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-blue-900">Create Zoom Meeting</p>
-                    <p className="text-xs text-blue-600">Automatically generate a Zoom link</p>
+              <>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-100">
+                  <div className="flex items-center gap-2">
+                    <Video className="w-4 h-4 text-blue-600" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Create Zoom Meeting</p>
+                      <p className="text-xs text-blue-600">Automatically generate a Zoom link</p>
+                    </div>
                   </div>
+                  <Switch
+                    checked={createZoomLink}
+                    onCheckedChange={setCreateZoomLink}
+                  />
                 </div>
-                <Switch
-                  checked={createZoomLink}
-                  onCheckedChange={setCreateZoomLink}
-                />
-              </div>
+
+                {/* Email Invite Option */}
+                {createZoomLink && (
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-100">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-emerald-600" />
+                      <div>
+                        <p className="text-sm font-medium text-emerald-900">Send Email Invites</p>
+                        <p className="text-xs text-emerald-600">Both you and {selectedUser?.display_name} will receive an email</p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={sendEmailInvite}
+                      onCheckedChange={setSendEmailInvite}
+                    />
+                  </div>
+                )}
+              </>
             )}
 
             {/* Message */}
