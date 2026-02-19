@@ -4,6 +4,82 @@ const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID');
 const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
 const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
 
+// Send meeting invitation email
+async function sendMeetingEmail(base44, { to, toName, topic, startTime, duration, joinUrl, isHost, hostName, guestName }) {
+  const formattedTime = startTime ? new Date(startTime).toLocaleString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  }) : 'Instant Meeting';
+  
+  const otherPerson = isHost ? guestName : hostName;
+  
+  const emailBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
+    .content { background: #f8fafc; padding: 30px; border-radius: 0 0 12px 12px; }
+    .meeting-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #7c3aed; }
+    .join-btn { display: inline-block; background: #7c3aed; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 style="margin:0;">📅 Meeting Scheduled</h1>
+      <p style="margin:10px 0 0 0; opacity: 0.9;">Saint Agents Platform</p>
+    </div>
+    <div class="content">
+      <p>Hi ${toName || 'there'},</p>
+      <p>A meeting has been scheduled ${otherPerson ? `with <strong>${otherPerson}</strong>` : ''}.</p>
+      
+      <div class="meeting-details">
+        <p><strong>📌 Topic:</strong> ${topic || 'Saint Agents Meeting'}</p>
+        <p><strong>🕐 When:</strong> ${formattedTime}</p>
+        <p><strong>⏱️ Duration:</strong> ${duration || 60} minutes</p>
+      </div>
+      
+      <div style="text-align: center;">
+        <a href="${joinUrl}" class="join-btn">Join Meeting</a>
+      </div>
+      
+      <p style="color: #64748b; font-size: 14px;">
+        Click the button above or copy this link:<br>
+        <a href="${joinUrl}" style="color: #7c3aed; word-break: break-all;">${joinUrl}</a>
+      </p>
+      
+      <div class="footer">
+        <p>This is an automated message from Saint Agents.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+
+  try {
+    await base44.integrations.Core.SendEmail({
+      to: to,
+      subject: `Meeting Scheduled: ${topic || 'Saint Agents Meeting'}`,
+      body: emailBody
+    });
+    console.log(`Email sent to ${to}`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to send email to ${to}:`, error);
+    return false;
+  }
+}
+
 // Get Zoom access token using Server-to-Server OAuth
 async function getZoomAccessToken() {
   const tokenUrl = `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`;
