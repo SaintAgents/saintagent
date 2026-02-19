@@ -193,7 +193,11 @@ export default function RecipientSelectorModal({
                   {filteredProfiles.map(profile => (
                     <div
                       key={profile.id}
-                      onClick={() => toggleUser(profile.user_id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleUser(profile.user_id);
+                      }}
                       className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
                         selectedUserIds.has(profile.user_id) 
                           ? 'bg-violet-50 border border-violet-200' 
@@ -203,6 +207,7 @@ export default function RecipientSelectorModal({
                       <Checkbox 
                         checked={selectedUserIds.has(profile.user_id)}
                         onCheckedChange={() => toggleUser(profile.user_id)}
+                        onClick={(e) => e.stopPropagation()}
                       />
                       <Avatar className="w-8 h-8">
                         <AvatarImage src={profile.avatar_url} />
@@ -285,7 +290,11 @@ export default function RecipientSelectorModal({
                     filteredTeams.map(team => (
                       <div
                         key={team.id}
-                        onClick={() => toggleTeam(team.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleTeam(team.id);
+                        }}
                         className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                           selectedTeamIds.has(team.id) 
                             ? 'bg-violet-50 border border-violet-200' 
@@ -295,6 +304,7 @@ export default function RecipientSelectorModal({
                         <Checkbox 
                           checked={selectedTeamIds.has(team.id)}
                           onCheckedChange={() => toggleTeam(team.id)}
+                          onClick={(e) => e.stopPropagation()}
                         />
                         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                           <UsersRound className="w-5 h-5 text-white" />
