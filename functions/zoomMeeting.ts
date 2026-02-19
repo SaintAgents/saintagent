@@ -184,7 +184,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    const { action, meetingId, meetingDetails } = await req.json();
+    const { action, meetingId, meetingDetails, sendEmails, hostEmail, hostName, guestEmail, guestName } = await req.json();
     
     // Get Zoom access token
     const accessToken = await getZoomAccessToken();
