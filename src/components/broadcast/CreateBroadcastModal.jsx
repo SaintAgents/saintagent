@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { Calendar as CalendarIcon, Clock, Radio, Loader2, Video, Bell } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Radio, Loader2, Video, Bell, Mail, Users } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +25,7 @@ export default function CreateBroadcastModal({ open, onClose }) {
   const [coverImageUrl, setCoverImageUrl] = useState('');
   const [createZoomLink, setCreateZoomLink] = useState(true);
   const [notifyAll, setNotifyAll] = useState(true);
+  const [emailAll, setEmailAll] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const queryClient = useQueryClient();
@@ -62,26 +63,71 @@ export default function CreateBroadcastModal({ open, onClose }) {
       let zoomStartUrl = '';
       let zoomMeetingId = '';
       
+      // Get all profiles for email if needed
+      let allProfiles = [];
+      if (emailAll || notifyAll) {
+        allProfiles = await base44.entities.UserProfile.list('-created_date', 500);
+      }
+
       if (createZoomLink) {
-        try {
-          const zoomResponse = await base44.functions.invoke('zoomMeeting', {
-            action: 'create',
-            meetingDetails: {
-              topic: title,
-              start_time: scheduledTime.toISOString(),
-              duration: duration,
-              agenda: description || `${broadcastType} broadcast`
-            }
-          });
-          
-          if (zoomResponse.data?.success) {
-            zoomJoinUrl = zoomResponse.data.meeting.join_url;
-            zoomStartUrl = zoomResponse.data.meeting.start_url;
-            zoomMeetingId = zoomResponse.data.meeting.id?.toString();
-          }
-        } catch (zoomError) {
-          console.error('Failed to create Zoom meeting:', zoomError);
+      try {
+        const zoomResponse = await base44.functions.invoke('zoomMeeting', {
+          action: 'create',
+          meetingDetails: {
+            topic: title,
+            start_time: scheduledTime.toISOString(),
+            duration: duration,
+            agenda: description || `${broadcastType} broadcast`
+          },
+          // Send emails to all users if emailAll is enabled
+          sendEmails: emailAll,
+          hostEmail: currentUser.email,
+          hostName: currentUser.full_name || me?.display_name
+        });
+
+        if (zoomResponse.data?.success) {
+          zoomJoinUrl = zoomResponse.data.meeting.join_url;
+          zoomStartUrl = zoomResponse.data.meeting.start_url;
+          zoomMeetingId = zoomResponse.data.meeting.id?.toString();
         }
+
+        // If email all is enabled, send individual emails to all users
+        if (emailAll && zoomJoinUrl) {
+          const emailPromises = allProfiles
+            .filter(p => p.user_id !== currentUser.email)
+            .slice(0, 100) // Limit to 100 emails
+            .map(p => 
+              base44.integrations.Core.SendEmail({
+                to: p.user_id,
+                subject: `📡 Broadcast Invitation: ${title}`,
+                body: `
+                  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+                      <h1 style="margin: 0;">📡 You're Invited!</h1>
+                    </div>
+                    <div style="background: #f8fafc; padding: 30px; border-radius: 0 0 12px 12px;">
+                      <p>Hi ${p.display_name || 'there'},</p>
+                      <p><strong>${currentUser.full_name || me?.display_name}</strong> has scheduled a broadcast and you're invited to join!</p>
+                      <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #7c3aed;">
+                        <p><strong>📌 ${title}</strong></p>
+                        <p><strong>🕐 When:</strong> ${format(scheduledTime, 'EEEE, MMMM d, yyyy')} at ${format(scheduledTime, 'h:mm a')}</p>
+                        <p><strong>⏱️ Duration:</strong> ${duration} minutes</p>
+                        <p><strong>📺 Type:</strong> ${broadcastType}</p>
+                      </div>
+                      <div style="text-align: center;">
+                        <a href="${zoomJoinUrl}" style="display: inline-block; background: #7c3aed; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold;">Join Broadcast</a>
+                      </div>
+                    </div>
+                  </div>
+                `
+              }).catch(err => console.error('Email failed:', err))
+            );
+
+          await Promise.allSettled(emailPromises);
+        }
+      } catch (zoomError) {
+        console.error('Failed to create Zoom meeting:', zoomError);
+      }
       }
 
       // Create the broadcast
@@ -302,7 +348,7 @@ export default function CreateBroadcastModal({ open, onClose }) {
               <Bell className="w-4 h-4 text-amber-600" />
               <div>
                 <p className="text-sm font-medium text-amber-900">Notify All Users</p>
-                <p className="text-xs text-amber-600">Send notification to everyone about this broadcast</p>
+                <p className="text-xs text-amber-600">Send in-app notification to everyone</p>
               </div>
             </div>
             <Switch
@@ -310,6 +356,23 @@ export default function CreateBroadcastModal({ open, onClose }) {
               onCheckedChange={setNotifyAll}
             />
           </div>
+
+          {/* Email All Toggle - Admin only */}
+          {currentUser?.role === 'admin' && (
+            <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-100">
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-emerald-600" />
+                <div>
+                  <p className="text-sm font-medium text-emerald-900">Email All Users</p>
+                  <p className="text-xs text-emerald-600">Send email invitations to all members</p>
+                </div>
+              </div>
+              <Switch
+                checked={emailAll}
+                onCheckedChange={setEmailAll}
+              />
+            </div>
+          )}
 
           {/* Submit */}
           <Button
