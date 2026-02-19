@@ -206,6 +206,17 @@ export default function HeroGalleryViewer() {
           <Button
             variant="ghost"
             size="sm"
+            onClick={handlePrev}
+            className="text-white/70 hover:text-white p-2"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+          
+          <div className="w-px h-6 bg-white/20" />
+          
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handleResonate}
             className={cn(
               "gap-2 transition-all",
@@ -228,6 +239,17 @@ export default function HeroGalleryViewer() {
           >
             <Download className="w-5 h-5" />
             <span className="text-xs">Download</span>
+          </Button>
+          
+          <div className="w-px h-6 bg-white/20" />
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleNext}
+            className="text-white/70 hover:text-white p-2"
+          >
+            <ChevronRight className="w-5 h-5" />
           </Button>
         </div>
       </div>
