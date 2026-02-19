@@ -94,7 +94,29 @@ export default function VideoPlayerModal({ video, open, onClose, currentUser, pr
     return views.toString();
   };
 
+  // Helper to detect and convert video URLs
+  const getVideoEmbed = (url) => {
+    if (!url) return { type: 'none', url: null };
+    
+    // YouTube detection
+    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (youtubeMatch) {
+      return { type: 'youtube', id: youtubeMatch[1] };
+    }
+    
+    // Vimeo detection
+    const vimeoMatch = url.match(/(?:vimeo\.com\/)(\d+)/);
+    if (vimeoMatch) {
+      return { type: 'vimeo', id: vimeoMatch[1] };
+    }
+    
+    // Direct video file
+    return { type: 'direct', url };
+  };
+
   if (!video) return null;
+
+  const videoEmbed = getVideoEmbed(video.video_url);
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -102,12 +124,28 @@ export default function VideoPlayerModal({ video, open, onClose, currentUser, pr
         <div className="flex flex-col lg:flex-row h-full">
           {/* Video Section */}
           <div className="flex-1 bg-black flex flex-col">
-            <video
-              src={video.video_url}
-              className="w-full aspect-video object-contain"
-              controls
-              autoPlay
-            />
+            {videoEmbed.type === 'youtube' ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${videoEmbed.id}?autoplay=1`}
+                className="w-full aspect-video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : videoEmbed.type === 'vimeo' ? (
+              <iframe
+                src={`https://player.vimeo.com/video/${videoEmbed.id}?autoplay=1`}
+                className="w-full aspect-video"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <video
+                src={video.video_url}
+                className="w-full aspect-video object-contain"
+                controls
+                autoPlay
+              />
+            )}
             
             {/* Video Info */}
             <div className="p-4 bg-white">
