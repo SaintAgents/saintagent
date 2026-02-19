@@ -1288,21 +1288,67 @@ export default function SidePanel({
           </CollapsibleCard>
 
 
-          {/* Help */}
+          {/* Help - Marketplace Earn Mode */}
           <CollapsibleCard title="Help" icon={HelpCircle} defaultOpen={false} onPopout={() => setHelpPopupOpen(true)}>
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-slate-200">
-                  <HelpCircle className="w-4 h-4 text-slate-600" />
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-slate-200">
+                    <HelpCircle className="w-4 h-4 text-slate-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">Need help?</p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Learn how the Synchronicity Engine finds your perfect matches.
+                    </p>
+                    <Button variant="link" size="sm" className="h-6 px-0 text-xs text-violet-600">
+                      View guide →
+                    </Button>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-900">Need help?</p>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Learn how the Synchronicity Engine finds your perfect matches.
-                  </p>
-                  <Button variant="link" size="sm" className="h-6 px-0 text-xs text-violet-600">
-                    View guide →
-                  </Button>
+
+                {/* Marketplace Earning Potential */}
+                <div className="border-t border-slate-200 pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Coins className="w-4 h-4 text-amber-500" />
+                    <p className="text-sm font-semibold text-slate-900">Earning Potential</p>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-700">Complete a marketplace transaction</span>
+                      <span className="font-semibold text-amber-600">Variable GGG</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-700">First sale bonus</span>
+                      <span className="font-semibold text-amber-600">50.00 GGG</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-700">Top seller badge</span>
+                      <span className="font-semibold text-emerald-600">+10% earnings boost</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pro Tips */}
+                <div className="border-t border-slate-200 pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="w-4 h-4 text-violet-500" />
+                    <p className="text-sm font-semibold text-slate-900">Pro Tips</p>
+                  </div>
+                  <ul className="space-y-1.5 text-xs text-slate-600">
+                    <li className="flex items-start gap-2">
+                      <span className="text-amber-500 shrink-0">✓</span>
+                      <span>Keep your listings updated with accurate availability</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-amber-500 shrink-0">✓</span>
+                      <span>Price competitively when starting out to build reviews</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-amber-500 shrink-0">✓</span>
+                      <span>Use boosts strategically during high-traffic times</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
