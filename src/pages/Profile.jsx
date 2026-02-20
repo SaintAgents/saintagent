@@ -94,6 +94,7 @@ import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard'
 import JournalTab from '@/components/profile/JournalTab';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import DealsTab from '@/components/deals/DealsTab.jsx';
+import ProjectsTab from '@/components/profile/ProjectsTab';
 import {
   Tooltip,
   TooltipContent,
@@ -718,6 +719,12 @@ export default function Profile() {
                 <TabsTrigger value="deals" className="text-xs sm:text-sm px-2 sm:px-3" title="Deals">
                   <span className="hidden sm:inline">Deals</span>
                   <Target className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
+              {isOwnProfile && (
+                <TabsTrigger value="projects" className="text-xs sm:text-sm px-2 sm:px-3" title="Projects">
+                  <span className="hidden sm:inline">Projects</span>
+                  <Folder className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1732,6 +1739,12 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="deals" className="space-y-6">
               <DealsTab currentUser={currentUser} profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
+            <TabsContent value="projects" className="space-y-6">
+              <ProjectsTab currentUser={currentUser} profile={profile} />
             </TabsContent>
           )}
 
