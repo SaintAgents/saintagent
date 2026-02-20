@@ -62,7 +62,6 @@ import ContentStudio from './pages/ContentStudio';
 import CourseDetail from './pages/CourseDetail';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
-import Deals from './pages/Deals';
 import DemoLogin from './pages/DemoLogin';
 import DemoPreview from './pages/DemoPreview';
 import EvaluationDocs from './pages/EvaluationDocs';
@@ -138,7 +137,6 @@ export const PAGES = {
     "CourseDetail": CourseDetail,
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
-    "Deals": Deals,
     "DemoLogin": DemoLogin,
     "DemoPreview": DemoPreview,
     "EvaluationDocs": EvaluationDocs,
