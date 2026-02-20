@@ -111,48 +111,48 @@ export default function ProjectTrackPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a]">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0f1a]">
       {/* Active Filters Bar */}
-      <div className="bg-[#0d1321] border-b border-slate-700/50 px-6 py-3 flex items-center gap-4">
-        <div className="flex items-center gap-2 text-slate-400">
+      <div className="bg-white dark:bg-[#0d1321] border-b border-slate-200 dark:border-slate-700/50 px-6 py-3 flex items-center gap-4">
+        <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
           <Filter className="w-4 h-4" />
           <span className="text-sm font-medium">ACTIVE FILTERS:</span>
         </div>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 gap-2">
+            <Button variant="ghost" className="h-8 bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 gap-2">
               <Building2 className="w-4 h-4" />
               Global Jurisdiction (All)
               <ChevronDown className="w-3 h-3" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-slate-800 border-slate-700">
-            <DropdownMenuItem className="text-white hover:bg-slate-700">All Jurisdictions</DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-slate-700">North America</DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-slate-700">Europe</DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-slate-700">Asia Pacific</DropdownMenuItem>
+          <DropdownMenuContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <DropdownMenuItem className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">All Jurisdictions</DropdownMenuItem>
+            <DropdownMenuItem className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">North America</DropdownMenuItem>
+            <DropdownMenuItem className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">Europe</DropdownMenuItem>
+            <DropdownMenuItem className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">Asia Pacific</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 bg-slate-700/50 text-slate-300 border border-slate-600 hover:bg-slate-700 gap-2">
+            <Button variant="ghost" className="h-8 bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-700 gap-2">
               <Calendar className="w-4 h-4" />
               Rolling {timeFilter} Days
               <ChevronDown className="w-3 h-3" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-slate-800 border-slate-700">
-            <DropdownMenuItem onClick={() => setTimeFilter('30')} className="text-white hover:bg-slate-700">Rolling 30 Days</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTimeFilter('90')} className="text-white hover:bg-slate-700">Rolling 90 Days</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTimeFilter('180')} className="text-white hover:bg-slate-700">Rolling 180 Days</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTimeFilter('365')} className="text-white hover:bg-slate-700">Rolling 365 Days</DropdownMenuItem>
+          <DropdownMenuContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <DropdownMenuItem onClick={() => setTimeFilter('30')} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">Rolling 30 Days</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTimeFilter('90')} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">Rolling 90 Days</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTimeFilter('180')} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">Rolling 180 Days</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTimeFilter('365')} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">Rolling 365 Days</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <div className="ml-auto">
-          <Button variant="ghost" className="h-8 text-cyan-400 hover:text-cyan-300 gap-2">
+          <Button variant="ghost" className="h-8 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 gap-2">
             <Upload className="w-4 h-4" />
             Export Audit Pack
           </Button>
@@ -161,10 +161,10 @@ export default function ProjectTrackPage() {
 
       <div className="p-6">
         {/* Header Card */}
-        <div className="bg-[#111827] rounded-2xl border border-slate-700/50 p-6 mb-6">
+        <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-700/50 p-6 mb-6 shadow-sm">
           {/* Title Row */}
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-white">GGT Command</h1>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">GGT Command</h1>
             <div className="flex items-center gap-3">
               <Button 
                 variant="ghost" 
@@ -200,86 +200,86 @@ export default function ProjectTrackPage() {
           {/* Stats Row */}
           <div className="grid grid-cols-7 gap-4 mb-6">
             {/* Total Projects */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center mb-3">
-                <Folder className="w-5 h-5 text-cyan-400" />
+                <Folder className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">TOTAL PROJECTS</p>
-              <p className="text-2xl font-bold text-white">{totalProjects}</p>
-              <p className="text-xs text-slate-500">active initiatives</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">TOTAL PROJECTS</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalProjects}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">active initiatives</p>
             </div>
 
             {/* Initiation */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-3">
-                <Building2 className="w-5 h-5 text-amber-400" />
+                <Building2 className="w-5 h-5 text-amber-600 dark:text-amber-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">INITIATION</p>
-              <p className="text-2xl font-bold text-white">{stageCounts.idea}</p>
-              <p className="text-xs text-slate-500">Initiation phase</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">INITIATION</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stageCounts.idea}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">Initiation phase</p>
             </div>
 
             {/* Planning */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
-                <Target className="w-5 h-5 text-blue-400" />
+                <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">PLANNING</p>
-              <p className="text-2xl font-bold text-white">{stageCounts.prototype}</p>
-              <p className="text-xs text-slate-500">Planning phase</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">PLANNING</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stageCounts.prototype}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">Planning phase</p>
             </div>
 
             {/* Execution */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center mb-3">
-                <TrendingUp className="w-5 h-5 text-rose-400" />
+                <TrendingUp className="w-5 h-5 text-rose-600 dark:text-rose-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">EXECUTION</p>
-              <p className="text-2xl font-bold text-white">{stageCounts.scaling}</p>
-              <p className="text-xs text-slate-500">Execution phase</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">EXECUTION</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stageCounts.scaling}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">Execution phase</p>
             </div>
 
             {/* Monitoring */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center mb-3">
-                <Target className="w-5 h-5 text-violet-400" />
+                <Target className="w-5 h-5 text-violet-600 dark:text-violet-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">MONITORING</p>
-              <p className="text-2xl font-bold text-white">{stageCounts.pilot}</p>
-              <p className="text-xs text-slate-500">Monitoring phase</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">MONITORING</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stageCounts.pilot}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">Monitoring phase</p>
             </div>
 
             {/* Closure */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center mb-3">
-                <CheckCircle2 className="w-5 h-5 text-green-400" />
+                <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">CLOSURE</p>
-              <p className="text-2xl font-bold text-white">{stageCounts.mature_ops}</p>
-              <p className="text-xs text-slate-500">Closure phase</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">CLOSURE</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stageCounts.mature_ops}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">Closure phase</p>
             </div>
 
             {/* Avg Progress */}
-            <div className="bg-[#1a2234] rounded-xl p-4">
+            <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4">
               <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3">
-                <BarChart3 className="w-5 h-5 text-emerald-400" />
+                <BarChart3 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">AVG PROGRESS</p>
-              <p className="text-2xl font-bold text-white">{avgProgress}%</p>
-              <p className="text-xs text-slate-500">completion rate</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">AVG PROGRESS</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{avgProgress}%</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">completion rate</p>
             </div>
           </div>
 
           {/* Funding Secured Card */}
-          <div className="bg-[#1a2234] rounded-xl p-4 inline-block">
+          <div className="bg-slate-50 dark:bg-[#1a2234] rounded-xl p-4 inline-block">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-slate-700/50 flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-slate-400" />
+              <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700/50 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-slate-500 dark:text-slate-400" />
               </div>
             </div>
-            <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">FUNDING SECURED</p>
-            <p className="text-3xl font-bold text-white">{formatCurrency(totalBudget)}</p>
-            <p className="text-xs text-slate-500">capital deployed</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">FUNDING SECURED</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-white">{formatCurrency(totalBudget)}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">capital deployed</p>
           </div>
         </div>
 
@@ -289,10 +289,10 @@ export default function ProjectTrackPage() {
             <div key={stage.id} className="flex flex-col">
               {/* Column Header */}
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                   {stage.label}
                 </h3>
-                <Badge variant="outline" className="border-slate-600 text-slate-400">
+                <Badge variant="outline" className="border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400">
                   {projectsByStage[stage.id]?.length || 0}
                 </Badge>
               </div>
@@ -301,8 +301,8 @@ export default function ProjectTrackPage() {
               <ScrollArea className="flex-1">
                 <div className="space-y-3 pr-2">
                   {projectsByStage[stage.id]?.length === 0 ? (
-                    <div className="bg-[#111827] rounded-xl border border-dashed border-slate-700 p-6 text-center">
-                      <p className="text-slate-500 text-sm">No Projects</p>
+                    <div className="bg-white dark:bg-[#111827] rounded-xl border border-dashed border-slate-300 dark:border-slate-700 p-6 text-center">
+                      <p className="text-slate-400 dark:text-slate-500 text-sm">No Projects</p>
                     </div>
                   ) : (
                     projectsByStage[stage.id]?.map((project) => {
@@ -314,7 +314,7 @@ export default function ProjectTrackPage() {
                         <div 
                           key={project.id}
                           onClick={() => setSelectedProject(project)}
-                          className="bg-[#111827] rounded-xl border border-slate-700/50 p-4 cursor-pointer hover:border-slate-600 transition-colors"
+                          className="bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-700/50 p-4 cursor-pointer hover:border-cyan-500/50 dark:hover:border-slate-600 transition-colors shadow-sm"
                         >
                           {/* Stage & Confidence Badges */}
                           <div className="flex items-center gap-2 mb-3">
@@ -334,26 +334,26 @@ export default function ProjectTrackPage() {
                           </div>
 
                           {/* Title */}
-                          <h4 className="text-white font-semibold text-sm mb-1 truncate">
+                          <h4 className="text-slate-900 dark:text-white font-semibold text-sm mb-1 truncate">
                             {project.title}
                           </h4>
                           
                           {/* Description */}
-                          <p className="text-slate-400 text-xs mb-3 line-clamp-2">
+                          <p className="text-slate-500 dark:text-slate-400 text-xs mb-3 line-clamp-2">
                             {project.description}
                           </p>
 
                           {/* Progress */}
                           <div className="mb-3">
                             <div className="flex items-center justify-between text-xs mb-1">
-                              <span className="text-slate-500">Progress</span>
+                              <span className="text-slate-400 dark:text-slate-500">Progress</span>
                               <span className={`font-medium ${
-                                (project.progress_percent || 0) >= 50 ? 'text-emerald-400' : 'text-cyan-400'
+                                (project.progress_percent || 0) >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-cyan-600 dark:text-cyan-400'
                               }`}>
                                 {project.progress_percent || 0}%
                               </span>
                             </div>
-                            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                               <div 
                                 className={`h-full rounded-full ${
                                   stage.id === 'idea' ? 'bg-cyan-500' :
@@ -368,7 +368,7 @@ export default function ProjectTrackPage() {
                           </div>
 
                           {/* Budget & Date Row */}
-                          <div className="flex items-center gap-4 text-xs text-slate-400 mb-3">
+                          <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 mb-3">
                             <div className="flex items-center gap-1">
                               <DollarSign className="w-3 h-3" />
                               <span>{formatCurrency(project.budget)}</span>
@@ -410,7 +410,7 @@ export default function ProjectTrackPage() {
                             {avatars.map((avatar, i) => (
                               <div 
                                 key={i}
-                                className={`w-8 h-8 rounded-full ${avatar.color} flex items-center justify-center text-white text-xs font-bold border-2 border-[#111827]`}
+                                className={`w-8 h-8 rounded-full ${avatar.color} flex items-center justify-center text-white text-xs font-bold border-2 border-white dark:border-[#111827]`}
                               >
                                 {avatar.initial}
                               </div>
