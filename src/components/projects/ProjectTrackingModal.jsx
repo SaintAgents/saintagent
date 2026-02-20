@@ -289,6 +289,14 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
               <Badge className={STATUS_CONFIG[project.project_status]?.color || STATUS_CONFIG.planned.color}>
                 {STATUS_CONFIG[project.project_status]?.label || 'Planned'}
               </Badge>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => setShowReportGenerator(true)}
+                className="gap-1"
+              >
+                <BarChart3 className="w-4 h-4" /> Report
+              </Button>
               <span className="text-lg font-bold">{formatCurrency(project.budget)}</span>
             </div>
           </div>
