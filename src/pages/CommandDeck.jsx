@@ -548,8 +548,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // DISABLE listings - causing rate limits
   const listings = [];
 
-  // DISABLE projects - causing rate limits
-  const projects = [];
+  // Projects for dashboard card
+  const { data: projects = [] } = useQuery({
+    queryKey: ['dashboardProjects'],
+    queryFn: () => base44.entities.Project.filter({ status: 'funded' }, '-created_date', 20),
+    enabled: queryStage >= 2,
+    staleTime: 300000
+  });
 
   // DISABLE notifications - causing rate limits
   const notifications = [];
