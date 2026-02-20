@@ -509,41 +509,54 @@ export default function DealsPage() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {Object.entries(PIPELINE_STAGES).filter(([k]) => k !== 'closed_lost').map(([stage, config]) => {
-              const StageIcon = config.icon;
-              const stageDeals = dealsByStage[stage] || [];
-              
-              return (
-                <div key={stage}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className={`w-1.5 h-4 rounded-full ${config.color}`} />
-                    <StageIcon className={`w-4 h-4 ${config.textColor}`} />
-                    <span className={`text-xs font-medium uppercase ${config.textColor}`}>
-                      {config.label}
-                    </span>
-                    <ChevronRight className="w-3 h-3 text-slate-600 ml-auto" />
-                  </div>
-                  
-                  <ScrollArea className="h-[500px] pr-2">
-                    <div className="space-y-3">
-                      {stageDeals.length === 0 ? (
-                        <Card className="border-dashed border-slate-300 dark:border-slate-700 bg-transparent">
-                          <CardContent className="p-4 text-center">
-                            <p className="text-xs text-slate-400 dark:text-slate-600">No deals</p>
-                          </CardContent>
-                        </Card>
-                      ) : (
-                        stageDeals.map(deal => (
-                          <DealCard key={deal.id} deal={deal} />
-                        ))
-                      )}
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              {Object.entries(PIPELINE_STAGES).filter(([k]) => k !== 'closed_lost').map(([stage, config]) => {
+                const StageIcon = config.icon;
+                const stageDeals = dealsByStage[stage] || [];
+                
+                return (
+                  <div key={stage}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className={`w-1.5 h-4 rounded-full ${config.color}`} />
+                      <StageIcon className={`w-4 h-4 ${config.textColor}`} />
+                      <span className={`text-xs font-medium uppercase ${config.textColor}`}>
+                        {config.label}
+                      </span>
+                      <ChevronRight className="w-3 h-3 text-slate-600 ml-auto" />
                     </div>
-                  </ScrollArea>
-                </div>
-              );
-            })}
-          </div>
+                    
+                    <Droppable droppableId={stage}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className={`min-h-[500px] rounded-lg transition-colors ${snapshot.isDraggingOver ? 'bg-cyan-500/10 ring-2 ring-cyan-500/30 ring-dashed' : ''}`}
+                        >
+                          <ScrollArea className="h-[500px] pr-2">
+                            <div className="space-y-3 p-1">
+                              {stageDeals.length === 0 && !snapshot.isDraggingOver ? (
+                                <Card className="border-dashed border-slate-300 dark:border-slate-700 bg-transparent">
+                                  <CardContent className="p-4 text-center">
+                                    <p className="text-xs text-slate-400 dark:text-slate-600">Drop deals here</p>
+                                  </CardContent>
+                                </Card>
+                              ) : (
+                                stageDeals.map((deal, index) => (
+                                  <DealCard key={deal.id} deal={deal} index={index} />
+                                ))
+                              )}
+                              {provided.placeholder}
+                            </div>
+                          </ScrollArea>
+                        </div>
+                      )}
+                    </Droppable>
+                  </div>
+                );
+              })}
+            </div>
+          </DragDropContext>
         )}
       </div>
 
