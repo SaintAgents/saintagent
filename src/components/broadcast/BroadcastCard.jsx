@@ -35,8 +35,17 @@ export default function BroadcastCard({ broadcast, currentUser, onRsvp, onIntere
   const isRsvp = broadcast.rsvp_user_ids?.includes(currentUser?.email);
   const isInterested = broadcast.interested_user_ids?.includes(currentUser?.email);
   const isGoing = broadcast.going_user_ids?.includes(currentUser?.email);
-  const isLive = broadcast.status === 'live';
-  const isPast = broadcast.status === 'ended';
+  
+  // Check if broadcast is currently live based on time
+  const now = new Date();
+  const scheduledTime = parseISO(broadcast.scheduled_time);
+  const endTime = new Date(scheduledTime.getTime() + (broadcast.duration_minutes || 60) * 60 * 1000);
+  const isCurrentlyLive = broadcast.status === 'live' || 
+    (broadcast.status !== 'ended' && broadcast.status !== 'cancelled' && 
+     scheduledTime <= now && now < endTime);
+  
+  const isLive = isCurrentlyLive;
+  const isPast = broadcast.status === 'ended' || (broadcast.status === 'scheduled' && endTime < now);
   const isHost = broadcast.host_id === currentUser?.email;
 
   // Fetch profiles for going/interested users when expanded
