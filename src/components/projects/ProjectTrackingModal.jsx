@@ -260,26 +260,26 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-2xl font-bold">{overallProgress}%</div>
-                    <div className="text-xs text-slate-500">Progress</div>
+                    <div className="text-2xl font-bold text-slate-900 dark:text-white">{overallProgress}%</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Progress</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-2xl font-bold">{milestones.length}</div>
-                    <div className="text-xs text-slate-500">Milestones</div>
+                    <div className="text-2xl font-bold text-slate-900 dark:text-white">{milestones.length}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Milestones</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-2xl font-bold">{tasks.length}</div>
-                    <div className="text-xs text-slate-500">Tasks</div>
+                    <div className="text-2xl font-bold text-slate-900 dark:text-white">{tasks.length}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Tasks</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-2xl font-bold">{tasks.filter(t => t.status === 'completed').length}</div>
-                    <div className="text-xs text-slate-500">Completed</div>
+                    <div className="text-2xl font-bold text-slate-900 dark:text-white">{tasks.filter(t => t.status === 'completed').length}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Completed</div>
                   </CardContent>
                 </Card>
               </div>
