@@ -54,6 +54,7 @@ export default function DealsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [viewMode, setViewMode] = useState('pipeline');
+  const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
