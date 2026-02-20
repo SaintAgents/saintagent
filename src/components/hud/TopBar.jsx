@@ -841,7 +841,7 @@ export default function TopBar({
                   <DropdownMenuItem asChild>
                     <Link to={createPageUrl('Profile')} className="flex items-center gap-3 px-4 py-2.5">
                       <User className="w-4 h-4 text-slate-500" />
-                      <span>My Dashboard</span>
+                      <span>My Dashboard/Profile</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
