@@ -257,6 +257,34 @@ export default function DealDetailModal({ deal, onClose, currentUser, profile, a
                   </div>
                 )}
 
+                {/* Funding Status */}
+                {deal.stage === 'closed_won' && (
+                  <div className="pt-4 border-t">
+                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">Funding Status</p>
+                    {deal.funding_status === 'funded' ? (
+                      <Badge className="bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        Funded
+                      </Badge>
+                    ) : deal.funding_status === 'rejected' ? (
+                      <Badge className="bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300">
+                        <AlertCircle className="w-3 h-3 mr-1" />
+                        Rejected
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Pending Review
+                      </Badge>
+                    )}
+                    {deal.project_id && (
+                      <p className="text-xs text-slate-500 mt-2">
+                        Linked to Project Track
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Actions */}
                 {canEdit && (
                   <div className="pt-4 border-t space-y-2">
