@@ -1384,6 +1384,27 @@ html[data-theme='hacker'] img[alt*="Badge"] {
         color: var(--text-on-primary) !important;
       }
 
+      /* CRITICAL: Dialog/modal stat numbers must be visible */
+      [data-theme='dark'] [role="dialog"] .text-2xl,
+      [data-theme='dark'] [role="dialog"] .text-3xl,
+      [data-theme='dark'] [role="dialog"] .text-4xl,
+      [data-theme='dark'] [role="dialog"] .font-bold,
+      [data-theme='dark'] [data-radix-dialog-content] .text-2xl,
+      [data-theme='dark'] [data-radix-dialog-content] .text-3xl,
+      [data-theme='dark'] [data-radix-dialog-content] .font-bold {
+        color: #ffffff !important;
+      }
+
+      [data-theme='hacker'] [role="dialog"] .text-2xl,
+      [data-theme='hacker'] [role="dialog"] .text-3xl,
+      [data-theme='hacker'] [role="dialog"] .text-4xl,
+      [data-theme='hacker'] [role="dialog"] .font-bold,
+      [data-theme='hacker'] [data-radix-dialog-content] .text-2xl,
+      [data-theme='hacker'] [data-radix-dialog-content] .text-3xl,
+      [data-theme='hacker'] [data-radix-dialog-content] .font-bold {
+        color: #00ff00 !important;
+      }
+
       [data-theme='hacker'] button,
       [data-theme='hacker'] [role="button"],
       [data-theme='hacker'] button span,
