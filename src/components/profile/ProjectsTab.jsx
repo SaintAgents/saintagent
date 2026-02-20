@@ -1,37 +1,56 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Folder, Search, Plus, Calendar, DollarSign, TrendingUp, Users } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  Folder, 
+  Building2, 
+  TrendingUp, 
+  CheckCircle2, 
+  Eye,
+  DollarSign,
+  Calendar,
+  Users,
+  Lock,
+  Plus,
+  Upload,
+  BarChart3
+} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ProjectTrackingModal from '@/components/projects/ProjectTrackingModal';
 
-const STAGES = [
-  { id: 'idea', label: 'Idea', color: 'bg-slate-100 text-slate-700' },
-  { id: 'prototype', label: 'Prototype', color: 'bg-blue-100 text-blue-700' },
-  { id: 'pilot', label: 'Pilot', color: 'bg-purple-100 text-purple-700' },
-  { id: 'scaling', label: 'Scaling', color: 'bg-amber-100 text-amber-700' },
-  { id: 'mature_ops', label: 'Mature Ops', color: 'bg-emerald-100 text-emerald-700' }
+const PIPELINE_STAGES = [
+  { id: 'initiation', label: 'INITIATION', icon: Folder, color: 'bg-blue-500' },
+  { id: 'planning', label: 'PLANNING', icon: Building2, color: 'bg-purple-500' },
+  { id: 'execution', label: 'EXECUTION', icon: TrendingUp, color: 'bg-amber-500' },
+  { id: 'monitoring', label: 'MONITORING', icon: Eye, color: 'bg-cyan-500' },
+  { id: 'closure', label: 'CLOSURE', icon: CheckCircle2, color: 'bg-emerald-500' }
 ];
 
-const PROJECT_STATUSES = [
-  { id: 'planned', label: 'Planned', color: 'bg-slate-100 text-slate-700' },
-  { id: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-700' },
-  { id: 'completed', label: 'Completed', color: 'bg-emerald-100 text-emerald-700' },
-  { id: 'on_hold', label: 'On Hold', color: 'bg-amber-100 text-amber-700' },
-  { id: 'cancelled', label: 'Cancelled', color: 'bg-rose-100 text-rose-700' }
-];
+const CONFIDENCE_COLORS = {
+  low: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+  medium: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  high: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+};
+
+const STAGE_MAP = {
+  'idea': 'initiation',
+  'prototype': 'initiation', 
+  'pilot': 'planning',
+  'scaling': 'execution',
+  'mature_ops': 'closure',
+  'planned': 'initiation',
+  'in_progress': 'execution',
+  'completed': 'closure',
+  'on_hold': 'monitoring'
+};
 
 export default function ProjectsTab({ profile, currentUser }) {
-  const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
-  const [filterStage, setFilterStage] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
+  const [viewMode, setViewMode] = useState('projects'); // pipeline or projects
 
   const userIdentifier = profile?.sa_number || currentUser?.email;
 
@@ -45,181 +64,249 @@ export default function ProjectsTab({ profile, currentUser }) {
     enabled: !!userIdentifier
   });
 
-  // Filter projects
-  const filteredProjects = projects.filter((p) => {
-    const stageMatch = filterStage === 'all' || p.stage === filterStage;
-    const statusMatch = filterStatus === 'all' || p.project_status === filterStatus;
-    const searchMatch = !search || 
-      p.title?.toLowerCase().includes(search.toLowerCase()) ||
-      p.description?.toLowerCase().includes(search.toLowerCase());
-    return stageMatch && statusMatch && searchMatch;
-  });
-
   const formatCurrency = (amount) => {
+    if (!amount) return '$0';
     if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
     if (amount >= 1000) return `$${(amount / 1000).toFixed(0)}K`;
     return `$${amount}`;
   };
 
-  // Stats
+  // Calculate stats
   const totalBudget = projects.reduce((sum, p) => sum + (p.budget || 0), 0);
   const avgProgress = projects.length > 0 
-    ? projects.reduce((sum, p) => sum + (p.progress_percent || 0), 0) / projects.length 
+    ? Math.round(projects.reduce((sum, p) => sum + (p.progress_percent || 0), 0) / projects.length)
     : 0;
 
+  // Group projects by pipeline stage
+  const projectsByStage = PIPELINE_STAGES.reduce((acc, stage) => {
+    acc[stage.id] = projects.filter(p => {
+      const mappedStage = STAGE_MAP[p.stage] || STAGE_MAP[p.project_status] || 'initiation';
+      return mappedStage === stage.id;
+    });
+    return acc;
+  }, {});
+
+  // Stats for each stage
+  const stageCounts = PIPELINE_STAGES.map(stage => ({
+    ...stage,
+    count: projectsByStage[stage.id]?.length || 0
+  }));
+
+  const getConfidenceLevel = (project) => {
+    const progress = project.progress_percent || 0;
+    if (progress >= 70) return 'high';
+    if (progress >= 30) return 'medium';
+    return 'low';
+  };
+
+  const getInitials = (name) => {
+    if (!name) return '?';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const getAvatarColor = (name) => {
+    const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-purple-500', 'bg-cyan-500'];
+    const index = name ? name.charCodeAt(0) % colors.length : 0;
+    return colors[index];
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <Folder className="w-8 h-8 text-violet-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-slate-900">{projects.length}</div>
-            <div className="text-xs text-slate-500">Total Projects</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <DollarSign className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-slate-900">{formatCurrency(totalBudget)}</div>
-            <div className="text-xs text-slate-500">Total Budget</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <TrendingUp className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-slate-900">{avgProgress.toFixed(0)}%</div>
-            <div className="text-xs text-slate-500">Avg Progress</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <Users className="w-8 h-8 text-amber-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-slate-900">
-              {projects.reduce((sum, p) => sum + (p.team_member_ids?.length || 0), 0)}
-            </div>
-            <div className="text-xs text-slate-500">Team Members</div>
-          </CardContent>
-        </Card>
+    <div className="bg-slate-900 rounded-2xl p-6 space-y-6 min-h-[600px]">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">GGT Command</h2>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant={viewMode === 'pipeline' ? 'secondary' : 'ghost'}
+            size="sm"
+            className={viewMode === 'pipeline' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white'}
+            onClick={() => setViewMode('pipeline')}
+          >
+            <BarChart3 className="w-4 h-4 mr-1" />
+            Pipeline
+          </Button>
+          <Button 
+            variant={viewMode === 'projects' ? 'default' : 'ghost'}
+            size="sm"
+            className={viewMode === 'projects' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'text-slate-400 hover:text-white'}
+            onClick={() => setViewMode('projects')}
+          >
+            <Folder className="w-4 h-4 mr-1" />
+            Projects
+          </Button>
+          <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+            <Upload className="w-4 h-4 mr-1" />
+            Upload
+          </Button>
+          <Button size="sm" className="bg-cyan-600 hover:bg-cyan-700 text-white">
+            <Plus className="w-4 h-4 mr-1" />
+            New Deal
+          </Button>
+          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Plus className="w-4 h-4 mr-1" />
+            Project
+          </Button>
+        </div>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
-                placeholder="Search projects..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-            <Select value={filterStage} onValueChange={setFilterStage}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Stages" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Stages</SelectItem>
-                {STAGES.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                {PROJECT_STATUSES.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        {/* Total Projects */}
+        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+          <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3">
+            <Folder className="w-5 h-5 text-blue-400" />
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Projects List */}
-      {isLoading ? (
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto" />
+          <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">TOTAL PROJECTS</div>
+          <div className="text-2xl font-bold text-white">{projects.length}</div>
+          <div className="text-xs text-slate-500">active initiatives</div>
         </div>
-      ) : filteredProjects.length === 0 ? (
-        <Card>
-          <CardContent className="pt-8 pb-8 text-center">
-            <Folder className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">No Projects Found</h3>
-            <p className="text-slate-500 mb-4">
-              {search || filterStage !== 'all' || filterStatus !== 'all'
-                ? 'Try adjusting your filters'
-                : 'You don\'t have any funded projects yet'}
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredProjects.map((project) => {
-            const stageConfig = STAGES.find((s) => s.id === project.stage);
-            const statusConfig = PROJECT_STATUSES.find((s) => s.id === project.project_status);
-            
-            return (
-              <Card 
-                key={project.id} 
-                className="hover:shadow-lg transition-all cursor-pointer"
-                onClick={() => setSelectedProject(project)}
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-base">{project.title}</CardTitle>
-                    <Badge className={stageConfig?.color || 'bg-slate-100'}>
-                      {stageConfig?.label || project.stage}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">
-                    {project.description || 'No description'}
-                  </p>
-                  
-                  {/* Progress */}
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-slate-500">Progress</span>
-                      <span className="text-xs font-semibold text-slate-700">
-                        {project.progress_percent || 0}%
-                      </span>
-                    </div>
-                    <Progress value={project.progress_percent || 0} className="h-2" />
-                  </div>
 
-                  {/* Status & Budget */}
-                  <div className="flex items-center justify-between">
-                    <Badge className={statusConfig?.color || 'bg-slate-100'} variant="outline">
-                      {statusConfig?.label || project.project_status}
-                    </Badge>
-                    <span className="text-sm font-semibold text-emerald-600">
-                      {formatCurrency(project.budget || 0)}
-                    </span>
-                  </div>
+        {/* Stage Stats */}
+        {stageCounts.map((stage) => (
+          <div key={stage.id} className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+            <div className={`w-10 h-10 rounded-lg ${stage.color}/20 flex items-center justify-center mb-3`}>
+              <stage.icon className={`w-5 h-5 ${stage.color.replace('bg-', 'text-').replace('-500', '-400')}`} />
+            </div>
+            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{stage.label}</div>
+            <div className="text-2xl font-bold text-white">{stage.count}</div>
+            <div className="text-xs text-slate-500">{stage.label.toLowerCase()} phase</div>
+          </div>
+        ))}
 
-                  {/* Dates */}
-                  {(project.start_date || project.end_date) && (
-                    <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
-                      <Calendar className="w-3 h-3" />
-                      {project.start_date && new Date(project.start_date).toLocaleDateString()}
-                      {project.start_date && project.end_date && ' - '}
-                      {project.end_date && new Date(project.end_date).toLocaleDateString()}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
+        {/* Avg Progress */}
+        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+          <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-3">
+            <TrendingUp className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">AVG PROGRESS</div>
+          <div className="text-2xl font-bold text-white">{avgProgress}%</div>
+          <div className="text-xs text-slate-500">completion rate</div>
         </div>
-      )}
+      </div>
+
+      {/* Funding Secured */}
+      <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 inline-block">
+        <div className="w-10 h-10 rounded-lg bg-slate-700/50 flex items-center justify-center mb-3">
+          <DollarSign className="w-5 h-5 text-slate-400" />
+        </div>
+        <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">FUNDING SECURED</div>
+        <div className="text-3xl font-bold text-white">{formatCurrency(totalBudget)}</div>
+        <div className="text-xs text-slate-500">capital deployed</div>
+      </div>
+
+      {/* Pipeline Columns */}
+      <div className="grid grid-cols-5 gap-4">
+        {PIPELINE_STAGES.map((stage) => (
+          <div key={stage.id} className="space-y-3">
+            {/* Column Header */}
+            <div className="flex items-center justify-between text-slate-400 text-sm border-b border-slate-700/50 pb-2">
+              <span className="uppercase tracking-wider font-medium">{stage.label}</span>
+              <span className="text-slate-500">{projectsByStage[stage.id]?.length || 0}</span>
+            </div>
+
+            {/* Project Cards */}
+            <ScrollArea className="h-[400px] pr-2">
+              <div className="space-y-3">
+                {projectsByStage[stage.id]?.length === 0 ? (
+                  <div className="text-center py-8 text-slate-600 text-sm">
+                    No Projects
+                  </div>
+                ) : (
+                  projectsByStage[stage.id]?.map((project) => {
+                    const confidence = getConfidenceLevel(project);
+                    return (
+                      <div 
+                        key={project.id}
+                        className="bg-slate-800/80 rounded-xl p-4 border border-slate-700/50 hover:border-slate-600 cursor-pointer transition-all"
+                        onClick={() => setSelectedProject(project)}
+                      >
+                        {/* Stage & Confidence Badges */}
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          <Badge className={`${stage.color}/20 ${stage.color.replace('bg-', 'text-').replace('-500', '-400')} border-0 text-[10px] uppercase`}>
+                            {stage.label}
+                          </Badge>
+                          <Badge className={`${CONFIDENCE_COLORS[confidence]} border text-[10px] uppercase`}>
+                            CONF: {confidence.toUpperCase()}
+                          </Badge>
+                          <Lock className="w-3 h-3 text-slate-500" />
+                        </div>
+
+                        {/* Title */}
+                        <h4 className="font-semibold text-white text-sm mb-1 line-clamp-1">
+                          {project.title}
+                        </h4>
+
+                        {/* Description */}
+                        <p className="text-xs text-slate-400 mb-3 line-clamp-2">
+                          {project.description || 'No description available'}
+                        </p>
+
+                        {/* Progress */}
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs text-slate-500">Progress</span>
+                            <span className="text-xs font-medium text-emerald-400">
+                              {project.progress_percent || 0}%
+                            </span>
+                          </div>
+                          <Progress 
+                            value={project.progress_percent || 0} 
+                            className="h-1 bg-slate-700"
+                          />
+                        </div>
+
+                        {/* Budget & Date Row */}
+                        <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="w-3 h-3" />
+                            {formatCurrency(project.budget || 0)}
+                          </div>
+                          {project.end_date && (
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              Due {new Date(project.end_date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Team Avatars */}
+                        <div className="flex items-center -space-x-2">
+                          {project.owner_avatar ? (
+                            <Avatar className="w-8 h-8 border-2 border-slate-800">
+                              <AvatarImage src={project.owner_avatar} />
+                              <AvatarFallback className={`${getAvatarColor(project.owner_name)} text-white text-xs`}>
+                                {getInitials(project.owner_name)}
+                              </AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <Avatar className="w-8 h-8 border-2 border-slate-800">
+                              <AvatarFallback className={`${getAvatarColor(project.owner_name)} text-white text-xs`}>
+                                {getInitials(project.owner_name)}
+                              </AvatarFallback>
+                            </Avatar>
+                          )}
+                          {project.team_member_ids?.slice(0, 2).map((_, idx) => (
+                            <Avatar key={idx} className="w-8 h-8 border-2 border-slate-800">
+                              <AvatarFallback className={`${getAvatarColor(`member${idx}`)} text-white text-xs`}>
+                                {String.fromCharCode(65 + idx)}
+                              </AvatarFallback>
+                            </Avatar>
+                          ))}
+                          {(project.team_member_ids?.length || 0) > 2 && (
+                            <div className="w-8 h-8 rounded-full bg-slate-700 border-2 border-slate-800 flex items-center justify-center text-xs text-slate-400">
+                              +{project.team_member_ids.length - 2}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        ))}
+      </div>
 
       {/* Project Tracking Modal */}
       {selectedProject && (
