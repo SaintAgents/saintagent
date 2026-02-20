@@ -197,9 +197,9 @@ export default function DealsPage() {
           </div>
         </div>
         <div className="mt-3">
-          <p className="text-2xl font-bold text-white">{value}</p>
-          <p className="text-xs text-slate-400">{label}</p>
-          {subLabel && <p className="text-xs text-red-400 mt-1">{subLabel}</p>}
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
+          {subLabel && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{subLabel}</p>}
         </div>
       </CardContent>
     </Card>
@@ -236,21 +236,21 @@ export default function DealsPage() {
               </div>
             )}
           </div>
-          <h4 className="font-medium text-white text-sm leading-tight mb-1 group-hover:text-cyan-400 transition-colors">
+          <h4 className="font-medium text-slate-900 dark:text-white text-sm leading-tight mb-1 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
             {deal.title}
           </h4>
-          <p className="text-lg font-bold text-white">{formatCurrency(deal.amount)}</p>
+          <p className="text-lg font-bold text-slate-900 dark:text-white">{formatCurrency(deal.amount)}</p>
           <p className="text-xs text-slate-500">{deal.company_name?.split(' ')[0] || 'Unknown'}</p>
           
           {deal.description && (
-            <p className="text-xs text-slate-400 mt-2 line-clamp-1">→ {deal.description}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-1">→ {deal.description}</p>
           )}
           
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-700/50">
+          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
             <div className="flex items-center gap-1">
               <Avatar className="w-5 h-5">
                 <AvatarImage src={deal.owner_avatar} />
-                <AvatarFallback className="text-[8px] bg-slate-700">{deal.owner_name?.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="text-[8px] bg-slate-200 dark:bg-slate-700">{deal.owner_name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <span className="text-[10px] text-slate-500">{deal.owner_name?.split(' ')[0]}</span>
             </div>
@@ -272,26 +272,26 @@ export default function DealsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a]">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0f1a]">
       {/* Top Bar */}
-      <div className="border-b border-slate-800 bg-[#0d1321] px-6 py-3">
+      <div className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d1321] px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Filter className="w-4 h-4 text-slate-400" />
-            <span className="text-sm text-slate-400">ACTIVE FILTERS:</span>
-            <Badge className="bg-slate-700 text-slate-300">Global Jurisdiction (All)</Badge>
-            <Badge className="bg-slate-700 text-slate-300">
+            <Filter className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+            <span className="text-sm text-slate-600 dark:text-slate-400">ACTIVE FILTERS:</span>
+            <Badge className="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Global Jurisdiction (All)</Badge>
+            <Badge className="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
               <Calendar className="w-3 h-3 mr-1" />
               Rolling 90 Days
             </Badge>
             {activeFilter && (
-              <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+              <Badge className="bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-500/30">
                 {activeFilter.label}
-                <button onClick={clearFilter} className="ml-1 hover:text-white">×</button>
+                <button onClick={clearFilter} className="ml-1 hover:text-cyan-900 dark:hover:text-white">×</button>
               </Badge>
             )}
           </div>
-          <Button variant="outline" size="sm" className="text-slate-400 border-slate-700">
+          <Button variant="outline" size="sm" className="text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700">
             Export Audit Pack
           </Button>
         </div>
@@ -302,16 +302,16 @@ export default function DealsPage() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <BackButton />
-            <h1 className="text-2xl font-bold text-white">GGT Command</h1>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">GGT Command</h1>
           </div>
           <div className="flex items-center gap-2">
             <Tabs value={viewMode} onValueChange={setViewMode}>
-              <TabsList className="bg-slate-800 border border-slate-700">
-                <TabsTrigger value="pipeline" className="data-[state=active]:bg-cyan-600">Pipeline</TabsTrigger>
-                <TabsTrigger value="projects" className="data-[state=active]:bg-cyan-600">Projects</TabsTrigger>
+              <TabsList className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                <TabsTrigger value="pipeline" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Pipeline</TabsTrigger>
+                <TabsTrigger value="projects" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Projects</TabsTrigger>
               </TabsList>
             </Tabs>
-            <Button variant="outline" size="sm" className="gap-1 border-slate-700 text-slate-400">
+            <Button variant="outline" size="sm" className="gap-1 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400">
               <Upload className="w-4 h-4" /> Upload
             </Button>
             <Button onClick={() => setShowCreateModal(true)} className="bg-cyan-600 hover:bg-cyan-700 gap-1">
@@ -388,11 +388,11 @@ export default function DealsPage() {
         {/* Category and Stage Distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           {/* Deals by Category */}
-          <Card className="bg-[#0d1321] border-slate-800">
+          <Card className="bg-white dark:bg-[#0d1321] border-slate-200 dark:border-slate-800">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-2 h-2 rounded-full bg-cyan-500" />
-                <span className="text-sm font-medium text-white">DEALS BY CATEGORY</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">DEALS BY CATEGORY</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {categoryDistribution.map(([cat, count]) => (
@@ -409,11 +409,11 @@ export default function DealsPage() {
           </Card>
 
           {/* Stage Distribution */}
-          <Card className="bg-[#0d1321] border-slate-800">
+          <Card className="bg-white dark:bg-[#0d1321] border-slate-200 dark:border-slate-800">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-sm font-medium text-white">STAGE DISTRIBUTION</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">STAGE DISTRIBUTION</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(PIPELINE_STAGES).map(([stage, config]) => (
@@ -438,17 +438,17 @@ export default function DealsPage() {
               placeholder="Search deals..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
+              className="pl-10 bg-white dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
           </div>
         </div>
 
         {/* Pipeline View */}
         <div className="mb-4">
-          <div className="flex items-center gap-2 text-slate-400 mb-4">
-            <div className="w-2 h-2 rounded-full bg-slate-500" />
+          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 mb-4">
+            <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500" />
             <span className="text-sm font-medium uppercase">PIPELINE</span>
-            <span className="text-xs text-slate-600">({filteredDeals.length} deals)</span>
+            <span className="text-xs text-slate-500 dark:text-slate-600">({filteredDeals.length} deals)</span>
           </div>
         </div>
 
@@ -476,9 +476,9 @@ export default function DealsPage() {
                   <ScrollArea className="h-[500px] pr-2">
                     <div className="space-y-3">
                       {stageDeals.length === 0 ? (
-                        <Card className="border-dashed border-slate-700 bg-transparent">
+                        <Card className="border-dashed border-slate-300 dark:border-slate-700 bg-transparent">
                           <CardContent className="p-4 text-center">
-                            <p className="text-xs text-slate-600">No deals</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-600">No deals</p>
                           </CardContent>
                         </Card>
                       ) : (
