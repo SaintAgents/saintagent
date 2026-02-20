@@ -512,7 +512,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       }
 
       // For returning users with complete onboarding, redirect to Command Deck if on generic pages
-      const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
+      const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
       if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
         window.location.href = createPageUrl('CommandDeck');
         return;
