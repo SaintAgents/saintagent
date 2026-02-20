@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Settings, Folder, Building2, TrendingUp, CheckCircle2, 
   Target, Upload, Plus, DollarSign, Lock, Calendar,
-  Users, Filter, ChevronDown, BarChart3
+  Users, Filter, ChevronDown, BarChart3, UserPlus, MessageSquarePlus
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -16,6 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProjectTrackingModal from '@/components/projects/ProjectTrackingModal.jsx';
+import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal.jsx';
+import AddNoteModal from '@/components/deals/AddNoteModal.jsx';
 
 // Stage configuration matching the image
 const STAGES = [
@@ -37,6 +39,8 @@ export default function ProjectTrackPage() {
   const [activeView, setActiveView] = useState('projects'); // 'pipeline' or 'projects'
   const [jurisdictionFilter, setJurisdictionFilter] = useState('all');
   const [timeFilter, setTimeFilter] = useState('90');
+  const [teamMemberModal, setTeamMemberModal] = useState({ open: false, projectId: null, teamIds: [] });
+  const [noteModal, setNoteModal] = useState({ open: false, projectId: null });
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
