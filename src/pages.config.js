@@ -119,6 +119,7 @@ import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
 import Deals from './pages/Deals';
+import ProjectTrack from './pages/ProjectTrack';
 import __Layout from './Layout.jsx';
 
 
@@ -195,6 +196,7 @@ export const PAGES = {
     "UserGuide": UserGuide,
     "Videos": Videos,
     "Deals": Deals,
+    "ProjectTrack": ProjectTrack,
 }
 
 export const pagesConfig = {
