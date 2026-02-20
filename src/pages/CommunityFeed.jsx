@@ -9,7 +9,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import MiniProfile from '@/components/profile/MiniProfile';
@@ -34,6 +35,7 @@ export default function CommunityFeed() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImages, setLightboxImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [linkUrl, setLinkUrl] = useState('');
 
   const openLightbox = (images, index) => {
     setLightboxImages(images);
@@ -108,7 +110,8 @@ export default function CommunityFeed() {
         video_url: payload.video_url,
         video_duration_seconds: payload.video_duration_seconds,
         audio_url: payload.audio_url,
-        image_urls: payload.image_urls || []
+        image_urls: payload.image_urls || [],
+        link_url: payload.link_url || null
       });
     },
     onSuccess: () => {
@@ -125,6 +128,7 @@ export default function CommunityFeed() {
       imagePreviews.forEach(url => { try { URL.revokeObjectURL(url); } catch {} });
       setImageFiles([]);
       setImagePreviews([]);
+      setLinkUrl('');
     }
   });
 
@@ -172,7 +176,7 @@ export default function CommunityFeed() {
   });
 
   const handleCreatePost = async () => {
-    if (!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0) return;
+    if (!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0 && !linkUrl.trim()) return;
     let video_url, audio_url;
     const image_urls = [];
     
@@ -194,7 +198,8 @@ export default function CommunityFeed() {
       video_url,
       video_duration_seconds: videoFile ? Math.round(videoDuration || 0) : undefined,
       audio_url,
-      image_urls
+      image_urls,
+      link_url: linkUrl.trim() || null
     });
   };
 
@@ -334,6 +339,25 @@ export default function CommunityFeed() {
               </label>
               {videoError && <span className="text-sm text-rose-600">{videoError}</span>}
             </div>
+            
+            {/* Link URL Input */}
+            <div className="flex items-center gap-2">
+              <Link2 className="w-4 h-4 text-slate-400 shrink-0" />
+              <Input
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                placeholder="Paste YouTube, Vimeo, or any URL..."
+                className="text-sm"
+              />
+              {linkUrl && (
+                <button
+                  onClick={() => setLinkUrl('')}
+                  className="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shrink-0"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
 
             {/* Preview uploaded media */}
             {imagePreviews.length > 0 && (
@@ -357,7 +381,7 @@ export default function CommunityFeed() {
               </div>
               <Button
                 onClick={handleCreatePost}
-                disabled={(!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0) || createPostMutation.isPending}
+                disabled={(!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0 && !linkUrl.trim()) || createPostMutation.isPending}
                 className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
               >
                 <Send className="w-4 h-4" />
