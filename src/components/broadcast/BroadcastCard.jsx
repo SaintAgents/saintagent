@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Radio, Calendar, Clock, Users, Play, Bell, BellOff, 
-  Video, Mic, ExternalLink, CheckCircle 
+  Video, Mic, ExternalLink, CheckCircle, Star, CalendarCheck 
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
@@ -27,8 +27,10 @@ const BROADCAST_TYPE_LABELS = {
   ama: 'AMA'
 };
 
-export default function BroadcastCard({ broadcast, currentUser, onRsvp, isAdmin }) {
+export default function BroadcastCard({ broadcast, currentUser, onRsvp, onInterested, onGoing, isAdmin }) {
   const isRsvp = broadcast.rsvp_user_ids?.includes(currentUser?.email);
+  const isInterested = broadcast.interested_user_ids?.includes(currentUser?.email);
+  const isGoing = broadcast.going_user_ids?.includes(currentUser?.email);
   const isLive = broadcast.status === 'live';
   const isPast = broadcast.status === 'ended';
   const isHost = broadcast.host_id === currentUser?.email;
@@ -105,8 +107,12 @@ export default function BroadcastCard({ broadcast, currentUser, onRsvp, isAdmin 
                   {broadcast.duration_minutes} min
                 </span>
                 <span className="flex items-center gap-1">
+                  <Star className="w-4 h-4" />
+                  {broadcast.interested_count || 0} Interested
+                </span>
+                <span className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
-                  {broadcast.rsvp_count || 0} RSVPs
+                  {broadcast.going_count || 0} Going
                 </span>
               </div>
 
@@ -156,19 +162,37 @@ export default function BroadcastCard({ broadcast, currentUser, onRsvp, isAdmin 
             ) : (
               <>
                 <Button
-                  variant={isRsvp ? "default" : "outline"}
-                  className={cn("gap-2", isRsvp && "bg-emerald-600 hover:bg-emerald-700")}
-                  onClick={() => onRsvp(broadcast.id, isRsvp)}
+                  variant={isInterested ? "default" : "outline"}
+                  className={cn("gap-2", isInterested && "bg-amber-500 hover:bg-amber-600")}
+                  onClick={() => onInterested(broadcast.id, isInterested)}
                 >
-                  {isRsvp ? (
+                  {isInterested ? (
                     <>
-                      <CheckCircle className="w-4 h-4" />
-                      RSVP'd
+                      <Star className="w-4 h-4 fill-current" />
+                      Interested
                     </>
                   ) : (
                     <>
-                      <Bell className="w-4 h-4" />
-                      RSVP & Notify Me
+                      <Star className="w-4 h-4" />
+                      Interested
+                    </>
+                  )}
+                </Button>
+                
+                <Button
+                  variant={isGoing ? "default" : "outline"}
+                  className={cn("gap-2", isGoing && "bg-emerald-600 hover:bg-emerald-700")}
+                  onClick={() => onGoing(broadcast.id, isGoing)}
+                >
+                  {isGoing ? (
+                    <>
+                      <CalendarCheck className="w-4 h-4" />
+                      Going
+                    </>
+                  ) : (
+                    <>
+                      <CalendarCheck className="w-4 h-4" />
+                      Going
                     </>
                   )}
                 </Button>
