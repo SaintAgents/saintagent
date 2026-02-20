@@ -300,6 +300,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="milestones">Milestones</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
+            <TabsTrigger value="time">Time</TabsTrigger>
             <TabsTrigger value="comments">Comments</TabsTrigger>
             <TabsTrigger value="files">Files</TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
