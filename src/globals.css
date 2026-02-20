@@ -304,8 +304,15 @@ main {
 
 /* Dark theme - dropdown menus must be visible */
 [data-theme='dark'] [role="menu"],
+[data-theme='dark'] [role="dialog"],
+[data-theme='dark'] [role="listbox"],
 [data-theme='dark'] [data-radix-menu-content],
-[data-theme='dark'] [data-radix-dropdown-menu-content] {
+[data-theme='dark'] [data-radix-dropdown-menu-content],
+[data-theme='dark'] [data-radix-select-content],
+[data-theme='dark'] [data-radix-select-viewport],
+[data-theme='dark'] [data-radix-dialog-content],
+[data-theme='dark'] [data-radix-popper-content-wrapper] > *,
+[data-theme='dark'] [data-state="open"][role="dialog"] {
   background: #0a0a0a !important;
   background-color: #0a0a0a !important;
   border: 1px solid rgba(0, 255, 136, 0.3) !important;
