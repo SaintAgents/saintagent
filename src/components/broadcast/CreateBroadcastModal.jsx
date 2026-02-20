@@ -117,7 +117,9 @@ export default function CreateBroadcastModal({ open, onClose }) {
                         <p><strong>${currentUser.full_name || me?.display_name}</strong> has scheduled a broadcast and you're invited to join!</p>
                         <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #7c3aed;">
                           <p><strong>📌 ${title}</strong></p>
-                          <p><strong>🕐 When:</strong> ${format(scheduledTime, 'EEEE, MMMM d, yyyy')} at ${format(scheduledTime, 'h:mm a')}</p>
+                          <p><strong>🕐 When:</strong> ${format(scheduledTime, 'EEEE, MMMM d, yyyy')}</p>
+                          <p style="margin-left: 24px;">• Pacific: ${formatInTimeZone(scheduledTime, 'America/Los_Angeles', 'h:mm a')} PT</p>
+                          <p style="margin-left: 24px;">• Eastern: ${formatInTimeZone(scheduledTime, 'America/New_York', 'h:mm a')} ET</p>
                           <p><strong>⏱️ Duration:</strong> ${duration} minutes</p>
                           <p><strong>📺 Type:</strong> ${broadcastType}</p>
                         </div>
