@@ -25,6 +25,7 @@ export default function CreateBroadcastModal({ open, onClose }) {
   const [duration, setDuration] = useState(60);
   const [topics, setTopics] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [createZoomLink, setCreateZoomLink] = useState(true);
   const [notifyAll, setNotifyAll] = useState(true);
   const [emailAll, setEmailAll] = useState(false);
