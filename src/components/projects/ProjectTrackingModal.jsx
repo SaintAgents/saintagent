@@ -520,7 +520,20 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             </TabsContent>
 
             {/* Tasks Tab */}
-            <TabsContent value="tasks" className="mt-4 space-y-2">
+            <TabsContent value="tasks" className="mt-4 space-y-4">
+              {/* Dependency Graph */}
+              {tasks.length > 0 && (
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <GitBranch className="w-4 h-4 text-violet-500" />
+                      <h4 className="font-medium text-sm text-slate-900 dark:text-white">Dependencies</h4>
+                    </div>
+                    <TaskDependencyGraph tasks={tasks} />
+                  </CardContent>
+                </Card>
+              )}
+
               {showAddTask && (
                 <Card className="border-violet-200 dark:border-violet-800 mb-3">
                   <CardContent className="p-4 space-y-3">
@@ -552,49 +565,80 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
                 </Card>
               )}
 
-              {tasks.map((task) => (
-                <Card key={task.id} className="hover:border-slate-300 transition-colors">
-                  <CardContent className="p-3">
-                    <div className="flex items-center gap-3">
-                      <Select 
-                        value={task.status} 
-                        onValueChange={(val) => updateTaskMutation.mutate({ id: task.id, data: { status: val } })}
-                      >
-                        <SelectTrigger className="w-28 h-7 text-xs">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.entries(TASK_STATUS_CONFIG).map(([key, config]) => (
-                            <SelectItem key={key} value={key}>{config.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      
-                      <div className="flex-1">
-                        <div className={`font-medium text-sm ${task.status === 'completed' ? 'line-through text-slate-400' : ''}`}>
-                          {task.title}
+              {tasks.map((task) => {
+                const blocked = isTaskBlocked(task, tasks);
+                const blockingTasks = getBlockingTasks(task, tasks);
+                const hasDeps = task.depends_on && task.depends_on.length > 0;
+                
+                return (
+                  <Card key={task.id} className={`hover:border-slate-300 transition-colors ${blocked ? 'border-amber-300 dark:border-amber-700' : ''}`}>
+                    <CardContent className="p-3">
+                      <div className="flex items-center gap-3">
+                        <Select 
+                          value={task.status} 
+                          onValueChange={(val) => {
+                            if (val !== 'todo' && blocked) {
+                              // Can't start a blocked task
+                              return;
+                            }
+                            updateTaskMutation.mutate({ id: task.id, data: { status: val } });
+                          }}
+                          disabled={blocked && task.status === 'todo'}
+                        >
+                          <SelectTrigger className={`w-28 h-7 text-xs ${blocked && task.status === 'todo' ? 'opacity-50' : ''}`}>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(TASK_STATUS_CONFIG).map(([key, config]) => (
+                              <SelectItem key={key} value={key}>{config.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            {blocked && <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />}
+                            <span className={`font-medium text-sm truncate ${task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900 dark:text-white'}`}>
+                              {task.title}
+                            </span>
+                          </div>
+                          {blocked && blockingTasks.length > 0 && (
+                            <div className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
+                              Waiting on: {blockingTasks.map(t => t.title).join(', ')}
+                            </div>
+                          )}
+                          {task.description && !blocked && (
+                            <div className="text-xs text-slate-500 line-clamp-1">{task.description}</div>
+                          )}
                         </div>
-                        {task.description && (
-                          <div className="text-xs text-slate-500 line-clamp-1">{task.description}</div>
+                        
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className={`h-7 w-7 p-0 ${hasDeps ? 'text-violet-500' : 'text-slate-400'}`}
+                          onClick={() => setEditingDepsTask(task)}
+                          title="Manage dependencies"
+                        >
+                          <Link2 className="w-4 h-4" />
+                        </Button>
+                        
+                        {task.due_date && (
+                          <span className="text-xs text-slate-500">
+                            {format(new Date(task.due_date), 'MMM d')}
+                          </span>
+                        )}
+                        
+                        {task.assignee_name && (
+                          <Avatar className="w-6 h-6">
+                            <AvatarImage src={task.assignee_avatar} />
+                            <AvatarFallback className="text-[8px]">{task.assignee_name?.charAt(0)}</AvatarFallback>
+                          </Avatar>
                         )}
                       </div>
-                      
-                      {task.due_date && (
-                        <span className="text-xs text-slate-500">
-                          {format(new Date(task.due_date), 'MMM d')}
-                        </span>
-                      )}
-                      
-                      {task.assignee_name && (
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage src={task.assignee_avatar} />
-                          <AvatarFallback className="text-[8px]">{task.assignee_name?.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
 
               {tasks.length === 0 && (
                 <div className="text-center py-8 text-slate-500">
