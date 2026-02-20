@@ -678,18 +678,34 @@ html[data-theme='hacker'] [role="button"] *,
 [data-theme='dark'] [role="dialog"] input,
 [data-theme='dark'] [role="dialog"] textarea,
 [data-theme='dark'] [role="dialog"] select,
+[data-theme='dark'] [role="dialog"] [role="combobox"],
+[data-theme='dark'] [role="dialog"] [data-radix-select-trigger],
 [data-theme='dark'] [data-radix-dialog-content] input,
 [data-theme='dark'] [data-radix-dialog-content] textarea,
 [data-theme='dark'] [data-radix-dialog-content] select,
+[data-theme='dark'] [data-radix-dialog-content] [role="combobox"],
+[data-theme='dark'] [data-radix-dialog-content] [data-radix-select-trigger],
 [data-theme='hacker'] [role="dialog"] input,
 [data-theme='hacker'] [role="dialog"] textarea,
 [data-theme='hacker'] [role="dialog"] select,
+[data-theme='hacker'] [role="dialog"] [role="combobox"],
+[data-theme='hacker'] [role="dialog"] [data-radix-select-trigger],
 [data-theme='hacker'] [data-radix-dialog-content] input,
 [data-theme='hacker'] [data-radix-dialog-content] textarea,
-[data-theme='hacker'] [data-radix-dialog-content] select {
+[data-theme='hacker'] [data-radix-dialog-content] select,
+[data-theme='hacker'] [data-radix-dialog-content] [role="combobox"],
+[data-theme='hacker'] [data-radix-dialog-content] [data-radix-select-trigger] {
   background-color: #1a1a1a !important;
   color: #ffffff !important;
   border-color: rgba(0, 255, 136, 0.4) !important;
+}
+
+/* Select trigger text inside dialogs must be visible */
+[data-theme='dark'] [role="dialog"] [data-radix-select-trigger] span,
+[data-theme='dark'] [data-radix-dialog-content] [data-radix-select-trigger] span,
+[data-theme='hacker'] [role="dialog"] [data-radix-select-trigger] span,
+[data-theme='hacker'] [data-radix-dialog-content] [data-radix-select-trigger] span {
+  color: #ffffff !important;
 }
 
 /* Select dropdown content inside dialogs */
