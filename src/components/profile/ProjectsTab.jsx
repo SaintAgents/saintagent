@@ -54,14 +54,12 @@ export default function ProjectsTab({ profile, currentUser }) {
 
   const userIdentifier = profile?.sa_number || currentUser?.email;
 
-  // Fetch user's funded projects
+  // Fetch all funded projects (for demo, show all; in production filter by owner)
   const { data: projects = [], isLoading } = useQuery({
-    queryKey: ['myFundedProjects', userIdentifier],
+    queryKey: ['fundedProjects'],
     queryFn: () => base44.entities.Project.filter({ 
-      status: 'funded',
-      owner_id: userIdentifier 
-    }, '-created_date', 100),
-    enabled: !!userIdentifier
+      status: 'funded'
+    }, '-created_date', 100)
   });
 
   const formatCurrency = (amount) => {
