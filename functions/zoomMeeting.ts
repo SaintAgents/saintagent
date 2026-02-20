@@ -82,20 +82,31 @@ async function sendMeetingEmail(base44, { to, toName, topic, startTime, duration
 
 // Get Zoom access token using Server-to-Server OAuth
 async function getZoomAccessToken() {
-  const tokenUrl = `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`;
+  console.log('Getting Zoom token with Account ID:', ZOOM_ACCOUNT_ID);
+  console.log('Client ID present:', !!ZOOM_CLIENT_ID);
+  console.log('Client Secret present:', !!ZOOM_CLIENT_SECRET);
+  
+  const tokenUrl = `https://zoom.us/oauth/token`;
   
   const credentials = btoa(`${ZOOM_CLIENT_ID}:${ZOOM_CLIENT_SECRET}`);
+  
+  const body = new URLSearchParams({
+    grant_type: 'account_credentials',
+    account_id: ZOOM_ACCOUNT_ID
+  });
   
   const response = await fetch(tokenUrl, {
     method: 'POST',
     headers: {
       'Authorization': `Basic ${credentials}`,
       'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    },
+    body: body.toString()
   });
   
   if (!response.ok) {
     const error = await response.text();
+    console.error('Zoom token error:', error);
     throw new Error(`Failed to get Zoom access token: ${error}`);
   }
   
