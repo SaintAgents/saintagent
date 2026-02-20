@@ -15,7 +15,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { 
   X, Plus, Calendar, Users, Target, CheckCircle2, Clock, 
   MessageSquare, Paperclip, Activity, ChevronRight, Edit2,
-  Trash2, Play, Pause, AlertCircle, FileText, Upload
+  Trash2, Play, Pause, AlertCircle, FileText, Upload, UserPlus, Search
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -39,6 +39,8 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
   const [activeTab, setActiveTab] = useState('overview');
   const [showAddMilestone, setShowAddMilestone] = useState(false);
   const [showAddTask, setShowAddTask] = useState(null);
+  const [showAddTeamMember, setShowAddTeamMember] = useState(false);
+  const [teamSearchQuery, setTeamSearchQuery] = useState('');
   const [newMilestone, setNewMilestone] = useState({ name: '', start_date: '', end_date: '' });
   const [newTask, setNewTask] = useState({ title: '', description: '', due_date: '' });
   const [newComment, setNewComment] = useState('');
@@ -68,6 +70,26 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
     queryKey: ['projectAttachments', project.id],
     queryFn: () => base44.entities.ProjectAttachment.filter({ project_id: project.id }, '-created_date', 50)
   });
+
+  // Fetch all profiles for team member search
+  const { data: allProfiles = [] } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 200)
+  });
+
+  // Get current team members' profiles
+  const teamMemberIds = project.team_member_ids || [];
+  const teamMembers = allProfiles.filter(p => teamMemberIds.includes(p.user_id));
+  
+  // Filter profiles for search
+  const filteredProfiles = allProfiles.filter(p => {
+    if (teamMemberIds.includes(p.user_id)) return false;
+    if (!teamSearchQuery) return true;
+    const query = teamSearchQuery.toLowerCase();
+    return (p.display_name?.toLowerCase().includes(query) || 
+            p.handle?.toLowerCase().includes(query) ||
+            p.user_id?.toLowerCase().includes(query));
+  }).slice(0, 10);
 
   const createMilestoneMutation = useMutation({
     mutationFn: (data) => base44.entities.ProjectMilestone.create({
@@ -122,6 +144,22 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
       queryClient.invalidateQueries({ queryKey: ['projects_all'] });
     }
   });
+
+  const addTeamMember = async (userProfile) => {
+    const newTeamIds = [...teamMemberIds, userProfile.user_id];
+    await base44.entities.Project.update(project.id, { team_member_ids: newTeamIds });
+    queryClient.invalidateQueries({ queryKey: ['fundedProjects'] });
+    logActivity('team_member_added', `Added ${userProfile.display_name} to team`);
+    setShowAddTeamMember(false);
+    setTeamSearchQuery('');
+  };
+
+  const removeTeamMember = async (userId) => {
+    const newTeamIds = teamMemberIds.filter(id => id !== userId);
+    await base44.entities.Project.update(project.id, { team_member_ids: newTeamIds });
+    queryClient.invalidateQueries({ queryKey: ['fundedProjects'] });
+    logActivity('team_member_removed', `Removed a team member`);
+  };
 
   const createCommentMutation = useMutation({
     mutationFn: (content) => base44.entities.ProjectComment.create({
@@ -208,6 +246,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
           <TabsList className="mx-4 bg-slate-100 dark:bg-slate-800">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="milestones">Milestones</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
             <TabsTrigger value="comments">Comments</TabsTrigger>
@@ -302,6 +341,90 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
                     </div>
                   </CardContent>
                 </Card>
+              )}
+            </TabsContent>
+
+            {/* Team Tab */}
+            <TabsContent value="team" className="mt-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium">Team Members ({teamMembers.length})</h4>
+                <Button size="sm" onClick={() => setShowAddTeamMember(true)} className="gap-1">
+                  <UserPlus className="w-4 h-4" /> Add Member
+                </Button>
+              </div>
+
+              {showAddTeamMember && (
+                <Card className="border-violet-200 dark:border-violet-800">
+                  <CardContent className="p-4 space-y-3">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                      <Input 
+                        placeholder="Search by name or handle..." 
+                        value={teamSearchQuery}
+                        onChange={(e) => setTeamSearchQuery(e.target.value)}
+                        className="pl-9"
+                      />
+                    </div>
+                    <div className="max-h-48 overflow-y-auto space-y-1">
+                      {filteredProfiles.map((p) => (
+                        <div 
+                          key={p.id}
+                          className="flex items-center gap-3 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer"
+                          onClick={() => addTeamMember(p)}
+                        >
+                          <Avatar className="w-8 h-8">
+                            <AvatarImage src={p.avatar_url} />
+                            <AvatarFallback>{p.display_name?.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="text-sm font-medium">{p.display_name}</div>
+                            <div className="text-xs text-slate-500">@{p.handle}</div>
+                          </div>
+                        </div>
+                      ))}
+                      {filteredProfiles.length === 0 && (
+                        <div className="text-sm text-slate-500 py-2 text-center">No users found</div>
+                      )}
+                    </div>
+                    <Button size="sm" variant="outline" onClick={() => setShowAddTeamMember(false)}>
+                      Cancel
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              <div className="space-y-2">
+                {teamMembers.map((member) => (
+                  <Card key={member.id}>
+                    <CardContent className="p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarImage src={member.avatar_url} />
+                          <AvatarFallback>{member.display_name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{member.display_name}</div>
+                          <div className="text-xs text-slate-500">@{member.handle}</div>
+                        </div>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => removeTeamMember(member.user_id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {teamMembers.length === 0 && !showAddTeamMember && (
+                <div className="text-center py-8 text-slate-500">
+                  <Users className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                  <p>No team members yet</p>
+                </div>
               )}
             </TabsContent>
 
