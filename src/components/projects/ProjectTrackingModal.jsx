@@ -136,10 +136,47 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
 
   const updateTaskMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.ProjectTask.update(id, data),
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['projectTasks', project.id] });
       if (variables.data.status) {
         logActivity('task_updated', `Task status changed to ${variables.data.status}`);
+        
+        // Check for dependency notifications when a task is completed
+        if (variables.data.status === 'completed') {
+          const completedTask = tasks.find(t => t.id === variables.id);
+          if (completedTask) {
+            // Notify project owner
+            notifyTaskCompleted({
+              task: completedTask,
+              project,
+              sourceUser: { email: currentUser?.email, name: profile?.display_name }
+            });
+            
+            // Check if this completion unblocks other tasks
+            const dependentTasks = tasks.filter(t => t.depends_on?.includes(variables.id));
+            for (const depTask of dependentTasks) {
+              notifyDependencyMet({
+                task: depTask,
+                allTasks: tasks.map(t => t.id === variables.id ? { ...t, status: 'completed' } : t),
+                sourceUser: { email: currentUser?.email, name: profile?.display_name }
+              });
+            }
+          }
+        }
+      }
+      
+      // Handle task assignment notification
+      if (variables.data.assignee_id) {
+        const updatedTask = tasks.find(t => t.id === variables.id);
+        const assigneeProfile = allProfiles.find(p => p.user_id === variables.data.assignee_id);
+        if (updatedTask && assigneeProfile && variables.data.assignee_id !== currentUser?.email) {
+          notifyTaskAssigned({
+            task: updatedTask,
+            project,
+            assignee: assigneeProfile,
+            sourceUser: { email: currentUser?.email, name: profile?.display_name, avatar: profile?.avatar_url }
+          });
+        }
       }
     }
   });
