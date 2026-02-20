@@ -678,6 +678,15 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
                           <Link2 className="w-4 h-4" />
                         </Button>
                         
+                        <TaskTimeTracker
+                          task={task}
+                          projectId={project.id}
+                          currentUser={currentUser}
+                          profile={profile}
+                          timeEntries={timeEntries}
+                          onTimeUpdate={() => queryClient.invalidateQueries({ queryKey: ['projectTimeEntries', project.id] })}
+                        />
+                        
                         {task.due_date && (
                           <span className="text-xs text-slate-500">
                             {format(new Date(task.due_date), 'MMM d')}
