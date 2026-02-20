@@ -264,8 +264,8 @@ export default function UserManagement() {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="bg-emerald-100 pt-6 p-6 text-center">
+        <Card className="bg-slate-800/80">
+          <CardContent className="pt-6 p-6 text-center">
             <Button 
               onClick={() => setInviteDialogOpen(true)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
@@ -391,43 +391,44 @@ export default function UserManagement() {
 
       {/* Invite User Modal */}
       <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
-        <DialogContent className="max-w-md bg-black/95 backdrop-blur-sm">
+        <DialogContent className="max-w-md bg-slate-900 border-slate-700">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <UserPlus className="w-5 h-5 text-emerald-600" />
+            <DialogTitle className="flex items-center gap-2 text-white">
+              <UserPlus className="w-5 h-5 text-emerald-500" />
               Invite New User
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-4">
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Email Address</label>
+              <label className="text-sm font-medium text-slate-300 mb-2 block">Email Address</label>
               <Input
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="user@example.com"
+                className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-500"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Role</label>
+              <label className="text-sm font-medium text-slate-300 mb-2 block">Role</label>
               <Select value={inviteRole} onValueChange={setInviteRole}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
+                <SelectContent className="bg-slate-800 border-slate-600">
+                  <SelectItem value="user" className="text-white">User</SelectItem>
+                  <SelectItem value="admin" className="text-white">Admin</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex justify-end gap-2 pt-4">
-              <Button variant="outline" onClick={() => setInviteDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setInviteDialogOpen(false)} className="border-slate-600 text-slate-300 hover:bg-slate-800">
                 Cancel
               </Button>
               <Button 
                 onClick={handleInviteUser}
                 disabled={!inviteEmail.trim() || isInviting}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 {isInviting ? 'Sending...' : 'Send Invitation'}
               </Button>
