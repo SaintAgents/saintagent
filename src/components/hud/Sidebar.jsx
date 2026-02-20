@@ -102,7 +102,7 @@ const NAV_ITEMS = [
   { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
   { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
   { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
-  { id: 'projecttrack', label: 'My Dashboard/Profile', Icon: Folder, page: 'ProjectTrack', hint: 'Your funded projects dashboard and profile' },
+
   { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
   { id: 'communityfeed', label: 'Community Feed', Icon: Sparkles, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
   { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
