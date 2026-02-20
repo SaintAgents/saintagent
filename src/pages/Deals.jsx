@@ -240,69 +240,86 @@ export default function DealsPage() {
     </Card>
   );
 
-  const DealCard = ({ deal }) => {
+  const DealCard = ({ deal, index }) => {
     const primaryTag = deal.tags?.[0]?.toLowerCase();
     const tagColor = CATEGORY_COLORS[primaryTag] || CATEGORY_COLORS.default;
     
     return (
-      <Card 
-        className="cursor-pointer hover:border-cyan-500/50 transition-all group"
-        onClick={() => setSelectedDeal(deal)}
-      >
-        <CardContent className="p-3">
-          {primaryTag && (
-            <Badge className={`${tagColor} border text-[10px] uppercase mb-2`}>
-              {primaryTag}
-            </Badge>
-          )}
-          <div className="flex items-center gap-1 mb-1">
-            {deal.priority === 'high' && (
-              <div className="flex gap-0.5">
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="w-1 h-1 rounded-full bg-red-500" />
-                ))}
+      <Draggable draggableId={deal.id} index={index}>
+        {(provided, snapshot) => (
+          <Card 
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            className={`cursor-pointer hover:border-cyan-500/50 transition-all group ${snapshot.isDragging ? 'shadow-xl ring-2 ring-cyan-500 rotate-2' : ''}`}
+            onClick={() => setSelectedDeal(deal)}
+          >
+            <CardContent className="p-3">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  {primaryTag && (
+                    <Badge className={`${tagColor} border text-[10px] uppercase mb-2`}>
+                      {primaryTag}
+                    </Badge>
+                  )}
+                </div>
+                <div 
+                  {...provided.dragHandleProps}
+                  className="p-1 -mr-1 -mt-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-grab active:cursor-grabbing"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <GripVertical className="w-4 h-4 text-slate-400" />
+                </div>
               </div>
-            )}
-            {deal.priority === 'medium' && (
-              <div className="flex gap-0.5">
-                {[1,2,3].map(i => (
-                  <div key={i} className="w-1 h-1 rounded-full bg-amber-500" />
-                ))}
+              <div className="flex items-center gap-1 mb-1">
+                {deal.priority === 'high' && (
+                  <div className="flex gap-0.5">
+                    {[1,2,3,4,5].map(i => (
+                      <div key={i} className="w-1 h-1 rounded-full bg-red-500" />
+                    ))}
+                  </div>
+                )}
+                {deal.priority === 'medium' && (
+                  <div className="flex gap-0.5">
+                    {[1,2,3].map(i => (
+                      <div key={i} className="w-1 h-1 rounded-full bg-amber-500" />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <h4 className="font-medium text-slate-900 dark:text-white text-sm leading-tight mb-1 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-            {deal.title}
-          </h4>
-          <p className="text-lg font-bold text-slate-900 dark:text-white">{formatCurrency(deal.amount)}</p>
-          <p className="text-xs text-slate-500">{deal.company_name?.split(' ')[0] || 'Unknown'}</p>
-          
-          {deal.description && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-1">→ {deal.description}</p>
-          )}
-          
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
-            <div className="flex items-center gap-1">
-              <Avatar className="w-5 h-5">
-                <AvatarImage src={deal.owner_avatar} />
-                <AvatarFallback className="text-[8px] bg-slate-200 dark:bg-slate-700">{deal.owner_name?.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <span className="text-[10px] text-slate-500">{deal.owner_name?.split(' ')[0]}</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-500">
-              <div className="flex items-center gap-0.5">
-                <FileText className="w-3 h-3" />
-                <span className="text-[10px]">{Math.floor(Math.random() * 5)}</span>
-              </div>
-              {deal.expected_close_date && (
-                <span className="text-[10px]">
-                  {format(new Date(deal.expected_close_date), 'MMM d')}
-                </span>
+              <h4 className="font-medium text-slate-900 dark:text-white text-sm leading-tight mb-1 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                {deal.title}
+              </h4>
+              <p className="text-lg font-bold text-slate-900 dark:text-white">{formatCurrency(deal.amount)}</p>
+              <p className="text-xs text-slate-500">{deal.company_name?.split(' ')[0] || 'Unknown'}</p>
+              
+              {deal.description && (
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-1">→ {deal.description}</p>
               )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              
+              <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
+                <div className="flex items-center gap-1">
+                  <Avatar className="w-5 h-5">
+                    <AvatarImage src={deal.owner_avatar} />
+                    <AvatarFallback className="text-[8px] bg-slate-200 dark:bg-slate-700">{deal.owner_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-[10px] text-slate-500">{deal.owner_name?.split(' ')[0]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-500">
+                  <div className="flex items-center gap-0.5">
+                    <FileText className="w-3 h-3" />
+                    <span className="text-[10px]">{Math.floor(Math.random() * 5)}</span>
+                  </div>
+                  {deal.expected_close_date && (
+                    <span className="text-[10px]">
+                      {format(new Date(deal.expected_close_date), 'MMM d')}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </Draggable>
     );
   };
 
