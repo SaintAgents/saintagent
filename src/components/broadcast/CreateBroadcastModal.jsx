@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Calendar as CalendarIcon, Clock, Radio, Loader2, Video, Bell, Mail, Users, Upload, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { cn } from "@/lib/utils";
 import RecipientSelectorModal from './RecipientSelectorModal';
 
