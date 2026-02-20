@@ -758,6 +758,22 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             </TabsContent>
           </ScrollArea>
         </Tabs>
+
+        {/* Dependency Manager Modal */}
+        {editingDepsTask && (
+          <TaskDependencyManager
+            task={editingDepsTask}
+            allTasks={tasks}
+            onSave={(deps) => {
+              updateTaskMutation.mutate({ 
+                id: editingDepsTask.id, 
+                data: { depends_on: deps } 
+              });
+              logActivity('task_updated', `Updated dependencies for: ${editingDepsTask.title}`);
+            }}
+            onClose={() => setEditingDepsTask(null)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
