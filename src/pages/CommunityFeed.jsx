@@ -306,6 +306,12 @@ export default function CommunityFeed() {
                 placeholder="Share your thoughts with the community..."
                 className="flex-1 resize-none"
                 rows={4}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleCreatePost();
+                  }
+                }}
               />
             </div>
             
