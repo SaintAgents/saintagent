@@ -94,14 +94,23 @@ export default function Broadcast() {
 
   const now = new Date();
   
+  // Check if a broadcast is currently live based on time (scheduled_time <= now < scheduled_time + duration)
+  const isCurrentlyLive = (b) => {
+    if (b.status === 'live') return true;
+    if (b.status === 'ended' || b.status === 'cancelled') return false;
+    const scheduledTime = parseISO(b.scheduled_time);
+    const endTime = new Date(scheduledTime.getTime() + (b.duration_minutes || 60) * 60 * 1000);
+    return !isAfter(scheduledTime, now) && isAfter(endTime, now);
+  };
+  
   const upcoming = broadcasts.filter(b => 
-    b.status === 'scheduled' && isAfter(parseISO(b.scheduled_time), now)
+    b.status === 'scheduled' && isAfter(parseISO(b.scheduled_time), now) && !isCurrentlyLive(b)
   ).sort((a, b) => new Date(a.scheduled_time) - new Date(b.scheduled_time));
   
-  const live = broadcasts.filter(b => b.status === 'live');
+  const live = broadcasts.filter(b => isCurrentlyLive(b));
   
   const past = broadcasts.filter(b => 
-    b.status === 'ended' || (b.status === 'scheduled' && isBefore(parseISO(b.scheduled_time), now))
+    b.status === 'ended' || (b.status === 'scheduled' && isBefore(parseISO(b.scheduled_time), now) && !isCurrentlyLive(b))
   ).sort((a, b) => new Date(b.scheduled_time) - new Date(a.scheduled_time));
 
   const isAdmin = currentUser?.role === 'admin';
