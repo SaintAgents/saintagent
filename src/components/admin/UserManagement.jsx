@@ -275,12 +275,12 @@ export default function UserManagement() {
             </Button>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="bg-purple-100 pt-6 p-6 text-center">
-            <p className="text-purple-950 text-3xl font-bold">
+        <Card className="bg-slate-800/80">
+          <CardContent className="pt-6 p-6 text-center">
+            <p className="text-emerald-400 text-3xl font-bold">
               {isLoading ? '...' : profiles.length}
             </p>
-            <p className="text-zinc-950 mt-1 text-sm">
+            <p className="text-slate-300 mt-1 text-sm">
               {isLoading ? 'Loading...' : 'Total Users'}
             </p>
             {error && <p className="text-red-500 text-xs mt-1">Error loading</p>}
