@@ -500,7 +500,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                         url={window.location.origin + '/CommunityFeed?post=' + post.id}
                         text={post.content?.slice(0, 100) + (post.content?.length > 100 ? '...' : '') + ' - via SaintAgent'}
                         size="sm"
-                        platforms={['twitter', 'telegram']}
+                        platforms={['twitter', 'telegram', 'facebook', 'instagram', 'tiktok']}
                       />
                     </div>
 
