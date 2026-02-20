@@ -381,6 +381,30 @@ export default function ProjectTrackPage() {
                             )}
                           </div>
 
+                          {/* Action Icons */}
+                          <div className="flex items-center gap-1 mb-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setTeamMemberModal({ open: true, projectId: project.id, teamIds: project.team_member_ids || [] });
+                              }}
+                              className="p-1.5 rounded-md hover:bg-cyan-500/20 text-slate-500 hover:text-cyan-400 transition-colors"
+                              title="Add team member"
+                            >
+                              <UserPlus className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setNoteModal({ open: true, projectId: project.id });
+                              }}
+                              className="p-1.5 rounded-md hover:bg-amber-500/20 text-slate-500 hover:text-amber-400 transition-colors"
+                              title="Add note"
+                            >
+                              <MessageSquarePlus className="w-4 h-4" />
+                            </button>
+                          </div>
+
                           {/* Team Avatars */}
                           <div className="flex items-center -space-x-2">
                             {avatars.map((avatar, i) => (
