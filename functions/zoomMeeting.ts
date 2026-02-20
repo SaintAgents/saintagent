@@ -1,8 +1,12 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID');
-const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
-const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
+const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID') || '';
+const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID') || '';
+const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET') || '';
+
+console.log('ENV CHECK - Account ID length:', ZOOM_ACCOUNT_ID.length);
+console.log('ENV CHECK - Client ID length:', ZOOM_CLIENT_ID.length);
+console.log('ENV CHECK - Client Secret length:', ZOOM_CLIENT_SECRET.length);
 
 // Send meeting invitation email
 async function sendMeetingEmail(base44, { to, toName, topic, startTime, duration, joinUrl, isHost, hostName, guestName }) {
