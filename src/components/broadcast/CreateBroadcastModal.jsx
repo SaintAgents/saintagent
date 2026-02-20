@@ -100,7 +100,7 @@ export default function CreateBroadcastModal({ open, onClose }) {
 
         // If email is enabled, send individual emails to selected recipients
           if (emailAll && zoomJoinUrl && selectedRecipients?.profiles?.length > 0) {
-            console.log('Sending emails to:', selectedRecipients.profiles.map(p => p.user_id));
+            console.log('BROADCAST EMAIL: Sending emails to:', selectedRecipients.profiles.map(p => p.user_id));
             const emailPromises = selectedRecipients.profiles
               .slice(0, 100) // Limit to 100 emails
               .map(p => {
