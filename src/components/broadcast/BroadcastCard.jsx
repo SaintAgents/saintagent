@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Radio, Calendar, Clock, Users, Play, Bell, BellOff, 
-  Video, Mic, ExternalLink, CheckCircle, Star, CalendarCheck 
+  Video, Mic, ExternalLink, CheckCircle, Star, CalendarCheck,
+  ChevronDown, ChevronUp
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 
 const BROADCAST_TYPE_COLORS = {
   podcast: 'bg-violet-100 text-violet-700',
