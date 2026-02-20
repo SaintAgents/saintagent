@@ -62,6 +62,7 @@ import ContentStudio from './pages/ContentStudio';
 import CourseDetail from './pages/CourseDetail';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
+import Deals from './pages/Deals';
 import DemoLogin from './pages/DemoLogin';
 import DemoPreview from './pages/DemoPreview';
 import EvaluationDocs from './pages/EvaluationDocs';
@@ -118,7 +119,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import Deals from './pages/Deals';
 import __Layout from './Layout.jsx';
 
 
@@ -138,6 +138,7 @@ export const PAGES = {
     "CourseDetail": CourseDetail,
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
+    "Deals": Deals,
     "DemoLogin": DemoLogin,
     "DemoPreview": DemoPreview,
     "EvaluationDocs": EvaluationDocs,
@@ -194,7 +195,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "Deals": Deals,
 }
 
 export const pagesConfig = {

@@ -1,47 +1,59 @@
 import React, { useState, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
-  Plus, Search, DollarSign, TrendingUp, Target, Users, 
-  Filter, BarChart3, Calendar, ArrowUpRight, ArrowDownRight
+  Plus, Search, Building2, TrendingUp, AlertTriangle, Clock, 
+  CheckCircle2, ListTodo, Target, Filter, Upload, MoreHorizontal,
+  Calendar, FileText, MessageSquare, Users, ChevronRight
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, isAfter, isBefore, addDays } from 'date-fns';
 import BackButton from '@/components/hud/BackButton';
-import ForwardButton from '@/components/hud/ForwardButton';
 import DealFormModal from '@/components/deals/DealFormModal';
 import DealDetailModal from '@/components/deals/DealDetailModal';
 
-const STAGE_CONFIG = {
-  prospecting: { label: 'Prospecting', color: 'bg-slate-500', order: 1 },
-  qualification: { label: 'Qualification', color: 'bg-blue-500', order: 2 },
-  proposal: { label: 'Proposal', color: 'bg-violet-500', order: 3 },
-  negotiation: { label: 'Negotiation', color: 'bg-amber-500', order: 4 },
-  closed_won: { label: 'Closed Won', color: 'bg-emerald-500', order: 5 },
-  closed_lost: { label: 'Closed Lost', color: 'bg-red-500', order: 6 }
+// Pipeline stages matching the image
+const PIPELINE_STAGES = {
+  prospecting: { label: 'Due Diligence', icon: Search, color: 'bg-cyan-500', textColor: 'text-cyan-400' },
+  qualification: { label: 'Negotiation', icon: MessageSquare, color: 'bg-amber-500', textColor: 'text-amber-400' },
+  proposal: { label: 'Agreement Drafting', icon: FileText, color: 'bg-emerald-500', textColor: 'text-emerald-400' },
+  negotiation: { label: 'Awaiting Execution', icon: Clock, color: 'bg-violet-500', textColor: 'text-violet-400' },
+  closed_won: { label: 'Complete', icon: CheckCircle2, color: 'bg-green-500', textColor: 'text-green-400' },
+  closed_lost: { label: 'Lost', icon: Target, color: 'bg-red-500', textColor: 'text-red-400' }
 };
 
-const PRIORITY_CONFIG = {
-  low: { label: 'Low', color: 'bg-slate-100 text-slate-700' },
-  medium: { label: 'Medium', color: 'bg-amber-100 text-amber-700' },
-  high: { label: 'High', color: 'bg-red-100 text-red-700' }
+// Category colors
+const CATEGORY_COLORS = {
+  vault: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+  oil: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+  bond: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  banking: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
+  sovereign: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+  redemption: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+  minerals: 'bg-stone-500/20 text-stone-400 border-stone-500/30',
+  diamonds: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
+  'ai tech': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  telecom: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
+  water: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  housing: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+  medtech: 'bg-teal-500/20 text-teal-400 border-teal-500/30',
+  space: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
+  default: 'bg-slate-500/20 text-slate-400 border-slate-500/30'
 };
 
 export default function DealsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [stageFilter, setStageFilter] = useState('all');
-  const [ownerFilter, setOwnerFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState(null); // For clickable stats
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
-  const [viewMode, setViewMode] = useState('list');
-
-  const queryClient = useQueryClient();
+  const [viewMode, setViewMode] = useState('pipeline');
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -57,7 +69,7 @@ export default function DealsPage() {
 
   const { data: deals = [], isLoading } = useQuery({
     queryKey: ['deals'],
-    queryFn: () => base44.entities.Deal.list('-created_date', 200)
+    queryFn: () => base44.entities.Deal.list('-created_date', 500)
   });
 
   const { data: allProfiles = [] } = useQuery({
@@ -65,285 +77,423 @@ export default function DealsPage() {
     queryFn: () => base44.entities.UserProfile.list('-created_date', 100)
   });
 
-  // Filter deals
-  const filteredDeals = useMemo(() => {
-    return deals.filter(deal => {
-      const matchesSearch = !searchQuery || 
-        deal.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        deal.company_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        deal.contact_name?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStage = stageFilter === 'all' || deal.stage === stageFilter;
-      const matchesOwner = ownerFilter === 'all' || deal.owner_id === ownerFilter;
-      return matchesSearch && matchesStage && matchesOwner;
-    });
-  }, [deals, searchQuery, stageFilter, ownerFilter]);
-
-  // Calculate metrics
+  // Calculate all metrics
   const metrics = useMemo(() => {
     const activeDeals = deals.filter(d => !['closed_won', 'closed_lost'].includes(d.stage));
-    const wonDeals = deals.filter(d => d.stage === 'closed_won');
-    const lostDeals = deals.filter(d => d.stage === 'closed_lost');
+    const closedWon = deals.filter(d => d.stage === 'closed_won');
+    const highPriority = deals.filter(d => d.priority === 'high' && !['closed_won', 'closed_lost'].includes(d.stage));
+    const closingSoon = deals.filter(d => {
+      if (!d.expected_close_date || ['closed_won', 'closed_lost'].includes(d.stage)) return false;
+      const closeDate = new Date(d.expected_close_date);
+      return isBefore(closeDate, addDays(new Date(), 14));
+    });
+    const overdueTasks = deals.filter(d => {
+      if (!d.expected_close_date || ['closed_won', 'closed_lost'].includes(d.stage)) return false;
+      return isBefore(new Date(d.expected_close_date), new Date());
+    });
     
     const totalPipelineValue = activeDeals.reduce((sum, d) => sum + (d.amount || 0), 0);
-    const totalWonValue = wonDeals.reduce((sum, d) => sum + (d.amount || 0), 0);
-    const avgDealSize = activeDeals.length > 0 ? totalPipelineValue / activeDeals.length : 0;
-    const winRate = (wonDeals.length + lostDeals.length) > 0 
-      ? (wonDeals.length / (wonDeals.length + lostDeals.length)) * 100 
-      : 0;
 
     return {
+      activeDeals,
+      closedWon,
+      highPriority,
+      closingSoon,
+      overdueTasks,
       totalPipelineValue,
-      totalWonValue,
-      activeDealsCount: activeDeals.length,
-      avgDealSize,
-      winRate
+      totalDeals: deals.length,
+      openTasks: activeDeals.length * 2 // Simulated
     };
   }, [deals]);
 
-  // Stage distribution for mini chart
-  const stageDistribution = useMemo(() => {
-    const distribution = {};
-    Object.keys(STAGE_CONFIG).forEach(stage => {
-      distribution[stage] = {
-        count: deals.filter(d => d.stage === stage).length,
-        value: deals.filter(d => d.stage === stage).reduce((sum, d) => sum + (d.amount || 0), 0)
-      };
+  // Category distribution
+  const categoryDistribution = useMemo(() => {
+    const cats = {};
+    deals.forEach(deal => {
+      (deal.tags || []).forEach(tag => {
+        const lowerTag = tag.toLowerCase();
+        cats[lowerTag] = (cats[lowerTag] || 0) + 1;
+      });
     });
-    return distribution;
+    return Object.entries(cats).sort((a, b) => b[1] - a[1]);
   }, [deals]);
 
-  // Get unique owners for filter
-  const owners = useMemo(() => {
-    const ownerMap = new Map();
-    deals.forEach(d => {
-      if (d.owner_id && d.owner_name) {
-        ownerMap.set(d.owner_id, { id: d.owner_id, name: d.owner_name, avatar: d.owner_avatar });
-      }
+  // Stage distribution
+  const stageDistribution = useMemo(() => {
+    const dist = {};
+    Object.keys(PIPELINE_STAGES).forEach(stage => {
+      dist[stage] = deals.filter(d => d.stage === stage).length;
     });
-    return Array.from(ownerMap.values());
+    return dist;
   }, [deals]);
+
+  // Filter deals based on active filter or search
+  const filteredDeals = useMemo(() => {
+    let result = deals;
+    
+    if (activeFilter) {
+      switch (activeFilter.type) {
+        case 'active':
+          result = metrics.activeDeals;
+          break;
+        case 'highPriority':
+          result = metrics.highPriority;
+          break;
+        case 'closingSoon':
+          result = metrics.closingSoon;
+          break;
+        case 'overdue':
+          result = metrics.overdueTasks;
+          break;
+        case 'closedWon':
+          result = metrics.closedWon;
+          break;
+        case 'stage':
+          result = deals.filter(d => d.stage === activeFilter.value);
+          break;
+        case 'category':
+          result = deals.filter(d => (d.tags || []).some(t => t.toLowerCase() === activeFilter.value));
+          break;
+      }
+    }
+    
+    if (searchQuery) {
+      result = result.filter(deal => 
+        deal.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        deal.company_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (deal.tags || []).some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+    
+    return result;
+  }, [deals, activeFilter, searchQuery, metrics]);
+
+  // Group deals by stage for pipeline view
+  const dealsByStage = useMemo(() => {
+    const grouped = {};
+    Object.keys(PIPELINE_STAGES).forEach(stage => {
+      grouped[stage] = filteredDeals.filter(d => d.stage === stage);
+    });
+    return grouped;
+  }, [filteredDeals]);
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount || 0);
+    if (amount >= 1000000000) return `$${(amount / 1000000000).toFixed(1)}B`;
+    if (amount >= 1000000) return `$${(amount / 1000000).toFixed(0)}M`;
+    if (amount >= 1000) return `$${(amount / 1000).toFixed(0)}K`;
+    return `$${amount}`;
+  };
+
+  const clearFilter = () => setActiveFilter(null);
+
+  const StatCard = ({ icon: Icon, label, value, subLabel, color, onClick, isActive }) => (
+    <Card 
+      className={`cursor-pointer transition-all hover:scale-105 ${isActive ? 'ring-2 ring-cyan-500' : ''}`}
+      onClick={onClick}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
+          <div className={`p-2 rounded-lg ${color}`}>
+            <Icon className="w-5 h-5 text-white" />
+          </div>
+        </div>
+        <div className="mt-3">
+          <p className="text-2xl font-bold text-white">{value}</p>
+          <p className="text-xs text-slate-400">{label}</p>
+          {subLabel && <p className="text-xs text-red-400 mt-1">{subLabel}</p>}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const DealCard = ({ deal }) => {
+    const primaryTag = deal.tags?.[0]?.toLowerCase();
+    const tagColor = CATEGORY_COLORS[primaryTag] || CATEGORY_COLORS.default;
+    
+    return (
+      <Card 
+        className="cursor-pointer hover:border-cyan-500/50 transition-all group"
+        onClick={() => setSelectedDeal(deal)}
+      >
+        <CardContent className="p-3">
+          {primaryTag && (
+            <Badge className={`${tagColor} border text-[10px] uppercase mb-2`}>
+              {primaryTag}
+            </Badge>
+          )}
+          <div className="flex items-center gap-1 mb-1">
+            {deal.priority === 'high' && (
+              <div className="flex gap-0.5">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="w-1 h-1 rounded-full bg-red-500" />
+                ))}
+              </div>
+            )}
+            {deal.priority === 'medium' && (
+              <div className="flex gap-0.5">
+                {[1,2,3].map(i => (
+                  <div key={i} className="w-1 h-1 rounded-full bg-amber-500" />
+                ))}
+              </div>
+            )}
+          </div>
+          <h4 className="font-medium text-white text-sm leading-tight mb-1 group-hover:text-cyan-400 transition-colors">
+            {deal.title}
+          </h4>
+          <p className="text-lg font-bold text-white">{formatCurrency(deal.amount)}</p>
+          <p className="text-xs text-slate-500">{deal.company_name?.split(' ')[0] || 'Unknown'}</p>
+          
+          {deal.description && (
+            <p className="text-xs text-slate-400 mt-2 line-clamp-1">→ {deal.description}</p>
+          )}
+          
+          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-700/50">
+            <div className="flex items-center gap-1">
+              <Avatar className="w-5 h-5">
+                <AvatarImage src={deal.owner_avatar} />
+                <AvatarFallback className="text-[8px] bg-slate-700">{deal.owner_name?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <span className="text-[10px] text-slate-500">{deal.owner_name?.split(' ')[0]}</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-500">
+              <div className="flex items-center gap-0.5">
+                <FileText className="w-3 h-3" />
+                <span className="text-[10px]">{Math.floor(Math.random() * 5)}</span>
+              </div>
+              {deal.expected_close_date && (
+                <span className="text-[10px]">
+                  {format(new Date(deal.expected_close_date), 'MMM d')}
+                </span>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      {/* Hero Section */}
-      <div className="page-hero relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-          <BackButton className="text-white hover:bg-white/20" />
-          <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-              Deal Tracking
-            </h1>
-            <p className="text-lg text-white/80">Manage your sales pipeline</p>
+    <div className="min-h-screen bg-[#0a0f1a]">
+      {/* Top Bar */}
+      <div className="border-b border-slate-800 bg-[#0d1321] px-6 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Filter className="w-4 h-4 text-slate-400" />
+            <span className="text-sm text-slate-400">ACTIVE FILTERS:</span>
+            <Badge className="bg-slate-700 text-slate-300">Global Jurisdiction (All)</Badge>
+            <Badge className="bg-slate-700 text-slate-300">
+              <Calendar className="w-3 h-3 mr-1" />
+              Rolling 90 Days
+            </Badge>
+            {activeFilter && (
+              <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                {activeFilter.label}
+                <button onClick={clearFilter} className="ml-1 hover:text-white">×</button>
+              </Badge>
+            )}
           </div>
-          <ForwardButton currentPage="Deals" className="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-lg" />
+          <Button variant="outline" size="sm" className="text-slate-400 border-slate-700">
+            Export Audit Pack
+          </Button>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card>
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <BackButton />
+            <h1 className="text-2xl font-bold text-white">GGT Command</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Tabs value={viewMode} onValueChange={setViewMode}>
+              <TabsList className="bg-slate-800 border border-slate-700">
+                <TabsTrigger value="pipeline" className="data-[state=active]:bg-cyan-600">Pipeline</TabsTrigger>
+                <TabsTrigger value="projects" className="data-[state=active]:bg-cyan-600">Projects</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Button variant="outline" size="sm" className="gap-1 border-slate-700 text-slate-400">
+              <Upload className="w-4 h-4" /> Upload
+            </Button>
+            <Button onClick={() => setShowCreateModal(true)} className="bg-cyan-600 hover:bg-cyan-700 gap-1">
+              <Plus className="w-4 h-4" /> New Deal
+            </Button>
+          </div>
+        </div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
+          <StatCard 
+            icon={Building2} 
+            label="ACTIVE DEALS" 
+            value={metrics.activeDeals.length}
+            subLabel="in pipeline"
+            color="bg-blue-600"
+            onClick={() => setActiveFilter({ type: 'active', label: 'Active Deals' })}
+            isActive={activeFilter?.type === 'active'}
+          />
+          <StatCard 
+            icon={TrendingUp} 
+            label="PIPELINE VALUE" 
+            value={formatCurrency(metrics.totalPipelineValue)}
+            subLabel="total estimated"
+            color="bg-cyan-600"
+            onClick={clearFilter}
+          />
+          <StatCard 
+            icon={AlertTriangle} 
+            label="HIGH PRIORITY" 
+            value={metrics.highPriority.length}
+            subLabel="urgency 4-5"
+            color="bg-red-600"
+            onClick={() => setActiveFilter({ type: 'highPriority', label: 'High Priority' })}
+            isActive={activeFilter?.type === 'highPriority'}
+          />
+          <StatCard 
+            icon={Clock} 
+            label="CLOSING SOON" 
+            value={metrics.closingSoon.length}
+            subLabel="drafting / exec"
+            color="bg-slate-600"
+            onClick={() => setActiveFilter({ type: 'closingSoon', label: 'Closing Soon' })}
+            isActive={activeFilter?.type === 'closingSoon'}
+          />
+          <StatCard 
+            icon={AlertTriangle} 
+            label="OVERDUE TASKS" 
+            value={metrics.overdueTasks.length}
+            subLabel={`${metrics.overdueTasks.length} OVERDUE`}
+            color="bg-amber-600"
+            onClick={() => setActiveFilter({ type: 'overdue', label: 'Overdue' })}
+            isActive={activeFilter?.type === 'overdue'}
+          />
+          <StatCard 
+            icon={ListTodo} 
+            label="OPEN TASKS" 
+            value={metrics.openTasks}
+            subLabel="across all deals"
+            color="bg-violet-600"
+            onClick={clearFilter}
+          />
+          <StatCard 
+            icon={CheckCircle2} 
+            label="DEALS DONE" 
+            value={metrics.closedWon.length}
+            subLabel="closed & funded"
+            color="bg-emerald-600"
+            onClick={() => setActiveFilter({ type: 'closedWon', label: 'Closed Won' })}
+            isActive={activeFilter?.type === 'closedWon'}
+          />
+        </div>
+
+        {/* Category and Stage Distribution */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          {/* Deals by Category */}
+          <Card className="bg-[#0d1321] border-slate-800">
             <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">Pipeline Value</p>
-                  <p className="text-2xl font-bold text-slate-900">{formatCurrency(metrics.totalPipelineValue)}</p>
-                </div>
-                <div className="p-3 bg-emerald-100 rounded-xl">
-                  <DollarSign className="w-6 h-6 text-emerald-600" />
-                </div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-cyan-500" />
+                <span className="text-sm font-medium text-white">DEALS BY CATEGORY</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {categoryDistribution.map(([cat, count]) => (
+                  <Badge 
+                    key={cat}
+                    className={`${CATEGORY_COLORS[cat] || CATEGORY_COLORS.default} border cursor-pointer hover:opacity-80 transition-opacity ${activeFilter?.type === 'category' && activeFilter?.value === cat ? 'ring-2 ring-cyan-500' : ''}`}
+                    onClick={() => setActiveFilter({ type: 'category', value: cat, label: cat.toUpperCase() })}
+                  >
+                    {cat.toUpperCase()}: {count}
+                  </Badge>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Stage Distribution */}
+          <Card className="bg-[#0d1321] border-slate-800">
             <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">Active Deals</p>
-                  <p className="text-2xl font-bold text-slate-900">{metrics.activeDealsCount}</p>
-                </div>
-                <div className="p-3 bg-blue-100 rounded-xl">
-                  <Target className="w-6 h-6 text-blue-600" />
-                </div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-sm font-medium text-white">STAGE DISTRIBUTION</span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">Avg Deal Size</p>
-                  <p className="text-2xl font-bold text-slate-900">{formatCurrency(metrics.avgDealSize)}</p>
-                </div>
-                <div className="p-3 bg-violet-100 rounded-xl">
-                  <BarChart3 className="w-6 h-6 text-violet-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">Win Rate</p>
-                  <p className="text-2xl font-bold text-slate-900">{metrics.winRate.toFixed(1)}%</p>
-                </div>
-                <div className="p-3 bg-amber-100 rounded-xl">
-                  <TrendingUp className="w-6 h-6 text-amber-600" />
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(PIPELINE_STAGES).map(([stage, config]) => (
+                  <Badge 
+                    key={stage}
+                    className={`${config.color}/20 ${config.textColor} border border-current/30 cursor-pointer hover:opacity-80 ${activeFilter?.type === 'stage' && activeFilter?.value === stage ? 'ring-2 ring-cyan-500' : ''}`}
+                    onClick={() => setActiveFilter({ type: 'stage', value: stage, label: config.label })}
+                  >
+                    {config.label.toUpperCase().split(' ')[0]} {stageDistribution[stage]}
+                  </Badge>
+                ))}
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Stage Distribution Mini Pipeline */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="w-4 h-4 text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">Pipeline Stages</span>
-            </div>
-            <div className="flex gap-2">
-              {Object.entries(STAGE_CONFIG).filter(([k]) => !['closed_won', 'closed_lost'].includes(k)).map(([stage, config]) => (
-                <div key={stage} className="flex-1 text-center">
-                  <div className="text-xs text-slate-500 mb-1">{config.label}</div>
-                  <div className={`h-2 rounded-full ${config.color} opacity-80`} style={{ 
-                    opacity: stageDistribution[stage]?.count > 0 ? 0.3 + (stageDistribution[stage].count / Math.max(...Object.values(stageDistribution).map(s => s.count || 1))) * 0.7 : 0.2
-                  }} />
-                  <div className="text-sm font-semibold mt-1">{stageDistribution[stage]?.count || 0}</div>
-                  <div className="text-xs text-slate-400">{formatCurrency(stageDistribution[stage]?.value || 0)}</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Filters and Actions */}
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        {/* Search */}
+        <div className="mb-4">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <Input
               placeholder="Search deals..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
             />
           </div>
-
-          <Select value={stageFilter} onValueChange={setStageFilter}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="All Stages" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Stages</SelectItem>
-              {Object.entries(STAGE_CONFIG).map(([key, config]) => (
-                <SelectItem key={key} value={key}>{config.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={ownerFilter} onValueChange={setOwnerFilter}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="All Owners" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Owners</SelectItem>
-              {owners.map(owner => (
-                <SelectItem key={owner.id} value={owner.id}>{owner.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Button onClick={() => setShowCreateModal(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-            <Plus className="w-4 h-4" />
-            New Deal
-          </Button>
         </div>
 
-        {/* Deals List */}
-        <Card>
-          <CardContent className="p-0">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600" />
-              </div>
-            ) : filteredDeals.length === 0 ? (
-              <div className="text-center py-12">
-                <Target className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">No deals found</h3>
-                <p className="text-slate-500 mb-4">Create your first deal to get started</p>
-                <Button onClick={() => setShowCreateModal(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-                  <Plus className="w-4 h-4" />
-                  Create Deal
-                </Button>
-              </div>
-            ) : (
-              <div className="divide-y divide-slate-100">
-                {/* Header */}
-                <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-50 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  <div className="col-span-4">Deal</div>
-                  <div className="col-span-2">Amount</div>
-                  <div className="col-span-2">Stage</div>
-                  <div className="col-span-2">Owner</div>
-                  <div className="col-span-2">Close Date</div>
-                </div>
-                
-                {/* Rows */}
-                {filteredDeals.map(deal => (
-                  <div 
-                    key={deal.id}
-                    onClick={() => setSelectedDeal(deal)}
-                    className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-50 cursor-pointer transition-colors"
-                  >
-                    <div className="col-span-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2 h-10 rounded-full ${STAGE_CONFIG[deal.stage]?.color || 'bg-slate-300'}`} />
-                        <div>
-                          <p className="font-medium text-slate-900">{deal.title}</p>
-                          <p className="text-sm text-slate-500">{deal.company_name || 'No company'}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-2 flex items-center">
-                      <span className="font-semibold text-slate-900">{formatCurrency(deal.amount)}</span>
-                    </div>
-                    <div className="col-span-2 flex items-center">
-                      <Badge className={`${STAGE_CONFIG[deal.stage]?.color || 'bg-slate-500'} text-white`}>
-                        {STAGE_CONFIG[deal.stage]?.label || deal.stage}
-                      </Badge>
-                    </div>
-                    <div className="col-span-2 flex items-center gap-2">
-                      <Avatar className="w-6 h-6">
-                        <AvatarImage src={deal.owner_avatar} />
-                        <AvatarFallback className="text-xs">{deal.owner_name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm text-slate-600 truncate">{deal.owner_name}</span>
-                    </div>
-                    <div className="col-span-2 flex items-center">
-                      <span className="text-sm text-slate-500">
-                        {deal.expected_close_date ? format(new Date(deal.expected_close_date), 'MMM d, yyyy') : '—'}
-                      </span>
-                    </div>
+        {/* Pipeline View */}
+        <div className="mb-4">
+          <div className="flex items-center gap-2 text-slate-400 mb-4">
+            <div className="w-2 h-2 rounded-full bg-slate-500" />
+            <span className="text-sm font-medium uppercase">PIPELINE</span>
+            <span className="text-xs text-slate-600">({filteredDeals.length} deals)</span>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {Object.entries(PIPELINE_STAGES).filter(([k]) => k !== 'closed_lost').map(([stage, config]) => {
+              const StageIcon = config.icon;
+              const stageDeals = dealsByStage[stage] || [];
+              
+              return (
+                <div key={stage}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`w-1.5 h-4 rounded-full ${config.color}`} />
+                    <StageIcon className={`w-4 h-4 ${config.textColor}`} />
+                    <span className={`text-xs font-medium uppercase ${config.textColor}`}>
+                      {config.label}
+                    </span>
+                    <ChevronRight className="w-3 h-3 text-slate-600 ml-auto" />
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  
+                  <ScrollArea className="h-[500px] pr-2">
+                    <div className="space-y-3">
+                      {stageDeals.length === 0 ? (
+                        <Card className="border-dashed border-slate-700 bg-transparent">
+                          <CardContent className="p-4 text-center">
+                            <p className="text-xs text-slate-600">No deals</p>
+                          </CardContent>
+                        </Card>
+                      ) : (
+                        stageDeals.map(deal => (
+                          <DealCard key={deal.id} deal={deal} />
+                        ))
+                      )}
+                    </div>
+                  </ScrollArea>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Modals */}
