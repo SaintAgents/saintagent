@@ -93,6 +93,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
 import JournalTab from '@/components/profile/JournalTab';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
+import DealsTab from '@/components/deals/DealsTab';
 import {
   Tooltip,
   TooltipContent,
@@ -713,6 +714,12 @@ export default function Profile() {
                   <span className="hidden sm:inline">Bank</span>
                   <Coins className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
+              {isOwnProfile && (
+                <TabsTrigger value="deals" className="text-xs sm:text-sm px-2 sm:px-3" title="Deals">
+                  <span className="hidden sm:inline">Deals</span>
+                  <Target className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
             </TabsList>
           </div>
 
@@ -1721,6 +1728,12 @@ export default function Profile() {
           <TabsContent value="bank" className="space-y-6">
             <GaiaBankTab />
           </TabsContent>
+
+          {isOwnProfile && (
+            <TabsContent value="deals" className="space-y-6">
+              <DealsTab currentUser={currentUser} profile={profile} />
+            </TabsContent>
+          )}
 
           {isOwnProfile && (
             <TabsContent value="friends" className="space-y-6">
