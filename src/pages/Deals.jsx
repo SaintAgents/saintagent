@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,9 +11,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Plus, Search, Building2, TrendingUp, AlertTriangle, Clock, 
   CheckCircle2, ListTodo, Target, Filter, Upload,
-  Calendar, FileText, MessageSquare, ChevronRight
+  Calendar, FileText, MessageSquare, ChevronRight, GripVertical
 } from 'lucide-react';
 import { format, isBefore, addDays } from 'date-fns';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import BackButton from '@/components/hud/BackButton.jsx';
 import DealFormModal from '@/components/deals/DealFormModal.jsx';
 import DealDetailModal from '@/components/deals/DealDetailModal.jsx';
