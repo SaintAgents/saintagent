@@ -27,6 +27,7 @@ import {
   Landmark } from
 "lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
+import TaskNotificationSettings from '@/components/notifications/TaskNotificationSettings';
 import BackButton from '@/components/hud/BackButton';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
