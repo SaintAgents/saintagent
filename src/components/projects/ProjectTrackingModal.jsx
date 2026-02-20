@@ -295,12 +295,12 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
 
               <Card>
                 <CardContent className="p-4">
-                  <h4 className="font-medium mb-3">Project Status</h4>
+                  <h4 className="font-medium mb-3 text-slate-900 dark:text-white">Project Status</h4>
                   <Select 
                     value={project.project_status || 'planned'} 
                     onValueChange={(val) => updateProjectMutation.mutate({ project_status: val })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="text-slate-900 dark:text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
