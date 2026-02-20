@@ -187,6 +187,39 @@ export default function DealsPage() {
 
   const clearFilter = () => setActiveFilter(null);
 
+  // Handle drag and drop for deals
+  const handleDragEnd = async (result) => {
+    const { destination, source, draggableId } = result;
+    
+    // Dropped outside a valid droppable
+    if (!destination) return;
+    
+    // Dropped in the same position
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+    
+    const newStage = destination.droppableId;
+    const dealId = draggableId;
+    
+    // Find the deal
+    const deal = deals.find(d => d.id === dealId);
+    if (!deal) return;
+    
+    // Optimistically update the UI
+    queryClient.setQueryData(['deals'], (oldDeals) => {
+      return oldDeals.map(d => d.id === dealId ? { ...d, stage: newStage } : d);
+    });
+    
+    // Update the deal in the database
+    try {
+      await base44.entities.Deal.update(dealId, { stage: newStage });
+      queryClient.invalidateQueries({ queryKey: ['deals'] });
+    } catch (error) {
+      console.error('Failed to update deal stage:', error);
+      // Revert on error
+      queryClient.invalidateQueries({ queryKey: ['deals'] });
+    }
+  };
+
   const StatCard = ({ icon: Icon, label, value, subLabel, color, onClick, isActive }) => (
     <Card 
       className={`cursor-pointer transition-all hover:scale-105 ${isActive ? 'ring-2 ring-cyan-500' : ''}`}
