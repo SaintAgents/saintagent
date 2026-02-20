@@ -56,7 +56,8 @@ import {
   Award,
   Medal,
   ChevronDown,
-  BookOpen
+  BookOpen,
+  Folder
 } from
 "lucide-react";
 
