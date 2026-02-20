@@ -15,9 +15,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { 
   X, Plus, Calendar, Users, Target, CheckCircle2, Clock, 
   MessageSquare, Paperclip, Activity, ChevronRight, Edit2,
-  Trash2, Play, Pause, AlertCircle, FileText, Upload, UserPlus, Search
+  Trash2, Play, Pause, AlertCircle, FileText, Upload, UserPlus, Search,
+  Link2, Lock, GitBranch
 } from 'lucide-react';
 import { format } from 'date-fns';
+import TaskDependencyManager, { isTaskBlocked, getBlockingTasks } from './TaskDependencyManager';
+import TaskDependencyGraph from './TaskDependencyGraph';
 
 const STATUS_CONFIG = {
   planned: { label: 'Planned', color: 'bg-slate-500 text-white' },
