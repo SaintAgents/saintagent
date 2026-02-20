@@ -93,7 +93,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
 import JournalTab from '@/components/profile/JournalTab';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
-import DealsTab from '@/components/deals/DealsTab';
+import DealsTab from '@/components/deals/DealsTab.jsx';
 import {
   Tooltip,
   TooltipContent,
