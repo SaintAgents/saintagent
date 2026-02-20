@@ -329,12 +329,62 @@ export default function CreateBroadcastModal({ open, onClose }) {
 
           {/* Cover Image */}
           <div className="space-y-2">
-            <Label>Cover Image URL (optional)</Label>
-            <Input
-              placeholder="https://..."
-              value={coverImageUrl}
-              onChange={(e) => setCoverImageUrl(e.target.value)}
-            />
+            <Label>Cover Image (optional)</Label>
+            {coverImageUrl ? (
+              <div className="relative">
+                <img 
+                  src={coverImageUrl} 
+                  alt="Cover preview" 
+                  className="w-full h-32 object-cover rounded-lg border"
+                />
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2 h-6 w-6"
+                  onClick={() => setCoverImageUrl('')}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  placeholder="https://... or upload"
+                  value={coverImageUrl}
+                  onChange={(e) => setCoverImageUrl(e.target.value)}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={uploadingImage}
+                  className="gap-1"
+                  onClick={() => document.getElementById('broadcast-cover-upload').click()}
+                >
+                  {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  Upload
+                </Button>
+                <input
+                  id="broadcast-cover-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setUploadingImage(true);
+                    try {
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      setCoverImageUrl(file_url);
+                    } catch (err) {
+                      console.error('Upload failed:', err);
+                    } finally {
+                      setUploadingImage(false);
+                    }
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Zoom Toggle */}
