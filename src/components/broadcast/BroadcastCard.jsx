@@ -128,15 +128,76 @@ export default function BroadcastCard({ broadcast, currentUser, onRsvp, onIntere
                   <Mic className="w-4 h-4" />
                   {broadcast.duration_minutes} min
                 </span>
-                <span className="flex items-center gap-1">
+                <button 
+                  onClick={() => setShowAttendees(!showAttendees)}
+                  className="flex items-center gap-1 hover:text-violet-600 transition-colors"
+                >
                   <Star className="w-4 h-4" />
                   {broadcast.interested_count || 0} Interested
-                </span>
-                <span className="flex items-center gap-1">
+                  {showAttendees ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                </button>
+                <button 
+                  onClick={() => setShowAttendees(!showAttendees)}
+                  className="flex items-center gap-1 hover:text-violet-600 transition-colors"
+                >
                   <Users className="w-4 h-4" />
                   {broadcast.going_count || 0} Going
-                </span>
+                </button>
               </div>
+
+              {/* Attendees Panel */}
+              {showAttendees && (goingIds.length > 0 || interestedIds.length > 0) && (
+                <div className="mt-3 p-3 bg-slate-50 rounded-lg border">
+                  {goingIds.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-emerald-700 mb-2 flex items-center gap-1">
+                        <CalendarCheck className="w-3 h-3" /> Going ({goingIds.length})
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {goingProfiles.length > 0 ? goingProfiles.map(profile => (
+                          <div 
+                            key={profile.id} 
+                            className="flex items-center gap-1.5 px-2 py-1 bg-white rounded-full border text-xs"
+                            title={profile.display_name}
+                          >
+                            <Avatar className="w-5 h-5">
+                              <AvatarImage src={profile.avatar_url} />
+                              <AvatarFallback className="text-[10px]">{profile.display_name?.[0]}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-slate-700 truncate max-w-[100px]">{profile.display_name}</span>
+                          </div>
+                        )) : (
+                          <span className="text-xs text-slate-400">Loading...</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {interestedIds.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-amber-700 mb-2 flex items-center gap-1">
+                        <Star className="w-3 h-3" /> Interested ({interestedIds.length})
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {interestedProfiles.length > 0 ? interestedProfiles.map(profile => (
+                          <div 
+                            key={profile.id} 
+                            className="flex items-center gap-1.5 px-2 py-1 bg-white rounded-full border text-xs"
+                            title={profile.display_name}
+                          >
+                            <Avatar className="w-5 h-5">
+                              <AvatarImage src={profile.avatar_url} />
+                              <AvatarFallback className="text-[10px]">{profile.display_name?.[0]}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-slate-700 truncate max-w-[100px]">{profile.display_name}</span>
+                          </div>
+                        )) : (
+                          <span className="text-xs text-slate-400">Loading...</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Topics */}
               {broadcast.topics?.length > 0 && (
