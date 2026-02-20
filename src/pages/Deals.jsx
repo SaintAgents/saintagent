@@ -301,7 +301,31 @@ export default function DealsPage() {
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-1">→ {deal.description}</p>
               )}
               
-              <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
+              {/* Action Icons */}
+              <div className="flex items-center gap-1 mt-2 mb-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTeamMemberModal({ open: true, dealId: deal.id, teamIds: deal.team_member_ids || [] });
+                  }}
+                  className="p-1.5 rounded-md hover:bg-cyan-100 dark:hover:bg-cyan-500/20 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+                  title="Add team member"
+                >
+                  <UserPlus className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNoteModal({ open: true, dealId: deal.id });
+                  }}
+                  className="p-1.5 rounded-md hover:bg-amber-100 dark:hover:bg-amber-500/20 text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                  title="Add note"
+                >
+                  <MessageSquarePlus className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700/50">
                 <div className="flex items-center gap-1">
                   <Avatar className="w-5 h-5">
                     <AvatarImage src={deal.owner_avatar} />
