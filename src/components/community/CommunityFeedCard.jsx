@@ -474,8 +474,28 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                       </div>
                     )}
                     
-                    {/* Post Link */}
-                    {post.link_url && (
+                    {/* Embedded YouTube/Vimeo */}
+                    {post.link_url && (post.link_url.includes('youtube.com') || post.link_url.includes('youtu.be') || post.link_url.includes('vimeo.com')) && (
+                      <div className="mt-2 aspect-video rounded-lg overflow-hidden">
+                        <iframe
+                          src={
+                            post.link_url.includes('youtube.com/watch') 
+                              ? `https://www.youtube.com/embed/${new URL(post.link_url).searchParams.get('v')}`
+                              : post.link_url.includes('youtu.be')
+                              ? `https://www.youtube.com/embed/${post.link_url.split('/').pop().split('?')[0]}`
+                              : post.link_url.includes('vimeo.com')
+                              ? `https://player.vimeo.com/video/${post.link_url.split('/').pop().split('?')[0]}`
+                              : ''
+                          }
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Post Link (non-video links only) */}
+                    {post.link_url && !post.link_url.includes('youtube.com') && !post.link_url.includes('youtu.be') && !post.link_url.includes('vimeo.com') && (
                       <a 
                         href={post.link_url} 
                         target="_blank" 
