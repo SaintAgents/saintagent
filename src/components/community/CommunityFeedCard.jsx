@@ -128,18 +128,24 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
       
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        clearInterval(progressInterval);
         setVideoUploadProgress(100);
         setPendingVideo(file_url);
+        toast.success('Video uploaded! Click Send to post.');
       } catch (error) {
+        clearInterval(progressInterval);
         toast.error('Failed to upload video');
       } finally {
-        clearInterval(progressInterval);
-        setTimeout(() => {
-          setUploadingVideo(false);
-          setVideoUploadProgress(0);
-        }, 500);
+        setUploadingVideo(false);
+        setVideoUploadProgress(0);
         if (videoInputRef.current) videoInputRef.current.value = '';
       }
+    };
+    
+    video.onerror = () => {
+      URL.revokeObjectURL(video.src);
+      toast.error('Could not read video file');
+      if (videoInputRef.current) videoInputRef.current.value = '';
     };
   };
 
