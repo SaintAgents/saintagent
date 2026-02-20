@@ -121,6 +121,14 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
     const file = e.target.files?.[0];
     if (!file) return;
     
+    // Check file size (max 50MB)
+    const maxSizeMB = 50;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      toast.error(`Video must be under ${maxSizeMB}MB. Your file is ${Math.round(file.size / 1024 / 1024)}MB.`);
+      if (videoInputRef.current) videoInputRef.current.value = '';
+      return;
+    }
+    
     // Check video duration (max 15 minutes)
     const video = document.createElement('video');
     video.preload = 'metadata';
@@ -153,7 +161,12 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
         toast.success('Video uploaded! Click Send to post.');
       } catch (error) {
         clearInterval(progressInterval);
-        toast.error('Failed to upload video');
+        const errorMsg = error?.message || '';
+        if (errorMsg.includes('413') || errorMsg.includes('too large') || errorMsg.includes('Payload')) {
+          toast.error('Video file is too large. Please use a smaller file (under 50MB).');
+        } else {
+          toast.error('Failed to upload video. Please try again.');
+        }
       } finally {
         setUploadingVideo(false);
         setVideoUploadProgress(0);
