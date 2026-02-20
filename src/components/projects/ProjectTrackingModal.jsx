@@ -348,7 +348,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             <TabsContent value="team" className="mt-4 space-y-3">
               <div className="flex justify-between items-center">
                 <h4 className="font-medium">Team Members ({teamMembers.length})</h4>
-                <Button size="sm" onClick={() => setShowAddTeamMember(true)} className="gap-1">
+                <Button size="sm" onClick={() => setShowAddTeamMember(true)} className="gap-1 bg-violet-600 hover:bg-violet-700 text-white">
                   <UserPlus className="w-4 h-4" /> Add Member
                 </Button>
               </div>
@@ -431,7 +431,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             {/* Milestones Tab */}
             <TabsContent value="milestones" className="mt-4 space-y-3">
               <div className="flex justify-end">
-                <Button size="sm" onClick={() => setShowAddMilestone(true)} className="gap-1">
+                <Button size="sm" onClick={() => setShowAddMilestone(true)} className="gap-1 bg-violet-600 hover:bg-violet-700 text-white">
                   <Plus className="w-4 h-4" /> Add Milestone
                 </Button>
               </div>
@@ -496,8 +496,8 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
                       
                       <Button 
                         size="sm" 
-                        variant="ghost" 
-                        className="mt-2 text-xs"
+                        variant="outline" 
+                        className="mt-2 text-xs border-slate-300 dark:border-slate-600"
                         onClick={() => setShowAddTask(milestone.id)}
                       >
                         <Plus className="w-3 h-3 mr-1" /> Add Task
