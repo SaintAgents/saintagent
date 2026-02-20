@@ -100,10 +100,12 @@ export default function CreateBroadcastModal({ open, onClose }) {
 
         // If email is enabled, send individual emails to selected recipients
           if (emailAll && zoomJoinUrl && selectedRecipients?.profiles?.length > 0) {
+            console.log('Sending emails to:', selectedRecipients.profiles.map(p => p.user_id));
             const emailPromises = selectedRecipients.profiles
               .slice(0, 100) // Limit to 100 emails
-              .map(p => 
-                base44.integrations.Core.SendEmail({
+              .map(p => {
+                console.log('Sending email to:', p.user_id);
+                return base44.integrations.Core.SendEmail({
                   to: p.user_id,
                   subject: `📡 Broadcast Invitation: ${title}`,
                   body: `
