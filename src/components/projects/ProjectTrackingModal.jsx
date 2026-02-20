@@ -51,7 +51,9 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
   const [newTask, setNewTask] = useState({ title: '', description: '', due_date: '' });
   const [newComment, setNewComment] = useState('');
   const [editingDepsTask, setEditingDepsTask] = useState(null);
+  const [showReportGenerator, setShowReportGenerator] = useState(false);
   const queryClient = useQueryClient();
+  const { notifyTaskAssigned, notifyTaskCompleted, notifyDependencyMet } = useTaskNotifications();
 
   const { data: milestones = [] } = useQuery({
     queryKey: ['projectMilestones', project.id],
