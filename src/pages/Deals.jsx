@@ -607,6 +607,23 @@ export default function DealsPage() {
           allProfiles={allProfiles}
         />
       )}
+
+      {/* Add Team Member Modal */}
+      <AddTeamMemberModal
+        open={teamMemberModal.open}
+        onClose={() => setTeamMemberModal({ open: false, dealId: null, teamIds: [] })}
+        entityType="deal"
+        entityId={teamMemberModal.dealId}
+        currentTeamIds={teamMemberModal.teamIds}
+      />
+
+      {/* Add Note Modal */}
+      <AddNoteModal
+        open={noteModal.open}
+        onClose={() => setNoteModal({ open: false, dealId: null })}
+        entityType="deal"
+        entityId={noteModal.dealId}
+      />
     </div>
   );
 }
