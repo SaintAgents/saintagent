@@ -289,9 +289,9 @@ export default function UserManagement() {
       </div>
 
       {/* Users Table */}
-      <Card>
-        <CardHeader className="bg-purple-100 p-6 flex flex-row items-center justify-between">
-          <CardTitle>User Directory</CardTitle>
+      <Card className="bg-slate-800/80">
+        <CardHeader className="p-6 flex flex-row items-center justify-between">
+          <CardTitle className="text-slate-100">User Directory</CardTitle>
           <Tabs value={sortOrder} onValueChange={setSortOrder} className="w-auto">
             <TabsList className="h-8">
               <TabsTrigger value="date" className="text-xs px-3 gap-1">
@@ -306,65 +306,65 @@ export default function UserManagement() {
             </TabsList>
           </Tabs>
         </CardHeader>
-        <CardContent className="bg-purple-100 pt-0 p-6">
+        <CardContent className="pt-0 p-6">
           <ScrollArea className="h-[600px]">
             <div className="space-y-2">
               {isLoading && (
-                <div className="text-center py-8 text-slate-500">Loading users...</div>
+                <div className="text-center py-8 text-slate-400">Loading users...</div>
               )}
               {!isLoading && filteredProfiles.length === 0 && (
-                <div className="text-center py-8 text-slate-500">No users found</div>
+                <div className="text-center py-8 text-slate-400">No users found</div>
               )}
               {filteredProfiles.map((profile) =>
               <div
                 key={profile.id}
-                className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                className="flex items-center gap-4 p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors">
 
                   <Avatar 
-                    className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-violet-400 transition-all"
+                    className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-emerald-400 transition-all"
                     data-user-id={profile.user_id}
                   >
                     <AvatarImage src={profile.avatar_url} />
-                    <AvatarFallback className="bg-transparent rounded-full flex h-full w-full items-center justify-center">{profile.display_name?.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-slate-600 text-slate-200 rounded-full flex h-full w-full items-center justify-center">{profile.display_name?.charAt(0)}</AvatarFallback>
                   </Avatar>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-slate-100">
                         {profile.display_name}
                         {profile.sa_number && <span className="text-slate-400 font-normal ml-1.5">SA#{profile.sa_number}</span>}
                       </p>
                       {profile.leader_tier === 'verified144k' &&
-                    <Badge className="bg-amber-100 text-amber-700">144K Leader</Badge>
+                    <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">144K Leader</Badge>
                     }
                       {profile.leader_tier === 'candidate' &&
-                    <Badge variant="outline" className="bg-purple-100 text-foreground px-2.5 py-0.5 text-xs font-semibold rounded-md inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">Candidate</Badge>
+                    <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/30">Candidate</Badge>
                     }
                     </div>
-                    <p className="text-sm text-slate-500">@{profile.handle} • {profile.user_id}</p>
+                    <p className="text-sm text-slate-400">@{profile.handle} • {profile.user_id}</p>
                   </div>
 
                   <div className="flex items-center gap-4 text-sm">
                     <div className="text-center min-w-[80px]">
-                      <p className="font-semibold text-slate-900 flex items-center justify-center gap-1">
+                      <p className="font-semibold text-slate-200 flex items-center justify-center gap-1">
                         <Calendar className="w-3 h-3 text-slate-400" />
                         {profile.created_date ? new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '-'}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {profile.created_date ? formatDistanceToNow(new Date(profile.created_date), { addSuffix: true }) : 'Joined'}
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="font-semibold text-slate-900">{profile.ggg_balance?.toFixed(2) || 0}</p>
-                      <p className="text-xs text-slate-500">GGG</p>
+                      <p className="font-semibold text-slate-200">{profile.ggg_balance?.toFixed(2) || 0}</p>
+                      <p className="text-xs text-slate-400">GGG</p>
                     </div>
                     <div className="text-center">
-                      <p className="font-semibold text-slate-900 capitalize">{profile.rank_code || 'seeker'}</p>
-                      <p className="text-xs text-slate-500">Rank</p>
+                      <p className="font-semibold text-slate-200 capitalize">{profile.rank_code || 'seeker'}</p>
+                      <p className="text-xs text-slate-400">Rank</p>
                     </div>
                     <div className={cn(
                     "w-2 h-2 rounded-full",
-                    profile.status === 'online' ? "bg-emerald-500" : "bg-slate-300"
+                    profile.status === 'online' ? "bg-emerald-500" : "bg-slate-500"
                   )} />
                   </div>
 
@@ -377,7 +377,7 @@ export default function UserManagement() {
                     console.log('Manage clicked for:', profile.display_name);
                     setSelectedUser(profile);
                   }} 
-                  className="bg-purple-100 text-slate-950 px-3 text-xs font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-8">
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 px-3 text-xs font-medium h-8">
 
                     <Edit className="w-3 h-3 mr-1" />
                     Manage
