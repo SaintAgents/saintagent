@@ -888,6 +888,14 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             onClose={() => setEditingDepsTask(null)}
           />
         )}
+
+        {/* Report Generator Modal */}
+        {showReportGenerator && (
+          <ProjectReportGenerator
+            project={project}
+            onClose={() => setShowReportGenerator(false)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
