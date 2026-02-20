@@ -253,10 +253,13 @@ main {
 [data-theme='hacker'] [data-radix-menu-content],
 [data-theme='hacker'] [data-radix-popper-content-wrapper] > *,
 [data-theme='hacker'] [data-radix-select-content],
+[data-theme='hacker'] [data-radix-select-viewport],
 [data-theme='hacker'] [data-radix-dropdown-menu-content],
 [data-theme='hacker'] [data-radix-popover-content],
 [data-theme='hacker'] .popover-content,
-[data-theme='hacker'] .dropdown-content {
+[data-theme='hacker'] .dropdown-content,
+[data-theme='hacker'] [data-radix-dialog-content],
+[data-theme='hacker'] [data-state="open"][role="dialog"] {
   background: #000000 !important;
   background-color: #000000 !important;
   backdrop-filter: none !important;
@@ -266,6 +269,37 @@ main {
   max-height: 80vh !important;
   overflow-y: auto !important;
   z-index: 99999 !important;
+}
+
+/* Hacker/Dark theme - Select dropdown items must be visible */
+[data-theme='hacker'] [role="option"],
+[data-theme='hacker'] [data-radix-select-item],
+[data-theme='hacker'] [cmdk-item],
+[data-theme='dark'] [role="option"],
+[data-theme='dark'] [data-radix-select-item],
+[data-theme='dark'] [cmdk-item] {
+  background-color: #000000 !important;
+  color: #00ff00 !important;
+}
+
+[data-theme='hacker'] [role="option"][data-highlighted],
+[data-theme='hacker'] [role="option"]:hover,
+[data-theme='hacker'] [data-radix-select-item][data-highlighted],
+[data-theme='hacker'] [data-radix-select-item]:hover,
+[data-theme='hacker'] [data-state="checked"],
+[data-theme='hacker'] [aria-selected="true"] {
+  background-color: rgba(0, 255, 0, 0.2) !important;
+  color: #00ff00 !important;
+}
+
+[data-theme='dark'] [role="option"][data-highlighted],
+[data-theme='dark'] [role="option"]:hover,
+[data-theme='dark'] [data-radix-select-item][data-highlighted],
+[data-theme='dark'] [data-radix-select-item]:hover,
+[data-theme='dark'] [data-state="checked"],
+[data-theme='dark'] [aria-selected="true"] {
+  background-color: rgba(0, 255, 136, 0.2) !important;
+  color: #00ff88 !important;
 }
 
 /* Dark theme - dropdown menus must be visible */
