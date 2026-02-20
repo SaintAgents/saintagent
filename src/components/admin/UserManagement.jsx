@@ -20,7 +20,8 @@ import {
   DialogHeader,
   DialogTitle } from
 "@/components/ui/dialog";
-import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock, Recycle, Package, Star, Trash2, MessageSquare } from "lucide-react";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock, Recycle, Package, Star, Trash2, MessageSquare, UserPlus } from "lucide-react";
+import { toast } from 'sonner';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
@@ -227,12 +228,31 @@ export default function UserManagement() {
   };
 
   const [customGGGAmount, setCustomGGGAmount] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('user');
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [isInviting, setIsInviting] = useState(false);
+
+  const handleInviteUser = async () => {
+    if (!inviteEmail.trim()) return;
+    setIsInviting(true);
+    try {
+      await base44.users.inviteUser(inviteEmail.trim(), inviteRole);
+      toast.success(`Invitation sent to ${inviteEmail}`);
+      setInviteEmail('');
+      setInviteDialogOpen(false);
+    } catch (err) {
+      toast.error('Failed to invite: ' + (err.message || 'Unknown error'));
+    } finally {
+      setIsInviting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
       {/* Search & Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-violet-100 text-card-foreground rounded-xl border shadow col-span-3">
+        <Card className="bg-violet-100 text-card-foreground rounded-xl border shadow col-span-2">
           <CardContent className="pt-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -241,8 +261,18 @@ export default function UserManagement() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search users by name, handle, or email..."
                 className="pl-10" />
-
             </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="bg-emerald-100 pt-6 p-6 text-center">
+            <Button 
+              onClick={() => setInviteDialogOpen(true)}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+            >
+              <UserPlus className="w-4 h-4" />
+              Invite User
+            </Button>
           </CardContent>
         </Card>
         <Card>
@@ -358,6 +388,53 @@ export default function UserManagement() {
           </ScrollArea>
         </CardContent>
       </Card>
+
+      {/* Invite User Modal */}
+      <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UserPlus className="w-5 h-5 text-emerald-600" />
+              Invite New User
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div>
+              <label className="text-sm font-medium text-slate-700 mb-2 block">Email Address</label>
+              <Input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="user@example.com"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700 mb-2 block">Role</label>
+              <Select value={inviteRole} onValueChange={setInviteRole}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setInviteDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleInviteUser}
+                disabled={!inviteEmail.trim() || isInviting}
+                className="bg-emerald-600 hover:bg-emerald-700"
+              >
+                {isInviting ? 'Sending...' : 'Send Invitation'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* User Management Modal */}
       <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
