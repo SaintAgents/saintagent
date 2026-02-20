@@ -32,19 +32,61 @@ export default function Broadcast() {
     queryFn: () => base44.entities.Broadcast.list('-scheduled_time', 100)
   });
 
-  const rsvpMutation = useMutation({
-    mutationFn: async ({ broadcastId, isRsvp }) => {
+  const interestedMutation = useMutation({
+    mutationFn: async ({ broadcastId, isCurrentlyInterested }) => {
       const broadcast = broadcasts.find(b => b.id === broadcastId);
       if (!broadcast) return;
       
-      const currentRsvps = broadcast.rsvp_user_ids || [];
-      const newRsvps = isRsvp 
-        ? [...currentRsvps, currentUser.email]
-        : currentRsvps.filter(id => id !== currentUser.email);
+      const currentInterested = broadcast.interested_user_ids || [];
+      const currentGoing = broadcast.going_user_ids || [];
+      
+      let newInterested;
+      let newGoing = currentGoing;
+      
+      if (isCurrentlyInterested) {
+        // Remove from interested
+        newInterested = currentInterested.filter(id => id !== currentUser.email);
+      } else {
+        // Add to interested, remove from going if present
+        newInterested = [...currentInterested.filter(id => id !== currentUser.email), currentUser.email];
+        newGoing = currentGoing.filter(id => id !== currentUser.email);
+      }
       
       return base44.entities.Broadcast.update(broadcastId, {
-        rsvp_user_ids: newRsvps,
-        rsvp_count: newRsvps.length
+        interested_user_ids: newInterested,
+        interested_count: newInterested.length,
+        going_user_ids: newGoing,
+        going_count: newGoing.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['broadcasts'] })
+  });
+
+  const goingMutation = useMutation({
+    mutationFn: async ({ broadcastId, isCurrentlyGoing }) => {
+      const broadcast = broadcasts.find(b => b.id === broadcastId);
+      if (!broadcast) return;
+      
+      const currentInterested = broadcast.interested_user_ids || [];
+      const currentGoing = broadcast.going_user_ids || [];
+      
+      let newGoing;
+      let newInterested = currentInterested;
+      
+      if (isCurrentlyGoing) {
+        // Remove from going
+        newGoing = currentGoing.filter(id => id !== currentUser.email);
+      } else {
+        // Add to going, remove from interested if present
+        newGoing = [...currentGoing.filter(id => id !== currentUser.email), currentUser.email];
+        newInterested = currentInterested.filter(id => id !== currentUser.email);
+      }
+      
+      return base44.entities.Broadcast.update(broadcastId, {
+        going_user_ids: newGoing,
+        going_count: newGoing.length,
+        interested_user_ids: newInterested,
+        interested_count: newInterested.length
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['broadcasts'] })
@@ -64,8 +106,12 @@ export default function Broadcast() {
 
   const isAdmin = currentUser?.role === 'admin';
 
-  const handleRsvp = (broadcastId, isCurrentlyRsvp) => {
-    rsvpMutation.mutate({ broadcastId, isRsvp: !isCurrentlyRsvp });
+  const handleInterested = (broadcastId, isCurrentlyInterested) => {
+    interestedMutation.mutate({ broadcastId, isCurrentlyInterested });
+  };
+
+  const handleGoing = (broadcastId, isCurrentlyGoing) => {
+    goingMutation.mutate({ broadcastId, isCurrentlyGoing });
   };
 
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg";
@@ -219,7 +265,8 @@ export default function Broadcast() {
                   key={broadcast.id}
                   broadcast={broadcast}
                   currentUser={currentUser}
-                  onRsvp={handleRsvp}
+                  onInterested={handleInterested}
+                  onGoing={handleGoing}
                   isAdmin={isAdmin}
                 />
               ))
