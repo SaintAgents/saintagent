@@ -713,6 +713,55 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
               )}
             </TabsContent>
 
+            {/* Time Tracking Tab */}
+            <TabsContent value="time" className="mt-4 space-y-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Timer className="w-5 h-5 text-violet-500" />
+                    <h4 className="font-medium text-slate-900 dark:text-white">Time by Task</h4>
+                  </div>
+                  <TimeTrackingSummary 
+                    timeEntries={timeEntries} 
+                    tasks={tasks} 
+                    groupBy="task" 
+                  />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users className="w-5 h-5 text-blue-500" />
+                    <h4 className="font-medium text-slate-900 dark:text-white">Time by Team Member</h4>
+                  </div>
+                  <TimeTrackingSummary 
+                    timeEntries={timeEntries} 
+                    tasks={tasks} 
+                    groupBy="user" 
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Total Summary */}
+              <Card className="bg-violet-50 dark:bg-violet-900/20 border-violet-200 dark:border-violet-800">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm text-slate-600 dark:text-slate-400">Total Time Logged</div>
+                      <div className="text-2xl font-bold text-violet-600 dark:text-violet-400">
+                        {(() => {
+                          const totalMins = timeEntries.filter(te => !te.is_running).reduce((sum, te) => sum + (te.duration_minutes || 0), 0);
+                          return `${Math.floor(totalMins / 60)}h ${totalMins % 60}m`;
+                        })()}
+                      </div>
+                    </div>
+                    <Clock className="w-10 h-10 text-violet-400" />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             {/* Comments Tab */}
             <TabsContent value="comments" className="mt-4 space-y-3">
               <div className="flex gap-2">
