@@ -1,5 +1,67 @@
 css
 /* =====================================================
+   GLOBAL BUTTON TEXT - ALL THEMES
+   ===================================================== */
+
+/* CRITICAL: Colored background buttons ALWAYS have white text - ALL themes */
+button.bg-violet-600, button.bg-violet-700,
+button.bg-purple-600, button.bg-purple-700,
+button.bg-blue-600, button.bg-blue-700,
+button.bg-green-600, button.bg-green-700,
+button.bg-emerald-600, button.bg-emerald-700,
+button.bg-red-600, button.bg-red-700,
+button.bg-amber-600, button.bg-amber-700,
+button.bg-indigo-600, button.bg-indigo-700,
+button.bg-pink-600, button.bg-pink-700,
+button.bg-slate-800, button.bg-slate-900,
+.bg-violet-600, .bg-violet-700,
+.bg-purple-600, .bg-purple-700,
+.bg-blue-600, .bg-blue-700,
+.bg-green-600, .bg-green-700,
+.bg-emerald-600, .bg-emerald-700,
+.bg-red-600, .bg-red-700,
+.bg-amber-600, .bg-amber-700,
+.bg-indigo-600, .bg-indigo-700,
+.bg-pink-600, .bg-pink-700,
+.bg-slate-800, .bg-slate-900,
+[class*="bg-violet-6"], [class*="bg-violet-7"],
+[class*="bg-purple-6"], [class*="bg-purple-7"],
+[class*="bg-blue-6"], [class*="bg-blue-7"],
+[class*="bg-green-6"], [class*="bg-green-7"],
+[class*="bg-emerald-6"], [class*="bg-emerald-7"] {
+  color: #ffffff !important;
+}
+
+button.bg-violet-600 *, button.bg-violet-700 *,
+button.bg-purple-600 *, button.bg-purple-700 *,
+button.bg-blue-600 *, button.bg-blue-700 *,
+button.bg-green-600 *, button.bg-green-700 *,
+button.bg-emerald-600 *, button.bg-emerald-700 *,
+button.bg-red-600 *, button.bg-red-700 *,
+button.bg-amber-600 *, button.bg-amber-700 *,
+button.bg-indigo-600 *, button.bg-indigo-700 *,
+button.bg-pink-600 *, button.bg-pink-700 *,
+button.bg-slate-800 *, button.bg-slate-900 *,
+.bg-violet-600 *, .bg-violet-700 *,
+.bg-purple-600 *, .bg-purple-700 *,
+.bg-blue-600 *, .bg-blue-700 *,
+.bg-green-600 *, .bg-green-700 *,
+.bg-emerald-600 *, .bg-emerald-700 *,
+[class*="bg-violet-6"] *, [class*="bg-violet-7"] *,
+[class*="bg-purple-6"] *, [class*="bg-purple-7"] *,
+[class*="bg-blue-6"] *, [class*="bg-blue-7"] *,
+[class*="bg-green-6"] *, [class*="bg-green-7"] *,
+[class*="bg-emerald-6"] *, [class*="bg-emerald-7"] * {
+  color: #ffffff !important;
+}
+
+/* Light theme - outline/ghost buttons need dark text */
+html:not([data-theme="dark"]):not([data-theme="hacker"]) button:not([class*="bg-violet"]):not([class*="bg-purple"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-amber"]):not([class*="bg-indigo"]):not([class*="bg-pink"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]),
+html:not([data-theme="dark"]):not([data-theme="hacker"]) button:not([class*="bg-violet"]):not([class*="bg-purple"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-amber"]):not([class*="bg-indigo"]):not([class*="bg-pink"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]) * {
+  color: #1e293b;
+}
+
+/* =====================================================
    SIDE PANEL HANDLE - FORCE 32PX HEIGHT
    ===================================================== */
 
