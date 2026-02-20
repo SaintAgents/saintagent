@@ -410,6 +410,26 @@ export default function CommunityFeed() {
                       </div>
                     )}
                     {post.video_url && <video src={post.video_url} controls className="w-full rounded-lg" />}
+                    
+                    {/* Embedded YouTube/Vimeo */}
+                    {post.link_url && (post.link_url.includes('youtube.com') || post.link_url.includes('youtu.be') || post.link_url.includes('vimeo.com')) && (
+                      <div className="aspect-video rounded-lg overflow-hidden">
+                        <iframe
+                          src={
+                            post.link_url.includes('youtube.com/watch') 
+                              ? `https://www.youtube.com/embed/${new URL(post.link_url).searchParams.get('v')}`
+                              : post.link_url.includes('youtu.be')
+                              ? `https://www.youtube.com/embed/${post.link_url.split('/').pop().split('?')[0]}`
+                              : post.link_url.includes('vimeo.com')
+                              ? `https://player.vimeo.com/video/${post.link_url.split('/').pop().split('?')[0]}`
+                              : ''
+                          }
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    )}
                     {post.audio_url && <audio src={post.audio_url} controls className="w-full" />}
 
                     {/* Post Actions */}
