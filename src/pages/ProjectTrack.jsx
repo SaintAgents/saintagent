@@ -436,6 +436,23 @@ export default function ProjectTrackPage() {
           profile={profile}
         />
       )}
+
+      {/* Add Team Member Modal */}
+      <AddTeamMemberModal
+        open={teamMemberModal.open}
+        onClose={() => setTeamMemberModal({ open: false, projectId: null, teamIds: [] })}
+        entityType="project"
+        entityId={teamMemberModal.projectId}
+        currentTeamIds={teamMemberModal.teamIds}
+      />
+
+      {/* Add Note Modal */}
+      <AddNoteModal
+        open={noteModal.open}
+        onClose={() => setNoteModal({ open: false, projectId: null })}
+        entityType="project"
+        entityId={noteModal.projectId}
+      />
     </div>
   );
 }
