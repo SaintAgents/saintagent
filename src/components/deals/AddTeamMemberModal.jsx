@@ -78,18 +78,18 @@ export default function AddTeamMemberModal({ open, onClose, entityType, entityId
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
+      <DialogContent className="max-w-md max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="w-5 h-5 text-cyan-500" />
             Add Team Member
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
           {!selectedUser ? (
             <>
-              <div className="relative">
+              <div className="relative flex-shrink-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
                   placeholder="Search by name or email..."
@@ -99,8 +99,8 @@ export default function AddTeamMemberModal({ open, onClose, entityType, entityId
                 />
               </div>
 
-              <ScrollArea className="h-64">
-                <div className="space-y-2">
+              <ScrollArea className="flex-1 max-h-[50vh]">
+                <div className="space-y-2 pr-2">
                   {filteredProfiles.slice(0, 20).map(profile => (
                     <div
                       key={profile.id}

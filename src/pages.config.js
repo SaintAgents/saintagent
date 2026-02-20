@@ -62,6 +62,7 @@ import ContentStudio from './pages/ContentStudio';
 import CourseDetail from './pages/CourseDetail';
 import DailyOps from './pages/DailyOps';
 import DatingMatches from './pages/DatingMatches';
+import Deals from './pages/Deals';
 import DemoLogin from './pages/DemoLogin';
 import DemoPreview from './pages/DemoPreview';
 import EvaluationDocs from './pages/EvaluationDocs';
@@ -103,6 +104,7 @@ import Profile from './pages/Profile';
 import Profiles from './pages/Profiles';
 import ProjectCreate from './pages/ProjectCreate';
 import ProjectOnboard from './pages/ProjectOnboard';
+import ProjectTrack from './pages/ProjectTrack';
 import Projects from './pages/Projects';
 import Quests from './pages/Quests';
 import ResourceHub from './pages/ResourceHub';
@@ -118,8 +120,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import Deals from './pages/Deals';
-import ProjectTrack from './pages/ProjectTrack';
 import __Layout from './Layout.jsx';
 
 
@@ -139,6 +139,7 @@ export const PAGES = {
     "CourseDetail": CourseDetail,
     "DailyOps": DailyOps,
     "DatingMatches": DatingMatches,
+    "Deals": Deals,
     "DemoLogin": DemoLogin,
     "DemoPreview": DemoPreview,
     "EvaluationDocs": EvaluationDocs,
@@ -180,6 +181,7 @@ export const PAGES = {
     "Profiles": Profiles,
     "ProjectCreate": ProjectCreate,
     "ProjectOnboard": ProjectOnboard,
+    "ProjectTrack": ProjectTrack,
     "Projects": Projects,
     "Quests": Quests,
     "ResourceHub": ResourceHub,
@@ -195,8 +197,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "Deals": Deals,
-    "ProjectTrack": ProjectTrack,
 }
 
 export const pagesConfig = {

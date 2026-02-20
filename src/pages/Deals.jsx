@@ -88,10 +88,11 @@ export default function DealsPage() {
     const activeDeals = deals.filter(d => !['closed_won', 'closed_lost'].includes(d.stage));
     const closedWon = deals.filter(d => d.stage === 'closed_won');
     const highPriority = deals.filter(d => d.priority === 'high' && !['closed_won', 'closed_lost'].includes(d.stage));
+    // "Closing Soon" = deals in negotiation (Awaiting Execution) or proposal (Agreement Drafting) stages
     const closingSoon = deals.filter(d => {
-      if (!d.expected_close_date || ['closed_won', 'closed_lost'].includes(d.stage)) return false;
-      const closeDate = new Date(d.expected_close_date);
-      return isBefore(closeDate, addDays(new Date(), 14));
+      if (['closed_won', 'closed_lost'].includes(d.stage)) return false;
+      // Count deals in drafting/execution stages as "closing soon"
+      return d.stage === 'negotiation' || d.stage === 'proposal';
     });
     const overdueTasks = deals.filter(d => {
       if (!d.expected_close_date || ['closed_won', 'closed_lost'].includes(d.stage)) return false;
@@ -386,7 +387,13 @@ export default function DealsPage() {
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">GGT Command</h1>
           </div>
           <div className="flex items-center gap-2">
-            <Tabs value={viewMode} onValueChange={setViewMode}>
+            <Tabs value={viewMode} onValueChange={(v) => {
+              if (v === 'projects') {
+                window.location.href = '/ProjectTrack';
+              } else {
+                setViewMode(v);
+              }
+            }}>
               <TabsList className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                 <TabsTrigger value="pipeline" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Pipeline</TabsTrigger>
                 <TabsTrigger value="projects" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Projects</TabsTrigger>
