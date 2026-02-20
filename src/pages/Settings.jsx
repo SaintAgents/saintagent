@@ -404,7 +404,15 @@ export default function Settings() {
             <NotificationSettings
               settings={settings.notification_prefs}
               onChange={(newPrefs) => setSettings({ ...settings, notification_prefs: newPrefs })} />
-
+            
+            <TaskNotificationSettings
+              settings={profile?.task_notification_prefs || {}}
+              onChange={(newPrefs) => {
+                if (profile) {
+                  updateMutation.mutate({ task_notification_prefs: newPrefs });
+                }
+              }}
+            />
           </TabsContent>
 
           {/* Preferences */}
