@@ -130,10 +130,18 @@ export default function CreateBroadcastModal({ open, onClose }) {
                       </div>
                     </div>
                   `
-                }).catch(err => console.error('Email failed:', err))
-              );
+                });
+              });
 
-            await Promise.allSettled(emailPromises);
+            const results = await Promise.allSettled(emailPromises);
+            console.log('Email results:', results);
+            results.forEach((result, i) => {
+              if (result.status === 'rejected') {
+                console.error(`Email to ${selectedRecipients.profiles[i]?.user_id} failed:`, result.reason);
+              } else {
+                console.log(`Email to ${selectedRecipients.profiles[i]?.user_id} sent:`, result.value);
+              }
+            });
           }
       } catch (zoomError) {
         console.error('Failed to create Zoom meeting:', zoomError);
