@@ -16,11 +16,14 @@ import {
   X, Plus, Calendar, Users, Target, CheckCircle2, Clock, 
   MessageSquare, Paperclip, Activity, ChevronRight, Edit2,
   Trash2, Play, Pause, AlertCircle, FileText, Upload, UserPlus, Search,
-  Link2, Lock, GitBranch
+  Link2, Lock, GitBranch, BarChart3, Timer
 } from 'lucide-react';
 import { format } from 'date-fns';
 import TaskDependencyManager, { isTaskBlocked, getBlockingTasks } from './TaskDependencyManager';
 import TaskDependencyGraph from './TaskDependencyGraph';
+import TaskTimeTracker, { TimeTrackingSummary } from './TaskTimeTracker';
+import ProjectReportGenerator from './ProjectReportGenerator';
+import { useTaskNotifications } from './TaskNotificationService';
 
 const STATUS_CONFIG = {
   planned: { label: 'Planned', color: 'bg-slate-500 text-white' },
