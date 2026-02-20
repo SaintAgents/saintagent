@@ -24,7 +24,7 @@ const PIPELINE_STAGES = {
   qualification: { label: 'Negotiation', icon: MessageSquare, color: 'bg-amber-500', textColor: 'text-amber-400' },
   proposal: { label: 'Agreement Drafting', icon: FileText, color: 'bg-emerald-500', textColor: 'text-emerald-400' },
   negotiation: { label: 'Awaiting Execution', icon: Clock, color: 'bg-violet-500', textColor: 'text-violet-400' },
-  closed_won: { label: 'Complete', icon: CheckCircle2, color: 'bg-green-500', textColor: 'text-green-400' },
+  closed_won: { label: 'Complete → Funding Review', icon: CheckCircle2, color: 'bg-green-500', textColor: 'text-green-400' },
   closed_lost: { label: 'Lost', icon: Target, color: 'bg-red-500', textColor: 'text-red-400' }
 };
 
