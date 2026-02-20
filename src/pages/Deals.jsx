@@ -11,13 +11,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Plus, Search, Building2, TrendingUp, AlertTriangle, Clock, 
   CheckCircle2, ListTodo, Target, Filter, Upload,
-  Calendar, FileText, MessageSquare, ChevronRight, GripVertical
+  Calendar, FileText, MessageSquare, ChevronRight, GripVertical,
+  UserPlus, MessageSquarePlus
 } from 'lucide-react';
 import { format, isBefore, addDays } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import BackButton from '@/components/hud/BackButton.jsx';
 import DealFormModal from '@/components/deals/DealFormModal.jsx';
 import DealDetailModal from '@/components/deals/DealDetailModal.jsx';
+import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal.jsx';
+import AddNoteModal from '@/components/deals/AddNoteModal.jsx';
 
 // Pipeline stages matching the image
 const PIPELINE_STAGES = {
@@ -54,6 +57,8 @@ export default function DealsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [viewMode, setViewMode] = useState('pipeline');
+  const [teamMemberModal, setTeamMemberModal] = useState({ open: false, dealId: null, teamIds: [] });
+  const [noteModal, setNoteModal] = useState({ open: false, dealId: null });
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
