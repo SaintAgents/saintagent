@@ -31,12 +31,31 @@ const BROADCAST_TYPE_LABELS = {
 };
 
 export default function BroadcastCard({ broadcast, currentUser, onRsvp, onInterested, onGoing, isAdmin }) {
+  const [showAttendees, setShowAttendees] = useState(false);
   const isRsvp = broadcast.rsvp_user_ids?.includes(currentUser?.email);
   const isInterested = broadcast.interested_user_ids?.includes(currentUser?.email);
   const isGoing = broadcast.going_user_ids?.includes(currentUser?.email);
   const isLive = broadcast.status === 'live';
   const isPast = broadcast.status === 'ended';
   const isHost = broadcast.host_id === currentUser?.email;
+
+  // Fetch profiles for going/interested users when expanded
+  const goingIds = broadcast.going_user_ids || [];
+  const interestedIds = broadcast.interested_user_ids || [];
+  const allAttendeeIds = [...new Set([...goingIds, ...interestedIds])];
+
+  const { data: attendeeProfiles = [] } = useQuery({
+    queryKey: ['broadcastAttendees', broadcast.id, allAttendeeIds.join(',')],
+    queryFn: async () => {
+      if (allAttendeeIds.length === 0) return [];
+      const profiles = await base44.entities.UserProfile.filter({ user_id: { $in: allAttendeeIds } });
+      return profiles;
+    },
+    enabled: showAttendees && allAttendeeIds.length > 0
+  });
+
+  const goingProfiles = attendeeProfiles.filter(p => goingIds.includes(p.user_id));
+  const interestedProfiles = attendeeProfiles.filter(p => interestedIds.includes(p.user_id));
 
   return (
     <div className={cn(
