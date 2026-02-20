@@ -54,14 +54,12 @@ export default function ProjectTrackPage() {
   });
   const profile = myProfile?.[0];
 
-  // Get funded projects for current user
+  // Get funded projects (all funded projects visible to user)
   const { data: fundedProjects = [], isLoading } = useQuery({
-    queryKey: ['fundedProjects', currentUser?.email],
+    queryKey: ['fundedProjects'],
     queryFn: () => base44.entities.Project.filter({ 
-      status: 'funded',
-      owner_id: currentUser?.email 
-    }, '-created_date', 500),
-    enabled: !!currentUser?.email
+      status: 'funded'
+    }, '-created_date', 500)
   });
 
   // Calculate metrics
