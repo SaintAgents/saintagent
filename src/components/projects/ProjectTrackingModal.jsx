@@ -80,6 +80,11 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
     queryFn: () => base44.entities.ProjectAttachment.filter({ project_id: project.id }, '-created_date', 50)
   });
 
+  const { data: timeEntries = [] } = useQuery({
+    queryKey: ['projectTimeEntries', project.id],
+    queryFn: () => base44.entities.TaskTimeEntry.filter({ project_id: project.id }, '-created_date', 1000)
+  });
+
   // Fetch all profiles for team member search
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['allProfiles'],
