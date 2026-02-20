@@ -99,7 +99,6 @@ const NAV_ITEMS = [
   { id: 'missions', label: 'Missions', Icon: Zap, page: 'Missions', hint: 'Join collaborative missions and quests' },
   { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
   { id: 'projects', label: 'Projects', Icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
-  { id: 'projecttrack', label: 'Project Tracking', Icon: Target, page: 'ProjectTrack', hint: 'Track funded projects through pipeline stages' },
   { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
   { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
   { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
