@@ -274,9 +274,8 @@ export default function TopBar({
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Open advanced search modal
+    // Open advanced search modal with current query
     setAdvancedSearchOpen(true);
-    setShowResults(false);
   };
 
   const handleSearchSelect = (type, item) => {
