@@ -504,6 +504,30 @@ export default function TopBar({
               </div>
             ) : (
               <div className="py-2">
+                {/* Pages section */}
+                {filteredPages.length > 0 && (
+                  <div>
+                    <p className="px-3 py-1 text-xs font-semibold text-slate-500 uppercase">Pages</p>
+                    {filteredPages.map(page => (
+                      <button
+                        key={page.name}
+                        onClick={() => {
+                          setShowResults(false);
+                          setSearchQuery('');
+                          window.location.href = createPageUrl(page.name);
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 text-left"
+                      >
+                        <LayoutDashboard className="w-8 h-8 p-1.5 rounded-lg bg-violet-100 text-violet-600" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 truncate">{page.label}</p>
+                          <p className="text-xs text-slate-500 truncate">{page.description}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {filteredProfiles.length > 0 && (
                   <div>
                     <p className="px-3 py-1 text-xs font-semibold text-slate-500 uppercase">People</p>
