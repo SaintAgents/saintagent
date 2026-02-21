@@ -242,10 +242,10 @@ export default function TopBar({
       }).slice(0, 5)
     : [];
 
-  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name', 'bio']);
-  const filteredListings = filterResults(searchListings, ['title', 'description']);
-  const filteredMissions = filterResults(searchMissions, ['title', 'objective']);
-  const filteredCircles = filterResults(searchCircles, ['name', 'description']);
+  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name']);
+  const filteredListings = filterResults(searchListings, ['title']);
+  const filteredMissions = filterResults(searchMissions, ['title']);
+  const filteredCircles = filterResults(searchCircles, ['name']);
 
   const totalResults = filteredPages.length + filteredProfiles.length + filteredListings.length + filteredMissions.length + filteredCircles.length;
 
