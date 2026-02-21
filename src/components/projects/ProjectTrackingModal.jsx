@@ -907,6 +907,15 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
             onClose={() => setShowReportGenerator(false)}
           />
         )}
+
+        {/* Bottleneck Alert Settings Modal */}
+        {showAlertSettings && (
+          <BottleneckAlertSettings
+            project={project}
+            currentUser={currentUser}
+            onClose={() => setShowAlertSettings(false)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
