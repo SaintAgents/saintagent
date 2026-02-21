@@ -251,6 +251,26 @@ export default function SearchModal({ open, onClose, onSelect }) {
         <ScrollArea className="h-96 px-4 pb-4">
           {(
             <div className="space-y-2">
+              {/* Pages */}
+              {(tab === 'all' || tab === 'pages') && filteredPages.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Pages</h3>}
+                  {filteredPages.map(page => (
+                    <button
+                      key={page.name}
+                      onClick={() => { navigate(createPageUrl(page.name)); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <LayoutGrid className="w-10 h-10 p-2 rounded-lg bg-slate-100 text-slate-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{page.label}</p>
+                        <p className="text-sm text-slate-500">{page.description}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {(tab === 'all' || tab === 'people') && filteredProfiles.length > 0 && (
                 <div>
                   {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">People</h3>}
