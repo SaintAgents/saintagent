@@ -945,8 +945,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   name={profile?.display_name || currentUser?.full_name || 'User'}
                   size={120}
                   leaderTier={profile?.leader_tier}
-                  rpRankCode={profile?.rp_rank_code}
-                  rpPoints={profile?.rp_points || 0}
+                  rpRankCode={profile?.rp_rank_code || profile?.rank_code}
+                  rpPoints={profile?.rp_points || profile?.rank_points || 0}
                   trustScore={profile?.trust_score}
                   userId={profile?.user_id || currentUser?.email}
                   saNumber={profile?.sa_number}
