@@ -1,3 +1,4 @@
+
 // Badge definitions grouped by section
 // Badges can be earned via Quest completion, Challenge milestones, or both (Hybrid)
 
@@ -6,14 +7,6 @@ export const BADGE_SECTIONS = [
     id: 'identity',
     title: 'IDENTITY',
     items: [
-      {
-        code: 'eternal_flame',
-        label: 'Eternal Flame',
-        subtitle: 'Living Agent',
-        icon_desc: 'Golden flame in a circular base',
-        definition: 'Baseline awakening badge—signals a living agent with active inner fire and presence.',
-        iconKey: 'flame'
-      },
       {
         code: 'verified',
         label: 'Verified',
@@ -137,112 +130,6 @@ export const BADGE_SECTIONS = [
         icon_desc: 'Tree growing from open hands with laurel framing',
         definition: 'Nurtures growth and sustainability—long-term building, cultivation, and life-supporting stewardship.',
         iconKey: 'sprout'
-      },
-      {
-        code: 'first_meeting',
-        label: 'First Meeting',
-        icon_desc: 'Green handshake within circular frame',
-        definition: 'Took the first step into connection. Earned by attending or hosting your first meeting on the platform.',
-        iconKey: 'handshake',
-        rarity: 'common',
-        earnMethods: ['quest', 'automatic'],
-        questPath: 'Onboarding Quest',
-        sacredMeaning: 'Represents initial trust and willingness to engage with the community'
-      },
-      {
-        code: 'audit_expert',
-        label: 'Audit Expert',
-        icon_desc: 'Document with checkmark and magnifying glass',
-        definition: 'Master of verification and quality assurance. Earned by completing 50+ audits with high accuracy.',
-        iconKey: 'clipboard',
-        rarity: 'rare',
-        earnMethods: ['quest', 'challenge'],
-        questPath: 'Stewardship Quest line',
-        sacredMeaning: 'Represents diligence, attention to detail, and commitment to platform integrity'
-      },
-      {
-        code: 'streak_7',
-        label: '7-Day Streak',
-        icon_desc: 'Fiery star with wings and the number 7',
-        definition: 'Consistency and dedication to daily practice. Earned by logging in and completing activities for 7 consecutive days.',
-        iconKey: 'flame',
-        rarity: 'common',
-        earnMethods: ['quest', 'automatic'],
-        questPath: 'Seven Days of Coherence - Alignment Quest',
-        sacredMeaning: 'Represents momentum, discipline, and sustained engagement',
-        unlocks: ['streak_multipliers']
-      },
-      {
-        code: 'top_mentor',
-        label: 'Top Mentor',
-        icon_desc: 'Golden chalice with wings and radiating light',
-        definition: 'Guide and teacher who uplifts others. Earned by successfully mentoring 10+ members with positive testimonials.',
-        iconKey: 'trophy',
-        rarity: 'epic',
-        earnMethods: ['quest'],
-        questPath: "The Mentor's Path - Leadership Quest",
-        sacredMeaning: 'Represents wisdom shared, leadership, and service to others growth',
-        unlocks: ['mentorship_privileges', 'leadership_circles']
-      },
-      {
-        code: 'ascended_tier',
-        label: 'Ascended Tier',
-        icon_desc: 'Golden wings embracing a triangle with central gem',
-        definition: 'Reached elevated rank status. Earned by achieving Ascended rank (5,000+ RP, Trust Score 60+).',
-        iconKey: 'sparkles',
-        rarity: 'epic',
-        earnMethods: ['quest'],
-        questPath: 'The Ascension - Epic Quest',
-        sacredMeaning: 'Represents transcendence, elevated consciousness, and proven dedication',
-        unlocks: ['advanced_features', 'allocation_access']
-      },
-      {
-        code: 'social_butterfly',
-        label: 'Social Butterfly',
-        icon_desc: 'Ornate butterfly with cosmic patterns',
-        definition: 'Community connector and relationship builder. Earned by making 50+ meaningful connections, 100+ DMs sent, and being active in Global Chat.',
-        iconKey: 'users',
-        rarity: 'rare',
-        earnMethods: ['quest', 'challenge'],
-        questPath: 'Social Quest line',
-        sacredMeaning: 'Represents transformation through connection, social grace, and network weaving',
-        unlocks: ['synchronicity_priority']
-      },
-      {
-        code: 'mission_master',
-        label: 'Mission Master',
-        icon_desc: 'Compass/orb with laurel wreath and stars',
-        definition: 'Completed major platform objectives. Earned by completing 25+ quests across all categories.',
-        iconKey: 'target',
-        rarity: 'epic',
-        earnMethods: ['challenge'],
-        questPath: 'Multiple quest chains completed',
-        sacredMeaning: 'Represents purpose-driven action, goal achievement, and mastery of the pathway system',
-        unlocks: ['legendary_quest_access']
-      },
-      {
-        code: 'trust_anchor',
-        label: 'Trust Anchor',
-        icon_desc: 'Golden anchor with wreath',
-        definition: 'Pillar of reliability and integrity. Earned by maintaining 90+ Trust Score for 90 days with 100+ verified transactions.',
-        iconKey: 'shield',
-        rarity: 'epic',
-        earnMethods: ['quest'],
-        questPath: 'Trust Exemplar - Epic Quest',
-        sacredMeaning: 'Represents stability, dependability, and foundational trust within the community',
-        unlocks: ['stewardship_council', 'allocation_authority', 'dispute_resolution']
-      },
-      {
-        code: 'synchronicity_weaver',
-        label: 'Synchronicity Weaver',
-        icon_desc: 'Cosmic eye/orb with orbital patterns',
-        definition: 'Master of meaningful connections and divine timing. Earned by 20+ perfect synchronicity engine matches and facilitating major collaborative breakthroughs.',
-        iconKey: 'sparkles',
-        rarity: 'legendary',
-        earnMethods: ['quest', 'challenge'],
-        questPath: 'Hidden Synchronicity Master Quest',
-        sacredMeaning: 'Represents seeing invisible threads, orchestrating serendipity, and operating from flow state',
-        unlocks: ['permanent_synchronicity_priority', 'co_creation_fund', 'reality_weaver_status']
       },
       {
         code: 'project_contributor',
