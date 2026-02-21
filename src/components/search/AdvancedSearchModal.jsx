@@ -30,16 +30,40 @@ const TAB_CONFIG = [
   { id: 'projects', label: 'Projects', icon: Folder },
 ];
 
-// Quick action pages
-const QUICK_PAGES = [
-  { name: 'CommandDeck', label: 'Command Deck' },
-  { name: 'Messages', label: 'Messages' },
-  { name: 'Missions', label: 'Missions' },
-  { name: 'Marketplace', label: 'Marketplace' },
-  { name: 'Circles', label: 'Circles' },
-  { name: 'Events', label: 'Events' },
-  { name: 'Settings', label: 'Settings' },
+// All application pages for search
+const APP_PAGES = [
+  { name: 'CommandDeck', label: 'Command Deck', description: 'Main dashboard' },
+  { name: 'Profile', label: 'Profile', description: 'Your profile' },
+  { name: 'Messages', label: 'Messages', description: 'Direct messages' },
+  { name: 'Missions', label: 'Missions', description: 'Browse missions' },
+  { name: 'Marketplace', label: 'Marketplace', description: 'Offers & services' },
+  { name: 'Circles', label: 'Circles', description: 'Community circles' },
+  { name: 'Projects', label: 'Projects', description: 'Project management' },
+  { name: 'Deals', label: 'Deals', description: 'Deal pipeline' },
+  { name: 'CommunityFeed', label: 'Community Feed', description: 'Posts & updates' },
+  { name: 'ActivityFeed', label: 'Activity Feed', description: 'Recent activity' },
+  { name: 'Events', label: 'Events', description: 'Upcoming events' },
+  { name: 'Meetings', label: 'Meetings', description: 'Scheduled meetings' },
+  { name: 'Schedule', label: 'Schedule', description: 'Calendar view' },
+  { name: 'Broadcast', label: 'Broadcast', description: 'Live broadcasts' },
+  { name: 'News', label: 'News', description: 'Platform news' },
+  { name: 'Quests', label: 'Quests', description: 'Available quests' },
+  { name: 'Leaderboards', label: 'Leaderboards', description: 'Rankings' },
+  { name: 'Settings', label: 'Settings', description: 'App settings' },
+  { name: 'Admin', label: 'Admin', description: 'Admin panel' },
+  { name: 'Notes', label: 'Notes', description: 'Your notes' },
+  { name: 'DailyOps', label: 'Daily Ops', description: 'Daily operations' },
+  { name: 'Forum', label: 'Forum', description: 'Discussion forum' },
+  { name: 'SpiritTube', label: 'Spirit Tube', description: 'Video content' },
+  { name: 'LearningHub', label: 'Learning Hub', description: 'Courses & learning' },
+  { name: 'CRM', label: 'CRM', description: 'Contact management' },
+  { name: 'Profiles', label: 'Profiles', description: 'Browse profiles' },
+  { name: 'Matches', label: 'Matches', description: 'Your matches' },
+  { name: 'AffiliateCenter', label: 'Affiliate Center', description: 'Referral program' },
 ];
+
+// Quick action pages
+const QUICK_PAGES = APP_PAGES.slice(0, 7);
 
 export default function AdvancedSearchModal({ open, onClose, onSelect }) {
   const navigate = useNavigate();
