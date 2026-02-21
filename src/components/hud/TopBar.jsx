@@ -474,7 +474,7 @@ export default function TopBar({
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
-                if (e.target.value.trim()) setShowResults(true);
+                setShowResults(true);
               }}
               onFocus={() => {
                 setSearchFocused(true);
