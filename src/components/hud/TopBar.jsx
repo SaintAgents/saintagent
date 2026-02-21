@@ -492,7 +492,7 @@ export default function TopBar({
         {searchQuery.length > 0 && !advancedSearchOpen && (
           <div 
             className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 max-h-96 overflow-y-auto"
-            style={{ zIndex: 99999 }}
+            style={{ zIndex: 99999, pointerEvents: 'auto' }}
             onMouseDown={(e) => e.preventDefault()}
           >
             {totalResults === 0 ? (
