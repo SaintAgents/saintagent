@@ -388,6 +388,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
               {TAB_CONFIG.map(t => {
                 const Icon = t.icon;
                 const count = t.id === 'all' ? totalResults : 
+                              t.id === 'pages' ? filteredResults.pages.length :
                               t.id === 'people' ? filteredResults.profiles.length :
                               t.id === 'offers' ? filteredResults.listings.length :
                               filteredResults[t.id]?.length || 0;
