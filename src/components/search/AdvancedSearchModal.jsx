@@ -426,7 +426,10 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl p-0 max-h-[90vh] overflow-hidden">
+      <DialogContent className="sm:max-w-4xl p-0 max-h-[90vh] overflow-hidden" aria-describedby={undefined}>
+        <div className="sr-only">
+          <h2>Advanced Search</h2>
+        </div>
         {/* Search Header */}
         <div className="p-4 border-b sticky top-0 bg-white z-10">
           <div className="flex items-center gap-2">
