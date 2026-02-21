@@ -521,39 +521,39 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 min-h-0">
+        <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Filters Panel */}
           {showFilters && (
-            <div className="w-80 border-r shrink-0 flex flex-col">
-              <ScrollArea className="flex-1 p-4">
-                {/* AI Suggestions - collapsible */}
-                {showAISuggestions && (
-                  <div className="mb-4">
+            <div className="w-80 border-r shrink-0 flex flex-col max-h-[50vh] overflow-hidden">
+              <ScrollArea className="flex-1">
+                <div className="p-4 space-y-4">
+                  {/* AI Suggestions - collapsible */}
+                  {showAISuggestions && (
                     <AISuggestedFilters
                       currentUser={currentUser}
                       activeTab={tab}
                       onApplySuggestion={handleAISuggestion}
                       recentSearches={recentSearches}
                     />
-                  </div>
-                )}
+                  )}
 
-                <AdvancedSearchFilters
-                  filters={filters}
-                  onFilterChange={setFilters}
-                  onReset={resetFilters}
-                  activeTab={tab}
-                  expandedSections={expandedSections}
-                  onToggleSection={toggleSection}
-                />
+                  <AdvancedSearchFilters
+                    filters={filters}
+                    onFilterChange={setFilters}
+                    onReset={resetFilters}
+                    activeTab={tab}
+                    expandedSections={expandedSections}
+                    onToggleSection={toggleSection}
+                  />
 
-                {/* Saved Filters */}
-                <SavedFiltersPanel
-                  currentFilters={filters}
-                  onApplyFilter={setFilters}
-                  entityType={tab}
-                  currentUser={currentUser}
-                />
+                  {/* Saved Filters */}
+                  <SavedFiltersPanel
+                    currentFilters={filters}
+                    onApplyFilter={setFilters}
+                    entityType={tab}
+                    currentUser={currentUser}
+                  />
+                </div>
               </ScrollArea>
             </div>
           )}

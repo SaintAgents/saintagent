@@ -137,8 +137,7 @@ export default function AdvancedSearchFilters({
         )}
       </div>
 
-      <ScrollArea className="h-[calc(100vh-380px)] pr-2">
-        <div className="space-y-3">
+      <div className="space-y-3">
           {/* Location Filter */}
           <Collapsible 
             open={expandedSections?.includes('location')} 
@@ -610,7 +609,6 @@ export default function AdvancedSearchFilters({
             </>
           )}
         </div>
-      </ScrollArea>
 
       {/* Active Filters Display */}
       {hasActiveFilters() && (
