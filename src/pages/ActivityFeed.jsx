@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 import BackButton from '@/components/hud/BackButton';
 import { format } from 'date-fns';
+import UserActivityDashboard from '@/components/activity/UserActivityDashboard';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]' },
