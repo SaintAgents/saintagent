@@ -516,8 +516,8 @@ export default function Profile() {
                   name={profile?.display_name}
                   size={96}
                   leaderTier={profile?.leader_tier}
-                  rpRankCode={profile?.rp_rank_code}
-                  rpPoints={profile?.rp_points}
+                  rpRankCode={profile?.rp_rank_code || profile?.rank_code}
+                  rpPoints={profile?.rp_points || profile?.rank_points}
                   userId={profile?.user_id}
                   status={profile?.status}
                   saNumber={profile?.sa_number}
