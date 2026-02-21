@@ -481,15 +481,17 @@ export default function TopBar({
               onChange={(e) => {
                 const val = e.target.value;
                 setSearchQuery(val);
-                if (val.trim()) {
-                  setShowResults(true);
-                }
+                setShowResults(val.trim().length > 0);
               }}
               onFocus={() => {
                 setSearchFocused(true);
-                if (searchQuery.trim()) setShowResults(true);
+                setShowResults(searchQuery.trim().length > 0);
               }}
-              onBlur={() => setSearchFocused(false)}
+              onBlur={() => {
+                setSearchFocused(false);
+                // Delay hiding results to allow clicking on them
+                setTimeout(() => setShowResults(false), 200);
+              }}
             />
             {searchQuery && (
               <button
