@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -11,12 +11,15 @@ import { Separator } from "@/components/ui/separator";
 import { 
   Search, X, Filter, Users, ShoppingBag, Target, Calendar, 
   CircleDot, FileText, Folder, LayoutGrid, SlidersHorizontal,
-  Loader2, StickyNote, Clock, LayoutDashboard
+  Loader2, StickyNote, Clock, LayoutDashboard, Sparkles, ChevronDown
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import AdvancedSearchFilters from "./AdvancedSearchFilters";
 import SearchResultCard from "./SearchResultCard";
+import SavedFiltersPanel from "./SavedFiltersPanel";
+import SortOptionsPanel from "./SortOptionsPanel";
+import AISuggestedFilters from "./AISuggestedFilters";
 
 const TAB_CONFIG = [
   { id: 'all', label: 'All', icon: LayoutGrid },
@@ -69,16 +72,43 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
   const navigate = useNavigate();
   const [query, setQuery] = useState(initialQuery);
   const [tab, setTab] = useState('all');
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({});
+  const [expandedSections, setExpandedSections] = useState(['location']);
+  const [sortBy, setSortBy] = useState('relevance');
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [showAISuggestions, setShowAISuggestions] = useState(true);
+  const [recentSearches, setRecentSearches] = useState([]);
+
+  // Load recent searches from localStorage
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+      setRecentSearches(saved);
+    } catch {}
+  }, []);
+
+  // Save search to recent
+  const saveRecentSearch = useCallback((term) => {
+    if (!term.trim()) return;
+    const updated = [term, ...recentSearches.filter(s => s !== term)].slice(0, 10);
+    setRecentSearches(updated);
+    try { localStorage.setItem('recentSearches', JSON.stringify(updated)); } catch {}
+  }, [recentSearches]);
   
   // Sync query when initialQuery changes (e.g., when modal opens with a query)
-  React.useEffect(() => {
+  useEffect(() => {
     if (open && initialQuery) {
       setQuery(initialQuery);
     }
   }, [open, initialQuery]);
-  const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({});
-  const [expandedSections, setExpandedSections] = useState(['location']);
+
+  // Fetch current user
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 300000
+  });
 
   // Fetch all data
   const { data: profiles = [], isLoading: loadingProfiles } = useQuery({
@@ -256,32 +286,81 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
     );
   }, [query, tab]);
 
-  // Filtered results
+  // Sort function
+  const sortResults = useCallback((items, type) => {
+    if (sortBy === 'relevance' || !sortBy) return items;
+    
+    return [...items].sort((a, b) => {
+      let aVal = a[sortBy];
+      let bVal = b[sortBy];
+      
+      // Handle dates
+      if (sortBy.includes('date') || sortBy.includes('time')) {
+        aVal = new Date(aVal || 0).getTime();
+        bVal = new Date(bVal || 0).getTime();
+      }
+      
+      // Handle numbers
+      if (typeof aVal === 'number' || typeof bVal === 'number') {
+        aVal = aVal || 0;
+        bVal = bVal || 0;
+      }
+      
+      // Handle strings
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return sortOrder === 'asc' 
+          ? aVal.localeCompare(bVal)
+          : bVal.localeCompare(aVal);
+      }
+      
+      return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
+    });
+  }, [sortBy, sortOrder]);
+
+  // Filtered and sorted results
   const filteredResults = useMemo(() => ({
     pages: filteredPages,
-    profiles: applyFilters(profiles, 'profile'),
-    listings: applyFilters(listings, 'listing'),
-    missions: applyFilters(missions, 'mission'),
-    circles: applyFilters(circles, 'circle'),
-    events: applyFilters(events, 'event'),
-    posts: applyFilters(posts, 'post'),
-    projects: applyFilters(projects, 'project'),
-  }), [filteredPages, profiles, listings, missions, circles, events, posts, projects, applyFilters]);
+    profiles: sortResults(applyFilters(profiles, 'profile'), 'profile'),
+    listings: sortResults(applyFilters(listings, 'listing'), 'listing'),
+    missions: sortResults(applyFilters(missions, 'mission'), 'mission'),
+    circles: sortResults(applyFilters(circles, 'circle'), 'circle'),
+    events: sortResults(applyFilters(events, 'event'), 'event'),
+    posts: sortResults(applyFilters(posts, 'post'), 'post'),
+    projects: sortResults(applyFilters(projects, 'project'), 'project'),
+  }), [filteredPages, profiles, listings, missions, circles, events, posts, projects, applyFilters, sortResults]);
 
   const totalResults = Object.values(filteredResults).reduce((sum, arr) => sum + arr.length, 0);
 
   const handleSelect = (type, item) => {
+    if (query) saveRecentSearch(query);
     onSelect?.(type, item);
     onClose();
   };
 
   const handlePageNav = (pageName) => {
+    if (query) saveRecentSearch(query);
     navigate(createPageUrl(pageName));
     onClose();
   };
 
   const resetFilters = () => {
     setFilters({});
+    setSortBy('relevance');
+    setSortOrder('desc');
+  };
+
+  const handleSortChange = (newSortBy, newSortOrder) => {
+    setSortBy(newSortBy);
+    setSortOrder(newSortOrder);
+  };
+
+  const handleAISuggestion = (suggestedFilters, searchTerm) => {
+    if (suggestedFilters && Object.keys(suggestedFilters).length > 0) {
+      setFilters(prev => ({ ...prev, ...suggestedFilters }));
+    }
+    if (searchTerm) {
+      setQuery(searchTerm);
+    }
   };
 
   const toggleSection = (section) => {
@@ -428,21 +507,77 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         <div className="flex flex-1 min-h-0">
           {/* Filters Panel */}
           {showFilters && (
-            <div className="w-72 border-r p-4 shrink-0">
-              <AdvancedSearchFilters
-                filters={filters}
-                onFilterChange={setFilters}
-                onReset={resetFilters}
-                activeTab={tab}
-                expandedSections={expandedSections}
-                onToggleSection={toggleSection}
-              />
+            <div className="w-80 border-r shrink-0 flex flex-col">
+              <ScrollArea className="flex-1 p-4">
+                {/* AI Suggestions - collapsible */}
+                {showAISuggestions && (
+                  <div className="mb-4">
+                    <AISuggestedFilters
+                      currentUser={currentUser}
+                      activeTab={tab}
+                      onApplySuggestion={handleAISuggestion}
+                      recentSearches={recentSearches}
+                    />
+                  </div>
+                )}
+
+                <AdvancedSearchFilters
+                  filters={filters}
+                  onFilterChange={setFilters}
+                  onReset={resetFilters}
+                  activeTab={tab}
+                  expandedSections={expandedSections}
+                  onToggleSection={toggleSection}
+                />
+
+                {/* Saved Filters */}
+                <SavedFiltersPanel
+                  currentFilters={filters}
+                  onApplyFilter={setFilters}
+                  entityType={tab}
+                  currentUser={currentUser}
+                />
+              </ScrollArea>
             </div>
           )}
 
           {/* Results */}
           <ScrollArea className="flex-1 h-[50vh]">
             <div className="p-4">
+              {/* Sort bar */}
+              {(query || hasActiveFilters) && tab !== 'pages' && (
+                <div className="flex items-center justify-between mb-4 pb-3 border-b">
+                  <span className="text-sm text-slate-500">{totalResults} results</span>
+                  <SortOptionsPanel
+                    activeTab={tab}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    onSortChange={handleSortChange}
+                  />
+                </div>
+              )}
+
+              {/* Recent searches when empty */}
+              {!query && !hasActiveFilters && recentSearches.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs text-slate-500 mb-2 flex items-center gap-1">
+                    <Clock className="w-3 h-3" /> Recent searches
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {recentSearches.slice(0, 8).map((term, i) => (
+                      <Badge
+                        key={i}
+                        variant="secondary"
+                        className="cursor-pointer"
+                        onClick={() => setQuery(term)}
+                      >
+                        {term}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
@@ -621,10 +756,26 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
 
         {/* Footer */}
         <div className="border-t p-3 bg-slate-50 flex items-center justify-between text-xs text-slate-500">
-          <span>{totalResults} results found</span>
-          <div className="flex items-center gap-2">
-            <kbd className="px-2 py-1 bg-white rounded border">⌘K</kbd>
-            <span>to search</span>
+          <div className="flex items-center gap-3">
+            <span>{totalResults} results found</span>
+            {sortBy !== 'relevance' && (
+              <span className="text-violet-600">
+                Sorted by {sortBy.replace('_', ' ')} ({sortOrder === 'asc' ? '↑' : '↓'})
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowAISuggestions(!showAISuggestions)}
+              className={`flex items-center gap-1 ${showAISuggestions ? 'text-violet-600' : ''}`}
+            >
+              <Sparkles className="w-3 h-3" />
+              AI suggestions {showAISuggestions ? 'on' : 'off'}
+            </button>
+            <div className="flex items-center gap-2">
+              <kbd className="px-2 py-1 bg-white rounded border">⌘K</kbd>
+              <span>to search</span>
+            </div>
           </div>
         </div>
       </DialogContent>
