@@ -174,13 +174,14 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filteredMeetings = filterResults(meetings, ['title', 'host_name', 'guest_name']);
   const filteredEvents = filterResults(events, ['title', 'description', 'location']);
 
-  // Filter pages
-  const filteredPages = query 
-    ? APP_PAGES.filter(page => 
-        page.label.toLowerCase().includes(query.toLowerCase()) ||
-        page.description.toLowerCase().includes(query.toLowerCase()) ||
-        page.name.toLowerCase().includes(query.toLowerCase())
-      )
+  // Filter pages - always search when query exists
+  const filteredPages = query.trim()
+    ? APP_PAGES.filter(page => {
+        const q = query.toLowerCase().trim();
+        return page.label.toLowerCase().includes(q) ||
+          page.description.toLowerCase().includes(q) ||
+          page.name.toLowerCase().includes(q);
+      })
     : (showAll ? APP_PAGES.slice(0, 8) : []);
 
   return (
