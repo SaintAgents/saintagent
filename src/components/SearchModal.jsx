@@ -23,8 +23,11 @@ import {
   X,
   StickyNote,
   CalendarDays,
-  Clock
+  Clock,
+  LayoutGrid
 } from "lucide-react";
+import { createPageUrl } from "@/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchModal({ open, onClose, onSelect }) {
   const [query, setQuery] = useState('');
