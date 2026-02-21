@@ -465,23 +465,26 @@ export default function TopBar({
             >
               <Search className="w-4 h-4" />
             </button>
-            <Input
+            <input
+              type="text"
               placeholder={searchFocused || searchQuery ? "Search people, offers, missions..." : "Enter deep search..."}
-              className="w-full pl-10 pr-10 h-10 bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
+              className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus:bg-white md:text-sm"
               value={searchQuery}
               onChange={(e) => {
                 const val = e.target.value;
                 setSearchQuery(val);
-                setShowResults(val.trim().length > 0);
+                if (val.trim().length > 0) {
+                  setShowResults(true);
+                }
               }}
               onFocus={() => {
                 setSearchFocused(true);
-                setShowResults(searchQuery.trim().length > 0);
+                if (searchQuery.trim().length > 0) {
+                  setShowResults(true);
+                }
               }}
               onBlur={() => {
                 setSearchFocused(false);
-                // Delay hiding results to allow clicking on them
-                setTimeout(() => setShowResults(false), 200);
               }}
             />
             {searchQuery && (
