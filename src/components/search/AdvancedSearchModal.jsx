@@ -232,6 +232,11 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
           }
         });
       }
+
+      // Rank filter
+      if (filters.rank) {
+        result = result.filter(item => item.rank_code === filters.rank);
+      }
     }
 
     if (type === 'mission') {
@@ -251,6 +256,14 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
       if (filters.maxMembers && filters.maxMembers < 1000) {
         result = result.filter(item => (item.member_count || 0) <= filters.maxMembers);
       }
+      // Category filter
+      if (filters.circleCategory) {
+        result = result.filter(item => item.category === filters.circleCategory);
+      }
+      // Visibility filter
+      if (filters.visibility && filters.visibility !== 'any') {
+        result = result.filter(item => item.visibility === filters.visibility);
+      }
     }
 
     if (type === 'listing') {
@@ -264,6 +277,10 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         if (filters.priceMax !== undefined) {
           result = result.filter(item => (item.price_amount || 0) <= filters.priceMax);
         }
+      }
+      // Category filter
+      if (filters.listingCategory) {
+        result = result.filter(item => item.category === filters.listingCategory);
       }
     }
 
