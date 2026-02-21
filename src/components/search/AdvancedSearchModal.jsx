@@ -440,6 +440,40 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
                   {/* All tab - show grouped results */}
                   {tab === 'all' && (
                     <>
+                      {/* Pages section */}
+                      {filteredResults.pages.length > 0 && (
+                        <div>
+                          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <LayoutDashboard className="w-4 h-4" /> Pages ({filteredResults.pages.length})
+                          </h3>
+                          <div className="space-y-1">
+                            {filteredResults.pages.slice(0, 5).map(page => (
+                              <button
+                                key={page.name}
+                                onClick={() => handlePageNav(page.name)}
+                                className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-lg text-left"
+                              >
+                                <LayoutDashboard className="w-8 h-8 p-1.5 rounded-lg bg-violet-100 text-violet-600" />
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-slate-900 truncate">{page.label}</p>
+                                  <p className="text-xs text-slate-500 truncate">{page.description}</p>
+                                </div>
+                              </button>
+                            ))}
+                            {filteredResults.pages.length > 5 && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="w-full text-xs text-slate-500"
+                                onClick={() => setTab('pages')}
+                              >
+                                Show all {filteredResults.pages.length} pages
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       {filteredResults.profiles.length > 0 && (
                         <div>
                           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
