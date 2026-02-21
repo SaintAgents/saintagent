@@ -57,7 +57,8 @@ import {
   Medal,
   ChevronDown,
   BookOpen,
-  Folder
+  Folder,
+  BarChart3
 } from
 "lucide-react";
 
@@ -737,7 +738,7 @@ export default function Profile() {
               {isOwnProfile && (
                 <TabsTrigger value="analytics" className="text-xs sm:text-sm px-2 sm:px-3" title="Analytics">
                   <span className="hidden sm:inline">Analytics</span>
-                  <TrendingUp className="sm:hidden w-4 h-4" />
+                  <BarChart3 className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1763,7 +1764,7 @@ export default function Profile() {
 
           {isOwnProfile && (
             <TabsContent value="analytics" className="space-y-6">
-              <CreatorAnalyticsDashboard userId={profile?.user_id} />
+              <CreatorAnalyticsDashboard profile={profile} />
             </TabsContent>
           )}
 

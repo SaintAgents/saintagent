@@ -2,47 +2,43 @@ import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import { 
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, 
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
+  AreaChart, Area, Legend
 } from 'recharts';
 import { 
-  TrendingUp, Eye, Heart, MessageSquare, Target, ShoppingBag, 
-  Users, Calendar, Award, Zap, DollarSign, MapPin, Clock, 
-  FileText, Sparkles, ArrowUp, ArrowDown, Minus, Activity
-} from "lucide-react";
-import { format, subDays, startOfDay, eachDayOfInterval } from 'date-fns';
+  TrendingUp, TrendingDown, Eye, Heart, MessageSquare, Users, 
+  Target, ShoppingBag, Zap, Calendar, Clock, Globe, 
+  Sparkles, Award, BarChart3, PieChart as PieIcon
+} from 'lucide-react';
+import { format, subDays, startOfWeek, eachDayOfInterval, parseISO, isWithinInterval } from 'date-fns';
 
-const COLORS = ['#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'];
+const CHART_COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
-function MetricCard({ label, value, change, icon: Icon, trend }) {
+function StatCard({ title, value, change, icon: Icon, color = 'violet', trend }) {
+  const isPositive = change >= 0;
   return (
     <Card>
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between">
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-slate-500">{label}</p>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
+            <p className="text-sm text-slate-500">{title}</p>
+            <p className="text-2xl font-bold mt-1">{value}</p>
             {change !== undefined && (
-              <div className="flex items-center gap-1 mt-2">
-                {trend === 'up' && <ArrowUp className="w-3 h-3 text-emerald-500" />}
-                {trend === 'down' && <ArrowDown className="w-3 h-3 text-red-500" />}
-                {trend === 'neutral' && <Minus className="w-3 h-3 text-slate-400" />}
-                <span className={`text-xs font-medium ${
-                  trend === 'up' ? 'text-emerald-600' : 
-                  trend === 'down' ? 'text-red-600' : 
-                  'text-slate-500'
-                }`}>
-                  {change > 0 ? '+' : ''}{change}% vs last period
-                </span>
+              <div className={`flex items-center gap-1 text-sm mt-1 ${isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
+                {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                <span>{isPositive ? '+' : ''}{change}%</span>
+                <span className="text-slate-400 text-xs">vs last period</span>
               </div>
             )}
           </div>
-          <div className="p-3 rounded-lg bg-violet-100">
-            <Icon className="w-6 h-6 text-violet-600" />
+          <div className={`p-2 rounded-lg bg-${color}-100`}>
+            <Icon className={`w-5 h-5 text-${color}-600`} />
           </div>
         </div>
       </CardContent>
@@ -50,660 +46,574 @@ function MetricCard({ label, value, change, icon: Icon, trend }) {
   );
 }
 
-export default function CreatorAnalyticsDashboard({ userId }) {
-  const [timeRange, setTimeRange] = useState('30d');
-  const [contentType, setContentType] = useState('all');
+function ContentPerformanceCard({ item, type }) {
+  const icon = type === 'post' ? MessageSquare : type === 'mission' ? Target : ShoppingBag;
+  const Icon = icon;
+  
+  return (
+    <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+      {item.image_url ? (
+        <img src={item.image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
+      ) : (
+        <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center">
+          <Icon className="w-6 h-6 text-violet-600" />
+        </div>
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-slate-900 truncate">{item.title || item.content?.slice(0, 50) || 'Untitled'}</p>
+        <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+          <span className="flex items-center gap-1">
+            <Eye className="w-3 h-3" />
+            {item.views || item.view_count || 0}
+          </span>
+          <span className="flex items-center gap-1">
+            <Heart className="w-3 h-3" />
+            {item.likes_count || item.interested_count || 0}
+          </span>
+          <span className="flex items-center gap-1">
+            <MessageSquare className="w-3 h-3" />
+            {item.comments_count || 0}
+          </span>
+        </div>
+      </div>
+      <Badge variant="secondary" className="shrink-0 capitalize">{type}</Badge>
+    </div>
+  );
+}
+
+export default function CreatorAnalyticsDashboard({ profile }) {
+  const [timeRange, setTimeRange] = useState('30');
+  const userId = profile?.user_id;
 
   // Fetch user's content
   const { data: posts = [] } = useQuery({
-    queryKey: ['creatorPosts', userId],
-    queryFn: () => base44.entities.Post.filter({ author_id: userId }, '-created_date', 500)
+    queryKey: ['userPosts', userId],
+    queryFn: () => base44.entities.Post.filter({ author_id: userId }, '-created_date', 100),
+    enabled: !!userId
   });
 
   const { data: missions = [] } = useQuery({
-    queryKey: ['creatorMissions', userId],
-    queryFn: () => base44.entities.Mission.filter({ creator_id: userId }, '-created_date', 200)
+    queryKey: ['userMissions', userId],
+    queryFn: () => base44.entities.Mission.filter({ creator_id: userId }, '-created_date', 100),
+    enabled: !!userId
   });
 
   const { data: listings = [] } = useQuery({
-    queryKey: ['creatorListings', userId],
-    queryFn: () => base44.entities.Listing.filter({ owner_id: userId }, '-created_date', 200)
+    queryKey: ['userListings', userId],
+    queryFn: () => base44.entities.Listing.filter({ owner_id: userId }, '-created_date', 100),
+    enabled: !!userId
   });
 
-  const { data: events = [] } = useQuery({
-    queryKey: ['creatorEvents', userId],
-    queryFn: () => base44.entities.Event.filter({ creator_id: userId }, '-created_date', 200)
+  const { data: videos = [] } = useQuery({
+    queryKey: ['userVideos', userId],
+    queryFn: () => base44.entities.Video.filter({ uploader_id: userId }, '-created_date', 100),
+    enabled: !!userId
   });
 
-  const { data: broadcasts = [] } = useQuery({
-    queryKey: ['creatorBroadcasts', userId],
-    queryFn: () => base44.entities.Broadcast.filter({ host_id: userId }, '-scheduled_time', 200)
+  const { data: followers = [] } = useQuery({
+    queryKey: ['followers', userId],
+    queryFn: () => base44.entities.Follow.filter({ following_id: userId }, '-created_date', 500),
+    enabled: !!userId
   });
 
-  // Calculate date range
-  const getDaysAgo = () => {
-    switch (timeRange) {
-      case '7d': return 7;
-      case '30d': return 30;
-      case '90d': return 90;
-      default: return 30;
-    }
-  };
-
-  const startDate = startOfDay(subDays(new Date(), getDaysAgo()));
-
-  // Filter content by date and type
-  const filteredContent = useMemo(() => {
-    const filterByDate = (items) => items.filter(item => 
-      new Date(item.created_date || item.scheduled_time) >= startDate
-    );
-
-    switch (contentType) {
-      case 'posts': return filterByDate(posts);
-      case 'missions': return filterByDate(missions);
-      case 'listings': return filterByDate(listings);
-      case 'events': return filterByDate(events);
-      case 'broadcasts': return filterByDate(broadcasts);
-      default: 
-        return [
-          ...filterByDate(posts),
-          ...filterByDate(missions),
-          ...filterByDate(listings),
-          ...filterByDate(events),
-          ...filterByDate(broadcasts)
-        ];
-    }
-  }, [contentType, posts, missions, listings, events, broadcasts, startDate]);
+  const { data: allProfiles = [] } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 1000),
+    enabled: !!userId
+  });
 
   // Calculate metrics
   const metrics = useMemo(() => {
-    const totalViews = posts.reduce((sum, p) => sum + (p.view_count || 0), 0) +
-                       missions.reduce((sum, m) => sum + (m.view_count || 0), 0) +
-                       listings.reduce((sum, l) => sum + (l.view_count || 0), 0);
+    const now = new Date();
+    const rangeStart = subDays(now, parseInt(timeRange));
+    
+    // Filter content by time range
+    const filterByDate = (items) => items.filter(item => {
+      const date = parseISO(item.created_date);
+      return isWithinInterval(date, { start: rangeStart, end: now });
+    });
 
-    const totalLikes = posts.reduce((sum, p) => sum + (p.likes_count || 0), 0) +
-                       broadcasts.reduce((sum, b) => sum + (b.going_count || 0), 0);
+    const recentPosts = filterByDate(posts);
+    const recentMissions = filterByDate(missions);
+    const recentListings = filterByDate(listings);
+    const recentFollowers = filterByDate(followers);
 
+    // Total views
+    const totalViews = posts.reduce((sum, p) => sum + (p.views || p.view_count || 0), 0)
+      + videos.reduce((sum, v) => sum + (v.views || 0), 0)
+      + listings.reduce((sum, l) => sum + (l.view_count || 0), 0);
+
+    // Total engagement (likes + comments)
+    const totalLikes = posts.reduce((sum, p) => sum + (p.likes_count || 0), 0)
+      + videos.reduce((sum, v) => sum + (v.likes || 0), 0)
+      + missions.reduce((sum, m) => sum + (m.interested_count || 0), 0);
+    
     const totalComments = posts.reduce((sum, p) => sum + (p.comments_count || 0), 0);
 
-    const totalEngagement = totalLikes + totalComments;
+    // Engagement rate
+    const engagementRate = totalViews > 0 ? ((totalLikes + totalComments) / totalViews * 100).toFixed(1) : 0;
 
-    const missionParticipants = missions.reduce((sum, m) => sum + (m.participant_count || 0), 0);
-
-    const listingInterest = listings.reduce((sum, l) => sum + (l.interest_count || 0), 0);
-
-    const broadcastAttendees = broadcasts.reduce((sum, b) => sum + (b.going_count || 0), 0);
-
-    const engagementRate = totalViews > 0 ? ((totalEngagement / totalViews) * 100).toFixed(1) : 0;
+    // Content count
+    const totalContent = posts.length + missions.length + listings.length + videos.length;
+    const recentContent = recentPosts.length + recentMissions.length + recentListings.length;
 
     return {
-      totalContent: posts.length + missions.length + listings.length + events.length + broadcasts.length,
       totalViews,
       totalLikes,
       totalComments,
-      totalEngagement,
       engagementRate,
-      missionParticipants,
-      listingInterest,
-      broadcastAttendees
+      totalContent,
+      recentContent,
+      recentFollowers: recentFollowers.length,
+      totalFollowers: followers.length,
+      postsCount: posts.length,
+      missionsCount: missions.length,
+      listingsCount: listings.length,
+      videosCount: videos.length
     };
-  }, [posts, missions, listings, events, broadcasts]);
+  }, [posts, missions, listings, videos, followers, timeRange]);
 
-  // Daily activity chart data
-  const activityData = useMemo(() => {
-    const days = eachDayOfInterval({ start: startDate, end: new Date() });
-    return days.map(day => {
-      const dayStr = format(day, 'yyyy-MM-dd');
-      const dayPosts = posts.filter(p => 
-        format(new Date(p.created_date), 'yyyy-MM-dd') === dayStr
-      );
-      const dayMissions = missions.filter(m => 
-        format(new Date(m.created_date), 'yyyy-MM-dd') === dayStr
-      );
+  // Audience demographics from followers
+  const audienceData = useMemo(() => {
+    const followerIds = followers.map(f => f.follower_id);
+    const followerProfiles = allProfiles.filter(p => followerIds.includes(p.user_id));
+
+    // Region distribution
+    const regions = {};
+    followerProfiles.forEach(p => {
+      const region = p.region || 'Unknown';
+      regions[region] = (regions[region] || 0) + 1;
+    });
+    const regionData = Object.entries(regions)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+
+    // Engagement level distribution (based on activity)
+    const engagementLevels = {
+      'Highly Active': 0,
+      'Active': 0,
+      'Casual': 0,
+      'New': 0
+    };
+    
+    followerProfiles.forEach(p => {
+      const daysSinceJoin = Math.floor((Date.now() - new Date(p.created_date).getTime()) / (1000 * 60 * 60 * 24));
+      const meetingsCompleted = p.meetings_completed || 0;
+      
+      if (daysSinceJoin < 30) {
+        engagementLevels['New']++;
+      } else if (meetingsCompleted > 10) {
+        engagementLevels['Highly Active']++;
+      } else if (meetingsCompleted > 3) {
+        engagementLevels['Active']++;
+      } else {
+        engagementLevels['Casual']++;
+      }
+    });
+
+    const engagementData = Object.entries(engagementLevels)
+      .map(([name, value]) => ({ name, value }))
+      .filter(d => d.value > 0);
+
+    return { regionData, engagementData, totalFollowerProfiles: followerProfiles.length };
+  }, [followers, allProfiles]);
+
+  // Activity over time chart data
+  const activityChartData = useMemo(() => {
+    const days = parseInt(timeRange);
+    const now = new Date();
+    const interval = eachDayOfInterval({ start: subDays(now, days), end: now });
+    
+    return interval.map(date => {
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const dayPosts = posts.filter(p => p.created_date?.startsWith(dateStr)).length;
+      const dayMissions = missions.filter(m => m.created_date?.startsWith(dateStr)).length;
+      const dayListings = listings.filter(l => l.created_date?.startsWith(dateStr)).length;
+      const dayFollowers = followers.filter(f => f.created_date?.startsWith(dateStr)).length;
       
       return {
-        date: format(day, 'MMM d'),
-        posts: dayPosts.length,
-        missions: dayMissions.length,
-        engagement: dayPosts.reduce((sum, p) => sum + (p.likes_count || 0) + (p.comments_count || 0), 0)
+        date: format(date, 'MMM d'),
+        posts: dayPosts,
+        missions: dayMissions,
+        listings: dayListings,
+        followers: dayFollowers,
+        total: dayPosts + dayMissions + dayListings
       };
     });
-  }, [posts, missions, startDate]);
-
-  // Content type breakdown
-  const contentTypeData = [
-    { name: 'Posts', value: posts.length, color: COLORS[0] },
-    { name: 'Missions', value: missions.length, color: COLORS[1] },
-    { name: 'Listings', value: listings.length, color: COLORS[2] },
-    { name: 'Events', value: events.length, color: COLORS[3] },
-    { name: 'Broadcasts', value: broadcasts.length, color: COLORS[4] },
-  ].filter(d => d.value > 0);
+  }, [posts, missions, listings, followers, timeRange]);
 
   // Top performing content
   const topContent = useMemo(() => {
     const allContent = [
-      ...posts.map(p => ({ 
-        type: 'post', 
-        title: p.content?.substring(0, 50) || 'Untitled',
-        engagement: (p.likes_count || 0) + (p.comments_count || 0),
-        views: p.view_count || 0,
-        date: p.created_date
-      })),
-      ...missions.map(m => ({ 
-        type: 'mission', 
-        title: m.title,
-        engagement: m.participant_count || 0,
-        views: m.view_count || 0,
-        date: m.created_date
-      })),
-      ...listings.map(l => ({ 
-        type: 'listing', 
-        title: l.title,
-        engagement: l.interest_count || 0,
-        views: l.view_count || 0,
-        date: l.created_date
-      }))
+      ...posts.map(p => ({ ...p, type: 'post', score: (p.likes_count || 0) + (p.comments_count || 0) * 2 })),
+      ...missions.map(m => ({ ...m, type: 'mission', score: (m.participant_count || 0) * 3 + (m.interested_count || 0) })),
+      ...listings.map(l => ({ ...l, type: 'listing', score: (l.view_count || 0) + (l.inquiry_count || 0) * 5 })),
+      ...videos.map(v => ({ ...v, type: 'video', score: (v.views || 0) + (v.likes || 0) * 2 }))
     ];
-
-    return allContent
-      .filter(c => new Date(c.date) >= startDate)
-      .sort((a, b) => b.engagement - a.engagement)
-      .slice(0, 10);
-  }, [posts, missions, listings, startDate]);
-
-  // Audience demographics - regions
-  const regionData = useMemo(() => {
-    const regions = {};
     
-    // Get regions from mission participants (simplified - would need to join with UserProfile)
-    missions.forEach(m => {
-      const region = m.region || 'Unknown';
-      regions[region] = (regions[region] || 0) + (m.participant_count || 0);
-    });
+    return allContent.sort((a, b) => b.score - a.score).slice(0, 5);
+  }, [posts, missions, listings, videos]);
 
-    return Object.entries(regions)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 6);
-  }, [missions]);
-
-  // Engagement patterns by day of week
-  const dayOfWeekData = useMemo(() => {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const counts = Array(7).fill(0);
-    
-    filteredContent.forEach(item => {
-      const date = new Date(item.created_date || item.scheduled_time);
-      const day = date.getDay();
-      counts[day]++;
-    });
-
-    return days.map((day, idx) => ({ day, posts: counts[idx] }));
-  }, [filteredContent]);
+  // Content type distribution
+  const contentDistribution = [
+    { name: 'Posts', value: posts.length, color: '#8b5cf6' },
+    { name: 'Missions', value: missions.length, color: '#06b6d4' },
+    { name: 'Listings', value: listings.length, color: '#10b981' },
+    { name: 'Videos', value: videos.length, color: '#f59e0b' }
+  ].filter(d => d.value > 0);
 
   return (
     <div className="space-y-6">
-      {/* Header with filters */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Activity className="w-6 h-6 text-violet-600" />
+            <BarChart3 className="w-6 h-6 text-violet-600" />
             Creator Analytics
           </h2>
-          <p className="text-slate-500 mt-1">Track your content performance and audience insights</p>
+          <p className="text-slate-500 mt-1">Insights into your content performance and audience</p>
         </div>
-        <div className="flex gap-2">
-          <Select value={contentType} onValueChange={setContentType}>
-            <SelectTrigger className="w-40">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Content</SelectItem>
-              <SelectItem value="posts">Posts Only</SelectItem>
-              <SelectItem value="missions">Missions Only</SelectItem>
-              <SelectItem value="listings">Listings Only</SelectItem>
-              <SelectItem value="events">Events Only</SelectItem>
-              <SelectItem value="broadcasts">Broadcasts Only</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 90 days</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="w-36">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="90">Last 90 days</SelectItem>
+            <SelectItem value="365">Last year</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          label="Total Views"
-          value={metrics.totalViews.toLocaleString()}
+      {/* Overview Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard 
+          title="Total Views" 
+          value={metrics.totalViews.toLocaleString()} 
           icon={Eye}
-          change={12}
-          trend="up"
+          color="blue"
         />
-        <MetricCard
-          label="Engagement Rate"
-          value={`${metrics.engagementRate}%`}
+        <StatCard 
+          title="Engagement Rate" 
+          value={`${metrics.engagementRate}%`} 
           icon={Heart}
-          change={5}
-          trend="up"
+          color="rose"
         />
-        <MetricCard
-          label="Total Content"
+        <StatCard 
+          title="Total Followers" 
+          value={metrics.totalFollowers.toLocaleString()}
+          change={metrics.recentFollowers > 0 ? Math.round((metrics.recentFollowers / Math.max(metrics.totalFollowers - metrics.recentFollowers, 1)) * 100) : 0}
+          icon={Users}
+          color="violet"
+        />
+        <StatCard 
+          title="Content Created" 
           value={metrics.totalContent}
-          icon={FileText}
-          change={8}
-          trend="up"
-        />
-        <MetricCard
-          label="Total Engagement"
-          value={metrics.totalEngagement.toLocaleString()}
           icon={Sparkles}
-          change={-3}
-          trend="down"
+          color="amber"
         />
       </div>
 
-      {/* Charts */}
-      <Tabs defaultValue="overview">
-        <TabsList className="w-full justify-start">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="audience">Audience</TabsTrigger>
-          <TabsTrigger value="top-content">Top Content</TabsTrigger>
+      <Tabs defaultValue="performance" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="performance" className="gap-2">
+            <TrendingUp className="w-4 h-4" />
+            Performance
+          </TabsTrigger>
+          <TabsTrigger value="audience" className="gap-2">
+            <Users className="w-4 h-4" />
+            Audience
+          </TabsTrigger>
+          <TabsTrigger value="content" className="gap-2">
+            <PieIcon className="w-4 h-4" />
+            Content
+          </TabsTrigger>
         </TabsList>
 
-        {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6 mt-6">
-          {/* Activity Over Time */}
+        {/* Performance Tab */}
+        <TabsContent value="performance" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Activity Chart */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-base">Activity Over Time</CardTitle>
+                <CardDescription>Content creation and follower growth</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={activityChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <Tooltip />
+                      <Legend />
+                      <Area type="monotone" dataKey="posts" stackId="1" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} name="Posts" />
+                      <Area type="monotone" dataKey="missions" stackId="1" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.6} name="Missions" />
+                      <Area type="monotone" dataKey="listings" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} name="Listings" />
+                      <Line type="monotone" dataKey="followers" stroke="#f59e0b" strokeWidth={2} dot={false} name="New Followers" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Engagement Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600">Likes</span>
+                  <span className="font-medium">{metrics.totalLikes.toLocaleString()}</span>
+                </div>
+                <Progress value={metrics.totalLikes > 0 ? Math.min((metrics.totalLikes / (metrics.totalLikes + metrics.totalComments)) * 100, 100) : 0} className="h-2" />
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600">Comments</span>
+                  <span className="font-medium">{metrics.totalComments.toLocaleString()}</span>
+                </div>
+                <Progress value={metrics.totalComments > 0 ? Math.min((metrics.totalComments / (metrics.totalLikes + metrics.totalComments)) * 100, 100) : 0} className="h-2" />
+
+                <div className="pt-4 border-t">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-slate-600">Posts</span>
+                    <span className="font-medium">{metrics.postsCount}</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-slate-600">Missions</span>
+                    <span className="font-medium">{metrics.missionsCount}</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-slate-600">Listings</span>
+                    <span className="font-medium">{metrics.listingsCount}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600">Videos</span>
+                    <span className="font-medium">{metrics.videosCount}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Top Performing Content */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Activity Over Time</CardTitle>
-              <CardDescription>Daily content creation and engagement</CardDescription>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-500" />
+                Top Performing Content
+              </CardTitle>
+              <CardDescription>Your best content based on engagement</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={activityData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-                  <YAxis stroke="#64748b" fontSize={12} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#fff', 
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: '12px'
-                    }}
-                  />
-                  <Legend fontSize={12} />
-                  <Area 
-                    type="monotone" 
-                    dataKey="posts" 
-                    stackId="1"
-                    stroke="#8b5cf6" 
-                    fill="#8b5cf6" 
-                    fillOpacity={0.6}
-                    name="Posts"
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="missions" 
-                    stackId="1"
-                    stroke="#f59e0b" 
-                    fill="#f59e0b" 
-                    fillOpacity={0.6}
-                    name="Missions"
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="engagement" 
-                    stroke="#10b981" 
-                    fill="#10b981" 
-                    fillOpacity={0.3}
-                    name="Engagement"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {topContent.length > 0 ? (
+                <div className="space-y-3">
+                  {topContent.map((item, idx) => (
+                    <ContentPerformanceCard key={item.id || idx} item={item} type={item.type} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-500">No content yet. Start creating to see analytics!</p>
+                </div>
+              )}
             </CardContent>
           </Card>
+        </TabsContent>
 
+        {/* Audience Tab */}
+        <TabsContent value="audience" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Content Type Distribution */}
+            {/* Region Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-blue-500" />
+                  Audience by Region
+                </CardTitle>
+                <CardDescription>Where your followers are located</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {audienceData.regionData.length > 0 ? (
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={audienceData.regionData} layout="vertical">
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis type="number" tick={{ fontSize: 12 }} />
+                        <YAxis dataKey="name" type="category" tick={{ fontSize: 12 }} width={80} />
+                        <Tooltip />
+                        <Bar dataKey="value" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <div className="h-64 flex items-center justify-center">
+                    <p className="text-slate-400">Not enough data yet</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Engagement Levels */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-amber-500" />
+                  Audience Engagement Levels
+                </CardTitle>
+                <CardDescription>How engaged your followers are</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {audienceData.engagementData.length > 0 ? (
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={audienceData.engagementData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {audienceData.engagementData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <div className="h-64 flex items-center justify-center">
+                    <p className="text-slate-400">Not enough data yet</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Follower Growth */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Users className="w-5 h-5 text-violet-500" />
+                  Follower Growth
+                </CardTitle>
+                <CardDescription>New followers over time</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={activityChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="followers" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} name="New Followers" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Content Tab */}
+        <TabsContent value="content" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Content Distribution */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Content Distribution</CardTitle>
                 <CardDescription>Breakdown by content type</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={contentTypeData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {contentTypeData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Posting Patterns */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Posting Patterns</CardTitle>
-                <CardDescription>Activity by day of week</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={dayOfWeekData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="day" stroke="#64748b" fontSize={12} />
-                    <YAxis stroke="#64748b" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px'
-                      }}
-                    />
-                    <Bar dataKey="posts" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Performance by Type */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Performance by Content Type</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="p-4 rounded-lg border bg-violet-50 border-violet-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <FileText className="w-5 h-5 text-violet-600" />
-                    <p className="font-medium text-violet-900">Posts</p>
+                {contentDistribution.length > 0 ? (
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={contentDistribution}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({ name, value }) => `${name}: ${value}`}
+                        >
+                          {contentDistribution.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Total:</span>
-                      <span className="font-medium">{posts.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Avg Likes:</span>
-                      <span className="font-medium">
-                        {posts.length > 0 ? (posts.reduce((s, p) => s + (p.likes_count || 0), 0) / posts.length).toFixed(1) : 0}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Avg Comments:</span>
-                      <span className="font-medium">
-                        {posts.length > 0 ? (posts.reduce((s, p) => s + (p.comments_count || 0), 0) / posts.length).toFixed(1) : 0}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-lg border bg-amber-50 border-amber-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Target className="w-5 h-5 text-amber-600" />
-                    <p className="font-medium text-amber-900">Missions</p>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Total:</span>
-                      <span className="font-medium">{missions.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Total Joins:</span>
-                      <span className="font-medium">{missionParticipants}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Avg per Mission:</span>
-                      <span className="font-medium">
-                        {missions.length > 0 ? (missionParticipants / missions.length).toFixed(1) : 0}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-lg border bg-emerald-50 border-emerald-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <ShoppingBag className="w-5 h-5 text-emerald-600" />
-                    <p className="font-medium text-emerald-900">Listings</p>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Total:</span>
-                      <span className="font-medium">{listings.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Interest:</span>
-                      <span className="font-medium">{listingInterest}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Avg Interest:</span>
-                      <span className="font-medium">
-                        {listings.length > 0 ? (listingInterest / listings.length).toFixed(1) : 0}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Audience Tab */}
-        <TabsContent value="audience" className="space-y-6 mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Geographic Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-blue-500" />
-                  Audience by Region
-                </CardTitle>
-                <CardDescription>Where your participants are from</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {regionData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={regionData} layout="horizontal">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                      <XAxis type="number" stroke="#64748b" fontSize={12} />
-                      <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={12} width={100} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: '1px solid #e2e8f0',
-                          borderRadius: '8px'
-                        }}
-                      />
-                      <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
                 ) : (
-                  <p className="text-sm text-slate-400 text-center py-12">
-                    Not enough data yet
-                  </p>
+                  <div className="h-64 flex items-center justify-center">
+                    <p className="text-slate-400">No content created yet</p>
+                  </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Engagement by Time */}
+            {/* Content Performance Summary */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-violet-500" />
-                  Best Posting Days
-                </CardTitle>
-                <CardDescription>When your content gets the most traction</CardDescription>
+                <CardTitle className="text-base">Content Performance Summary</CardTitle>
               </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={dayOfWeekData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="day" stroke="#64748b" fontSize={12} />
-                    <YAxis stroke="#64748b" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px'
-                      }}
-                    />
-                    <Bar dataKey="posts" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
+              <CardContent className="space-y-4">
+                <div className="p-3 rounded-lg bg-violet-50 border border-violet-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-violet-700">Posts</span>
+                    <Badge className="bg-violet-100 text-violet-700">{posts.length}</Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-violet-600">
+                    <span>{posts.reduce((s, p) => s + (p.likes_count || 0), 0)} likes</span>
+                    <span>{posts.reduce((s, p) => s + (p.comments_count || 0), 0)} comments</span>
+                  </div>
+                </div>
 
-          {/* Audience Stats */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Audience Engagement Stats</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-4 rounded-lg bg-slate-50">
-                  <Users className="w-8 h-8 text-violet-500 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-slate-900">{metrics.missionParticipants}</p>
-                  <p className="text-xs text-slate-500">Mission Participants</p>
+                <div className="p-3 rounded-lg bg-cyan-50 border border-cyan-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-cyan-700">Missions</span>
+                    <Badge className="bg-cyan-100 text-cyan-700">{missions.length}</Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-cyan-600">
+                    <span>{missions.reduce((s, m) => s + (m.participant_count || 0), 0)} participants</span>
+                    <span>{missions.filter(m => m.status === 'completed').length} completed</span>
+                  </div>
                 </div>
-                <div className="text-center p-4 rounded-lg bg-slate-50">
-                  <Heart className="w-8 h-8 text-pink-500 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-slate-900">{metrics.totalLikes}</p>
-                  <p className="text-xs text-slate-500">Total Likes</p>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-slate-50">
-                  <MessageSquare className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-slate-900">{metrics.totalComments}</p>
-                  <p className="text-xs text-slate-500">Total Comments</p>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-slate-50">
-                  <Calendar className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-slate-900">{metrics.broadcastAttendees}</p>
-                  <p className="text-xs text-slate-500">Broadcast Attendees</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
-        {/* Top Content Tab */}
-        <TabsContent value="top-content" className="space-y-6 mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-violet-500" />
-                Top Performing Content
-              </CardTitle>
-              <CardDescription>Your most engaging content ranked by interaction</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {topContent.length > 0 ? (
-                <div className="space-y-3">
-                  {topContent.map((item, idx) => (
-                    <div 
-                      key={idx}
-                      className="flex items-center gap-4 p-3 rounded-lg border bg-slate-50 hover:bg-slate-100 transition-colors"
-                    >
-                      <span className="text-2xl font-bold text-slate-300 w-8 text-center">
-                        {idx + 1}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge variant="secondary" className="text-xs capitalize">
-                            {item.type}
-                          </Badge>
-                          <span className="text-xs text-slate-500">
-                            {format(new Date(item.date), 'MMM d')}
-                          </span>
-                        </div>
-                        <p className="font-medium text-slate-900 truncate">{item.title}</p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <div className="flex items-center gap-1 text-violet-600 font-medium">
-                          <Sparkles className="w-4 h-4" />
-                          {item.engagement}
-                        </div>
-                        <p className="text-xs text-slate-500">{item.views} views</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-emerald-700">Listings</span>
+                    <Badge className="bg-emerald-100 text-emerald-700">{listings.length}</Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-emerald-600">
+                    <span>{listings.reduce((s, l) => s + (l.view_count || 0), 0)} views</span>
+                    <span>{listings.filter(l => l.status === 'active').length} active</span>
+                  </div>
                 </div>
-              ) : (
-                <p className="text-center text-slate-400 py-8">
-                  No content in the selected time range
-                </p>
-              )}
-            </CardContent>
-          </Card>
 
-          {/* Recent Activity Breakdown */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-violet-200 bg-violet-50/50">
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <FileText className="w-8 h-8 text-violet-600 mx-auto mb-2" />
-                  <p className="text-3xl font-bold text-slate-900">
-                    {posts.filter(p => new Date(p.created_date) >= startDate).length}
-                  </p>
-                  <p className="text-sm text-slate-600 mt-1">Posts Created</p>
-                  <p className="text-xs text-slate-500 mt-2">
-                    {posts.length > 0 ? (
-                      posts.filter(p => new Date(p.created_date) >= startDate).reduce((s, p) => s + (p.likes_count || 0), 0) / posts.filter(p => new Date(p.created_date) >= startDate).length
-                    ).toFixed(1) : 0} avg likes
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-amber-200 bg-amber-50/50">
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <Target className="w-8 h-8 text-amber-600 mx-auto mb-2" />
-                  <p className="text-3xl font-bold text-slate-900">
-                    {missions.filter(m => new Date(m.created_date) >= startDate).length}
-                  </p>
-                  <p className="text-sm text-slate-600 mt-1">Missions Created</p>
-                  <p className="text-xs text-slate-500 mt-2">
-                    {missions.filter(m => new Date(m.created_date) >= startDate).reduce((s, m) => s + (m.participant_count || 0), 0)} total participants
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-emerald-200 bg-emerald-50/50">
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <ShoppingBag className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-                  <p className="text-3xl font-bold text-slate-900">
-                    {listings.filter(l => new Date(l.created_date) >= startDate).length}
-                  </p>
-                  <p className="text-sm text-slate-600 mt-1">Listings Created</p>
-                  <p className="text-xs text-slate-500 mt-2">
-                    {listings.filter(l => new Date(l.created_date) >= startDate).reduce((s, l) => s + (l.interest_count || 0), 0)} total interest
-                  </p>
+                <div className="p-3 rounded-lg bg-amber-50 border border-amber-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-amber-700">Videos</span>
+                    <Badge className="bg-amber-100 text-amber-700">{videos.length}</Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-amber-600">
+                    <span>{videos.reduce((s, v) => s + (v.views || 0), 0)} views</span>
+                    <span>{videos.reduce((s, v) => s + (v.likes || 0), 0)} likes</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
