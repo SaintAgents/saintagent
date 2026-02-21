@@ -233,8 +233,20 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
     return result;
   }, [query, filters]);
 
+  // Filter pages based on query
+  const filteredPages = useMemo(() => {
+    if (!query.trim()) return [];
+    const q = query.toLowerCase().trim();
+    return APP_PAGES.filter(page =>
+      page.label.toLowerCase().includes(q) ||
+      page.description.toLowerCase().includes(q) ||
+      page.name.toLowerCase().includes(q)
+    );
+  }, [query]);
+
   // Filtered results
   const filteredResults = useMemo(() => ({
+    pages: filteredPages,
     profiles: applyFilters(profiles, 'profile'),
     listings: applyFilters(listings, 'listing'),
     missions: applyFilters(missions, 'mission'),
@@ -242,7 +254,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
     events: applyFilters(events, 'event'),
     posts: applyFilters(posts, 'post'),
     projects: applyFilters(projects, 'project'),
-  }), [profiles, listings, missions, circles, events, posts, projects, applyFilters]);
+  }), [filteredPages, profiles, listings, missions, circles, events, posts, projects, applyFilters]);
 
   const totalResults = Object.values(filteredResults).reduce((sum, arr) => sum + arr.length, 0);
 
