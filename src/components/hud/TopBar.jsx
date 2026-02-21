@@ -233,12 +233,11 @@ export default function TopBar({
     ).slice(0, 5);
   };
 
-  // Filter pages based on query
-  const filteredPages = searchQuery.trim()
+  // Filter pages based on query - require at least 2 chars for pages
+  const filteredPages = searchQuery.trim().length >= 2
     ? APP_PAGES.filter(page => {
         const q = searchQuery.toLowerCase().trim();
         return page.label.toLowerCase().includes(q) ||
-          page.description.toLowerCase().includes(q) ||
           page.name.toLowerCase().includes(q);
       }).slice(0, 5)
     : [];
