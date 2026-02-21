@@ -1093,8 +1093,12 @@ export default function TopBar({
       {/* Advanced Search Modal */}
       <AdvancedSearchModal
         open={advancedSearchOpen}
-        onClose={() => setAdvancedSearchOpen(false)}
+        onClose={() => {
+          setAdvancedSearchOpen(false);
+          setSearchQuery('');
+        }}
         onSelect={handleSearchSelect}
+        initialQuery={searchQuery}
       />
     </header>
   );

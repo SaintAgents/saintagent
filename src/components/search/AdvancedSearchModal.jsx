@@ -65,10 +65,17 @@ const APP_PAGES = [
 // Quick action pages
 const QUICK_PAGES = APP_PAGES.slice(0, 7);
 
-export default function AdvancedSearchModal({ open, onClose, onSelect }) {
+export default function AdvancedSearchModal({ open, onClose, onSelect, initialQuery = '' }) {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
   const [tab, setTab] = useState('all');
+  
+  // Sync query when initialQuery changes (e.g., when modal opens with a query)
+  React.useEffect(() => {
+    if (open && initialQuery) {
+      setQuery(initialQuery);
+    }
+  }, [open, initialQuery]);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({});
   const [expandedSections, setExpandedSections] = useState(['location']);
