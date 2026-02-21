@@ -471,20 +471,16 @@ export default function TopBar({
               className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus:bg-white md:text-sm"
               value={searchQuery}
               onChange={(e) => {
-                const val = e.target.value;
-                setSearchQuery(val);
-                if (val.trim().length > 0) {
-                  setShowResults(true);
-                }
+                setSearchQuery(e.target.value);
               }}
               onFocus={() => {
                 setSearchFocused(true);
-                if (searchQuery.trim().length > 0) {
-                  setShowResults(true);
-                }
               }}
-              onBlur={() => {
-                setSearchFocused(false);
+              onBlur={(e) => {
+                // Delay hiding to allow clicks on results
+                setTimeout(() => {
+                  setSearchFocused(false);
+                }, 200);
               }}
             />
             {searchQuery && (
