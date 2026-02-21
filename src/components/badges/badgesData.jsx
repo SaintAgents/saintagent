@@ -325,8 +325,88 @@ export const BADGE_SECTIONS = [
     id: 'sigils',
     title: 'SIGILS',
     items: [
-      // Sigils are mystical/symbolic marks - coming soon
-      // These will be special earned insignia separate from achievement badges
+      {
+        code: 'eternal_flame',
+        label: 'Eternal Flame',
+        subtitle: 'Living Agent',
+        icon_desc: 'Golden flame in a circular base',
+        definition: 'Baseline awakening badge—signals a living agent with active inner fire and presence.',
+        iconKey: 'flame',
+        hasCustomImage: true
+      },
+      {
+        code: 'social_butterfly',
+        label: 'Social Butterfly',
+        subtitle: 'Connector',
+        icon_desc: 'Ornate butterfly with cosmic patterns',
+        definition: 'Community connector and relationship builder. Earned by making 50+ meaningful connections.',
+        iconKey: 'users',
+        hasCustomImage: true
+      },
+      {
+        code: 'trust_anchor',
+        label: 'Trust Anchor',
+        icon_desc: 'Golden anchor with wreath',
+        definition: 'Pillar of reliability and integrity. Earned by maintaining 90+ Trust Score for 90 days.',
+        iconKey: 'shield',
+        hasCustomImage: true
+      },
+      {
+        code: 'first_meeting',
+        label: 'First Meeting',
+        icon_desc: 'Green handshake within circular frame',
+        definition: 'Took the first step into connection. Earned by attending or hosting your first meeting.',
+        iconKey: 'handshake',
+        hasCustomImage: true
+      },
+      {
+        code: 'audit_expert',
+        label: 'Audit Expert',
+        icon_desc: 'Document with checkmark and magnifying glass',
+        definition: 'Master of verification and quality assurance. Earned by completing 50+ audits.',
+        iconKey: 'clipboard',
+        hasCustomImage: true
+      },
+      {
+        code: 'streak_7',
+        label: '7-Day Streak',
+        icon_desc: 'Fiery star with wings and the number 7',
+        definition: 'Consistency and dedication to daily practice. Earned by 7 consecutive days of activity.',
+        iconKey: 'flame',
+        hasCustomImage: true
+      },
+      {
+        code: 'top_mentor',
+        label: 'Top Mentor',
+        icon_desc: 'Golden chalice with wings and radiating light',
+        definition: 'Guide and teacher who uplifts others. Earned by successfully mentoring 10+ members.',
+        iconKey: 'trophy',
+        hasCustomImage: true
+      },
+      {
+        code: 'ascended_tier',
+        label: 'Ascended Tier',
+        icon_desc: 'Golden wings embracing a triangle with central gem',
+        definition: 'Reached elevated rank status. Earned by achieving Ascended rank.',
+        iconKey: 'sparkles',
+        hasCustomImage: true
+      },
+      {
+        code: 'mission_master',
+        label: 'Mission Master',
+        icon_desc: 'Compass/orb with laurel wreath and stars',
+        definition: 'Completed major platform objectives. Earned by completing 25+ quests.',
+        iconKey: 'target',
+        hasCustomImage: true
+      },
+      {
+        code: 'synchronicity_weaver',
+        label: 'Synchronicity Weaver',
+        icon_desc: 'Cosmic eye/orb with orbital patterns',
+        definition: 'Master of meaningful connections and divine timing.',
+        iconKey: 'sparkles',
+        hasCustomImage: true
+      }
     ]
   },
   {

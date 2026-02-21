@@ -8,12 +8,10 @@ export default function BadgesGlossaryModal({ open, onOpenChange }) {
   const [filterTab, setFilterTab] = useState('all');
   
   // Separate sections into badges and sigils
-  const badgeSections = BADGE_SECTIONS.filter(s => 
-    s.id !== 'sigils'
-  );
-  const sigilSections = BADGE_SECTIONS.filter(s => 
-    s.id === 'sigils'
-  );
+  // Badges = all sections EXCEPT 'sigils' (these have generic icons)
+  // Sigils = ONLY the 'sigils' section (these have big custom images)
+  const badgeSections = BADGE_SECTIONS.filter(s => s.id !== 'sigils');
+  const sigilSections = BADGE_SECTIONS.filter(s => s.id === 'sigils');
   
   const sectionsToShow = filterTab === 'all' ? BADGE_SECTIONS :
     filterTab === 'badges' ? badgeSections : sigilSections;
