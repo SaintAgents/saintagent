@@ -365,7 +365,7 @@ export default function Profile() {
 
   const rpPoints = profile?.rp_points || 0;
   // Use stored rank_code if available, otherwise calculate from points
-  const storedRankCode = profile?.rp_rank_code || profile?.rank_code;
+  const storedRankCode = profile?.rp_rank_code || profile?.rank_code || null;
   const calculatedRpInfo = getRPRank(rpPoints);
   const rpInfo = storedRankCode 
     ? (RP_LADDER.find(r => r.code === storedRankCode) || calculatedRpInfo)
@@ -442,7 +442,7 @@ export default function Profile() {
             
             {/* Rank Badge - Top Left - 3x Bigger */}
             <div className="absolute top-3 left-3 z-10">
-              <RankBadge code={profile?.rp_rank_code || 'seeker'} size={144} className="drop-shadow-lg" />
+              <RankBadge code={profile?.rp_rank_code || profile?.rank_code || 'seeker'} size={144} className="drop-shadow-lg" />
             </div>
             
             {/* SA# Badge - Top Right */}
@@ -1599,7 +1599,7 @@ export default function Profile() {
             <Card>
               <CardContent className="pt-6 text-center">
                 <div className="flex flex-col items-center mb-4">
-                  <RankBadge code={rpInfo?.code || 'seeker'} size={80} className="mb-2 drop-shadow-lg" />
+                  <RankBadge code={profile?.rp_rank_code || profile?.rank_code || rpInfo?.code || 'seeker'} size={80} className="mb-2 drop-shadow-lg" />
                   <RPRing rpPoints={rpPoints} className="mx-auto" />
                 </div>
                 <div className="flex items-center justify-center gap-2">
