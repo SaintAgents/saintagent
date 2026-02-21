@@ -39,18 +39,12 @@ export default function BadgesGlossaryModal({ open, onOpenChange }) {
               <div className="space-y-3">
                 {section.items.map(item => (
                   <div key={item.code} className="flex items-start gap-3 p-3 rounded-lg border bg-white">
-                    {/* Sigils always show big custom images, Badges show small generic icons */}
-                    {section.id === 'sigils' && QUEST_BADGE_IMAGES[item.code] ? (
+                    {/* Badges with custom images show BIG, Sigils show small generic icons */}
+                    {section.id !== 'sigils' && QUEST_BADGE_IMAGES[item.code] ? (
                       <img 
                         src={QUEST_BADGE_IMAGES[item.code]} 
                         alt={item.label}
                         className="w-20 h-20 object-contain flex-shrink-0"
-                      />
-                    ) : section.id !== 'sigils' && QUEST_BADGE_IMAGES[item.code] ? (
-                      <img 
-                        src={QUEST_BADGE_IMAGES[item.code]} 
-                        alt={item.label}
-                        className="w-10 h-10 object-contain flex-shrink-0"
                       />
                     ) : (
                       <BadgeIcon iconKey={item.iconKey} section={section.id} size={section.id === 'sigils' ? 40 : 22} />
