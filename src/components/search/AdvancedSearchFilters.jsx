@@ -91,7 +91,11 @@ export default function AdvancedSearchFilters({
            filters.status ||
            filters.priceMin ||
            filters.priceMax ||
-           filters.isFree;
+           filters.isFree ||
+           filters.listingCategory ||
+           filters.circleCategory ||
+           filters.visibility ||
+           filters.rank;
   };
 
   const activeFilterCount = () => {
@@ -105,6 +109,10 @@ export default function AdvancedSearchFilters({
     if (filters.dateTo) count++;
     if (filters.status && filters.status !== 'any') count++;
     if (filters.isFree) count++;
+    if (filters.listingCategory) count++;
+    if (filters.circleCategory) count++;
+    if (filters.visibility && filters.visibility !== 'any') count++;
+    if (filters.rank) count++;
     return count;
   };
 
