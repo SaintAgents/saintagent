@@ -138,10 +138,11 @@ export default function SearchModal({ open, onClose, onSelect }) {
   };
 
   const filterResults = (items, fields = null) => {
-    if (showAll && !query) return items;
-    if (!query) return [];
+    if (!query) return showAll ? items : [];
     
     const searchTerm = query.toLowerCase().trim();
+    if (!searchTerm) return showAll ? items : [];
+    
     // Remove @ prefix for handle searches but keep original for matching
     const cleanedTerm = searchTerm.replace(/^@/, '');
     
