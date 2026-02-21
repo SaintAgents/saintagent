@@ -116,6 +116,12 @@ export default function ActivityFeed() {
   const [scope, setScope] = useState('me');
   const [shareModal, setShareModal] = useState({ open: false, content: null });
 
+  // Fetch current user for the dashboard
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const activeTypes = useMemo(() => Object.entries(filters).filter(([,v]) => v).map(([k]) => k), [filters]);
 
   const { data, refetch, isFetching, isError, error } = useQuery({
