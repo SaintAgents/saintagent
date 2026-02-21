@@ -256,16 +256,7 @@ export default function TopBar({
 
   const totalResults = filteredPages.length + filteredProfiles.length + filteredListings.length + filteredMissions.length + filteredCircles.length;
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
-        setShowResults(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // No need for click outside handler - onBlur handles it
 
   const handleResultClick = (type, item) => {
     setShowResults(false);
