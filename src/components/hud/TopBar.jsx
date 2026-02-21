@@ -499,9 +499,9 @@ export default function TopBar({
           </div>
         </form>
 
-        {/* Inline Results Dropdown */}
-        {searchQuery.trim().length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 z-50 max-h-96 overflow-y-auto">
+        {/* Inline Results Dropdown - always visible when there's a query */}
+        {searchQuery.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 max-h-96 overflow-y-auto" style={{ zIndex: 99999 }}>
             {totalResults === 0 ? (
               <div className="p-6 text-center text-slate-500">
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-40" />
