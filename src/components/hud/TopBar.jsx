@@ -199,35 +199,29 @@ export default function TopBar({
     { name: 'AffiliateCenter', label: 'Affiliate Center', description: 'Referral program' },
   ];
 
-  // Search data - fetch when user types (searchQuery has content)
-  const shouldFetchSearch = searchQuery.trim().length > 0;
-  
+  // Search data - always fetch so results are instant
   const { data: searchProfiles = [] } = useQuery({
     queryKey: ['topbarSearchProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-created_date', 200),
-    enabled: shouldFetchSearch,
-    staleTime: 60000
+    staleTime: 120000
   });
 
   const { data: searchListings = [] } = useQuery({
     queryKey: ['topbarSearchListings'],
     queryFn: () => base44.entities.Listing.list('-created_date', 50),
-    enabled: shouldFetchSearch,
-    staleTime: 60000
+    staleTime: 120000
   });
 
   const { data: searchMissions = [] } = useQuery({
     queryKey: ['topbarSearchMissions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 50),
-    enabled: shouldFetchSearch,
-    staleTime: 60000
+    staleTime: 120000
   });
 
   const { data: searchCircles = [] } = useQuery({
     queryKey: ['topbarSearchCircles'],
     queryFn: () => base44.entities.Circle.list('-created_date', 50),
-    enabled: shouldFetchSearch,
-    staleTime: 60000
+    staleTime: 120000
   });
 
   // Filter results based on query
