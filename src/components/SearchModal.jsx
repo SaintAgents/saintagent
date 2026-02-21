@@ -210,8 +210,11 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </div>
 
         <Tabs value={tab} onValueChange={setTab} className="px-4">
-          <TabsList className="w-full grid grid-cols-11 gap-0.5">
+          <TabsList className="w-full grid grid-cols-12 gap-0.5">
             <TabsTrigger value="all" title="All Results" className="text-xs px-1">All</TabsTrigger>
+            <TabsTrigger value="pages" title="Pages">
+              <LayoutGrid className="w-4 h-4" />
+            </TabsTrigger>
             <TabsTrigger value="people" title="People">
               <Users className="w-4 h-4" />
             </TabsTrigger>
