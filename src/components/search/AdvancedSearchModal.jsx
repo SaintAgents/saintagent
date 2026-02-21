@@ -573,14 +573,32 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
                   {tab === 'projects' && renderResults('project', filteredResults.projects, 100)}
 
                   {/* No results */}
-                  {totalResults === 0 && (
+                  {totalResults === 0 && query && (
                     <div className="text-center py-12">
                       <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                       <p className="text-slate-500">
-                        {query || hasActiveFilters 
-                          ? 'No results found. Try adjusting your search or filters.'
-                          : 'Start typing to search across the platform.'}
+                        No results found for "{query}". Try a different search term.
                       </p>
+                    </div>
+                  )}
+                  
+                  {/* Empty state - no query */}
+                  {!query && !hasActiveFilters && totalResults === 0 && (
+                    <div className="text-center py-12">
+                      <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                      <p className="text-slate-500">Start typing to search across the platform.</p>
+                      <div className="mt-4 flex flex-wrap justify-center gap-2">
+                        {APP_PAGES.slice(0, 12).map(page => (
+                          <Badge
+                            key={page.name}
+                            variant="secondary"
+                            className="cursor-pointer"
+                            onClick={() => handlePageNav(page.name)}
+                          >
+                            {page.label}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
