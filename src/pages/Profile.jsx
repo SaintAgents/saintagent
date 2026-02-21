@@ -63,7 +63,7 @@ import {
 
 import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
-import { getRPRank } from '@/components/reputation/rpUtils';
+import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES, RankBadge } from '@/components/reputation/rankBadges';
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
@@ -364,7 +364,12 @@ export default function Profile() {
   });
 
   const rpPoints = profile?.rp_points || 0;
-  const rpInfo = getRPRank(rpPoints);
+  // Use stored rank_code if available, otherwise calculate from points
+  const storedRankCode = profile?.rp_rank_code || profile?.rank_code;
+  const calculatedRpInfo = getRPRank(rpPoints);
+  const rpInfo = storedRankCode 
+    ? (RP_LADDER.find(r => r.code === storedRankCode) || calculatedRpInfo)
+    : calculatedRpInfo;
 
   // Fetch affiliate code for the target user
   const { data: affiliateCodes = [] } = useQuery({
