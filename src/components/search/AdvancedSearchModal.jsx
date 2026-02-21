@@ -540,6 +540,30 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
                   )}
 
                   {/* Individual tabs */}
+                  {tab === 'pages' && (
+                    <div className="space-y-1">
+                      {filteredResults.pages.length > 0 ? (
+                        filteredResults.pages.map(page => (
+                          <button
+                            key={page.name}
+                            onClick={() => handlePageNav(page.name)}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-lg text-left"
+                          >
+                            <LayoutDashboard className="w-8 h-8 p-1.5 rounded-lg bg-violet-100 text-violet-600" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-slate-900 truncate">{page.label}</p>
+                              <p className="text-xs text-slate-500 truncate">{page.description}</p>
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="text-center py-8 text-slate-500">
+                          <LayoutDashboard className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                          <p>Type to search pages</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {tab === 'people' && renderResults('profile', filteredResults.profiles, 100)}
                   {tab === 'missions' && renderResults('mission', filteredResults.missions, 100)}
                   {tab === 'circles' && renderResults('circle', filteredResults.circles, 100)}
