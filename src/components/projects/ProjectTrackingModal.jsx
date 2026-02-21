@@ -23,6 +23,7 @@ import TaskDependencyManager, { isTaskBlocked, getBlockingTasks } from './TaskDe
 import TaskDependencyGraph from './TaskDependencyGraph';
 import TaskTimeTracker, { TimeTrackingSummary } from './TaskTimeTracker';
 import ProjectReportGenerator from './ProjectReportGenerator';
+import BottleneckAlertSettings from './BottleneckAlertSettings';
 import { useTaskNotifications } from './TaskNotificationService';
 
 const STATUS_CONFIG = {
