@@ -294,6 +294,15 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
               <Button 
                 size="sm" 
                 variant="outline" 
+                onClick={() => setShowAlertSettings(true)}
+                className="gap-1"
+                title="Alert Settings"
+              >
+                <AlertCircle className="w-4 h-4" />
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
                 onClick={() => setShowReportGenerator(true)}
                 className="gap-1"
               >
