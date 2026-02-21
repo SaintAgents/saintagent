@@ -60,6 +60,7 @@ import { base44 } from '@/api/base44Client';
 import MastersMessagesTicker from './MastersMessagesTicker';
 import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
 import SaintBrowser from '../browser/SaintBrowser';
+import AdvancedSearchModal from '../search/AdvancedSearchModal';
 import { formatDistanceToNow, parseISO } from "date-fns";
 
 // Theme-aware mode icons
@@ -116,6 +117,7 @@ export default function TopBar({
   const [isBoostActive, setIsBoostActive] = useState(false);
   const [datingSearching, setDatingSearching] = useState(false);
   const [browserOpen, setBrowserOpen] = useState(false);
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   const searchRef = useRef(null);
   const [currentTheme, setCurrentTheme] = useState('light');
   
@@ -233,12 +235,24 @@ export default function TopBar({
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      setShowResults(true);
-      // Also trigger the search modal callback if provided
-      if (onSearch) {
-        onSearch(searchQuery);
-      }
+    // Open advanced search modal
+    setAdvancedSearchOpen(true);
+    setShowResults(false);
+  };
+
+  const handleSearchSelect = (type, item) => {
+    if (type === 'profile') {
+      window.location.href = createPageUrl('Profile') + `?id=${item.user_id}`;
+    } else if (type === 'listing') {
+      window.location.href = createPageUrl('ListingDetail') + `?id=${item.id}`;
+    } else if (type === 'mission') {
+      window.location.href = createPageUrl('MissionDetail') + `?id=${item.id}`;
+    } else if (type === 'circle') {
+      window.location.href = createPageUrl('Circles') + `?id=${item.id}`;
+    } else if (type === 'event') {
+      window.location.href = createPageUrl('EventDetail') + `?id=${item.id}`;
+    } else if (type === 'project') {
+      window.location.href = createPageUrl('ProjectTrack') + `?id=${item.id}`;
     }
   };
 
@@ -406,12 +420,9 @@ export default function TopBar({
           )}>
             <button
               type="button"
-              onClick={() => {
-                setShowResults(true);
-                if (onSearch) onSearch('');
-              }}
+              onClick={() => setAdvancedSearchOpen(true)}
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 hover:text-violet-600 transition-colors cursor-pointer z-10"
-              title="Open search"
+              title="Open advanced search"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -1012,6 +1023,13 @@ export default function TopBar({
       
       {/* SaintBrowser Modal */}
       <SaintBrowser open={browserOpen} onClose={() => setBrowserOpen(false)} />
+      
+      {/* Advanced Search Modal */}
+      <AdvancedSearchModal
+        open={advancedSearchOpen}
+        onClose={() => setAdvancedSearchOpen(false)}
+        onSelect={handleSearchSelect}
+      />
     </header>
   );
 }
