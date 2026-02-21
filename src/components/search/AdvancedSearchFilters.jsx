@@ -24,7 +24,14 @@ const SKILL_CATEGORIES = {
   'Business': ['Marketing', 'Sales', 'Finance', 'Project Management', 'Strategy', 'Operations', 'HR'],
   'Wellness': ['Coaching', 'Meditation', 'Nutrition', 'Fitness', 'Therapy', 'Healing Arts', 'Yoga'],
   'Education': ['Teaching', 'Mentoring', 'Curriculum Design', 'Training', 'Research', 'Public Speaking'],
+  'Spiritual': ['Energy Work', 'Astrology', 'Tarot', 'Sound Healing', 'Breathwork', 'Shamanism', 'Channeling'],
 };
+
+// Circle categories
+const CIRCLE_CATEGORIES = ['spiritual', 'creative', 'business', 'wellness', 'learning', 'social', 'activism', 'other'];
+
+// Listing categories  
+const LISTING_CATEGORIES = ['mentorship', 'course', 'session', 'consulting', 'healing', 'mutual_aid', 'collaboration'];
 
 // Mission types
 const MISSION_TYPES = ['impact', 'creative', 'tech', 'community', 'wellness', 'education', 'environment', 'social'];
@@ -416,51 +423,183 @@ export default function AdvancedSearchFilters({
 
           {/* Pricing (for Offers tab) */}
           {(activeTab === 'all' || activeTab === 'offers') && (
-            <Collapsible 
-              open={expandedSections?.includes('pricing')} 
-              onOpenChange={() => onToggleSection?.('pricing')}
-            >
-              <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">💰</span>
-                  <span className="text-sm font-medium">Pricing</span>
-                </div>
-                {expandedSections?.includes('pricing') ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </CollapsibleTrigger>
-              <CollapsibleContent className="pt-2 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Checkbox 
-                    checked={filters.isFree || false}
-                    onCheckedChange={(v) => updateFilter('isFree', v)}
-                  />
-                  <Label className="text-sm">Free only</Label>
-                </div>
-                {!filters.isFree && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <Label className="text-xs">Min $</Label>
-                      <Input
-                        type="number"
-                        placeholder="0"
-                        value={filters.priceMin || ''}
-                        onChange={(e) => updateFilter('priceMin', e.target.value ? Number(e.target.value) : undefined)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Max $</Label>
-                      <Input
-                        type="number"
-                        placeholder="Any"
-                        value={filters.priceMax || ''}
-                        onChange={(e) => updateFilter('priceMax', e.target.value ? Number(e.target.value) : undefined)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
+            <>
+              <Collapsible 
+                open={expandedSections?.includes('pricing')} 
+                onOpenChange={() => onToggleSection?.('pricing')}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">💰</span>
+                    <span className="text-sm font-medium">Pricing</span>
                   </div>
-                )}
-              </CollapsibleContent>
-            </Collapsible>
+                  {expandedSections?.includes('pricing') ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Checkbox 
+                      checked={filters.isFree || false}
+                      onCheckedChange={(v) => updateFilter('isFree', v)}
+                    />
+                    <Label className="text-sm">Free only</Label>
+                  </div>
+                  {!filters.isFree && (
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label className="text-xs">Min $</Label>
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          value={filters.priceMin || ''}
+                          onChange={(e) => updateFilter('priceMin', e.target.value ? Number(e.target.value) : undefined)}
+                          className="h-8 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Max $</Label>
+                        <Input
+                          type="number"
+                          placeholder="Any"
+                          value={filters.priceMax || ''}
+                          onChange={(e) => updateFilter('priceMax', e.target.value ? Number(e.target.value) : undefined)}
+                          className="h-8 text-sm"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </CollapsibleContent>
+              </Collapsible>
+              <Separator />
+
+              {/* Listing Category */}
+              <Collapsible 
+                open={expandedSections?.includes('listingCategory')} 
+                onOpenChange={() => onToggleSection?.('listingCategory')}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🏷️</span>
+                    <span className="text-sm font-medium">Category</span>
+                  </div>
+                  {expandedSections?.includes('listingCategory') ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2">
+                  <div className="flex flex-wrap gap-1">
+                    {LISTING_CATEGORIES.map(cat => (
+                      <Badge
+                        key={cat}
+                        variant={filters.listingCategory === cat ? "default" : "outline"}
+                        className="cursor-pointer text-xs capitalize"
+                        onClick={() => updateFilter('listingCategory', filters.listingCategory === cat ? '' : cat)}
+                      >
+                        {cat.replace('_', ' ')}
+                      </Badge>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </>
+          )}
+
+          {/* Circle Category (for Circles tab) */}
+          {(activeTab === 'circles') && (
+            <>
+              <Separator />
+              <Collapsible 
+                open={expandedSections?.includes('circleCategory')} 
+                onOpenChange={() => onToggleSection?.('circleCategory')}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🏷️</span>
+                    <span className="text-sm font-medium">Category</span>
+                  </div>
+                  {expandedSections?.includes('circleCategory') ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2">
+                  <div className="flex flex-wrap gap-1">
+                    {CIRCLE_CATEGORIES.map(cat => (
+                      <Badge
+                        key={cat}
+                        variant={filters.circleCategory === cat ? "default" : "outline"}
+                        className="cursor-pointer text-xs capitalize"
+                        onClick={() => updateFilter('circleCategory', filters.circleCategory === cat ? '' : cat)}
+                      >
+                        {cat}
+                      </Badge>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </>
+          )}
+
+          {/* Visibility filter (for Circles) */}
+          {(activeTab === 'circles') && (
+            <>
+              <Separator />
+              <Collapsible 
+                open={expandedSections?.includes('visibility')} 
+                onOpenChange={() => onToggleSection?.('visibility')}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">👁️</span>
+                    <span className="text-sm font-medium">Visibility</span>
+                  </div>
+                  {expandedSections?.includes('visibility') ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2">
+                  <Select 
+                    value={filters.visibility || 'any'} 
+                    onValueChange={(v) => updateFilter('visibility', v)}
+                  >
+                    <SelectTrigger className="h-8 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="any">Any</SelectItem>
+                      <SelectItem value="public">Public</SelectItem>
+                      <SelectItem value="private">Private</SelectItem>
+                      <SelectItem value="invite_only">Invite Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </CollapsibleContent>
+              </Collapsible>
+            </>
+          )}
+
+          {/* Rank filter (for People) */}
+          {(activeTab === 'people') && (
+            <>
+              <Separator />
+              <Collapsible 
+                open={expandedSections?.includes('rank')} 
+                onOpenChange={() => onToggleSection?.('rank')}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-lg hover:bg-slate-50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">⭐</span>
+                    <span className="text-sm font-medium">Rank</span>
+                  </div>
+                  {expandedSections?.includes('rank') ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2">
+                  <div className="flex flex-wrap gap-1">
+                    {['seeker', 'initiate', 'adept', 'practitioner', 'master', 'sage', 'oracle'].map(rank => (
+                      <Badge
+                        key={rank}
+                        variant={filters.rank === rank ? "default" : "outline"}
+                        className="cursor-pointer text-xs capitalize"
+                        onClick={() => updateFilter('rank', filters.rank === rank ? '' : rank)}
+                      >
+                        {rank}
+                      </Badge>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </>
           )}
         </div>
       </ScrollArea>
@@ -516,6 +655,30 @@ export default function AdvancedSearchFilters({
               <Badge variant="secondary" className="text-xs gap-1">
                 Free only
                 <X className="w-3 h-3 cursor-pointer" onClick={() => updateFilter('isFree', false)} />
+              </Badge>
+            )}
+            {filters.listingCategory && (
+              <Badge variant="secondary" className="text-xs gap-1 capitalize">
+                {filters.listingCategory.replace('_', ' ')}
+                <X className="w-3 h-3 cursor-pointer" onClick={() => updateFilter('listingCategory', '')} />
+              </Badge>
+            )}
+            {filters.circleCategory && (
+              <Badge variant="secondary" className="text-xs gap-1 capitalize">
+                {filters.circleCategory}
+                <X className="w-3 h-3 cursor-pointer" onClick={() => updateFilter('circleCategory', '')} />
+              </Badge>
+            )}
+            {filters.visibility && filters.visibility !== 'any' && (
+              <Badge variant="secondary" className="text-xs gap-1 capitalize">
+                {filters.visibility.replace('_', ' ')}
+                <X className="w-3 h-3 cursor-pointer" onClick={() => updateFilter('visibility', 'any')} />
+              </Badge>
+            )}
+            {filters.rank && (
+              <Badge variant="secondary" className="text-xs gap-1 capitalize">
+                {filters.rank}
+                <X className="w-3 h-3 cursor-pointer" onClick={() => updateFilter('rank', '')} />
               </Badge>
             )}
           </div>
