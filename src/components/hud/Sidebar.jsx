@@ -706,7 +706,7 @@ export default function Sidebar({
               <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
               <span className="text-xs font-semibold text-violet-700">{profile.rp_points || 0} RP</span>
             </div>
-            <span className="text-xs font-medium capitalize text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
+            <span className="text-xs font-medium capitalize text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">{(profile.rp_rank_code && RP_LADDER.find(r => r.code === profile.rp_rank_code)?.title) || getRPRank(profile.rp_points || 0).title}</span>
           </div>
         )}
 
@@ -1199,7 +1199,7 @@ export default function Sidebar({
                   <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
                   <span className="text-xs font-semibold text-violet-700">{profile.rp_points || 0} RP</span>
                 </div>
-                <span className="text-xs font-medium capitalize text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">{getRPRank(profile.rp_points || 0).title}</span>
+                <span className="text-xs font-medium capitalize text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">{(profile.rp_rank_code && RP_LADDER.find(r => r.code === profile.rp_rank_code)?.title) || getRPRank(profile.rp_points || 0).title}</span>
               </div>
             )}
 
