@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { 
   Search, X, Filter, Users, ShoppingBag, Target, Calendar, 
   CircleDot, FileText, Folder, LayoutGrid, SlidersHorizontal,
-  Loader2, StickyNote, Clock
+  Loader2, StickyNote, Clock, LayoutDashboard
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
