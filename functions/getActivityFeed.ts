@@ -37,6 +37,26 @@ Deno.serve(async (req) => {
 
     const results = [];
 
+    // Announcements / News Articles
+    if (types.includes('announcements')) {
+      let recentArticles = [];
+      try {
+        recentArticles = await base44.entities.NewsArticle.filter({ is_published: true }, '-created_date', 30) || [];
+      } catch (_) {}
+      for (const a of recentArticles) {
+        if (filterByMe && a.author_id !== me.email) continue;
+        if (filterByFriends && !followingIds.has(a.author_id)) continue;
+        results.push(toEvent({
+          type: 'announcements',
+          source: a,
+          createdAt: a.published_date || a.created_date,
+          actorId: a.author_id,
+          title: a.title || 'News Update',
+          description: a.summary || a.content?.substring(0, 150) || '',
+        }));
+      }
+    }
+
     // Listings
     if (types.includes('listings')) {
       let recentListings = [];
