@@ -435,7 +435,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
                 </div>
               )}
 
-              {filteredProfiles.length === 0 && filteredListings.length === 0 && 
+              {filteredPages.length === 0 && filteredProfiles.length === 0 && filteredListings.length === 0 && 
                filteredMissions.length === 0 && filteredCircles.length === 0 && 
                filteredPosts.length === 0 && filteredProjects.length === 0 &&
                filteredDailyLogs.length === 0 && filteredNotes.length === 0 &&
