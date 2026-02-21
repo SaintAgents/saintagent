@@ -479,8 +479,11 @@ export default function TopBar({
               className="w-full pl-10 pr-10 h-10 bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
               value={searchQuery}
               onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setShowResults(true);
+                const val = e.target.value;
+                setSearchQuery(val);
+                if (val.trim()) {
+                  setShowResults(true);
+                }
               }}
               onFocus={() => {
                 setSearchFocused(true);
