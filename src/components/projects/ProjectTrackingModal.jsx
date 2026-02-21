@@ -53,6 +53,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
   const [newComment, setNewComment] = useState('');
   const [editingDepsTask, setEditingDepsTask] = useState(null);
   const [showReportGenerator, setShowReportGenerator] = useState(false);
+  const [showAlertSettings, setShowAlertSettings] = useState(false);
   const queryClient = useQueryClient();
   const { notifyTaskAssigned, notifyTaskCompleted, notifyDependencyMet } = useTaskNotifications();
 
