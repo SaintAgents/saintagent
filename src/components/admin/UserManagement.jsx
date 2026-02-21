@@ -252,7 +252,7 @@ export default function UserManagement() {
     <div className="space-y-6">
       {/* Search & Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-violet-100 text-card-foreground rounded-xl border shadow col-span-2">
+        <Card className="col-span-2">
           <CardContent className="pt-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -264,7 +264,7 @@ export default function UserManagement() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-slate-800/80">
+        <Card>
           <CardContent className="pt-6 p-6 text-center">
             <Button 
               onClick={() => setInviteDialogOpen(true)}
@@ -275,12 +275,12 @@ export default function UserManagement() {
             </Button>
           </CardContent>
         </Card>
-        <Card className="bg-slate-800/80">
+        <Card>
           <CardContent className="pt-6 p-6 text-center">
-            <p className="text-emerald-400 text-3xl font-bold">
+            <p className="text-emerald-600 text-3xl font-bold">
               {isLoading ? '...' : profiles.length}
             </p>
-            <p className="text-slate-300 mt-1 text-sm">
+            <p className="text-muted-foreground mt-1 text-sm">
               {isLoading ? 'Loading...' : 'Total Users'}
             </p>
             {error && <p className="text-red-500 text-xs mt-1">Error loading</p>}
@@ -289,9 +289,9 @@ export default function UserManagement() {
       </div>
 
       {/* Users Table */}
-      <Card className="bg-slate-800/80">
+      <Card>
         <CardHeader className="p-6 flex flex-row items-center justify-between">
-          <CardTitle className="text-slate-100">User Directory</CardTitle>
+          <CardTitle>User Directory</CardTitle>
           <Tabs value={sortOrder} onValueChange={setSortOrder} className="w-auto">
             <TabsList className="h-8">
               <TabsTrigger value="date" className="text-xs px-3 gap-1">
@@ -310,29 +310,29 @@ export default function UserManagement() {
           <ScrollArea className="h-[600px]">
             <div className="space-y-2">
               {isLoading && (
-                <div className="text-center py-8 text-slate-400">Loading users...</div>
+                <div className="text-center py-8 text-muted-foreground">Loading users...</div>
               )}
               {!isLoading && filteredProfiles.length === 0 && (
-                <div className="text-center py-8 text-slate-400">No users found</div>
+                <div className="text-center py-8 text-muted-foreground">No users found</div>
               )}
               {filteredProfiles.map((profile) =>
               <div
                 key={profile.id}
-                className="flex items-center gap-4 p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors">
+                className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
 
                   <Avatar 
                     className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-emerald-400 transition-all"
                     data-user-id={profile.user_id}
                   >
                     <AvatarImage src={profile.avatar_url} />
-                    <AvatarFallback className="bg-slate-600 text-slate-200 rounded-full flex h-full w-full items-center justify-center">{profile.display_name?.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
                   </Avatar>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-slate-100">
+                      <p className="font-medium">
                         {profile.display_name}
-                        {profile.sa_number && <span className="text-slate-400 font-normal ml-1.5">SA#{profile.sa_number}</span>}
+                        {profile.sa_number && <span className="text-muted-foreground font-normal ml-1.5">SA#{profile.sa_number}</span>}
                       </p>
                       {profile.leader_tier === 'verified144k' &&
                     <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">144K Leader</Badge>
@@ -341,26 +341,26 @@ export default function UserManagement() {
                     <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/30">Candidate</Badge>
                     }
                     </div>
-                    <p className="text-sm text-slate-400">@{profile.handle} • {profile.user_id}</p>
+                    <p className="text-sm text-muted-foreground">@{profile.handle} • {profile.user_id}</p>
                   </div>
 
                   <div className="flex items-center gap-4 text-sm">
                     <div className="text-center min-w-[80px]">
-                      <p className="font-semibold text-slate-200 flex items-center justify-center gap-1">
-                        <Calendar className="w-3 h-3 text-slate-400" />
+                      <p className="font-semibold flex items-center justify-center gap-1">
+                        <Calendar className="w-3 h-3 text-muted-foreground" />
                         {profile.created_date ? new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '-'}
                       </p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-muted-foreground">
                         {profile.created_date ? formatDistanceToNow(new Date(profile.created_date), { addSuffix: true }) : 'Joined'}
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="font-semibold text-slate-200">{profile.ggg_balance?.toFixed(2) || 0}</p>
-                      <p className="text-xs text-slate-400">GGG</p>
+                      <p className="font-semibold">{profile.ggg_balance?.toFixed(2) || 0}</p>
+                      <p className="text-xs text-muted-foreground">GGG</p>
                     </div>
                     <div className="text-center">
-                      <p className="font-semibold text-slate-200 capitalize">{profile.rank_code || 'seeker'}</p>
-                      <p className="text-xs text-slate-400">Rank</p>
+                      <p className="font-semibold capitalize">{profile.rank_code || 'seeker'}</p>
+                      <p className="text-xs text-muted-foreground">Rank</p>
                     </div>
                     <div className={cn(
                     "w-2 h-2 rounded-full",
