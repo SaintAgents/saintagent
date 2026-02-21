@@ -35,11 +35,18 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
+import { ACTIONS, GGG_TO_USD, formatGGGSmart } from '@/components/earnings/gggMatrix';
 
 function ChallengeCard({ template, userChallenges, users, completedCount, activeCount, expiredCount, onEdit, onDelete }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const getUserProfile = (userId) => users.find(u => u.user_id === userId);
+  
+  // Calculate GGG earnings based on the action from gggMatrix
+  const actionData = ACTIONS.find(a => a.key === template.target_action);
+  const gggPerAction = actionData?.base || 0;
+  const totalGggEarnings = gggPerAction * (template.target_count || 1);
+  const usdValue = totalGggEarnings * GGG_TO_USD;
 
   return (
     <Card className="overflow-hidden">
@@ -61,6 +68,24 @@ function ChallengeCard({ template, userChallenges, users, completedCount, active
                 <span>Reward: {template.reward_points} pts</span>
                 {template.reward_ggg > 0 && <span>+{template.reward_ggg} GGG</span>}
               </div>
+              {/* GGG Earnings from Matrix */}
+              {gggPerAction > 0 && (
+                <div className="flex items-center gap-3 mt-2 p-2 rounded-lg bg-amber-50 border border-amber-200">
+                  <span className="text-xs font-medium text-amber-800">
+                    💰 Earns: {formatGGGSmart(totalGggEarnings)} GGG (${usdValue.toFixed(2)})
+                  </span>
+                  <span className="text-xs text-amber-600">
+                    ({formatGGGSmart(gggPerAction)} × {template.target_count} actions)
+                  </span>
+                </div>
+              )}
+              {!actionData && template.target_action && (
+                <div className="flex items-center gap-2 mt-2 p-2 rounded-lg bg-slate-100 border border-slate-200">
+                  <span className="text-xs text-slate-500">
+                    ⚠️ Action "{template.target_action}" not in GGG matrix
+                  </span>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Button
