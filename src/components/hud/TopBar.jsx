@@ -500,7 +500,7 @@ export default function TopBar({
         </form>
 
         {/* Inline Results Dropdown */}
-        {showResults && searchQuery.trim().length > 0 && (
+        {searchQuery.trim().length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 z-50 max-h-96 overflow-y-auto">
             {totalResults === 0 ? (
               <div className="p-6 text-center text-slate-500">
