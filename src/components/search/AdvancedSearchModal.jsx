@@ -20,6 +20,7 @@ import SearchResultCard from "./SearchResultCard";
 
 const TAB_CONFIG = [
   { id: 'all', label: 'All', icon: LayoutGrid },
+  { id: 'pages', label: 'Pages', icon: LayoutDashboard },
   { id: 'people', label: 'People', icon: Users },
   { id: 'missions', label: 'Missions', icon: Target },
   { id: 'circles', label: 'Circles', icon: CircleDot },
