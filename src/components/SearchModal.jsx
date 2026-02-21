@@ -173,6 +173,15 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filteredMeetings = filterResults(meetings, ['title', 'host_name', 'guest_name']);
   const filteredEvents = filterResults(events, ['title', 'description', 'location']);
 
+  // Filter pages
+  const filteredPages = query 
+    ? APP_PAGES.filter(page => 
+        page.label.toLowerCase().includes(query.toLowerCase()) ||
+        page.description.toLowerCase().includes(query.toLowerCase()) ||
+        page.name.toLowerCase().includes(query.toLowerCase())
+      )
+    : (showAll ? APP_PAGES.slice(0, 8) : []);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl p-0 top-[120px] translate-y-0" style={{ top: '120px', transform: 'translateX(-50%)' }}>
