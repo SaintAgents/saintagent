@@ -96,6 +96,7 @@ import JournalTab from '@/components/profile/JournalTab';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import DealsTab from '@/components/deals/DealsTab.jsx';
 import ProjectsTab from '@/components/profile/ProjectsTab';
+import CreatorAnalyticsDashboard from '@/components/profile/CreatorAnalyticsDashboard';
 import {
   Tooltip,
   TooltipContent,
@@ -731,6 +732,12 @@ export default function Profile() {
                 <TabsTrigger value="projects" className="text-xs sm:text-sm px-2 sm:px-3" title="Projects">
                   <span className="hidden sm:inline">Projects</span>
                   <Folder className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
+              {isOwnProfile && (
+                <TabsTrigger value="analytics" className="text-xs sm:text-sm px-2 sm:px-3" title="Analytics">
+                  <span className="hidden sm:inline">Analytics</span>
+                  <TrendingUp className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1751,6 +1758,12 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="projects" className="space-y-6">
               <ProjectsTab currentUser={currentUser} profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
+            <TabsContent value="analytics" className="space-y-6">
+              <CreatorAnalyticsDashboard userId={profile?.user_id} />
             </TabsContent>
           )}
 
