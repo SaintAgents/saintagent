@@ -200,6 +200,11 @@ export default function ActivityFeed() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-8">
+        {/* Personal Activity Dashboard */}
+        {currentUser && scope === 'me' && (
+          <UserActivityDashboard userId={currentUser.id} userEmail={currentUser.email} />
+        )}
+
         {/* Scope Toggle */}
         <div className="flex items-center justify-between mb-6">
           <Tabs value={scope} onValueChange={setScope}>
