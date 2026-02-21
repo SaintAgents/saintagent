@@ -59,7 +59,7 @@ export default function Marketplace() {
 
   const filteredListings = listings.filter((l) => {
     // Only show active listings
-    if (l.status !== 'active') return false;
+    if (l.status !== 'active' && l.status) return false;
     const matchesSearch = !searchQuery ||
     l.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     l.description?.toLowerCase().includes(searchQuery.toLowerCase());
