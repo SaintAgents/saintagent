@@ -464,16 +464,19 @@ export default function TopBar({
               className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus:bg-white md:text-sm"
               value={searchQuery}
               onChange={(e) => {
+                console.log('[SEARCH] Input changed:', e.target.value);
                 setSearchQuery(e.target.value);
               }}
               onFocus={() => {
+                console.log('[SEARCH] Input focused');
                 setSearchFocused(true);
               }}
               onBlur={(e) => {
+                console.log('[SEARCH] Input blurred');
                 // Delay hiding to allow clicks on results
                 setTimeout(() => {
                   setSearchFocused(false);
-                }, 200);
+                }, 300);
               }}
             />
             {searchQuery && (
@@ -489,12 +492,14 @@ export default function TopBar({
         </form>
 
         {/* Inline Results Dropdown - always visible when there's a query */}
+        {console.log('[SEARCH] Render check - searchQuery:', searchQuery, 'advancedSearchOpen:', advancedSearchOpen, 'totalResults:', totalResults)}
         {searchQuery.length > 0 && !advancedSearchOpen && (
           <div 
             className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 max-h-96 overflow-y-auto"
             style={{ zIndex: 99999, pointerEvents: 'auto' }}
             onMouseDown={(e) => e.preventDefault()}
           >
+            {console.log('[SEARCH] Dropdown rendering with totalResults:', totalResults)}
             {totalResults === 0 ? (
               <div className="p-6 text-center text-slate-500">
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-40" />
