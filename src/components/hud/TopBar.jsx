@@ -224,12 +224,14 @@ export default function TopBar({
     staleTime: 120000
   });
 
-  // Filter results based on query
+  // Filter results based on query - match at word boundaries only
   const filterResults = (items, fields) => {
     if (!searchQuery.trim()) return [];
     const term = searchQuery.toLowerCase().trim().replace(/^@/, '');
+    // Create regex that matches term at start of string or after a word boundary
+    const regex = new RegExp(`(^|\\s|[^a-z])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i');
     return items.filter(item => 
-      fields.some(f => item[f] && String(item[f]).toLowerCase().includes(term))
+      fields.some(f => item[f] && regex.test(String(item[f])))
     ).slice(0, 5);
   };
 
