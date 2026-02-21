@@ -233,8 +233,13 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
     return result;
   }, [query, filters]);
 
-  // Filter pages based on query
+  // Filter pages based on query - ALWAYS show all pages when Pages tab is selected
   const filteredPages = useMemo(() => {
+    // If on pages tab with no query, show ALL pages
+    if (tab === 'pages' && !query.trim()) {
+      return APP_PAGES;
+    }
+    // Otherwise filter by query
     if (!query.trim()) return [];
     const q = query.toLowerCase().trim();
     return APP_PAGES.filter(page =>
@@ -242,7 +247,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect }) {
       page.description.toLowerCase().includes(q) ||
       page.name.toLowerCase().includes(q)
     );
-  }, [query]);
+  }, [query, tab]);
 
   // Filtered results
   const filteredResults = useMemo(() => ({
