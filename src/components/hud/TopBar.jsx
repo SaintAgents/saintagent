@@ -444,7 +444,7 @@ export default function TopBar({
       <div ref={searchRef} className={cn(
         "flex-1 max-w-xl mx-auto relative transition-all duration-300 hidden md:block",
         isCollapsed && "!hidden"
-      )} data-no-top style={{ zIndex: 50 }}>
+      )} data-no-top style={{ zIndex: 9998 }}>
         <form onSubmit={handleSearch}>
           <div className={cn(
             "relative transition-all duration-300",
@@ -492,14 +492,12 @@ export default function TopBar({
         </form>
 
         {/* Inline Results Dropdown - always visible when there's a query */}
-        {console.log('[SEARCH] Render check - searchQuery:', searchQuery, 'advancedSearchOpen:', advancedSearchOpen, 'totalResults:', totalResults)}
         {searchQuery.length > 0 && !advancedSearchOpen && (
           <div 
-            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 max-h-96 overflow-y-auto"
-            style={{ zIndex: 99999, pointerEvents: 'auto' }}
+            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border-2 border-violet-300 max-h-96 overflow-y-auto"
+            style={{ zIndex: 999999, pointerEvents: 'auto', minHeight: '100px' }}
             onMouseDown={(e) => e.preventDefault()}
           >
-            {console.log('[SEARCH] Dropdown rendering with totalResults:', totalResults)}
             {totalResults === 0 ? (
               <div className="p-6 text-center text-slate-500">
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-40" />
