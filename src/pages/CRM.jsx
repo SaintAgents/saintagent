@@ -28,6 +28,7 @@ import FollowUpReminderPanel from '@/components/crm/FollowUpReminderPanel';
 import AutomatedFollowUpSettings from '@/components/crm/AutomatedFollowUpSettings';
 import CRMAIAssistant from '@/components/crm/CRMAIAssistant';
 import { cn } from '@/lib/utils';
+import { createPageUrl } from '@/utils';
 
 const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
 
@@ -166,7 +167,15 @@ export default function CRM() {
         )}
 
         {/* Header Actions */}
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <Button 
+            variant="outline" 
+            onClick={() => window.location.href = createPageUrl('Deals')}
+            className="gap-2"
+          >
+            <TrendingUp className="w-4 h-4" />
+            Deal Tracker
+          </Button>
           <div className="flex items-center gap-3">
             {accessRequests.length > 0 && (
               <Badge className="bg-amber-100 text-amber-700">
