@@ -827,9 +827,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
         [data-theme='dark'] input,
         [data-theme='dark'] textarea,
         [data-theme='dark'] select {
-          background-color: var(--obsidian) !important;
+          background-color: #0a0a0a !important;
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.3) !important;
+          opacity: 1 !important;
+        }
+        [data-theme='dark'] select option {
+          background-color: #0a0a0a !important;
+          color: #ffffff !important;
         }
         [data-theme='dark'] input:focus,
         [data-theme='dark'] textarea:focus,
