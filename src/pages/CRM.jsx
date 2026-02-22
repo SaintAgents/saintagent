@@ -341,6 +341,8 @@ export default function CRM() {
             <CRMAnalyticsDashboard 
               contacts={myContacts}
               contributions={myContribution ? [myContribution] : []}
+              currentUserId={currentUser?.email}
+              deals={[]}
             />
           </TabsContent>
         </Tabs>
