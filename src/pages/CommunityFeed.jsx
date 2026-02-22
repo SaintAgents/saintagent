@@ -9,7 +9,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2 } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2, MoreHorizontal, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
@@ -172,6 +179,16 @@ export default function CommunityFeed() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       queryClient.invalidateQueries({ queryKey: ['postComments'] });
+    }
+  });
+
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId) => {
+      await base44.entities.Post.delete(postId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      toast.success('Post deleted');
     }
   });
 
@@ -411,9 +428,29 @@ export default function CommunityFeed() {
                     {/* Post Header */}
                     <div className="flex items-center justify-between gap-3">
                       <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={40} />
-                      <p className="text-xs text-slate-500">
-                        {post.created_date ? format(typeof post.created_date === 'string' ? parseISO(post.created_date) : new Date(post.created_date), 'MMM d, h:mm a') : ''}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-slate-500">
+                          {post.created_date ? format(typeof post.created_date === 'string' ? parseISO(post.created_date) : new Date(post.created_date), 'MMM d, h:mm a') : ''}
+                        </p>
+                        {post.author_id === profile?.user_id && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="w-4 h-4 text-slate-400" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem 
+                                onClick={() => deletePostMutation.mutate(post.id)}
+                                className="text-red-600 focus:text-red-600"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete Post
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
                     </div>
 
                     {/* Post Content */}
