@@ -149,6 +149,7 @@ export default function AskQuestionModal({ open, onClose, currentUser, profile }
               <Switch
                 checked={formData.is_anonymous}
                 onCheckedChange={(v) => setFormData({ ...formData, is_anonymous: v })}
+                className="data-[state=checked]:bg-indigo-600 data-[state=unchecked]:bg-slate-300"
               />
             </div>
 
@@ -163,6 +164,7 @@ export default function AskQuestionModal({ open, onClose, currentUser, profile }
               <Switch
                 checked={formData.request_ai_insight}
                 onCheckedChange={(v) => setFormData({ ...formData, request_ai_insight: v })}
+                className="data-[state=checked]:bg-amber-500 data-[state=unchecked]:bg-slate-300"
               />
             </div>
 
@@ -177,6 +179,7 @@ export default function AskQuestionModal({ open, onClose, currentUser, profile }
               <Switch
                 checked={formData.allow_public_replies}
                 onCheckedChange={(v) => setFormData({ ...formData, allow_public_replies: v })}
+                className="data-[state=checked]:bg-indigo-600 data-[state=unchecked]:bg-slate-300"
               />
             </div>
           </div>
