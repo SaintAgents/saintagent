@@ -888,9 +888,28 @@ function AuthenticatedLayout({ children, currentPageName }) {
         /* Modals and dialogs - solid obsidian */
         [data-theme='dark'] [role="dialog"],
         [data-theme='dark'] [data-radix-popper-content-wrapper] > * {
-          background-color: var(--obsidian) !important;
+          background-color: #050505 !important;
           border: 1px solid rgba(0, 255, 136, 0.25) !important;
           box-shadow: 0 0 40px rgba(0, 255, 136, 0.15), 0 0 80px rgba(0, 212, 255, 0.08) !important;
+          opacity: 1 !important;
+        }
+
+        /* Hacker theme dialogs - pure black solid */
+        [data-theme='hacker'] [role="dialog"],
+        [data-theme='hacker'] [data-radix-popper-content-wrapper] > *,
+        [data-theme='hacker'] [data-radix-dialog-content] {
+          background-color: #000000 !important;
+          border: 1px solid #00ff00 !important;
+          box-shadow: 0 0 40px rgba(0, 255, 0, 0.3) !important;
+          opacity: 1 !important;
+        }
+        [data-theme='hacker'] [role="dialog"] *,
+        [data-theme='hacker'] [data-radix-dialog-content] * {
+          background-color: transparent !important;
+        }
+        [data-theme='hacker'] [role="dialog"] > div,
+        [data-theme='hacker'] [data-radix-dialog-content] > div {
+          background-color: #000000 !important;
         }
 
         /* Empty state containers - solid obsidian */
