@@ -234,7 +234,7 @@ export default function Settings() {
 
           {/* Account Settings */}
           <TabsContent value="account" className="space-y-6">
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Profile Information</CardTitle>
                 <CardDescription>Update your basic profile details</CardDescription>
@@ -251,7 +251,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Status</CardTitle>
                 <CardDescription>Set your current availability status</CardDescription>
@@ -319,7 +319,7 @@ export default function Settings() {
 
           {/* Privacy Settings */}
           <TabsContent value="privacy" className="space-y-6">
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Direct Messages</CardTitle>
                 <CardDescription>Control who can send you direct messages</CardDescription>
@@ -342,7 +342,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Profile Visibility</CardTitle>
                 <CardDescription>Control what others can see on your profile</CardDescription>
@@ -417,7 +417,7 @@ export default function Settings() {
 
           {/* Preferences */}
           <TabsContent value="preferences" className="space-y-6">
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Theme</CardTitle>
                 <CardDescription>Select light, dark, or custom colors</CardDescription>
@@ -496,7 +496,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Device Optimization</CardTitle>
                 <CardDescription>Optimize for your device</CardDescription>
@@ -522,7 +522,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Command Deck Layout</CardTitle>
                 <CardDescription>Set your default layout</CardDescription>
@@ -556,7 +556,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Synchronicity Engine</CardTitle>
                 <CardDescription>Tune your matching preferences</CardDescription>
@@ -589,7 +589,7 @@ export default function Settings() {
 
           {/* Deck Settings */}
           <TabsContent value="deck" className="space-y-6">
-            <Card>
+            <Card className="bg-violet-50/50">
               <CardHeader>
                 <CardTitle>Custom Deck Cards</CardTitle>
                 <CardDescription>Select which cards to show on your Command Deck (used in Custom view mode)</CardDescription>
