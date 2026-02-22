@@ -90,13 +90,16 @@ export const ACTIONS = [
   { key: 'mbti_completion', title: 'MBTI Assessment Complete', base: 0.0500000, usd: 7.25, category: 'profile', definition: 'Completing the MBTI personality assessment to improve match quality and compatibility scoring.' },
 ];
 
-// Smart GGG formatting: 7 decimals for values < 0.01, otherwise appropriate precision
+// Smart GGG formatting: 7 decimals for tiny values, fewer for larger values
 export const formatGGGSmart = (val) => {
-  if (val < 0.01) {
-    return val.toFixed(7);
+  if (val >= 1) {
+    return val.toFixed(2);
   }
-  if (val < 1) {
-    return val.toFixed(7);
+  if (val >= 0.1) {
+    return val.toFixed(3);
+  }
+  if (val >= 0.01) {
+    return val.toFixed(4);
   }
   return val.toFixed(7);
 };
