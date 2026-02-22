@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   CheckCircle2, 
   Clock, 
@@ -10,7 +11,9 @@ import {
   MessageSquare,
   Calendar,
   MoreHorizontal,
-  User
+  User,
+  Link2,
+  ArrowRight
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -18,6 +21,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+
+const DEPENDENCY_TYPE_LABELS = {
+  FS: 'Finish→Start',
+  SS: 'Start→Start',
+  FF: 'Finish→Finish',
+  SF: 'Start→Finish'
+};
 
 const STATUS_CONFIG = {
   todo: { label: 'To Do', color: 'bg-slate-500', icon: Clock },
