@@ -11,7 +11,8 @@ import { Separator } from "@/components/ui/separator";
 import { 
   Search, X, Filter, Users, ShoppingBag, Target, Calendar, 
   CircleDot, FileText, Folder, LayoutGrid, SlidersHorizontal,
-  Loader2, StickyNote, Clock, LayoutDashboard, Sparkles, ChevronDown
+  Loader2, StickyNote, Clock, LayoutDashboard, Sparkles, ChevronDown,
+  GripVertical
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -79,6 +80,8 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
   const [sortOrder, setSortOrder] = useState('desc');
   const [showAISuggestions, setShowAISuggestions] = useState(true);
   const [recentSearches, setRecentSearches] = useState([]);
+  const [filterPanelWidth, setFilterPanelWidth] = useState(320);
+  const [isResizing, setIsResizing] = useState(false);
 
   // Load recent searches from localStorage
   useEffect(() => {
@@ -426,7 +429,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-5xl p-0 h-[90vh] max-h-[90vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
+      <DialogContent className="sm:max-w-6xl p-0 h-[90vh] max-h-[90vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
         <div className="sr-only">
           <h2>Advanced Search</h2>
         </div>
@@ -527,7 +530,10 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Filters Panel */}
           {showFilters && (
-            <div className="w-80 border-r shrink-0 flex flex-col overflow-hidden">
+            <div 
+              className="border-r shrink-0 flex flex-col overflow-hidden relative"
+              style={{ width: filterPanelWidth, minWidth: 250, maxWidth: 500 }}
+            >
               <ScrollArea className="flex-1 h-full">
                 <div className="p-4 space-y-4">
                   {/* AI Suggestions - collapsible */}
@@ -558,6 +564,32 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
                   />
                 </div>
               </ScrollArea>
+              {/* Resize handle */}
+              <div
+                className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-violet-200 transition-colors flex items-center justify-center group"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  setIsResizing(true);
+                  const startX = e.clientX;
+                  const startWidth = filterPanelWidth;
+                  
+                  const onMouseMove = (e) => {
+                    const newWidth = Math.min(500, Math.max(250, startWidth + (e.clientX - startX)));
+                    setFilterPanelWidth(newWidth);
+                  };
+                  
+                  const onMouseUp = () => {
+                    setIsResizing(false);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                  };
+                  
+                  document.addEventListener('mousemove', onMouseMove);
+                  document.addEventListener('mouseup', onMouseUp);
+                }}
+              >
+                <GripVertical className="w-3 h-3 text-slate-300 group-hover:text-violet-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
             </div>
           )}
 
