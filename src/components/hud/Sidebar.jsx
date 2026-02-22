@@ -85,9 +85,6 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { getStoredViewMode, isNavItemVisible } from './DeckViewModeSelector';
 
-// Import Key icon
-import { Key } from 'lucide-react';
-
 
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
