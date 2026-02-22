@@ -157,6 +157,15 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         </div>
       </div>
 
+      {/* AI Assistant Panel */}
+      {showAIAssistant && (
+        <AIProjectAssistant 
+          project={project} 
+          tasks={tasks}
+          onApplyPriorities={() => queryClient.invalidateQueries({ queryKey: ['projectTasks'] })}
+        />
+      )}
+
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
