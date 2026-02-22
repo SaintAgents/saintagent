@@ -1776,6 +1776,12 @@ export default function Profile() {
           )}
 
           {isOwnProfile && (
+            <TabsContent value="144k" className="space-y-6">
+              <Leader144KProgress profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
             <TabsContent value="friends" className="space-y-6">
               {/* Friend Requests - only show on own profile */}
               <FriendRequestsPanel currentUser={currentUser} />
