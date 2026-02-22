@@ -72,7 +72,8 @@ import {
   Ticket,
   Globe,
   Play,
-  FileText
+  FileText,
+  Key
 } from "lucide-react";
 import {
   Tooltip,
@@ -83,6 +84,9 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { getStoredViewMode, isNavItemVisible } from './DeckViewModeSelector';
+
+// Import Key icon
+import { Key } from 'lucide-react';
 
 
 const NAV_ITEMS = [
