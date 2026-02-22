@@ -111,11 +111,11 @@ export default function DigitalRightsExchange() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1920')] bg-cover bg-center opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white dark:via-slate-900/50 dark:to-slate-900" />
         
         <div className="relative max-w-6xl mx-auto px-6 py-16 md:py-24">
           <div className="flex items-center justify-between mb-8">
@@ -124,19 +124,19 @@ export default function DigitalRightsExchange() {
           </div>
 
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 mb-6">
-              <Zap className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-300 text-sm font-medium">Programmable Digital Sovereignty</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/30 mb-6">
+              <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-emerald-700 dark:text-emerald-300 text-sm font-medium">Programmable Digital Sovereignty</span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: 'serif' }}>
+            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6" style={{ fontFamily: 'serif' }}>
               Digital Rights Exchange
-              <span className="block text-2xl md:text-3xl text-indigo-300 mt-2 font-normal">DRX</span>
+              <span className="block text-2xl md:text-3xl text-indigo-600 dark:text-indigo-300 mt-2 font-normal">DRX</span>
             </h1>
 
-            <p className="text-xl text-slate-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed max-w-3xl mx-auto">
               Transform how digital assets are shared, licensed, and monetized. 
-              Gain <span className="text-emerald-400 font-semibold">programmable control</span> over access, 
+              Gain <span className="text-emerald-600 dark:text-emerald-400 font-semibold">programmable control</span> over access, 
               duration, permissions, and conditions.
             </p>
 
@@ -152,7 +152,7 @@ export default function DigitalRightsExchange() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 gap-2"
+                className="border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-white/30 dark:text-white dark:hover:bg-white/10 gap-2"
                 onClick={() => setActiveTab('incoming')}
               >
                 <Key className="w-5 h-5" />
@@ -162,21 +162,21 @@ export default function DigitalRightsExchange() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold text-white">{myAssets.length}</div>
-                <div className="text-sm text-slate-400">My Assets</div>
+              <div className="bg-white/80 dark:bg-white/5 backdrop-blur border border-slate-200 dark:border-white/10 rounded-xl p-4">
+                <div className="text-3xl font-bold text-slate-900 dark:text-white">{myAssets.length}</div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">My Assets</div>
               </div>
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold text-emerald-400">{activeGrants.length}</div>
-                <div className="text-sm text-slate-400">Active Grants</div>
+              <div className="bg-white/80 dark:bg-white/5 backdrop-blur border border-slate-200 dark:border-white/10 rounded-xl p-4">
+                <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{activeGrants.length}</div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">Active Grants</div>
               </div>
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold text-indigo-400">{activeIncoming.length}</div>
-                <div className="text-sm text-slate-400">Access Rights</div>
+              <div className="bg-white/80 dark:bg-white/5 backdrop-blur border border-slate-200 dark:border-white/10 rounded-xl p-4">
+                <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{activeIncoming.length}</div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">Access Rights</div>
               </div>
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold text-amber-400">{expiringSoon.length}</div>
-                <div className="text-sm text-slate-400">Expiring Soon</div>
+              <div className="bg-white/80 dark:bg-white/5 backdrop-blur border border-slate-200 dark:border-white/10 rounded-xl p-4">
+                <div className="text-3xl font-bold text-amber-600 dark:text-amber-400">{expiringSoon.length}</div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">Expiring Soon</div>
               </div>
             </div>
           </div>
@@ -186,23 +186,23 @@ export default function DigitalRightsExchange() {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-white/5 border border-white/10 p-1 mb-8">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+          <TabsList className="bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-1 mb-8">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 text-slate-600 dark:text-white/70 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white gap-2">
               <HelpCircle className="w-4 h-4" /> Overview
             </TabsTrigger>
-            <TabsTrigger value="assets" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+            <TabsTrigger value="assets" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 text-slate-600 dark:text-white/70 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white gap-2">
               <Layers className="w-4 h-4" /> My Assets
             </TabsTrigger>
-            <TabsTrigger value="granted" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+            <TabsTrigger value="granted" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 text-slate-600 dark:text-white/70 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white gap-2">
               <Share2 className="w-4 h-4" /> Granted Rights
             </TabsTrigger>
-            <TabsTrigger value="incoming" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+            <TabsTrigger value="incoming" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 text-slate-600 dark:text-white/70 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white gap-2">
               <Key className="w-4 h-4" /> My Access
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 text-slate-600 dark:text-white/70 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white gap-2">
               <BarChart3 className="w-4 h-4" /> Analytics
             </TabsTrigger>
-            <TabsTrigger value="earnings" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+            <TabsTrigger value="earnings" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 text-slate-600 dark:text-white/70 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white gap-2">
               <DollarSign className="w-4 h-4" /> Earnings
             </TabsTrigger>
             </TabsList>
@@ -210,19 +210,19 @@ export default function DigitalRightsExchange() {
           <TabsContent value="overview" className="space-y-12">
             {/* Benefits Grid */}
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <Shield className="w-6 h-6 text-emerald-400" />
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                <Shield className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 Core Benefits
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {BENEFITS.map((benefit, i) => (
-                  <Card key={i} className="bg-white/5 border-white/10 hover:border-emerald-500/30 transition-all">
+                  <Card key={i} className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-emerald-500/50 dark:hover:border-emerald-500/30 transition-all">
                     <CardContent className="p-6">
-                      <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
-                        <benefit.icon className="w-6 h-6 text-emerald-400" />
+                      <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center mb-4">
+                        <benefit.icon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">{benefit.title}</h3>
-                      <p className="text-sm text-slate-400 leading-relaxed">{benefit.description}</p>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">{benefit.title}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{benefit.description}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -231,26 +231,26 @@ export default function DigitalRightsExchange() {
 
             {/* Use Cases */}
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <Sparkles className="w-6 h-6 text-indigo-400" />
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                <Sparkles className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 Use Cases
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {USE_CASES.map((uc, i) => (
-                  <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer">
+                  <div key={i} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-4 hover:bg-slate-50 dark:hover:bg-white/10 transition-all cursor-pointer">
                     <div className="flex items-center gap-3 mb-2">
-                      <uc.icon className="w-5 h-5 text-indigo-400" />
-                      <h4 className="font-medium text-white text-sm">{uc.title}</h4>
+                      <uc.icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                      <h4 className="font-medium text-slate-900 dark:text-white text-sm">{uc.title}</h4>
                     </div>
-                    <p className="text-xs text-slate-400">{uc.desc}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">{uc.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* How It Works */}
-            <div className="bg-gradient-to-br from-indigo-900/50 to-emerald-900/30 border border-white/10 rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-8 text-center">How DRX Works</h2>
+            <div className="bg-gradient-to-br from-indigo-100 to-emerald-50 dark:from-indigo-900/50 dark:to-emerald-900/30 border border-indigo-200 dark:border-white/10 rounded-2xl p-8">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 text-center">How DRX Works</h2>
               <div className="grid md:grid-cols-4 gap-6">
                 {[
                   { step: 1, title: "Upload Asset", desc: "Add your digital content to the vault", icon: Plus },
@@ -259,13 +259,13 @@ export default function DigitalRightsExchange() {
                   { step: 4, title: "Track & Monetize", desc: "Monitor usage, auto-expire, earn", icon: TrendingUp }
                 ].map((item, i) => (
                   <div key={i} className="text-center">
-                    <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-4">
-                      <item.icon className="w-7 h-7 text-emerald-400" />
+                    <div className="w-16 h-16 rounded-full bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 flex items-center justify-center mx-auto mb-4">
+                      <item.icon className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <div className="text-xs text-emerald-400 mb-1">Step {item.step}</div>
-                    <h4 className="font-semibold text-white mb-1">{item.title}</h4>
-                    <p className="text-xs text-slate-400">{item.desc}</p>
-                    {i < 3 && <ChevronRight className="w-5 h-5 text-white/30 mx-auto mt-4 hidden md:block" />}
+                    <div className="text-xs text-emerald-600 dark:text-emerald-400 mb-1">Step {item.step}</div>
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">{item.title}</h4>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">{item.desc}</p>
+                    {i < 3 && <ChevronRight className="w-5 h-5 text-slate-300 dark:text-white/30 mx-auto mt-4 hidden md:block" />}
                   </div>
                 ))}
               </div>
@@ -273,14 +273,14 @@ export default function DigitalRightsExchange() {
 
             {/* Strategic Value */}
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <Globe className="w-6 h-6 text-amber-400" />
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                <Globe className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                 Strategic Value
               </h2>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                <p className="text-slate-300 leading-relaxed mb-6">
+              <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-6">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
                   The Digital Rights Exchange shifts SaintAgent.world from being a content platform to becoming a 
-                  <span className="text-emerald-400 font-semibold"> programmable digital ownership infrastructure</span>.
+                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold"> programmable digital ownership infrastructure</span>.
                 </p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[
@@ -292,13 +292,13 @@ export default function DigitalRightsExchange() {
                     "Programmable access control"
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span className="text-sm text-slate-300">{item}</span>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span className="text-sm text-slate-700 dark:text-slate-300">{item}</span>
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                  <p className="text-amber-200 text-sm italic">
+                <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-lg">
+                  <p className="text-amber-800 dark:text-amber-200 text-sm italic">
                     "In a world where digital duplication is frictionless, DRX reintroduces controlled permission 
                     as a first-class asset — turning access itself into value."
                   </p>
