@@ -570,7 +570,7 @@ export default function Sidebar({
             </div>
           </div>
           {/* Collapsed: show avatars only in a row */}
-          {(!leaderboardOpen || (isCollapsed && !inPopup)) && (
+          {(!leaderboardOpen || (isCollapsed && !inPopup)) && !leaderboardFullyCollapsed && (
             <div className={cn("flex flex-wrap gap-1 px-2 py-1", isCollapsed && !inPopup && "flex-col items-center gap-1.5 px-0")}>
               <TooltipProvider delayDuration={200}>
                 {resolvedLeaders.slice(0, 10).map((leader, index) => (
@@ -606,6 +606,19 @@ export default function Sidebar({
                   </Tooltip>
                 ))}
               </TooltipProvider>
+              {/* Second collapse chevron - collapse to title only */}
+              {(!isCollapsed || inPopup) && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLeaderboardFullyCollapsed(true);
+                  }}
+                  className="w-full flex items-center justify-center py-1 mt-1 rounded hover:bg-slate-100 transition-colors"
+                  title="Collapse to title only"
+                >
+                  <ChevronDown className="w-4 h-4 text-slate-400" />
+                </button>
+              )}
             </div>
           )}
 
