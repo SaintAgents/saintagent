@@ -145,10 +145,10 @@ export default function CRM() {
             </h1>
             <button 
               onClick={() => setHelpOpen(true)}
-              className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-              title="Learn how it works"
+              className="p-1.5 rounded-full bg-amber-400 hover:bg-amber-300 transition-colors animate-pulse shadow-lg shadow-amber-400/50"
+              title="Learn how it works - Earn GGG!"
             >
-              <HelpCircle className="w-4 h-4 text-white" />
+              <HelpCircle className="w-5 h-5 text-amber-900" />
             </button>
           </div>
           <p className="text-white/80">
