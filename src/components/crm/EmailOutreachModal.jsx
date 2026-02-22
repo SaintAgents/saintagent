@@ -163,6 +163,23 @@ Return in JSON format.`,
         last_email_date: new Date().toISOString(),
         last_contact_date: format(new Date(), 'yyyy-MM-dd')
       });
+
+      // Create email campaign record for tracking
+      await base44.entities.EmailCampaign.create({
+        owner_id: currentUser?.email,
+        contact_id: contact.id,
+        contact_name: contact.name,
+        contact_email: recipientEmail,
+        subject: subject,
+        body: body,
+        template_used: selectedTemplate || 'custom',
+        status: 'sent',
+        sent_at: new Date().toISOString(),
+        lead_source: contact.lead_source,
+        lead_status: contact.lead_status,
+        domain: contact.domain,
+        deal_value: 0
+      });
     },
     onSuccess: () => {
       setSendStatus('success');
