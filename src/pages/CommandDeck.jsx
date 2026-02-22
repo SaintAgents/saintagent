@@ -75,6 +75,7 @@ import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
 import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
 import SpiritTubeCard from '@/components/videos/SpiritTubeCard';
 import GlobalScheduleCard from '@/components/hud/GlobalScheduleCard';
+import AIProfileCompletionPrompt from '@/components/ai/AIProfileCompletionPrompt';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -1422,6 +1423,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           {profile && !profile.mbti_type && (
             <div className="mb-6">
               <MBTIPromptBanner profile={profile} />
+            </div>
+          )}
+
+          {/* AI Profile Completion Prompt */}
+          {profile && (
+            <div className="mb-6">
+              <AIProfileCompletionPrompt profile={profile} />
             </div>
           )}
 
