@@ -557,12 +557,26 @@ export default function Sidebar({
                     variant="ghost" 
                     size="icon"
                     className="h-6 w-6"
-                    onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+                    onClick={() => {
+                      if (leaderboardFullyCollapsed) {
+                        // Expand from fully collapsed to avatars
+                        setLeaderboardFullyCollapsed(false);
+                        setLeaderboardOpen(false);
+                      } else if (!leaderboardOpen) {
+                        // Expand from avatars to full list
+                        setLeaderboardOpen(true);
+                      } else {
+                        // Collapse from full list to avatars
+                        setLeaderboardOpen(false);
+                      }
+                    }}
                   >
-                    {leaderboardOpen ? (
+                    {leaderboardFullyCollapsed ? (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    ) : leaderboardOpen ? (
                       <ChevronUp className="w-4 h-4 text-slate-500" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
                     )}
                   </Button>
                 </div>
