@@ -460,9 +460,9 @@ export default function NetworkHelpModal({ open, onClose }) {
               GGG Rewards
             </h4>
             <ul className="text-sm text-slate-600 help-modal-text space-y-1">
-              <li>• <strong>+5 GGG</strong> for each contact you federate</li>
-              <li>• <strong>+10 GGG</strong> when someone requests an intro through your contact</li>
-              <li>• <strong>+25 GGG</strong> for successful introductions that lead to meetings</li>
+              <li>• <strong>+0.05 GGG</strong> for each contact you federate</li>
+              <li>• <strong>+0.10 GGG</strong> when someone requests an intro through your contact</li>
+              <li>• <strong>+0.25 GGG</strong> for successful introductions that lead to meetings</li>
             </ul>
           </div>
         </TabsContent>

@@ -156,13 +156,13 @@ export default function CRM() {
           </p>
           <div className="flex flex-wrap justify-center gap-3 text-xs">
             <span className="px-2 py-1 rounded-full bg-amber-400/20 text-amber-200 border border-amber-400/30">
-              +5 GGG per federated contact
+              +0.05 GGG per federated contact
             </span>
             <span className="px-2 py-1 rounded-full bg-emerald-400/20 text-emerald-200 border border-emerald-400/30">
-              +10 GGG per intro request
+              +0.10 GGG per intro request
             </span>
             <span className="px-2 py-1 rounded-full bg-violet-400/20 text-violet-200 border border-violet-400/30">
-              +25 GGG for successful meetings
+              +0.25 GGG for successful meetings
             </span>
           </div>
         </div>
