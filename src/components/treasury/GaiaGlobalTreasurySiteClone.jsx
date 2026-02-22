@@ -471,6 +471,78 @@ export default function GaiaGlobalTreasurySiteClone() {
           </div>
         </ExpandableDocument>
 
+        {/* G3DEX GDCE */}
+        <ExpandableDocument
+          title="G3DEX (GDCE)"
+          subtitle="Global Digital Commodity Exchange"
+          icon={Coins}
+        >
+          <div className="space-y-6">
+            <p>
+              Compliant commodity exchange bridging physical assets with digital titles. Tokenization represents digital title, verified custody, settlement records, and compliant trading.
+            </p>
+
+            <section>
+              <h4 className="text-amber-400 font-semibold mb-2">Core Features</h4>
+              <ul className="list-none space-y-2">
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400">✓</span>
+                  <span><strong>Digital title representation</strong> — Every physical asset receives a cryptographically secured digital title that serves as proof of ownership and custody chain.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400">✓</span>
+                  <span><strong>Verified custody chains</strong> — End-to-end traceability from vault to settlement, with multi-party verification at every custody transfer point.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400">✓</span>
+                  <span><strong>Compliant trading protocols</strong> — Built-in regulatory compliance frameworks that satisfy international commodity trading standards and AML/KYC requirements.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400">✓</span>
+                  <span><strong>Prevention of pump-and-dumps</strong> — Algorithmic safeguards and circuit breakers prevent market manipulation, ensuring fair price discovery.</span>
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h4 className="text-amber-400 font-semibold mb-2">Exchange Architecture</h4>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold">Asset Classes Supported:</p>
+                  <p className="text-sm">Precious metals (gold, silver, platinum, palladium), rare earth elements, battery metals, energy commodities, agricultural resources, and strategic mineral deposits.</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Settlement Currency:</p>
+                  <p className="text-sm">All trades settle in GGG (Gaia Gold Gram), providing a stable, gold-backed unit of account that eliminates crypto volatility from commodity markets.</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Trading Mechanisms:</p>
+                  <p className="text-sm">Spot markets, forward contracts, and escrow services — all operating with full transparency on the StarChain ledger.</p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h4 className="text-amber-400 font-semibold mb-2">Regulatory Framework</h4>
+              <p>
+                G3DEX operates as a sovereign-grade exchange outside traditional BIS/IMF control, yet maintains rigorous compliance through:
+              </p>
+              <ul className="list-none space-y-1 mt-2">
+                <li>✦ Independent audit mechanisms and real-time reserve verification</li>
+                <li>✦ Cross-jurisdictional legal recognition via UCC filings</li>
+                <li>✦ Anti-manipulation surveillance systems</li>
+                <li>✦ Transparent order book and trade reporting</li>
+              </ul>
+            </section>
+
+            <section className="border-t border-amber-500/30 pt-6">
+              <p className="italic text-amber-300">
+                The Global Digital Commodity Exchange represents the infrastructure layer that transforms how the world trades, settles, and custodies physical resources — bringing transparency, efficiency, and integrity to global commodity markets.
+              </p>
+            </section>
+          </div>
+        </ExpandableDocument>
+
         {/* GGTR Overview */}
         <ExpandableDocument
           title="The Gaia Global Treasury Repository (GGTR)"
