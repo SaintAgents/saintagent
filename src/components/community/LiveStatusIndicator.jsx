@@ -47,7 +47,7 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
 
   const updateStatusMutation = useMutation({
     mutationFn: async (newStatus) => {
-      const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
+      const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1);
       if (existing?.[0]) {
         return base44.entities.LiveStatus.update(existing[0].id, {
           status: newStatus,
