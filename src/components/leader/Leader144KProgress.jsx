@@ -91,9 +91,10 @@ export default function Leader144KProgress({ profile }) {
   const pointsRemaining = Math.max(0, REQUIRED_POINTS - currentPoints);
   const daysRemaining = Math.max(0, REQUIRED_ACCOUNT_AGE_DAYS - accountAge);
   
-  const aggressiveDays = Math.ceil(pointsRemaining / 400); // 400 RP/day aggressive
-  const middleRoadDays = Math.ceil(pointsRemaining / 150); // 150 RP/day moderate
-  const currentPaceDays = avgDailyRP > 0 ? Math.ceil(pointsRemaining / avgDailyRP) : middleRoadDays;
+  // If points already achieved, these will be 0 - we'll show "Complete" in UI
+  const aggressiveDays = pointsRemaining > 0 ? Math.ceil(pointsRemaining / 400) : 0; // 400 RP/day aggressive
+  const middleRoadDays = pointsRemaining > 0 ? Math.ceil(pointsRemaining / 150) : 0; // 150 RP/day moderate
+  const currentPaceDays = pointsRemaining > 0 && avgDailyRP > 0 ? Math.ceil(pointsRemaining / avgDailyRP) : 0;
 
   // Find current milestone
   const currentMilestone = MILESTONES.reduce((prev, curr) => 
