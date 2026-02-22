@@ -42,7 +42,7 @@ const PERMISSION_OPTIONS = [
   { value: 'private', label: 'Private', desc: 'Only you can see this contact', icon: Lock },
   { value: 'signal_only', label: 'Signal Only', desc: 'Others see existence & strength, no identity', icon: Eye },
   { value: 'masked', label: 'Masked', desc: 'Others see role/domain only, no name', icon: EyeOff },
-  { value: 'shared', label: 'Full Share', desc: 'Full details visible to network (earn 0.010 GGG)', icon: Globe }
+  { value: 'shared', label: 'Full Share', desc: 'Full details visible to network (earn 0.0154 GGG)', icon: Globe }
 ];
 
 const CONTACT_METHODS = [
@@ -138,7 +138,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
       if (isEdit) {
         savedContact = await base44.entities.Contact.update(contact.id, payload);
         
-        // Award GGG if contact is being federated for the first time (0.010 GGG)
+        // Award GGG if contact is being federated for the first time (0.0154 GGG = $2.24)
         if (data.is_federated && !contact.is_federated && !contact.ggg_federated_awarded) {
           await base44.entities.Contact.update(contact.id, { ggg_federated_awarded: true });
           
@@ -149,12 +149,12 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
             contribution = await base44.entities.CRMContribution.create({
               user_id: currentUserId,
               federated_contacts: 1,
-              total_ggg_earned: 0.010
+              total_ggg_earned: 0.0154
             });
           } else {
             await base44.entities.CRMContribution.update(contribution.id, {
               federated_contacts: (contribution.federated_contacts || 0) + 1,
-              total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.010
+              total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.0154
             });
           }
           
@@ -162,14 +162,14 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
           const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
           const userProfile = userProfiles?.[0];
           if (userProfile) {
-            const newBalance = (userProfile.ggg_balance || 0) + 0.010;
+            const newBalance = (userProfile.ggg_balance || 0) + 0.0154;
             await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
             
             await base44.entities.GGGTransaction.create({
               user_id: currentUserId,
               source_type: 'reward',
               source_id: contact.id,
-              delta: 0.010,
+              delta: 0.0154,
               reason_code: 'crm_federated',
               description: 'Contact added to federated network',
               balance_after: newBalance
@@ -179,7 +179,7 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
       } else {
         savedContact = await base44.entities.Contact.create(payload);
         
-        // Award GGG if new contact is federated (0.010 GGG)
+        // Award GGG if new contact is federated (0.0154 GGG = $2.24)
         if (data.is_federated) {
           await base44.entities.Contact.update(savedContact.id, { ggg_federated_awarded: true });
           
@@ -190,27 +190,27 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
               user_id: currentUserId,
               total_contacts: 1,
               federated_contacts: 1,
-              total_ggg_earned: 0.010
+              total_ggg_earned: 0.0154
             });
           } else {
             await base44.entities.CRMContribution.update(contribution.id, {
               total_contacts: (contribution.total_contacts || 0) + 1,
               federated_contacts: (contribution.federated_contacts || 0) + 1,
-              total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.010
+              total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.0154
             });
           }
           
           const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
           const userProfile = userProfiles?.[0];
           if (userProfile) {
-            const newBalance = (userProfile.ggg_balance || 0) + 0.010;
+            const newBalance = (userProfile.ggg_balance || 0) + 0.0154;
             await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
             
             await base44.entities.GGGTransaction.create({
               user_id: currentUserId,
               source_type: 'reward',
               source_id: savedContact.id,
-              delta: 0.010,
+              delta: 0.0154,
               reason_code: 'crm_federated',
               description: 'Contact added to federated network',
               balance_after: newBalance
