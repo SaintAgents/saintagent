@@ -11,12 +11,13 @@ import { Input } from '@/components/ui/input';
 import { 
   ArrowLeft, Plus, Calendar, DollarSign, Users, 
   CheckCircle2, Clock, Paperclip, MessageSquare,
-  LayoutGrid, List, Upload, Search, Filter
+  LayoutGrid, List, Upload, Search, Filter, Brain
 } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
 import TaskDetailModal from './TaskDetailModal';
 import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal';
+import AIProjectAssistant from './AIProjectAssistant';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
