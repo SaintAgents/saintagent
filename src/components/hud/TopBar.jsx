@@ -408,7 +408,7 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="object-contain topbar-mode-icon h-[calc(100%-8px)] w-auto max-h-10 md:max-h-12"
+                  className="object-contain topbar-mode-icon w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11"
                   style={currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : undefined}
                 />
                 {/* Hover tooltip with label */}
