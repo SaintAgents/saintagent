@@ -97,6 +97,13 @@ export default function TaskCard({
             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onStatusChange?.(task.id, 'completed'); }}>
               Mark as Completed
             </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={(e) => { e.stopPropagation(); onManageDependencies?.(task); }}
+              className="border-t mt-1 pt-1"
+            >
+              <Link2 className="w-3.5 h-3.5 mr-2" />
+              Manage Dependencies
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
