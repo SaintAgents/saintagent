@@ -154,7 +154,7 @@ export default function Circles() {
               onClick={() => setViewMode('grid')}
               className={cn(
                 "gap-1.5 rounded-lg",
-                viewMode === 'grid' ? "bg-white dark:bg-slate-700 shadow-sm" : ""
+                viewMode === 'grid' ? "bg-violet-600 text-white hover:bg-violet-700 shadow-sm" : "text-slate-700"
               )}
             >
               <List className="w-4 h-4" />
@@ -166,7 +166,7 @@ export default function Circles() {
               onClick={() => setViewMode('map')}
               className={cn(
                 "gap-1.5 rounded-lg",
-                viewMode === 'map' ? "bg-white dark:bg-slate-700 shadow-sm" : ""
+                viewMode === 'map' ? "bg-violet-600 text-white hover:bg-violet-700 shadow-sm" : "text-slate-700"
               )}
             >
               <Globe className="w-4 h-4" />
