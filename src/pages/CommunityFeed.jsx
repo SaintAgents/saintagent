@@ -476,15 +476,31 @@ export default function CommunityFeed() {
                     {post.link_url && (post.link_url.includes('youtube.com') || post.link_url.includes('youtu.be') || post.link_url.includes('vimeo.com')) && (
                       <div className="aspect-video rounded-lg overflow-hidden">
                         <iframe
-                          src={
-                            post.link_url.includes('youtube.com/watch') 
-                              ? `https://www.youtube.com/embed/${new URL(post.link_url).searchParams.get('v')}`
-                              : post.link_url.includes('youtu.be')
-                              ? `https://www.youtube.com/embed/${post.link_url.split('/').pop().split('?')[0]}`
-                              : post.link_url.includes('vimeo.com')
-                              ? `https://player.vimeo.com/video/${post.link_url.split('/').pop().split('?')[0]}`
-                              : ''
-                          }
+                          src={(() => {
+                            const url = post.link_url;
+                            // YouTube Shorts
+                            if (url.includes('youtube.com/shorts/')) {
+                              const videoId = url.split('/shorts/')[1]?.split('?')[0];
+                              return `https://www.youtube.com/embed/${videoId}`;
+                            }
+                            // Regular YouTube watch URL
+                            if (url.includes('youtube.com/watch')) {
+                              try {
+                                return `https://www.youtube.com/embed/${new URL(url).searchParams.get('v')}`;
+                              } catch { return ''; }
+                            }
+                            // youtu.be short links
+                            if (url.includes('youtu.be')) {
+                              const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                              return `https://www.youtube.com/embed/${videoId}`;
+                            }
+                            // Vimeo
+                            if (url.includes('vimeo.com')) {
+                              const videoId = url.split('/').pop()?.split('?')[0];
+                              return `https://player.vimeo.com/video/${videoId}`;
+                            }
+                            return '';
+                          })()}
                           className="w-full h-full"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen

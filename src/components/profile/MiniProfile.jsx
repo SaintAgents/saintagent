@@ -86,9 +86,10 @@ export default function MiniProfile({
   const displayName = name || profile?.display_name || userId || 'User';
   const handle = profile?.handle;
   const sa = profile?.sa_number;
-  const rpPointsVal = profile?.rp_points || 0;
+  const rpPointsVal = profile?.rp_points || profile?.rank_points || 0;
   const rankTitle = (() => {
-    const code = profile?.rp_rank_code;
+    // Support both rp_rank_code and rank_code fields
+    const code = profile?.rp_rank_code || profile?.rank_code;
     if (code) {
       const found = RP_LADDER.find((t) => t.code === code);
       if (found) return found.title;
@@ -149,8 +150,8 @@ export default function MiniProfile({
                 userId={userId}
                 status={profile?.status}
                 leaderTier={profile?.leader_tier}
-                rpRankCode={profile?.rp_rank_code}
-                rpPoints={profile?.rp_points}
+                rpRankCode={profile?.rp_rank_code || profile?.rank_code}
+                rpPoints={profile?.rp_points || profile?.rank_points}
                 showPhotoIcon={true}
                 galleryImages={profile?.gallery_images || []}
               />
@@ -211,8 +212,8 @@ export default function MiniProfile({
             userId={userId}
             status={profile?.status}
             leaderTier={profile?.leader_tier}
-            rpRankCode={profile?.rp_rank_code}
-            rpPoints={profile?.rp_points}
+            rpRankCode={profile?.rp_rank_code || profile?.rank_code}
+            rpPoints={profile?.rp_points || profile?.rank_points}
             showPhotoIcon={true}
             galleryImages={profile?.gallery_images || []}
           />
@@ -300,7 +301,7 @@ export default function MiniProfile({
                       <TooltipTrigger asChild>
                         <Badge className="h-5 text-[10px] bg-emerald-100 text-emerald-700 flex items-center gap-1 cursor-help">
                           <Shield className="w-3 h-3" />
-                          Trust: {Math.round(profile?.trust_score ?? 0)}
+                          Trust: {Math.round(profile?.trust_score || profile?.reputation_score || profile?.influence_score || 75)}
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="max-w-[200px]">
