@@ -7,7 +7,7 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const dragOffsetRef = React.useRef({ x: 0, y: 0 });
   const draggingRef = React.useRef(false);
-  const [size, setSize] = React.useState({ w: 420, h: 0 });
+  const [size, setSize] = React.useState({ w: 600, h: 0 });
   const resizingRef = React.useRef({ active: false, edge: null });
   const startResize = (edge) => (e) => {
     e.preventDefault();
@@ -16,10 +16,10 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
   };
 
   React.useEffect(() => {
-    const width = collapsedWidth || 420;
-    const height = Math.min(window.innerHeight * 0.6, 560);
-    const x = Math.max(8, window.innerWidth - width - 24);
-    const y = Math.max(8, window.innerHeight - height - 24);
+    const width = collapsedWidth || 600;
+    const height = Math.min(window.innerHeight * 0.85, 720);
+    const x = Math.max(8, (window.innerWidth - width) / 2);
+    const y = Math.max(8, (window.innerHeight - height) / 2);
     setPos({ x, y });
     setSize({ w: width, h: height });
   }, []);
