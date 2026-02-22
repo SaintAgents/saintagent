@@ -98,6 +98,7 @@ import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import DealsTab from '@/components/deals/DealsTab.jsx';
 import ProjectsTab from '@/components/profile/ProjectsTab';
 import CreatorAnalyticsDashboard from '@/components/profile/CreatorAnalyticsDashboard';
+import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import {
   Tooltip,
   TooltipContent,
