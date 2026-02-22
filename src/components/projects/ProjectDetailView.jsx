@@ -34,6 +34,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPriority, setFilterPriority] = useState('all');
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
 
   // Fetch tasks for this project
   const { data: tasks = [] } = useQuery({
