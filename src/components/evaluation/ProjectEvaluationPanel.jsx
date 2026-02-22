@@ -35,10 +35,21 @@ const PHASE1_RESULT_CONFIG = {
   pending: { label: 'PENDING', color: 'slate', icon: Clock }
 };
 
-export default function ProjectEvaluationPanel({ project, onUpdate }) {
+export default function ProjectEvaluationPanel({ project: initialProject, onUpdate }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [overrideReason, setOverrideReason] = useState('');
   const queryClient = useQueryClient();
+
+  // Fetch fresh project data to get latest evaluation results
+  const { data: project, refetch: refetchProject } = useQuery({
+    queryKey: ['evaluationProject', initialProject?.id],
+    queryFn: async () => {
+      const results = await base44.entities.Project.filter({ id: initialProject.id });
+      return results[0] || initialProject;
+    },
+    enabled: !!initialProject?.id,
+    initialData: initialProject
+  });
 
   const { data: evaluations = [] } = useQuery({
     queryKey: ['projectEvaluations', project.id],
@@ -58,11 +69,15 @@ export default function ProjectEvaluationPanel({ project, onUpdate }) {
       return response.data;
     },
     onSuccess: (data) => {
+      // Refetch the project data to show updated scores
+      refetchProject();
       // Invalidate all related queries to force refresh
       queryClient.invalidateQueries({ queryKey: ['projectEvaluations', project.id] });
       queryClient.invalidateQueries({ queryKey: ['evaluationAuditLogs', project.id] });
-      queryClient.invalidateQueries({ queryKey: ['project', project.id] });
+      queryClient.invalidateQueries({ queryKey: ['evaluationProject', project.id] });
+      queryClient.invalidateQueries({ queryKey: ['projectDetail', project.id] });
       queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['projects_all'] });
       // Call onUpdate to refresh parent component with the new data
       onUpdate?.(data);
     },
