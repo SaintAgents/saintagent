@@ -74,6 +74,7 @@ import FindCollaborators from './pages/FindCollaborators';
 import Forum from './pages/Forum';
 import G3Dex from './pages/G3Dex';
 import GGGCrypto from './pages/GGGCrypto';
+import GaiaGlobalTreasury from './pages/GaiaGlobalTreasury';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Initiations from './pages/Initiations';
@@ -120,7 +121,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import GaiaGlobalTreasury from './pages/GaiaGlobalTreasury';
 import __Layout from './Layout.jsx';
 
 
@@ -152,6 +152,7 @@ export const PAGES = {
     "Forum": Forum,
     "G3Dex": G3Dex,
     "GGGCrypto": GGGCrypto,
+    "GaiaGlobalTreasury": GaiaGlobalTreasury,
     "Gamification": Gamification,
     "Home": Home,
     "Initiations": Initiations,
@@ -198,7 +199,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "GaiaGlobalTreasury": GaiaGlobalTreasury,
 }
 
 export const pagesConfig = {

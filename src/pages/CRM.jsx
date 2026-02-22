@@ -25,6 +25,7 @@ import CRMAnalyticsDashboard from '@/components/crm/CRMAnalyticsDashboard';
 import BatchFederationPanel from '@/components/crm/BatchFederationPanel';
 import ContactScoringEngine from '@/components/crm/ContactScoringEngine';
 import FollowUpReminderPanel from '@/components/crm/FollowUpReminderPanel';
+import AutomatedFollowUpSettings from '@/components/crm/AutomatedFollowUpSettings';
 import { cn } from '@/lib/utils';
 
 const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
@@ -227,6 +228,10 @@ export default function CRM() {
                 <BarChart3 className="w-4 h-4" />
                 Analytics
               </TabsTrigger>
+              <TabsTrigger value="automations" className="gap-2">
+                <Sparkles className="w-4 h-4" />
+                Automations
+              </TabsTrigger>
             </TabsList>
 
             <div className="flex items-center gap-2">
@@ -344,6 +349,10 @@ export default function CRM() {
               currentUserId={currentUser?.email}
               deals={[]}
             />
+          </TabsContent>
+
+          <TabsContent value="automations">
+            <AutomatedFollowUpSettings currentUserId={currentUser?.email} />
           </TabsContent>
         </Tabs>
       </div>
