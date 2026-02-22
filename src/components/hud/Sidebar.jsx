@@ -86,6 +86,9 @@ import { createPageUrl } from '@/utils';
 import { getStoredViewMode, isNavItemVisible } from './DeckViewModeSelector';
 
 
+// Web pages group - these will have special styling
+const WEB_PAGES = ['authority144', 'topgggmission', 'gggcrypto', 'sovereignalliance', 'ggt'];
+
 const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
   { id: 'betafeedback', label: 'Beta Feedback', Icon: Smile, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
@@ -105,8 +108,6 @@ const NAV_ITEMS = [
   { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
   { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
   { id: 'drx', label: 'Digital Rights Exchange', Icon: Key, page: 'DigitalRightsExchange', hint: 'Programmable digital asset rights - license, rent, and monetize your content' },
-  { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation' },
-
   { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
   { id: 'communityfeed', label: 'Community Feed', Icon: Sparkles, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
   { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
@@ -125,11 +126,14 @@ const NAV_ITEMS = [
   { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
   { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
   { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
-  { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission' },
-  { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure for Humanity\'s Golden Age' },
-  { id: 'gggcrypto', label: 'GGG Crypto', Icon: Coins, page: 'GGGCrypto', hint: 'Gaia Global Gold - Gold-backed cryptocurrency with staking and swap' },
-  { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Globe, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty' },
   { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
+  // Web Pages Group - grouped together with special styling
+  { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation', isWebPage: true },
+  { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
+  { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure for Humanity\'s Golden Age', isWebPage: true },
+  { id: 'gggcrypto', label: 'GGG Crypto', Icon: Coins, page: 'GGGCrypto', hint: 'Gaia Global Gold - Gold-backed cryptocurrency with staking and swap', isWebPage: true },
+  { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Globe, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty', isWebPage: true },
+  // Settings at the end
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
 
