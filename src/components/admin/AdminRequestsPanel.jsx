@@ -145,6 +145,16 @@ function RequestCard({ request, onAction }) {
                 <ExternalLink className="w-3 h-3" />
               </Link>
             )}
+            {request.reference_type === 'deal' && request.reference_id && (
+              <Link 
+                to={createPageUrl('Deals')}
+                className="inline-flex items-center gap-1 mt-2 text-sm text-cyan-600 hover:text-cyan-700"
+              >
+                <Target className="w-3 h-3" />
+                View Deal Tracker
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            )}
 
             {/* Actions for pending requests */}
             {request.status === 'pending' && (
