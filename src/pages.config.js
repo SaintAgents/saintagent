@@ -49,6 +49,8 @@
  */
 import ActivityFeed from './pages/ActivityFeed';
 import Admin from './pages/Admin';
+import Advice from './pages/Advice';
+import AdviceDetail from './pages/AdviceDetail';
 import AffiliateCenter from './pages/AffiliateCenter';
 import Authority144 from './pages/Authority144';
 import BetaFeedback from './pages/BetaFeedback';
@@ -121,14 +123,15 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import Advice from './pages/Advice';
-import AdviceDetail from './pages/AdviceDetail';
+import DigitalRightsExchange from './pages/DigitalRightsExchange';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "ActivityFeed": ActivityFeed,
     "Admin": Admin,
+    "Advice": Advice,
+    "AdviceDetail": AdviceDetail,
     "AffiliateCenter": AffiliateCenter,
     "Authority144": Authority144,
     "BetaFeedback": BetaFeedback,
@@ -201,8 +204,7 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "Advice": Advice,
-    "AdviceDetail": AdviceDetail,
+    "DigitalRightsExchange": DigitalRightsExchange,
 }
 
 export const pagesConfig = {
