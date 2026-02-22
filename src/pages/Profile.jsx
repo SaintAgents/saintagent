@@ -742,6 +742,12 @@ export default function Profile() {
                   <BarChart3 className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
+              {isOwnProfile && (
+                <TabsTrigger value="144k" className="text-xs sm:text-sm px-2 sm:px-3" title="144K Path">
+                  <span className="hidden sm:inline">144K Path</span>
+                  <Crown className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
             </TabsList>
           </div>
 
