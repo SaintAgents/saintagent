@@ -489,6 +489,19 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             </div>
           </div>
         </div>
+
+        <EmailOutreachModal
+          open={emailModalOpen}
+          onClose={() => setEmailModalOpen(false)}
+          contact={contact}
+          currentUser={currentUser}
+        />
+
+        <SetFollowUpModal
+          open={followUpModalOpen}
+          onClose={() => setFollowUpModalOpen(false)}
+          contact={contact}
+        />
       </DialogContent>
     </Dialog>
   );
