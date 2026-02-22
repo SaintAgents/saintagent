@@ -121,6 +121,8 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
+import Advice from './pages/Advice';
+import AdviceDetail from './pages/AdviceDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -199,6 +201,8 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
+    "Advice": Advice,
+    "AdviceDetail": AdviceDetail,
 }
 
 export const pagesConfig = {
