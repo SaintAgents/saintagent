@@ -72,7 +72,7 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
     
     const heartbeat = async () => {
       try {
-        const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
+        const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1);
         if (existing?.[0] && existing[0].status !== 'offline') {
           await base44.entities.LiveStatus.update(existing[0].id, {
             last_heartbeat: new Date().toISOString()
