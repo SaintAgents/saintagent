@@ -8,7 +8,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X, Video, Link2 } from 'lucide-react';
+import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X, Video, Link2, Trash2, MoreHorizontal } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import SocialShareButtons from '@/components/affiliate/SocialShareButtons';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
@@ -228,6 +234,16 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
     }
   });
 
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId) => {
+      await base44.entities.Post.delete(postId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      toast.success('Post deleted');
+    }
+  });
+
   const handleCreatePost = async () => {
     if (!newPostText.trim() && !pendingImage && !pendingVideo && !pendingUrl.trim()) return;
     createPostMutation.mutate({ 
@@ -444,6 +460,24 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                           {format(parseISO(post.created_date), 'MMM d, h:mm a')}
                         </p>
                       </div>
+                      {post.author_id === profile?.user_id && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <MoreHorizontal className="w-4 h-4 text-slate-400" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem 
+                              onClick={() => deletePostMutation.mutate(post.id)}
+                              className="text-red-600 focus:text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete Post
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </div>
 
                     {/* Post Content */}
