@@ -27,7 +27,7 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
     queryKey: ['liveStatus', userId],
     queryFn: async () => {
       try {
-        const statuses = await base44.entities.LiveStatus.filter({ user_id: userId });
+        const statuses = await base44.entities.LiveStatus.filter({ user_id: userId }, '-updated_date', 1);
         return statuses?.[0];
       } catch (err) {
         console.warn('LiveStatus fetch error:', err?.message);
