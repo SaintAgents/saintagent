@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronUp, MessageSquare, Sparkles, CheckCircle2, User } from 'lucide-react';
+import { ChevronUp, MessageSquare, Sparkles, CheckCircle2, User, Heart, Waves } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,7 @@ const CATEGORY_LABELS = {
   other: 'Other'
 };
 
-export default function QuestionCard({ question, onUpvote, hasVoted }) {
+export default function QuestionCard({ question, onUpvote, hasVoted, onLike, hasLiked, onResonance, hasResonated }) {
   return (
     <Link to={createPageUrl('AdviceDetail') + `?id=${question.id}`}>
       <Card className="bg-white border-slate-200 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer">
@@ -60,6 +60,52 @@ export default function QuestionCard({ question, onUpvote, hasVoted }) {
                 hasVoted ? "text-amber-600" : "text-slate-600"
               )}>
                 {question.upvote_count || 0}
+              </span>
+            </div>
+
+            {/* Like section */}
+            <div className="flex flex-col items-center gap-1">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onLike?.(question.id);
+                }}
+                className={cn(
+                  "p-2 rounded-lg transition-colors",
+                  hasLiked ? "bg-pink-100 text-pink-600" : "hover:bg-slate-100 text-slate-400"
+                )}
+              >
+                <Heart className={cn("w-5 h-5", hasLiked && "fill-current")} />
+              </button>
+              <span className={cn(
+                "text-sm font-semibold",
+                hasLiked ? "text-pink-600" : "text-slate-600"
+              )}>
+                {question.like_count || 0}
+              </span>
+            </div>
+
+            {/* Resonance section */}
+            <div className="flex flex-col items-center gap-1">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onResonance?.(question.id);
+                }}
+                className={cn(
+                  "p-2 rounded-lg transition-colors",
+                  hasResonated ? "bg-purple-100 text-purple-600" : "hover:bg-slate-100 text-slate-400"
+                )}
+              >
+                <Waves className="w-5 h-5" />
+              </button>
+              <span className={cn(
+                "text-sm font-semibold",
+                hasResonated ? "text-purple-600" : "text-slate-600"
+              )}>
+                {question.resonance_count || 0}
               </span>
             </div>
 
