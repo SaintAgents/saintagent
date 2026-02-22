@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,15 +8,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, FunnelChart, Funnel, LabelList
 } from 'recharts';
 import {
   TrendingUp, TrendingDown, Users, UserPlus, Mail, Phone, Calendar,
   Globe, Building, Briefcase, Target, Activity, Download, Filter,
   BarChart3, PieChart as PieChartIcon, LineChart as LineChartIcon,
-  ArrowUpRight, ArrowDownRight, Sparkles, Clock, Star, Zap
+  ArrowUpRight, ArrowDownRight, Sparkles, Clock, Star, Zap, DollarSign,
+  MousePointer, Eye, Reply, Send
 } from 'lucide-react';
 import { format, subDays, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, eachMonthOfInterval, parseISO, isWithinInterval } from 'date-fns';
+import EmailCampaignHistory from './EmailCampaignHistory';
 
 const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1', '#14b8a6'];
 
@@ -32,9 +36,40 @@ const DOMAIN_COLORS = {
   other: '#94a3b8'
 };
 
-export default function CRMAnalyticsDashboard({ contacts = [], contributions = [], interactions = [] }) {
+const LEAD_SOURCE_LABELS = {
+  referral: 'Referral',
+  website: 'Website',
+  social_media: 'Social Media',
+  event: 'Event',
+  cold_outreach: 'Cold Outreach',
+  inbound: 'Inbound',
+  partner: 'Partner',
+  advertisement: 'Advertisement',
+  content: 'Content',
+  other: 'Other'
+};
+
+const LEAD_STATUS_LABELS = {
+  new: 'New',
+  contacted: 'Contacted',
+  qualified: 'Qualified',
+  proposal: 'Proposal',
+  negotiation: 'Negotiation',
+  won: 'Won',
+  lost: 'Lost',
+  nurturing: 'Nurturing'
+};
+
+export default function CRMAnalyticsDashboard({ contacts = [], contributions = [], interactions = [], currentUserId, deals = [] }) {
   const [timeRange, setTimeRange] = useState('30d');
   const [reportTab, setReportTab] = useState('overview');
+
+  // Fetch email campaigns for this user
+  const { data: emailCampaigns = [] } = useQuery({
+    queryKey: ['emailCampaigns', currentUserId],
+    queryFn: () => base44.entities.EmailCampaign.filter({ owner_id: currentUserId }, '-sent_at', 500),
+    enabled: !!currentUserId
+  });
 
   // Calculate date range
   const dateRange = useMemo(() => {
@@ -88,17 +123,141 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
     });
   }, [contacts, dateRange, timeRange]);
 
-  // Lead Source Analysis
+  // Lead Source Analysis with effectiveness metrics
   const leadSourceData = useMemo(() => {
     const sources = {};
     contacts.forEach(c => {
-      const source = c.source || 'Direct';
-      sources[source] = (sources[source] || 0) + 1;
+      const source = c.lead_source || 'other';
+      if (!sources[source]) {
+        sources[source] = { total: 0, won: 0, contacted: 0, qualified: 0, revenue: 0 };
+      }
+      sources[source].total++;
+      if (c.lead_status === 'won') sources[source].won++;
+      if (c.lead_status === 'contacted' || c.lead_status === 'qualified' || c.lead_status === 'proposal' || c.lead_status === 'negotiation' || c.lead_status === 'won') {
+        sources[source].contacted++;
+      }
+      if (c.lead_status === 'qualified' || c.lead_status === 'proposal' || c.lead_status === 'negotiation' || c.lead_status === 'won') {
+        sources[source].qualified++;
+      }
     });
+
+    // Add deal values
+    deals.forEach(d => {
+      const contact = contacts.find(c => c.email === d.contact_email || c.name === d.contact_name);
+      if (contact && contact.lead_source && sources[contact.lead_source]) {
+        if (d.stage === 'closed_won') {
+          sources[contact.lead_source].revenue += d.amount || 0;
+        }
+      }
+    });
+
     return Object.entries(sources)
-      .map(([name, value]) => ({ name, value }))
+      .map(([name, data]) => ({ 
+        name: LEAD_SOURCE_LABELS[name] || name, 
+        sourceKey: name,
+        value: data.total,
+        won: data.won,
+        contacted: data.contacted,
+        qualified: data.qualified,
+        revenue: data.revenue,
+        conversionRate: data.total > 0 ? Math.round((data.won / data.total) * 100) : 0,
+        contactRate: data.total > 0 ? Math.round((data.contacted / data.total) * 100) : 0,
+        qualifyRate: data.contacted > 0 ? Math.round((data.qualified / data.contacted) * 100) : 0
+      }))
       .sort((a, b) => b.value - a.value);
+  }, [contacts, deals]);
+
+  // Lead Status Conversion Funnel
+  const leadStatusFunnel = useMemo(() => {
+    const statuses = {
+      new: 0,
+      contacted: 0,
+      qualified: 0,
+      proposal: 0,
+      negotiation: 0,
+      won: 0,
+      lost: 0,
+      nurturing: 0
+    };
+    contacts.forEach(c => {
+      const status = c.lead_status || 'new';
+      if (statuses[status] !== undefined) statuses[status]++;
+    });
+
+    const funnelData = [
+      { name: 'New', value: statuses.new, fill: '#3b82f6' },
+      { name: 'Contacted', value: statuses.contacted, fill: '#06b6d4' },
+      { name: 'Qualified', value: statuses.qualified, fill: '#10b981' },
+      { name: 'Proposal', value: statuses.proposal, fill: '#f59e0b' },
+      { name: 'Negotiation', value: statuses.negotiation, fill: '#f97316' },
+      { name: 'Won', value: statuses.won, fill: '#22c55e' }
+    ];
+
+    const total = contacts.length || 1;
+    return funnelData.map((item, idx) => ({
+      ...item,
+      percentage: Math.round((item.value / total) * 100),
+      conversionFromPrev: idx > 0 && funnelData[idx - 1].value > 0 
+        ? Math.round((item.value / funnelData[idx - 1].value) * 100) 
+        : 100
+    }));
   }, [contacts]);
+
+  // AOV (Average Order Value) by Domain
+  const aovByDomain = useMemo(() => {
+    const domainStats = {};
+    
+    contacts.forEach(c => {
+      const domain = c.domain || 'other';
+      if (!domainStats[domain]) {
+        domainStats[domain] = { count: 0, totalRevenue: 0, wonDeals: 0 };
+      }
+      domainStats[domain].count++;
+    });
+
+    deals.forEach(d => {
+      if (d.stage === 'closed_won') {
+        const contact = contacts.find(c => c.email === d.contact_email || c.name === d.contact_name);
+        const domain = contact?.domain || 'other';
+        if (domainStats[domain]) {
+          domainStats[domain].totalRevenue += d.amount || 0;
+          domainStats[domain].wonDeals++;
+        }
+      }
+    });
+
+    return Object.entries(domainStats)
+      .map(([domain, stats]) => ({
+        domain: domain.charAt(0).toUpperCase() + domain.slice(1),
+        contacts: stats.count,
+        revenue: stats.totalRevenue,
+        deals: stats.wonDeals,
+        aov: stats.wonDeals > 0 ? Math.round(stats.totalRevenue / stats.wonDeals) : 0,
+        color: DOMAIN_COLORS[domain] || DOMAIN_COLORS.other
+      }))
+      .filter(d => d.contacts > 0)
+      .sort((a, b) => b.aov - a.aov);
+  }, [contacts, deals]);
+
+  // Email campaign metrics
+  const emailMetrics = useMemo(() => {
+    if (!emailCampaigns.length) return { total: 0, opened: 0, clicked: 0, replied: 0, openRate: 0, clickRate: 0, replyRate: 0 };
+    
+    const total = emailCampaigns.length;
+    const opened = emailCampaigns.filter(c => ['opened', 'clicked', 'replied'].includes(c.status)).length;
+    const clicked = emailCampaigns.filter(c => ['clicked', 'replied'].includes(c.status)).length;
+    const replied = emailCampaigns.filter(c => c.status === 'replied').length;
+    
+    return {
+      total,
+      opened,
+      clicked,
+      replied,
+      openRate: Math.round((opened / total) * 100),
+      clickRate: Math.round((clicked / total) * 100),
+      replyRate: Math.round((replied / total) * 100)
+    };
+  }, [emailCampaigns]);
 
   // Domain Distribution
   const domainData = useMemo(() => {
@@ -321,7 +480,7 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
 
       {/* Report Tabs */}
       <Tabs value={reportTab} onValueChange={setReportTab}>
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 flex-wrap">
           <TabsTrigger value="overview" className="gap-2">
             <BarChart3 className="w-4 h-4" />
             Overview
@@ -334,9 +493,21 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
             <Target className="w-4 h-4" />
             Lead Sources
           </TabsTrigger>
-          <TabsTrigger value="growth" className="gap-2">
+          <TabsTrigger value="conversion" className="gap-2">
             <TrendingUp className="w-4 h-4" />
-            Network Growth
+            Conversion
+          </TabsTrigger>
+          <TabsTrigger value="aov" className="gap-2">
+            <DollarSign className="w-4 h-4" />
+            AOV by Domain
+          </TabsTrigger>
+          <TabsTrigger value="email" className="gap-2">
+            <Mail className="w-4 h-4" />
+            Email Campaigns
+          </TabsTrigger>
+          <TabsTrigger value="growth" className="gap-2">
+            <LineChartIcon className="w-4 h-4" />
+            Growth
           </TabsTrigger>
         </TabsList>
 
@@ -564,7 +735,7 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
           </Card>
         </TabsContent>
 
-        {/* Lead Sources Tab */}
+        {/* Lead Sources Tab - Enhanced */}
         <TabsContent value="sources" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
@@ -599,31 +770,280 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Source Performance</CardTitle>
+                <CardTitle className="text-base">Source Effectiveness</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {leadSourceData.slice(0, 6).map((source, i) => (
-                    <div key={i} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                        />
-                        <span className="text-sm font-medium text-slate-700">{source.name}</span>
+                    <div key={i} className="p-3 bg-slate-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                          />
+                          <span className="font-medium text-slate-900">{source.name}</span>
+                        </div>
+                        <span className="text-sm font-bold">{source.value} contacts</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-900">{source.value}</span>
-                        <Badge variant="outline" className="text-xs">
-                          {contacts.length ? Math.round((source.value / contacts.length) * 100) : 0}%
-                        </Badge>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="text-center p-1 bg-white rounded">
+                          <p className="font-semibold text-blue-600">{source.contactRate}%</p>
+                          <p className="text-slate-500">Contact Rate</p>
+                        </div>
+                        <div className="text-center p-1 bg-white rounded">
+                          <p className="font-semibold text-emerald-600">{source.qualifyRate}%</p>
+                          <p className="text-slate-500">Qualify Rate</p>
+                        </div>
+                        <div className="text-center p-1 bg-white rounded">
+                          <p className="font-semibold text-violet-600">{source.conversionRate}%</p>
+                          <p className="text-slate-500">Win Rate</p>
+                        </div>
                       </div>
+                      {source.revenue > 0 && (
+                        <p className="text-xs text-emerald-600 mt-2 font-medium">
+                          Revenue: ${source.revenue.toLocaleString()}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
           </div>
+
+          {/* Source Performance Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-violet-500" />
+                Conversion Rates by Source
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={leadSourceData.slice(0, 8)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" domain={[0, 100]} unit="%" />
+                    <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 11 }} />
+                    <Tooltip formatter={(value) => `${value}%`} />
+                    <Legend />
+                    <Bar dataKey="contactRate" name="Contact Rate" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="qualifyRate" name="Qualify Rate" fill="#10b981" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="conversionRate" name="Win Rate" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Conversion Funnel Tab */}
+        <TabsContent value="conversion" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-emerald-500" />
+                  Lead Status Conversion Funnel
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {leadStatusFunnel.map((stage, idx) => (
+                    <div key={stage.name} className="relative">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-slate-700">{stage.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold">{stage.value}</span>
+                          <Badge variant="outline" className="text-xs">
+                            {stage.percentage}%
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="h-8 bg-slate-100 rounded-lg overflow-hidden">
+                        <div 
+                          className="h-full rounded-lg transition-all flex items-center justify-center"
+                          style={{ 
+                            width: `${Math.max(stage.percentage, 5)}%`,
+                            backgroundColor: stage.fill 
+                          }}
+                        >
+                          {stage.percentage > 15 && (
+                            <span className="text-xs font-medium text-white">{stage.value}</span>
+                          )}
+                        </div>
+                      </div>
+                      {idx > 0 && (
+                        <div className="absolute -top-1 right-20 text-xs text-slate-500">
+                          ↓ {stage.conversionFromPrev}% conversion
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Stage Conversion Rates</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-72">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={leadStatusFunnel}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value" name="Contacts">
+                        {leadStatusFunnel.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Conversion Metrics */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'New → Contacted', value: leadStatusFunnel[1]?.conversionFromPrev || 0, color: 'blue' },
+              { label: 'Contacted → Qualified', value: leadStatusFunnel[2]?.conversionFromPrev || 0, color: 'cyan' },
+              { label: 'Qualified → Proposal', value: leadStatusFunnel[3]?.conversionFromPrev || 0, color: 'emerald' },
+              { label: 'Overall Win Rate', value: leadStatusFunnel[5]?.percentage || 0, color: 'violet' }
+            ].map((metric, i) => (
+              <Card key={i} className={`bg-gradient-to-br from-${metric.color}-50 to-${metric.color}-100 border-${metric.color}-200`}>
+                <CardContent className="pt-4">
+                  <p className={`text-sm text-${metric.color}-600 font-medium`}>{metric.label}</p>
+                  <p className={`text-2xl font-bold text-${metric.color}-900`}>{metric.value}%</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* AOV by Domain Tab */}
+        <TabsContent value="aov" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-emerald-500" />
+                  Average Order Value by Domain
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-72">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={aovByDomain}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="domain" tick={{ fontSize: 11 }} />
+                      <YAxis tickFormatter={(v) => `$${v >= 1000 ? `${v/1000}k` : v}`} />
+                      <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                      <Bar dataKey="aov" name="AOV">
+                        {aovByDomain.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Domain Performance Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 max-h-72 overflow-y-auto">
+                  {aovByDomain.map((domain, i) => (
+                    <div key={i} className="p-3 border rounded-lg hover:bg-slate-50">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: domain.color }}
+                          />
+                          <span className="font-medium text-slate-900">{domain.domain}</span>
+                        </div>
+                        <Badge className="bg-emerald-100 text-emerald-700">
+                          AOV: ${domain.aov.toLocaleString()}
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <p className="text-slate-500">Contacts</p>
+                          <p className="font-semibold">{domain.contacts}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500">Won Deals</p>
+                          <p className="font-semibold">{domain.deals}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500">Revenue</p>
+                          <p className="font-semibold text-emerald-600">${domain.revenue.toLocaleString()}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {aovByDomain.length === 0 && (
+                    <p className="text-center text-slate-400 py-8">No deal data available</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Total Revenue Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200">
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="w-5 h-5 text-emerald-600" />
+                  <span className="text-sm font-medium text-emerald-700">Total Revenue</span>
+                </div>
+                <p className="text-2xl font-bold text-emerald-900">
+                  ${aovByDomain.reduce((sum, d) => sum + d.revenue, 0).toLocaleString()}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-700">Total Deals Won</span>
+                </div>
+                <p className="text-2xl font-bold text-blue-900">
+                  {aovByDomain.reduce((sum, d) => sum + d.deals, 0)}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="w-5 h-5 text-violet-600" />
+                  <span className="text-sm font-medium text-violet-700">Overall AOV</span>
+                </div>
+                <p className="text-2xl font-bold text-violet-900">
+                  ${aovByDomain.reduce((sum, d) => sum + d.deals, 0) > 0 
+                    ? Math.round(aovByDomain.reduce((sum, d) => sum + d.revenue, 0) / aovByDomain.reduce((sum, d) => sum + d.deals, 0)).toLocaleString()
+                    : 0}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Email Campaigns Tab */}
+        <TabsContent value="email" className="space-y-6">
+          <EmailCampaignHistory currentUserId={currentUserId} contacts={contacts} />
         </TabsContent>
 
         {/* Network Growth Tab */}
