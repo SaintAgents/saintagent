@@ -331,7 +331,7 @@ export default function ContentStudio() {
                 <h2 className="text-xl font-bold text-slate-900">My Digital Library</h2>
                 <p className="text-sm text-slate-500">Files uploaded to your library can be added to DRX for licensing</p>
               </div>
-              <Button onClick={() => window.location.href = '/DigitalRightsExchange'} className="gap-2">
+              <Button onClick={() => window.location.href = '/DigitalRightsExchange'} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
                 <Key className="w-4 h-4" />
                 Open DRX
               </Button>
@@ -344,7 +344,7 @@ export default function ContentStudio() {
                 </div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-2">Library is Empty</h3>
                 <p className="text-slate-500 mb-6">Upload files to your library to manage and license them</p>
-                <Button onClick={() => setUploadLibraryModalOpen(true)} className="gap-2">
+                <Button onClick={() => setUploadLibraryModalOpen(true)} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
                   <Upload className="w-4 h-4" />
                   Upload to Library
                 </Button>
@@ -410,7 +410,7 @@ export default function ContentStudio() {
                 : 'Projects shared with you will appear here'}
             </p>
             {activeTab === 'my-projects' && (
-              <Button onClick={() => setCreateModalOpen(true)} className="gap-2">
+              <Button onClick={() => setCreateModalOpen(true)} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
                 <Plus className="w-4 h-4" />
                 Create Project
               </Button>
@@ -472,7 +472,7 @@ export default function ContentStudio() {
                 Cancel
               </Button>
               <Button 
-                className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
                 onClick={() => window.location.href = createPageUrl('DigitalRightsExchange') + '?tab=assets'}
               >
                 <Key className="w-4 h-4" />
