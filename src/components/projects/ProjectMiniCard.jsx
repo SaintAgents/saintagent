@@ -3,8 +3,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
-import { Layers, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import MiniProfile from '@/components/profile/MiniProfile';
+
+const RISK_GRADE_COLORS = {
+  A: 'text-emerald-600',
+  B: 'text-green-600',
+  C: 'text-amber-600',
+  D: 'text-orange-600',
+  F: 'text-rose-600'
+};
 
 const STATUS_STYLES = {
   approved: "bg-emerald-100 text-emerald-700",
@@ -99,6 +107,18 @@ export default function ProjectMiniCard({ project, onClick }) {
               {project.claim_status === 'pending' ? 'Claim pending approval' : project.claim_status === 'approved' ? `Claimed by ${project.claimed_by || 'owner'}` : 'Claim rejected'}
             </div>
           )}
+
+          {/* Scores in bottom right */}
+          <div className="flex justify-end items-center gap-2 pt-2 mt-auto">
+            <span className="text-xs text-slate-500">Score:</span>
+            <span className="text-sm font-bold text-indigo-600">
+              {project.final_score ? project.final_score.toFixed(0) : 'N/A'}
+            </span>
+            <span className="text-xs text-slate-500">Grade:</span>
+            <span className={`text-sm font-bold ${project.phase3_risk_grade ? RISK_GRADE_COLORS[project.phase3_risk_grade] : 'text-slate-400'}`}>
+              {project.phase3_risk_grade || 'N/A'}
+            </span>
+          </div>
         </CardContent>
       </Card>
     </button>);

@@ -59,7 +59,14 @@ export default function ProjectEvaluationPanel({ project: initialProject, onUpda
 
   const { data: auditLogs = [] } = useQuery({
     queryKey: ['evaluationAuditLogs', project.id],
-    queryFn: () => base44.entities.EvaluationAuditLog.filter({ project_id: project.id }, '-created_date'),
+    queryFn: async () => {
+      try {
+        return await base44.entities.EvaluationAuditLog.filter({ project_id: project.id }, '-created_date');
+      } catch (err) {
+        console.warn('Failed to fetch audit logs:', err);
+        return [];
+      }
+    },
     enabled: !!project.id
   });
 
