@@ -8,8 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Trophy, Gem, Users, TrendingUp, Shield, Scale, Link2, Globe,
   Lock, Calendar, Clock, Wallet, ArrowRight, CheckCircle2,
-  Sparkles, ChevronDown, ExternalLink
+  Sparkles, ChevronDown, ExternalLink, ArrowLeft
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const GGG_TOKEN_IMAGE = "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759538255968_faab45d0.png";
 const PERFORMANCE_IMAGE = "https://d64gsuwffb70l.cloudfront.net/68be038a43ca0f0ab13d5a76_1759270221703_07ca2115.png";
@@ -70,7 +72,12 @@ export default function GGGCrypto() {
       {/* Navigation - positioned relative to main content area */}
       <nav className="sticky top-0 z-40 bg-purple-900/80 backdrop-blur-md border-b border-purple-700/50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Link to={createPageUrl('CommandDeck')}>
+              <Button variant="ghost" size="icon" className="text-yellow-400 hover:bg-yellow-500/10">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+            </Link>
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png" 
               alt="SaintAgent" 
