@@ -72,7 +72,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
   const navigate = useNavigate();
   const [query, setQuery] = useState(initialQuery);
   const [tab, setTab] = useState('all');
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const [filters, setFilters] = useState({});
   const [expandedSections, setExpandedSections] = useState(['location']);
   const [sortBy, setSortBy] = useState('relevance');

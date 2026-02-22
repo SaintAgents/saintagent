@@ -116,12 +116,8 @@ For offers tab, suggest price/category filters.`;
     setLoading(false);
   };
 
-  // Generate on mount or tab change
-  useEffect(() => {
-    if (currentUser && !suggestions) {
-      generateSuggestions();
-    }
-  }, [currentUser, activeTab]);
+  // Don't auto-generate - let user click to generate
+  // This prevents the loading spinner on initial load
 
   if (!currentUser) return null;
 
@@ -152,7 +148,19 @@ For offers tab, suggest price/category filters.`;
         <div className="flex items-center justify-center py-4">
           <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
         </div>
-      ) : suggestions ? (
+      ) : !suggestions ? (
+        <div className="text-center py-3">
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs gap-1"
+            onClick={generateSuggestions}
+          >
+            <Sparkles className="w-3 h-3" />
+            Get AI Suggestions
+          </Button>
+        </div>
+      ) : (
         <div className="space-y-2">
           {/* Filter suggestions */}
           {suggestions.suggestions?.slice(0, 4).map((sug, i) => (
