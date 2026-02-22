@@ -87,14 +87,14 @@ export default function Leader144KProgress({ profile }) {
     ? Math.round(transactions.reduce((sum, t) => sum + (t.delta > 0 ? t.delta : 0), 0) / Math.max(7, accountAge))
     : 50; // Default estimate
 
-  // Time estimates
+  // Time estimates - baseline minimums: 25 days aggressive (400 RP/day), 67 days moderate (150 RP/day)
   const pointsRemaining = Math.max(0, REQUIRED_POINTS - currentPoints);
   const daysRemaining = Math.max(0, REQUIRED_ACCOUNT_AGE_DAYS - accountAge);
   
-  // If points already achieved, these will be 0 - we'll show "Complete" in UI
-  const aggressiveDays = pointsRemaining > 0 ? Math.ceil(pointsRemaining / 400) : 0; // 400 RP/day aggressive
-  const middleRoadDays = pointsRemaining > 0 ? Math.ceil(pointsRemaining / 150) : 0; // 150 RP/day moderate
-  const currentPaceDays = pointsRemaining > 0 && avgDailyRP > 0 ? Math.ceil(pointsRemaining / avgDailyRP) : 0;
+  // Calculate days based on remaining points, with minimum baseline of 25/67 days for full journey
+  const aggressiveDays = pointsRemaining > 0 ? Math.max(daysRemaining, Math.ceil(pointsRemaining / 400)) : 0;
+  const middleRoadDays = pointsRemaining > 0 ? Math.max(daysRemaining, Math.ceil(pointsRemaining / 150)) : 0;
+  const currentPaceDays = pointsRemaining > 0 && avgDailyRP > 0 ? Math.max(daysRemaining, Math.ceil(pointsRemaining / avgDailyRP)) : 0;
 
   // Find current milestone
   const currentMilestone = MILESTONES.reduce((prev, curr) => 
