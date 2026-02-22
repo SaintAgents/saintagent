@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Plus, FileText, Music, Video, Image as ImageIcon, BookOpen, Brain, Mic, 
-  Upload, Eye, Share2, Trash2, MoreHorizontal, Lock, Globe
+  Upload, Eye, Share2, Trash2, MoreHorizontal, Lock, Globe, Sparkles, Loader2
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toast } from 'sonner';
@@ -45,6 +45,7 @@ const LICENSE_TYPES = [
 export default function DRXMyAssets({ assets, profile, currentUser, onCreateGrant }) {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -56,6 +57,53 @@ export default function DRXMyAssets({ assets, profile, currentUser, onCreateGran
   const [pendingFile, setPendingFile] = useState(null);
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
+
+  const handleAISuggest = async () => {
+    if (!formData.title) {
+      toast.error('Please enter a title first');
+      return;
+    }
+    setAiGenerating(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are helping a user describe a digital asset they want to upload and license.
+
+Asset title: "${formData.title}"
+${pendingFile ? `File name: "${pendingFile.name}"` : ''}
+
+Based on the title${pendingFile ? ' and file name' : ''}, generate:
+1. A compelling description (2-3 sentences, professional tone, highlight value/uniqueness)
+2. Suggest the best asset type from: document, audio, video, image, course, prompt_pack, advisory, research, knowledge_vault
+3. Suggest relevant tags (3-5 keywords)
+4. Suggest the best license: all_rights_reserved (for premium/restricted), copy_left (for open sharing), creative_commons (for attribution), custom (for specific terms)`,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            description: { type: 'string' },
+            asset_type: { type: 'string' },
+            tags: { type: 'string' },
+            license: { type: 'string' }
+          }
+        }
+      });
+      
+      const validTypes = ASSET_TYPES.map(t => t.value);
+      const validLicenses = LICENSE_TYPES.map(l => l.value);
+      
+      setFormData(prev => ({
+        ...prev,
+        description: result.description || prev.description,
+        asset_type: validTypes.includes(result.asset_type) ? result.asset_type : prev.asset_type,
+        tags: result.tags || prev.tags,
+        base_license: validLicenses.includes(result.license) ? result.license : prev.base_license
+      }));
+      toast.success('AI suggestions applied');
+    } catch (e) {
+      console.error('AI suggestion failed:', e);
+      toast.error('AI suggestion failed');
+    }
+    setAiGenerating(false);
+  };
 
   const createAssetMutation = useMutation({
     mutationFn: async (data) => {
@@ -219,12 +267,28 @@ export default function DRXMyAssets({ assets, profile, currentUser, onCreateGran
             </div>
 
             <div>
-              <Label className="text-slate-300">Description</Label>
+              <div className="flex items-center justify-between mb-1">
+                <Label className="text-slate-300">Description</Label>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 gap-1 h-7"
+                  onClick={handleAISuggest}
+                  disabled={!formData.title || aiGenerating}
+                >
+                  {aiGenerating ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3 h-3" />
+                  )}
+                  AI Assist
+                </Button>
+              </div>
               <Textarea 
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe your asset..."
-                className="bg-slate-800 border-slate-600 text-white mt-1"
+                className="bg-slate-800 border-slate-600 text-white"
                 rows={3}
               />
             </div>
