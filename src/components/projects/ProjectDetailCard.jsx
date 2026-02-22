@@ -38,7 +38,7 @@ const STAGE_LABELS = {
   mature_ops: 'Mature Operations'
 };
 
-export default function ProjectDetailCard({ project }) {
+export default function ProjectDetailCard({ project: initialProject }) {
   const [activeTab, setActiveTab] = useState('overview');
   const queryClient = useQueryClient();
 
@@ -47,10 +47,24 @@ export default function ProjectDetailCard({ project }) {
     queryFn: () => base44.auth.me()
   });
 
+  // Fetch fresh project data to get latest evaluation results
+  const { data: freshProject, refetch: refetchProject } = useQuery({
+    queryKey: ['projectDetail', initialProject?.id],
+    queryFn: async () => {
+      const results = await base44.entities.Project.filter({ id: initialProject.id });
+      return results[0] || initialProject;
+    },
+    enabled: !!initialProject?.id,
+    initialData: initialProject
+  });
+
+  const project = freshProject || initialProject;
+
   const statusConfig = STATUS_CONFIG[project.status] || STATUS_CONFIG.pending_review;
   const StatusIcon = statusConfig.icon;
 
   const handleProjectUpdate = () => {
+    refetchProject();
     queryClient.invalidateQueries({ queryKey: ['projects_all'] });
     queryClient.invalidateQueries({ queryKey: ['projects'] });
   };
