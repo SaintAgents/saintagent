@@ -44,6 +44,12 @@ const REQUEST_TYPE_CONFIG = {
     color: 'text-emerald-600',
     bgColor: 'bg-emerald-100'
   },
+  deal_approval: {
+    label: 'Deal Approval',
+    icon: Target,
+    color: 'text-cyan-600',
+    bgColor: 'bg-cyan-100'
+  },
   other: {
     label: 'Other',
     icon: Inbox,
