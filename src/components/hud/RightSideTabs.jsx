@@ -257,15 +257,19 @@ export default function RightSideTabs() {
       
       {/* Help Tab */}
       <div 
-        className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
+        className={cn(
+          "fixed right-0 z-[60] transition-all duration-300 ease-out",
+          // On mobile, only show if panel is open (triggered from menu)
+          showHelpPanel ? "block" : "hidden md:block"
+        )}
         style={{ bottom: '52px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
-        {/* Tab Handle */}
+        {/* Tab Handle - hidden on mobile */}
         <div 
           className={cn(
-            "absolute right-0 top-0 flex items-center justify-center w-10 h-10 cursor-pointer transition-all duration-300",
+            "absolute right-0 top-0 items-center justify-center w-10 h-10 cursor-pointer transition-all duration-300 hidden md:flex",
             "bg-gradient-to-l from-violet-600 to-purple-600 text-white shadow-lg",
             "rounded-l-lg border-l border-t border-b border-violet-500",
             showHelpPanel ? "translate-x-0 opacity-0" : "translate-x-0"
@@ -393,15 +397,19 @@ export default function RightSideTabs() {
 
       {/* Chat Tab */}
       <div 
-        className="fixed right-0 z-[60] transition-all duration-300 ease-out hidden md:block"
+        className={cn(
+          "fixed right-0 z-[60] transition-all duration-300 ease-out",
+          // On mobile, only show if panel is open (triggered from menu)
+          showChatPanel ? "block" : "hidden md:block"
+        )}
         style={{ bottom: '100px' }}
         onMouseEnter={handleChatMouseEnter}
         onMouseLeave={handleChatMouseLeave}
       >
-        {/* Tab Handle */}
+        {/* Tab Handle - hidden on mobile */}
         <div 
           className={cn(
-            "absolute right-0 top-0 flex items-center justify-center w-10 h-10 cursor-pointer transition-all duration-300",
+            "absolute right-0 top-0 items-center justify-center w-10 h-10 cursor-pointer transition-all duration-300 hidden md:flex",
             "bg-gradient-to-l from-blue-600 to-indigo-600 text-white shadow-lg",
             "rounded-l-lg border-l border-t border-b border-blue-500",
             showChatPanel ? "translate-x-0 opacity-0" : "translate-x-0"
