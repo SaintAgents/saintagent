@@ -21,6 +21,7 @@ import {
 import GroupForum from './GroupForum';
 import GroupMemberDirectory from './GroupMemberDirectory';
 import GroupEvents from './GroupEvents';
+import GroupMeetings from './GroupMeetings';
 import CircleChatPanel from '@/components/community/CircleChatPanel';
 import VideoCallRoom from '@/components/video/VideoCallRoom';
 
@@ -168,6 +169,10 @@ export default function GroupDetailPage({ circle, user, onBack }) {
                 <Calendar className="w-4 h-4" />
                 Events
               </TabsTrigger>
+              <TabsTrigger value="meetings" className="gap-2">
+                <Video className="w-4 h-4" />
+                Meetings
+              </TabsTrigger>
               {isOwner && (
                 <TabsTrigger value="settings" className="gap-2">
                   <Settings className="w-4 h-4" />
@@ -186,6 +191,10 @@ export default function GroupDetailPage({ circle, user, onBack }) {
 
             <TabsContent value="events">
               <GroupEvents circle={circle} user={user} />
+            </TabsContent>
+
+            <TabsContent value="meetings">
+              <GroupMeetings circle={circle} user={user} />
             </TabsContent>
 
             {isOwner && (
