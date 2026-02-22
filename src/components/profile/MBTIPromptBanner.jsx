@@ -16,9 +16,14 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   const [dismissed, setDismissed] = useState(false);
   const [showDismissOptions, setShowDismissOptions] = useState(false);
 
-  // Check if already dismissed temporarily
+  // Check if already dismissed temporarily or permanently
   useEffect(() => {
     try {
+      const dismissedPermanently = localStorage.getItem('mbti_prompt_dismissed_permanently');
+      if (dismissedPermanently === 'true') {
+        setDismissed(true);
+        return;
+      }
       const dismissedUntil = localStorage.getItem('mbti_prompt_dismissed_until');
       if (dismissedUntil && new Date(dismissedUntil) > new Date()) {
         setDismissed(true);
@@ -32,20 +37,22 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   }
 
   const handleDismiss = (duration) => {
-    const dismissUntil = new Date();
-    if (duration === 'hour') {
-      dismissUntil.setHours(dismissUntil.getHours() + 1);
-    } else if (duration === 'day') {
-      dismissUntil.setDate(dismissUntil.getDate() + 1);
-    } else if (duration === 'week') {
-      dismissUntil.setDate(dismissUntil.getDate() + 7);
-    } else if (duration === 'month') {
-      dismissUntil.setMonth(dismissUntil.getMonth() + 1);
-    } else if (duration === 'never') {
-      dismissUntil.setFullYear(dismissUntil.getFullYear() + 100);
-    }
     try {
-      localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
+      if (duration === 'never') {
+        localStorage.setItem('mbti_prompt_dismissed_permanently', 'true');
+      } else {
+        const dismissUntil = new Date();
+        if (duration === 'hour') {
+          dismissUntil.setHours(dismissUntil.getHours() + 1);
+        } else if (duration === 'day') {
+          dismissUntil.setDate(dismissUntil.getDate() + 1);
+        } else if (duration === 'week') {
+          dismissUntil.setDate(dismissUntil.getDate() + 7);
+        } else if (duration === 'month') {
+          dismissUntil.setMonth(dismissUntil.getMonth() + 1);
+        }
+        localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
+      }
     } catch {}
     setDismissed(true);
     setShowDismissOptions(false);
