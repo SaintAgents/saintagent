@@ -25,7 +25,9 @@ import {
   Calendar,
   ExternalLink,
   Share2,
-  MessageSquare
+  MessageSquare,
+  Crown,
+  AlertTriangle
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MissionCollaborationBoard from './MissionCollaborationBoard';
@@ -211,6 +213,23 @@ export default function MissionDetailModal({ mission, open, onClose }) {
     }
   });
 
+  // Claim demo mission mutation
+  const claimMissionMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.Mission.update(mission.id, {
+        is_demo: false,
+        creator_id: profile.user_id,
+        creator_name: profile.display_name,
+        claimed_by: profile.user_id,
+        claimed_at: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missions'] });
+      onClose();
+    }
+  });
+
   const handleReflectionSubmit = async (data) => {
     try {
       // Save reflection to a testimonial/review entity
@@ -269,9 +288,17 @@ export default function MissionDetailModal({ mission, open, onClose }) {
             className="w-full h-full object-cover mission-image"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-          <Badge className={cn("absolute top-4 left-4", typeColors[mission.mission_type])}>
-            {mission.mission_type}
-          </Badge>
+          <div className="absolute top-4 left-4 flex items-center gap-2">
+            <Badge className={cn(typeColors[mission.mission_type])}>
+              {mission.mission_type}
+            </Badge>
+            {mission.is_demo && (
+              <Badge className="bg-amber-500 text-white border-0">
+                <AlertTriangle className="w-3 h-3 mr-1" />
+                Demo - Claim to own
+              </Badge>
+            )}
+          </div>
           <div className="absolute bottom-4 left-4 right-4">
             <h2 className="text-2xl font-bold text-white mb-1">{mission.title}</h2>
             <p className="text-white/80 text-sm line-clamp-2">{mission.objective}</p>
@@ -494,6 +521,17 @@ export default function MissionDetailModal({ mission, open, onClose }) {
 
         {/* Footer Actions */}
         <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center gap-3">
+          {/* Claim Demo Mission Button */}
+          {mission.is_demo && !isCreator && (
+            <Button
+              className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+              onClick={() => claimMissionMutation.mutate()}
+              disabled={claimMissionMutation.isPending}
+            >
+              <Crown className="w-4 h-4 mr-2" />
+              {claimMissionMutation.isPending ? 'Claiming...' : 'Claim Ownership'}
+            </Button>
+          )}
           {isParticipant ? (
             <>
               {progressPercent === 100 && mission.status !== 'completed' ? (
