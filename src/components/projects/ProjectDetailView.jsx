@@ -137,6 +137,15 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button 
+            variant={showAIAssistant ? "default" : "outline"} 
+            size="sm" 
+            onClick={() => setShowAIAssistant(!showAIAssistant)}
+            className={showAIAssistant ? "bg-violet-600 hover:bg-violet-700" : ""}
+          >
+            <Brain className="w-4 h-4 mr-1" />
+            AI Assistant
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setAddMemberOpen(true)}>
             <Users className="w-4 h-4 mr-1" />
             Add Member
