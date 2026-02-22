@@ -240,10 +240,18 @@ export default function AdminRequestsPanel() {
           status: status === 'approved' ? 'active' : 'pending_approval'
         });
       }
+
+      // If this is a deal approval, update the deal's approval_status
+      if (request?.request_type === 'deal_approval' && request?.reference_id) {
+        await base44.entities.Deal.update(request.reference_id, {
+          approval_status: status === 'approved' ? 'approved' : 'rejected'
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
       queryClient.invalidateQueries({ queryKey: ['missions'] });
+      queryClient.invalidateQueries({ queryKey: ['deals'] });
       setActionDialog(null);
       setAdminNote('');
     }
