@@ -198,7 +198,7 @@ For offers tab, suggest price/category filters.`;
             </div>
           )}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
