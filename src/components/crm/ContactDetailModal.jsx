@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,10 +9,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { 
   Building2, MapPin, Star, Calendar, Mail, Phone, Globe, 
   Linkedin, Twitter, ExternalLink, FileText, Tag, Lock, Eye, EyeOff,
-  Edit, Trash2, Plus, Save, X, Sparkles, Loader2
+  Edit, Trash2, Plus, Save, X, Sparkles, Loader2, Bell, Send, Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import EmailOutreachModal from './EmailOutreachModal';
+import SetFollowUpModal from './SetFollowUpModal';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -35,12 +37,43 @@ const DOMAIN_COLORS = {
   other: 'bg-gray-100 text-gray-700'
 };
 
+const LEAD_SOURCE_LABELS = {
+  referral: 'Referral',
+  website: 'Website',
+  social_media: 'Social Media',
+  event: 'Event',
+  cold_outreach: 'Cold Outreach',
+  inbound: 'Inbound',
+  partner: 'Partner',
+  advertisement: 'Advertisement',
+  content: 'Content',
+  other: 'Other'
+};
+
+const LEAD_STATUS_CONFIG = {
+  new: { label: 'New', color: 'bg-blue-100 text-blue-700' },
+  contacted: { label: 'Contacted', color: 'bg-cyan-100 text-cyan-700' },
+  qualified: { label: 'Qualified', color: 'bg-emerald-100 text-emerald-700' },
+  proposal: { label: 'Proposal', color: 'bg-amber-100 text-amber-700' },
+  negotiation: { label: 'Negotiation', color: 'bg-orange-100 text-orange-700' },
+  won: { label: 'Won', color: 'bg-green-100 text-green-700' },
+  lost: { label: 'Lost', color: 'bg-rose-100 text-rose-700' },
+  nurturing: { label: 'Nurturing', color: 'bg-purple-100 text-purple-700' }
+};
+
 export default function ContactDetailModal({ open, onClose, contact, onEdit, onDelete }) {
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNote, setNewNote] = useState('');
   const [isGeneratingNote, setIsGeneratingNote] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [followUpModalOpen, setFollowUpModalOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
 
   if (!contact) return null;
   
@@ -177,6 +210,63 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
               </div>
             </div>
           </div>
+
+          {/* Quick Actions */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEmailModalOpen(true)}
+              className="gap-1 text-xs"
+              style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}
+            >
+              <Send className="w-3 h-3" />
+              Email
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFollowUpModalOpen(true)}
+              className={cn("gap-1 text-xs", contact.next_followup_date && "border-amber-300 bg-amber-50")}
+              style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}
+            >
+              <Bell className="w-3 h-3" />
+              {contact.next_followup_date ? 'Edit Reminder' : 'Set Reminder'}
+            </Button>
+          </div>
+
+          {/* Follow-up Reminder */}
+          {contact.next_followup_date && (
+            <div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
+              <div className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-amber-600" />
+                <span className="text-sm font-medium text-amber-800">
+                  Follow-up: {format(new Date(contact.next_followup_date), 'MMM d, yyyy')}
+                </span>
+              </div>
+              {contact.followup_note && (
+                <p className="text-xs text-amber-700 mt-1 ml-6">{contact.followup_note}</p>
+              )}
+            </div>
+          )}
+
+          {/* Lead Source & Status */}
+          {(contact.lead_source || contact.lead_status) && (
+            <div className="flex flex-wrap items-center gap-2">
+              {contact.lead_source && (
+                <Badge variant="outline" className="text-xs gap-1">
+                  <Target className="w-3 h-3" />
+                  {LEAD_SOURCE_LABELS[contact.lead_source] || contact.lead_source}
+                  {contact.lead_source_detail && `: ${contact.lead_source_detail}`}
+                </Badge>
+              )}
+              {contact.lead_status && LEAD_STATUS_CONFIG[contact.lead_status] && (
+                <Badge className={cn("text-xs", LEAD_STATUS_CONFIG[contact.lead_status].color)}>
+                  {LEAD_STATUS_CONFIG[contact.lead_status].label}
+                </Badge>
+              )}
+            </div>
+          )}
 
           {/* Relationship Strength */}
           <div className="flex items-center gap-2">
