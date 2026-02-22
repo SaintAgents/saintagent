@@ -119,6 +119,54 @@ export default function TaskCard({
         </p>
       )}
 
+      {/* Dependencies Display */}
+      {((task.dependencies && task.dependencies.length > 0) || (task.depends_on && task.depends_on.length > 0)) && (
+        <TooltipProvider delayDuration={200}>
+          <div className="flex items-center gap-1 mb-2 flex-wrap">
+            <Link2 className="w-3 h-3 text-slate-400 shrink-0" />
+            {(task.dependencies || task.depends_on?.map(id => ({ task_id: id, type: 'FS', lag_days: 0 })) || []).slice(0, 3).map((dep, idx) => {
+              const depTask = allTasks.find(t => t.id === (dep.task_id || dep));
+              if (!depTask) return null;
+              const depType = dep.type || 'FS';
+              const lagDays = dep.lag_days || 0;
+              
+              return (
+                <Tooltip key={idx}>
+                  <TooltipTrigger asChild>
+                    <Badge 
+                      variant="outline" 
+                      className={`text-[9px] px-1.5 py-0 cursor-help ${
+                        depTask.status === 'completed' 
+                          ? 'border-green-300 bg-green-50 text-green-700' 
+                          : 'border-amber-300 bg-amber-50 text-amber-700'
+                      }`}
+                    >
+                      {depTask.status === 'completed' ? '✓' : depType}
+                      {lagDays !== 0 && <span className="ml-0.5">{lagDays > 0 ? `+${lagDays}d` : `${lagDays}d`}</span>}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <div className="text-xs">
+                      <p className="font-medium">{depTask.title}</p>
+                      <p className="text-slate-500">{DEPENDENCY_TYPE_LABELS[depType]}</p>
+                      {lagDays !== 0 && (
+                        <p className="text-slate-500">{lagDays > 0 ? `+${lagDays} days lag` : `${lagDays} days lead`}</p>
+                      )}
+                      <p className="text-slate-400 capitalize">Status: {depTask.status?.replace('_', ' ')}</p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+            {((task.dependencies?.length || task.depends_on?.length || 0) > 3) && (
+              <Badge variant="outline" className="text-[9px] px-1.5 py-0 text-slate-500">
+                +{(task.dependencies?.length || task.depends_on?.length || 0) - 3} more
+              </Badge>
+            )}
+          </div>
+        </TooltipProvider>
+      )}
+
       {/* Footer */}
       <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700">
         {/* Status & Due Date */}
