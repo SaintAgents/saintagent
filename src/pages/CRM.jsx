@@ -170,8 +170,8 @@ export default function CRM() {
               <Globe className="w-4 h-4" />
               Batch Federate
             </Button>
-            <Button onClick={() => setFormOpen(true)} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
-              <Plus className="w-4 h-4" />
+            <Button onClick={() => setFormOpen(true)} className="gap-2 bg-violet-600 hover:bg-violet-700">
+              <Plus className="w-4 h-4 text-white" />
               <span className="text-white">Add Contact</span>
             </Button>
           </div>
