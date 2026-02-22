@@ -322,8 +322,10 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
                     <TaskCard
                       key={task.id}
                       task={task}
+                      allTasks={tasks}
                       onClick={setSelectedTask}
                       onStatusChange={(taskId, status) => updateTaskMutation.mutate({ taskId, status })}
+                      onManageDependencies={(t) => setDependencyTask(t)}
                       commentCount={getCommentCount(task.id)}
                       attachmentCount={getAttachmentCount(task.id)}
                     />
