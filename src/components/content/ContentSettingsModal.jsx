@@ -104,9 +104,15 @@ export default function ContentSettingsModal({ open, onClose, project }) {
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={onClose}>Cancel</Button>
-            <Button onClick={() => updateMutation.mutate()}>
-              Save Settings
+            <Button variant="outline" onClick={onClose} className="border-slate-300 text-slate-700">
+              Cancel
+            </Button>
+            <Button 
+              onClick={() => updateMutation.mutate()} 
+              disabled={updateMutation.isPending}
+              className="bg-violet-600 hover:bg-violet-700 text-white"
+            >
+              {updateMutation.isPending ? 'Saving...' : 'Save Settings'}
             </Button>
           </div>
         </div>
