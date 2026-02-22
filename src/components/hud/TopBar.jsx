@@ -291,9 +291,9 @@ export default function TopBar({
 
   return (
     <header className={cn(
-      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 flex items-center gap-2 md:gap-4 px-2 md:px-6 transition-all duration-300 scrollbar-hide",
+      "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 flex items-center gap-2 md:gap-3 px-2 md:px-4 transition-all duration-300 scrollbar-hide",
       "left-0",
-      sidebarCollapsed ? "md:left-20" : "md:left-64",
+      sidebarCollapsed ? "md:left-16" : "md:left-64",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflow: 'visible' }}>
       {/* Collapse/Expand Toggle */}
@@ -382,7 +382,7 @@ export default function TopBar({
           )}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
-        "flex flex-wrap items-center gap-1 bg-slate-100/80 rounded-xl p-1 transition-all duration-300 flex",
+        "flex items-center gap-0.5 bg-slate-100/80 rounded-xl p-1 transition-all duration-300 shrink-0",
         isCollapsed && "!hidden"
       )} data-no-top>
         {MODE_TABS.map((tab) => {
@@ -398,7 +398,7 @@ export default function TopBar({
                   }
                 }}
                 className={cn(
-                  "p-1.5 rounded-lg transition-all flex items-center justify-center relative",
+                  "p-1 rounded-lg transition-all flex items-center justify-center relative",
                   mode === tab.id 
                     ? "bg-white/90 shadow-sm ring-1 ring-violet-200" 
                     : "hover:bg-white/50"
@@ -408,10 +408,8 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="object-contain topbar-mode-icon"
+                  className="object-contain topbar-mode-icon w-8 h-8 md:w-9 md:h-9"
                   style={{
-                    width: 'clamp(28px, 5vw, 44px)',
-                    height: 'clamp(28px, 5vw, 44px)',
                     ...(currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : {})
                   }}
                 />
@@ -425,7 +423,7 @@ export default function TopBar({
                   e.stopPropagation();
                   setHelpMode(tab.id);
                 }}
-                className="p-0.5 rounded-full hover:bg-slate-200 transition-colors ml-0.5 opacity-0 group-hover:opacity-100"
+                className="p-0.5 rounded-full hover:bg-slate-200 transition-colors -ml-1 opacity-0 group-hover:opacity-100"
                 title={`Learn about ${tab.label}`}
               >
                 <HelpCircle className="w-3 h-3 text-slate-400 hover:text-violet-600" />
@@ -444,7 +442,7 @@ export default function TopBar({
 
       {/* Search - hidden when collapsed */}
       <div ref={searchRef} className={cn(
-        "flex-1 max-w-xl mx-auto relative transition-all duration-300 hidden md:block",
+        "flex-1 max-w-md relative transition-all duration-300 hidden md:block mx-2",
         isCollapsed && "!hidden"
       )} data-no-top style={{ zIndex: 9998 }}>
         <form onSubmit={handleSearch}>
