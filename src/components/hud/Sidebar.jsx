@@ -89,6 +89,7 @@ const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
   { id: 'betafeedback', label: 'Beta Feedback', Icon: Smile, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
   { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
+  { id: 'advice', label: 'Wisdom Exchange', Icon: Sparkles, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
   { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
