@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -35,6 +35,7 @@ import AdminTestimonialsTab from '@/components/admin/AdminTestimonialsTab.jsx';
 import ModeratorReviewPanel from '@/components/admin/ModeratorReviewPanel';
 import DemoUsersManager from '@/components/admin/DemoUsersManager';
 import AdminRequestsPanel from '@/components/admin/AdminRequestsPanel';
+import PagesControlPanel from '@/components/admin/PagesControlPanel';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -195,6 +196,10 @@ export default function Admin() {
               <Inbox className="w-4 h-4" />
               Requests
             </TabsTrigger>
+            <TabsTrigger value="pages" className="gap-2 px-3 py-2">
+              <FileText className="w-4 h-4" />
+              Pages
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -325,6 +330,10 @@ export default function Admin() {
 
           <TabsContent value="requests">
             <AdminRequestsPanel />
+          </TabsContent>
+
+          <TabsContent value="pages">
+            <PagesControlPanel />
           </TabsContent>
         </Tabs>
       </div>
