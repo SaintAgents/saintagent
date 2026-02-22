@@ -7,9 +7,10 @@ import {
   Shield, Building2, Globe, Wallet, FileCheck, 
   Users, TrendingUp, CheckCircle2, ExternalLink,
   Coins, Lock, Database, BarChart3, Target,
-  Calendar, AlertCircle, Info, Play
+  Calendar, AlertCircle, Info, Play, BookOpen, ChevronDown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import GaiaGlobalTreasurySiteClone from '@/components/treasury/GaiaGlobalTreasurySiteClone';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
 
@@ -94,6 +95,7 @@ const USE_CASES = [
 
 export default function GaiaGlobalTreasury() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showFullSite, setShowFullSite] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent">
@@ -530,6 +532,26 @@ export default function GaiaGlobalTreasury() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Learn More Button */}
+        <div className="text-center">
+          <Button
+            onClick={() => setShowFullSite(!showFullSite)}
+            size="lg"
+            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white gap-2"
+          >
+            <BookOpen className="w-5 h-5" />
+            {showFullSite ? 'Hide Full Documentation' : 'Learn More - Full Sacred Charter & Documents'}
+            <ChevronDown className={cn("w-5 h-5 transition-transform", showFullSite && "rotate-180")} />
+          </Button>
+        </div>
+
+        {/* Full Site Clone */}
+        {showFullSite && (
+          <div className="mt-8 -mx-6 md:-mx-0">
+            <GaiaGlobalTreasurySiteClone />
+          </div>
+        )}
       </div>
     </div>
   );
