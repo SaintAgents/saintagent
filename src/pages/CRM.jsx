@@ -270,7 +270,7 @@ export default function CRM() {
                 />
               </div>
               <select 
-                className="h-9 px-3 rounded-md border border-slate-200 text-sm"
+                className="h-9 px-3 rounded-md border border-slate-200 text-sm bg-white text-slate-900"
                 value={domainFilter}
                 onChange={(e) => setDomainFilter(e.target.value)}
               >
