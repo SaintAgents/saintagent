@@ -252,9 +252,6 @@ export default function DealsPage() {
     </Card>
   );
 
-  // Check if user can move deals (admin or auditor role)
-  const canMoveDeal = currentUser?.role === 'admin' || profile?.user_role === 'auditor';
-
   const DealCard = ({ deal, index }) => {
     const primaryTag = deal.tags?.[0]?.toLowerCase();
     const tagColor = CATEGORY_COLORS[primaryTag] || CATEGORY_COLORS.default;
