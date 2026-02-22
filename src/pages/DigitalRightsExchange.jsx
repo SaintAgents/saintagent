@@ -114,8 +114,13 @@ export default function DigitalRightsExchange() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1920')] bg-cover bg-center opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white dark:via-slate-900/50 dark:to-slate-900" />
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/bb5f02058_ChatGPTImageFeb22202612_55_44AM.png"
+          alt="Digital Rights Exchange"
+          className="absolute inset-0 w-full h-full object-cover"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-900/60 to-slate-900/90" />
         
         <div className="relative max-w-6xl mx-auto px-6 py-16 md:py-24">
           <div className="flex items-center justify-between mb-8">
@@ -129,16 +134,16 @@ export default function DigitalRightsExchange() {
               <span className="text-emerald-700 dark:text-emerald-300 text-sm font-medium">Programmable Digital Sovereignty</span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6" style={{ fontFamily: 'serif' }}>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg" style={{ fontFamily: 'serif' }}>
               Digital Rights Exchange
-              <span className="block text-2xl md:text-3xl text-indigo-600 dark:text-indigo-300 mt-2 font-normal">DRX</span>
+              <span className="block text-2xl md:text-3xl text-amber-300 mt-2 font-normal">DRX</span>
             </h1>
 
-            <p className="text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Transform how digital assets are shared, licensed, and monetized. 
-              Gain <span className="text-emerald-600 dark:text-emerald-400 font-semibold">programmable control</span> over access, 
-              duration, permissions, and conditions.
-            </p>
+            <div className="inline-block px-6 py-3 rounded-xl bg-slate-900/60 backdrop-blur-sm border border-white/10 mb-8">
+              <p className="text-xl text-white/90 leading-relaxed max-w-3xl mx-auto">
+                Control Access. Lease Knowledge. Monetize Content.
+              </p>
+            </div>
 
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               <Button 
