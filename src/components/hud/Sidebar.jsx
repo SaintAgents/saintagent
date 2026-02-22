@@ -102,6 +102,7 @@ const NAV_ITEMS = [
   { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
   { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
   { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
+  { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation' },
 
   { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
   { id: 'communityfeed', label: 'Community Feed', Icon: Sparkles, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
