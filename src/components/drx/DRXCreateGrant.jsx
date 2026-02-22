@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  Key, User, Clock, Eye, Download, Edit3, Share2, DollarSign, Shield, CheckCircle2
+  Key, User, Clock, Eye, Download, Edit3, Share2, DollarSign, Shield, CheckCircle2,
+  RefreshCcw, Layers, TrendingUp, Percent
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { addDays, format } from 'date-fns';
@@ -31,6 +32,20 @@ const DURATION_OPTIONS = [
   { value: 0, label: 'Unlimited' }
 ];
 
+const SUBSCRIPTION_INTERVALS = [
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'quarterly', label: 'Quarterly' },
+  { value: 'yearly', label: 'Yearly' }
+];
+
+const TIERS = [
+  { value: 'basic', label: 'Basic', color: 'bg-slate-500' },
+  { value: 'standard', label: 'Standard', color: 'bg-blue-500' },
+  { value: 'premium', label: 'Premium', color: 'bg-amber-500' },
+  { value: 'enterprise', label: 'Enterprise', color: 'bg-purple-500' }
+];
+
 export default function DRXCreateGrant({ open, onClose, assets, profile }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -43,6 +58,17 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
     is_revocable: true,
     monetization_type: 'free',
     price_ggg: 0,
+    subscription_interval: 'monthly',
+    auto_renew: false,
+    revenue_share_percent: 10,
+    tier_prices: { basic: 5, standard: 15, premium: 30, enterprise: 100 },
+    tier_access_scopes: {
+      basic: ['view'],
+      standard: ['view', 'stream'],
+      premium: ['view', 'stream', 'download'],
+      enterprise: ['view', 'stream', 'download', 'edit']
+    },
+    selected_tier: 'standard',
     conditions: {
       nda_required: false,
       verified_only: false
@@ -62,9 +88,33 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
   const createGrantMutation = useMutation({
     mutationFn: async () => {
       const asset = assets.find(a => a.id === formData.asset_id);
-      const expirationDate = formData.duration_days > 0 
+      let expirationDate = formData.duration_days > 0 
         ? addDays(new Date(), formData.duration_days).toISOString() 
         : null;
+
+      // For subscriptions, set initial billing period
+      let nextBillingDate = null;
+      if (formData.monetization_type === 'subscription') {
+        const intervalDays = {
+          weekly: 7,
+          monthly: 30,
+          quarterly: 90,
+          yearly: 365
+        };
+        nextBillingDate = addDays(new Date(), intervalDays[formData.subscription_interval]).toISOString();
+        if (formData.auto_renew) {
+          expirationDate = null; // No expiration for auto-renewing subs
+        }
+      }
+
+      // Determine price based on monetization type
+      let finalPrice = formData.price_ggg || 0;
+      let accessScope = formData.access_scope;
+      
+      if (formData.monetization_type === 'tiered') {
+        finalPrice = formData.tier_prices[formData.selected_tier] || 0;
+        accessScope = formData.tier_access_scopes[formData.selected_tier] || ['view'];
+      }
 
       await base44.entities.DRXRightsGrant.create({
         asset_id: formData.asset_id,
@@ -73,7 +123,7 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
         grantor_name: profile?.display_name,
         grantee_id: formData.grantee_email,
         grantee_email: formData.grantee_email,
-        access_scope: formData.access_scope,
+        access_scope: accessScope,
         duration_type: formData.duration_days > 0 ? 'fixed_days' : 'unlimited',
         duration_days: formData.duration_days || null,
         usage_limit: formData.usage_limit || null,
@@ -82,12 +132,21 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
         conditions: formData.conditions,
         monetization: {
           type: formData.monetization_type,
-          price_ggg: formData.price_ggg || 0
+          price_ggg: finalPrice,
+          auto_renew: formData.auto_renew,
+          subscription_interval: formData.monetization_type === 'subscription' ? formData.subscription_interval : null,
+          next_billing_date: nextBillingDate,
+          revenue_share_percent: formData.monetization_type === 'revenue_share' ? formData.revenue_share_percent : null,
+          tier: formData.monetization_type === 'tiered' ? formData.selected_tier : null,
+          tier_prices: formData.monetization_type === 'tiered' ? formData.tier_prices : null,
+          tier_access_scopes: formData.monetization_type === 'tiered' ? formData.tier_access_scopes : null
         },
         is_transferable: formData.is_transferable,
         is_revocable: formData.is_revocable,
         status: 'active',
-        rights_token: generateToken()
+        rights_token: generateToken(),
+        total_earnings_ggg: finalPrice,
+        payment_history: finalPrice > 0 ? [{ date: new Date().toISOString(), amount: finalPrice, type: 'initial' }] : []
       });
 
       // Update asset grant count
@@ -120,6 +179,17 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
       is_revocable: true,
       monetization_type: 'free',
       price_ggg: 0,
+      subscription_interval: 'monthly',
+      auto_renew: false,
+      revenue_share_percent: 10,
+      tier_prices: { basic: 5, standard: 15, premium: 30, enterprise: 100 },
+      tier_access_scopes: {
+        basic: ['view'],
+        standard: ['view', 'stream'],
+        premium: ['view', 'stream', 'download'],
+        enterprise: ['view', 'stream', 'download', 'edit']
+      },
+      selected_tier: 'standard',
       conditions: { nda_required: false, verified_only: false }
     });
     onClose();
@@ -281,7 +351,7 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
         {step === 3 && (
           <div className="space-y-4">
             <div>
-              <Label className="text-slate-300">Monetization</Label>
+              <Label className="text-slate-300">Monetization Model</Label>
               <Select 
                 value={formData.monetization_type} 
                 onValueChange={(v) => setFormData({ ...formData, monetization_type: v })}
@@ -291,13 +361,17 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="free">Free</SelectItem>
-                  <SelectItem value="fixed_fee">Fixed Fee (GGG)</SelectItem>
-                  <SelectItem value="per_use">Per Use</SelectItem>
+                  <SelectItem value="fixed_fee">One-Time Fee</SelectItem>
+                  <SelectItem value="subscription">Subscription</SelectItem>
+                  <SelectItem value="per_use">Pay Per Use</SelectItem>
+                  <SelectItem value="revenue_share">Revenue Share</SelectItem>
+                  <SelectItem value="tiered">Tiered Pricing</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {formData.monetization_type !== 'free' && (
+            {/* One-time / Per-use pricing */}
+            {(formData.monetization_type === 'fixed_fee' || formData.monetization_type === 'per_use') && (
               <div>
                 <Label className="text-slate-300">Price (GGG)</Label>
                 <div className="relative mt-1">
@@ -308,6 +382,130 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
                     onChange={(e) => setFormData({ ...formData, price_ggg: Number(e.target.value) })}
                     className="bg-slate-800 border-slate-600 text-white pl-10"
                   />
+                </div>
+              </div>
+            )}
+
+            {/* Subscription Options */}
+            {formData.monetization_type === 'subscription' && (
+              <div className="space-y-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                <div className="flex items-center gap-2 text-amber-300 text-sm font-medium">
+                  <RefreshCcw className="w-4 h-4" />
+                  Subscription Settings
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-slate-300">Price per Period</Label>
+                    <div className="relative mt-1">
+                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <Input 
+                        type="number"
+                        value={formData.price_ggg}
+                        onChange={(e) => setFormData({ ...formData, price_ggg: Number(e.target.value) })}
+                        className="bg-slate-800 border-slate-600 text-white pl-10"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-slate-300">Billing Interval</Label>
+                    <Select 
+                      value={formData.subscription_interval} 
+                      onValueChange={(v) => setFormData({ ...formData, subscription_interval: v })}
+                    >
+                      <SelectTrigger className="bg-slate-800 border-slate-600 text-white mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUBSCRIPTION_INTERVALS.map(int => (
+                          <SelectItem key={int.value} value={int.value}>{int.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Checkbox 
+                    checked={formData.auto_renew}
+                    onCheckedChange={(v) => setFormData({ ...formData, auto_renew: v })}
+                  />
+                  <span className="text-sm text-slate-300">Auto-renew subscription</span>
+                </label>
+              </div>
+            )}
+
+            {/* Revenue Share Options */}
+            {formData.monetization_type === 'revenue_share' && (
+              <div className="space-y-4 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
+                <div className="flex items-center gap-2 text-cyan-300 text-sm font-medium">
+                  <Percent className="w-4 h-4" />
+                  Revenue Share Settings
+                </div>
+                
+                <div>
+                  <Label className="text-slate-300">Your Share Percentage</Label>
+                  <div className="flex items-center gap-4 mt-2">
+                    <input
+                      type="range"
+                      min="5"
+                      max="50"
+                      value={formData.revenue_share_percent}
+                      onChange={(e) => setFormData({ ...formData, revenue_share_percent: Number(e.target.value) })}
+                      className="flex-1 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span className="text-lg font-bold text-cyan-400 w-16 text-right">
+                      {formData.revenue_share_percent}%
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-2">
+                    You'll earn {formData.revenue_share_percent}% of revenue generated from this asset's usage
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Tiered Pricing Options */}
+            {formData.monetization_type === 'tiered' && (
+              <div className="space-y-4 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                <div className="flex items-center gap-2 text-purple-300 text-sm font-medium">
+                  <Layers className="w-4 h-4" />
+                  Tiered Pricing
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {TIERS.map((tier) => (
+                    <button
+                      key={tier.value}
+                      onClick={() => setFormData({ ...formData, selected_tier: tier.value })}
+                      className={`p-3 rounded-lg border transition-all text-left ${
+                        formData.selected_tier === tier.value
+                          ? 'border-purple-500 bg-purple-500/20'
+                          : 'border-slate-600 bg-slate-800 hover:border-slate-500'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className={`w-2 h-2 rounded-full ${tier.color}`} />
+                        <span className="text-sm font-medium text-white">{tier.label}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Input
+                          type="number"
+                          value={formData.tier_prices[tier.value]}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            tier_prices: { ...formData.tier_prices, [tier.value]: Number(e.target.value) }
+                          })}
+                          onClick={(e) => e.stopPropagation()}
+                          className="bg-slate-700 border-slate-600 text-white h-8 text-sm w-20"
+                        />
+                        <span className="text-xs text-slate-400">GGG</span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {formData.tier_access_scopes[tier.value]?.join(', ')}
+                      </p>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
@@ -349,7 +547,13 @@ export default function DRXCreateGrant({ open, onClose, assets, profile }) {
                 <p><span className="text-slate-300">To:</span> {formData.grantee_email}</p>
                 <p><span className="text-slate-300">Access:</span> {formData.access_scope.join(', ')}</p>
                 <p><span className="text-slate-300">Duration:</span> {formData.duration_days > 0 ? `${formData.duration_days} days` : 'Unlimited'}</p>
-                <p><span className="text-slate-300">Price:</span> {formData.monetization_type === 'free' ? 'Free' : `${formData.price_ggg} GGG`}</p>
+                <p><span className="text-slate-300">Price:</span> {
+                  formData.monetization_type === 'free' ? 'Free' :
+                  formData.monetization_type === 'subscription' ? `${formData.price_ggg} GGG/${formData.subscription_interval}${formData.auto_renew ? ' (auto-renew)' : ''}` :
+                  formData.monetization_type === 'revenue_share' ? `${formData.revenue_share_percent}% revenue share` :
+                  formData.monetization_type === 'tiered' ? `${formData.tier_prices[formData.selected_tier]} GGG (${formData.selected_tier})` :
+                  `${formData.price_ggg} GGG`
+                }</p>
               </div>
             </div>
 

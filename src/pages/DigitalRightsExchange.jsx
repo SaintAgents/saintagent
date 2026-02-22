@@ -19,6 +19,7 @@ import DRXGrantedRights from '@/components/drx/DRXGrantedRights';
 import DRXIncomingAccess from '@/components/drx/DRXIncomingAccess';
 import DRXCreateGrant from '@/components/drx/DRXCreateGrant';
 import DRXAnalytics from '@/components/drx/DRXAnalytics';
+import DRXEarnings from '@/components/drx/DRXEarnings';
 
 const BENEFITS = [
   {
@@ -201,7 +202,10 @@ export default function DigitalRightsExchange() {
             <TabsTrigger value="analytics" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
               <BarChart3 className="w-4 h-4" /> Analytics
             </TabsTrigger>
-          </TabsList>
+            <TabsTrigger value="earnings" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white gap-2">
+              <DollarSign className="w-4 h-4" /> Earnings
+            </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="overview" className="space-y-12">
             {/* Benefits Grid */}
@@ -334,6 +338,10 @@ export default function DigitalRightsExchange() {
 
           <TabsContent value="analytics">
             <DRXAnalytics assets={myAssets} grants={grantedRights} />
+          </TabsContent>
+
+          <TabsContent value="earnings">
+            <DRXEarnings grants={grantedRights} assets={myAssets} />
           </TabsContent>
         </Tabs>
       </div>
