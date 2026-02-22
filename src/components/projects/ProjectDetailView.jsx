@@ -440,6 +440,20 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         onAdd={(member) => addMemberMutation.mutate(member.user_id)}
         existingMembers={project.team_member_ids || []}
       />
+
+      {/* Advanced Dependency Manager */}
+      {dependencyTask && (
+        <AdvancedDependencyManager
+          task={dependencyTask}
+          allTasks={tasks}
+          onSave={(depData) => updateDependenciesMutation.mutate({ 
+            taskId: dependencyTask.id, 
+            dependencies: depData.dependencies,
+            depends_on: depData.depends_on
+          })}
+          onClose={() => setDependencyTask(null)}
+        />
+      )}
     </div>
   );
 }
