@@ -67,6 +67,7 @@ import DatingMatches from './pages/DatingMatches';
 import Deals from './pages/Deals';
 import DemoLogin from './pages/DemoLogin';
 import DemoPreview from './pages/DemoPreview';
+import DigitalRightsExchange from './pages/DigitalRightsExchange';
 import EvaluationDocs from './pages/EvaluationDocs';
 import EvaluationSpec from './pages/EvaluationSpec';
 import EventDetail from './pages/EventDetail';
@@ -123,7 +124,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import DigitalRightsExchange from './pages/DigitalRightsExchange';
 import __Layout from './Layout.jsx';
 
 
@@ -148,6 +148,7 @@ export const PAGES = {
     "Deals": Deals,
     "DemoLogin": DemoLogin,
     "DemoPreview": DemoPreview,
+    "DigitalRightsExchange": DigitalRightsExchange,
     "EvaluationDocs": EvaluationDocs,
     "EvaluationSpec": EvaluationSpec,
     "EventDetail": EventDetail,
@@ -204,7 +205,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "DigitalRightsExchange": DigitalRightsExchange,
 }
 
 export const pagesConfig = {

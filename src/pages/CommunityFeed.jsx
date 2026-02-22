@@ -473,40 +473,46 @@ export default function CommunityFeed() {
                     {post.video_url && <video src={post.video_url} controls className="w-full rounded-lg" />}
                     
                     {/* Embedded YouTube/Vimeo */}
-                    {post.link_url && (post.link_url.includes('youtube.com') || post.link_url.includes('youtu.be') || post.link_url.includes('vimeo.com')) && (
-                      <div className="aspect-video rounded-lg overflow-hidden">
-                        <iframe
-                          src={(() => {
-                            const url = post.link_url;
-                            // YouTube Shorts
-                            if (url.includes('youtube.com/shorts/')) {
-                              const videoId = url.split('/shorts/')[1]?.split('?')[0];
-                              return `https://www.youtube.com/embed/${videoId}`;
-                            }
-                            // Regular YouTube watch URL
-                            if (url.includes('youtube.com/watch')) {
-                              try {
-                                return `https://www.youtube.com/embed/${new URL(url).searchParams.get('v')}`;
-                              } catch { return ''; }
-                            }
-                            // youtu.be short links
-                            if (url.includes('youtu.be')) {
-                              const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-                              return `https://www.youtube.com/embed/${videoId}`;
-                            }
-                            // Vimeo
-                            if (url.includes('vimeo.com')) {
-                              const videoId = url.split('/').pop()?.split('?')[0];
-                              return `https://player.vimeo.com/video/${videoId}`;
-                            }
-                            return '';
-                          })()}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      </div>
-                    )}
+                    {post.link_url && (post.link_url.includes('youtube.com') || post.link_url.includes('youtu.be') || post.link_url.includes('vimeo.com')) && (() => {
+                      const url = post.link_url;
+                      let embedUrl = '';
+                      // YouTube Shorts
+                      if (url.includes('youtube.com/shorts/')) {
+                        const videoId = url.split('/shorts/')[1]?.split('?')[0];
+                        if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                      }
+                      // Regular YouTube watch URL
+                      else if (url.includes('youtube.com/watch')) {
+                        try {
+                          const videoId = new URL(url).searchParams.get('v');
+                          if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                        } catch {}
+                      }
+                      // youtu.be short links
+                      else if (url.includes('youtu.be')) {
+                        const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                        if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                      }
+                      // Vimeo
+                      else if (url.includes('vimeo.com')) {
+                        const videoId = url.split('/').pop()?.split('?')[0];
+                        if (videoId) embedUrl = `https://player.vimeo.com/video/${videoId}`;
+                      }
+                      
+                      if (!embedUrl) return null;
+                      
+                      return (
+                        <div className="aspect-video rounded-lg overflow-hidden bg-black">
+                          <iframe
+                            src={embedUrl}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            title="Embedded video"
+                          />
+                        </div>
+                      );
+                    })()}
                     {post.audio_url && <audio src={post.audio_url} controls className="w-full" />}
 
                     {/* Post Actions */}
