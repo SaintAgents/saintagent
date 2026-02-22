@@ -160,7 +160,7 @@ export default function ContentStudio() {
               <Button 
                 onClick={() => setUploadLibraryModalOpen(true)}
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 gap-2"
+                className="border-white/50 bg-white/10 text-white hover:bg-white/20 gap-2"
                 size="lg"
               >
                 <Upload className="w-5 h-5" />
