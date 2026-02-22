@@ -432,6 +432,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         onClose={() => setSelectedTask(null)}
         currentUser={currentUser}
         profile={profile}
+        allTasks={tasks}
       />
 
       <AddTeamMemberModal
