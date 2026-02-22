@@ -1453,6 +1453,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
             background-color: #001a00 !important;
             color: #00ff00 !important;
             border: 1px solid #00ff00 !important;
+            opacity: 1 !important;
+          }
+          [data-theme='hacker'] select option {
+            background-color: #001a00 !important;
+            color: #00ff00 !important;
           }
           [data-theme='hacker'] input::placeholder, [data-theme='hacker'] textarea::placeholder {
             color: #006600 !important;
