@@ -332,7 +332,11 @@ export default function UserManagement() {
                     <div className="flex items-center gap-2">
                       <p className="font-medium">
                         {profile.display_name}
-                        {profile.sa_number && <span className="text-muted-foreground font-normal ml-1.5">SA#{profile.sa_number}</span>}
+                        {profile.sa_number ? (
+                          <span className="text-muted-foreground font-normal ml-1.5">SA#{profile.sa_number}</span>
+                        ) : (
+                          <span className="text-slate-400 text-xs ml-1.5">(No SA#)</span>
+                        )}
                       </p>
                       {profile.leader_tier === 'verified144k' &&
                     <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">144K Leader</Badge>
@@ -351,7 +355,7 @@ export default function UserManagement() {
                         {profile.created_date ? new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '-'}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {profile.created_date ? formatDistanceToNow(new Date(profile.created_date), { addSuffix: true }) : 'Joined'}
+                        {profile.created_date ? formatDistanceToNow(new Date(profile.created_date), { addSuffix: true, includeSeconds: false }) : 'Joined'}
                       </p>
                     </div>
                     <div className="text-center">
