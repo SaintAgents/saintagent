@@ -14,6 +14,30 @@ import { cn } from '@/lib/utils';
 
 const DOMAINS = ['finance', 'tech', 'governance', 'health', 'education', 'media', 'legal', 'spiritual', 'creative', 'nonprofit', 'other'];
 
+const LEAD_SOURCES = [
+  { value: 'referral', label: 'Referral' },
+  { value: 'website', label: 'Website' },
+  { value: 'social_media', label: 'Social Media' },
+  { value: 'event', label: 'Event' },
+  { value: 'cold_outreach', label: 'Cold Outreach' },
+  { value: 'inbound', label: 'Inbound' },
+  { value: 'partner', label: 'Partner' },
+  { value: 'advertisement', label: 'Advertisement' },
+  { value: 'content', label: 'Content' },
+  { value: 'other', label: 'Other' }
+];
+
+const LEAD_STATUSES = [
+  { value: 'new', label: 'New' },
+  { value: 'contacted', label: 'Contacted' },
+  { value: 'qualified', label: 'Qualified' },
+  { value: 'proposal', label: 'Proposal' },
+  { value: 'negotiation', label: 'Negotiation' },
+  { value: 'won', label: 'Won' },
+  { value: 'lost', label: 'Lost' },
+  { value: 'nurturing', label: 'Nurturing' }
+];
+
 const PERMISSION_OPTIONS = [
   { value: 'private', label: 'Private', desc: 'Only you can see this contact', icon: Lock },
   { value: 'signal_only', label: 'Signal Only', desc: 'Others see existence & strength, no identity', icon: Eye },
@@ -45,7 +69,10 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
     is_federated: false,
     notes: '',
     tags: [],
-    social_links: { linkedin: '', twitter: '', website: '' }
+    social_links: { linkedin: '', twitter: '', website: '' },
+    lead_source: '',
+    lead_source_detail: '',
+    lead_status: 'new'
   });
   const [tagInput, setTagInput] = useState('');
 
@@ -64,7 +91,10 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
         is_federated: contact.is_federated || false,
         notes: contact.notes || '',
         tags: contact.tags || [],
-        social_links: contact.social_links || { linkedin: '', twitter: '', website: '' }
+        social_links: contact.social_links || { linkedin: '', twitter: '', website: '' },
+        lead_source: contact.lead_source || '',
+        lead_source_detail: contact.lead_source_detail || '',
+        lead_status: contact.lead_status || 'new'
       });
     } else {
       setForm({
@@ -80,7 +110,10 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
         is_federated: false,
         notes: '',
         tags: [],
-        social_links: { linkedin: '', twitter: '', website: '' }
+        social_links: { linkedin: '', twitter: '', website: '' },
+        lead_source: '',
+        lead_source_detail: '',
+        lead_status: 'new'
       });
     }
   }, [contact, open]);
@@ -360,6 +393,49 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          {/* Lead Source & Status */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="contact-form-label">Lead Source</Label>
+              <Select value={form.lead_source} onValueChange={(v) => setForm({ ...form, lead_source: v })}>
+                <SelectTrigger className="contact-form-input">
+                  <SelectValue placeholder="How did you connect?" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEAD_SOURCES.map(s => (
+                    <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="contact-form-label">Lead Status</Label>
+              <Select value={form.lead_status} onValueChange={(v) => setForm({ ...form, lead_status: v })}>
+                <SelectTrigger className="contact-form-input">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEAD_STATUSES.map(s => (
+                    <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {form.lead_source && (
+              <div className="col-span-2">
+                <Label className="contact-form-label">Lead Source Details (optional)</Label>
+                <Input 
+                  className="contact-form-input"
+                  value={form.lead_source_detail}
+                  onChange={(e) => setForm({ ...form, lead_source_detail: e.target.value })}
+                  placeholder={form.lead_source === 'referral' ? 'Who referred them?' : 
+                               form.lead_source === 'event' ? 'Which event?' : 
+                               'Additional details...'}
+                />
+              </div>
+            )}
           </div>
 
           {/* Relationship Strength */}
