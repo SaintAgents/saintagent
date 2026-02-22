@@ -193,6 +193,9 @@ export default function DealsPage() {
 
   const clearFilter = () => setActiveFilter(null);
 
+  // Check if user can move deals (admin or auditor role)
+  const canMoveDeal = currentUser?.role === 'admin' || profile?.user_role === 'auditor';
+
   // Handle drag and drop for deals - only admin/auditor can move
   const handleDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
