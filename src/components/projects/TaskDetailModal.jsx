@@ -261,6 +261,47 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
                       </div>
                     )}
                   </div>
+                  
+                  {/* Dependencies Section */}
+                  {((task.dependencies && task.dependencies.length > 0) || (task.depends_on && task.depends_on.length > 0)) && (
+                    <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Link2 className="w-4 h-4 text-slate-500" />
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Dependencies</span>
+                      </div>
+                      <div className="space-y-2">
+                        {(task.dependencies || task.depends_on?.map(id => ({ task_id: id, type: 'FS', lag_days: 0 })) || []).map((dep, idx) => {
+                          const depTask = allTasks.find(t => t.id === (dep.task_id || dep));
+                          if (!depTask) return null;
+                          const depType = dep.type || 'FS';
+                          const lagDays = dep.lag_days || 0;
+                          
+                          return (
+                            <div key={idx} className="flex items-center justify-between p-2 bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600">
+                              <div className="flex items-center gap-2">
+                                <CheckCircle2 className={`w-4 h-4 ${depTask.status === 'completed' ? 'text-green-500' : 'text-slate-300'}`} />
+                                <span className="text-sm text-slate-700 dark:text-slate-300">{depTask.title}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-[10px]">
+                                  {DEPENDENCY_TYPE_LABELS[depType]}
+                                </Badge>
+                                {lagDays !== 0 && (
+                                  <Badge variant="outline" className="text-[10px] flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {lagDays > 0 ? `+${lagDays}d` : `${lagDays}d`}
+                                  </Badge>
+                                )}
+                                <Badge className={depTask.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}>
+                                  {depTask.status === 'completed' ? 'Done' : 'Pending'}
+                                </Badge>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </div>
