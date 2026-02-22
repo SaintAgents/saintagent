@@ -413,109 +413,154 @@ export default function Sidebar({
         {navOpen && (
           <nav className={cn("p-3 pt-0 space-y-1", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
             <TooltipProvider delayDuration={200}>
-              {NAV_ITEMS.filter(item => {
-                // Admin check
-                if (item.adminOnly && currentUser?.role !== 'admin') return false;
-                // View mode filtering
-                if (!isNavItemVisible(item.id, viewMode)) return false;
-                return true;
-              }).map((item) => {
-                const isActive = currentPage === item.id;
-                const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
-                const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
-                const isLocked = item.locked || isLeaderLocked;
-                const showExpanded = !isCollapsed || inPopup;
-                const ItemIcon = item.Icon;
+              {(() => {
+                const filteredItems = NAV_ITEMS.filter(item => {
+                  if (item.adminOnly && currentUser?.role !== 'admin') return false;
+                  if (!isNavItemVisible(item.id, viewMode)) return false;
+                  return true;
+                });
                 
-                const navLink = (
-                  <Link
-                    key={item.id}
-                    to={isLocked ? '#' : createPageUrl(item.page)}
-                    onClick={(e) => {
-                      if (isLocked) { e.preventDefault(); return; }
-                      if (item.action === 'openGallery') {
-                        e.preventDefault();
-                        document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
-                      }
-                    }}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
-                      isActive 
-                        ? "bg-violet-100 text-violet-700" 
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                      isLocked && "opacity-60 cursor-not-allowed",
-                      isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center"
-                    )}
-                  >
-                    {ItemIcon && <ItemIcon className={cn(
-                      "w-5 h-5 shrink-0",
-                      isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
-                    )} />}
-                    {showExpanded && (
-                      <>
-                        <span className="font-medium text-sm text-slate-900">{item.label}</span>
-                        {badgeValue > 0 && !isLocked && (
-                          <Badge className="ml-auto bg-violet-600 text-white text-xs">
-                            {badgeValue}
-                          </Badge>
-                        )}
-                        {isLocked && (
-                          <div className="ml-auto flex items-center gap-1">
-                            <Lock className="w-3 h-3 text-slate-400" />
-                            <Badge variant="outline" className="text-xs text-slate-500">
-                              Locked
+                // Find where web pages start
+                const webPageStartIndex = filteredItems.findIndex(item => item.isWebPage);
+                const hasWebPages = webPageStartIndex !== -1;
+                
+                return filteredItems.map((item, index) => {
+                  const isActive = currentPage === item.id;
+                  const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
+                  const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
+                  const isLocked = item.locked || isLeaderLocked;
+                  const showExpanded = !isCollapsed || inPopup;
+                  const ItemIcon = item.Icon;
+                  
+                  // Check if this is the first web page item
+                  const isFirstWebPage = hasWebPages && index === webPageStartIndex;
+                  // Check if this is a web page item
+                  const isWebPage = item.isWebPage;
+                  // Check if this is the last web page (next item is settings or end)
+                  const nextItem = filteredItems[index + 1];
+                  const isLastWebPage = isWebPage && (!nextItem || !nextItem.isWebPage);
+                  
+                  const navLink = (
+                    <Link
+                      key={item.id}
+                      to={isLocked ? '#' : createPageUrl(item.page)}
+                      onClick={(e) => {
+                        if (isLocked) { e.preventDefault(); return; }
+                        if (item.action === 'openGallery') {
+                          e.preventDefault();
+                          document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
+                        }
+                      }}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
+                        isActive 
+                          ? "bg-violet-100 text-violet-700" 
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                        isLocked && "opacity-60 cursor-not-allowed",
+                        isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center"
+                      )}
+                    >
+                      {ItemIcon && <ItemIcon className={cn(
+                        "w-5 h-5 shrink-0",
+                        isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
+                      )} />}
+                      {showExpanded && (
+                        <>
+                          <span className="font-medium text-sm text-slate-900">{item.label}</span>
+                          {badgeValue > 0 && !isLocked && (
+                            <Badge className="ml-auto bg-violet-600 text-white text-xs">
+                              {badgeValue}
                             </Badge>
-                          </div>
-                        )}
-                      </>
-                    )}
-                    {!showExpanded && badgeValue > 0 && !isLocked && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                        {badgeValue}
-                      </span>
-                    )}
-                    {!showExpanded && isLocked && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center">
-                        <Lock className="w-2.5 h-2.5" />
-                      </span>
-                    )}
-                  </Link>
-                );
-                
-                if (((isCollapsed && !inPopup) || item.hint) && !isLocked) {
-                  return (
-                    <Tooltip key={item.id}>
-                      <TooltipTrigger asChild>
-                        {navLink}
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                        <p className="text-sm font-medium text-slate-900">{item.label}</p>
-                        {item.hint && <p className="text-xs text-slate-600">{item.hint}</p>}
-                      </TooltipContent>
-                    </Tooltip>
+                          )}
+                          {isLocked && (
+                            <div className="ml-auto flex items-center gap-1">
+                              <Lock className="w-3 h-3 text-slate-400" />
+                              <Badge variant="outline" className="text-xs text-slate-500">
+                                Locked
+                              </Badge>
+                            </div>
+                          )}
+                        </>
+                      )}
+                      {!showExpanded && badgeValue > 0 && !isLocked && (
+                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                          {badgeValue}
+                        </span>
+                      )}
+                      {!showExpanded && isLocked && (
+                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center">
+                          <Lock className="w-2.5 h-2.5" />
+                        </span>
+                      )}
+                    </Link>
                   );
-                }
-                
-                if (isLocked && item.id === 'leader') {
-                  return (
-                    <Tooltip key={item.id}>
-                      <TooltipTrigger asChild>
-                        {navLink}
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                        <div className="space-y-1">
-                          <p className="font-medium text-sm text-slate-900">Leader Channel Locked</p>
-                          <p className="text-xs text-slate-600">
-                            Become a Verified 144k Leader to unlock.
-                          </p>
+                  
+                  // Wrap web pages in a special container
+                  const wrappedNavLink = (() => {
+                    if (((isCollapsed && !inPopup) || item.hint) && !isLocked) {
+                      return (
+                        <Tooltip key={item.id}>
+                          <TooltipTrigger asChild>
+                            {navLink}
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
+                            <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                            {item.hint && <p className="text-xs text-slate-600">{item.hint}</p>}
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    }
+                    
+                    if (isLocked && item.id === 'leader') {
+                      return (
+                        <Tooltip key={item.id}>
+                          <TooltipTrigger asChild>
+                            {navLink}
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
+                            <div className="space-y-1">
+                              <p className="font-medium text-sm text-slate-900">Leader Channel Locked</p>
+                              <p className="text-xs text-slate-600">
+                                Become a Verified 144k Leader to unlock.
+                              </p>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    }
+                    
+                    return navLink;
+                  })();
+                  
+                  // Add web pages container styling
+                  if (isFirstWebPage && showExpanded) {
+                    return (
+                      <React.Fragment key={item.id}>
+                        <div className="pt-2 pb-1">
+                          <span className="px-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Web Pages</span>
                         </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  );
-                }
-                
-                return navLink;
-              })}
+                        <div className="bg-slate-50/80 rounded-lg py-1 -mx-1 px-1 space-y-0.5">
+                          {wrappedNavLink}
+                        </div>
+                      </React.Fragment>
+                    );
+                  }
+                  
+                  if (isWebPage && !isFirstWebPage && showExpanded) {
+                    // Continue the web pages container
+                    return (
+                      <div key={item.id} className={cn(
+                        "bg-slate-50/80 -mx-1 px-1",
+                        isLastWebPage ? "rounded-b-lg pb-1" : ""
+                      )}>
+                        {wrappedNavLink}
+                      </div>
+                    );
+                  }
+                  
+                  return wrappedNavLink;
+                });
+              })()}
             </TooltipProvider>
           </nav>
         )}
