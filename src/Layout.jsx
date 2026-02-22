@@ -1481,10 +1481,23 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] input::placeholder, [data-theme='hacker'] textarea::placeholder {
             color: #006600 !important;
           }
-          [data-theme='hacker'] [role="dialog"], [data-theme='hacker'] [data-radix-popper-content-wrapper] *, [data-theme='hacker'] [data-state="open"] {
-            background-color: #000 !important;
+          [data-theme='hacker'] [role="dialog"],
+          [data-theme='hacker'] [data-radix-dialog-content],
+          [data-theme='hacker'] [data-radix-popper-content-wrapper] > div {
+            background-color: #000000 !important;
             color: #00ff00 !important;
             border-color: #00ff00 !important;
+          }
+          [data-theme='hacker'] [role="dialog"] > div,
+          [data-theme='hacker'] [data-radix-dialog-content] > div {
+            background-color: #000000 !important;
+          }
+          /* Dialog content wrapper - solid black */
+          html[data-theme='hacker'] [role="dialog"],
+          html[data-theme='hacker'] [data-radix-dialog-content] {
+            background-color: #000000 !important;
+            border: 1px solid #00ff00 !important;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.4) !important;
           }
           [data-theme='hacker'] svg { color: #00ff00 !important; stroke: #00ff00 !important; }
           [data-theme='hacker'] svg path, [data-theme='hacker'] svg circle, [data-theme='hacker'] svg rect, [data-theme='hacker'] svg line { stroke: #00ff00 !important; fill: none !important; }
