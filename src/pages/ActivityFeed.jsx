@@ -20,20 +20,21 @@ import { format } from 'date-fns';
 import UserActivityDashboard from '@/components/activity/UserActivityDashboard';
 
 const TYPE_META = {
-  announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]' },
-  listings: { label: 'Listings', icon: ShoppingBag, color: 'bg-emerald-900' },
-  missions: { label: 'Missions', icon: Target, color: 'bg-violet-900' },
-  testimonials: { label: 'Testimonials', icon: Star, color: 'bg-amber-700' },
-  reputation: { label: 'Reputation', icon: TrendingUp, color: 'bg-blue-900' },
-  posts: { label: 'Posts', icon: FileText, color: 'bg-pink-900' },
-  meetings: { label: 'Meetings', icon: Calendar, color: 'bg-cyan-900' },
-  follows: { label: 'Follows', icon: UserPlus, color: 'bg-indigo-900' },
-  events: { label: 'Events', icon: Sparkles, color: 'bg-orange-800' },
+  announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]', textColor: 'text-white' },
+  listings: { label: 'Listings', icon: ShoppingBag, color: 'bg-emerald-600', textColor: 'text-white' },
+  missions: { label: 'Missions', icon: Target, color: 'bg-violet-600', textColor: 'text-white' },
+  testimonials: { label: 'Testimonials', icon: Star, color: 'bg-amber-500', textColor: 'text-white' },
+  reputation: { label: 'Reputation', icon: TrendingUp, color: 'bg-blue-600', textColor: 'text-white' },
+  posts: { label: 'Posts', icon: FileText, color: 'bg-pink-600', textColor: 'text-white' },
+  meetings: { label: 'Meetings', icon: Calendar, color: 'bg-cyan-600', textColor: 'text-white' },
+  follows: { label: 'Follows', icon: UserPlus, color: 'bg-indigo-600', textColor: 'text-white' },
+  events: { label: 'Events', icon: Sparkles, color: 'bg-orange-500', textColor: 'text-white' },
+  updates: { label: 'Updates', icon: TrendingUp, color: 'bg-violet-600', textColor: 'text-white' },
 };
 
 // McKinsey-style Activity Card
 function ActivityCard({ ev, onOpen, onShare }) {
-  const meta = TYPE_META[ev.type] || { icon: TrendingUp, color: 'bg-slate-800' };
+  const meta = TYPE_META[ev.type] || { icon: TrendingUp, color: 'bg-slate-600', textColor: 'text-white' };
   const Icon = meta.icon;
   const timeAgo = ev.created_date ? format(new Date(ev.created_date), 'MMM d, yyyy • h:mm a') : '';
   
@@ -53,7 +54,7 @@ function ActivityCard({ ev, onOpen, onShare }) {
           <div className="flex-1 min-w-0">
             {/* Category Badge */}
             <div className="flex items-center justify-between mb-2">
-              <Badge className={`${meta.color} text-white text-xs font-semibold tracking-widest uppercase`}>
+              <Badge className={`${meta.color} ${meta.textColor || 'text-white'} text-xs font-semibold tracking-widest uppercase`}>
                 {meta.label}
               </Badge>
               <span className="text-xs text-slate-400 flex items-center gap-1">
