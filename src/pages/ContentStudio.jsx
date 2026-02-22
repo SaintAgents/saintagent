@@ -11,11 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { 
   Plus, Search, FileText, Video, Music, FolderOpen, 
   Clock, Users, Eye, Edit3, Trash2, MoreVertical,
-  Filter, Grid, List, Sparkles, TrendingUp
+  Filter, Grid, List, Sparkles, TrendingUp, Key, Upload, BookOpen
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { createPageUrl } from '@/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import CreateContentModal from '@/components/content/CreateContentModal';
 import ContentProjectCard from '@/components/content/ContentProjectCard';
 import BackButton from '@/components/hud/BackButton';
@@ -43,6 +44,7 @@ export default function ContentStudio() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
   const [activeTab, setActiveTab] = useState('my-projects');
+  const [uploadLibraryModalOpen, setUploadLibraryModalOpen] = useState(false);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -87,6 +89,13 @@ export default function ContentStudio() {
     enabled: !!currentUser?.email
   });
 
+  // DRX Assets (library items)
+  const { data: drxAssets = [] } = useQuery({
+    queryKey: ['drxAssets', currentUser?.email],
+    queryFn: () => base44.entities.DRXAsset.filter({ owner_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.ContentProject.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myContentProjects'] })
@@ -122,7 +131,9 @@ export default function ContentStudio() {
 
   const displayProjects = activeTab === 'my-projects' 
     ? filterProjects(myProjects) 
-    : filterProjects(sharedProjects);
+    : activeTab === 'shared'
+    ? filterProjects(sharedProjects)
+    : []; // Library tab doesn't show projects
 
   const stats = {
     total: myProjects.length,
@@ -143,16 +154,27 @@ export default function ContentStudio() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">Content Studio</h1>
-              <p className="text-violet-200 text-lg">Create, collaborate, and publish amazing content</p>
+              <p className="text-violet-200 text-lg">Create, collaborate, and manage your digital library</p>
             </div>
-            <Button 
-              onClick={() => setCreateModalOpen(true)}
-              className="bg-white text-violet-600 hover:bg-violet-50 gap-2 shadow-lg"
-              size="lg"
-            >
-              <Plus className="w-5 h-5" />
-              New Project
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => setUploadLibraryModalOpen(true)}
+                variant="outline"
+                className="border-white/30 text-white hover:bg-white/10 gap-2"
+                size="lg"
+              >
+                <Upload className="w-5 h-5" />
+                Upload to Library
+              </Button>
+              <Button 
+                onClick={() => setCreateModalOpen(true)}
+                className="bg-white text-violet-600 hover:bg-violet-50 gap-2 shadow-lg"
+                size="lg"
+              >
+                <Plus className="w-5 h-5" />
+                New Project
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
@@ -172,6 +194,10 @@ export default function ContentStudio() {
             <div className="p-4 rounded-xl bg-white/10 backdrop-blur-sm">
               <p className="text-2xl font-bold">{stats.collaborations}</p>
               <p className="text-sm text-violet-200">Collaborations</p>
+            </div>
+            <div className="p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+              <p className="text-2xl font-bold">{drxAssets.length}</p>
+              <p className="text-sm text-violet-200">Library Items</p>
             </div>
           </div>
         </div>
@@ -290,8 +316,76 @@ export default function ContentStudio() {
           </div>
         </div>
 
+        {/* Library Tab */}
+        {activeTab === 'library' && (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">My Digital Library</h2>
+                <p className="text-sm text-slate-500">Files uploaded to your library can be added to DRX for licensing</p>
+              </div>
+              <Button onClick={() => window.location.href = '/DigitalRightsExchange'} className="gap-2">
+                <Key className="w-4 h-4" />
+                Open DRX
+              </Button>
+            </div>
+
+            {drxAssets.length === 0 ? (
+              <div className="text-center py-20">
+                <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="w-10 h-10 text-emerald-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">Library is Empty</h3>
+                <p className="text-slate-500 mb-6">Upload files to your library to manage and license them</p>
+                <Button onClick={() => setUploadLibraryModalOpen(true)} className="gap-2">
+                  <Upload className="w-4 h-4" />
+                  Upload to Library
+                </Button>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {drxAssets.map(asset => {
+                  const typeIcon = asset.asset_type === 'video' ? Video :
+                                   asset.asset_type === 'audio' ? Music :
+                                   asset.asset_type === 'image' ? Eye :
+                                   FileText;
+                  const TypeIcon = typeIcon;
+                  
+                  return (
+                    <Card key={asset.id} className="hover:shadow-lg transition-shadow">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
+                            <TypeIcon className="w-6 h-6 text-violet-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-slate-900 truncate">{asset.title}</h3>
+                            <p className="text-xs text-slate-500 capitalize">{asset.asset_type}</p>
+                          </div>
+                        </div>
+                        {asset.description && (
+                          <p className="text-sm text-slate-600 mb-3 line-clamp-2">{asset.description}</p>
+                        )}
+                        {asset.thumbnail_url && (
+                          <img src={asset.thumbnail_url} alt={asset.title} className="w-full h-32 object-cover rounded-lg mb-3" />
+                        )}
+                        <div className="flex items-center justify-between text-xs text-slate-500">
+                          <span>{asset.total_grants || 0} grants</span>
+                          <Badge className="bg-emerald-100 text-emerald-700">
+                            {asset.total_revenue_ggg?.toFixed(1) || 0} GGG
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Projects Grid */}
-        {loadingMy ? (
+        {activeTab !== 'library' && (loadingMy ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
           </div>
@@ -338,6 +432,49 @@ export default function ContentStudio() {
         onClose={() => setCreateModalOpen(false)}
         profile={profile}
       />
+
+      {/* Upload to Library Modal - redirects to DRX */}
+      <Dialog open={uploadLibraryModalOpen} onOpenChange={setUploadLibraryModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Upload className="w-5 h-5 text-emerald-600" />
+              Upload to Library
+            </DialogTitle>
+            <DialogDescription>
+              Your digital library is managed through the Digital Rights Exchange (DRX)
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+              <div className="flex items-start gap-3">
+                <Key className="w-5 h-5 text-emerald-600 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-emerald-900 mb-1">Why DRX?</p>
+                  <p className="text-xs text-emerald-700">
+                    Files in your library can be licensed, rented, or shared through programmable rights grants.
+                    Upload in DRX to set access controls, monetization, and usage tracking.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setUploadLibraryModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+                onClick={() => window.location.href = createPageUrl('DigitalRightsExchange') + '?tab=assets'}
+              >
+                <Key className="w-4 h-4" />
+                Go to DRX
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
