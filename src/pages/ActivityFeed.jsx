@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   ShoppingBag, Target, Star, TrendingUp, RefreshCcw, Sparkles, 
-  MessageSquare, Users, Briefcase, Globe, Heart, User, FileText, 
+  MessageSquare, Users, Briefcase, Globe, User, FileText, 
   Calendar, UserPlus, Share2, Megaphone, Clock, ArrowRight, ChevronRight
 } from 'lucide-react';
 import ShareContentModal from '@/components/share/ShareContentModal';
@@ -213,7 +213,7 @@ export default function ActivityFeed() {
                 <User className="w-4 h-4" /> My Activity
               </TabsTrigger>
               <TabsTrigger value="friends" className="gap-2 data-[state=active]:bg-[#051C2C] data-[state=active]:text-white">
-                <Heart className="w-4 h-4" /> Network
+                <Users className="w-4 h-4" /> Network
               </TabsTrigger>
               <TabsTrigger value="everyone" className="gap-2 data-[state=active]:bg-[#051C2C] data-[state=active]:text-white">
                 <Globe className="w-4 h-4" /> All Activity
