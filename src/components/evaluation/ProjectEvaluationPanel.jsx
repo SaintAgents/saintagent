@@ -57,10 +57,17 @@ export default function ProjectEvaluationPanel({ project, onUpdate }) {
       const response = await base44.functions.invoke('evaluateProject', { project_id: project.id });
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Invalidate all related queries to force refresh
       queryClient.invalidateQueries({ queryKey: ['projectEvaluations', project.id] });
       queryClient.invalidateQueries({ queryKey: ['evaluationAuditLogs', project.id] });
-      onUpdate?.();
+      queryClient.invalidateQueries({ queryKey: ['project', project.id] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      // Call onUpdate to refresh parent component with the new data
+      onUpdate?.(data);
+    },
+    onError: (error) => {
+      console.error('Evaluation failed:', error);
     }
   });
 
