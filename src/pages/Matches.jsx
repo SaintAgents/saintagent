@@ -26,6 +26,7 @@ import {
 import { createPageUrl } from '@/utils';
 import MatchCard from '@/components/hud/MatchCard';
 import AIMatchGenerator from '@/components/ai/AIMatchGenerator';
+import AIRecommendedMatches from '@/components/ai/AIRecommendedMatches';
 import DatingTab from '@/components/dating/DatingTab';
 import HelpHint from '@/components/hud/HelpHint';
 import AIMatchAssistant from '@/components/dating/AIMatchAssistant';
@@ -405,6 +406,13 @@ export default function Matches() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
+
+        {/* AI Recommended Matches Section */}
+        {tab !== 'dating' && (
+          <div className="mb-8">
+            <AIRecommendedMatches profile={profile} limit={6} />
+          </div>
+        )}
 
         {tab === 'dating' ? (
           <DatingTab profile={profile} />
