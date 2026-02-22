@@ -339,6 +339,7 @@ export default function AdminRequestsPanel() {
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="mission_ggg_approval">Mission GGG</SelectItem>
+                <SelectItem value="deal_approval">Deal Approval</SelectItem>
                 <SelectItem value="badge_request">Badge</SelectItem>
                 <SelectItem value="role_request">Role</SelectItem>
                 <SelectItem value="feature_request">Feature</SelectItem>
