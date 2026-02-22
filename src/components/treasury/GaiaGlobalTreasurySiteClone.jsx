@@ -592,7 +592,7 @@ export default function GaiaGlobalTreasurySiteClone() {
                   <span className="text-2xl font-serif text-amber-400">MC</span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-serif text-amber-400 mb-1">Marc Chagnon</h3>
+                  <h3 className="text-2xl font-serif text-amber-400 mb-1">Marc Cifelli</h3>
                   <p className="text-slate-400 mb-4">Co-Founder</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <Badge variant="outline" className="border-amber-500/50 text-amber-400">Strategic Operations</Badge>
@@ -600,7 +600,7 @@ export default function GaiaGlobalTreasurySiteClone() {
                     <Badge variant="outline" className="border-amber-500/50 text-amber-400">Partnership Architecture</Badge>
                   </div>
                   <p className="text-slate-300 text-sm leading-relaxed">
-                    Marc Chagnon brings decades of experience in strategic operations, international business development, 
+                    Marc Cifelli brings decades of experience in strategic operations, international business development, 
                     and partnership architecture to Gaia Global Treasury. His expertise spans cross-border coordination, 
                     stakeholder alignment, and the practical implementation of complex financial structures.
                   </p>
