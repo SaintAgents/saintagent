@@ -355,7 +355,13 @@ export default function UserManagement() {
                         {profile.created_date ? new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '-'}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {profile.created_date ? formatDistanceToNow(new Date(profile.created_date), { addSuffix: true, includeSeconds: false }) : 'Joined'}
+                        {profile.created_date ? (() => {
+                          const date = new Date(profile.created_date);
+                          const now = new Date();
+                          // If date is in the future, just show "Just now"
+                          if (date > now) return 'Just now';
+                          return formatDistanceToNow(date, { addSuffix: true });
+                        })() : 'Joined'}
                       </p>
                     </div>
                     <div className="text-center">
