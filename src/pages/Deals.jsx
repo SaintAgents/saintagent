@@ -229,9 +229,6 @@ export default function DealsPage() {
     }
   };
 
-  // Check if user can move deals (admin or auditor role)
-  const canMoveDeal = currentUser?.role === 'admin' || profile?.user_role === 'auditor';
-
   const StatCard = ({ icon: Icon, label, value, subLabel, color, onClick, isActive }) => (
     <Card 
       className={`cursor-pointer transition-all hover:scale-105 ${isActive ? 'ring-2 ring-cyan-500' : ''}`}
