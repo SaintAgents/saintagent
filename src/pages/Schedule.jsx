@@ -9,8 +9,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar } from "@/components/ui/calendar";
 import { 
   Calendar as CalendarIcon, Clock, Users, Video, MapPin, 
-  Radio, Target, Filter, ChevronLeft, ChevronRight
+  Radio, Target, Filter, ChevronLeft, ChevronRight, Copy, Check
 } from "lucide-react";
+import { toast } from 'sonner';
 import { format, parseISO, isAfter, isBefore, startOfDay, endOfDay, addDays, isSameDay } from "date-fns";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -386,10 +387,20 @@ export default function Schedule() {
                                   </span>
                                 )}
                                 {item.online_link && (
-                                  <span className="flex items-center gap-1 text-blue-600">
+                                  <button 
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      navigator.clipboard.writeText(item.online_link);
+                                      toast.success('Meeting link copied!');
+                                    }}
+                                    className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:underline"
+                                    title="Click to copy link"
+                                  >
                                     <Video className="w-3 h-3" />
                                     Online
-                                  </span>
+                                    <Copy className="w-2.5 h-2.5 ml-0.5" />
+                                  </button>
                                 )}
                                 {item.attendeeCount !== undefined && (
                                   <span className="flex items-center gap-1">

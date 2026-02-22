@@ -6,8 +6,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Radio, Calendar, Clock, Users, Play, Bell, BellOff, 
   Video, Mic, ExternalLink, CheckCircle, Star, CalendarCheck,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Copy, Check
 } from "lucide-react";
+import { toast } from 'sonner';
 import { format, parseISO } from "date-fns";
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -302,16 +303,17 @@ export default function BroadcastCard({ broadcast, currentUser, onRsvp, onIntere
               </>
             )}
 
-            {broadcast.live_stream_url && !isLive && !isPast && (
+            {broadcast.live_stream_url && (
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="gap-1 text-slate-500"
+                className="gap-1 text-slate-500 hover:text-violet-600"
                 onClick={() => {
                   navigator.clipboard.writeText(broadcast.live_stream_url);
+                  toast.success('Zoom link copied to clipboard!');
                 }}
               >
-                <ExternalLink className="w-3 h-3" />
+                <Copy className="w-3 h-3" />
                 Copy Link
               </Button>
             )}
