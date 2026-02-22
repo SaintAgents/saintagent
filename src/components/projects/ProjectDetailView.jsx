@@ -18,6 +18,8 @@ import CreateTaskModal from './CreateTaskModal';
 import TaskDetailModal from './TaskDetailModal';
 import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal';
 import AIProjectAssistant from './AIProjectAssistant';
+import AdvancedDependencyManager from './AdvancedDependencyManager';
+import TaskDependencyGraph from './TaskDependencyGraph';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
