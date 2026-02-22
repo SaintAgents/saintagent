@@ -246,20 +246,34 @@ export default function DealsPage() {
     </Card>
   );
 
+  // Check if user can move deals (admin or auditor role)
+  const canMoveDeal = currentUser?.role === 'admin' || profile?.user_role === 'auditor';
+
   const DealCard = ({ deal, index }) => {
     const primaryTag = deal.tags?.[0]?.toLowerCase();
     const tagColor = CATEGORY_COLORS[primaryTag] || CATEGORY_COLORS.default;
+    const isPendingApproval = deal.approval_status === 'pending';
     
     return (
-      <Draggable draggableId={deal.id} index={index}>
+      <Draggable draggableId={deal.id} index={index} isDragDisabled={!canMoveDeal}>
         {(provided, snapshot) => (
           <Card 
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`cursor-pointer hover:border-cyan-500/50 transition-all group ${snapshot.isDragging ? 'shadow-xl ring-2 ring-cyan-500 rotate-2' : ''}`}
+            className={`cursor-pointer hover:border-cyan-500/50 transition-all group relative overflow-hidden ${snapshot.isDragging ? 'shadow-xl ring-2 ring-cyan-500 rotate-2' : ''}`}
             onClick={() => setSelectedDeal(deal)}
           >
-            <CardContent className="p-3">
+            {/* Pending Approval Diagonal Stamp */}
+            {isPendingApproval && (
+              <div className="absolute inset-0 pointer-events-none z-10">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-45 whitespace-nowrap">
+                  <span className="px-8 py-1 bg-amber-500/90 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg">
+                    Pending Approval
+                  </span>
+                </div>
+              </div>
+            )}
+            <CardContent className={`p-3 ${isPendingApproval ? 'opacity-70' : ''}`}>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {primaryTag && (
