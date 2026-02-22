@@ -130,6 +130,17 @@ function RequestCard({ request, onAction }) {
                       {request.requested_value.role}
                     </Badge>
                   )}
+                  {request.requested_value.deal_title && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Target className="w-3 h-3" />
+                      {request.requested_value.deal_title}
+                    </Badge>
+                  )}
+                  {request.requested_value.amount && (
+                    <Badge variant="secondary" className="gap-1 bg-emerald-100 text-emerald-700">
+                      ${request.requested_value.amount.toLocaleString()}
+                    </Badge>
+                  )}
                 </div>
               </div>
             )}
