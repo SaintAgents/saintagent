@@ -138,7 +138,7 @@ export default function GaiaGlobalTreasury() {
                 </div>
               </div>
               <a 
-                href="https://www.youtube.com/watch?v=P4iW9w0F4uE" 
+                href="https://youtu.be/igeV4LxrEik" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
