@@ -24,7 +24,8 @@ import {
   StickyNote,
   CalendarDays,
   Clock,
-  LayoutGrid
+  LayoutGrid,
+  Hash
 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
@@ -166,6 +167,32 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const filteredMissions = filterResults(missions, ['title', 'description', 'objective']);
   const filteredCircles = filterResults(circles, ['name', 'description', 'purpose']);
   const filteredPosts = filterResults(posts, ['content', 'title']);
+  
+  // Extract hashtags from posts and filter by search query
+  const extractHashtags = (postsArray) => {
+    const tagMap = new Map();
+    postsArray.forEach(post => {
+      const content = post.content || '';
+      const matches = content.match(/#[\w]+/g) || [];
+      matches.forEach(tag => {
+        const normalizedTag = tag.toLowerCase();
+        if (!tagMap.has(normalizedTag)) {
+          tagMap.set(normalizedTag, { tag: normalizedTag, count: 0, posts: [] });
+        }
+        const entry = tagMap.get(normalizedTag);
+        entry.count++;
+        if (!entry.posts.includes(post.id)) {
+          entry.posts.push(post.id);
+        }
+      });
+    });
+    return Array.from(tagMap.values()).sort((a, b) => b.count - a.count);
+  };
+  
+  const allHashtags = extractHashtags(posts);
+  const filteredHashtags = query.trim() 
+    ? allHashtags.filter(h => h.tag.includes(query.toLowerCase().replace(/^#/, '')))
+    : (showAll ? allHashtags.slice(0, 10) : []);
   const filteredProjects = filterResults(projects, ['title', 'description']);
   
   // New: Daily Logs, Notes, Meetings, Events
@@ -212,13 +239,16 @@ export default function SearchModal({ open, onClose, onSelect }) {
         </div>
 
         <Tabs value={tab} onValueChange={setTab} className="px-4">
-          <TabsList className="w-full grid grid-cols-12 gap-0.5">
+          <TabsList className="w-full grid grid-cols-13 gap-0.5">
             <TabsTrigger value="all" title="All Results" className="text-xs px-1">All</TabsTrigger>
             <TabsTrigger value="pages" title="Pages">
               <LayoutGrid className="w-4 h-4" />
             </TabsTrigger>
             <TabsTrigger value="people" title="People">
               <Users className="w-4 h-4" />
+            </TabsTrigger>
+            <TabsTrigger value="hashtags" title="Hashtags">
+              <Hash className="w-4 h-4" />
             </TabsTrigger>
             <TabsTrigger value="dailylogs" title="Daily Logs">
               <CalendarDays className="w-4 h-4" />
@@ -267,6 +297,29 @@ export default function SearchModal({ open, onClose, onSelect }) {
                       <div className="text-left flex-1">
                         <p className="font-medium text-slate-900">{page.label}</p>
                         <p className="text-sm text-slate-500">{page.description}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Hashtags */}
+              {(tab === 'all' || tab === 'hashtags') && filteredHashtags.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Hashtags</h3>}
+                  {filteredHashtags.map(hashtag => (
+                    <button
+                      key={hashtag.tag}
+                      onClick={() => { 
+                        setQuery(hashtag.tag);
+                        setTab('posts');
+                      }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <Hash className="w-10 h-10 p-2 rounded-lg bg-violet-100 text-violet-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{hashtag.tag}</p>
+                        <p className="text-sm text-slate-500">{hashtag.count} posts</p>
                       </div>
                     </button>
                   ))}
@@ -441,7 +494,8 @@ export default function SearchModal({ open, onClose, onSelect }) {
                filteredMissions.length === 0 && filteredCircles.length === 0 && 
                filteredPosts.length === 0 && filteredProjects.length === 0 &&
                filteredDailyLogs.length === 0 && filteredNotes.length === 0 &&
-               filteredMeetings.length === 0 && filteredEvents.length === 0 && (
+               filteredMeetings.length === 0 && filteredEvents.length === 0 &&
+               filteredHashtags.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
                   <p>No results found{query ? ` for "${query}"` : ''}</p>
                 </div>
