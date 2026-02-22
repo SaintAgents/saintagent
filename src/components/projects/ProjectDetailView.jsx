@@ -295,6 +295,13 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         </div>
       </div>
 
+      {/* Dependency Graph */}
+      {showDependencyGraph && (
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+          <TaskDependencyGraph tasks={tasks} />
+        </div>
+      )}
+
       {/* Kanban Board */}
       {viewMode === 'board' ? (
         <div className="grid grid-cols-4 gap-4">
