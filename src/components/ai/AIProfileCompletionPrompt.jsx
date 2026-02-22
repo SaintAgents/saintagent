@@ -281,7 +281,7 @@ Provide:
 
   return (
     <>
-      <Card className="border-violet-200 bg-gradient-to-br from-violet-50/50 to-indigo-50/50 overflow-hidden">
+      <Card className="border-violet-200 bg-gradient-to-br from-violet-50/70 to-indigo-50/70 overflow-hidden">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
