@@ -137,7 +137,7 @@ export default function CreateContentModal({ open, onClose, profile }) {
               </RadioGroup>
             </div>
             <div className="flex justify-end">
-              <Button onClick={() => setStep(2)}>Continue</Button>
+              <Button onClick={() => setStep(2)} className="bg-violet-600 hover:bg-violet-700 text-white">Continue</Button>
             </div>
           </div>
         ) : (
@@ -220,6 +220,7 @@ export default function CreateContentModal({ open, onClose, profile }) {
               <Button 
                 onClick={handleSubmit}
                 disabled={!formData.title.trim() || createMutation.isPending}
+                className="bg-violet-600 hover:bg-violet-700 text-white"
               >
                 {createMutation.isPending ? (
                   <>
