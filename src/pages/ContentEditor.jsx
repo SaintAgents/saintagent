@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,13 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { createPageUrl } from '@/utils';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import CollaboratorPanel from '@/components/content/CollaboratorPanel';
 import VersionHistoryPanel from '@/components/content/VersionHistoryPanel';
 import CommentsPanel from '@/components/content/CommentsPanel';
 import AIWritingAssistant from '@/components/content/AIWritingAssistant';
 import ContentSettingsModal from '@/components/content/ContentSettingsModal';
+import CollaborativeEditor from '@/components/content/CollaborativeEditor';
+import { ActiveCollaborators } from '@/components/content/LiveCursors';
 
 export default function ContentEditor() {
   const queryClient = useQueryClient();
@@ -177,6 +177,7 @@ export default function ContentEditor() {
             {hasUnsavedChanges ? 'Unsaved' : 'Saved'}
           </Badge>
           <Badge className="text-xs">{wordCount} words</Badge>
+          <ActiveCollaborators projectId={projectId} currentUser={currentUser} />
         </div>
 
         <div className="flex items-center gap-2">
@@ -215,13 +216,14 @@ export default function ContentEditor() {
       <div className="flex-1 flex overflow-hidden">
         <div className="flex-1 overflow-auto">
           <div className="max-w-4xl mx-auto p-8">
-            <ReactQuill
-              value={content}
+            <CollaborativeEditor
+              projectId={projectId}
+              initialContent={content}
+              currentUser={currentUser}
+              profile={profile}
+              canEdit={canEdit}
               onChange={setContent}
-              theme="snow"
-              readOnly={!canEdit}
-              className="bg-white rounded-lg shadow-sm"
-              style={{ minHeight: '500px' }}
+              onSave={() => handleSave(false)}
             />
           </div>
         </div>
