@@ -23,7 +23,7 @@ const DEPENDENCY_TYPE_LABELS = {
 };
 import { formatDistanceToNow } from 'date-fns';
 
-export default function TaskDetailModal({ task, open, onClose, currentUser, profile }) {
+export default function TaskDetailModal({ task, open, onClose, currentUser, profile, allTasks = [] }) {
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
