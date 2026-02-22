@@ -470,7 +470,20 @@ export default function CommunityFeed() {
                         ))}
                       </div>
                     )}
-                    {post.video_url && <video src={post.video_url} controls className="w-full rounded-lg" />}
+                    {post.video_url && (
+                      <div className="w-full rounded-lg overflow-hidden bg-black">
+                        <video 
+                          src={post.video_url} 
+                          controls 
+                          playsInline
+                          preload="metadata"
+                          className="w-full max-h-[500px] object-contain"
+                          onError={(e) => console.log('Video load error:', post.video_url)}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                    )}
                     
                     {/* Embedded YouTube/Vimeo */}
                     {post.link_url && (post.link_url.includes('youtube.com') || post.link_url.includes('youtu.be') || post.link_url.includes('vimeo.com')) && (() => {
