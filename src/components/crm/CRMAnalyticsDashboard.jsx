@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { format, subDays, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, eachMonthOfInterval, parseISO, isWithinInterval } from 'date-fns';
 import EmailCampaignHistory from './EmailCampaignHistory';
+import AIDealPrediction from './AIDealPrediction';
 
 const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1', '#14b8a6'];
 
@@ -508,6 +509,10 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
           <TabsTrigger value="growth" className="gap-2">
             <LineChartIcon className="w-4 h-4" />
             Growth
+          </TabsTrigger>
+          <TabsTrigger value="ai-prediction" className="gap-2">
+            <Sparkles className="w-4 h-4" />
+            AI Predictions
           </TabsTrigger>
         </TabsList>
 
@@ -1044,6 +1049,15 @@ export default function CRMAnalyticsDashboard({ contacts = [], contributions = [
         {/* Email Campaigns Tab */}
         <TabsContent value="email" className="space-y-6">
           <EmailCampaignHistory currentUserId={currentUserId} contacts={contacts} />
+        </TabsContent>
+
+        {/* AI Predictions Tab */}
+        <TabsContent value="ai-prediction" className="space-y-6">
+          <AIDealPrediction 
+            deals={deals}
+            contacts={contacts}
+            currentUserId={currentUserId}
+          />
         </TabsContent>
 
         {/* Network Growth Tab */}
