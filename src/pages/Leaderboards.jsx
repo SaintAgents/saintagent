@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import BackButton from '@/components/hud/BackButton';
-import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import LeaderboardFilters from '@/components/leaderboard/LeaderboardFilters';
 import UserHistoryModal from '@/components/leaderboard/UserHistoryModal';
 import moment from 'moment';
