@@ -155,7 +155,7 @@ export function useLiveStatus() {
 
     const initStatus = async () => {
       try {
-        const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email });
+        const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1);
         if (!isMounted) return;
         
         if (!existing?.length) {
