@@ -206,6 +206,67 @@ export default function ActivityFeed() {
           <UserActivityDashboard userId={currentUser.id} userEmail={currentUser.email} />
         )}
 
+        {/* AI Recommendations Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-[#051C2C] flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-violet-500" />
+              AI Recommendations
+            </h2>
+            <Button className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
+              <Sparkles className="w-4 h-4" />
+              Generate
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Recommended Reading */}
+            <div className="bg-white border border-slate-200 rounded-lg p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <FileText className="w-5 h-5 text-violet-600" />
+                <h3 className="font-semibold text-lg text-slate-900">Recommended Reading</h3>
+              </div>
+              <div className="space-y-3">
+                {['Saint Germain Transmission', 'Deep Disclosure Update', '7th Seal Gaia Bank'].map((title, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                    <span className="text-sm text-slate-700 font-medium">{title}</span>
+                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 italic mt-4">
+                These articles cover a range of topics that may inspire and engage the user, particularly in realms of spiritual growth, community updates, and spiritual economics, given the absence of current skills and focus areas.
+              </p>
+            </div>
+
+            {/* Aligned Missions */}
+            <div className="bg-white border border-slate-200 rounded-lg p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Target className="w-5 h-5 text-violet-600" />
+                <h3 className="font-semibold text-lg text-slate-900">Aligned Missions</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { title: 'Soul Purpose Discovery', joined: '1 joined' },
+                  { title: 'Gather 144K', joined: '0 joined' },
+                  { title: 'Non-Profit Networking Fellowship', joined: '1 joined' }
+                ].map((mission, i) => (
+                  <div key={i} className="p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm text-slate-900 font-medium">{mission.title}</span>
+                      <ChevronRight className="w-4 h-4 text-slate-400" />
+                    </div>
+                    <span className="text-xs text-slate-500">{mission.joined}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 italic mt-4">
+                The selected missions are aligned with self-discovery, community building, and networking, which can resonate with someone who is looking to find direction and make connections without specific prior focus or intentions.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Scope Toggle */}
         <div className="flex items-center justify-between mb-6">
           <Tabs value={scope} onValueChange={setScope}>
