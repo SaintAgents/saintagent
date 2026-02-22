@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import AskQuestionModal from '@/components/advice/AskQuestionModal';
 import QuestionCard from '@/components/advice/QuestionCard';
 import WisdomLeaderboard from '@/components/advice/WisdomLeaderboard';
+import TopicDashboard from '@/components/advice/TopicDashboard';
 
 const CATEGORIES = [
   { value: 'all', label: 'All Topics' },
@@ -223,7 +224,14 @@ export default function AdvicePage() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[1fr,320px] gap-8">
+        {/* Topic Dashboard */}
+        <TopicDashboard 
+          questions={questions} 
+          selectedCategory={selectedCategory}
+          onCategorySelect={setSelectedCategory}
+        />
+
+        <div className="grid lg:grid-cols-[1fr,320px] gap-8 mt-6">
           {/* Left Column - Questions */}
           <div className="space-y-6">
             {/* Search and Filters */}

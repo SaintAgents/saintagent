@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronUp, MessageSquare, Sparkles, CheckCircle2, User, Heart, Waves } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import { cn } from "@/lib/utils";
 
 const CATEGORY_COLORS = {
@@ -146,7 +146,12 @@ export default function QuestionCard({ question, onUpvote, hasVoted, onLike, has
                     <span>{question.answer_count || 0}</span>
                   </div>
                   <span>•</span>
-                  <span>{formatDistanceToNow(new Date(question.created_date), { addSuffix: true })}</span>
+                  <span>{(() => {
+                      const date = new Date(question.created_date);
+                      if (isToday(date)) return 'Today';
+                      if (isYesterday(date)) return 'Yesterday';
+                      return format(date, 'MMM d, yyyy');
+                    })()}</span>
                 </div>
               </div>
 
