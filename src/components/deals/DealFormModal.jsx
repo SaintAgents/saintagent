@@ -102,16 +102,32 @@ export default function DealFormModal({ open, onClose, deal, currentUser, profil
         amount: parseFloat(data.amount) || 0,
         owner_name: ownerProfile?.display_name || currentUser?.full_name,
         owner_avatar: ownerProfile?.avatar_url,
-        expected_close_date: data.expected_close_date ? format(data.expected_close_date, 'yyyy-MM-dd') : null
+        expected_close_date: data.expected_close_date ? format(data.expected_close_date, 'yyyy-MM-dd') : null,
+        approval_status: 'pending' // All new deals require approval
       };
       
       const created = await base44.entities.Deal.create(dealData);
+      
+      // Create admin request for deal approval
+      await base44.entities.AdminRequest.create({
+        request_type: 'deal_approval',
+        title: `Deal Approval: ${data.title}`,
+        description: `New deal submitted for approval.\n\nAmount: $${parseFloat(data.amount || 0).toLocaleString()}\nCompany: ${data.company_name || 'N/A'}\nPriority: ${data.priority}`,
+        requester_id: currentUser.email,
+        requester_name: profile?.display_name || currentUser.full_name,
+        requester_avatar: profile?.avatar_url,
+        reference_type: 'deal',
+        reference_id: created.id,
+        requested_value: { deal_title: data.title, amount: parseFloat(data.amount) || 0 },
+        priority: data.priority === 'high' ? 'high' : 'normal',
+        status: 'pending'
+      });
       
       // Log activity
       await base44.entities.DealActivity.create({
         deal_id: created.id,
         activity_type: 'created',
-        description: `Deal "${data.title}" was created`,
+        description: `Deal "${data.title}" was created (pending approval)`,
         actor_id: currentUser.email,
         actor_name: profile?.display_name || currentUser.full_name
       });
@@ -120,6 +136,7 @@ export default function DealFormModal({ open, onClose, deal, currentUser, profil
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deals'] });
+      queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
       onClose();
     }
   });
