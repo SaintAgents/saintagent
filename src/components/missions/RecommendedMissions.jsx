@@ -5,8 +5,8 @@ import { Sparkles, ChevronRight, Star, Target, Zap } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import MissionCard from '@/components/hud/MissionCard';
 import { cn } from "@/lib/utils";
+import { createPageUrl } from '@/utils';
 
 export default function RecommendedMissions({ missions = [], onAction, className }) {
   // Fetch current user profile for recommendation matching
@@ -159,8 +159,11 @@ export default function RecommendedMissions({ missions = [], onAction, className
       <ScrollArea className="w-full">
         <div className="flex gap-4 pb-4">
           {recommendedMissions.map((mission) => (
-            <div key={mission.id} className="w-[340px] flex-shrink-0">
-              <div className="relative">
+            <div key={mission.id} className="w-[280px] flex-shrink-0">
+              <div 
+                className="relative p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-amber-300 hover:shadow-md transition-all cursor-pointer"
+                onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}
+              >
                 {/* Recommendation badge */}
                 <div className="absolute -top-2 -right-2 z-10">
                   <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-medium shadow-lg">
@@ -169,20 +172,33 @@ export default function RecommendedMissions({ missions = [], onAction, className
                   </div>
                 </div>
                 
-                <MissionCard 
-                  mission={mission} 
-                  onAction={onAction}
-                  variant="compact"
-                />
+                {/* Mission content */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-violet-100 dark:bg-violet-900/50 shrink-0">
+                    <Target className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 truncate mb-1">
+                      {mission.title}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-2">
+                      {mission.objective || mission.description}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <span>{mission.participant_count || 0}/{mission.max_participants || '∞'}</span>
+                      <ChevronRight className="w-3 h-3" />
+                    </div>
+                  </div>
+                </div>
                 
                 {/* Recommendation reasons */}
                 {mission.recommendationReasons?.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1">
+                  <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-1">
                     {mission.recommendationReasons.slice(0, 2).map((reason, i) => (
                       <Badge 
                         key={i} 
                         variant="outline" 
-                        className="text-xs bg-amber-50 border-amber-200 text-amber-700"
+                        className="text-[10px] bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-300"
                       >
                         {reason}
                       </Badge>
