@@ -426,7 +426,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl p-0 max-h-[90vh] overflow-hidden" aria-describedby={undefined}>
+      <DialogContent className="sm:max-w-5xl p-0 h-[90vh] max-h-[90vh] overflow-hidden flex flex-col" aria-describedby={undefined}>
         <div className="sr-only">
           <h2>Advanced Search</h2>
         </div>
@@ -527,8 +527,8 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Filters Panel */}
           {showFilters && (
-            <div className="w-80 border-r shrink-0 flex flex-col max-h-[50vh] overflow-hidden">
-              <ScrollArea className="flex-1">
+            <div className="w-80 border-r shrink-0 flex flex-col overflow-hidden">
+              <ScrollArea className="flex-1 h-full">
                 <div className="p-4 space-y-4">
                   {/* AI Suggestions - collapsible */}
                   {showAISuggestions && (
@@ -562,7 +562,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
           )}
 
           {/* Results */}
-          <ScrollArea className="flex-1 h-[50vh]">
+          <ScrollArea className="flex-1 h-full">
             <div className="p-4">
               {/* Sort bar */}
               {(query || hasActiveFilters) && tab !== 'pages' && (
