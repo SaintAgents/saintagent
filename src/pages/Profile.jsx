@@ -58,7 +58,8 @@ import {
   ChevronDown,
   BookOpen,
   Folder,
-  BarChart3
+  BarChart3,
+  Contact
 } from
 "lucide-react";
 
@@ -99,6 +100,7 @@ import DealsTab from '@/components/deals/DealsTab.jsx';
 import ProjectsTab from '@/components/profile/ProjectsTab';
 import CreatorAnalyticsDashboard from '@/components/profile/CreatorAnalyticsDashboard';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
+import MyContactsTab from '@/components/profile/MyContactsTab';
 import {
   Tooltip,
   TooltipContent,
@@ -746,6 +748,12 @@ export default function Profile() {
                 <TabsTrigger value="144k" className="text-xs sm:text-sm px-2 sm:px-3" title="144K Path">
                   <span className="hidden sm:inline">144K Path</span>
                   <Crown className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
+              {isOwnProfile && (
+                <TabsTrigger value="crm" className="text-xs sm:text-sm px-2 sm:px-3" title="CRM">
+                  <span className="hidden sm:inline">CRM</span>
+                  <Contact className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1778,6 +1786,12 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="144k" className="space-y-6">
               <Leader144KProgress profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
+            <TabsContent value="crm" className="space-y-6">
+              <MyContactsTab currentUser={currentUser} profile={profile} />
             </TabsContent>
           )}
 
