@@ -46,8 +46,10 @@ const PRIORITY_CONFIG = {
 
 export default function TaskCard({ 
   task, 
+  allTasks = [],
   onStatusChange, 
   onClick,
+  onManageDependencies,
   commentCount = 0,
   attachmentCount = 0,
   showProject = false,
