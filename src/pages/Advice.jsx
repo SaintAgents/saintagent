@@ -84,9 +84,13 @@ export default function AdvicePage() {
     enabled: !!currentUser?.email
   });
 
+  const userUpvotes = userVotes.filter(v => v.vote_type === 'upvote');
+  const userLikes = userVotes.filter(v => v.vote_type === 'like');
+  const userResonances = userVotes.filter(v => v.vote_type === 'resonance');
+
   const upvoteMutation = useMutation({
     mutationFn: async (questionId) => {
-      const existingVote = userVotes.find(v => v.target_id === questionId && v.vote_type === 'upvote');
+      const existingVote = userUpvotes.find(v => v.target_id === questionId);
       
       if (existingVote) {
         await base44.entities.AdviceVote.delete(existingVote.id);
@@ -107,6 +111,72 @@ export default function AdvicePage() {
         if (question) {
           await base44.entities.AdviceQuestion.update(questionId, {
             upvote_count: (question.upvote_count || 0) + 1
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adviceQuestions'] });
+      queryClient.invalidateQueries({ queryKey: ['userVotes'] });
+    }
+  });
+
+  const likeMutation = useMutation({
+    mutationFn: async (questionId) => {
+      const existingVote = userLikes.find(v => v.target_id === questionId);
+      
+      if (existingVote) {
+        await base44.entities.AdviceVote.delete(existingVote.id);
+        const question = questions.find(q => q.id === questionId);
+        if (question) {
+          await base44.entities.AdviceQuestion.update(questionId, {
+            like_count: Math.max(0, (question.like_count || 1) - 1)
+          });
+        }
+      } else {
+        await base44.entities.AdviceVote.create({
+          user_id: currentUser.email,
+          target_type: 'question',
+          target_id: questionId,
+          vote_type: 'like'
+        });
+        const question = questions.find(q => q.id === questionId);
+        if (question) {
+          await base44.entities.AdviceQuestion.update(questionId, {
+            like_count: (question.like_count || 0) + 1
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adviceQuestions'] });
+      queryClient.invalidateQueries({ queryKey: ['userVotes'] });
+    }
+  });
+
+  const resonanceMutation = useMutation({
+    mutationFn: async (questionId) => {
+      const existingVote = userResonances.find(v => v.target_id === questionId);
+      
+      if (existingVote) {
+        await base44.entities.AdviceVote.delete(existingVote.id);
+        const question = questions.find(q => q.id === questionId);
+        if (question) {
+          await base44.entities.AdviceQuestion.update(questionId, {
+            resonance_count: Math.max(0, (question.resonance_count || 1) - 1)
+          });
+        }
+      } else {
+        await base44.entities.AdviceVote.create({
+          user_id: currentUser.email,
+          target_type: 'question',
+          target_id: questionId,
+          vote_type: 'resonance'
+        });
+        const question = questions.find(q => q.id === questionId);
+        if (question) {
+          await base44.entities.AdviceQuestion.update(questionId, {
+            resonance_count: (question.resonance_count || 0) + 1
           });
         }
       }
@@ -240,7 +310,11 @@ export default function AdvicePage() {
                       key={question.id}
                       question={question}
                       onUpvote={(id) => upvoteMutation.mutate(id)}
-                      hasVoted={userVotes.some(v => v.target_id === question.id && v.vote_type === 'upvote')}
+                      hasVoted={userUpvotes.some(v => v.target_id === question.id)}
+                      onLike={(id) => likeMutation.mutate(id)}
+                      hasLiked={userLikes.some(v => v.target_id === question.id)}
+                      onResonance={(id) => resonanceMutation.mutate(id)}
+                      hasResonated={userResonances.some(v => v.target_id === question.id)}
                     />
                   ))
                 )}
@@ -258,7 +332,11 @@ export default function AdvicePage() {
                       key={question.id}
                       question={question}
                       onUpvote={(id) => upvoteMutation.mutate(id)}
-                      hasVoted={userVotes.some(v => v.target_id === question.id && v.vote_type === 'upvote')}
+                      hasVoted={userUpvotes.some(v => v.target_id === question.id)}
+                      onLike={(id) => likeMutation.mutate(id)}
+                      hasLiked={userLikes.some(v => v.target_id === question.id)}
+                      onResonance={(id) => resonanceMutation.mutate(id)}
+                      hasResonated={userResonances.some(v => v.target_id === question.id)}
                     />
                   ))
                 )}
