@@ -86,6 +86,18 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
     }
   });
 
+  // Update task dependencies
+  const updateDependenciesMutation = useMutation({
+    mutationFn: ({ taskId, dependencies, depends_on }) => base44.entities.ProjectTask.update(taskId, { 
+      dependencies,
+      depends_on
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectTasks'] });
+      setDependencyTask(null);
+    }
+  });
+
   // Add team member
   const addMemberMutation = useMutation({
     mutationFn: (memberId) => base44.entities.Project.update(project.id, {
