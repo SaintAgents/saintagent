@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { 
   ArrowLeft, Plus, Calendar, DollarSign, Users, 
   CheckCircle2, Clock, Paperclip, MessageSquare,
-  LayoutGrid, List, Upload, Search, Filter, Brain
+  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch
 } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
