@@ -439,15 +439,15 @@ Provide specific, actionable reasons why each is a great match.`;
                       {/* Header with avatar and basic info */}
                       <div className="flex items-start gap-3 mb-3">
                         <div 
-                          className="cursor-pointer"
+                          className="cursor-pointer shrink-0"
                           onClick={() => openProfile(rec.user_id)}
                         >
-                          <RankedAvatar
-                            src={rec.avatar}
-                            name={rec.display_name}
-                            rankCode={rec.rank_code}
-                            size="md"
-                          />
+                          <Avatar className="w-12 h-12 border-2 border-white shadow">
+                            <AvatarImage src={rec.avatar} />
+                            <AvatarFallback className="bg-violet-100 text-violet-700">
+                              {rec.display_name?.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
                         </div>
                         <div className="flex-1 min-w-0">
                           <p 
