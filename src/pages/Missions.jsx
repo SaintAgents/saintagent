@@ -71,6 +71,18 @@ export default function Missions() {
   const [sortBy, setSortBy] = useState('relevance');
   const [showRecommended, setShowRecommended] = useState(true);
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
+    enabled: !!currentUser?.email
+  });
+  const profile = profiles?.[0];
+
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 100),
