@@ -74,6 +74,7 @@ import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
 import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
 import SpiritTubeCard from '@/components/videos/SpiritTubeCard';
+import GlobalScheduleCard from '@/components/hud/GlobalScheduleCard';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -250,7 +251,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Store all cards to side panel
   const storeAllCards = () => {
-    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube'];
+    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule'];
     // Create fresh array with all cards (icons will be resolved when rendering)
     const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
     console.log('Stowing all cards:', newStoredCards);
@@ -292,7 +293,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       news: 'News & Updates',
       heroGallery: 'Hero Gallery',
       videos: 'SaintTube Videos',
-      spiritTube: 'SpiritTube'
+      spiritTube: 'SpiritTube',
+      globalSchedule: 'Global Schedule'
     };
     return titles[id] || id;
   };
@@ -322,7 +324,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     news: Newspaper,
     heroGallery: Image,
     videos: Play,
-    spiritTube: Play
+    spiritTube: Play,
+    globalSchedule: Calendar
   };
 
   // Toss card to side panel storage
@@ -1761,6 +1764,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
             {isCardVisible('spiritTube') && <CollapsibleCard title="SpiritTube" cardId="spiritTube" icon={Play} badge="Spiritual" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('spiritTube')} onToggleHide={() => toggleCardVisibility('spiritTube')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('SpiritTube')}>
               <SpiritTubeCard />
+            </CollapsibleCard>}
+
+            {isCardVisible('globalSchedule') && <CollapsibleCard title="Global Schedule" cardId="globalSchedule" icon={Calendar} badge="Live" badgeColor="emerald" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('globalSchedule')} onToggleHide={() => toggleCardVisibility('globalSchedule')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Schedule')}>
+              <GlobalScheduleCard />
             </CollapsibleCard>}
 
             {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
