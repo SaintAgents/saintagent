@@ -223,6 +223,7 @@ export default function DealsTab({ currentUser, profile }) {
         currentUser={currentUser}
         profile={profile}
         allProfiles={allProfiles}
+        skipApproval={true}
       />
 
       {selectedDeal && (
