@@ -408,8 +408,12 @@ export default function TopBar({
                 <img 
                   src={iconUrl} 
                   alt={tab.label}
-                  className="object-contain topbar-mode-icon w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11"
-                  style={currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : undefined}
+                  className="object-contain topbar-mode-icon"
+                  style={{
+                    width: 'clamp(28px, 5vw, 44px)',
+                    height: 'clamp(28px, 5vw, 44px)',
+                    ...(currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : {})
+                  }}
                 />
                 {/* Hover tooltip with label */}
                 <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
