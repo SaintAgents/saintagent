@@ -429,7 +429,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-3 md:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
@@ -511,7 +511,7 @@ export default function Profile() {
               </label>
             }
           </div>
-          <CardContent className="bg-purple-100 text-zinc-500 pt-4 p-6 relative">
+          <CardContent className="bg-purple-100 text-zinc-500 pt-4 p-3 md:p-6 relative">
             <div className="flex items-start gap-6">
               <div className="cursor-pointer" onClick={() => setViewerOpen(true)} title="View photos">
                 <RankedAvatar
