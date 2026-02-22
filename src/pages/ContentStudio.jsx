@@ -251,11 +251,18 @@ export default function ContentStudio() {
             <TabsList>
               <TabsTrigger value="my-projects" className="gap-2">
                 <FileText className="w-4 h-4" />
-                My Projects
+                Projects
+              </TabsTrigger>
+              <TabsTrigger value="library" className="gap-2">
+                <BookOpen className="w-4 h-4" />
+                Library
+                {drxAssets.length > 0 && (
+                  <Badge variant="secondary" className="ml-1">{drxAssets.length}</Badge>
+                )}
               </TabsTrigger>
               <TabsTrigger value="shared" className="gap-2">
                 <Users className="w-4 h-4" />
-                Shared with Me
+                Shared
                 {sharedProjects.length > 0 && (
                   <Badge variant="secondary" className="ml-1">{sharedProjects.length}</Badge>
                 )}
@@ -424,7 +431,7 @@ export default function ContentStudio() {
               />
             ))}
           </div>
-        )}
+        ))}
       </div>
 
       <CreateContentModal 
