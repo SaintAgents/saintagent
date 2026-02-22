@@ -193,9 +193,12 @@ export default function DealsPage() {
 
   const clearFilter = () => setActiveFilter(null);
 
-  // Handle drag and drop for deals
+  // Handle drag and drop for deals - only admin/auditor can move
   const handleDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
+    
+    // Only admin or auditor can move deals
+    if (!canMoveDeal) return;
     
     // Dropped outside a valid droppable
     if (!destination) return;
@@ -225,6 +228,9 @@ export default function DealsPage() {
       queryClient.invalidateQueries({ queryKey: ['deals'] });
     }
   };
+
+  // Check if user can move deals (admin or auditor role)
+  const canMoveDeal = currentUser?.role === 'admin' || profile?.user_role === 'auditor';
 
   const StatCard = ({ icon: Icon, label, value, subLabel, color, onClick, isActive }) => (
     <Card 
