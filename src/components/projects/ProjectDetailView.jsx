@@ -266,21 +266,32 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
             <option value="low">Low</option>
           </select>
         </div>
-        <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
+        <div className="flex items-center gap-2">
           <Button 
-            variant={viewMode === 'board' ? 'secondary' : 'ghost'} 
+            variant={showDependencyGraph ? 'default' : 'outline'} 
             size="sm"
-            onClick={() => setViewMode('board')}
+            onClick={() => setShowDependencyGraph(!showDependencyGraph)}
+            className={showDependencyGraph ? 'bg-violet-600 hover:bg-violet-700' : ''}
           >
-            <LayoutGrid className="w-4 h-4" />
+            <GitBranch className="w-4 h-4 mr-1" />
+            Dependencies
           </Button>
-          <Button 
-            variant={viewMode === 'list' ? 'secondary' : 'ghost'} 
-            size="sm"
-            onClick={() => setViewMode('list')}
-          >
-            <List className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
+            <Button 
+              variant={viewMode === 'board' ? 'secondary' : 'ghost'} 
+              size="sm"
+              onClick={() => setViewMode('board')}
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant={viewMode === 'list' ? 'secondary' : 'ghost'} 
+              size="sm"
+              onClick={() => setViewMode('list')}
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
