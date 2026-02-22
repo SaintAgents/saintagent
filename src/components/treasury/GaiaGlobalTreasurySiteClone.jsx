@@ -578,9 +578,21 @@ export default function GaiaGlobalTreasurySiteClone() {
                     cultivated a reputation for seeing large-scale structural patterns where others see fragmentation.
                   </p>
                   <p className="text-slate-300 text-sm leading-relaxed mt-3">
+                    Beginning his career in advanced computing and enterprise data systems, Mathew developed a foundation 
+                    in complex systems modeling and efficiency optimization. His background spans financial restructuring 
+                    initiatives, sovereign-scale capital strategy, and the conceptual design of next-generation economic 
+                    frameworks intended to integrate transparency, digital infrastructure, and ethical stewardship.
+                  </p>
+                  <p className="text-slate-300 text-sm leading-relaxed mt-3">
                     Beyond technical and financial architecture, Mathew is known for articulating a values-driven 
                     approach to resource management. He advocates for regenerative economics, planetary stewardship, 
-                    and governance models that integrate long-term ecological balance with human prosperity.
+                    and governance models that integrate long-term ecological balance with human prosperity. His 
+                    philosophy emphasizes that financial systems must evolve to serve humanity and the Earth, rather 
+                    than extract from them.
+                  </p>
+                  <p className="text-amber-300/80 text-sm italic mt-4">
+                    As Co-Founder of Gaia Global Treasury, Mathew provides the overarching vision: aligning global 
+                    resource frameworks with ethical governance, long-term sustainability, and principled stewardship.
                   </p>
                 </div>
               </div>
@@ -592,23 +604,33 @@ export default function GaiaGlobalTreasurySiteClone() {
                   <span className="text-2xl font-serif text-amber-400">MC</span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-serif text-amber-400 mb-1">Marc Cifelli</h3>
+                  <h3 className="text-2xl font-serif text-amber-400 mb-1">Marc Alfonse Cifelli</h3>
                   <p className="text-slate-400 mb-4">Co-Founder</p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">Strategic Operations</Badge>
-                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">Global Development</Badge>
-                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">Partnership Architecture</Badge>
+                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">Financial Strategist</Badge>
+                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">Institutional Markets Specialist</Badge>
+                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">Regulatory Expert</Badge>
                   </div>
                   <p className="text-slate-300 text-sm leading-relaxed">
-                    Marc Cifelli brings decades of experience in strategic operations, international business development, 
-                    and partnership architecture to Gaia Global Treasury. His expertise spans cross-border coordination, 
-                    stakeholder alignment, and the practical implementation of complex financial structures.
+                    Marc Alfonse Cifelli brings deep expertise in global finance, regulatory frameworks, and institutional markets. 
+                    A former Wall Street trader and hedge fund operator, Marc has firsthand experience navigating high-velocity 
+                    capital markets and complex financial instruments.
                   </p>
                   <p className="text-slate-300 text-sm leading-relaxed mt-3">
-                    Marc's approach combines pragmatic execution with ethical vision, ensuring that the Treasury's 
-                    ambitious goals translate into real-world impact. He specializes in building bridges between 
-                    diverse stakeholders—from sovereign entities to grassroots communities—fostering the collaborative 
-                    networks essential for global stewardship.
+                    Following the 2008 financial crisis, Marc redirected his focus toward systemic reform and the structural 
+                    integrity of financial governance. His work expanded into sovereign asset frameworks, Basel regulatory structures, 
+                    capital compliance mechanisms, and the operational realities of global banking architecture. He has built 
+                    relationships across financial institutions, trust structures, and compliance environments, bringing technical 
+                    fluency in the mechanics of capital flows and regulatory standards.
+                  </p>
+                  <p className="text-slate-300 text-sm leading-relaxed mt-3">
+                    Marc's strength lies in translating ambitious structural visions into executable financial frameworks. He 
+                    understands how to bridge idealism with regulatory practicality — how to design systems that can operate 
+                    within existing global frameworks while evolving toward greater transparency and stability.
+                  </p>
+                  <p className="text-amber-300/80 text-sm italic mt-4">
+                    As Co-Founder of Gaia Global Treasury, Marc anchors the institution in operational finance, compliance 
+                    architecture, and risk-managed implementation strategies.
                   </p>
                 </div>
               </div>
