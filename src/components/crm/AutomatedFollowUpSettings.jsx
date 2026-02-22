@@ -135,6 +135,21 @@ export default function AutomatedFollowUpSettings({ currentUserId }) {
                           <Badge variant="outline" className="text-xs">
                             {TRIGGER_TYPES.find(t => t.value === workflow.trigger_type)?.label || workflow.trigger_type}
                           </Badge>
+                          {workflow.trigger_type === 'days_since_contact' && workflow.trigger_config?.days_threshold && (
+                            <Badge className="bg-blue-100 text-blue-700 text-xs">
+                              {workflow.trigger_config.days_threshold} days
+                            </Badge>
+                          )}
+                          {workflow.trigger_type === 'status_change' && workflow.trigger_config?.to_status && (
+                            <Badge className="bg-blue-100 text-blue-700 text-xs">
+                              → {workflow.trigger_config.to_status}
+                            </Badge>
+                          )}
+                          {workflow.trigger_type === 'score_change' && workflow.trigger_config?.score_threshold && (
+                            <Badge className="bg-blue-100 text-blue-700 text-xs">
+                              {workflow.trigger_config.score_direction === 'below' ? '↓' : '↑'} {workflow.trigger_config.score_threshold}
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-sm text-slate-500 mb-3">{workflow.description || 'No description'}</p>
                         <div className="flex items-center gap-4 text-xs text-slate-500">
@@ -155,6 +170,7 @@ export default function AutomatedFollowUpSettings({ currentUserId }) {
                         <Switch
                           checked={workflow.is_active}
                           onCheckedChange={() => toggleWorkflowMutation.mutate({ id: workflow.id, is_active: workflow.is_active })}
+                          className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-slate-400"
                         />
                         <Button
                           variant="ghost"
