@@ -400,7 +400,7 @@ Write a short (2-3 sentences), warm, mystical encouragement message. Reference t
                     <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">AGGRESSIVE</span>
                   </div>
                   <p className="text-xl font-bold text-slate-900 dark:text-white">
-                    {pointsRemaining === 0 ? '✓ Complete' : `${Math.max(daysRemaining, aggressiveDays)} days`}
+                    {pointsRemaining === 0 ? '✓ Complete' : `~${aggressiveDays} days`}
                   </p>
                   <p className="text-xs text-slate-500">~400 RP/day • Intensive daily activity</p>
                 </div>
@@ -411,7 +411,7 @@ Write a short (2-3 sentences), warm, mystical encouragement message. Reference t
                     <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">MIDDLE ROAD</span>
                   </div>
                   <p className="text-xl font-bold text-slate-900 dark:text-white">
-                    {pointsRemaining === 0 ? '✓ Complete' : `${Math.max(daysRemaining, middleRoadDays)} days`}
+                    {pointsRemaining === 0 ? '✓ Complete' : `~${middleRoadDays} days`}
                   </p>
                   <p className="text-xs text-slate-500">~150 RP/day • Consistent engagement</p>
                 </div>
@@ -422,7 +422,7 @@ Write a short (2-3 sentences), warm, mystical encouragement message. Reference t
                     <span className="text-xs font-semibold text-violet-700 dark:text-violet-400">YOUR PACE</span>
                   </div>
                   <p className="text-xl font-bold text-slate-900 dark:text-white">
-                    {pointsRemaining === 0 ? '✓ Complete' : `${Math.max(daysRemaining, currentPaceDays)} days`}
+                    {pointsRemaining === 0 ? '✓ Complete' : (avgDailyRP > 0 ? `~${currentPaceDays} days` : 'Start earning!')}
                   </p>
                   <p className="text-xs text-slate-500">~{avgDailyRP} RP/day • Based on your activity</p>
                 </div>
