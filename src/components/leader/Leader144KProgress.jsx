@@ -399,7 +399,9 @@ Write a short (2-3 sentences), warm, mystical encouragement message. Reference t
                     <Rocket className="w-4 h-4 text-emerald-500" />
                     <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">AGGRESSIVE</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{Math.max(daysRemaining, aggressiveDays)} days</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    {pointsRemaining === 0 ? '✓ Complete' : `${Math.max(daysRemaining, aggressiveDays)} days`}
+                  </p>
                   <p className="text-xs text-slate-500">~400 RP/day • Intensive daily activity</p>
                 </div>
                 
@@ -408,7 +410,9 @@ Write a short (2-3 sentences), warm, mystical encouragement message. Reference t
                     <TrendingUp className="w-4 h-4 text-blue-500" />
                     <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">MIDDLE ROAD</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{Math.max(daysRemaining, middleRoadDays)} days</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    {pointsRemaining === 0 ? '✓ Complete' : `${Math.max(daysRemaining, middleRoadDays)} days`}
+                  </p>
                   <p className="text-xs text-slate-500">~150 RP/day • Consistent engagement</p>
                 </div>
                 
@@ -417,7 +421,9 @@ Write a short (2-3 sentences), warm, mystical encouragement message. Reference t
                     <Zap className="w-4 h-4 text-violet-500" />
                     <span className="text-xs font-semibold text-violet-700 dark:text-violet-400">YOUR PACE</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{Math.max(daysRemaining, currentPaceDays)} days</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    {pointsRemaining === 0 ? '✓ Complete' : `${Math.max(daysRemaining, currentPaceDays)} days`}
+                  </p>
                   <p className="text-xs text-slate-500">~{avgDailyRP} RP/day • Based on your activity</p>
                 </div>
               </div>
