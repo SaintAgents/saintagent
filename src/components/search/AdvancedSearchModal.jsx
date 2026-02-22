@@ -434,7 +434,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
           <h2>Advanced Search</h2>
         </div>
         {/* Search Header */}
-        <div className="p-4 border-b sticky top-0 bg-white z-10">
+        <div className="p-4 border-b bg-white z-10 shrink-0">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -496,7 +496,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         </div>
 
         {/* Tabs */}
-        <div className="px-4 pt-2 border-b">
+        <div className="px-4 pt-2 border-b shrink-0">
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="w-full justify-start bg-transparent gap-1 h-auto p-0 pb-2">
               {TAB_CONFIG.map(t => {
@@ -807,7 +807,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
         </div>
 
         {/* Footer */}
-        <div className="border-t p-3 bg-slate-50 flex items-center justify-between text-xs text-slate-500">
+        <div className="border-t p-3 bg-slate-50 flex items-center justify-between text-xs text-slate-500 shrink-0">
           <div className="flex items-center gap-3">
             <span>{totalResults} results found</span>
             {sortBy !== 'relevance' && (
