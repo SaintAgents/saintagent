@@ -503,8 +503,13 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                         <video 
                           src={post.video_url} 
                           controls
-                          className="rounded-lg max-h-48 w-auto"
-                        />
+                          playsInline
+                          preload="metadata"
+                          className="rounded-lg max-h-64 w-full object-contain bg-black"
+                          onError={(e) => console.log('Video load error:', post.video_url)}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
                       </div>
                     )}
                     

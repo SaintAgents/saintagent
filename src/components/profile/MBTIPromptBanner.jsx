@@ -16,11 +16,11 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   const [dismissed, setDismissed] = useState(false);
   const [showDismissOptions, setShowDismissOptions] = useState(false);
 
-  // Check if already dismissed temporarily or permanently
+  // Check if already dismissed temporarily or permanently - run IMMEDIATELY on mount
   useEffect(() => {
     try {
       const dismissedPermanently = localStorage.getItem('mbti_prompt_dismissed_permanently');
-      if (dismissedPermanently === 'true') {
+      if (dismissedPermanently === 'true' || dismissedPermanently === 'never') {
         setDismissed(true);
         return;
       }
@@ -31,8 +31,16 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
     } catch {}
   }, []);
 
-  // Don't show if user already has MBTI type or dismissed
-  if (profile?.mbti_type || dismissed) {
+  // Also check synchronously during render to prevent flash
+  const isPermanentlyDismissed = (() => {
+    try {
+      const val = localStorage.getItem('mbti_prompt_dismissed_permanently');
+      return val === 'true' || val === 'never';
+    } catch { return false; }
+  })();
+
+  // Don't show if user already has MBTI type or dismissed (check both state and localStorage)
+  if (profile?.mbti_type || dismissed || isPermanentlyDismissed) {
     return null;
   }
 
