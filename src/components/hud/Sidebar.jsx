@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
+import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
 import {
   Select,
   SelectContent,
