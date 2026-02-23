@@ -659,6 +659,59 @@ export default function SidePanel({
                 </div>
               </CollapsibleCard>
 
+              {/* Challenges & Rewards */}
+              <CollapsibleCard title="Challenges & Rewards" icon={Trophy} defaultOpen={true}>
+                <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={RANK_BADGE_IMAGES[getRPRank(profile?.rank_points || profile?.rp_points || 0).code]}
+                      alt="Rank Badge"
+                      className="w-12 h-12 object-contain"
+                      data-no-filter="true"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-amber-900 capitalize">
+                        {getRPRank(profile?.rank_points || profile?.rp_points || 0).title}
+                      </p>
+                      <p className="text-xs text-amber-600">
+                        {(profile?.rank_points || profile?.rp_points || 0).toLocaleString()} RP
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <div className="flex justify-between text-xs text-amber-600 mb-1">
+                      <span>Progress</span>
+                      <span>
+                        {getRPRank(profile?.rank_points || profile?.rp_points || 0).nextMin 
+                          ? `${getRPRank(profile?.rank_points || profile?.rp_points || 0).nextMin - (profile?.rank_points || profile?.rp_points || 0)} to next`
+                          : 'Max'}
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-amber-100 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-500"
+                        style={{ 
+                          width: `${(() => {
+                            const rpInfo = getRPRank(profile?.rank_points || profile?.rp_points || 0);
+                            const currentRP = profile?.rank_points || profile?.rp_points || 0;
+                            return ((currentRP - rpInfo.currentMin) / (rpInfo.nextMin - rpInfo.currentMin)) * 100;
+                          })()}%` 
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full mt-3 border-amber-300 text-amber-700 hover:bg-amber-100"
+                    onClick={() => window.location.href = createPageUrl('Gamification')}
+                  >
+                    <Target className="w-4 h-4 mr-1" />
+                    View Challenges
+                  </Button>
+                </div>
+              </CollapsibleCard>
+
               <CollapsibleCard title="Potential Collaborators" icon={Users} badge="AI" badgeColor="emerald" onPopout={() => setRecentJoinsPopupOpen(true)}>
                 <CollaborationSuggestions profile={profile} compact={true} />
               </CollapsibleCard>
