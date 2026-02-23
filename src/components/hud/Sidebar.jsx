@@ -132,7 +132,7 @@ const NAV_ITEMS = [
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
   { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure for Humanity\'s Golden Age', isWebPage: true },
   { id: 'gggcrypto', label: 'GGG Crypto', Icon: Coins, page: 'GGGCrypto', hint: 'Gaia Global Gold - Gold-backed cryptocurrency with staking and swap', isWebPage: true },
-  { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Globe, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty', isWebPage: true },
+  { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Shield, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty', isWebPage: true },
   // Settings at the end
   { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
 ];
