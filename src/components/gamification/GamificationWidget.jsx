@@ -31,7 +31,7 @@ export default function GamificationWidget({ profile, compact = false }) {
   const activeChallenges = challenges.filter(c => c.status === 'active');
   const pendingRewards = challenges.filter(c => c.current_count >= c.target_count && c.status === 'active');
   
-  const rpPoints = profile?.rp_points || 0;
+  const rpPoints = profile?.rank_points || profile?.rp_points || 0;
   const rpInfo = getRPRank(rpPoints);
   const rankProgress = ((rpPoints - rpInfo.currentMin) / (rpInfo.nextMin - rpInfo.currentMin)) * 100;
 

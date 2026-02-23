@@ -23,7 +23,9 @@ import {
   X,
   Calendar,
   Flame,
-  Clock
+  Clock,
+  EyeOff,
+  Eye
 } from "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 
@@ -42,6 +44,14 @@ export default function SidebarLeaderboard({
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
   const [leaderboardFullyCollapsed, setLeaderboardFullyCollapsed] = useState(false);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
+  const [leaderboardHidden, setLeaderboardHidden] = useState(() => {
+    try { return localStorage.getItem('sidebarLeaderboardHidden') === 'true'; } catch { return false; }
+  });
+
+  // Persist hidden state
+  React.useEffect(() => {
+    try { localStorage.setItem('sidebarLeaderboardHidden', String(leaderboardHidden)); } catch {}
+  }, [leaderboardHidden]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [timeFilter, setTimeFilter] = useState('all');
@@ -330,6 +340,22 @@ export default function SidebarLeaderboard({
     </div>
   );
 
+  // If hidden, show minimal toggle
+  if (leaderboardHidden && !inPopup) {
+    return (
+      <div className={cn("border-t border-slate-100 p-2", isCollapsed && "p-1")}>
+        <button
+          onClick={() => setLeaderboardHidden(false)}
+          className="w-full flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors text-slate-400 hover:text-slate-600"
+          title="Show leaderboard"
+        >
+          <Eye className="w-3.5 h-3.5" />
+          {!isCollapsed && <span className="text-xs">Show Leaders</span>}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={cn("border-t border-slate-100 p-3", isCollapsed && !inPopup && "p-1")}>
@@ -345,6 +371,15 @@ export default function SidebarLeaderboard({
             </button>
             {showExpanded && (
               <div className="flex items-center gap-1">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={() => setLeaderboardHidden(true)}
+                  title="Hide leaderboard"
+                >
+                  <EyeOff className="w-3.5 h-3.5 text-slate-400" />
+                </Button>
                 <Button 
                   variant="ghost" 
                   size="icon" 

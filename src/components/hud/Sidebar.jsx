@@ -74,7 +74,8 @@ import {
   Globe,
   Play,
   FileText,
-  Key
+  Key,
+  Medal
 } from "lucide-react";
 import {
   Tooltip,
@@ -99,6 +100,7 @@ const NAV_ITEMS = [
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
   { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
   { id: 'gamification', label: 'Gamification', Icon: Trophy, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
+  { id: 'leaderboards', label: 'Leaderboards', Icon: Medal, page: 'Leaderboards', hint: 'View rankings, top players, and your position' },
   { id: 'mentorship', label: 'Mentorship', Icon: Users, page: 'Mentorship', hint: 'Find mentors or become one' },
   { id: 'matches', label: 'Matches', Icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
   { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
