@@ -21,6 +21,30 @@ const QUICK_QUESTIONS = [
   { icon: Users, label: 'Finding collaborators', question: 'How can I find people to collaborate with on projects or missions?' },
 ];
 
+// Page-specific context for AI Help
+const PAGE_CONTEXT = {
+  CommandDeck: "The user is on their Command Deck - their main dashboard showing matches, missions, meetings, and key metrics.",
+  Events: "The user is on the Events page where they can discover, create, and RSVP to community gatherings, workshops, meditations, and ceremonies.",
+  Matches: "The user is on the Matches page viewing AI-powered connection suggestions based on their profile, values, and interests.",
+  Meetings: "The user is on the Meetings page to schedule and manage 1:1 or group meetings with other members.",
+  Missions: "The user is on the Missions page where they can join or create collaborative quests with GGG rewards.",
+  Marketplace: "The user is on the Marketplace where they can browse and list services, offerings, and requests.",
+  Circles: "The user is on the Circles page to join interest-based communities and groups.",
+  Messages: "The user is on the Messages page for direct and group conversations.",
+  Profile: "The user is viewing their Profile page where they can edit their info, skills, and preferences.",
+  Settings: "The user is on the Settings page to manage account preferences and notifications.",
+  CommunityFeed: "The user is on the Community Feed to share and engage with posts from other members.",
+  ActivityFeed: "The user is on the Activity Feed showing recent platform activity and updates.",
+  Projects: "The user is on the Projects page to manage and discover collaborative projects.",
+  Quests: "The user is on the Quests page for the gamified quest system with badges and challenges.",
+  Forum: "The user is on the Community Forum for discussions and Q&A.",
+  Advice: "The user is on the Wisdom Exchange to seek guidance and share wisdom.",
+  News: "The user is on the News page for platform announcements and community updates.",
+  LeaderChannel: "The user is on the Leader Channel - exclusive content for verified 144K leaders.",
+  Schedule: "The user is on the Global Schedule viewing all meetings, events, and broadcasts.",
+  Broadcast: "The user is on the Broadcast page for live podcasts and town halls.",
+};
+
 const SYSTEM_CONTEXT = `You are Saint Support, the helpful AI assistant for the SaintAgent platform - a conscious community for spiritual seekers, lightworkers, and builders.
 
 PERSONALITY:
@@ -130,6 +154,17 @@ export default function RightSideTabs() {
   }, [helpOpen, helpHovered]);
 
   // Help send message
+  // Get current page from URL
+  const getCurrentPage = () => {
+    try {
+      const path = window.location.pathname;
+      const pageName = path.split('/').pop() || 'CommandDeck';
+      return pageName;
+    } catch {
+      return 'CommandDeck';
+    }
+  };
+
   const sendHelpMessage = async (text) => {
     if (!text.trim() || helpLoading) return;
     const userMessage = { role: 'user', content: text };
@@ -142,8 +177,13 @@ export default function RightSideTabs() {
         `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
       ).join('\n');
 
+      // Get current page context
+      const currentPage = getCurrentPage();
+      const pageContext = PAGE_CONTEXT[currentPage] || "";
+      const contextNote = pageContext ? `\n\nCURRENT PAGE CONTEXT: ${pageContext}\nBe ready to help with questions specific to this page.` : "";
+
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${SYSTEM_CONTEXT}\n\nCONVERSATION HISTORY:\n${conversationHistory}\n\nUser: ${text}\n\nRespond helpfully and concisely. Use markdown formatting when helpful (bullet points, bold for emphasis). Keep responses under 200 words unless the topic requires more detail.`,
+        prompt: `${SYSTEM_CONTEXT}${contextNote}\n\nCONVERSATION HISTORY:\n${conversationHistory}\n\nUser: ${text}\n\nRespond helpfully and concisely. Use markdown formatting when helpful (bullet points, bold for emphasis). Keep responses under 200 words unless the topic requires more detail.`,
       });
       setHelpMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {

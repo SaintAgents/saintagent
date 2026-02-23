@@ -109,7 +109,7 @@ const NAV_ITEMS = [
   { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
   { id: 'drx', label: 'Digital Rights Exchange', Icon: Key, page: 'DigitalRightsExchange', hint: 'Programmable digital asset rights - license, rent, and monetize your content' },
   { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
-  { id: 'communityfeed', label: 'Community Feed', Icon: Sparkles, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
+  { id: 'communityfeed', label: 'Community Feed', Icon: FileText, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
   { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
   { id: 'marketplace', label: 'Marketplace', Icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
   { id: 'messages', label: 'Messages', Icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
