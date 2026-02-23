@@ -1259,45 +1259,7 @@ export default function Sidebar({
         </FloatingPanel>
       )}
 
-      {/* Leaders popup when docked */}
-      {leadersPopupOpen && (
-        <FloatingPanel title="Top Leaders" onClose={() => setLeadersPopupOpen(false)}>
-          <TooltipProvider delayDuration={200}>
-          <div className="space-y-2">
-            {resolvedLeaders.map((leader, index) => (
-              <div key={leader.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                <div className="relative">
-                  <Avatar className="w-9 h-9 cursor-pointer" data-user-id={leader.user_id}>
-                    <AvatarImage src={leader.avatar_url} />
-                    <AvatarFallback className="text-xs">{leader.display_name?.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  {index < 3 && (
-                    <div className={cn(
-                      "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold",
-                      index === 0 && "bg-amber-400 text-white",
-                      index === 1 && "bg-slate-300 text-slate-700",
-                      index === 2 && "bg-orange-400 text-white"
-                    )}>
-                      {index + 1}
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 truncate">{leader.display_name}</p>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3 text-violet-500" />
-                    <span className="text-[11px] text-slate-500">{leader.rank_points?.toLocaleString() || 0}</span>
-                  </div>
-                </div>
-                {leader.leader_tier === 'verified144k' && (
-                  <Crown className="w-4 h-4 text-amber-500 shrink-0" />
-                )}
-              </div>
-            ))}
-          </div>
-          </TooltipProvider>
-        </FloatingPanel>
-      )}
+
 
       {/* Bottom Expand/Collapse Chevron */}
       <button
