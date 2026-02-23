@@ -163,9 +163,7 @@ export default function Sidebar({
 }) {
   const [status, setStatus] = useState(profile?.status || 'online');
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
-  const [leaderboardOpen, setLeaderboardOpen] = useState(true);
-  const [leaderboardFullyCollapsed, setLeaderboardFullyCollapsed] = useState(false);
-  const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
+
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
