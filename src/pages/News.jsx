@@ -67,11 +67,11 @@ function NewsCard({ article, onClick }) {
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         {article.summary && (
-          <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 mb-3">
+          <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 mb-3 flex-1">
             {article.summary}
           </p>
         )}
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-auto">
           <div className="flex items-center gap-3">
             {article.published_date && (
               <span className="flex items-center gap-1">
