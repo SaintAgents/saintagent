@@ -59,13 +59,13 @@ function NewsCard({ article, onClick }) {
           </div>
         </div>
       )}
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 flex-shrink-0">
         <div className="flex items-start gap-2">
           <Icon className="w-5 h-5 text-violet-500 mt-0.5 shrink-0" />
           <CardTitle className="text-lg line-clamp-2">{article.title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         {article.summary && (
           <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 mb-3">
             {article.summary}
