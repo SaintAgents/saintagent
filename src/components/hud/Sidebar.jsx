@@ -344,23 +344,7 @@ export default function Sidebar({
     refetchInterval: 5000
   });
 
-  const { data: topLeaders = [] } = useQuery({
-    queryKey: ['topLeaders'],
-    queryFn: () => base44.entities.UserProfile.list('-rank_points', 10),
-    refetchInterval: 30000
-  });
 
-  // Ensure current user appears if their rank qualifies (or if not in initial 10 due to caching)
-  const resolvedLeaders = React.useMemo(() => {
-    const arr = Array.isArray(topLeaders) ? [...topLeaders] : [];
-    if (profile?.user_id) {
-      const exists = arr.some(l => l.user_id === profile.user_id);
-      if (!exists) arr.push(profile);
-    }
-    return arr
-      .sort((a, b) => (Number(b?.rank_points) || 0) - (Number(a?.rank_points) || 0))
-      .slice(0, 10);
-  }, [topLeaders, profile?.user_id, profile?.rank_points]);
 
   const handleStatusChange = (value) => {
     setStatus(value);
