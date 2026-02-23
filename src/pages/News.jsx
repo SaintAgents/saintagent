@@ -35,11 +35,11 @@ function NewsCard({ article, onClick }) {
   
   return (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-all dark:bg-[rgba(0,0,0,0.75)] dark:border-[rgba(0,255,136,0.2)] dark:hover:border-[rgba(0,255,136,0.4)]"
+      className="cursor-pointer hover:shadow-lg transition-all dark:bg-[rgba(0,0,0,0.75)] dark:border-[rgba(0,255,136,0.2)] dark:hover:border-[rgba(0,255,136,0.4)] h-full flex flex-col"
       onClick={onClick}
     >
       {article.image_url && (
-        <div className="relative h-48 overflow-hidden rounded-t-lg">
+        <div className="relative h-48 overflow-hidden rounded-t-lg flex-shrink-0">
           <img 
             src={article.image_url} 
             alt={article.title}
