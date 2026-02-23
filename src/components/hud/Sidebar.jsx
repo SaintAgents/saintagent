@@ -113,7 +113,7 @@ const NAV_ITEMS = [
   { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
   { id: 'marketplace', label: 'Marketplace', Icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
   { id: 'messages', label: 'Messages', Icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
-  { id: 'events', label: 'Events', Icon: Calendar, page: 'Events', hint: 'Discover and create meetups' },
+  { id: 'events', label: 'Events', Icon: Star, page: 'Events', hint: 'Discover and create meetups' },
   { id: 'broadcast', label: 'Broadcast', Icon: Mic, page: 'Broadcast', hint: 'Live podcasts, town halls & community broadcasts' },
   { id: 'schedule', label: 'Global Schedule', Icon: Calendar, page: 'Schedule', hint: 'View all meetings, events & broadcasts in one place' },
   { id: 'leader', label: 'Leader Channel', Icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
