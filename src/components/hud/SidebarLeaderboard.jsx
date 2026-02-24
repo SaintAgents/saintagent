@@ -340,17 +340,20 @@ export default function SidebarLeaderboard({
     </div>
   );
 
-  // If hidden, show minimal toggle
+  // If hidden, show minimal toggle - keep within sidebar bounds
   if (leaderboardHidden && !inPopup) {
     return (
-      <div className={cn("border-t border-slate-100 p-2", isCollapsed && "p-1")}>
+      <div className={cn("border-t border-slate-100 px-3 py-2 shrink-0", isCollapsed && "px-1 py-1")}>
         <button
           onClick={() => setLeaderboardHidden(false)}
-          className="w-full flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors text-slate-400 hover:text-slate-600"
+          className={cn(
+            "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors text-slate-400 hover:text-slate-600",
+            isCollapsed ? "justify-center" : "justify-center"
+          )}
           title="Show leaderboard"
         >
-          <Eye className="w-3.5 h-3.5" />
-          {!isCollapsed && <span className="text-xs">Show Leaders</span>}
+          <Eye className="w-3.5 h-3.5 shrink-0" />
+          {!isCollapsed && <span className="text-xs whitespace-nowrap">Show Leaders</span>}
         </button>
       </div>
     );
