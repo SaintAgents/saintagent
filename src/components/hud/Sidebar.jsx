@@ -555,6 +555,23 @@ export default function Sidebar({
         )}
       </div>
 
+      {/* Show presence toggle when hidden */}
+      {presenceHidden && !isCollapsed && !inPopup && (
+        <div className="border-t border-slate-100 px-3 py-2">
+          <button
+            onClick={() => {
+              setPresenceHidden(false);
+              try { localStorage.setItem('presenceHidden', 'false'); } catch {}
+            }}
+            className="w-full flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors text-slate-500 hover:text-slate-700"
+            title="Show presence section"
+          >
+            <EyeOff className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">Show Presence</span>
+          </button>
+        </div>
+      )}
+
       {/* Testimonials Link - hidden when collapsed */}
       {(inPopup || !isCollapsed) && (
         <div className={cn("border-t border-slate-100 px-3 py-2", isCollapsed && !inPopup && "p-1")}>
