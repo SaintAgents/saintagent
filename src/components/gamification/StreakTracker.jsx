@@ -67,7 +67,7 @@ export default function StreakTracker({ userId, compact = false }) {
     date.setDate(date.getDate() - (6 - i));
     date.setHours(0, 0, 0, 0);
     const dateStr = date.toISOString().slice(0, 10);
-    const hasActivity = dailyLogs.some(log => log.date === dateStr);
+    const hasActivity = activityDates.has(dateStr);
     return { date, dateStr, hasActivity, dayName: date.toLocaleDateString('en', { weekday: 'short' }) };
   });
 
