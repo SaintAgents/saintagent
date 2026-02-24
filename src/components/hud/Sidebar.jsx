@@ -65,6 +65,7 @@ import {
   Cloud,
   Shield,
   Eye,
+  EyeOff,
   Orbit,
   Smile,
   Newspaper,
@@ -170,6 +171,9 @@ export default function Sidebar({
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const [presenceOpen, setPresenceOpen] = useState(true);
+  const [presenceHidden, setPresenceHidden] = useState(() => {
+    try { return localStorage.getItem('presenceHidden') === 'true'; } catch { return false; }
+  });
   const [themeOpen, setThemeOpen] = useState(false);
   const [bgEffectOpen, setBgEffectOpen] = useState(false);
   const [navPopupCollapsed, setNavPopupCollapsed] = useState(false);
