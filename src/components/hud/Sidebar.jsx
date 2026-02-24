@@ -588,15 +588,13 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Leaderboard - hidden when collapsed */}
-      {(inPopup || !isCollapsed) && (
-        <SidebarLeaderboard
-          isCollapsed={isCollapsed}
-          inPopup={inPopup}
-          profile={profile}
-          currentUserEmail={currentUser?.email}
-        />
-      )}
+      {/* Leaderboard - always rendered so "Show Leaders" button appears */}
+      <SidebarLeaderboard
+        isCollapsed={isCollapsed}
+        inPopup={inPopup}
+        profile={profile}
+        currentUserEmail={currentUser?.email}
+      />
 
       {/* Footer - Status Controls - hidden when collapsed or presence hidden */}
       <div className={cn(
