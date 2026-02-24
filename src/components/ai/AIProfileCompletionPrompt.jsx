@@ -110,7 +110,13 @@ export default function AIProfileCompletionPrompt({ profile, showCard = true, on
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeField, setActiveField] = useState(null);
   const [formData, setFormData] = useState({});
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(() => {
+    try {
+      return localStorage.getItem('profileCompletionDismissed') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // Calculate completion percentage
   const calculateCompletion = () => {
@@ -292,7 +298,12 @@ Provide:
               variant="ghost" 
               size="icon" 
               className="h-8 w-8"
-              onClick={() => setDismissed(true)}
+              onClick={() => {
+                setDismissed(true);
+                try {
+                  localStorage.setItem('profileCompletionDismissed', 'true');
+                } catch {}
+              }}
             >
               <X className="w-4 h-4" />
             </Button>
