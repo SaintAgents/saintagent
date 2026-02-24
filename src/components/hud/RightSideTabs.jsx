@@ -43,6 +43,11 @@ const PAGE_CONTEXT = {
   LeaderChannel: "The user is on the Leader Channel - exclusive content for verified 144K leaders.",
   Schedule: "The user is on the Global Schedule viewing all meetings, events, and broadcasts.",
   Broadcast: "The user is on the Broadcast page for live podcasts and town halls.",
+  Gamification: "The user is on the Gamification page showing their rank, badges, challenges, leaderboards, and progress in the platform's reward system.",
+  Teams: "The user is on the Teams page to create and manage collaborative teams.",
+  Leaderboards: "The user is on the Leaderboards page showing top performers and rankings.",
+  DailyOps: "The user is on the Daily Ops page for daily check-ins and operational tasks.",
+  Notes: "The user is on the Notes page for personal note-taking and organization.",
 };
 
 const SYSTEM_CONTEXT = `You are Saint Support, the helpful AI assistant for the SaintAgent platform - a conscious community for spiritual seekers, lightworkers, and builders.
