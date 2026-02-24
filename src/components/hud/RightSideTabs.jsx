@@ -103,6 +103,24 @@ PLATFORM KNOWLEDGE:
 
 Always guide users to explore features and complete their profiles for better matches. Encourage community participation and conscious connection.`;
 
+// Get current page from URL - check search params first (Base44 uses ?page= pattern)
+const getCurrentPage = () => {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get('page');
+    if (pageParam) return pageParam;
+    
+    // Fallback to path-based detection
+    const path = window.location.pathname;
+    const segments = path.split('/').filter(Boolean);
+    const pageName = segments[segments.length - 1] || 'CommandDeck';
+    if (pageName === '' || pageName === 'index.html') return 'CommandDeck';
+    return pageName;
+  } catch {
+    return 'CommandDeck';
+  }
+};
+
 export default function RightSideTabs() {
   // Help panel state
   const [helpOpen, setHelpOpen] = useState(false);
