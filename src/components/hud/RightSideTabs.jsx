@@ -182,7 +182,11 @@ export default function RightSideTabs() {
   const getCurrentPage = () => {
     try {
       const path = window.location.pathname;
-      const pageName = path.split('/').pop() || 'CommandDeck';
+      // Get the last segment of the path
+      const segments = path.split('/').filter(Boolean);
+      const pageName = segments[segments.length - 1] || 'CommandDeck';
+      // Handle common URL patterns
+      if (pageName === '' || pageName === 'index.html') return 'CommandDeck';
       return pageName;
     } catch {
       return 'CommandDeck';
