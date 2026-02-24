@@ -171,6 +171,8 @@ export default function RightSideTabs() {
       let greeting = "Hi! I'm Saint Support, your guide to the SaintAgent platform. 🌟\n\n";
       if (pageContext) {
         greeting += `**About this page:** ${pageContext}\n\n`;
+      } else {
+        greeting += `**Current page:** ${currentPage}\n\n`;
       }
       greeting += "Feel free to explore the suggestions below, or ask me anything!";
       setHelpMessages([{ role: 'assistant', content: greeting }]);
