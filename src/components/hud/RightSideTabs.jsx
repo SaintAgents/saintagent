@@ -156,6 +156,29 @@ export default function RightSideTabs() {
     }
   }, [helpMessages]);
 
+  // Track current page and reset help when page changes
+  const [trackedPage, setTrackedPage] = useState(() => getCurrentPage());
+  
+  // Check for page changes periodically (URL can change without remount)
+  useEffect(() => {
+    const checkPageChange = () => {
+      const currentPage = getCurrentPage();
+      if (currentPage !== trackedPage) {
+        setTrackedPage(currentPage);
+        // Reset help messages when page changes so it picks up new context
+        setHelpMessages([]);
+        // Close help panel on page change
+        setHelpOpen(false);
+        setHelpHovered(false);
+      }
+    };
+    
+    // Check immediately and on interval
+    checkPageChange();
+    const interval = setInterval(checkPageChange, 500);
+    return () => clearInterval(interval);
+  }, [trackedPage]);
+
   // Auto-open help on first visit to each page
   useEffect(() => {
     const currentPage = getCurrentPage();
@@ -169,7 +192,7 @@ export default function RightSideTabs() {
         localStorage.setItem(visitedKey, '1');
       }
     } catch {}
-  }, []);
+  }, [trackedPage]);
 
   // Focus input when help opens and set initial greeting with page context
   useEffect(() => {
