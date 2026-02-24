@@ -41,7 +41,9 @@ import {
   CheckCircle,
   Folder,
   Compass,
-  MapPin } from
+  MapPin,
+  Key,
+  CircleDot } from
   "lucide-react";
 
 // Card icon mapping - must be defined here to resolve icons from stored card data
@@ -64,7 +66,11 @@ const CARD_ICONS = {
   dailyops: Calendar,
   communityFeed: Sparkles,
   leaderboard: Trophy,
-  affirmations: Sparkles
+  affirmations: Sparkles,
+  drx: Key,
+  broadcast: Radio,
+  events: CircleDot,
+  globalSchedule: Calendar
 };
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
@@ -521,19 +527,18 @@ export default function SidePanel({
                     </div>
                     <button
                       onClick={() => {
-                        const section = document.querySelector('[data-stored-cards]');
-                        const isHidden = section?.classList.contains('hidden');
-                        section?.classList.toggle('hidden');
+                        setStoredCardsCollapsed(!storedCardsCollapsed);
                         try {
-                          localStorage.setItem('storedCardsCollapsed', String(!isHidden));
+                          localStorage.setItem('storedCardsCollapsed', String(!storedCardsCollapsed));
                         } catch {}
                       }}
                       className="p-1 rounded hover:bg-slate-200 transition-colors"
                       title="Toggle stored cards"
                     >
-                      <ChevronRight className="w-4 h-4 text-slate-500" />
+                      <ChevronDown className={cn("w-4 h-4 text-slate-500 transition-transform", storedCardsCollapsed && "rotate-180")} />
                     </button>
                   </div>
+                  {!storedCardsCollapsed && (
                   <div className="space-y-2" data-stored-cards>
                     {storedCards.map((card) => {
                       const CardIcon = CARD_ICONS[card.id] || Sparkles;
@@ -566,7 +571,8 @@ export default function SidePanel({
                       );
                     })}
                   </div>
-                  {onRestoreCard && storedCards.length > 1 && (
+                  )}
+                  {!storedCardsCollapsed && onRestoreCard && storedCards.length > 1 && (
                     <Button
                       variant="ghost"
                       size="sm"
