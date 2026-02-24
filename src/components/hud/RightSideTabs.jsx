@@ -370,7 +370,7 @@ export default function RightSideTabs() {
           // On mobile, only show if panel is open (triggered from menu)
           showHelpPanel ? "block" : "hidden md:block"
         )}
-        style={{ bottom: '52px' }}
+        style={{ bottom: '102px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
@@ -510,7 +510,7 @@ export default function RightSideTabs() {
           // On mobile, only show if panel is open (triggered from menu)
           showChatPanel ? "block" : "hidden md:block"
         )}
-        style={{ bottom: '100px' }}
+        style={{ bottom: '150px' }}
         onMouseEnter={handleChatMouseEnter}
         onMouseLeave={handleChatMouseLeave}
       >
