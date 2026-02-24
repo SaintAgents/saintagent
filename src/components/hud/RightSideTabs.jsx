@@ -144,6 +144,21 @@ export default function RightSideTabs() {
     }
   }, [helpMessages]);
 
+  // Auto-open help on first visit to each page
+  useEffect(() => {
+    const currentPage = getCurrentPage();
+    const visitedKey = `visited_page_${currentPage}`;
+    try {
+      const hasVisited = localStorage.getItem(visitedKey);
+      if (!hasVisited && PAGE_CONTEXT[currentPage]) {
+        // First visit to this page - auto open help
+        setHelpOpen(true);
+        setHelpHovered(true);
+        localStorage.setItem(visitedKey, '1');
+      }
+    } catch {}
+  }, []);
+
   // Focus input when help opens and set initial greeting with page context
   useEffect(() => {
     if ((helpOpen || helpHovered) && helpInputRef.current) {
