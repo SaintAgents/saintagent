@@ -612,6 +612,21 @@ export default function Sidebar({
                   <ChevronDown className="w-4 h-4 text-slate-500" />
                 )}
               </button>
+              <button
+                onClick={() => {
+                  const newVal = !presenceHidden;
+                  setPresenceHidden(newVal);
+                  try { localStorage.setItem('presenceHidden', String(newVal)); } catch {}
+                }}
+                className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                title={presenceHidden ? 'Show presence section' : 'Hide presence section'}
+              >
+                {presenceHidden ? (
+                  <EyeOff className="w-3.5 h-3.5 text-slate-400" />
+                ) : (
+                  <Eye className="w-3.5 h-3.5 text-slate-400" />
+                )}
+              </button>
             </div>
           )}
         </div>
