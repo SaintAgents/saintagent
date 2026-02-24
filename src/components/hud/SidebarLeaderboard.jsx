@@ -358,7 +358,7 @@ export default function SidebarLeaderboard({
 
   return (
     <>
-      <div className={cn("border-t border-slate-100 p-3", isCollapsed && !inPopup && "p-1")}>
+      <div className={cn("border-t border-slate-100 p-3 pb-14", isCollapsed && !inPopup && "p-1 pb-14")}>
         {/* Header */}
         <div className={cn("mb-3 px-2", isCollapsed && !inPopup && "mb-1 px-0")}>
           <div className={cn("flex items-center justify-between gap-1 min-w-0", isCollapsed && !inPopup && "justify-center")}>
