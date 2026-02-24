@@ -96,9 +96,7 @@ export default function RightSideTabs() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [helpHovered, setHelpHovered] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [helpMessages, setHelpMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm Saint Support, your guide to the SaintAgent platform. How can I help you today? 🌟" }
-  ]);
+  const [helpMessages, setHelpMessages] = useState([]);
   const [helpInput, setHelpInput] = useState('');
   const [helpLoading, setHelpLoading] = useState(false);
   const helpScrollRef = useRef(null);
@@ -146,28 +144,21 @@ export default function RightSideTabs() {
     }
   }, [helpMessages]);
 
-  // Focus input when help opens and generate initial messages
+  // Focus input when help opens and set initial greeting with page context
   useEffect(() => {
     if ((helpOpen || helpHovered) && helpInputRef.current) {
       setTimeout(() => helpInputRef.current?.focus(), 100);
     }
-    
-    // Generate initial welcome messages when help panel opens
+    // Set initial greeting with page context when opened
     if ((helpOpen || helpHovered) && helpMessages.length === 0) {
       const currentPage = getCurrentPage();
       const pageContext = PAGE_CONTEXT[currentPage];
-      
-      const greeting = "Hi! I'm Saint Support, your guide to the SaintAgent platform. 🌟";
-      
-      const pageInfo = pageContext 
-        ? `\n\n**About this page:** ${pageContext.replace('The user is on ', 'You\'re on ').replace('The user is viewing ', 'You\'re viewing ')}`
-        : "";
-      
-      const suggestions = "\n\n---\n\n💡 **Suggestions:** Ask me about matches, GGG rewards, rank progression, or anything else!\n\nYou can ask me anything about the platform.";
-      
-      setHelpMessages([
-        { role: 'assistant', content: greeting + pageInfo + suggestions }
-      ]);
+      let greeting = "Hi! I'm Saint Support, your guide to the SaintAgent platform. 🌟\n\n";
+      if (pageContext) {
+        greeting += `**About this page:** ${pageContext}\n\n`;
+      }
+      greeting += "Feel free to explore the suggestions below, or ask me anything!";
+      setHelpMessages([{ role: 'assistant', content: greeting }]);
     }
   }, [helpOpen, helpHovered]);
 
