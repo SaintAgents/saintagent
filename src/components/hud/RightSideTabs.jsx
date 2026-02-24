@@ -96,9 +96,7 @@ export default function RightSideTabs() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [helpHovered, setHelpHovered] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [helpMessages, setHelpMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm Saint Support, your guide to the SaintAgent platform. How can I help you today? 🌟" }
-  ]);
+  const [helpMessages, setHelpMessages] = useState([]);
   const [helpInput, setHelpInput] = useState('');
   const [helpLoading, setHelpLoading] = useState(false);
   const helpScrollRef = useRef(null);
