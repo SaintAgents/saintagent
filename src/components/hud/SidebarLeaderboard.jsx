@@ -361,13 +361,13 @@ export default function SidebarLeaderboard({
       <div className={cn("border-t border-slate-100 p-3", isCollapsed && !inPopup && "p-1")}>
         {/* Header */}
         <div className={cn("mb-3 px-2", isCollapsed && !inPopup && "mb-1 px-0")}>
-          <div className={cn("flex items-center justify-between", isCollapsed && !inPopup && "justify-center")}>
+          <div className={cn("flex items-center justify-between gap-1 min-w-0", isCollapsed && !inPopup && "justify-center")}>
             <button
               onClick={() => setLeaderboardOpen(!leaderboardOpen)}
-              className={cn("flex items-center gap-2 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors", isCollapsed && !inPopup && "p-1 justify-center")}
+              className={cn("flex items-center gap-1.5 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors min-w-0 flex-shrink", isCollapsed && !inPopup && "p-1 justify-center")}
             >
-              <Trophy className="w-4 h-4 text-amber-500" />
-              {showExpanded && <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Top Leaders</span>}
+              <Trophy className="w-4 h-4 text-amber-500 flex-shrink-0" />
+              {showExpanded && <span className="text-[10px] font-semibold text-slate-900 uppercase tracking-wide truncate">Leaders</span>}
             </button>
             {showExpanded && (
               <div className="flex items-center gap-1">

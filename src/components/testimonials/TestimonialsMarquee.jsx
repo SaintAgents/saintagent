@@ -137,15 +137,15 @@ export function TestimonialsCompact({ limit = 3 }) {
   const testimonials = DEMO_TESTIMONIALS.slice(0, limit);
   
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 flex flex-col items-center">
       {testimonials.map((t) => (
-        <div key={t.id} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-          <Avatar className="w-9 h-9">
+        <div key={t.id} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 w-full max-w-md mx-auto text-center">
+          <Avatar className="w-9 h-9 mx-auto">
             <AvatarImage src={t.avatar} />
             <AvatarFallback>{t.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <span className="text-sm font-medium truncate">{t.name}</span>
               <div className="flex">
                 {[...Array(t.rating)].map((_, i) => (
@@ -153,7 +153,7 @@ export function TestimonialsCompact({ limit = 3 }) {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{t.text}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 text-center">{t.text}</p>
           </div>
         </div>
       ))}
