@@ -36,6 +36,7 @@ import ModeratorReviewPanel from '@/components/admin/ModeratorReviewPanel';
 import DemoUsersManager from '@/components/admin/DemoUsersManager';
 import AdminRequestsPanel from '@/components/admin/AdminRequestsPanel';
 import PagesControlPanel from '@/components/admin/PagesControlPanel';
+import BetaTickerManager from '@/components/admin/BetaTickerManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -200,6 +201,10 @@ export default function Admin() {
               <FileText className="w-4 h-4" />
               Pages
             </TabsTrigger>
+            <TabsTrigger value="ticker" className="gap-2 px-3 py-2">
+              <Bell className="w-4 h-4" />
+              Ticker
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -334,6 +339,10 @@ export default function Admin() {
 
           <TabsContent value="pages">
             <PagesControlPanel />
+          </TabsContent>
+
+          <TabsContent value="ticker">
+            <BetaTickerManager />
           </TabsContent>
         </Tabs>
       </div>
