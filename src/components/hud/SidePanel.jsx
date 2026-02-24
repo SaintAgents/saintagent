@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Sparkles,
   Calendar,
   Zap,
@@ -518,8 +519,22 @@ export default function SidePanel({
                         {storedCards.length}
                       </span>
                     </div>
+                    <button
+                      onClick={() => {
+                        const section = document.querySelector('[data-stored-cards]');
+                        const isHidden = section?.classList.contains('hidden');
+                        section?.classList.toggle('hidden');
+                        try {
+                          localStorage.setItem('storedCardsCollapsed', String(!isHidden));
+                        } catch {}
+                      }}
+                      className="p-1 rounded hover:bg-slate-200 transition-colors"
+                      title="Toggle stored cards"
+                    >
+                      <ChevronRight className="w-4 h-4 text-slate-500" />
+                    </button>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2" data-stored-cards>
                     {storedCards.map((card) => {
                       const CardIcon = CARD_ICONS[card.id] || Sparkles;
                       return (
