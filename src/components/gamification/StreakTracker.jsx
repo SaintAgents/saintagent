@@ -6,39 +6,43 @@ import { Flame, Calendar, TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 export default function StreakTracker({ userId, compact = false }) {
-  // Get daily logs for the last 30 days
-  // userId can be either SA# or email - query supports both
-  const { data: dailyLogs = [] } = useQuery({
-    queryKey: ['dailyLogs', userId],
+  // Get GGG transactions as activity indicator (more reliable than daily logs)
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['streakTransactions', userId],
     queryFn: async () => {
-      const logs = await base44.entities.DailyLog.filter({ user_id: userId }, '-date', 30);
-      return logs;
+      const txns = await base44.entities.GGGTransaction.filter({ user_id: userId }, '-created_date', 60);
+      return txns;
     },
     enabled: !!userId
   });
 
-  // Calculate current streak
+  // Calculate current streak based on days with activity (GGG transactions)
   const calculateStreak = () => {
-    if (dailyLogs.length === 0) return 0;
+    if (transactions.length === 0) return 0;
     
-    const sortedLogs = [...dailyLogs].sort((a, b) => 
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    // Group transactions by date
+    const activityDates = new Set();
+    transactions.forEach(txn => {
+      const date = new Date(txn.created_date);
+      activityDates.add(date.toISOString().slice(0, 10));
+    });
+    
+    const sortedDates = [...activityDates].sort((a, b) => new Date(b) - new Date(a));
     
     let streak = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    for (let i = 0; i < sortedLogs.length; i++) {
-      const logDate = new Date(sortedLogs[i].date);
-      logDate.setHours(0, 0, 0, 0);
-      
+    for (let i = 0; i < sortedDates.length; i++) {
       const expectedDate = new Date(today);
       expectedDate.setDate(today.getDate() - i);
+      const expectedDateStr = expectedDate.toISOString().slice(0, 10);
       
-      if (logDate.getTime() === expectedDate.getTime()) {
+      if (sortedDates.includes(expectedDateStr)) {
         streak++;
       } else {
+        // Allow for today not having activity yet
+        if (i === 0) continue;
         break;
       }
     }
@@ -47,7 +51,15 @@ export default function StreakTracker({ userId, compact = false }) {
   };
 
   const streak = calculateStreak();
-  const longestStreak = Math.max(streak, ...(dailyLogs.map(l => l.streak_count || 0)), 0);
+  
+  // Group by date for activity visualization
+  const activityDates = new Set();
+  transactions.forEach(txn => {
+    const date = new Date(txn.created_date);
+    activityDates.add(date.toISOString().slice(0, 10));
+  });
+  
+  const longestStreak = Math.max(streak, 0);
 
   // Generate last 7 days for visualization
   const last7Days = Array.from({ length: 7 }, (_, i) => {
