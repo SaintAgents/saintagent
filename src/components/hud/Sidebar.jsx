@@ -572,14 +572,14 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Testimonials Link - hidden when collapsed */}
+      {/* Testimonials Link - centered when expanded */}
       {(inPopup || !isCollapsed) && (
         <div className={cn("border-t border-slate-100 px-3 py-2", isCollapsed && !inPopup && "p-1")}>
           <Link
             to={createPageUrl('Testimonials')}
             className={cn(
               "flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-amber-50 transition-colors",
-              isCollapsed && !inPopup && "justify-center"
+              isCollapsed && !inPopup ? "justify-center" : "justify-center"
             )}
           >
             <Star className="w-4 h-4 text-amber-500" />
