@@ -233,24 +233,6 @@ export default function RightSideTabs() {
   }, [helpOpen, helpHovered]);
 
   // Help send message
-  // Get current page from URL - check search params first (Base44 uses ?page= pattern)
-  const getCurrentPage = () => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const pageParam = urlParams.get('page');
-      if (pageParam) return pageParam;
-      
-      // Fallback to path-based detection
-      const path = window.location.pathname;
-      const segments = path.split('/').filter(Boolean);
-      const pageName = segments[segments.length - 1] || 'CommandDeck';
-      if (pageName === '' || pageName === 'index.html') return 'CommandDeck';
-      return pageName;
-    } catch {
-      return 'CommandDeck';
-    }
-  };
-
   const sendHelpMessage = async (text) => {
     if (!text.trim() || helpLoading) return;
     const userMessage = { role: 'user', content: text };
