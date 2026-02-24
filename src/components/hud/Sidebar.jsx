@@ -581,10 +581,11 @@ export default function Sidebar({
         />
       )}
 
-      {/* Footer - Status Controls - hidden when collapsed */}
+      {/* Footer - Status Controls - hidden when collapsed or presence hidden */}
       <div className={cn(
         "border-t border-slate-100 p-4 space-y-3",
-        (isCollapsed && !inPopup) && "hidden"
+        (isCollapsed && !inPopup) && "hidden",
+        presenceHidden && !inPopup && "hidden"
       )}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
