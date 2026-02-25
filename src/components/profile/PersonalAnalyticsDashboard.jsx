@@ -21,6 +21,7 @@ import {
   BarChart3, Activity, Zap, Heart, Edit2, Trash2, Star
 } from 'lucide-react';
 import { format, subDays, eachDayOfInterval, parseISO, isWithinInterval, differenceInDays } from 'date-fns';
+import { toast } from 'sonner';
 
 const CHART_COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
@@ -51,41 +52,63 @@ function StatCard({ title, value, change, icon: Icon, color = 'violet', subtitle
   );
 }
 
-function GoalCard({ goal, onUpdate, onDelete }) {
-  const progress = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
+function GoalCard({ goal, onUpdate, onDelete, autoProgress }) {
+  const currentValue = autoProgress !== undefined ? autoProgress : goal.current;
+  const progress = goal.target > 0 ? Math.min((currentValue / goal.target) * 100, 100) : 0;
   const isComplete = progress >= 100;
+  const isOverdue = goal.deadline && new Date(goal.deadline) < new Date() && !isComplete;
+  const daysLeft = goal.deadline ? differenceInDays(new Date(goal.deadline), new Date()) : null;
   
   return (
-    <div className={`p-4 rounded-lg border ${isComplete ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`}>
+    <div className={`p-4 rounded-lg border transition-all ${
+      isComplete ? 'bg-emerald-50 border-emerald-200 ring-2 ring-emerald-300' : 
+      isOverdue ? 'bg-red-50 border-red-200' :
+      'bg-slate-50 border-slate-200'
+    }`}>
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           {isComplete ? (
-            <CheckCircle className="w-5 h-5 text-emerald-600" />
+            <div className="relative">
+              <CheckCircle className="w-5 h-5 text-emerald-600" />
+              <Trophy className="w-3 h-3 text-amber-500 absolute -top-1 -right-1" />
+            </div>
+          ) : isOverdue ? (
+            <Clock className="w-5 h-5 text-red-500" />
           ) : (
             <Target className="w-5 h-5 text-violet-600" />
           )}
           <h4 className="font-medium text-slate-900">{goal.title}</h4>
         </div>
         <div className="flex items-center gap-1">
+          {autoProgress !== undefined && (
+            <Badge variant="secondary" className="text-[10px]">Auto-tracked</Badge>
+          )}
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onDelete(goal.id)}>
             <Trash2 className="w-3 h-3 text-slate-400" />
           </Button>
         </div>
       </div>
-      <p className="text-sm text-slate-500 mb-3">{goal.description}</p>
+      {goal.description && <p className="text-sm text-slate-500 mb-3">{goal.description}</p>}
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-slate-600">{goal.current} / {goal.target} {goal.unit}</span>
+          <span className="text-slate-600">{currentValue.toFixed(goal.unit === 'GGG' ? 2 : 0)} / {goal.target} {goal.unit}</span>
           <span className={isComplete ? 'text-emerald-600 font-medium' : 'text-slate-500'}>{Math.round(progress)}%</span>
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress value={progress} className={`h-2 ${isComplete ? '[&>div]:bg-emerald-500' : isOverdue ? '[&>div]:bg-red-500' : ''}`} />
       </div>
-      {goal.deadline && (
-        <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
-          <Clock className="w-3 h-3" />
-          Due: {format(new Date(goal.deadline), 'MMM d, yyyy')}
-        </p>
-      )}
+      <div className="flex items-center justify-between mt-2">
+        {goal.deadline && (
+          <p className={`text-xs flex items-center gap-1 ${isOverdue ? 'text-red-500' : 'text-slate-400'}`}>
+            <Clock className="w-3 h-3" />
+            {isOverdue ? 'Overdue' : daysLeft === 0 ? 'Due today' : daysLeft === 1 ? '1 day left' : `${daysLeft} days left`}
+          </p>
+        )}
+        {isComplete && (
+          <Badge className="bg-emerald-100 text-emerald-700 text-xs">
+            <CheckCircle className="w-3 h-3 mr-1" /> Completed!
+          </Badge>
+        )}
+      </div>
     </div>
   );
 }
@@ -148,6 +171,45 @@ export default function PersonalAnalyticsDashboard({ profile }) {
 
   // Personal goals stored on profile
   const personalGoals = profile?.personal_goals || [];
+
+  // Auto-calculate goal progress based on unit type
+  const getAutoProgress = (goal) => {
+    const now = new Date();
+    const goalCreated = goal.created_at ? new Date(goal.created_at) : subDays(now, 30);
+    
+    const filterSinceGoalCreated = (items) => items.filter(item => {
+      const date = parseISO(item.created_date);
+      return date >= goalCreated;
+    });
+
+    switch (goal.unit) {
+      case 'challenges':
+        return filterSinceGoalCreated(challenges).filter(c => c.status === 'claimed').length;
+      case 'meetings':
+        return filterSinceGoalCreated([...meetings, ...hostMeetings]).filter(m => m.status === 'completed').length;
+      case 'messages':
+        return filterSinceGoalCreated(messages).length;
+      case 'followers':
+        return filterSinceGoalCreated(followers).length;
+      case 'GGG':
+        return filterSinceGoalCreated(transactions).filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
+      case 'days': {
+        // Calculate streak since goal creation
+        const activityDates = new Set();
+        transactions.forEach(txn => {
+          if (new Date(txn.created_date) >= goalCreated) {
+            activityDates.add(txn.created_date?.slice(0, 10));
+          }
+        });
+        return activityDates.size;
+      }
+      default:
+        return undefined; // Manual tracking
+    }
+  };
+
+  // Check for newly completed goals and show notification
+  const [notifiedGoals, setNotifiedGoals] = useState(new Set());
 
   // Save goal mutation
   const updateGoalsMutation = useMutation({
@@ -567,6 +629,97 @@ export default function PersonalAnalyticsDashboard({ profile }) {
 
         {/* Goals Tab */}
         <TabsContent value="goals" className="space-y-6">
+          {/* Goals Overview Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard 
+              title="Active Goals" 
+              value={personalGoals.filter(g => {
+                const auto = getAutoProgress(g);
+                const current = auto !== undefined ? auto : g.current;
+                return current < g.target;
+              }).length}
+              icon={Target}
+              color="violet"
+            />
+            <StatCard 
+              title="Completed" 
+              value={personalGoals.filter(g => {
+                const auto = getAutoProgress(g);
+                const current = auto !== undefined ? auto : g.current;
+                return current >= g.target;
+              }).length}
+              icon={Trophy}
+              color="emerald"
+            />
+            <StatCard 
+              title="Completion Rate" 
+              value={personalGoals.length > 0 
+                ? `${Math.round((personalGoals.filter(g => {
+                    const auto = getAutoProgress(g);
+                    const current = auto !== undefined ? auto : g.current;
+                    return current >= g.target;
+                  }).length / personalGoals.length) * 100)}%`
+                : '0%'}
+              icon={Activity}
+              color="blue"
+            />
+            <StatCard 
+              title="Avg Progress" 
+              value={personalGoals.length > 0
+                ? `${Math.round(personalGoals.reduce((sum, g) => {
+                    const auto = getAutoProgress(g);
+                    const current = auto !== undefined ? auto : g.current;
+                    return sum + Math.min((current / g.target) * 100, 100);
+                  }, 0) / personalGoals.length)}%`
+                : '0%'}
+              icon={BarChart3}
+              color="amber"
+            />
+          </div>
+
+          {/* Goals Progress Chart */}
+          {personalGoals.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Goals Progress Overview</CardTitle>
+                <CardDescription>Visual breakdown of all your goals</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart 
+                      data={personalGoals.map(g => {
+                        const auto = getAutoProgress(g);
+                        const current = auto !== undefined ? auto : g.current;
+                        return {
+                          name: g.title.length > 20 ? g.title.slice(0, 20) + '...' : g.title,
+                          progress: Math.min((current / g.target) * 100, 100),
+                          remaining: Math.max(100 - (current / g.target) * 100, 0),
+                          current,
+                          target: g.target,
+                          unit: g.unit
+                        };
+                      })}
+                      layout="vertical"
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} />
+                      <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={120} />
+                      <Tooltip 
+                        formatter={(value, name, props) => [
+                          `${props.payload.current} / ${props.payload.target} ${props.payload.unit}`,
+                          'Progress'
+                        ]}
+                      />
+                      <Bar dataKey="progress" stackId="a" fill="#10b981" name="Progress" />
+                      <Bar dataKey="remaining" stackId="a" fill="#e2e8f0" name="Remaining" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Personal Goals</h3>
@@ -651,14 +804,32 @@ export default function PersonalAnalyticsDashboard({ profile }) {
 
           {personalGoals.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {personalGoals.map((goal) => (
-                <GoalCard 
-                  key={goal.id} 
-                  goal={goal} 
-                  onUpdate={handleUpdateGoalProgress}
-                  onDelete={handleDeleteGoal}
-                />
-              ))}
+              {personalGoals.map((goal) => {
+                const autoProgress = getAutoProgress(goal);
+                const currentValue = autoProgress !== undefined ? autoProgress : goal.current;
+                const isComplete = currentValue >= goal.target;
+                
+                // Check for completion notification
+                if (isComplete && !notifiedGoals.has(goal.id)) {
+                  setTimeout(() => {
+                    toast.success(`🎉 Goal Completed: ${goal.title}`, {
+                      description: `You've reached your target of ${goal.target} ${goal.unit}!`,
+                      duration: 5000
+                    });
+                    setNotifiedGoals(prev => new Set([...prev, goal.id]));
+                  }, 100);
+                }
+                
+                return (
+                  <GoalCard 
+                    key={goal.id} 
+                    goal={goal} 
+                    autoProgress={autoProgress}
+                    onUpdate={handleUpdateGoalProgress}
+                    onDelete={handleDeleteGoal}
+                  />
+                );
+              })}
             </div>
           ) : (
             <Card className="p-8 text-center">
@@ -676,43 +847,101 @@ export default function PersonalAnalyticsDashboard({ profile }) {
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Suggested Goals</CardTitle>
-              <CardDescription>Quick-add popular goals</CardDescription>
+              <CardDescription>Quick-add popular goals (auto-tracked where possible)</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {[
-                  { title: 'Complete 10 challenges', target: 10, unit: 'challenges' },
-                  { title: 'Attend 5 meetings', target: 5, unit: 'meetings' },
-                  { title: 'Earn 100 GGG', target: 100, unit: 'GGG' },
-                  { title: '7-day streak', target: 7, unit: 'days' },
-                  { title: 'Gain 20 followers', target: 20, unit: 'followers' }
-                ].map((suggestion, idx) => (
-                  <Button
-                    key={idx}
-                    variant="outline"
-                    size="sm"
-                    className="gap-1"
-                    onClick={() => {
-                      const goal = {
-                        id: Date.now().toString(),
-                        title: suggestion.title,
-                        description: '',
-                        target: suggestion.target,
-                        current: 0,
-                        unit: suggestion.unit,
-                        deadline: null,
-                        created_at: new Date().toISOString()
-                      };
-                      updateGoalsMutation.mutate([...personalGoals, goal]);
-                    }}
-                  >
-                    <Plus className="w-3 h-3" />
-                    {suggestion.title}
-                  </Button>
-                ))}
+                  { title: 'Complete 10 challenges', target: 10, unit: 'challenges', icon: Target, color: 'violet', autoTracked: true },
+                  { title: 'Attend 5 meetings', target: 5, unit: 'meetings', icon: Calendar, color: 'blue', autoTracked: true },
+                  { title: 'Earn 100 GGG', target: 100, unit: 'GGG', icon: Zap, color: 'emerald', autoTracked: true },
+                  { title: '7-day activity streak', target: 7, unit: 'days', icon: Flame, color: 'amber', autoTracked: true },
+                  { title: 'Gain 20 followers', target: 20, unit: 'followers', icon: Users, color: 'rose', autoTracked: true },
+                  { title: 'Send 50 messages', target: 50, unit: 'messages', icon: MessageSquare, color: 'cyan', autoTracked: true },
+                  { title: 'Complete 25 challenges', target: 25, unit: 'challenges', icon: Trophy, color: 'violet', autoTracked: true },
+                  { title: 'Earn 500 GGG', target: 500, unit: 'GGG', icon: Star, color: 'amber', autoTracked: true },
+                  { title: '30-day streak', target: 30, unit: 'days', icon: Flame, color: 'orange', autoTracked: true }
+                ].map((suggestion, idx) => {
+                  const Icon = suggestion.icon;
+                  const alreadyExists = personalGoals.some(g => g.title === suggestion.title);
+                  
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                        alreadyExists 
+                          ? 'bg-slate-100 border-slate-200 opacity-50 cursor-not-allowed' 
+                          : `hover:bg-${suggestion.color}-50 hover:border-${suggestion.color}-200 border-slate-200`
+                      }`}
+                      onClick={() => {
+                        if (alreadyExists) return;
+                        const goal = {
+                          id: Date.now().toString(),
+                          title: suggestion.title,
+                          description: suggestion.autoTracked ? 'Progress is automatically tracked' : '',
+                          target: suggestion.target,
+                          current: 0,
+                          unit: suggestion.unit,
+                          deadline: null,
+                          created_at: new Date().toISOString()
+                        };
+                        updateGoalsMutation.mutate([...personalGoals, goal]);
+                        toast.success(`Goal added: ${suggestion.title}`);
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className={`p-1.5 rounded bg-${suggestion.color}-100`}>
+                          <Icon className={`w-3.5 h-3.5 text-${suggestion.color}-600`} />
+                        </div>
+                        <span className="text-sm font-medium text-slate-900">{suggestion.title}</span>
+                      </div>
+                      <div className="flex items-center gap-2 ml-8">
+                        {suggestion.autoTracked && (
+                          <Badge variant="secondary" className="text-[10px]">Auto-tracked</Badge>
+                        )}
+                        {alreadyExists && (
+                          <Badge className="bg-slate-200 text-slate-600 text-[10px]">Already added</Badge>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
+
+          {/* Manual Goal Progress Update */}
+          {personalGoals.some(g => getAutoProgress(g) === undefined) && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Update Manual Goals</CardTitle>
+                <CardDescription>Update progress for goals that aren't auto-tracked</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {personalGoals
+                    .filter(g => getAutoProgress(g) === undefined)
+                    .map(goal => (
+                      <div key={goal.id} className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{goal.title}</p>
+                          <p className="text-xs text-slate-500">{goal.current} / {goal.target} {goal.unit}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            className="w-20 h-8 text-sm"
+                            value={goal.current}
+                            onChange={(e) => handleUpdateGoalProgress(goal.id, parseInt(e.target.value) || 0)}
+                          />
+                          <span className="text-xs text-slate-500">{goal.unit}</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>
