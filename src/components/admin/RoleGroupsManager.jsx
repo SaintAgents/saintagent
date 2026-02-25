@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Users, Shield, Plus, Pencil, Trash2, Loader2, ChevronRight,
-  Lock, Eye, Settings, CheckCircle2, Layers
+  Lock, Eye, Settings, CheckCircle2, Layers, GitBranch, Grid3X3
 } from "lucide-react";
 import { 
   ROLE_ORDER, 
@@ -24,6 +24,8 @@ import {
 } from '@/components/roles/RoleDefinitions';
 import ROLE_DEFS from '@/components/roles/RoleDefinitions';
 import { toast } from 'sonner';
+import RoleHierarchyTree from './RoleHierarchyTree';
+import PermissionsMatrix from './PermissionsMatrix';
 
 const GROUP_COLORS = ['slate', 'emerald', 'amber', 'violet', 'rose', 'blue', 'cyan', 'pink', 'orange', 'teal'];
 
@@ -80,120 +82,173 @@ export default function RoleGroupsManager() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Layers className="w-5 h-5 text-violet-600" />
-                Role Groups & Permissions
-              </CardTitle>
-              <CardDescription>
-                Define role groups with hierarchies and granular access controls
-              </CardDescription>
-            </div>
-            <Button onClick={() => { setIsCreating(true); setEditingGroup({}); }}>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Group
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {/* Hierarchy Overview */}
-          <div className="mb-6 p-4 bg-slate-50 rounded-lg">
-            <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
-              <ChevronRight className="w-4 h-4" />
-              Hierarchy Overview (Higher = More Authority)
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {[...allGroups]
-                .sort((a, b) => (b.hierarchy_level || 0) - (a.hierarchy_level || 0))
-                .map(group => (
-                  <Badge 
-                    key={group.code} 
-                    className={`bg-${group.color || 'slate'}-100 text-${group.color || 'slate'}-700`}
-                  >
-                    Level {group.hierarchy_level || 0}: {group.name}
-                  </Badge>
+      {/* Main Tabs */}
+      <Tabs defaultValue="groups" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="groups" className="gap-2">
+            <Layers className="w-4 h-4" />
+            Role Groups
+          </TabsTrigger>
+          <TabsTrigger value="hierarchy" className="gap-2">
+            <GitBranch className="w-4 h-4" />
+            Hierarchy Tree
+          </TabsTrigger>
+          <TabsTrigger value="matrix" className="gap-2">
+            <Grid3X3 className="w-4 h-4" />
+            Permissions Matrix
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="groups">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-violet-600" />
+                    Role Groups & Permissions
+                  </CardTitle>
+                  <CardDescription>
+                    Define role groups with hierarchies and granular access controls
+                  </CardDescription>
+                </div>
+                <Button onClick={() => { setIsCreating(true); setEditingGroup({}); }}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Group
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Hierarchy Overview */}
+              <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+                <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  Hierarchy Overview (Higher = More Authority)
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {[...allGroups]
+                    .sort((a, b) => (b.hierarchy_level || 0) - (a.hierarchy_level || 0))
+                    .map(group => (
+                      <Badge 
+                        key={group.code} 
+                        className={`bg-${group.color || 'slate'}-100 text-${group.color || 'slate'}-700`}
+                      >
+                        Level {group.hierarchy_level || 0}: {group.name}
+                      </Badge>
+                    ))}
+                </div>
+              </div>
+
+              {/* Groups Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {allGroups.map(group => (
+                  <Card key={group.code} className="border-slate-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full bg-${group.color || 'slate'}-500`} />
+                          <h3 className="font-medium text-slate-900">{group.name}</h3>
+                          {group._isDefault && (
+                            <Badge variant="outline" className="text-xs">Default</Badge>
+                          )}
+                        </div>
+                        <Badge variant="secondary">Level {group.hierarchy_level || 0}</Badge>
+                      </div>
+
+                      <p className="text-sm text-slate-500 mb-3">{group.description}</p>
+
+                      <div className="mb-3">
+                        <p className="text-xs font-medium text-slate-600 mb-1">Roles in Group:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(group.roles || []).map(roleCode => (
+                            <Badge key={roleCode} variant="secondary" className="text-xs">
+                              {ROLE_DEFS[roleCode]?.title || roleCode}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-3">
+                        <p className="text-xs font-medium text-slate-600 mb-1">Permissions:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {Object.entries(group.permissions || {})
+                            .filter(([_, v]) => v)
+                            .slice(0, 4)
+                            .map(([key]) => (
+                              <Badge key={key} variant="outline" className="text-[10px]">
+                                {PERMISSION_DEFINITIONS[key]?.label || key}
+                              </Badge>
+                            ))}
+                          {Object.entries(group.permissions || {}).filter(([_, v]) => v).length > 4 && (
+                            <Badge variant="outline" className="text-[10px]">
+                              +{Object.entries(group.permissions || {}).filter(([_, v]) => v).length - 4} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Section Access Preview */}
+                      <div className="mb-3">
+                        <p className="text-xs font-medium text-slate-600 mb-1">Section Access:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {group.section_access?.includes('*') ? (
+                            <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">
+                              All Sections
+                            </Badge>
+                          ) : (
+                            <>
+                              {(group.section_access || []).slice(0, 3).map(section => (
+                                <Badge key={section} variant="outline" className="text-[10px]">
+                                  {SECTION_DEFINITIONS[section]?.label || section}
+                                </Badge>
+                              ))}
+                              {(group.section_access || []).length > 3 && (
+                                <Badge variant="outline" className="text-[10px]">
+                                  +{(group.section_access || []).length - 3} more
+                                </Badge>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {!group._isDefault && (
+                        <div className="flex justify-end gap-2 mt-3 pt-3 border-t">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => setEditingGroup(group)}
+                          >
+                            <Pencil className="w-3 h-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="text-red-600 hover:bg-red-50"
+                            onClick={() => deleteMutation.mutate(group.id)}
+                          >
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
                 ))}
-            </div>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          {/* Groups Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {allGroups.map(group => (
-              <Card key={group.code} className="border-slate-200">
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-3 h-3 rounded-full bg-${group.color || 'slate'}-500`} />
-                      <h3 className="font-medium text-slate-900">{group.name}</h3>
-                      {group._isDefault && (
-                        <Badge variant="outline" className="text-xs">Default</Badge>
-                      )}
-                    </div>
-                    <Badge variant="secondary">Level {group.hierarchy_level || 0}</Badge>
-                  </div>
+        <TabsContent value="hierarchy">
+          <RoleHierarchyTree roleGroups={roleGroups} />
+        </TabsContent>
 
-                  <p className="text-sm text-slate-500 mb-3">{group.description}</p>
-
-                  <div className="mb-3">
-                    <p className="text-xs font-medium text-slate-600 mb-1">Roles in Group:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {(group.roles || []).map(roleCode => (
-                        <Badge key={roleCode} variant="secondary" className="text-xs">
-                          {ROLE_DEFS[roleCode]?.title || roleCode}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mb-3">
-                    <p className="text-xs font-medium text-slate-600 mb-1">Permissions:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {Object.entries(group.permissions || {})
-                        .filter(([_, v]) => v)
-                        .slice(0, 4)
-                        .map(([key]) => (
-                          <Badge key={key} variant="outline" className="text-[10px]">
-                            {PERMISSION_DEFINITIONS[key]?.label || key}
-                          </Badge>
-                        ))}
-                      {Object.entries(group.permissions || {}).filter(([_, v]) => v).length > 4 && (
-                        <Badge variant="outline" className="text-[10px]">
-                          +{Object.entries(group.permissions || {}).filter(([_, v]) => v).length - 4} more
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  {!group._isDefault && (
-                    <div className="flex justify-end gap-2 mt-3 pt-3 border-t">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => setEditingGroup(group)}
-                      >
-                        <Pencil className="w-3 h-3 mr-1" />
-                        Edit
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="text-red-600 hover:bg-red-50"
-                        onClick={() => deleteMutation.mutate(group.id)}
-                      >
-                        <Trash2 className="w-3 h-3 mr-1" />
-                        Delete
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <TabsContent value="matrix">
+          <PermissionsMatrix roleGroups={roleGroups} />
+        </TabsContent>
+      </Tabs>
 
       {/* Edit/Create Dialog */}
       <Dialog open={!!editingGroup} onOpenChange={() => { setEditingGroup(null); setIsCreating(false); }}>
