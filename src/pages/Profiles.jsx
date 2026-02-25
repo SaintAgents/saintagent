@@ -267,7 +267,11 @@ export default function Profiles() {
   }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, astroFilter, humanDesignFilter, enneagramFilter, mbtiFilter, practiceFilter, locationFilter, currentProfile, showOnlineOnly]);
 
   // Separate online and offline profiles for grouped display
+  // Check both last_seen_at AND status field for online status
   const isUserOnline = (profile) => {
+    // If status is explicitly set to online/focus, consider them online
+    if (profile.status === 'online' || profile.status === 'focus') return true;
+    // Fallback to last_seen_at check
     if (!profile.last_seen_at) return false;
     const lastSeen = new Date(profile.last_seen_at);
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
