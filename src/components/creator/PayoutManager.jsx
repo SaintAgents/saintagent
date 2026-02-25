@@ -77,11 +77,11 @@ export default function PayoutManager({ profile }) {
     
     const totalWithdrawn = withdrawals
       .filter(w => w.status === 'completed' || w.status === 'approved')
-      .reduce((sum, w) => sum + (w.amount || 0), 0);
+      .reduce((sum, w) => sum + (w.amount_ggg || w.amount || 0), 0);
     
     const pendingWithdrawal = withdrawals
-      .filter(w => w.status === 'pending')
-      .reduce((sum, w) => sum + (w.amount || 0), 0);
+      .filter(w => w.status === 'pending' || w.status === 'processing')
+      .reduce((sum, w) => sum + (w.amount_ggg || w.amount || 0), 0);
 
     const totalEarned = subscriptionRevenue + tipRevenue + salesRevenue;
     const available = Math.max(0, totalEarned - totalWithdrawn - pendingWithdrawal);
@@ -101,10 +101,9 @@ export default function PayoutManager({ profile }) {
     mutationFn: async (amount) => {
       return base44.entities.WithdrawalRequest.create({
         user_id: userId,
-        user_name: profile.display_name,
-        amount: parseFloat(amount),
-        status: 'pending',
-        requested_at: new Date().toISOString()
+        amount_ggg: parseFloat(amount),
+        usdt_address: 'pending_setup', // User needs to set this in settings
+        status: 'pending'
       });
     },
     onSuccess: () => {
@@ -246,7 +245,7 @@ export default function PayoutManager({ profile }) {
                         <Icon className="w-4 h-4" />
                       </div>
                       <div>
-                        <p className="font-medium text-sm">{w.amount} GGG</p>
+                        <p className="font-medium text-sm">{w.amount_ggg || w.amount} GGG</p>
                         <p className="text-xs text-slate-500">
                           {w.created_date && format(new Date(w.created_date), 'MMM d, yyyy')}
                         </p>
