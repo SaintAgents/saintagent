@@ -98,7 +98,7 @@ import JournalTab from '@/components/profile/JournalTab';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import DealsTab from '@/components/deals/DealsTab.jsx';
 import ProjectsTab from '@/components/profile/ProjectsTab';
-import CreatorAnalyticsDashboard from '@/components/profile/CreatorAnalyticsDashboard';
+import PersonalAnalyticsDashboard from '@/components/profile/PersonalAnalyticsDashboard';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import {
@@ -1779,7 +1779,7 @@ export default function Profile() {
 
           {isOwnProfile && (
             <TabsContent value="analytics" className="space-y-6">
-              <CreatorAnalyticsDashboard profile={profile} />
+              <PersonalAnalyticsDashboard profile={profile} />
             </TabsContent>
           )}
 
