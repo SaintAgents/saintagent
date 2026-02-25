@@ -1,19 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { X } from 'lucide-react';
 
 export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentPageName }) {
   const [isDismissed, setIsDismissed] = useState(() => {
-    // Initialize from sessionStorage
     try {
       return sessionStorage.getItem('betaTickerDismissed') === 'true';
     } catch {
       return false;
     }
   });
+
+  // Fetch platform settings to check if ticker is enabled
+  const { data: settings = [] } = useQuery({
+    queryKey: ['platformSettings'],
+    queryFn: () => base44.entities.PlatformSetting.list(),
+    staleTime: 60000
+  });
+
+  const setting = settings[0] || {};
+  const tickerEnabled = setting.beta_bonus_active === true;
+  const tickerMessage = setting.announcement_banner || 'Beta test active! Earn bonus GGG for feedback submissions.';
   
   // Hide on G3Dex page
   if (currentPageName === 'G3Dex') return null;
+  
+  // Don't render if not enabled in admin settings
+  if (!tickerEnabled) return null;
   
   const handleDismiss = () => {
     setIsDismissed(true);
@@ -39,8 +54,8 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentP
       >
         <div className="flex items-center justify-center relative">
           <div className="animate-marquee whitespace-nowrap inline-block">
-            🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn x3 GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            🚀 This is a Mock up demo app - many elements are demonstrations and examples - live launch scheduled for 2/22/26 - earn x3 GGG as a beta tester now 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            🚀 {tickerMessage} 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            🚀 {tickerMessage} 🚀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </div>
           <button
             onClick={handleDismiss}
@@ -66,8 +81,8 @@ export default function BetaTicker({ topbarCollapsed, sidebarCollapsed, currentP
       >
         <div className="flex items-center justify-center relative">
           <div className="animate-marquee whitespace-nowrap inline-block">
-            🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
-            🚀 BETA - live launch 2/22/26 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+            🚀 {tickerMessage.slice(0, 50)}... 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
+            🚀 {tickerMessage.slice(0, 50)}... 🚀 &nbsp;&nbsp;&nbsp;&nbsp;
           </div>
           <button
             onClick={handleDismiss}
