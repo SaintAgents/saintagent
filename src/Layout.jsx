@@ -26,7 +26,7 @@ import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
-import BetaTicker from '@/components/hud/BetaTicker.jsx';
+
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
 import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
 
@@ -1701,12 +1701,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         />
       )}
 
-      {/* Beta Ticker - only show when topbar is not collapsed */}
-      <BetaTicker 
-        topbarCollapsed={topbarCollapsed} 
-        sidebarCollapsed={sidebarCollapsed}
-        currentPageName={currentPageName}
-      />
+      {/* Beta Ticker removed - out of beta */}
 
       {/* System-wide Announcement Banner */}
       <AnnouncementBanner 
