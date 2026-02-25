@@ -422,13 +422,46 @@ function RoleGroupForm({ group, onSave, onCancel, isPending }) {
       <div className="space-y-3">
         <h4 className="font-medium text-slate-900 flex items-center gap-2">
           <Lock className="w-4 h-4" />
-          Permissions
+          Granular Permissions
         </h4>
+        <p className="text-xs text-slate-500">
+          Define specific actions members of this role group can perform
+        </p>
+        
+        {/* Quick actions */}
+        <div className="flex gap-2 mb-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="text-xs"
+            onClick={() => {
+              const allPerms = {};
+              Object.keys(PERMISSION_DEFINITIONS).forEach(k => allPerms[k] = true);
+              updateField('permissions', allPerms);
+            }}
+          >
+            <CheckCircle2 className="w-3 h-3 mr-1" />
+            Select All
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="text-xs"
+            onClick={() => updateField('permissions', {})}
+          >
+            Clear All
+          </Button>
+        </div>
+
         <div className="grid grid-cols-2 gap-2">
           {Object.entries(PERMISSION_DEFINITIONS).map(([key, def]) => (
             <div 
               key={key}
-              className="flex items-start gap-2 p-2 border rounded-lg hover:bg-slate-50 cursor-pointer"
+              className={`flex items-start gap-2 p-3 border rounded-lg hover:bg-slate-50 cursor-pointer transition-colors ${
+                formData.permissions[key] ? 'bg-violet-50 border-violet-200' : ''
+              }`}
               onClick={() => togglePermission(key)}
             >
               <Checkbox checked={!!formData.permissions[key]} className="mt-0.5" />
@@ -439,6 +472,22 @@ function RoleGroupForm({ group, onSave, onCancel, isPending }) {
             </div>
           ))}
         </div>
+
+        {/* Permission summary */}
+        <div className="p-3 bg-slate-50 rounded-lg">
+          <p className="text-xs font-medium text-slate-700 mb-1">
+            Selected: {Object.values(formData.permissions).filter(Boolean).length} of {Object.keys(PERMISSION_DEFINITIONS).length} permissions
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {Object.entries(formData.permissions)
+              .filter(([_, v]) => v)
+              .map(([key]) => (
+                <Badge key={key} variant="secondary" className="text-[10px]">
+                  {PERMISSION_DEFINITIONS[key]?.label}
+                </Badge>
+              ))}
+          </div>
+        </div>
       </div>
 
       {/* Section Access */}
@@ -447,7 +496,10 @@ function RoleGroupForm({ group, onSave, onCancel, isPending }) {
           <Eye className="w-4 h-4" />
           Section Access
         </h4>
-        <div className="flex items-center gap-2 mb-2">
+        <p className="text-xs text-slate-500">
+          Define which app sections members of this role group can access
+        </p>
+        <div className="flex items-center gap-2 mb-2 p-2 bg-emerald-50 border border-emerald-200 rounded-lg">
           <Checkbox 
             checked={formData.section_access.includes('*')}
             onCheckedChange={(checked) => {
@@ -458,20 +510,65 @@ function RoleGroupForm({ group, onSave, onCancel, isPending }) {
               }
             }}
           />
-          <span className="text-sm font-medium">All Sections</span>
+          <span className="text-sm font-medium text-emerald-700">Grant Access to All Sections</span>
         </div>
         {!formData.section_access.includes('*') && (
-          <div className="grid grid-cols-3 gap-2">
-            {Object.entries(SECTION_DEFINITIONS).map(([section, def]) => (
-              <div 
-                key={section}
-                className="flex items-center gap-2 p-2 border rounded-lg hover:bg-slate-50 cursor-pointer"
-                onClick={() => toggleSection(section)}
-              >
-                <Checkbox checked={formData.section_access.includes(section)} />
-                <span className="text-sm">{def.label}</span>
-              </div>
-            ))}
+          <div className="space-y-4">
+            {/* Group sections by category */}
+            {['admin', 'core', 'community', 'content'].map(category => {
+              const categorySections = Object.entries(SECTION_DEFINITIONS)
+                .filter(([_, def]) => def.category === category);
+              if (categorySections.length === 0) return null;
+              
+              const categoryLabels = {
+                admin: { label: 'Admin & Management', color: 'rose' },
+                core: { label: 'Core Features', color: 'violet' },
+                community: { label: 'Community', color: 'emerald' },
+                content: { label: 'Content', color: 'amber' }
+              };
+              const cat = categoryLabels[category];
+              
+              return (
+                <div key={category} className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge className={`bg-${cat.color}-100 text-${cat.color}-700 text-xs`}>
+                      {cat.label}
+                    </Badge>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs h-6 px-2"
+                      onClick={() => {
+                        const sectionCodes = categorySections.map(([s]) => s);
+                        const allSelected = sectionCodes.every(s => formData.section_access.includes(s));
+                        if (allSelected) {
+                          updateField('section_access', formData.section_access.filter(s => !sectionCodes.includes(s)));
+                        } else {
+                          updateField('section_access', [...new Set([...formData.section_access, ...sectionCodes])]);
+                        }
+                      }}
+                    >
+                      {categorySections.every(([s]) => formData.section_access.includes(s)) ? 'Deselect All' : 'Select All'}
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {categorySections.map(([section, def]) => (
+                      <div 
+                        key={section}
+                        className={`flex items-center gap-2 p-2 border rounded-lg hover:bg-slate-50 cursor-pointer transition-colors ${
+                          formData.section_access.includes(section) ? `bg-${cat.color}-50 border-${cat.color}-200` : ''
+                        }`}
+                        onClick={() => toggleSection(section)}
+                      >
+                        <Checkbox checked={formData.section_access.includes(section)} />
+                        <span className="text-sm">{def.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
