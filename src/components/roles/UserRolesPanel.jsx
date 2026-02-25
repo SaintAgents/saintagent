@@ -59,16 +59,36 @@ export default function UserRolesPanel({ profile }) {
 
   const requestRole = useMutation({
     mutationFn: async ({ role_code, message }) => {
-      return base44.entities.UserRole.create({ 
+      // Create the UserRole record
+      const roleRecord = await base44.entities.UserRole.create({ 
         user_id: profile.user_id, 
         role_code, 
         status: 'pending',
         request_message: message,
         requested_at: new Date().toISOString()
       });
+
+      // Also create an AdminRequest for visibility in the admin panel
+      const roleDef = ROLE_DEFS[role_code];
+      await base44.entities.AdminRequest.create({
+        request_type: 'role_request',
+        title: `Role Request: ${roleDef?.title || role_code}`,
+        description: message || `User requested the ${roleDef?.title || role_code} role`,
+        requester_id: profile.user_id,
+        requester_name: profile.display_name || profile.user_id,
+        requester_avatar: profile.avatar_url,
+        reference_type: 'user',
+        reference_id: roleRecord.id,
+        requested_value: { role: role_code, role_title: roleDef?.title },
+        status: 'pending',
+        priority: 'normal'
+      });
+
+      return roleRecord;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['roleRequests', profile?.user_id] });
+      qc.invalidateQueries({ queryKey: ['adminRequests'] });
       setRequestingRole(null);
       setRequestMessage('');
       toast.success('Role request submitted for admin review');
