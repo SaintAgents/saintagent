@@ -47,7 +47,7 @@ export default function UserRolesPanel({ profile }) {
 
   const assignedMap = Object.fromEntries((assigned || []).map(r => [r.role_code, r]));
   const pendingMap = Object.fromEntries((pendingRequests || []).map(r => [r.role_code, r]));
-  const userRank = profile?.rp_rank_code || 'seeker';
+  const userRank = profile?.rp_rank_code || profile?.rank_code || 'seeker';
   const userRankIndex = RANK_ORDER.indexOf(userRank);
 
   const meetsRankRequirement = (roleCode) => {
