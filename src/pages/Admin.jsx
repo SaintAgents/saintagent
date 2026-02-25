@@ -3,10 +3,11 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
+import RoleGroupsManager from '@/components/admin/RoleGroupsManager';
 import GGGRulesManager from '@/components/admin/GGGRulesManager';
 import LeaderApplications from '@/components/admin/LeaderApplications';
 import PlatformSettings from '@/components/admin/PlatformSettings';
@@ -205,6 +206,10 @@ export default function Admin() {
               <Bell className="w-4 h-4" />
               Ticker
             </TabsTrigger>
+            <TabsTrigger value="role-groups" className="gap-2 px-3 py-2">
+              <Layers className="w-4 h-4" />
+              Role Groups
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -343,6 +348,10 @@ export default function Admin() {
 
           <TabsContent value="ticker">
             <BetaTickerManager />
+          </TabsContent>
+
+          <TabsContent value="role-groups">
+            <RoleGroupsManager />
           </TabsContent>
         </Tabs>
       </div>
