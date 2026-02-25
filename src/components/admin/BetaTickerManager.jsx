@@ -98,7 +98,7 @@ export default function BetaTickerManager() {
         <Button 
           onClick={handleSave}
           disabled={updateMutation.isPending}
-          className="w-full gap-2"
+          className="w-full gap-2 bg-violet-600 hover:bg-violet-700 text-white"
         >
           <Save className="w-4 h-4" />
           Save Ticker Settings
