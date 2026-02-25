@@ -50,6 +50,12 @@ const REQUEST_TYPE_CONFIG = {
     color: 'text-cyan-600',
     bgColor: 'bg-cyan-100'
   },
+  withdrawal_request: {
+    label: 'Withdrawal Request',
+    icon: Coins,
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-100'
+  },
   other: {
     label: 'Other',
     icon: Inbox,
@@ -230,8 +236,75 @@ export default function AdminRequestsPanel() {
     queryFn: () => base44.entities.AdminRequest.list('-created_date', 200)
   });
 
+  // Also fetch pending role requests from UserRole entity
+  const { data: pendingRoleRequests = [] } = useQuery({
+    queryKey: ['pendingRoleRequests'],
+    queryFn: () => base44.entities.UserRole.filter({ status: 'pending' }, '-created_date', 100)
+  });
+
+  // Also fetch pending withdrawal requests
+  const { data: pendingWithdrawals = [] } = useQuery({
+    queryKey: ['pendingWithdrawals'],
+    queryFn: () => base44.entities.WithdrawalRequest.filter({ status: 'pending' }, '-created_date', 100)
+  });
+
+  // Transform role requests to match AdminRequest format for display
+  const roleRequestsAsAdminRequests = pendingRoleRequests.map(rr => ({
+    ...rr,
+    id: `role_${rr.id}`,
+    _originalId: rr.id,
+    _isRoleRequest: true,
+    title: `Role Request: ${rr.role_code?.replace(/_/g, ' ')}`,
+    description: rr.request_message || 'User requested this role',
+    request_type: 'role_request',
+    requester_name: rr.user_id,
+    requester_avatar: null,
+    status: rr.status,
+    requested_value: { role: rr.role_code }
+  }));
+
+  // Transform withdrawal requests
+  const withdrawalRequestsAsAdminRequests = pendingWithdrawals.map(wr => ({
+    ...wr,
+    id: `withdrawal_${wr.id}`,
+    _originalId: wr.id,
+    _isWithdrawalRequest: true,
+    title: `Withdrawal Request: ${wr.amount} GGG`,
+    description: `${wr.user_name || wr.user_id} requested a withdrawal`,
+    request_type: 'withdrawal_request',
+    requester_name: wr.user_name || wr.user_id,
+    requester_avatar: null,
+    status: wr.status,
+    requested_value: { amount: wr.amount, ggg: wr.amount }
+  }));
+
+  // Combine all requests
+  const allRequests = [...requests, ...roleRequestsAsAdminRequests, ...withdrawalRequestsAsAdminRequests];
+
   const updateMutation = useMutation({
-    mutationFn: async ({ requestId, status, note }) => {
+    mutationFn: async ({ requestId, status, note, isRoleRequest, isWithdrawalRequest, originalId }) => {
+      // Handle role requests from UserRole entity
+      if (isRoleRequest && originalId) {
+        const roleStatus = status === 'approved' ? 'active' : status === 'rejected' ? 'denied' : 'pending';
+        await base44.entities.UserRole.update(originalId, {
+          status: roleStatus,
+          assigned_by: currentUser?.email,
+          assigned_at: new Date().toISOString()
+        });
+        return;
+      }
+
+      // Handle withdrawal requests
+      if (isWithdrawalRequest && originalId) {
+        await base44.entities.WithdrawalRequest.update(originalId, {
+          status: status === 'approved' ? 'approved' : 'rejected',
+          reviewed_by: currentUser?.email,
+          reviewed_at: new Date().toISOString(),
+          admin_note: note
+        });
+        return;
+      }
+
       const updateData = {
         status,
         admin_note: note,
@@ -261,6 +334,8 @@ export default function AdminRequestsPanel() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['pendingRoleRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['pendingWithdrawals'] });
       queryClient.invalidateQueries({ queryKey: ['missions'] });
       queryClient.invalidateQueries({ queryKey: ['deals'] });
       setActionDialog(null);
@@ -271,7 +346,14 @@ export default function AdminRequestsPanel() {
   const handleAction = (request, action) => {
     if (action === 'approved') {
       // Quick approve without dialog
-      updateMutation.mutate({ requestId: request.id, status: 'approved', note: '' });
+      updateMutation.mutate({ 
+        requestId: request.id, 
+        status: 'approved', 
+        note: '',
+        isRoleRequest: request._isRoleRequest,
+        isWithdrawalRequest: request._isWithdrawalRequest,
+        originalId: request._originalId
+      });
     } else {
       // Show dialog for reject/needs_info
       setActionDialog({ request, action });
@@ -283,12 +365,15 @@ export default function AdminRequestsPanel() {
     updateMutation.mutate({
       requestId: actionDialog.request.id,
       status: actionDialog.action,
-      note: adminNote
+      note: adminNote,
+      isRoleRequest: actionDialog.request._isRoleRequest,
+      isWithdrawalRequest: actionDialog.request._isWithdrawalRequest,
+      originalId: actionDialog.request._originalId
     });
   };
 
-  // Filter requests
-  const filteredRequests = requests.filter(r => {
+  // Filter requests (using allRequests instead of just requests)
+  const filteredRequests = allRequests.filter(r => {
     if (statusFilter !== 'all' && r.status !== statusFilter) return false;
     if (typeFilter !== 'all' && r.request_type !== typeFilter) return false;
     if (searchQuery) {
@@ -300,7 +385,7 @@ export default function AdminRequestsPanel() {
     return true;
   });
 
-  const pendingCount = requests.filter(r => r.status === 'pending').length;
+  const pendingCount = allRequests.filter(r => r.status === 'pending').length;
 
   return (
     <div className="space-y-6">
@@ -353,6 +438,7 @@ export default function AdminRequestsPanel() {
                 <SelectItem value="deal_approval">Deal Approval</SelectItem>
                 <SelectItem value="badge_request">Badge</SelectItem>
                 <SelectItem value="role_request">Role</SelectItem>
+                <SelectItem value="withdrawal_request">Withdrawal</SelectItem>
                 <SelectItem value="feature_request">Feature</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
@@ -362,7 +448,7 @@ export default function AdminRequestsPanel() {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4 mb-6">
             {Object.entries(STATUS_CONFIG).map(([status, config]) => {
-              const count = requests.filter(r => r.status === status).length;
+              const count = allRequests.filter(r => r.status === status).length;
               return (
                 <Card key={status} className="cursor-pointer hover:shadow-sm" onClick={() => setStatusFilter(status)}>
                   <CardContent className="p-4 text-center">
