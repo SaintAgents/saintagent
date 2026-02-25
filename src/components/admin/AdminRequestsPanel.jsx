@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -11,9 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Inbox, Check, X, Clock, AlertCircle, MessageSquare, Target, 
-  Award, Shield, Loader2, ExternalLink, Filter, Search, Coins
+  Award, Shield, Loader2, ExternalLink, Filter, Search, Coins,
+  ArrowUpDown, ArrowUp, ArrowDown, UserPlus, CheckSquare, Users
 } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from 'react-router-dom';
@@ -71,15 +73,22 @@ const STATUS_CONFIG = {
   needs_info: { label: 'Needs Info', color: 'bg-blue-100 text-blue-700' }
 };
 
-function RequestCard({ request, onAction }) {
+function RequestCard({ request, onAction, isSelected, onSelect, onAssign, adminUsers }) {
   const config = REQUEST_TYPE_CONFIG[request.request_type] || REQUEST_TYPE_CONFIG.other;
   const Icon = config.icon;
   const statusConfig = STATUS_CONFIG[request.status];
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className={`hover:shadow-md transition-shadow ${isSelected ? 'ring-2 ring-violet-500' : ''}`}>
       <CardContent className="p-4">
         <div className="flex items-start gap-4">
+          {request.status === 'pending' && (
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={() => onSelect(request.id)}
+              className="mt-1"
+            />
+          )}
           <div className={`p-2 rounded-lg ${config.bgColor}`}>
             <Icon className={`w-5 h-5 ${config.color}`} />
           </div>
@@ -173,9 +182,17 @@ function RequestCard({ request, onAction }) {
               </Link>
             )}
 
+            {/* Assignment info */}
+            {request.assigned_to && (
+              <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
+                <UserPlus className="w-3 h-3" />
+                <span>Assigned to: <span className="font-medium">{request.assigned_to_name || request.assigned_to}</span></span>
+              </div>
+            )}
+
             {/* Actions for pending requests */}
             {request.status === 'pending' && (
-              <div className="flex items-center gap-2 mt-4 pt-3 border-t">
+              <div className="flex items-center gap-2 mt-4 pt-3 border-t flex-wrap">
                 <Button
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700"
@@ -200,6 +217,20 @@ function RequestCard({ request, onAction }) {
                   <MessageSquare className="w-4 h-4 mr-1" />
                   Request Info
                 </Button>
+                {!request._isRoleRequest && !request._isWithdrawalRequest && adminUsers?.length > 0 && (
+                  <Select onValueChange={(val) => onAssign(request, val)}>
+                    <SelectTrigger className="w-32 h-8">
+                      <SelectValue placeholder="Assign..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {adminUsers.map(admin => (
+                        <SelectItem key={admin.email} value={admin.email}>
+                          {admin.full_name || admin.email}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
             )}
 
@@ -223,12 +254,26 @@ export default function AdminRequestsPanel() {
   const [searchQuery, setSearchQuery] = useState('');
   const [actionDialog, setActionDialog] = useState(null);
   const [adminNote, setAdminNote] = useState('');
+  const [selectedRequests, setSelectedRequests] = useState([]);
+  const [bulkActionDialog, setBulkActionDialog] = useState(null);
+  const [sortField, setSortField] = useState('created_date');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const [assigneeFilter, setAssigneeFilter] = useState('all');
 
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
+  });
+
+  // Fetch admin users for assignment
+  const { data: adminUsers = [] } = useQuery({
+    queryKey: ['adminUsers'],
+    queryFn: async () => {
+      const users = await base44.entities.User.filter({ role: 'admin' }, '-created_date', 50);
+      return users;
+    }
   });
 
   const { data: requests = [], isLoading } = useQuery({
@@ -372,20 +417,170 @@ export default function AdminRequestsPanel() {
     });
   };
 
-  // Filter requests (using allRequests instead of just requests)
-  const filteredRequests = allRequests.filter(r => {
-    if (statusFilter !== 'all' && r.status !== statusFilter) return false;
-    if (typeFilter !== 'all' && r.request_type !== typeFilter) return false;
-    if (searchQuery) {
-      const search = searchQuery.toLowerCase();
-      return r.title?.toLowerCase().includes(search) ||
-             r.description?.toLowerCase().includes(search) ||
-             r.requester_name?.toLowerCase().includes(search);
+  // Assignment mutation
+  const assignMutation = useMutation({
+    mutationFn: async ({ requestId, assigneeEmail }) => {
+      const assignee = adminUsers.find(u => u.email === assigneeEmail);
+      await base44.entities.AdminRequest.update(requestId, {
+        assigned_to: assigneeEmail,
+        assigned_to_name: assignee?.full_name || assigneeEmail,
+        assigned_at: new Date().toISOString(),
+        assigned_by: currentUser?.email
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
     }
-    return true;
   });
 
+  const handleAssign = (request, assigneeEmail) => {
+    if (request._isRoleRequest || request._isWithdrawalRequest) return;
+    assignMutation.mutate({ requestId: request.id, assigneeEmail });
+  };
+
+  // Bulk actions mutation
+  const bulkActionMutation = useMutation({
+    mutationFn: async ({ requestIds, action, note }) => {
+      const updates = requestIds.map(async (id) => {
+        const request = allRequests.find(r => r.id === id);
+        if (!request) return;
+        
+        if (request._isRoleRequest) {
+          const roleStatus = action === 'approved' ? 'active' : 'denied';
+          return base44.entities.UserRole.update(request._originalId, {
+            status: roleStatus,
+            assigned_by: currentUser?.email,
+            assigned_at: new Date().toISOString()
+          });
+        }
+        
+        if (request._isWithdrawalRequest) {
+          return base44.entities.WithdrawalRequest.update(request._originalId, {
+            status: action === 'approved' ? 'approved' : 'rejected',
+            reviewed_by: currentUser?.email,
+            reviewed_at: new Date().toISOString(),
+            admin_note: note
+          });
+        }
+        
+        return base44.entities.AdminRequest.update(id, {
+          status: action,
+          admin_note: note,
+          reviewed_by: currentUser?.email,
+          reviewed_at: new Date().toISOString()
+        });
+      });
+      
+      await Promise.all(updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['pendingRoleRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['pendingWithdrawals'] });
+      setSelectedRequests([]);
+      setBulkActionDialog(null);
+      setAdminNote('');
+    }
+  });
+
+  const handleBulkAction = (action) => {
+    if (action === 'approved') {
+      bulkActionMutation.mutate({ requestIds: selectedRequests, action: 'approved', note: '' });
+    } else {
+      setBulkActionDialog({ action });
+    }
+  };
+
+  const confirmBulkAction = () => {
+    if (!bulkActionDialog) return;
+    bulkActionMutation.mutate({ 
+      requestIds: selectedRequests, 
+      action: bulkActionDialog.action, 
+      note: adminNote 
+    });
+  };
+
+  const toggleSelectRequest = (id) => {
+    setSelectedRequests(prev => 
+      prev.includes(id) ? prev.filter(r => r !== id) : [...prev, id]
+    );
+  };
+
+  const selectAllPending = () => {
+    const pendingIds = filteredRequests.filter(r => r.status === 'pending').map(r => r.id);
+    setSelectedRequests(pendingIds);
+  };
+
+  const clearSelection = () => setSelectedRequests([]);
+
+  // Sorting function
+  const toggleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
+  // Filter and sort requests
+  const filteredRequests = useMemo(() => {
+    let result = allRequests.filter(r => {
+      if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+      if (typeFilter !== 'all' && r.request_type !== typeFilter) return false;
+      if (assigneeFilter !== 'all') {
+        if (assigneeFilter === 'unassigned' && r.assigned_to) return false;
+        if (assigneeFilter === 'mine' && r.assigned_to !== currentUser?.email) return false;
+        if (assigneeFilter !== 'unassigned' && assigneeFilter !== 'mine' && r.assigned_to !== assigneeFilter) return false;
+      }
+      if (searchQuery) {
+        const search = searchQuery.toLowerCase();
+        return r.title?.toLowerCase().includes(search) ||
+               r.description?.toLowerCase().includes(search) ||
+               r.requester_name?.toLowerCase().includes(search);
+      }
+      return true;
+    });
+
+    // Sort
+    result.sort((a, b) => {
+      let aVal, bVal;
+      switch (sortField) {
+        case 'created_date':
+          aVal = new Date(a.created_date || 0).getTime();
+          bVal = new Date(b.created_date || 0).getTime();
+          break;
+        case 'requester_name':
+          aVal = (a.requester_name || '').toLowerCase();
+          bVal = (b.requester_name || '').toLowerCase();
+          break;
+        case 'amount':
+          aVal = a.requested_value?.ggg || a.requested_value?.amount || 0;
+          bVal = b.requested_value?.ggg || b.requested_value?.amount || 0;
+          break;
+        case 'priority':
+          const priorityOrder = { urgent: 4, high: 3, normal: 2, low: 1 };
+          aVal = priorityOrder[a.priority] || 2;
+          bVal = priorityOrder[b.priority] || 2;
+          break;
+        default:
+          aVal = a[sortField];
+          bVal = b[sortField];
+      }
+      
+      if (sortDirection === 'asc') {
+        return aVal > bVal ? 1 : -1;
+      }
+      return aVal < bVal ? 1 : -1;
+    });
+
+    return result;
+  }, [allRequests, statusFilter, typeFilter, assigneeFilter, searchQuery, sortField, sortDirection, currentUser?.email]);
+
   const pendingCount = allRequests.filter(r => r.status === 'pending').length;
+  const selectedPendingCount = selectedRequests.filter(id => 
+    filteredRequests.find(r => r.id === id && r.status === 'pending')
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -405,8 +600,38 @@ export default function AdminRequestsPanel() {
           </div>
         </CardHeader>
         <CardContent>
+          {/* Bulk Actions Bar */}
+          {selectedRequests.length > 0 && (
+            <div className="flex items-center gap-3 p-3 mb-4 bg-violet-50 rounded-lg border border-violet-200">
+              <CheckSquare className="w-5 h-5 text-violet-600" />
+              <span className="font-medium text-violet-900">{selectedRequests.length} selected</span>
+              <div className="flex-1" />
+              <Button size="sm" variant="outline" onClick={clearSelection}>
+                Clear
+              </Button>
+              <Button 
+                size="sm" 
+                className="bg-emerald-600 hover:bg-emerald-700"
+                onClick={() => handleBulkAction('approved')}
+                disabled={bulkActionMutation.isPending}
+              >
+                {bulkActionMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Check className="w-4 h-4 mr-1" />}
+                Approve All
+              </Button>
+              <Button 
+                size="sm" 
+                variant="destructive"
+                onClick={() => handleBulkAction('rejected')}
+                disabled={bulkActionMutation.isPending}
+              >
+                <X className="w-4 h-4 mr-1" />
+                Reject All
+              </Button>
+            </div>
+          )}
+
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3 mb-6">
+          <div className="flex flex-wrap items-center gap-3 mb-4">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
@@ -429,7 +654,7 @@ export default function AdminRequestsPanel() {
               </SelectContent>
             </Select>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-40">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -443,6 +668,52 @@ export default function AdminRequestsPanel() {
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={assigneeFilter} onValueChange={setAssigneeFilter}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Assignee" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Assignees</SelectItem>
+                <SelectItem value="unassigned">Unassigned</SelectItem>
+                <SelectItem value="mine">Assigned to Me</SelectItem>
+                {adminUsers.map(admin => (
+                  <SelectItem key={admin.email} value={admin.email}>
+                    {admin.full_name || admin.email}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Sort Controls */}
+          <div className="flex items-center gap-2 mb-4 text-sm">
+            <span className="text-slate-500">Sort by:</span>
+            {[
+              { field: 'created_date', label: 'Date' },
+              { field: 'requester_name', label: 'Requester' },
+              { field: 'amount', label: 'Amount' },
+              { field: 'priority', label: 'Priority' }
+            ].map(({ field, label }) => (
+              <Button
+                key={field}
+                variant={sortField === field ? 'secondary' : 'ghost'}
+                size="sm"
+                onClick={() => toggleSort(field)}
+                className="gap-1"
+              >
+                {label}
+                {sortField === field && (
+                  sortDirection === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+                )}
+              </Button>
+            ))}
+            <div className="flex-1" />
+            {statusFilter === 'pending' && filteredRequests.filter(r => r.status === 'pending').length > 0 && (
+              <Button variant="outline" size="sm" onClick={selectAllPending}>
+                <CheckSquare className="w-4 h-4 mr-1" />
+                Select All Pending
+              </Button>
+            )}
           </div>
 
           {/* Stats */}
@@ -477,6 +748,10 @@ export default function AdminRequestsPanel() {
                   key={request.id}
                   request={request}
                   onAction={handleAction}
+                  isSelected={selectedRequests.includes(request.id)}
+                  onSelect={toggleSelectRequest}
+                  onAssign={handleAssign}
+                  adminUsers={adminUsers}
                 />
               ))}
             </div>
@@ -518,6 +793,47 @@ export default function AdminRequestsPanel() {
             >
               {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {actionDialog?.action === 'rejected' ? 'Reject' : 'Send'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Action Dialog */}
+      <Dialog open={!!bulkActionDialog} onOpenChange={() => setBulkActionDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {bulkActionDialog?.action === 'rejected' 
+                ? `Reject ${selectedRequests.length} Requests` 
+                : `Request Info for ${selectedRequests.length} Requests`}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-slate-600">
+              {bulkActionDialog?.action === 'rejected'
+                ? 'Please provide a reason for rejecting these requests:'
+                : 'What additional information do you need?'}
+            </p>
+            <Textarea
+              value={adminNote}
+              onChange={(e) => setAdminNote(e.target.value)}
+              placeholder={bulkActionDialog?.action === 'rejected' 
+                ? 'Reason for rejection...'
+                : 'What information is needed...'}
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkActionDialog(null)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmBulkAction}
+              disabled={bulkActionMutation.isPending}
+              className={bulkActionDialog?.action === 'rejected' ? 'bg-red-600 hover:bg-red-700' : ''}
+            >
+              {bulkActionMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {bulkActionDialog?.action === 'rejected' ? `Reject ${selectedRequests.length}` : 'Send'}
             </Button>
           </DialogFooter>
         </DialogContent>
