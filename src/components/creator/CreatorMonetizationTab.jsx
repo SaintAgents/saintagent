@@ -12,10 +12,14 @@ import {
   TrendingUp,
   Users,
   DollarSign,
-  Calendar
+  Calendar,
+  BarChart3,
+  Wallet
 } from "lucide-react";
 import TierManager from './TierManager';
 import DigitalProductManager from './DigitalProductManager';
+import SubscriptionAnalytics from './SubscriptionAnalytics';
+import PayoutManager from './PayoutManager';
 import { format } from 'date-fns';
 
 export default function CreatorMonetizationTab({ profile }) {
@@ -128,22 +132,30 @@ export default function CreatorMonetizationTab({ profile }) {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview" className="gap-2">
             <TrendingUp className="w-4 h-4" />
-            Overview
+            <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>
           <TabsTrigger value="subscriptions" className="gap-2">
             <Crown className="w-4 h-4" />
-            Subscriptions
+            <span className="hidden sm:inline">Tiers</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="gap-2">
+            <BarChart3 className="w-4 h-4" />
+            <span className="hidden sm:inline">Analytics</span>
           </TabsTrigger>
           <TabsTrigger value="products" className="gap-2">
             <Package className="w-4 h-4" />
-            Products
+            <span className="hidden sm:inline">Products</span>
+          </TabsTrigger>
+          <TabsTrigger value="payouts" className="gap-2">
+            <Wallet className="w-4 h-4" />
+            <span className="hidden sm:inline">Payouts</span>
           </TabsTrigger>
           <TabsTrigger value="tips" className="gap-2">
             <Heart className="w-4 h-4" />
-            Tips
+            <span className="hidden sm:inline">Tips</span>
           </TabsTrigger>
         </TabsList>
 
@@ -247,8 +259,16 @@ export default function CreatorMonetizationTab({ profile }) {
           <TierManager profile={profile} />
         </TabsContent>
 
+        <TabsContent value="analytics" className="mt-6">
+          <SubscriptionAnalytics profile={profile} />
+        </TabsContent>
+
         <TabsContent value="products" className="mt-6">
           <DigitalProductManager profile={profile} />
+        </TabsContent>
+
+        <TabsContent value="payouts" className="mt-6">
+          <PayoutManager profile={profile} />
         </TabsContent>
 
         <TabsContent value="tips" className="space-y-6 mt-6">
