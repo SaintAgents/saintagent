@@ -417,7 +417,6 @@ export default function DealsPage() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <BackButton />
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">GGT Command</h1>
           </div>
           <div className="flex items-center gap-2">
             <Tabs value={viewMode} onValueChange={(v) => {
