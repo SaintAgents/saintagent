@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,45 +7,57 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { 
-  Sparkles, Send, Loader2, FileText, Mail, Lightbulb, 
-  TrendingUp, AlertTriangle, CheckCircle2, Copy, RefreshCw
+import {
+  Bot, Sparkles, Mail, ListChecks, FileText, 
+  Loader2, Copy, Check, Send, RefreshCw,
+  TrendingUp, AlertTriangle, Clock, DollarSign
 } from 'lucide-react';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
 
 const STAGE_LABELS = {
   prospecting: 'Due Diligence',
-  qualification: 'Negotiation', 
+  qualification: 'Negotiation',
   proposal: 'Agreement Drafting',
   negotiation: 'Awaiting Execution',
   closed_won: 'Complete',
   closed_lost: 'Lost'
 };
 
-export default function DealAIAssistant({ deal, notes = [], activities = [], onClose }) {
+export default function DealAIAssistant({ deal, notes = [], activities = [], currentUser, profile, onClose }) {
   const [activeTab, setActiveTab] = useState('summary');
-  const [customPrompt, setCustomPrompt] = useState('');
-  const [aiResponse, setAiResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [draftEmail, setDraftEmail] = useState(null);
-  const [suggestions, setSuggestions] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [actions, setActions] = useState(null);
+  const [emailDraft, setEmailDraft] = useState(null);
+  const [emailContext, setEmailContext] = useState('');
+  const [copied, setCopied] = useState(false);
+  const queryClient = useQueryClient();
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0
+    }).format(amount || 0);
+  };
 
   const generateSummary = async () => {
     setIsLoading(true);
     try {
       const notesText = notes.map(n => `- ${n.author_name}: ${n.content}`).join('\n');
-      const activitiesText = activities.slice(0, 10).map(a => `- ${a.description} by ${a.actor_name}`).join('\n');
+      const activitiesText = activities.slice(0, 10).map(a => `- ${a.description} (${a.actor_name})`).join('\n');
       
-      const prompt = `Summarize this deal for a SaintAgent deal manager:
+      const prompt = `Analyze this deal and provide a comprehensive summary:
 
 Deal: ${deal.title}
-Company: ${deal.company_name || 'Not specified'}
-Value: $${deal.amount?.toLocaleString()}
+Company: ${deal.company_name || 'N/A'}
+Amount: ${formatCurrency(deal.amount)}
 Stage: ${STAGE_LABELS[deal.stage]}
 Priority: ${deal.priority}
-Expected Close: ${deal.expected_close_date ? format(new Date(deal.expected_close_date), 'MMM d, yyyy') : 'Not set'}
+Expected Close: ${deal.expected_close_date || 'Not set'}
 Probability: ${deal.probability || 0}%
 Owner: ${deal.owner_name}
+Contact: ${deal.contact_name || 'N/A'} (${deal.contact_email || 'No email'})
 Description: ${deal.description || 'No description'}
 
 Recent Notes:
@@ -54,144 +66,111 @@ ${notesText || 'No notes'}
 Recent Activity:
 ${activitiesText || 'No activity'}
 
-Provide a concise executive summary (3-4 sentences) highlighting key status, risks, and opportunities.`;
+Provide:
+1. Executive Summary (2-3 sentences)
+2. Key Highlights
+3. Potential Risks or Concerns
+4. Deal Health Score (1-10) with explanation`;
 
-      const response = await base44.integrations.Core.InvokeLLM({
+      const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
-          type: 'object',
+          type: "object",
           properties: {
-            summary: { type: 'string' },
-            key_risks: { type: 'array', items: { type: 'string' } },
-            opportunities: { type: 'array', items: { type: 'string' } },
-            health_score: { type: 'number', description: 'Deal health 1-10' }
+            executive_summary: { type: "string" },
+            highlights: { type: "array", items: { type: "string" } },
+            risks: { type: "array", items: { type: "string" } },
+            health_score: { type: "number" },
+            health_explanation: { type: "string" }
           }
         }
       });
       
-      setAiResponse(response);
+      setSummary(result);
     } catch (error) {
-      console.error('AI Summary failed:', error);
+      console.error('Failed to generate summary:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const generateNextActions = async () => {
+  const suggestActions = async () => {
     setIsLoading(true);
     try {
-      const daysToClose = deal.expected_close_date 
-        ? differenceInDays(new Date(deal.expected_close_date), new Date())
-        : null;
-
-      const prompt = `As a deal management AI, suggest the next best actions for this deal:
+      const prompt = `Based on this deal's current state, suggest the next best actions:
 
 Deal: ${deal.title}
 Stage: ${STAGE_LABELS[deal.stage]}
-Value: $${deal.amount?.toLocaleString()}
+Amount: ${formatCurrency(deal.amount)}
+Expected Close: ${deal.expected_close_date || 'Not set'}
+Days in current stage: ${deal.updated_date ? Math.floor((Date.now() - new Date(deal.updated_date).getTime()) / (1000 * 60 * 60 * 24)) : 'Unknown'}
 Priority: ${deal.priority}
-Days to Expected Close: ${daysToClose !== null ? daysToClose : 'Not set'}
-Company: ${deal.company_name}
-Contact: ${deal.contact_name} (${deal.contact_email})
-Notes Count: ${notes.length}
-Last Activity: ${activities[0]?.description || 'None'}
+Last activity: ${activities[0]?.description || 'None'}
 
-Based on the current stage and deal context, provide 3-5 specific, actionable next steps the SaintAgent should take. Consider urgency, stage-appropriate activities, and best practices for deal progression.`;
+For stage "${STAGE_LABELS[deal.stage]}", suggest:
+1. Immediate actions (next 24-48 hours)
+2. Short-term actions (this week)
+3. Preparation for next stage
+4. Potential blockers to address`;
 
-      const response = await base44.integrations.Core.InvokeLLM({
+      const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
-          type: 'object',
+          type: "object",
           properties: {
-            actions: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  action: { type: 'string' },
-                  priority: { type: 'string', enum: ['high', 'medium', 'low'] },
-                  timeframe: { type: 'string' },
-                  rationale: { type: 'string' }
-                }
-              }
-            },
-            stage_recommendation: { type: 'string' },
-            risk_alert: { type: 'string' }
+            immediate_actions: { type: "array", items: { type: "object", properties: { action: { type: "string" }, priority: { type: "string" }, reason: { type: "string" } } } },
+            short_term_actions: { type: "array", items: { type: "object", properties: { action: { type: "string" }, timeline: { type: "string" } } } },
+            next_stage_prep: { type: "array", items: { type: "string" } },
+            blockers: { type: "array", items: { type: "string" } }
           }
         }
       });
       
-      setSuggestions(response);
+      setActions(result);
     } catch (error) {
-      console.error('AI Suggestions failed:', error);
+      console.error('Failed to suggest actions:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const generateEmail = async (emailType) => {
+  const draftEmail = async () => {
     setIsLoading(true);
     try {
-      const typePrompts = {
-        followup: 'a professional follow-up email to check on progress and next steps',
-        proposal: 'an email presenting our proposal and value proposition',
-        closing: 'an email to move the deal towards closing, addressing any final concerns',
-        introduction: 'an introduction email to establish rapport and understand their needs'
-      };
-
-      const prompt = `Draft ${typePrompts[emailType]} for this deal:
+      const prompt = `Draft a professional follow-up email for this deal:
 
 Deal: ${deal.title}
-Company: ${deal.company_name}
-Contact Name: ${deal.contact_name}
-Contact Email: ${deal.contact_email}
-Value: $${deal.amount?.toLocaleString()}
+Company: ${deal.company_name || 'the client'}
+Contact: ${deal.contact_name || 'the contact'}
 Stage: ${STAGE_LABELS[deal.stage]}
-Description: ${deal.description || 'No description provided'}
+Amount: ${formatCurrency(deal.amount)}
+My Name: ${profile?.display_name || currentUser?.full_name}
 
-Recent context from notes: ${notes.slice(0, 3).map(n => n.content).join(' | ') || 'None'}
+Additional context from user: ${emailContext || 'Standard follow-up'}
 
-Create a professional, warm email that reflects the SaintAgent ethos of positive change and collaboration. Include a clear call to action.`;
+Generate an appropriate email based on the deal stage:
+- Prospecting: Interest and discovery
+- Qualification: Value proposition
+- Proposal: Proposal follow-up
+- Negotiation: Address concerns
+- Closed: Thank you and next steps`;
 
-      const response = await base44.integrations.Core.InvokeLLM({
+      const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
-          type: 'object',
+          type: "object",
           properties: {
-            subject: { type: 'string' },
-            body: { type: 'string' },
-            call_to_action: { type: 'string' }
+            subject: { type: "string" },
+            body: { type: "string" },
+            tone: { type: "string" },
+            key_points: { type: "array", items: { type: "string" } }
           }
         }
       });
       
-      setDraftEmail(response);
+      setEmailDraft(result);
     } catch (error) {
-      console.error('Email generation failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCustomPrompt = async () => {
-    if (!customPrompt.trim()) return;
-    setIsLoading(true);
-    try {
-      const prompt = `Context about this deal:
-Deal: ${deal.title}
-Company: ${deal.company_name}
-Value: $${deal.amount?.toLocaleString()}
-Stage: ${STAGE_LABELS[deal.stage]}
-Contact: ${deal.contact_name}
-
-User Question: ${customPrompt}
-
-Provide a helpful, specific response.`;
-
-      const response = await base44.integrations.Core.InvokeLLM({ prompt });
-      setAiResponse({ custom_response: response });
-    } catch (error) {
-      console.error('Custom prompt failed:', error);
+      console.error('Failed to draft email:', error);
     } finally {
       setIsLoading(false);
     }
@@ -199,132 +178,238 @@ Provide a helpful, specific response.`;
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const sendEmail = async () => {
+    if (!deal.contact_email || !emailDraft) return;
+    
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: deal.contact_email,
+        subject: emailDraft.subject,
+        body: emailDraft.body
+      });
+      
+      // Log activity
+      await base44.entities.DealActivity.create({
+        deal_id: deal.id,
+        activity_type: 'email_sent',
+        description: `Sent email: "${emailDraft.subject}"`,
+        actor_id: currentUser.email,
+        actor_name: profile?.display_name || currentUser.full_name
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ['dealActivities', deal.id] });
+      alert('Email sent successfully!');
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      alert('Failed to send email');
+    }
   };
 
   return (
-    <Card className="border-violet-200 dark:border-violet-800">
+    <Card className="border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50 to-white dark:from-violet-950/30 dark:to-slate-900">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Sparkles className="w-5 h-5 text-violet-500" />
-          AI Deal Assistant
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-violet-700 dark:text-violet-300">
+            <Bot className="w-5 h-5" />
+            AI Deal Assistant
+          </CardTitle>
+          <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300">
+            <Sparkles className="w-3 h-3 mr-1" />
+            Powered by AI
+          </Badge>
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 mb-4">
-            <TabsTrigger value="summary" className="text-xs">Summary</TabsTrigger>
-            <TabsTrigger value="actions" className="text-xs">Actions</TabsTrigger>
-            <TabsTrigger value="email" className="text-xs">Email</TabsTrigger>
-            <TabsTrigger value="ask" className="text-xs">Ask AI</TabsTrigger>
+          <TabsList className="mb-4 bg-violet-100/50 dark:bg-violet-900/30">
+            <TabsTrigger value="summary" className="gap-1 data-[state=active]:bg-violet-600 data-[state=active]:text-white">
+              <FileText className="w-3 h-3" />
+              Summary
+            </TabsTrigger>
+            <TabsTrigger value="actions" className="gap-1 data-[state=active]:bg-violet-600 data-[state=active]:text-white">
+              <ListChecks className="w-3 h-3" />
+              Actions
+            </TabsTrigger>
+            <TabsTrigger value="email" className="gap-1 data-[state=active]:bg-violet-600 data-[state=active]:text-white">
+              <Mail className="w-3 h-3" />
+              Email
+            </TabsTrigger>
           </TabsList>
 
           {/* Summary Tab */}
           <TabsContent value="summary">
-            {!aiResponse ? (
-              <div className="text-center py-6">
-                <FileText className="w-10 h-10 mx-auto mb-3 text-slate-300" />
-                <p className="text-sm text-slate-500 mb-4">Generate an AI-powered summary of this deal</p>
-                <Button onClick={generateSummary} disabled={isLoading} className="gap-2">
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            {!summary ? (
+              <div className="text-center py-8">
+                <Bot className="w-12 h-12 mx-auto mb-4 text-violet-400" />
+                <p className="text-slate-600 dark:text-slate-400 mb-4">
+                  Get an AI-powered analysis of this deal
+                </p>
+                <Button 
+                  onClick={generateSummary} 
+                  disabled={isLoading}
+                  className="bg-violet-600 hover:bg-violet-700"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
                   Generate Summary
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    Health Score: {aiResponse.health_score}/10
-                  </Badge>
-                  <Button variant="ghost" size="sm" onClick={generateSummary} disabled={isLoading}>
-                    <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <ScrollArea className="h-[300px] pr-4">
+                <div className="space-y-4">
+                  {/* Health Score */}
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-white dark:bg-slate-800 border">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold ${
+                      summary.health_score >= 7 ? 'bg-emerald-500' : 
+                      summary.health_score >= 5 ? 'bg-amber-500' : 'bg-red-500'
+                    }`}>
+                      {summary.health_score}
+                    </div>
+                    <div>
+                      <p className="font-medium text-slate-900 dark:text-white">Deal Health Score</p>
+                      <p className="text-sm text-slate-500">{summary.health_explanation}</p>
+                    </div>
+                  </div>
+
+                  {/* Executive Summary */}
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white mb-2">Executive Summary</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{summary.executive_summary}</p>
+                  </div>
+
+                  {/* Highlights */}
+                  {summary.highlights?.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        Key Highlights
+                      </h4>
+                      <ul className="space-y-1">
+                        {summary.highlights.map((h, i) => (
+                          <li key={i} className="text-sm text-slate-600 dark:text-slate-400 flex items-start gap-2">
+                            <span className="text-emerald-500">✓</span>
+                            {h}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Risks */}
+                  {summary.risks?.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-500" />
+                        Potential Risks
+                      </h4>
+                      <ul className="space-y-1">
+                        {summary.risks.map((r, i) => (
+                          <li key={i} className="text-sm text-slate-600 dark:text-slate-400 flex items-start gap-2">
+                            <span className="text-amber-500">⚠</span>
+                            {r}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <Button variant="outline" size="sm" onClick={generateSummary} className="mt-2">
+                    <RefreshCw className="w-3 h-3 mr-1" />
+                    Regenerate
                   </Button>
                 </div>
-                
-                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                  <p className="text-sm">{aiResponse.summary}</p>
-                </div>
-
-                {aiResponse.key_risks?.length > 0 && (
-                  <div>
-                    <p className="text-xs font-medium text-red-600 mb-2 flex items-center gap-1">
-                      <AlertTriangle className="w-3 h-3" /> Key Risks
-                    </p>
-                    <ul className="space-y-1">
-                      {aiResponse.key_risks.map((risk, i) => (
-                        <li key={i} className="text-xs text-slate-600 dark:text-slate-400 flex items-start gap-2">
-                          <span className="text-red-400">•</span> {risk}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {aiResponse.opportunities?.length > 0 && (
-                  <div>
-                    <p className="text-xs font-medium text-emerald-600 mb-2 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Opportunities
-                    </p>
-                    <ul className="space-y-1">
-                      {aiResponse.opportunities.map((opp, i) => (
-                        <li key={i} className="text-xs text-slate-600 dark:text-slate-400 flex items-start gap-2">
-                          <span className="text-emerald-400">•</span> {opp}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              </ScrollArea>
             )}
           </TabsContent>
 
           {/* Actions Tab */}
           <TabsContent value="actions">
-            {!suggestions ? (
-              <div className="text-center py-6">
-                <Lightbulb className="w-10 h-10 mx-auto mb-3 text-slate-300" />
-                <p className="text-sm text-slate-500 mb-4">Get AI-powered suggestions for next best actions</p>
-                <Button onClick={generateNextActions} disabled={isLoading} className="gap-2">
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                  Generate Suggestions
+            {!actions ? (
+              <div className="text-center py-8">
+                <ListChecks className="w-12 h-12 mx-auto mb-4 text-violet-400" />
+                <p className="text-slate-600 dark:text-slate-400 mb-4">
+                  Get AI-suggested next steps for this deal
+                </p>
+                <Button 
+                  onClick={suggestActions} 
+                  disabled={isLoading}
+                  className="bg-violet-600 hover:bg-violet-700"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                  Suggest Actions
                 </Button>
               </div>
             ) : (
-              <ScrollArea className="h-[300px]">
+              <ScrollArea className="h-[300px] pr-4">
                 <div className="space-y-4">
-                  {suggestions.risk_alert && (
-                    <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                      <p className="text-xs font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1 mb-1">
-                        <AlertTriangle className="w-3 h-3" /> Risk Alert
-                      </p>
-                      <p className="text-xs text-amber-600 dark:text-amber-300">{suggestions.risk_alert}</p>
-                    </div>
-                  )}
-
-                  {suggestions.stage_recommendation && (
-                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <p className="text-xs text-blue-700 dark:text-blue-300">{suggestions.stage_recommendation}</p>
-                    </div>
-                  )}
-
-                  <div className="space-y-3">
-                    {suggestions.actions?.map((action, i) => (
-                      <div key={i} className="p-3 border rounded-lg">
-                        <div className="flex items-start justify-between mb-2">
-                          <p className="text-sm font-medium">{action.action}</p>
-                          <Badge variant={action.priority === 'high' ? 'destructive' : action.priority === 'medium' ? 'default' : 'secondary'} className="text-[10px]">
-                            {action.priority}
-                          </Badge>
-                        </div>
-                        <p className="text-xs text-slate-500 mb-1">⏱️ {action.timeframe}</p>
-                        <p className="text-xs text-slate-600">{action.rationale}</p>
+                  {/* Immediate Actions */}
+                  {actions.immediate_actions?.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-red-500" />
+                        Immediate Actions (24-48h)
+                      </h4>
+                      <div className="space-y-2">
+                        {actions.immediate_actions.map((a, i) => (
+                          <div key={i} className="p-2 rounded bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                            <p className="text-sm font-medium text-slate-900 dark:text-white">{a.action}</p>
+                            <p className="text-xs text-slate-500">{a.reason}</p>
+                            <Badge className="mt-1 text-xs" variant="outline">{a.priority}</Badge>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
 
-                  <Button variant="ghost" size="sm" onClick={generateNextActions} disabled={isLoading} className="w-full">
-                    <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                    Refresh Suggestions
+                  {/* Short-term Actions */}
+                  {actions.short_term_actions?.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-2">This Week</h4>
+                      <ul className="space-y-1">
+                        {actions.short_term_actions.map((a, i) => (
+                          <li key={i} className="text-sm text-slate-600 dark:text-slate-400 flex items-start gap-2">
+                            <span className="text-violet-500">→</span>
+                            {a.action}
+                            <Badge variant="outline" className="text-xs ml-auto">{a.timeline}</Badge>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Next Stage Prep */}
+                  {actions.next_stage_prep?.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-2">Prepare for Next Stage</h4>
+                      <ul className="space-y-1">
+                        {actions.next_stage_prep.map((p, i) => (
+                          <li key={i} className="text-sm text-slate-600 dark:text-slate-400">• {p}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Blockers */}
+                  {actions.blockers?.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-500" />
+                        Blockers to Address
+                      </h4>
+                      <ul className="space-y-1">
+                        {actions.blockers.map((b, i) => (
+                          <li key={i} className="text-sm text-slate-600 dark:text-slate-400">⚠ {b}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <Button variant="outline" size="sm" onClick={suggestActions} className="mt-2">
+                    <RefreshCw className="w-3 h-3 mr-1" />
+                    Regenerate
                   </Button>
                 </div>
               </ScrollArea>
@@ -333,83 +418,81 @@ Provide a helpful, specific response.`;
 
           {/* Email Tab */}
           <TabsContent value="email">
-            {!draftEmail ? (
-              <div className="space-y-3">
-                <p className="text-sm text-slate-500 text-center mb-4">Generate a professional email for this deal</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" onClick={() => generateEmail('introduction')} disabled={isLoading} className="text-xs">
-                    Introduction
-                  </Button>
-                  <Button variant="outline" onClick={() => generateEmail('followup')} disabled={isLoading} className="text-xs">
-                    Follow-up
-                  </Button>
-                  <Button variant="outline" onClick={() => generateEmail('proposal')} disabled={isLoading} className="text-xs">
-                    Proposal
-                  </Button>
-                  <Button variant="outline" onClick={() => generateEmail('closing')} disabled={isLoading} className="text-xs">
-                    Closing
-                  </Button>
+            {!emailDraft ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Additional Context (optional)
+                  </label>
+                  <Textarea
+                    value={emailContext}
+                    onChange={(e) => setEmailContext(e.target.value)}
+                    placeholder="E.g., Follow up on pricing discussion, Schedule next meeting..."
+                    rows={2}
+                    className="mt-1"
+                  />
                 </div>
-                {isLoading && (
-                  <div className="flex justify-center py-4">
-                    <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
-                  </div>
-                )}
+                <Button 
+                  onClick={draftEmail} 
+                  disabled={isLoading}
+                  className="w-full bg-violet-600 hover:bg-violet-700"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Mail className="w-4 h-4 mr-2" />}
+                  Draft Follow-up Email
+                </Button>
               </div>
             ) : (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline">Draft Email</Badge>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`Subject: ${draftEmail.subject}\n\n${draftEmail.body}`)}>
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDraftEmail(null)}>
-                      <RefreshCw className="w-4 h-4" />
-                    </Button>
+              <div className="space-y-4">
+                <div className="p-3 rounded-lg bg-white dark:bg-slate-800 border">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-slate-500">Subject</p>
+                    <Badge variant="outline" className="text-xs">{emailDraft.tone}</Badge>
                   </div>
-                </div>
-                
-                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                  <p className="text-xs font-medium text-slate-500 mb-1">Subject:</p>
-                  <p className="text-sm font-medium mb-3">{draftEmail.subject}</p>
-                  <p className="text-xs font-medium text-slate-500 mb-1">Body:</p>
-                  <p className="text-sm whitespace-pre-wrap">{draftEmail.body}</p>
+                  <p className="font-medium text-slate-900 dark:text-white">{emailDraft.subject}</p>
                 </div>
 
-                {deal.contact_email && (
-                  <Button 
-                    className="w-full gap-2"
-                    onClick={() => window.open(`mailto:${deal.contact_email}?subject=${encodeURIComponent(draftEmail.subject)}&body=${encodeURIComponent(draftEmail.body)}`)}
-                  >
-                    <Mail className="w-4 h-4" />
-                    Open in Email Client
-                  </Button>
+                <div className="p-3 rounded-lg bg-white dark:bg-slate-800 border">
+                  <p className="text-xs text-slate-500 mb-2">Body</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{emailDraft.body}</p>
+                </div>
+
+                {emailDraft.key_points?.length > 0 && (
+                  <div className="p-3 rounded-lg bg-violet-50 dark:bg-violet-900/20">
+                    <p className="text-xs font-medium text-violet-700 dark:text-violet-300 mb-1">Key Points Covered</p>
+                    <ul className="text-xs text-slate-600 dark:text-slate-400">
+                      {emailDraft.key_points.map((p, i) => (
+                        <li key={i}>• {p}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
+
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => copyToClipboard(`Subject: ${emailDraft.subject}\n\n${emailDraft.body}`)}
+                  >
+                    {copied ? <Check className="w-3 h-3 mr-1" /> : <Copy className="w-3 h-3 mr-1" />}
+                    {copied ? 'Copied!' : 'Copy'}
+                  </Button>
+                  {deal.contact_email && (
+                    <Button 
+                      size="sm" 
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                      onClick={sendEmail}
+                    >
+                      <Send className="w-3 h-3 mr-1" />
+                      Send to {deal.contact_name || 'Contact'}
+                    </Button>
+                  )}
+                  <Button variant="outline" size="sm" onClick={() => setEmailDraft(null)}>
+                    <RefreshCw className="w-3 h-3 mr-1" />
+                    New Draft
+                  </Button>
+                </div>
               </div>
             )}
-          </TabsContent>
-
-          {/* Ask AI Tab */}
-          <TabsContent value="ask">
-            <div className="space-y-3">
-              <Textarea
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="Ask anything about this deal..."
-                rows={3}
-              />
-              <Button onClick={handleCustomPrompt} disabled={isLoading || !customPrompt.trim()} className="w-full gap-2">
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                Ask AI
-              </Button>
-
-              {aiResponse?.custom_response && (
-                <div className="p-3 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
-                  <p className="text-sm whitespace-pre-wrap">{aiResponse.custom_response}</p>
-                </div>
-              )}
-            </div>
           </TabsContent>
         </Tabs>
       </CardContent>
