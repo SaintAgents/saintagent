@@ -12,7 +12,7 @@ import {
   Plus, Search, Building2, TrendingUp, AlertTriangle, Clock, 
   CheckCircle2, ListTodo, Target, Filter, Upload,
   Calendar, FileText, MessageSquare, ChevronRight, GripVertical,
-  UserPlus, MessageSquarePlus, BarChart3, Bell, Settings
+  UserPlus, MessageSquarePlus, BarChart3
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -434,7 +434,7 @@ export default function DealsPage() {
               </TabsList>
             </Tabs>
             <Link to={createPageUrl('DealAnalytics')}>
-              <Button variant="outline" size="sm" className="gap-1 border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 hover:bg-violet-50">
+              <Button variant="outline" size="sm" className="gap-1 border-cyan-300 dark:border-cyan-700 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20">
                 <BarChart3 className="w-4 h-4" /> Analytics
               </Button>
             </Link>
