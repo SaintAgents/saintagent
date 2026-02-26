@@ -596,7 +596,7 @@ export default function Profiles() {
                     <SelectTrigger className="w-32 h-9 rounded-lg">
                       <SelectValue placeholder="All" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="all">All Signs</SelectItem>
                       <SelectItem value="aries">Aries</SelectItem>
                       <SelectItem value="taurus">Taurus</SelectItem>
@@ -621,7 +621,7 @@ export default function Profiles() {
                     <SelectTrigger className="w-40 h-9 rounded-lg">
                       <SelectValue placeholder="All" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="all">All Types</SelectItem>
                       <SelectItem value="generator">Generator</SelectItem>
                       <SelectItem value="manifesting_generator">Manifesting Generator</SelectItem>
@@ -639,7 +639,7 @@ export default function Profiles() {
                     <SelectTrigger className="w-24 h-9 rounded-lg">
                       <SelectValue placeholder="All" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="all">All</SelectItem>
                       <SelectItem value="1">Type 1</SelectItem>
                       <SelectItem value="2">Type 2</SelectItem>
@@ -661,7 +661,7 @@ export default function Profiles() {
                     <SelectTrigger className="w-28 h-9 rounded-lg">
                       <SelectValue placeholder="All" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="all">All</SelectItem>
                       <SelectItem value="INTJ">INTJ</SelectItem>
                       <SelectItem value="INTP">INTP</SelectItem>
@@ -690,7 +690,7 @@ export default function Profiles() {
                     <SelectTrigger className="w-36 h-9 rounded-lg">
                       <SelectValue placeholder="All" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="all">All Practices</SelectItem>
                       <SelectItem value="meditation">Meditation</SelectItem>
                       <SelectItem value="yoga">Yoga</SelectItem>
