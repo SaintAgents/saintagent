@@ -14,7 +14,7 @@ import {
   Upload, FileText, Image, File, X, Loader2, Target,
   ArrowRight, TrendingUp, AlertCircle, Sparkles, Bot
 } from 'lucide-react';
-import DealAIAssistant from './DealAIAssistant';
+import DealAIAssistant from './DealAIAssistant.jsx';
 import { format, formatDistanceToNow } from 'date-fns';
 import DealFormModal from './DealFormModal';
 
