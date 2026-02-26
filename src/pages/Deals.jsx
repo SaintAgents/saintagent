@@ -372,6 +372,22 @@ export default function DealsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0f1a]">
+      {/* Hero Section */}
+      <div className="relative h-64 md:h-72 overflow-hidden page-hero hero-gradient">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/515fe6112_universal_upscale_0_da059915-7033-49cb-acf1-69b2a9df195b_0.jpg"
+          alt="Deals Hero"
+          className="absolute inset-0 w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 hero-content">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">GGT Command</h1>
+          <p className="text-lg md:text-xl text-cyan-300 font-medium">Agents of Positive Change Make Deals Happen</p>
+          <p className="text-sm text-slate-300 mt-1">SaintAgents earn 10% commission on closed/funded deals</p>
+        </div>
+      </div>
+
       {/* Top Bar */}
       <div className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d1321] px-6 py-3">
         <div className="flex items-center justify-between">
