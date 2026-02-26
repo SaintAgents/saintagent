@@ -25,7 +25,10 @@ import {
   Star,
   Zap,
   Award,
-  UserPlus
+  UserPlus,
+  Link2,
+  Wallet,
+  Send
 } from 'lucide-react';
 import { format, formatDistanceToNow, parseISO, subDays } from 'date-fns';
 
@@ -54,10 +57,27 @@ export default function GGGTotalsTab() {
   const [dateRange, setDateRange] = useState('30d');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAction, setSelectedAction] = useState(null);
+  const [showAffiliateSection, setShowAffiliateSection] = useState(false);
 
   const { data: gggTransactions = [], isLoading, refetch } = useQuery({
     queryKey: ['adminGGGTotals'],
     queryFn: () => base44.entities.GGGTransaction.list('-created_date', 1000),
+  });
+
+  // Fetch affiliate data
+  const { data: affiliateCodes = [] } = useQuery({
+    queryKey: ['adminAffiliateCodes'],
+    queryFn: () => base44.entities.AffiliateCode.list('-total_ggg_earned', 200),
+  });
+
+  const { data: referrals = [] } = useQuery({
+    queryKey: ['adminReferrals'],
+    queryFn: () => base44.entities.Referral.list('-created_date', 1000),
+  });
+
+  const { data: payouts = [] } = useQuery({
+    queryKey: ['adminPayouts'],
+    queryFn: () => base44.entities.AffiliatePayout.list('-created_date', 500),
   });
 
   const { data: profiles = [] } = useQuery({
@@ -193,6 +213,53 @@ export default function GGGTotalsTab() {
     };
   }, [realUserTransactions, dateRange]);
 
+  // Calculate affiliate totals
+  const affiliateTotals = React.useMemo(() => {
+    const dateFilter = getDateFilter();
+    
+    // Total earned by all affiliates
+    const totalEarned = affiliateCodes.reduce((sum, code) => sum + (code.total_ggg_earned || 0), 0);
+    
+    // Total paid out
+    const completedPayouts = payouts.filter(p => 
+      p.status === 'completed' && 
+      new Date(p.created_date) >= dateFilter
+    );
+    const totalPaidOut = completedPayouts.reduce((sum, p) => sum + p.amount_ggg, 0);
+    
+    // Pending payouts
+    const pendingPayouts = payouts.filter(p => p.status === 'pending');
+    const totalPending = pendingPayouts.reduce((sum, p) => sum + p.amount_ggg, 0);
+    
+    // Calculate signup bonuses
+    const signupBonuses = referrals
+      .filter(r => r.signup_bonus_paid && new Date(r.created_date) >= dateFilter)
+      .reduce((sum, r) => sum + (r.signup_bonus_ggg || 0.25), 0);
+    
+    // Commission from referrals
+    const totalCommission = referrals
+      .filter(r => new Date(r.created_date) >= dateFilter)
+      .reduce((sum, r) => sum + (r.total_commission_earned || 0), 0);
+    
+    // Active affiliates (those with any activity)
+    const activeAffiliates = affiliateCodes.filter(c => c.total_paid > 0 || c.total_ggg_earned > 0).length;
+    
+    // Total referrals
+    const filteredReferrals = referrals.filter(r => new Date(r.created_date) >= dateFilter);
+    
+    return {
+      totalEarned,
+      totalPaidOut,
+      totalPending,
+      totalOwed: totalEarned - totalPaidOut,
+      signupBonuses,
+      totalCommission,
+      activeAffiliates,
+      totalReferrals: filteredReferrals.length,
+      activatedReferrals: filteredReferrals.filter(r => r.status !== 'pending').length,
+    };
+  }, [affiliateCodes, payouts, referrals, dateRange]);
+
   const formatGGG = (val) => {
     if (val === 0) return '0';
     if (Math.abs(val) < 1) return val.toFixed(4);
@@ -272,6 +339,77 @@ export default function GGGTotalsTab() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Affiliate Summary Section */}
+      <Card className="border-violet-200">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <Link2 className="w-5 h-5 text-violet-600" />
+              Affiliate Program
+            </span>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowAffiliateSection(!showAffiliateSection)}
+            >
+              {showAffiliateSection ? 'Hide Details' : 'Show Details'}
+              <ChevronRight className={`w-4 h-4 ml-1 transition-transform ${showAffiliateSection ? 'rotate-90' : ''}`} />
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div className="p-3 rounded-lg bg-violet-50 text-center">
+              <p className="text-xs text-violet-600">Active Affiliates</p>
+              <p className="text-xl font-bold text-violet-700">{affiliateTotals.activeAffiliates}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-emerald-50 text-center">
+              <p className="text-xs text-emerald-600">Total Earned</p>
+              <p className="text-xl font-bold text-emerald-700">{formatGGG(affiliateTotals.signupBonuses + affiliateTotals.totalCommission)}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-blue-50 text-center">
+              <p className="text-xs text-blue-600">Paid Out</p>
+              <p className="text-xl font-bold text-blue-700">{formatGGG(affiliateTotals.totalPaidOut)}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-amber-50 text-center">
+              <p className="text-xs text-amber-600">Pending</p>
+              <p className="text-xl font-bold text-amber-700">{formatGGG(affiliateTotals.totalPending)}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-rose-50 text-center">
+              <p className="text-xs text-rose-600">Owed (Unpaid)</p>
+              <p className="text-xl font-bold text-rose-700">{formatGGG(affiliateTotals.totalOwed)}</p>
+            </div>
+          </div>
+
+          {showAffiliateSection && (
+            <div className="mt-4 pt-4 border-t space-y-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Total Referrals</p>
+                  <p className="text-lg font-bold">{affiliateTotals.totalReferrals}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Activated</p>
+                  <p className="text-lg font-bold">{affiliateTotals.activatedReferrals}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Signup Bonuses</p>
+                  <p className="text-lg font-bold text-emerald-600">{formatGGG(affiliateTotals.signupBonuses)}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-50">
+                  <p className="text-xs text-slate-500">Commission</p>
+                  <p className="text-lg font-bold text-emerald-600">{formatGGG(affiliateTotals.totalCommission)}</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500">
+                <Wallet className="w-3 h-3 inline mr-1" />
+                Manage payouts in the <span className="font-medium">Affiliate Payouts</span> tab
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Main Table */}
       <Card>
