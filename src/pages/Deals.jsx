@@ -12,8 +12,10 @@ import {
   Plus, Search, Building2, TrendingUp, AlertTriangle, Clock, 
   CheckCircle2, ListTodo, Target, Filter, Upload,
   Calendar, FileText, MessageSquare, ChevronRight, GripVertical,
-  UserPlus, MessageSquarePlus
+  UserPlus, MessageSquarePlus, BarChart3, Bell, Settings
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { format, isBefore, addDays } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import BackButton from '@/components/hud/BackButton.jsx';
@@ -431,6 +433,11 @@ export default function DealsPage() {
                 <TabsTrigger value="projects" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Projects</TabsTrigger>
               </TabsList>
             </Tabs>
+            <Link to={createPageUrl('DealAnalytics')}>
+              <Button variant="outline" size="sm" className="gap-1 border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 hover:bg-violet-50">
+                <BarChart3 className="w-4 h-4" /> Analytics
+              </Button>
+            </Link>
             <Button variant="outline" size="sm" className="gap-1 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400">
               <Upload className="w-4 h-4" /> Upload
             </Button>

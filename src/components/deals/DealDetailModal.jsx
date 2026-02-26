@@ -12,10 +12,11 @@ import {
   DollarSign, Building2, User, Mail, Phone, Calendar, 
   MessageSquare, Paperclip, Clock, Edit2, Trash2, Send,
   Upload, FileText, Image, File, X, Loader2, Target,
-  ArrowRight, TrendingUp, AlertCircle
+  ArrowRight, TrendingUp, AlertCircle, Bot
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import DealFormModal from './DealFormModal';
+import DealAIAssistant from './DealAIAssistant';
 
 const STAGE_CONFIG = {
   prospecting: { label: 'Prospecting', color: 'bg-slate-500' },
@@ -37,6 +38,7 @@ export default function DealDetailModal({ deal, onClose, currentUser, profile, a
   const [newNote, setNewNote] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
 
   const queryClient = useQueryClient();
   const isOwner = deal.owner_id === currentUser?.email;
@@ -285,6 +287,18 @@ export default function DealDetailModal({ deal, onClose, currentUser, profile, a
                   </div>
                 )}
 
+                {/* AI Assistant Button */}
+                <div className="pt-4 border-t">
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2 bg-violet-50 hover:bg-violet-100 text-violet-700 border-violet-200"
+                    onClick={() => setShowAIAssistant(!showAIAssistant)}
+                  >
+                    <Bot className="w-4 h-4" />
+                    {showAIAssistant ? 'Hide AI Assistant' : 'AI Assistant'}
+                  </Button>
+                </div>
+
                 {/* Actions */}
                 {canEdit && (
                   <div className="pt-4 border-t space-y-2">
@@ -316,6 +330,19 @@ export default function DealDetailModal({ deal, onClose, currentUser, profile, a
 
               {/* Right: Tabs */}
               <div className="col-span-2 py-4 flex flex-col overflow-hidden">
+                {/* AI Assistant Panel */}
+                {showAIAssistant && (
+                  <div className="mb-4">
+                    <DealAIAssistant 
+                      deal={deal}
+                      notes={notes}
+                      activities={activities}
+                      currentUser={currentUser}
+                      profile={profile}
+                    />
+                  </div>
+                )}
+
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
                   <TabsList className="mb-4">
                     <TabsTrigger value="notes" className="gap-2">
