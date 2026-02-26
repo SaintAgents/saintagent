@@ -351,13 +351,9 @@ export default function TopBar({
               "bg-gradient-to-br from-amber-300 to-orange-400",
               currentTheme === 'light' 
                 ? "ring-2 ring-offset-1 ring-amber-500" 
-                : "hover:ring-2 hover:ring-[#00ff88]"
+                : "hover:ring-2 hover:ring-[#00ff88] hover:ring-offset-1"
             )}
-            style={{ 
-              boxShadow: currentTheme !== 'light' 
-                ? '0 0 6px rgba(0, 255, 136, 0.4), 0 0 0 2px rgba(0, 255, 136, 0.2)' 
-                : undefined 
-            }}
+            style={{ boxShadow: '0 0 6px rgba(0, 255, 136, 0.4), 0 0 0 2px rgba(0, 255, 136, 0.2)' }}
             title="Light theme"
           />
           <button
@@ -370,9 +366,9 @@ export default function TopBar({
               "bg-gradient-to-br from-slate-600 to-slate-900",
               currentTheme === 'dark' 
                 ? "ring-2 ring-offset-1 ring-[#00ff88]" 
-                : "hover:ring-2 hover:ring-[#00ff88]"
+                : "hover:ring-2 hover:ring-[#00ff88] hover:ring-offset-1"
             )}
-            style={{ boxShadow: '0 0 6px rgba(0, 255, 136, 0.5), 0 0 0 2px rgba(0, 255, 136, 0.25)' }}
+            style={{ boxShadow: '0 0 6px rgba(0, 255, 136, 0.4), 0 0 0 2px rgba(0, 255, 136, 0.2)' }}
             title="Dark theme"
           />
           <button
@@ -385,13 +381,13 @@ export default function TopBar({
               "bg-[#00ff00]",
               currentTheme === 'hacker' 
                 ? "ring-2 ring-offset-1 ring-[#00ff00]" 
-                : "hover:ring-2 hover:ring-[#00ff00]"
+                : "hover:ring-2 hover:ring-[#00ff00] hover:ring-offset-1"
             )}
-            style={{ boxShadow: '0 0 6px rgba(0, 255, 0, 0.6), 0 0 0 2px rgba(0, 255, 0, 0.3)' }}
+            style={{ boxShadow: '0 0 8px rgba(0, 255, 0, 0.5), 0 0 0 2px rgba(0, 255, 0, 0.25)' }}
             title="Hacker theme"
           />
-          </div>
-          )}
+        </div>
+      )}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
         "flex items-center gap-0.5 bg-slate-100/80 rounded-xl p-1 transition-all duration-300 shrink-0",
