@@ -479,7 +479,9 @@ export default function DealDetailModal({ deal, onClose, currentUser, profile, a
                       <DealAIAssistant 
                         deal={deal} 
                         notes={notes} 
-                        activities={activities} 
+                        activities={activities}
+                        currentUser={currentUser}
+                        profile={profile}
                       />
                     </ScrollArea>
                   </TabsContent>
