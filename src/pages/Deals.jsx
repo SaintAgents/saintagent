@@ -382,7 +382,7 @@ export default function DealsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 hero-content">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">GGT Command</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Deal Maker</h1>
           <p className="text-lg md:text-xl text-cyan-300 font-medium">Agents of Positive Change Make Deals Happen</p>
           <p className="text-sm text-slate-300 mt-1">SaintAgents earn 10% commission on closed/funded deals</p>
         </div>
