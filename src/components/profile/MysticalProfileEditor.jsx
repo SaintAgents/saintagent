@@ -12,6 +12,7 @@ const ZODIAC_SIGNS = [
 ];
 
 const LIFE_PATH_OPTIONS = ['1','2','3','4','5','6','7','8','9','11','22','33'];
+const ENNEAGRAM_TYPES = ['1','2','3','4','5','6','7','8','9'];
 
 const RANKS = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King'];
 const SUITS = ['Clubs','Diamonds','Hearts','Spades'];
@@ -28,6 +29,7 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
     numerology_destiny: profile?.numerology_destiny != null ? String(profile?.numerology_destiny) : '',
     numerology_soul_urge: profile?.numerology_soul_urge != null ? String(profile?.numerology_soul_urge) : '',
     numerology_personality: profile?.numerology_personality != null ? String(profile?.numerology_personality) : '',
+    enneagram_type: profile?.enneagram_type || '',
     birth_card: profile?.birth_card || '',
     planetary_ruling_card: profile?.planetary_ruling_card || '',
     sun_card: profile?.sun_card || ''
@@ -252,6 +254,23 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
               <SelectContent>
                 {LIFE_PATH_OPTIONS.map((n) => (
                   <SelectItem key={n} value={n}>{n}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label>Enneagram Type</Label>
+            <Select
+              value={formData.enneagram_type}
+              onValueChange={(v) => setFormData({ ...formData, enneagram_type: v })}
+            >
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                {ENNEAGRAM_TYPES.map((n) => (
+                  <SelectItem key={n} value={n}>Type {n}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
