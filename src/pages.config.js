@@ -124,6 +124,7 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
+import AffiliateDashboard from './pages/AffiliateDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -205,6 +206,7 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
+    "AffiliateDashboard": AffiliateDashboard,
 }
 
 export const pagesConfig = {
