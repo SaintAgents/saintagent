@@ -1061,38 +1061,42 @@ export default function Sidebar({
           
           {/* Theme Dots at Bottom */}
           <div className="border-t border-slate-100 p-3">
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-4">
               <button
                 onClick={() => onThemeToggle('light')}
                 className={cn(
-                  "w-5 h-5 rounded-full border-2 transition-all",
+                  "w-6 h-6 rounded-full border-2 transition-all",
                   theme === 'light' 
                     ? "bg-white border-violet-500 ring-2 ring-violet-200" 
-                    : "bg-white border-slate-300 hover:border-[#00ff88] hover:ring-2 hover:ring-[#00ff88]/30"
+                    : "bg-white border-[#00ff88] hover:ring-4 hover:ring-[#00ff88]/40"
                 )}
-                style={{ boxShadow: theme !== 'light' ? '0 0 0 2px rgba(0, 255, 136, 0.3)' : undefined }}
+                style={{ 
+                  boxShadow: theme !== 'light' 
+                    ? '0 0 8px rgba(0, 255, 136, 0.5), 0 0 0 3px rgba(0, 255, 136, 0.25)' 
+                    : undefined 
+                }}
                 title="Light theme"
               />
               <button
                 onClick={() => onThemeToggle('dark')}
                 className={cn(
-                  "w-5 h-5 rounded-full border-2 transition-all",
+                  "w-6 h-6 rounded-full border-2 transition-all",
                   theme === 'dark' 
-                    ? "bg-slate-800 border-[#00ff88] ring-2 ring-[#00ff88]/50" 
-                    : "bg-slate-800 border-[#00ff88]/50 hover:border-[#00ff88] hover:ring-2 hover:ring-[#00ff88]/30"
+                    ? "bg-slate-800 border-[#00ff88] ring-4 ring-[#00ff88]/50" 
+                    : "bg-slate-800 border-[#00ff88] hover:ring-4 hover:ring-[#00ff88]/40"
                 )}
-                style={{ boxShadow: '0 0 0 2px rgba(0, 255, 136, 0.3)' }}
+                style={{ boxShadow: '0 0 8px rgba(0, 255, 136, 0.5), 0 0 0 3px rgba(0, 255, 136, 0.25)' }}
                 title="Dark theme"
               />
               <button
                 onClick={() => onThemeToggle('hacker')}
                 className={cn(
-                  "w-5 h-5 rounded-full border-2 transition-all",
+                  "w-6 h-6 rounded-full border-2 transition-all",
                   theme === 'hacker' 
-                    ? "bg-green-500 border-[#00ff00] ring-2 ring-[#00ff00]/50" 
-                    : "bg-green-500 border-[#00ff00]/50 hover:border-[#00ff00] hover:ring-2 hover:ring-[#00ff00]/30"
+                    ? "bg-[#00ff00] border-[#00ff00] ring-4 ring-[#00ff00]/50" 
+                    : "bg-[#00ff00] border-[#00ff00] hover:ring-4 hover:ring-[#00ff00]/40"
                 )}
-                style={{ boxShadow: '0 0 0 2px rgba(0, 255, 0, 0.3)' }}
+                style={{ boxShadow: '0 0 8px rgba(0, 255, 0, 0.6), 0 0 0 3px rgba(0, 255, 0, 0.3)' }}
                 title="Hacker theme"
               />
 
