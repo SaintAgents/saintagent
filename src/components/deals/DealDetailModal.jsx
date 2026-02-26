@@ -14,7 +14,7 @@ import {
   Upload, FileText, Image, File, X, Loader2, Target,
   ArrowRight, TrendingUp, AlertCircle, Sparkles, Bot
 } from 'lucide-react';
-import DealAIAssistant from './DealAIAssistant.jsx';
+import DealAIAssistant from '@/components/deals/DealAIAssistant';
 import { format, formatDistanceToNow } from 'date-fns';
 import DealFormModal from './DealFormModal';
 
@@ -479,9 +479,7 @@ export default function DealDetailModal({ deal, onClose, currentUser, profile, a
                       <DealAIAssistant 
                         deal={deal} 
                         notes={notes} 
-                        activities={activities}
-                        currentUser={currentUser}
-                        profile={profile}
+                        activities={activities} 
                       />
                     </ScrollArea>
                   </TabsContent>
