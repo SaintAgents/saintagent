@@ -23,6 +23,7 @@ import DealFormModal from '@/components/deals/DealFormModal.jsx';
 import DealDetailModal from '@/components/deals/DealDetailModal.jsx';
 import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal.jsx';
 import AddNoteModal from '@/components/deals/AddNoteModal.jsx';
+import DealAnalyticsTab from '@/components/deals/DealAnalyticsTab.jsx';
 
 // Pipeline stages matching the image
 const PIPELINE_STAGES = {
@@ -58,7 +59,7 @@ export default function DealsPage() {
   const [activeFilter, setActiveFilter] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
-  const [viewMode, setViewMode] = useState('pipeline');
+  const [viewMode, setViewMode] = useState('pipeline'); // 'pipeline', 'analytics', or redirect to 'projects'
   const [teamMemberModal, setTeamMemberModal] = useState({ open: false, dealId: null, teamIds: [] });
   const [noteModal, setNoteModal] = useState({ open: false, dealId: null });
   const queryClient = useQueryClient();
@@ -430,14 +431,12 @@ export default function DealsPage() {
             }}>
               <TabsList className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                 <TabsTrigger value="pipeline" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Pipeline</TabsTrigger>
+                <TabsTrigger value="analytics" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white gap-1">
+                  <BarChart3 className="w-3 h-3" /> Analytics
+                </TabsTrigger>
                 <TabsTrigger value="projects" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Projects</TabsTrigger>
               </TabsList>
             </Tabs>
-            <Link to={createPageUrl('DealAnalytics')}>
-              <Button variant="outline" size="sm" className="gap-1 border-cyan-300 dark:border-cyan-700 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20">
-                <BarChart3 className="w-4 h-4" /> Analytics
-              </Button>
-            </Link>
             <Button variant="outline" size="sm" className="gap-1 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400">
               <Upload className="w-4 h-4" /> Upload
             </Button>
@@ -579,7 +578,9 @@ export default function DealsPage() {
           </div>
         </div>
 
-        {isLoading ? (
+        {viewMode === 'analytics' ? (
+          <DealAnalyticsTab deals={deals} />
+        ) : isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
           </div>
@@ -633,6 +634,7 @@ export default function DealsPage() {
             </div>
           </DragDropContext>
         )}
+        
       </div>
 
       {/* Modals */}
