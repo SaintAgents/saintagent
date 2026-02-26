@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -38,6 +38,7 @@ import DemoUsersManager from '@/components/admin/DemoUsersManager';
 import AdminRequestsPanel from '@/components/admin/AdminRequestsPanel';
 import PagesControlPanel from '@/components/admin/PagesControlPanel';
 import BetaTickerManager from '@/components/admin/BetaTickerManager';
+import AffiliatePayoutManager from '@/components/admin/AffiliatePayoutManager';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -117,6 +118,10 @@ export default function Admin() {
             <TabsTrigger value="affiliate" className="gap-2 px-3 py-2">
               <Percent className="w-4 h-4" />
               Affiliate
+            </TabsTrigger>
+            <TabsTrigger value="affiliate-payouts" className="gap-2 px-3 py-2">
+              <Wallet className="w-4 h-4" />
+              Payouts
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2 px-3 py-2">
               <Settings className="w-4 h-4" />
@@ -238,6 +243,10 @@ export default function Admin() {
 
           <TabsContent value="affiliate">
             <AffiliateSettings />
+          </TabsContent>
+
+          <TabsContent value="affiliate-payouts">
+            <AffiliatePayoutManager />
           </TabsContent>
 
           <TabsContent value="settings">
