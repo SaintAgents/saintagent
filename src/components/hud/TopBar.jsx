@@ -340,17 +340,24 @@ export default function TopBar({
       
       {/* Theme dots - shows when collapsed */}
       {isCollapsed && (
-        <div className="flex items-center gap-1.5 mr-2">
+        <div className="flex items-center gap-2 mr-2">
           <button
             onClick={() => {
               localStorage.setItem('theme', 'light');
               document.documentElement.setAttribute('data-theme', 'light');
             }}
             className={cn(
-              "w-3 h-3 rounded-full transition-all",
+              "w-5 h-5 rounded-full transition-all",
               "bg-gradient-to-br from-amber-300 to-orange-400",
-              document.documentElement.getAttribute('data-theme') === 'light' && "ring-2 ring-offset-1 ring-amber-500"
+              currentTheme === 'light' 
+                ? "ring-2 ring-offset-1 ring-amber-500" 
+                : "hover:ring-2 hover:ring-[#00ff88]"
             )}
+            style={{ 
+              boxShadow: currentTheme !== 'light' 
+                ? '0 0 6px rgba(0, 255, 136, 0.4), 0 0 0 2px rgba(0, 255, 136, 0.2)' 
+                : undefined 
+            }}
             title="Light theme"
           />
           <button
@@ -359,10 +366,13 @@ export default function TopBar({
               document.documentElement.setAttribute('data-theme', 'dark');
             }}
             className={cn(
-              "w-3 h-3 rounded-full transition-all",
+              "w-5 h-5 rounded-full transition-all",
               "bg-gradient-to-br from-slate-600 to-slate-900",
-              document.documentElement.getAttribute('data-theme') === 'dark' && "ring-2 ring-offset-1 ring-slate-500"
+              currentTheme === 'dark' 
+                ? "ring-2 ring-offset-1 ring-[#00ff88]" 
+                : "hover:ring-2 hover:ring-[#00ff88]"
             )}
+            style={{ boxShadow: '0 0 6px rgba(0, 255, 136, 0.5), 0 0 0 2px rgba(0, 255, 136, 0.25)' }}
             title="Dark theme"
           />
           <button
@@ -371,13 +381,15 @@ export default function TopBar({
               document.documentElement.setAttribute('data-theme', 'hacker');
             }}
             className={cn(
-              "w-3 h-3 rounded-full transition-all",
-              "bg-gradient-to-br from-green-400 to-emerald-600",
-              document.documentElement.getAttribute('data-theme') === 'hacker' && "ring-2 ring-offset-1 ring-green-500"
+              "w-5 h-5 rounded-full transition-all",
+              "bg-[#00ff00]",
+              currentTheme === 'hacker' 
+                ? "ring-2 ring-offset-1 ring-[#00ff00]" 
+                : "hover:ring-2 hover:ring-[#00ff00]"
             )}
+            style={{ boxShadow: '0 0 6px rgba(0, 255, 0, 0.6), 0 0 0 2px rgba(0, 255, 0, 0.3)' }}
             title="Hacker theme"
           />
-
           </div>
           )}
       {/* Mode Selector - hidden when collapsed */}
