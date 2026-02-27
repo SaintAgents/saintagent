@@ -208,14 +208,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
       }
     };
     const handleOpenChat = (e) => {
-      console.log('openFloatingChat event received:', e.detail);
-      if (e.detail) {
+      if (e.detail?.recipientId) {
         setFloatingChat({
           recipientId: e.detail.recipientId,
-          recipientName: e.detail.recipientName,
-          recipientAvatar: e.detail.recipientAvatar
+          recipientName: e.detail.recipientName || 'User',
+          recipientAvatar: e.detail.recipientAvatar || ''
         });
-        console.log('Floating chat state set:', e.detail);
       }
     };
     const handleOpenFloatingSidePanel = () => {
