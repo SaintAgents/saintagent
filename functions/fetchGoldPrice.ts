@@ -18,12 +18,18 @@ Deno.serve(async (req) => {
         'Accept': 'application/json'
       }
     });
-    if (!response.ok) {
-      console.error('API error:', response.status, response.statusText);
-      return Response.json({ error: 'Failed to fetch gold price' }, { status: 500 });
-    }
-
+    
     const data = await response.json();
+    console.log('API response:', JSON.stringify(data));
+    
+    // Check for API error response
+    if (data.status === 'failure' || !response.ok) {
+      console.error('API error:', data.error_code, data.error_message || response.statusText);
+      return Response.json({ 
+        error: data.error_message || 'Failed to fetch gold price',
+        error_code: data.error_code 
+      }, { status: 500 });
+    }
     console.log('Gold price data received:', JSON.stringify(data));
 
     // Extract gold price per gram
