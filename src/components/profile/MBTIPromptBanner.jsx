@@ -109,36 +109,15 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
                   Take Assessment Now
                 </Button>
                 
-                <DropdownMenu open={showDismissOptions} onOpenChange={setShowDismissOptions}>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="text-slate-500 hover:text-slate-700 gap-1"
-                    >
-                      <Clock className="w-4 h-4" />
-                      Maybe Later
-                      <ChevronDown className="w-3 h-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-48">
-                    <DropdownMenuItem onClick={() => handleDismiss('hour')}>
-                      Remind me in 1 hour
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDismiss('day')}>
-                      Remind me tomorrow
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDismiss('week')}>
-                      Remind me in a week
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDismiss('month')}>
-                      Remind me in a month
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDismiss('never')} className="text-slate-400">
-                      Don't remind me again
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => handleDismiss('never')}
+                  className="text-slate-500 hover:text-slate-700 gap-1"
+                >
+                  <Clock className="w-4 h-4" />
+                  Maybe Later
+                </Button>
               </div>
             </div>
             
