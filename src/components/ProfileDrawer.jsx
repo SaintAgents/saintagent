@@ -185,17 +185,18 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   };
 
   const handleMessage = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     // Open floating chat with this user
     const detail = {
       recipientId: userId,
       recipientName: profile?.display_name || 'User',
       recipientAvatar: profile?.avatar_url || ''
     };
-    console.log('Opening chat with:', detail);
-    window.dispatchEvent(new CustomEvent('openFloatingChat', { detail }));
-    document.dispatchEvent(new CustomEvent('openFloatingChat', { detail }));
+    // Dispatch to document (where layout listens)
+    document.dispatchEvent(new CustomEvent('openFloatingChat', { detail, bubbles: true }));
   };
 
   const handleBook = () => {
