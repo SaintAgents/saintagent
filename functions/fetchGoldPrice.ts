@@ -13,7 +13,11 @@ Deno.serve(async (req) => {
     
     console.log('Fetching gold price from metals.dev API...');
     
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
     if (!response.ok) {
       console.error('API error:', response.status, response.statusText);
       return Response.json({ error: 'Failed to fetch gold price' }, { status: 500 });
