@@ -212,13 +212,49 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     });
   };
 
+  // Resize image for mission cover
+  const resizeImage = (file, maxWidth = 800, maxHeight = 400) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width = img.width;
+        let height = img.height;
+        
+        // Scale to fit within max dimensions
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        if (height > maxHeight) {
+          width = (width * maxHeight) / height;
+          height = maxHeight;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.85);
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleUpload = async () => {
     if (!localFile) return;
     setUploading(true);
     try {
-      const res = await base44.integrations.Core.UploadFile({ file: localFile });
+      // Resize image before upload
+      const resizedFile = await resizeImage(localFile, 800, 400);
+      const res = await base44.integrations.Core.UploadFile({ file: resizedFile });
       if (res?.file_url) {
         setFormData({ ...formData, image_url: res.file_url });
+        setLocalFile(null);
       }
     } catch (err) {
       console.error('Upload failed:', err);
