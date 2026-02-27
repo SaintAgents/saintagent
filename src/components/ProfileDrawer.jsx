@@ -184,18 +184,18 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     dragOffsetRef.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
   };
 
-  const handleMessage = () => {
+  const handleMessage = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     // Open floating chat with this user
-    const event = new CustomEvent('openFloatingChat', {
-      detail: {
-        recipientId: userId,
-        recipientName: profile?.display_name || 'User',
-        recipientAvatar: profile?.avatar_url || ''
-      },
-      bubbles: true
-    });
-    console.log('Dispatching openFloatingChat event:', event.detail);
-    document.dispatchEvent(event);
+    const detail = {
+      recipientId: userId,
+      recipientName: profile?.display_name || 'User',
+      recipientAvatar: profile?.avatar_url || ''
+    };
+    console.log('Opening chat with:', detail);
+    window.dispatchEvent(new CustomEvent('openFloatingChat', { detail }));
+    document.dispatchEvent(new CustomEvent('openFloatingChat', { detail }));
   };
 
   const handleBook = () => {
