@@ -52,6 +52,7 @@ import Admin from './pages/Admin';
 import Advice from './pages/Advice';
 import AdviceDetail from './pages/AdviceDetail';
 import AffiliateCenter from './pages/AffiliateCenter';
+import AffiliateDashboard from './pages/AffiliateDashboard';
 import Authority144 from './pages/Authority144';
 import BetaFeedback from './pages/BetaFeedback';
 import Broadcast from './pages/Broadcast';
@@ -124,7 +125,6 @@ import Testimonials from './pages/Testimonials';
 import TopGGGMission from './pages/TopGGGMission';
 import UserGuide from './pages/UserGuide';
 import Videos from './pages/Videos';
-import AffiliateDashboard from './pages/AffiliateDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -134,6 +134,7 @@ export const PAGES = {
     "Advice": Advice,
     "AdviceDetail": AdviceDetail,
     "AffiliateCenter": AffiliateCenter,
+    "AffiliateDashboard": AffiliateDashboard,
     "Authority144": Authority144,
     "BetaFeedback": BetaFeedback,
     "Broadcast": Broadcast,
@@ -206,7 +207,6 @@ export const PAGES = {
     "TopGGGMission": TopGGGMission,
     "UserGuide": UserGuide,
     "Videos": Videos,
-    "AffiliateDashboard": AffiliateDashboard,
 }
 
 export const pagesConfig = {

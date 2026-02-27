@@ -19,8 +19,10 @@ import {
   Calendar,
   MessageSquare,
   Share2,
-  Settings
+  Settings,
+  Pencil
 } from "lucide-react";
+import CreateMissionModal from '@/components/CreateMissionModal';
 
 import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
@@ -31,6 +33,7 @@ import Breadcrumb from '@/components/hud/Breadcrumb';
 
 export default function MissionDetail() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [editModalOpen, setEditModalOpen] = useState(false);
   
   // Get mission ID from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -138,6 +141,9 @@ export default function MissionDetail() {
   };
 
   const isParticipant = mission?.participant_ids?.includes(profile?.user_id);
+  const isCreator = mission?.creator_id === user?.email;
+  const isAdmin = user?.role === 'admin';
+  const canEdit = isCreator || isAdmin;
   const completedTasks = mission?.tasks?.filter(t => t.completed).length || 0;
   const totalTasks = mission?.tasks?.length || 0;
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
@@ -210,10 +216,29 @@ export default function MissionDetail() {
               <Button variant="outline" size="icon" className="bg-white/80 backdrop-blur-sm">
                 <Share2 className="w-4 h-4" />
               </Button>
+              {canEdit && (
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="bg-white/80 backdrop-blur-sm"
+                  onClick={() => setEditModalOpen(true)}
+                >
+                  <Pencil className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Edit Mission Modal */}
+      {canEdit && (
+        <CreateMissionModal
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          editMission={mission}
+        />
+      )}
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-6 py-6">
