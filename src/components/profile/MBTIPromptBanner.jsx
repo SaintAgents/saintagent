@@ -45,10 +45,24 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   }
 
   const handleDismiss = (duration) => {
-    // Always set permanently dismissed for "Maybe Later"
     try {
-      localStorage.setItem('mbti_prompt_dismissed_permanently', 'true');
-      localStorage.setItem('mbti_prompt_dismissed_never', 'true');
+      if (duration === 'never') {
+        localStorage.setItem('mbti_prompt_dismissed_permanently', 'true');
+        // Also clear any temporary dismissal
+        localStorage.removeItem('mbti_prompt_dismissed_until');
+      } else {
+        const dismissUntil = new Date();
+        if (duration === 'hour') {
+          dismissUntil.setHours(dismissUntil.getHours() + 1);
+        } else if (duration === 'day') {
+          dismissUntil.setDate(dismissUntil.getDate() + 1);
+        } else if (duration === 'week') {
+          dismissUntil.setDate(dismissUntil.getDate() + 7);
+        } else if (duration === 'month') {
+          dismissUntil.setMonth(dismissUntil.getMonth() + 1);
+        }
+        localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
+      }
     } catch (e) {
       console.error('Failed to save dismiss state:', e);
     }
