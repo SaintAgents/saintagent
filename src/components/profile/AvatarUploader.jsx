@@ -11,6 +11,34 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
 
+  // Resize and crop image to square
+  const resizeImage = (file, size = 256) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      img.onload = () => {
+        canvas.width = size;
+        canvas.height = size;
+        
+        // Calculate crop to make it square (center crop)
+        const minDim = Math.min(img.width, img.height);
+        const sx = (img.width - minDim) / 2;
+        const sy = (img.height - minDim) / 2;
+        
+        // Draw cropped and resized image
+        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+        
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.9);
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleFileSelect = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -29,15 +57,18 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
       return;
     }
 
-    // Show preview
-    const reader = new FileReader();
-    reader.onload = (e) => setPreview(e.target.result);
-    reader.readAsDataURL(file);
-
-    // Upload file
     setUploading(true);
     try {
-      const result = await base44.integrations.Core.UploadFile({ file });
+      // Resize image to 256x256 square
+      const resizedFile = await resizeImage(file, 256);
+      
+      // Show preview of resized image
+      const reader = new FileReader();
+      reader.onload = (e) => setPreview(e.target.result);
+      reader.readAsDataURL(resizedFile);
+
+      // Upload resized file
+      const result = await base44.integrations.Core.UploadFile({ file: resizedFile });
       await onAvatarUpdate(result.file_url);
       setPreview(null);
     } catch (error) {
