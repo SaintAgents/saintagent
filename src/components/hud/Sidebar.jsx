@@ -942,16 +942,6 @@ export default function Sidebar({
           )}
         </Link>
 
-        {(isCollapsed && !inPopup) && (
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="w-full"
-            onClick={onToggle}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        )}
       </div>
     </>
   );
