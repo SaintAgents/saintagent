@@ -1860,7 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-      baseSpeed: Math.random() * 0.2 + 0.15,
       fontSize: baseFontSize,
       hueShift: 0, // For color variance
       trailLength: 15
