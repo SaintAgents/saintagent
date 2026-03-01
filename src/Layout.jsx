@@ -1861,9 +1861,6 @@ export default function Layout({ children, currentPageName }) {
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
     
-    // Array to track y position of each column
-    const drops = Array(columns).fill(1);
-    
     // Column properties that vary based on variance setting
     const columnProps = Array(columns).fill(0).map(() => ({
       baseSpeed: Math.random() * 0.2 + 0.15,
