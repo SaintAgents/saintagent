@@ -1860,12 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-      fontSize: baseFontSize,
-      hueShift: 0, // For color variance
-      trailLength: 15
-    }));
-    
-    const draw = () => {
       const { speed, brightness, variance } = settingsRef.current;
       
       // Update column properties based on variance
