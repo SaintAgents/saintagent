@@ -602,7 +602,7 @@ export default function Sidebar({
 
       {/* Appearance Section - Dedicated section for theme & effects */}
       <div className={cn(
-        "border-t border-slate-100 pb-12",
+        "border-t border-slate-100 mb-14",
         (isCollapsed && !inPopup) ? "px-2 py-1" : "px-2 py-1.5"
       )}>
         {/* Collapsed: Show theme icon button */}
@@ -773,7 +773,7 @@ export default function Sidebar({
 
       {/* Footer - Status Controls - hidden when collapsed or presence hidden */}
       <div className={cn(
-        "border-t border-slate-100 p-2 space-y-2 pb-12",
+        "border-t border-slate-100 p-2 space-y-2 mb-14",
         (isCollapsed && !inPopup) && "hidden",
         presenceHidden && !inPopup && "hidden"
       )}>
