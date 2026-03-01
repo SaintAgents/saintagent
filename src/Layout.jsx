@@ -1860,9 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-    
-    // Variance affects font size range
-    const baseFontSize = 14;
     const columns = Math.floor(canvas.width / baseFontSize);
     
     // Array to track y position of each column
