@@ -609,29 +609,30 @@ export default function Sidebar({
       {/* Appearance Section - Dedicated section for theme & effects */}
       <div className={cn(
         "border-t border-slate-100",
-        (isCollapsed && !inPopup) ? "px-2 py-1 pb-16" : "px-2 py-1",
+        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1",
         appearanceHidden && !inPopup && "hidden"
       )}>
-        {/* Collapsed: Show theme icon button */}
+        {/* Collapsed: Show theme icon button that cycles through themes */}
         {(isCollapsed && !inPopup) ? (
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() => setThemeOpen(!themeOpen)}
-                  className={cn(
-                    "w-full flex items-center justify-center p-2 rounded-lg transition-colors",
-                    themeOpen ? "bg-violet-100 text-violet-600" : "hover:bg-slate-50 text-slate-500"
-                  )}
+                  onClick={() => {
+                    // Cycle through themes: light -> dark -> hacker -> light
+                    const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'hacker' : 'light';
+                    onThemeToggle(nextTheme);
+                  }}
+                  className="w-full flex items-center justify-center p-2 rounded-lg transition-colors hover:bg-slate-50 text-slate-500"
                 >
-                  {theme === 'light' ? <Sun className="w-5 h-5" /> : 
-                   theme === 'dark' ? <Moon className="w-5 h-5" /> : 
-                   <Terminal className="w-5 h-5" />}
+                  {theme === 'light' ? <Sun className="w-5 h-5 text-amber-500" /> : 
+                   theme === 'dark' ? <Moon className="w-5 h-5 text-indigo-500" /> : 
+                   <Terminal className="w-5 h-5 text-green-500" />}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="right">
-                <p className="text-sm font-medium">Appearance</p>
-                <p className="text-xs text-slate-500">Theme: {theme}</p>
+                <p className="text-sm font-medium">Toggle Theme</p>
+                <p className="text-xs text-slate-500">Current: {theme} (click to cycle)</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
