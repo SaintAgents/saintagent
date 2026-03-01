@@ -743,6 +743,14 @@ export default function G3Dex() {
               <OrderBookDepth theme={currentTheme.accent} />
             )}
 
+            {activeTab === 'kyc' && (
+              <KYCVerification 
+                walletConnected={walletConnected}
+                walletAddress={walletAddress}
+                theme={currentTheme.accent}
+              />
+            )}
+
             {activeTab === 'history' && (
               <TransactionHistory walletAddress={walletAddress} theme={currentTheme.accent} />
             )}
