@@ -35,6 +35,7 @@ import StakingDashboard from '@/components/dex/StakingDashboard';
 import AnalyticsDashboard from '@/components/dex/AnalyticsDashboard';
 import AdoptionHeatmap from '@/components/dex/AdoptionHeatmap';
 import OrderBookDepth from '@/components/dex/OrderBookDepth';
+import KYCVerification from '@/components/dex/KYCVerification';
 import { DexCard, DexFloatingCard } from '@/components/dex/DexCardControls';
 
 export default function G3Dex() {
