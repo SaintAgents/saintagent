@@ -176,7 +176,7 @@ export default function Sidebar({
     try { return localStorage.getItem('presenceHidden') === 'true'; } catch { return false; }
   });
   const [themeOpen, setThemeOpen] = useState(false);
-  const [bgEffectOpen, setBgEffectOpen] = useState(false);
+  const [bgEffectOpen, setBgEffectOpen] = useState(true);
   const [navPopupCollapsed, setNavPopupCollapsed] = useState(false);
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
