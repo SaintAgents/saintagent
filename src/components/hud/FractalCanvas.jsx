@@ -34,6 +34,7 @@ export default function FractalCanvas() {
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      initFractals();
     };
     resize();
     window.addEventListener('resize', resize);
@@ -111,11 +112,16 @@ export default function FractalCanvas() {
     };
     
     let time = 0;
-    const fractals = [
-      { x: canvas.width * 0.2, y: canvas.height * 0.3, baseSize: 200, type: 'triangle', colorStart: 0, phase: 0 },
-      { x: canvas.width * 0.7, y: canvas.height * 0.4, baseSize: 180, type: 'square', colorStart: 2, phase: Math.PI },
-      { x: canvas.width * 0.5, y: canvas.height * 0.7, baseSize: 220, type: 'triangle', colorStart: 4, phase: Math.PI * 1.5 }
-    ];
+    let fractals = [];
+    
+    const initFractals = () => {
+      fractals = [
+        { x: canvas.width * 0.2, y: canvas.height * 0.3, baseSize: 280, type: 'triangle', colorStart: 0, phase: 0 },
+        { x: canvas.width * 0.7, y: canvas.height * 0.4, baseSize: 250, type: 'square', colorStart: 2, phase: Math.PI },
+        { x: canvas.width * 0.5, y: canvas.height * 0.7, baseSize: 300, type: 'triangle', colorStart: 4, phase: Math.PI * 1.5 }
+      ];
+    };
+    initFractals();
     
     const animate = () => {
       const { speed, brightness, variance } = settingsRef.current;
@@ -152,7 +158,7 @@ export default function FractalCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.6, zIndex: -1 }}
+      style={{ opacity: 0.9, zIndex: -1 }}
     />
   );
 }
