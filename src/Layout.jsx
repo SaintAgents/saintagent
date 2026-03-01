@@ -544,11 +544,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
     );
   }
 
-  // Determine if we should show starfield (dark/hacker theme + starfield effect selected)
-  const showStarfield = (theme === 'dark' || theme === 'hacker') && bgEffect === 'starfield';
-  const showMatrixRain = (theme === 'dark' || theme === 'hacker') && bgEffect === 'matrix';
-  const showNebula = (theme === 'dark' || theme === 'hacker') && bgEffect === 'nebula';
-  const showCircuit = (theme === 'dark' || theme === 'hacker') && bgEffect === 'circuit';
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
@@ -1855,8 +1850,15 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
-// Nebula canvas effect with speed/brightness/variance controls
-function NebulaCanvas() {
+export default function Layout({ children, currentPageName }) {
+  // CRITICAL: Public pages bypass ALL hooks and render immediately
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <>{children}</>;
+  }
+  
+  // Non-public pages use the authenticated layout with hooks
+  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
+}
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -1964,28 +1966,7 @@ function NebulaCanvas() {
         ctx.fill();
       });
       
-      animationRef.current = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.8, zIndex: -1 }}
-    />
-  );
-}
 
-// Matrix Rain Canvas - authentic green falling characters with speed/brightness/variance controls
-function MatrixRainCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -2102,28 +2083,7 @@ function MatrixRainCanvas() {
         drops[i] += prop.baseSpeed * speed * speedVariation;
       }
       
-      animationRef.current = requestAnimationFrame(draw);
-    };
-    
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.9, zIndex: -1 }}
-    />
-  );
-}
 
-// Circuit board effect with speed/brightness/variance controls
-function CircuitCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -2377,29 +2337,7 @@ function CircuitCanvas() {
         ctx.shadowBlur = 0;
       });
       
-      animationRef.current = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: -1 }}
-    />
-  );
-}
 
-// Main Layout component - check public pages BEFORE any hooks
-// Starfield canvas component for cosmic background effect
-function StarfieldCanvas({ rankCode = 'seeker' }) {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -2531,33 +2469,3 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
         ctx.fill();
         ctx.globalAlpha = 1;
       });
-      
-      animationRef.current = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [rankCode]);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: -1 }}
-    />
-  );
-}
-
-export default function Layout({ children, currentPageName }) {
-  // CRITICAL: Public pages bypass ALL hooks and render immediately
-  if (PUBLIC_PAGES.includes(currentPageName)) {
-    return <>{children}</>;
-  }
-  
-  // Non-public pages use the authenticated layout with hooks
-  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
-}
