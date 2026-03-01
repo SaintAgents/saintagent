@@ -1860,19 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-  
-  React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
     
     // Matrix characters (katakana + numbers + symbols)
     const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
