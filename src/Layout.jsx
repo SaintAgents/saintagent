@@ -1860,7 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-      const { speed, brightness, variance } = settingsRef.current;
       
       // Update column properties based on variance
       columnProps.forEach((prop, i) => {
