@@ -1414,24 +1414,7 @@ export default function Sidebar({
 
 
 
-      {/* Bottom Expand/Collapse Chevron */}
-      <button
-        onClick={onToggle}
-        className={cn(
-          "absolute bottom-0 left-0 right-0 h-10 flex items-center justify-center",
-          "bg-gradient-to-t from-violet-100 to-white/90 dark:from-slate-800 dark:to-slate-900/90",
-          "border-t border-slate-200 dark:border-slate-700",
-          "hover:from-violet-200 dark:hover:from-slate-700 transition-colors",
-          "z-10"
-        )}
-        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-      >
-        {isCollapsed ? (
-          <ChevronRight className="w-5 h-5 text-violet-600 dark:text-violet-400" />
-        ) : (
-          <ChevronLeft className="w-5 h-5 text-violet-600 dark:text-violet-400" />
-        )}
-      </button>
+
     </div>
   );
 }
