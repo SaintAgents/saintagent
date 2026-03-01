@@ -1860,7 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-    const columns = Math.floor(canvas.width / baseFontSize);
     
     // Array to track y position of each column
     const drops = Array(columns).fill(1);
