@@ -22,7 +22,6 @@ import SynchronicityEngine from '@/components/sections/SynchronicityEngine';
 import MeetingsMomentum from '@/components/sections/MeetingsMomentum';
 import MissionsQuests from '@/components/sections/MissionsQuests';
 import MarketplaceEarnLearn from '@/components/sections/MarketplaceEarnLearn';
-import { ArrowRight } from "lucide-react";
 import InfluenceReach from '@/components/sections/InfluenceReach';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
