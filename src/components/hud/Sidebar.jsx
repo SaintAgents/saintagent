@@ -1309,6 +1309,12 @@ export default function Sidebar({
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
+                    <RadioGroupItem value="fractal" id="popup-bg-fractal" className="h-3.5 w-3.5" />
+                    <Label htmlFor="popup-bg-fractal" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-pink-500" /> Fractal
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem value="off" id="popup-bg-off" className="h-3.5 w-3.5" />
                     <Label htmlFor="popup-bg-off" className="text-sm text-slate-900 cursor-pointer flex items-center gap-1.5">
                       <Ban className="w-3.5 h-3.5 text-slate-400" /> Off
