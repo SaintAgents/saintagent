@@ -1860,8 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
-    const charArray = chars.split('');
     
     // Variance affects font size range
     const baseFontSize = 14;
