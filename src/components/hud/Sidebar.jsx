@@ -758,7 +758,7 @@ export default function Sidebar({
 
       {/* Footer - Status Controls - hidden when collapsed or presence hidden */}
       <div className={cn(
-        "border-t border-slate-100 p-2 space-y-1.5 pb-14",
+        "border-t border-slate-100 p-2 space-y-1.5",
         (isCollapsed && !inPopup) && "hidden",
         presenceHidden && !inPopup && "hidden"
       )}>
