@@ -22,6 +22,7 @@ import SynchronicityEngine from '@/components/sections/SynchronicityEngine';
 import MeetingsMomentum from '@/components/sections/MeetingsMomentum';
 import MissionsQuests from '@/components/sections/MissionsQuests';
 import MarketplaceEarnLearn from '@/components/sections/MarketplaceEarnLearn';
+import { ArrowRight } from "lucide-react";
 import InfluenceReach from '@/components/sections/InfluenceReach';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
@@ -1672,11 +1673,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         {/* Main Grid - Collapsible Cards */}
         <div className="px-0 md:px-6 relative min-h-[1200px] w-full max-w-full overflow-x-hidden">
           <div className="block space-y-6">
-            {isCardVisible('news') && <CollapsibleCard title="News & Updates" cardId="news" icon={Newspaper} badge="New" badgeColor="violet" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/news_hero.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('news')} onToggleHide={() => toggleCardVisibility('news')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('News')}>
+            {isCardVisible('news') && <CollapsibleCard title="News & Updates" cardId="news" icon={Newspaper} badge="New" badgeColor="violet" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/news_hero.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('news')} onToggleHide={() => toggleCardVisibility('news')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('News')} navigateTo={createPageUrl('News')}>
               <NewsCard />
             </CollapsibleCard>}
 
-            {isCardVisible('heroGallery') && <CollapsibleCard title="Hero Gallery" cardId="heroGallery" icon={Image} badge="Live" badgeColor="emerald" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('heroGallery')} onToggleHide={() => toggleCardVisibility('heroGallery')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+            {isCardVisible('heroGallery') && <CollapsibleCard title="Hero Gallery" cardId="heroGallery" icon={Image} badge="Live" badgeColor="emerald" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('heroGallery')} onToggleHide={() => toggleCardVisibility('heroGallery')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}} navigateTo={() => document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }))}>
               <HeroImageSlideshow className="w-full" />
             </CollapsibleCard>}
 
@@ -1791,7 +1792,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -1825,7 +1826,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </Tabs>
             </CollapsibleCard>}
 
-            {isCardVisible('meetings') && <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('meetings') && <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Meetings')}>
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
                 <div className="text-center py-6">
@@ -1843,7 +1844,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('missions') && <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('missions') && <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Missions')}>
               <div className="space-y-3">
                 {missions.length === 0 ?
                 <div className="text-center py-6">
@@ -1861,7 +1862,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('projects') && <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('projects') && <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Projects')}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                 <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{totalProjects}</div></div>
                 <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submittedCount}</div></div>
@@ -1910,7 +1911,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         {(dragProvided) =>
                     <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
                             {id === 'market' &&
-                      <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('market')} onToggleHide={() => toggleCardVisibility('market')} onTossToSidePanel={handleTossToSidePanel}>
+                      <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('market')} onToggleHide={() => toggleCardVisibility('market')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Marketplace')}>
                                 <Tabs defaultValue="offers" className="w-full">
                                   <TabsList className="w-full grid grid-cols-3 mb-4">
                                     <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>
@@ -1934,9 +1935,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                                     <div className="text-center py-6"><p className="text-sm text-slate-500">No pending requests</p></div>
                                   </TabsContent>
                                   <TabsContent value="browse" className="space-y-3">
-                                    {listings.slice(0, 2).map((listing) =>
-                            <ListingCard key={listing.id} listing={listing} onAction={handleListingAction} />
-                            )}
+                                    <MarketplaceEarnLearn listings={[]} onAction={handleListingAction} />
                                   </TabsContent>
                                 </Tabs>
                               </CollapsibleCard>
