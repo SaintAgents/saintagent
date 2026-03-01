@@ -29,6 +29,7 @@ import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
 import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
+import CanvasBackgrounds from '@/components/hud/CanvasBackgrounds';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home', 'DemoPreview'];
 
@@ -544,11 +545,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
     );
   }
 
-  // Determine if we should show starfield (dark/hacker theme + starfield effect selected)
-  const showStarfield = (theme === 'dark' || theme === 'hacker') && bgEffect === 'starfield';
-  const showMatrixRain = (theme === 'dark' || theme === 'hacker') && bgEffect === 'matrix';
-  const showNebula = (theme === 'dark' || theme === 'hacker') && bgEffect === 'nebula';
-  const showCircuit = (theme === 'dark' || theme === 'hacker') && bgEffect === 'circuit';
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
@@ -1855,8 +1851,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   );
 }
 
-// Nebula canvas effect with speed/brightness/variance controls
-function NebulaCanvas() {
+export default function Layout({ children, currentPageName }) {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -2552,12 +2547,11 @@ function StarfieldCanvas({ rankCode = 'seeker' }) {
   );
 }
 
-export default function Layout({ children, currentPageName }) {
-  // CRITICAL: Public pages bypass ALL hooks and render immediately
-  if (PUBLIC_PAGES.includes(currentPageName)) {
-    return <>{children}</>;
-  }
-  
-  // Non-public pages use the authenticated layout with hooks
-  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
+// CRITICAL: Public pages bypass ALL hooks and render immediately
+if (PUBLIC_PAGES.includes(currentPageName)) {
+  return <>{children}</>;
+}
+
+// Non-public pages use the authenticated layout with hooks
+return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }

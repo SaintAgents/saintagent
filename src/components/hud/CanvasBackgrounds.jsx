@@ -1,8 +1,276 @@
 import React from 'react';
-import FractalCanvas from '@/components/hud/FractalCanvas';
 
-// Nebula canvas effect with speed/brightness/variance controls
-export function NebulaCanvas() {
+// Starfield canvas component for cosmic background effect
+function StarfieldCanvas({ rankCode = 'seeker' }) {
+  const canvasRef = React.useRef(null);
+  const animationRef = React.useRef(null);
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
+  
+  React.useEffect(() => {
+    try {
+      settingsRef.current = {
+        speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
+        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8,
+        variance: parseFloat(localStorage.getItem('matrixVariance')) || 0.5
+      };
+    } catch {}
+    const handleSettingsChange = (e) => {
+      if (e.detail) settingsRef.current = { 
+        speed: e.detail.speed ?? 1, 
+        brightness: e.detail.brightness ?? 0.8,
+        variance: e.detail.variance ?? 0.5
+      };
+    };
+    document.addEventListener('matrixSettingsChange', handleSettingsChange);
+    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+  }, []);
+  
+  // Rank-based star colors
+  const rankColors = {
+    seeker: ['#6b7280', '#9ca3af', '#00d4ff'],
+    initiate: ['#60a5fa', '#93c5fd', '#00d4ff'],
+    adept: ['#34d399', '#6ee7b7', '#00ff88'],
+    practitioner: ['#10b981', '#a7f3d0', '#00ff88'],
+    master: ['#f59e0b', '#fcd34d', '#fef3c7'],
+    sage: ['#8b5cf6', '#c4b5fd', '#f59e0b'],
+    oracle: ['#6366f1', '#a5b4fc', '#fde68a'],
+    ascended: ['#fef3c7', '#fde68a', '#f59e0b'],
+    guardian: ['#f59e0b', '#fcd34d', '#ffffff']
+  };
+  
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const stars = [];
+    const numStars = 150;
+    const colors = rankColors[rankCode] || rankColors.seeker;
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Initialize stars with varying depths
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 3 + 0.5,
+        baseSize: Math.random() * 2 + 0.5,
+        colorIdx: Math.floor(Math.random() * colors.length),
+        twinkle: Math.random() * Math.PI * 2,
+        baseTwinkleSpeed: Math.random() * 0.02 + 0.01,
+        wobblePhase: Math.random() * Math.PI * 2,
+        wobbleSpeed: Math.random() * 0.01 + 0.005,
+        wobbleAmplitude: Math.random() * 20 + 10
+      });
+    }
+    
+    const animate = () => {
+      const { speed, brightness, variance } = settingsRef.current;
+      ctx.fillStyle = `rgba(5, 5, 5, ${0.08 + variance * 0.04})`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      stars.forEach((star, i) => {
+        const twinkleSpeed = star.baseTwinkleSpeed * (1 + variance * Math.sin(Date.now() * 0.001 + i));
+        star.twinkle += twinkleSpeed * speed;
+        star.wobblePhase += star.wobbleSpeed * speed;
+        
+        star.x -= star.z * 0.15 * speed;
+        
+        const wobbleY = variance > 0.3 ? Math.sin(star.wobblePhase) * star.wobbleAmplitude * variance : 0;
+        
+        if (star.x < 0) {
+          star.x = canvas.width;
+          star.y = Math.random() * canvas.height;
+        }
+        
+        const sizeVariation = 1 + Math.sin(star.twinkle * 2) * variance * 0.5;
+        const size = star.baseSize * sizeVariation;
+        
+        const twinkleIntensity = 0.4 + variance * 0.3;
+        const alpha = (0.5 + Math.sin(star.twinkle) * twinkleIntensity) * brightness;
+        const glowSize = size * (1 + Math.sin(star.twinkle) * (0.3 + variance * 0.4));
+        
+        let color = colors[star.colorIdx];
+        if (variance > 0.6) {
+          const cycleIdx = Math.floor((star.colorIdx + star.twinkle * 0.1) % colors.length);
+          color = colors[cycleIdx];
+        }
+        
+        const drawY = star.y + wobbleY;
+        
+        const glowMultiplier = 3 + variance * 2;
+        const gradient = ctx.createRadialGradient(star.x, drawY, 0, star.x, drawY, glowSize * glowMultiplier);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(0.3 + variance * 0.2, color + '60');
+        gradient.addColorStop(1, 'transparent');
+        
+        ctx.beginPath();
+        ctx.arc(star.x, drawY, glowSize * glowMultiplier, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.globalAlpha = alpha * (0.3 + variance * 0.2);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(star.x, drawY, glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.globalAlpha = alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [rankCode]);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none"
+      style={{ opacity: 0.7, zIndex: -1 }}
+    />
+  );
+}
+
+// Matrix Rain Canvas
+function MatrixRainCanvas() {
+  const canvasRef = React.useRef(null);
+  const animationRef = React.useRef(null);
+  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
+  
+  React.useEffect(() => {
+    try {
+      const savedSpeed = parseFloat(localStorage.getItem('matrixSpeed')) || 1;
+      const savedBrightness = parseFloat(localStorage.getItem('matrixBrightness')) || 0.8;
+      const savedVariance = parseFloat(localStorage.getItem('matrixVariance')) || 0.5;
+      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness, variance: savedVariance };
+    } catch {}
+    
+    const handleSettingsChange = (e) => {
+      if (e.detail) {
+        settingsRef.current = { 
+          speed: e.detail.speed ?? settingsRef.current.speed, 
+          brightness: e.detail.brightness ?? settingsRef.current.brightness,
+          variance: e.detail.variance ?? settingsRef.current.variance
+        };
+      }
+    };
+    document.addEventListener('matrixSettingsChange', handleSettingsChange);
+    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+  }, []);
+  
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
+    const charArray = chars.split('');
+    
+    const baseFontSize = 14;
+    const columns = Math.floor(canvas.width / baseFontSize);
+    
+    const drops = Array(columns).fill(1);
+    
+    const columnProps = Array(columns).fill(0).map(() => ({
+      baseSpeed: Math.random() * 0.2 + 0.15,
+      fontSize: baseFontSize,
+      hueShift: 0,
+      trailLength: 15
+    }));
+    
+    const draw = () => {
+      const { speed, brightness, variance } = settingsRef.current;
+      
+      columnProps.forEach((prop, i) => {
+        prop.fontSize = baseFontSize + (Math.sin(Date.now() * 0.001 + i) * variance * 6);
+        prop.hueShift = variance * 30 * Math.sin(Date.now() * 0.0005 + i * 0.5);
+        prop.trailLength = Math.floor(10 + variance * 20 + Math.sin(Date.now() * 0.002 + i) * variance * 10);
+      });
+      
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.03 + (1 - variance) * 0.04})`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < drops.length; i++) {
+        const prop = columnProps[i];
+        ctx.font = `${Math.floor(prop.fontSize)}px monospace`;
+        
+        const char = charArray[Math.floor(Math.random() * charArray.length)];
+        
+        const x = i * baseFontSize;
+        const y = drops[i] * baseFontSize;
+        
+        const greenVal = Math.floor(255 * brightness);
+        const redVal = Math.floor(Math.max(0, prop.hueShift) * brightness);
+        const blueVal = Math.floor(Math.max(0, -prop.hueShift + 50 * variance) * brightness);
+        
+        ctx.fillStyle = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
+        ctx.shadowColor = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
+        ctx.shadowBlur = (10 + variance * 10) * brightness;
+        ctx.fillText(char, x, y);
+        
+        ctx.shadowBlur = 0;
+        for (let j = 1; j < prop.trailLength; j++) {
+          const trailY = y - (j * baseFontSize);
+          if (trailY > 0) {
+            const opacity = (1 - (j / prop.trailLength)) * brightness;
+            ctx.fillStyle = `rgba(${redVal}, ${greenVal}, ${blueVal}, ${opacity * 0.5})`;
+            const trailChar = charArray[Math.floor(Math.random() * charArray.length)];
+            ctx.fillText(trailChar, x, trailY);
+          }
+        }
+        
+        const resetThreshold = 0.97 - variance * 0.03;
+        if (y > canvas.height && Math.random() > resetThreshold) {
+          drops[i] = 0;
+        }
+        
+        const speedVariation = 1 + (Math.sin(Date.now() * 0.003 + i * 2) * variance * 0.5);
+        drops[i] += prop.baseSpeed * speed * speedVariation;
+      }
+      
+      animationRef.current = requestAnimationFrame(draw);
+    };
+    
+    draw();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none"
+      style={{ opacity: 0.9, zIndex: -1 }}
+    />
+  );
+}
+
+// Nebula canvas effect
+function NebulaCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -42,7 +310,6 @@ export function NebulaCanvas() {
     resize();
     window.addEventListener('resize', resize);
     
-    // Initialize nebula particles
     for (let i = 0; i < numParticles; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -125,128 +392,8 @@ export function NebulaCanvas() {
   );
 }
 
-// Matrix Rain Canvas - authentic green falling characters with speed/brightness/variance controls
-export function MatrixRainCanvas() {
-  const canvasRef = React.useRef(null);
-  const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
-  
-  React.useEffect(() => {
-    try {
-      const savedSpeed = parseFloat(localStorage.getItem('matrixSpeed')) || 1;
-      const savedBrightness = parseFloat(localStorage.getItem('matrixBrightness')) || 0.8;
-      const savedVariance = parseFloat(localStorage.getItem('matrixVariance')) || 0.5;
-      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness, variance: savedVariance };
-    } catch {}
-    
-    const handleSettingsChange = (e) => {
-      if (e.detail) {
-        settingsRef.current = { 
-          speed: e.detail.speed ?? settingsRef.current.speed, 
-          brightness: e.detail.brightness ?? settingsRef.current.brightness,
-          variance: e.detail.variance ?? settingsRef.current.variance
-        };
-      }
-    };
-    document.addEventListener('matrixSettingsChange', handleSettingsChange);
-    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
-  }, []);
-  
-  React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-    
-    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
-    const charArray = chars.split('');
-    const baseFontSize = 14;
-    const columns = Math.floor(canvas.width / baseFontSize);
-    const drops = Array(columns).fill(1);
-    const columnProps = Array(columns).fill(0).map(() => ({
-      baseSpeed: Math.random() * 0.2 + 0.15,
-      fontSize: baseFontSize,
-      hueShift: 0,
-      trailLength: 15
-    }));
-    
-    const draw = () => {
-      const { speed, brightness, variance } = settingsRef.current;
-      
-      columnProps.forEach((prop, i) => {
-        prop.fontSize = baseFontSize + (Math.sin(Date.now() * 0.001 + i) * variance * 6);
-        prop.hueShift = variance * 30 * Math.sin(Date.now() * 0.0005 + i * 0.5);
-        prop.trailLength = Math.floor(10 + variance * 20 + Math.sin(Date.now() * 0.002 + i) * variance * 10);
-      });
-      
-      ctx.fillStyle = `rgba(0, 0, 0, ${0.03 + (1 - variance) * 0.04})`;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      for (let i = 0; i < drops.length; i++) {
-        const prop = columnProps[i];
-        ctx.font = `${Math.floor(prop.fontSize)}px monospace`;
-        const char = charArray[Math.floor(Math.random() * charArray.length)];
-        const x = i * baseFontSize;
-        const y = drops[i] * baseFontSize;
-        
-        const greenVal = Math.floor(255 * brightness);
-        const redVal = Math.floor(Math.max(0, prop.hueShift) * brightness);
-        const blueVal = Math.floor(Math.max(0, -prop.hueShift + 50 * variance) * brightness);
-        
-        ctx.fillStyle = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
-        ctx.shadowColor = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
-        ctx.shadowBlur = (10 + variance * 10) * brightness;
-        ctx.fillText(char, x, y);
-        
-        ctx.shadowBlur = 0;
-        for (let j = 1; j < prop.trailLength; j++) {
-          const trailY = y - (j * baseFontSize);
-          if (trailY > 0) {
-            const opacity = (1 - (j / prop.trailLength)) * brightness;
-            ctx.fillStyle = `rgba(${redVal}, ${greenVal}, ${blueVal}, ${opacity * 0.5})`;
-            const trailChar = charArray[Math.floor(Math.random() * charArray.length)];
-            ctx.fillText(trailChar, x, trailY);
-          }
-        }
-        
-        const resetThreshold = 0.97 - variance * 0.03;
-        if (y > canvas.height && Math.random() > resetThreshold) {
-          drops[i] = 0;
-        }
-        
-        const speedVariation = 1 + (Math.sin(Date.now() * 0.003 + i * 2) * variance * 0.5);
-        drops[i] += prop.baseSpeed * speed * speedVariation;
-      }
-      
-      animationRef.current = requestAnimationFrame(draw);
-    };
-    
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.9, zIndex: -1 }}
-    />
-  );
-}
-
-// Circuit board effect with speed/brightness/variance controls
-export function CircuitCanvas() {
+// Circuit board effect
+function CircuitCanvas() {
   const canvasRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
@@ -296,6 +443,7 @@ export function CircuitCanvas() {
       const nodes = [];
       const traces = [];
       const gridLines = [];
+      
       const baseSpacing = 80;
       const gridSpacing = baseSpacing - (variance * 40);
       const cols = Math.ceil(canvas.width / gridSpacing) + 1;
@@ -487,152 +635,13 @@ export function CircuitCanvas() {
       animationRef.current = requestAnimationFrame(animate);
     };
     
-    draw();
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ opacity: 0.7, zIndex: -1 }}
-    />
-  );
-}
-
-// Starfield canvas component for cosmic background effect
-export function StarfieldCanvas({ rankCode = 'seeker' }) {
-  const canvasRef = React.useRef(null);
-  const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
-  
-  React.useEffect(() => {
-    try {
-      settingsRef.current = {
-        speed: parseFloat(localStorage.getItem('matrixSpeed')) || 1,
-        brightness: parseFloat(localStorage.getItem('matrixBrightness')) || 0.8,
-        variance: parseFloat(localStorage.getItem('matrixVariance')) || 0.5
-      };
-    } catch {}
-    const handleSettingsChange = (e) => {
-      if (e.detail) settingsRef.current = { 
-        speed: e.detail.speed ?? 1, 
-        brightness: e.detail.brightness ?? 0.8,
-        variance: e.detail.variance ?? 0.5
-      };
-    };
-    document.addEventListener('matrixSettingsChange', handleSettingsChange);
-    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
-  }, []);
-  
-  const rankColors = {
-    seeker: ['#6b7280', '#9ca3af', '#00d4ff'],
-    initiate: ['#60a5fa', '#93c5fd', '#00d4ff'],
-    adept: ['#34d399', '#6ee7b7', '#00ff88'],
-    practitioner: ['#10b981', '#a7f3d0', '#00ff88'],
-    master: ['#f59e0b', '#fcd34d', '#fef3c7'],
-    sage: ['#8b5cf6', '#c4b5fd', '#f59e0b'],
-    oracle: ['#6366f1', '#a5b4fc', '#fde68a'],
-    ascended: ['#fef3c7', '#fde68a', '#f59e0b'],
-    guardian: ['#f59e0b', '#fcd34d', '#ffffff']
-  };
-  
-  React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    const stars = [];
-    const numStars = 150;
-    const colors = rankColors[rankCode] || rankColors.seeker;
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-    
-    for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        z: Math.random() * 3 + 0.5,
-        baseSize: Math.random() * 2 + 0.5,
-        colorIdx: Math.floor(Math.random() * colors.length),
-        twinkle: Math.random() * Math.PI * 2,
-        baseTwinkleSpeed: Math.random() * 0.02 + 0.01,
-        wobblePhase: Math.random() * Math.PI * 2,
-        wobbleSpeed: Math.random() * 0.01 + 0.005,
-        wobbleAmplitude: Math.random() * 20 + 10
-      });
-    }
-    
-    const animate = () => {
-      const { speed, brightness, variance } = settingsRef.current;
-      ctx.fillStyle = `rgba(5, 5, 5, ${0.08 + variance * 0.04})`;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      stars.forEach((star, i) => {
-        const twinkleSpeed = star.baseTwinkleSpeed * (1 + variance * Math.sin(Date.now() * 0.001 + i));
-        star.twinkle += twinkleSpeed * speed;
-        star.wobblePhase += star.wobbleSpeed * speed;
-        star.x -= star.z * 0.15 * speed;
-        
-        const wobbleY = variance > 0.3 ? Math.sin(star.wobblePhase) * star.wobbleAmplitude * variance : 0;
-        
-        if (star.x < 0) {
-          star.x = canvas.width;
-          star.y = Math.random() * canvas.height;
-        }
-        
-        const sizeVariation = 1 + Math.sin(star.twinkle * 2) * variance * 0.5;
-        const size = star.baseSize * sizeVariation;
-        const twinkleIntensity = 0.4 + variance * 0.3;
-        const alpha = (0.5 + Math.sin(star.twinkle) * twinkleIntensity) * brightness;
-        const glowSize = size * (1 + Math.sin(star.twinkle) * (0.3 + variance * 0.4));
-        
-        let color = colors[star.colorIdx];
-        if (variance > 0.6) {
-          const cycleIdx = Math.floor((star.colorIdx + star.twinkle * 0.1) % colors.length);
-          color = colors[cycleIdx];
-        }
-        
-        const drawY = star.y + wobbleY;
-        const glowMultiplier = 3 + variance * 2;
-        const gradient = ctx.createRadialGradient(star.x, drawY, 0, star.x, drawY, glowSize * glowMultiplier);
-        gradient.addColorStop(0, color);
-        gradient.addColorStop(0.3 + variance * 0.2, color + '60');
-        gradient.addColorStop(1, 'transparent');
-        
-        ctx.beginPath();
-        ctx.arc(star.x, drawY, glowSize * glowMultiplier, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.globalAlpha = alpha * (0.3 + variance * 0.2);
-        ctx.fill();
-        
-        ctx.beginPath();
-        ctx.arc(star.x, drawY, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.globalAlpha = alpha;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      });
-      
-      animationRef.current = requestAnimationFrame(animate);
-    };
-    
     animate();
     
     return () => {
       window.removeEventListener('resize', resize);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [rankCode]);
+  }, []);
   
   return (
     <canvas
@@ -643,21 +652,18 @@ export function StarfieldCanvas({ rankCode = 'seeker' }) {
   );
 }
 
-// Background selector component
 export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
   const showStarfield = (theme === 'dark' || theme === 'hacker') && bgEffect === 'starfield';
   const showMatrixRain = (theme === 'dark' || theme === 'hacker') && bgEffect === 'matrix';
   const showNebula = (theme === 'dark' || theme === 'hacker') && bgEffect === 'nebula';
   const showCircuit = (theme === 'dark' || theme === 'hacker') && bgEffect === 'circuit';
-  const showFractal = (theme === 'dark' || theme === 'hacker') && bgEffect === 'fractal';
-  
+
   return (
     <>
       {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
       {showMatrixRain && <MatrixRainCanvas />}
       {showNebula && <NebulaCanvas />}
       {showCircuit && <CircuitCanvas />}
-      {showFractal && <FractalCanvas />}
     </>
   );
 }
