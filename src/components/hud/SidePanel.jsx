@@ -967,7 +967,32 @@ export default function SidePanel({
 
   return (
     <>
-      {/* Nudge handle when collapsed - only show if NOT on CommandDeck (GlobalSidePanelNudge handles it there) */}
+      {/* Toggle Button - ALWAYS visible, outside of panel container */}
+      {!isPoppedOff && (
+        <button
+          onClick={onToggle}
+          data-side-panel-handle
+          className={cn(
+            "fixed w-6 flex items-center justify-center transition-colors z-[9999]",
+            dockSide === 'right' ? "rounded-l-md" : "rounded-r-md"
+          )}
+          style={{ 
+            top: '84px', 
+            height: '48px',
+            right: dockSide === 'right' ? (isOpen ? `${panelWidth}px` : '0px') : 'auto',
+            left: dockSide === 'left' ? (isOpen ? `${panelWidth}px` : '0px') : 'auto'
+          }}>
+          <div className="w-full h-full rounded-md bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex flex-col items-center justify-center gap-0.5 relative shadow-md hover:shadow-lg transition-shadow">
+            <PanelRight className={cn("w-3 h-3 text-white/80 dark:text-[#00ff88]", dockSide === 'left' && "rotate-180")} />
+            {dockSide === 'right' ?
+              isOpen ? <ChevronRight className="w-3 h-3 text-white dark:text-[#00ff88]" /> : <ChevronLeft className="w-3 h-3 text-white dark:text-[#00ff88]" /> :
+              isOpen ? <ChevronLeft className="w-3 h-3 text-white dark:text-[#00ff88]" /> : <ChevronRight className="w-3 h-3 text-white dark:text-[#00ff88]" />
+            }
+          </div>
+        </button>
+      )}
+
+      {/* Main Panel Container */}
       <div
         className={cn(
           "fixed h-screen bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.2)] shadow-xl z-[55] transition-all duration-300 flex flex-col",
@@ -1020,25 +1045,6 @@ export default function SidePanel({
           </button>
         </div>
       </div>
-
-      {/* Toggle Button - always visible when docked */}
-      {!isPoppedOff && (
-      <button
-          onClick={onToggle}
-          data-side-panel-handle
-          className={cn(
-            "absolute w-5 flex items-center justify-center transition-colors z-[9999]",
-            dockSide === 'right' ? "-left-5 rounded-l-sm" : "-right-5 rounded-r-sm"
-          )}
-          style={{ top: '20px', height: '20px', minHeight: '20px', maxHeight: '20px' }}>
-        <div className="w-full h-full rounded-sm bg-gradient-to-br from-violet-400 to-purple-500 border border-violet-300 dark:bg-[#050505] dark:border-[#00ff88] flex items-center justify-center relative shadow-sm hover:shadow-md">
-          {dockSide === 'right' ?
-            isOpen ? <ChevronLeft className="w-2 h-2 text-white dark:text-[#00ff88]" /> : <ChevronRight className="w-2 h-2 text-white dark:text-[#00ff88]" /> :
-            isOpen ? <ChevronRight className="w-2 h-2 text-white dark:text-[#00ff88]" /> : <ChevronLeft className="w-2 h-2 text-white dark:text-[#00ff88]" />
-          }
-        </div>
-      </button>
-      )}
 
       <ScrollArea className="flex-1">
         <div className="p-4 pb-32 space-y-6">
