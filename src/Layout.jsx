@@ -1966,119 +1966,16 @@ export default function Layout({ children, currentPageName }) {
         ctx.fill();
       });
       
-
-  const canvasRef = React.useRef(null);
-  const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
-  
-  // Load initial settings from localStorage
-  React.useEffect(() => {
-    try {
-      const savedSpeed = parseFloat(localStorage.getItem('matrixSpeed')) || 1;
-      const savedBrightness = parseFloat(localStorage.getItem('matrixBrightness')) || 0.8;
-      const savedVariance = parseFloat(localStorage.getItem('matrixVariance')) || 0.5;
-      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness, variance: savedVariance };
-    } catch {}
-    
-    // Listen for settings changes
-    const handleSettingsChange = (e) => {
-      if (e.detail) {
-        settingsRef.current = { 
-          speed: e.detail.speed ?? settingsRef.current.speed, 
-          brightness: e.detail.brightness ?? settingsRef.current.brightness,
-          variance: e.detail.variance ?? settingsRef.current.variance
-        };
-      }
+      animationRef.current = requestAnimationFrame(animate);
     };
-    document.addEventListener('matrixSettingsChange', handleSettingsChange);
-    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
   }, []);
   
-  React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-    
-    // Matrix characters (katakana + numbers + symbols)
-    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*';
-    const charArray = chars.split('');
-    
-    // Variance affects font size range
-    const baseFontSize = 14;
-    const columns = Math.floor(canvas.width / baseFontSize);
-    
-    // Array to track y position of each column
-    const drops = Array(columns).fill(1);
-    
-    // Column properties that vary based on variance setting
-    const columnProps = Array(columns).fill(0).map(() => ({
-      baseSpeed: Math.random() * 0.2 + 0.15,
-      fontSize: baseFontSize,
-      hueShift: 0, // For color variance
-      trailLength: 15
-    }));
-    
-    const draw = () => {
-      const { speed, brightness, variance } = settingsRef.current;
-      
-      // Update column properties based on variance
-      columnProps.forEach((prop, i) => {
-        prop.fontSize = baseFontSize + (Math.sin(Date.now() * 0.001 + i) * variance * 6);
-        prop.hueShift = variance * 30 * Math.sin(Date.now() * 0.0005 + i * 0.5); // -30 to +30 hue shift
-        prop.trailLength = Math.floor(10 + variance * 20 + Math.sin(Date.now() * 0.002 + i) * variance * 10);
-      });
-      
-      // Semi-transparent black to create fade trail effect - variance affects fade speed
-      ctx.fillStyle = `rgba(0, 0, 0, ${0.03 + (1 - variance) * 0.04})`;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      for (let i = 0; i < drops.length; i++) {
-        const prop = columnProps[i];
-        ctx.font = `${Math.floor(prop.fontSize)}px monospace`;
-        
-        // Random character
-        const char = charArray[Math.floor(Math.random() * charArray.length)];
-        
-        const x = i * baseFontSize;
-        const y = drops[i] * baseFontSize;
-        
-        // Color with optional hue shift based on variance
-        const greenVal = Math.floor(255 * brightness);
-        const redVal = Math.floor(Math.max(0, prop.hueShift) * brightness);
-        const blueVal = Math.floor(Math.max(0, -prop.hueShift + 50 * variance) * brightness);
-        
-        ctx.fillStyle = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
-        ctx.shadowColor = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
-        ctx.shadowBlur = (10 + variance * 10) * brightness;
-        ctx.fillText(char, x, y);
-        
-        // Dimmer trail characters
-        ctx.shadowBlur = 0;
-        for (let j = 1; j < prop.trailLength; j++) {
-          const trailY = y - (j * baseFontSize);
-          if (trailY > 0) {
-            const opacity = (1 - (j / prop.trailLength)) * brightness;
-            ctx.fillStyle = `rgba(${redVal}, ${greenVal}, ${blueVal}, ${opacity * 0.5})`;
-            const trailChar = charArray[Math.floor(Math.random() * charArray.length)];
-            ctx.fillText(trailChar, x, trailY);
-          }
-        }
-        
-        // Reset drop to top when it reaches bottom (variance affects reset randomness)
-        const resetThreshold = 0.97 - variance * 0.03;
-        if (y > canvas.height && Math.random() > resetThreshold) {
-          drops[i] = 0;
-        }
-        
-        // Apply speed multiplier with variance-based variation
-        const speedVariation = 1 + (Math.sin(Date.now() * 0.003 + i * 2) * variance * 0.5);
-        drops[i] += prop.baseSpeed * speed * speedVariation;
-      }
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: -1 }} />;
+}
