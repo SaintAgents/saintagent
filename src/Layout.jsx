@@ -1852,32 +1852,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
 }
 
 export default function Layout({ children, currentPageName }) {
-  const canvasRef = React.useRef(null);
-  const animationRef = React.useRef(null);
-  const settingsRef = React.useRef({ speed: 1, brightness: 0.8, variance: 0.5 });
+  // CRITICAL: Public pages bypass ALL hooks and render immediately
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <>{children}</>;
+  }
   
-  // Load initial settings from localStorage
-  React.useEffect(() => {
-    try {
-      const savedSpeed = parseFloat(localStorage.getItem('matrixSpeed')) || 1;
-      const savedBrightness = parseFloat(localStorage.getItem('matrixBrightness')) || 0.8;
-      const savedVariance = parseFloat(localStorage.getItem('matrixVariance')) || 0.5;
-      settingsRef.current = { speed: savedSpeed, brightness: savedBrightness, variance: savedVariance };
-    } catch {}
-    
-    // Listen for settings changes
-    const handleSettingsChange = (e) => {
-      if (e.detail) {
-        settingsRef.current = { 
-          speed: e.detail.speed ?? settingsRef.current.speed, 
-          brightness: e.detail.brightness ?? settingsRef.current.brightness,
-          variance: e.detail.variance ?? settingsRef.current.variance
-        };
-      }
-    };
-    document.addEventListener('matrixSettingsChange', handleSettingsChange);
-    return () => document.removeEventListener('matrixSettingsChange', handleSettingsChange);
-  }, []);
+  // Non-public pages use the authenticated layout with hooks
+  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
+}
   
   React.useEffect(() => {
     const canvas = canvasRef.current;
