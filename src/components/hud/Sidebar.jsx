@@ -177,6 +177,10 @@ export default function Sidebar({
   });
   const [themeOpen, setThemeOpen] = useState(false);
   const [bgEffectOpen, setBgEffectOpen] = useState(true);
+  const [appearanceOpen, setAppearanceOpen] = useState(true);
+  const [appearanceHidden, setAppearanceHidden] = useState(() => {
+    try { return localStorage.getItem('appearanceHidden') === 'true'; } catch { return false; }
+  });
   const [navPopupCollapsed, setNavPopupCollapsed] = useState(false);
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
@@ -577,6 +581,23 @@ export default function Sidebar({
         </div>
       )}
 
+      {/* Show appearance toggle when hidden */}
+      {appearanceHidden && !isCollapsed && !inPopup && (
+        <div className="border-t border-slate-100 px-3 py-2">
+          <button
+            onClick={() => {
+              setAppearanceHidden(false);
+              try { localStorage.setItem('appearanceHidden', 'false'); } catch {}
+            }}
+            className="w-full flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors text-slate-500 hover:text-slate-700"
+            title="Show appearance section"
+          >
+            <EyeOff className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">Show Appearance</span>
+          </button>
+        </div>
+      )}
+
       {/* Leaderboard - always rendered so "Show Leaders" button appears */}
       <SidebarLeaderboard
         isCollapsed={isCollapsed}
@@ -588,7 +609,8 @@ export default function Sidebar({
       {/* Appearance Section - Dedicated section for theme & effects */}
       <div className={cn(
         "border-t border-slate-100",
-        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1"
+        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1",
+        appearanceHidden && !inPopup && "hidden"
       )}>
         {/* Collapsed: Show theme icon button */}
         {(isCollapsed && !inPopup) ? (
@@ -617,55 +639,82 @@ export default function Sidebar({
           /* Expanded: Full appearance controls */
           <div className="space-y-2">
             {/* Section Header */}
-            <div className="flex items-center gap-2 px-1">
-              <div className="p-1 rounded-lg bg-violet-100">
-                <Sun className="w-3 h-3 text-violet-600" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 px-1">
+                <div className="p-1 rounded-lg bg-violet-100">
+                  <Sun className="w-3 h-3 text-violet-600" />
+                </div>
+                <span className="text-[10px] font-semibold text-slate-900 uppercase tracking-wide">Appearance</span>
               </div>
-              <span className="text-[10px] font-semibold text-slate-900 uppercase tracking-wide">Appearance</span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setAppearanceOpen(!appearanceOpen)}
+                  className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                  title={appearanceOpen ? 'Collapse' : 'Expand'}
+                >
+                  {appearanceOpen ? (
+                    <ChevronUp className="w-4 h-4 text-slate-500" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    setAppearanceHidden(true);
+                    try { localStorage.setItem('appearanceHidden', 'true'); } catch {}
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                  title="Hide appearance section"
+                >
+                  <Eye className="w-3.5 h-3.5 text-slate-400" />
+                </button>
+              </div>
             </div>
 
-            {/* Quick Theme Switcher - Always visible */}
-            <div className="flex items-center gap-1.5 p-1.5 bg-slate-50 rounded-lg">
-              <button
-                onClick={() => onThemeToggle('light')}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-all",
-                  theme === 'light' 
-                    ? "bg-white shadow-sm text-amber-600 ring-1 ring-amber-200" 
-                    : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
-                )}
-              >
-                <Sun className="w-3 h-3" />
-                Light
-              </button>
-              <button
-                onClick={() => onThemeToggle('dark')}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-all",
-                  theme === 'dark' 
-                    ? "bg-slate-800 shadow-sm text-blue-400 ring-1 ring-blue-500/30" 
-                    : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
-                )}
-              >
-                <Moon className="w-3 h-3" />
-                Dark
-              </button>
-              <button
-                onClick={() => onThemeToggle('hacker')}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-all",
-                  theme === 'hacker' 
-                    ? "bg-black shadow-sm text-green-400 ring-1 ring-green-500/30" 
-                    : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
-                )}
-              >
-                <Terminal className="w-3 h-3" />
-                Hacker
-              </button>
-            </div>
+            {appearanceOpen && (
+              <>
+                {/* Quick Theme Switcher - Always visible */}
+                <div className="flex items-center gap-1.5 p-1.5 bg-slate-50 rounded-lg">
+                  <button
+                    onClick={() => onThemeToggle('light')}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-all",
+                      theme === 'light' 
+                        ? "bg-white shadow-sm text-amber-600 ring-1 ring-amber-200" 
+                        : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                    )}
+                  >
+                    <Sun className="w-3 h-3" />
+                    Light
+                  </button>
+                  <button
+                    onClick={() => onThemeToggle('dark')}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-all",
+                      theme === 'dark' 
+                        ? "bg-slate-800 shadow-sm text-blue-400 ring-1 ring-blue-500/30" 
+                        : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                    )}
+                  >
+                    <Moon className="w-3 h-3" />
+                    Dark
+                  </button>
+                  <button
+                    onClick={() => onThemeToggle('hacker')}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-all",
+                      theme === 'hacker' 
+                        ? "bg-black shadow-sm text-green-400 ring-1 ring-green-500/30" 
+                        : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                    )}
+                  >
+                    <Terminal className="w-3 h-3" />
+                    Hacker
+                  </button>
+                </div>
 
-            {/* Background Effects - only for Dark/Hacker themes */}
-            {(theme === 'dark' || theme === 'hacker') && (
+                {/* Background Effects - only for Dark/Hacker themes */}
+                {(theme === 'dark' || theme === 'hacker') && (
               <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
                 <CollapsibleTrigger className="w-full flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50 bg-slate-50/50">
                   <div className="flex items-center gap-2">
@@ -751,6 +800,8 @@ export default function Sidebar({
                   )}
                 </CollapsibleContent>
               </Collapsible>
+                )}
+              </>
             )}
           </div>
         )}
