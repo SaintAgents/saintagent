@@ -1860,9 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-    
-    // Column properties that vary based on variance setting
-    const columnProps = Array(columns).fill(0).map(() => ({
       baseSpeed: Math.random() * 0.2 + 0.15,
       fontSize: baseFontSize,
       hueShift: 0, // For color variance
