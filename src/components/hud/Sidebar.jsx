@@ -1067,6 +1067,24 @@ export default function Sidebar({
         </div>
       </div>
 
+      {/* Collapse/Expand Button - Below Logo */}
+      <button
+        onClick={onToggle}
+        className={cn(
+          "w-full h-8 flex items-center justify-center",
+          "bg-gradient-to-b from-violet-50 to-white dark:from-slate-800 dark:to-slate-900",
+          "border-b border-slate-200 dark:border-slate-700",
+          "hover:from-violet-100 dark:hover:from-slate-700 transition-colors"
+        )}
+        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
+        {isCollapsed ? (
+          <ChevronRight className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+        ) : (
+          <ChevronLeft className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+        )}
+      </button>
+
       {renderSidebarContent(false)}
 
       {/* Nav popup */}
