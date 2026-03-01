@@ -547,7 +547,7 @@ export default function G3Dex() {
         {/* Function Tabs Bar - ABOVE the chart */}
         <div className="max-w-[1600px] mx-auto mb-3">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-12 gap-0.5`}>
+            <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full grid grid-cols-13 gap-0.5`}>
               <TabsTrigger 
                 value="swap" 
                 className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
@@ -624,6 +624,13 @@ export default function G3Dex() {
               >
                 <Activity className="w-3 h-3 mr-1" />
                 Order Book
+              </TabsTrigger>
+              <TabsTrigger 
+                value="kyc" 
+                className={`data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-400 text-xs`}
+              >
+                <Shield className="w-3 h-3 mr-1" />
+                KYC
               </TabsTrigger>
               <TabsTrigger 
                 value="history" 
