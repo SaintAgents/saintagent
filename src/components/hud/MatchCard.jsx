@@ -199,11 +199,15 @@ export default function MatchCard({ match, onAction, onAskAI }) {
   { label: "Timing", value: match.timing_readiness || 0, icon: Clock }];
 
 
+  const [showDetailedTooltip, setShowDetailedTooltip] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={handleCardClick}
+      onMouseEnter={() => setShowDetailedTooltip(true)}
+      onMouseLeave={() => setShowDetailedTooltip(false)}
       className="group relative bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/60 dark:border-slate-700 p-3 hover:shadow-lg hover:border-violet-200 dark:hover:border-violet-600 transition-all duration-300 h-fit [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00]">
 
       <div className="flex items-center gap-3">
@@ -478,6 +482,91 @@ export default function MatchCard({ match, onAction, onAskAI }) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Detailed match reasons tooltip on hover */}
+      <AnimatePresence>
+        {showDetailedTooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full z-50 pointer-events-none"
+          >
+            <div className="bg-slate-900 dark:bg-black text-white rounded-xl shadow-2xl p-4 w-80 border border-slate-700 dark:border-[#00ff88] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:shadow-[0_0_20px_rgba(0,255,0,0.4)]">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h5 className="font-semibold text-sm flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-violet-400 [data-theme='hacker']_&:text-[#00ff00]" />
+                    Match Analysis
+                  </h5>
+                  <div className={cn(
+                    "px-2 py-0.5 rounded-full text-xs font-bold",
+                    scoreColor
+                  )}>
+                    {match.match_score}%
+                  </div>
+                </div>
+                
+                {match.ai_reasoning && (
+                  <p className="text-xs text-slate-300 dark:text-slate-400 [data-theme='hacker']_&:text-[#00dd00] leading-relaxed italic">
+                    "{match.ai_reasoning}"
+                  </p>
+                )}
+                
+                <div className="space-y-2">
+                  {scoreBreakdown.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <item.icon className="w-3.5 h-3.5 text-slate-400 [data-theme='hacker']_&:text-[#00ff00]" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="text-xs text-slate-300 [data-theme='hacker']_&:text-[#00ff00]">{item.label}</span>
+                          <span className="text-xs font-semibold text-white [data-theme='hacker']_&:text-[#00ff00]">{item.value}%</span>
+                        </div>
+                        <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-violet-500 to-purple-500 [data-theme='hacker']_&:from-[#00ff00] [data-theme='hacker']_&:to-[#00ff00] rounded-full transition-all"
+                            style={{ width: `${item.value}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {match.shared_values?.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-400 [data-theme='hacker']_&:text-[#00ff00] mb-1.5 font-medium">Shared Values:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {match.shared_values.slice(0, 5).map((value, i) => (
+                        <Badge key={i} className="text-[10px] bg-blue-500/20 text-blue-300 border-blue-400/30 [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:border-[#00ff00]">
+                          {value}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {match.spiritual_synergies?.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-400 [data-theme='hacker']_&:text-[#00ff00] mb-1.5 font-medium">Spiritual Synergies:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {match.spiritual_synergies.slice(0, 5).map((syn, i) => (
+                        <Badge key={i} className="text-[10px] bg-purple-500/20 text-purple-300 border-purple-400/30 [data-theme='hacker']_&:bg-[#001a00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:border-[#00ff00]">
+                          ✨ {syn}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Arrow pointer */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-slate-900 dark:border-t-black [data-theme='hacker']_&:border-t-black" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </motion.div>);
 
 }
