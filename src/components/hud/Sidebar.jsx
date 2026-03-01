@@ -684,7 +684,7 @@ export default function Sidebar({
                         : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
                     )}
                   >
-                    <Sun className="w-3 h-3" />
+                    <Sun className={cn("w-3 h-3", theme === 'light' && "text-amber-500")} />
                     Light
                   </button>
                   <button
@@ -696,7 +696,7 @@ export default function Sidebar({
                         : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
                     )}
                   >
-                    <Moon className="w-3 h-3" />
+                    <Moon className={cn("w-3 h-3", theme === 'dark' && "text-indigo-400")} />
                     Dark
                   </button>
                   <button
