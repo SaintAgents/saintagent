@@ -588,7 +588,7 @@ export default function Sidebar({
       {/* Appearance Section - Dedicated section for theme & effects */}
       <div className={cn(
         "border-t border-slate-100",
-        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1 pb-14"
+        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1"
       )}>
         {/* Collapsed: Show theme icon button */}
         {(isCollapsed && !inPopup) ? (
