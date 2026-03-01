@@ -166,8 +166,8 @@ export default function Layout({ children, currentPageName }) {
           </nav>
         </ScrollArea>
 
-        {/* Theme Toggle - Bottom of sidebar */}
-        <div className="p-3 border-t border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
+        {/* Theme Toggle - Bottom of sidebar with extra bottom padding */}
+        <div className="p-3 pb-16 border-t border-slate-200 dark:border-[rgba(0,255,136,0.2)]">
           <button
             onClick={cycleTheme}
             className={cn(
