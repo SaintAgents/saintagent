@@ -2460,12 +2460,3 @@ export default function Layout({ children, currentPageName }) {
         ctx.fillStyle = gradient;
         ctx.globalAlpha = alpha * (0.3 + variance * 0.2);
         ctx.fill();
-        
-        // Draw star core
-        ctx.beginPath();
-        ctx.arc(star.x, drawY, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.globalAlpha = alpha;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      });
