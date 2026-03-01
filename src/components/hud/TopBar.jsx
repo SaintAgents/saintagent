@@ -356,9 +356,13 @@ export default function TopBar({
       {isCollapsed && (
         <div className="flex items-center gap-2 mr-2">
           <button
-            onClick={() => {
-              localStorage.setItem('theme', 'light');
-              document.documentElement.setAttribute('data-theme', 'light');
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newTheme = 'light';
+              localStorage.setItem('theme', newTheme);
+              document.documentElement.setAttribute('data-theme', newTheme);
+              window.location.reload();
             }}
             className={cn(
               "w-5 h-5 rounded-full transition-all",
@@ -371,9 +375,13 @@ export default function TopBar({
             title="Light theme"
           />
           <button
-            onClick={() => {
-              localStorage.setItem('theme', 'dark');
-              document.documentElement.setAttribute('data-theme', 'dark');
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newTheme = 'dark';
+              localStorage.setItem('theme', newTheme);
+              document.documentElement.setAttribute('data-theme', newTheme);
+              window.location.reload();
             }}
             className={cn(
               "w-5 h-5 rounded-full transition-all",
@@ -386,9 +394,13 @@ export default function TopBar({
             title="Dark theme"
           />
           <button
-            onClick={() => {
-              localStorage.setItem('theme', 'hacker');
-              document.documentElement.setAttribute('data-theme', 'hacker');
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newTheme = 'hacker';
+              localStorage.setItem('theme', newTheme);
+              document.documentElement.setAttribute('data-theme', newTheme);
+              window.location.reload();
             }}
             className={cn(
               "w-5 h-5 rounded-full transition-all",
