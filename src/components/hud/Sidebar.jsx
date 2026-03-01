@@ -131,6 +131,7 @@ const NAV_ITEMS = [
   { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
   { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
   { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
+  { id: 'testimonials', label: 'Testimonials', Icon: Star, page: 'Testimonials', hint: 'View and share community testimonials' },
   // Web Pages Group - grouped together with special styling
   { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation', isWebPage: true },
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
@@ -576,22 +577,6 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Testimonials Link - centered when expanded */}
-      {(inPopup || !isCollapsed) && (
-        <div className={cn("border-t border-slate-100 px-3 py-1.5", isCollapsed && !inPopup && "p-1")}>
-          <Link
-            to={createPageUrl('Testimonials')}
-            className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-amber-50 transition-colors",
-              isCollapsed && !inPopup ? "justify-center" : "justify-center"
-            )}
-          >
-            <Star className="w-4 h-4 text-amber-500" />
-            {(!isCollapsed || inPopup) && <span className="text-xs font-semibold text-slate-700 hover:text-amber-600">Testimonials</span>}
-          </Link>
-        </div>
-      )}
-
       {/* Leaderboard - always rendered so "Show Leaders" button appears */}
       <SidebarLeaderboard
         isCollapsed={isCollapsed}
@@ -603,7 +588,7 @@ export default function Sidebar({
       {/* Appearance Section - Dedicated section for theme & effects */}
       <div className={cn(
         "border-t border-slate-100",
-        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1"
+        (isCollapsed && !inPopup) ? "px-2 py-1 pb-14" : "px-2 py-1 pb-14"
       )}>
         {/* Collapsed: Show theme icon button */}
         {(isCollapsed && !inPopup) ? (
