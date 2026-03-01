@@ -17,7 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Menu } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Popover,
@@ -106,8 +105,7 @@ export default function TopBar({
   onNotificationAction,
   sidebarCollapsed,
   isCollapsed,
-  onToggleCollapse,
-  onMobileMenuOpen
+  onToggleCollapse
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -298,22 +296,10 @@ export default function TopBar({
       sidebarCollapsed ? "md:left-16" : "md:left-64",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflow: 'visible' }}>
-      {/* Mobile Menu Button */}
-      {onMobileMenuOpen && (
-        <button
-          onClick={onMobileMenuOpen}
-          className="flex md:hidden items-center justify-center w-8 h-8 rounded-lg bg-violet-600 hover:bg-violet-700 transition-colors shrink-0"
-          style={{ zIndex: 10001 }}
-          title="Open menu"
-        >
-          <Menu className="w-5 h-5 text-white" />
-        </button>
-      )}
-
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => onToggleCollapse?.()}
-        className="hidden md:flex items-center justify-center w-6 h-6 md:w-7 md:h-7 rounded-md hover:bg-slate-200/60 transition-colors shrink-0"
+        className="flex items-center justify-center w-6 h-6 md:w-7 md:h-7 rounded-md hover:bg-slate-200/60 transition-colors shrink-0"
         style={{ zIndex: 10001, position: 'relative', pointerEvents: 'auto' }}
         title={isCollapsed ? "Expand top bar" : "Collapse top bar"}
       >
@@ -356,13 +342,9 @@ export default function TopBar({
       {isCollapsed && (
         <div className="flex items-center gap-2 mr-2">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const newTheme = 'light';
-              localStorage.setItem('theme', newTheme);
-              document.documentElement.setAttribute('data-theme', newTheme);
-              window.location.reload();
+            onClick={() => {
+              localStorage.setItem('theme', 'light');
+              document.documentElement.setAttribute('data-theme', 'light');
             }}
             className={cn(
               "w-5 h-5 rounded-full transition-all",
@@ -375,13 +357,9 @@ export default function TopBar({
             title="Light theme"
           />
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const newTheme = 'dark';
-              localStorage.setItem('theme', newTheme);
-              document.documentElement.setAttribute('data-theme', newTheme);
-              window.location.reload();
+            onClick={() => {
+              localStorage.setItem('theme', 'dark');
+              document.documentElement.setAttribute('data-theme', 'dark');
             }}
             className={cn(
               "w-5 h-5 rounded-full transition-all",
@@ -394,13 +372,9 @@ export default function TopBar({
             title="Dark theme"
           />
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const newTheme = 'hacker';
-              localStorage.setItem('theme', newTheme);
-              document.documentElement.setAttribute('data-theme', newTheme);
-              window.location.reload();
+            onClick={() => {
+              localStorage.setItem('theme', 'hacker');
+              document.documentElement.setAttribute('data-theme', 'hacker');
             }}
             className={cn(
               "w-5 h-5 rounded-full transition-all",
