@@ -1,11 +1,29 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, ArrowRight } from "lucide-react";
+import { ShoppingBag, ArrowRight, TrendingUp } from "lucide-react";
 import ListingCard from '@/components/hud/ListingCard';
 import HelpHint from '@/components/hud/HelpHint';
 
 export default function MarketplaceEarnLearn({ listings = [], onAction }) {
+  // Fetch top trending listings (most viewed or most bookings)
+  const { data: allListings = [] } = useQuery({
+    queryKey: ['allListings'],
+    queryFn: () => base44.entities.Listing.filter({ status: 'active' }),
+    staleTime: 60000
+  });
+  
+  const trendingListings = React.useMemo(() => {
+    return [...allListings]
+      .sort((a, b) => {
+        const scoreA = (a.views_count || 0) + (a.bookings_count || 0) * 3 + (a.requests_count || 0) * 2;
+        const scoreB = (b.views_count || 0) + (b.bookings_count || 0) * 3 + (b.requests_count || 0) * 2;
+        return scoreB - scoreA;
+      })
+      .slice(0, 3);
+  }, [allListings]);
   return (
     <div>
       <div className="flex justify-end mb-2">
@@ -43,7 +61,24 @@ export default function MarketplaceEarnLearn({ listings = [], onAction }) {
         </div>
       </TabsContent>
       <TabsContent value="browse" className="space-y-3">
-        {listings.length === 0 ? (
+        {/* Trending Section */}
+        {trendingListings.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5 px-1">
+              <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 [data-theme='hacker']_&:text-[#00ff00] uppercase tracking-wide">Trending Now</span>
+            </div>
+            {trendingListings.map((listing) => (
+              <ListingCard 
+                key={listing.id} 
+                listing={listing} 
+                onAction={onAction}
+              />
+            ))}
+          </div>
+        )}
+        
+        {listings.length === 0 && trendingListings.length === 0 && (
           <div className="text-center py-6">
             <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-3" />
             <p className="text-sm text-slate-500">No listings available yet</p>
@@ -56,14 +91,6 @@ export default function MarketplaceEarnLearn({ listings = [], onAction }) {
               Browse Marketplace
             </Button>
           </div>
-        ) : (
-          listings.map((listing) => (
-            <ListingCard 
-              key={listing.id} 
-              listing={listing} 
-              onAction={onAction}
-            />
-          ))
         )}
       </TabsContent>
     </Tabs>

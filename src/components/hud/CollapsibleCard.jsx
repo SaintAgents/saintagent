@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -34,7 +34,8 @@ export default function CollapsibleCard({
   forceOpen,
   isHidden,
   onToggleHide,
-  onTossToSidePanel // Prop for toss functionality (button only)
+  onTossToSidePanel, // Prop for toss functionality (button only)
+  navigateTo // Navigation URL or page name
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const cardRef = useRef(null);
@@ -100,6 +101,25 @@ export default function CollapsibleCard({
             </div>
           }
           <h3 className="font-semibold text-slate-900 tracking-tight hidden md:block truncate">{typeof title === 'string' ? title : title}</h3>
+          {navigateTo && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs text-violet-600 hover:text-violet-700 hover:bg-violet-50 shrink-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (typeof navigateTo === 'function') {
+                  navigateTo();
+                } else {
+                  window.location.href = navigateTo;
+                }
+              }}
+              title="Go to full page"
+            >
+              <ArrowRight className="w-3.5 h-3.5 mr-1" />
+              View All
+            </Button>
+          )}
           {badgeImage && (
             <img 
               src={badgeImage} 
