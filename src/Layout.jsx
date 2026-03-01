@@ -1860,9 +1860,6 @@ export default function Layout({ children, currentPageName }) {
   // Non-public pages use the authenticated layout with hooks
   return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
 }
-      
-      // Update column properties based on variance
-      columnProps.forEach((prop, i) => {
         prop.fontSize = baseFontSize + (Math.sin(Date.now() * 0.001 + i) * variance * 6);
         prop.hueShift = variance * 30 * Math.sin(Date.now() * 0.0005 + i * 0.5); // -30 to +30 hue shift
         prop.trailLength = Math.floor(10 + variance * 20 + Math.sin(Date.now() * 0.002 + i) * variance * 10);
