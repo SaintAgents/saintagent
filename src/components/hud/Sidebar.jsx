@@ -733,6 +733,7 @@ export default function Sidebar({
                       { value: 'starfield', icon: Star, label: 'Stars', color: 'text-teal-400' },
                       { value: 'nebula', icon: Cloud, label: 'Nebula', color: 'text-purple-500' },
                       { value: 'circuit', icon: Waves, label: 'Circuit', color: 'text-cyan-500' },
+                      { value: 'fractal', icon: Sparkles, label: 'Fractal', color: 'text-pink-500' },
                       { value: 'off', icon: Ban, label: 'Off', color: 'text-slate-400' },
                     ].map((effect) => (
                       <button
