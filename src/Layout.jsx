@@ -20,6 +20,8 @@ import ProfileDrawer from '@/components/ProfileDrawer';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
 import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
 import DatingMatchesPopup from '@/components/hud/DatingMatchesPopup';
+import HelpSupportAgent from '@/components/support/HelpSupportAgent';
+import GlobalChatWidget from '@/components/community/GlobalChatWidget';
 
 // Navigation items
 const NAV_ITEMS = [
@@ -226,6 +228,12 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Dating Matches Popup */}
       <DatingMatchesPopup />
+
+      {/* Help Support Agent */}
+      <HelpSupportAgent />
+
+      {/* Global Chat Widget */}
+      <GlobalChatWidget />
     </div>
   );
 }
