@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 
 import TopBar from '@/components/hud/TopBar';
-import MobileTabBar from '@/components/hud/MobileTabBar';
 import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
@@ -194,6 +193,7 @@ export default function Layout({ children, currentPageName }) {
         sidebarCollapsed={sidebarCollapsed}
         isCollapsed={topbarCollapsed}
         onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
+        onMobileMenuOpen={() => setMobileMenuOpen(true)}
       />
 
       {/* Main Content */}
@@ -207,11 +207,7 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
 
-      {/* Mobile Menu Button */}
-      <MobileTabBar
-        currentPage={currentPageName}
-        onMenuOpen={() => setMobileMenuOpen(true)}
-      />
+      {/* Mobile Menu Button - in TopBar on mobile */}
 
       {/* Mobile Menu Sheet */}
       <MobileMenuSheet
