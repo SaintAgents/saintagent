@@ -11,7 +11,7 @@ import {
   Settings, Trophy, Folder, Radio, UserCircle, HelpCircle,
   Heart, Zap, MessageSquare, Compass, UserPlus, BookOpen, 
   Activity, Globe, Briefcase, ChevronLeft, ChevronRight,
-  Orbit, Newspaper, Sun, Moon, Terminal, Menu
+  Orbit, Newspaper, Sun, Moon, Terminal, Menu, Shield
 } from 'lucide-react';
 
 import TopBar from '@/components/hud/TopBar';
