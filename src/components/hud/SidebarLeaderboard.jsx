@@ -343,13 +343,13 @@ export default function SidebarLeaderboard({
   // If hidden, show minimal toggle - keep within sidebar bounds
   if (leaderboardHidden && !inPopup) {
     return (
-      <div className="border-t border-slate-100 px-3 py-2 pb-14 flex-shrink-0">
+      <div className="border-t border-slate-100 px-3 py-1.5 flex-shrink-0">
         <button
           onClick={() => setLeaderboardHidden(false)}
-          className="w-full flex items-center justify-center gap-2 px-2 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700 border border-slate-200"
+          className="w-full flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700 border border-slate-200"
           title="Show leaderboard"
         >
-          <Trophy className="w-4 h-4 text-amber-500" />
+          <Trophy className="w-3.5 h-3.5 text-amber-500" />
           <span className="text-xs font-medium">Show Leaders</span>
         </button>
       </div>
@@ -358,9 +358,9 @@ export default function SidebarLeaderboard({
 
   return (
     <>
-      <div className={cn("border-t border-slate-100 p-3 pb-14", isCollapsed && !inPopup && "p-1 pb-14")}>
+      <div className={cn("border-t border-slate-100 p-2", isCollapsed && !inPopup && "p-1")}>
         {/* Header */}
-        <div className={cn("mb-3 px-2", isCollapsed && !inPopup && "mb-1 px-0")}>
+        <div className={cn("mb-2 px-1", isCollapsed && !inPopup && "mb-1 px-0")}>
           <div className={cn("flex items-center justify-between gap-1 min-w-0", isCollapsed && !inPopup && "justify-center")}>
             <button
               onClick={() => setLeaderboardOpen(!leaderboardOpen)}
