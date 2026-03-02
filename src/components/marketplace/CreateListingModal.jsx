@@ -505,12 +505,6 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
         );
 
       case 3:
-
-      case 99: // unused placeholder
-        return null;
-        
-      // case 3 is the image step (defined above via case 3:)
-      default:
         return (
           <div className="space-y-4">
             <div>
