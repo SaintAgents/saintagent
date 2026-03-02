@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Minimize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip, Move } from "lucide-react";
+import { X, Send, Minimize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip, Move, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [videoFullscreen, setVideoFullscreen] = useState(false);
   const [showIcebreakers, setShowIcebreakers] = useState(false);
+  const [creatingZoom, setCreatingZoom] = useState(false);
   const scrollRef = useRef(null);
   const typingRef = useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
@@ -204,6 +206,47 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
     });
   };
 
+  const handleCreateZoomMeeting = async () => {
+    if (creatingZoom) return;
+    setCreatingZoom(true);
+    try {
+      const response = await base44.functions.invoke('zoomMeeting', {
+        action: 'create',
+        meetingDetails: {
+          topic: `Meeting with ${recipientName}`,
+          duration: 60
+        },
+        sendEmails: true,
+        hostEmail: user.email,
+        hostName: user.full_name,
+        guestEmail: recipientId,
+        guestName: recipientName
+      });
+      
+      if (response.data?.success) {
+        const joinUrl = response.data.meeting.join_url;
+        // Send the meeting link as a message
+        sendMutation.mutate({
+          from_user_id: user.email,
+          to_user_id: recipientId,
+          from_name: user.full_name,
+          to_name: recipientName,
+          from_avatar: user.avatar_url,
+          to_avatar: recipientAvatar,
+          content: `📹 I've created a Zoom meeting for us!\n\nJoin here: ${joinUrl}`,
+          message_type: 'zoom_invite'
+        });
+        toast.success('Zoom meeting created and link sent!');
+      } else {
+        toast.error('Failed to create Zoom meeting');
+      }
+    } catch (error) {
+      console.error('Zoom error:', error);
+      toast.error('Failed to create Zoom meeting');
+    }
+    setCreatingZoom(false);
+  };
+
   if (minimized) {
     return (
       <div className="fixed bottom-4 right-[400px] z-[150]">
@@ -272,12 +315,13 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
           <Button
             size="icon"
             variant="ghost"
-            onClick={() => setVideoCallOpen(true)}
+            onClick={handleCreateZoomMeeting}
+            disabled={creatingZoom}
             className="h-7 w-7 text-white hover:bg-violet-700"
-            title="Start video call"
+            title="Create Zoom Meeting"
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <Video className="w-4 h-4" />
+            {creatingZoom ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
           </Button>
           <Button
             size="icon"
