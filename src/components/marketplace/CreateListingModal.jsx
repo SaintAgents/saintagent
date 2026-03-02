@@ -596,9 +596,6 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
             </div>
           </div>
         );
-
-      default:
-        return null;
     }
   };
 
