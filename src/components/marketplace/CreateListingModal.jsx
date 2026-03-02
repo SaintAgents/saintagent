@@ -19,12 +19,22 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Check, Upload, Link, Image, AlertCircle } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, ChevronRight, Check, Upload, Link, Image, AlertCircle, X, Plus } from 'lucide-react';
 
 const STEPS = [
   { id: 'basics', label: 'Basics' },
+  { id: 'skills', label: 'Skills' },
   { id: 'details', label: 'Details' },
   { id: 'media', label: 'Image' }
+];
+
+const SKILL_SUGGESTIONS = [
+  'Strategy', 'Legal Structuring', 'AI Prompt Engineering', 'Web Development',
+  'Design', 'Governance Advisory', 'Finance Consulting', 'Digital Rights',
+  'Writing', 'Mentorship', 'Coaching', 'Marketing', 'Video Production',
+  'Audio Engineering', 'Project Management', 'Data Analysis', 'Blockchain',
+  'Smart Contracts', 'Community Building', 'Content Creation'
 ];
 
 export default function CreateListingModal({ open, onOpenChange, onCreate }) {
@@ -34,12 +44,19 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
     listing_type: 'offer',
     category: 'session',
     price_amount: '',
+    price_ggg: '',
+    time_credits: '',
+    payment_type: 'fiat',
     is_free: false,
     duration_minutes: 60,
     delivery_mode: 'online',
+    delivery_days: 7,
+    revisions_included: 1,
+    skills: [],
     description: '',
     image_url: ''
   });
+  const [skillInput, setSkillInput] = React.useState('');
   const [errors, setErrors] = React.useState({});
   const [uploading, setUploading] = React.useState(false);
   const [localFile, setLocalFile] = React.useState(null);
@@ -51,14 +68,21 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
       setErrors({});
       setLocalFile(null);
       setImageMode('upload');
+      setSkillInput('');
       setForm({
         title: '',
         listing_type: 'offer',
         category: 'session',
         price_amount: '',
+        price_ggg: '',
+        time_credits: '',
+        payment_type: 'fiat',
         is_free: false,
         duration_minutes: 60,
         delivery_mode: 'online',
+        delivery_days: 7,
+        revisions_included: 1,
+        skills: [],
         description: '',
         image_url: ''
       });
@@ -76,9 +100,17 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
       }
     }
     
-    if (stepIndex === 1) {
-      if (!form.is_free && (!form.price_amount || parseFloat(form.price_amount) <= 0)) {
+    // Step 1 is now skills - no validation required
+    
+    if (stepIndex === 2) {
+      if (!form.is_free && form.payment_type === 'fiat' && (!form.price_amount || parseFloat(form.price_amount) <= 0)) {
         newErrors.price_amount = 'Enter a price or mark as free';
+      }
+      if (!form.is_free && form.payment_type === 'ggg_only' && (!form.price_ggg || parseFloat(form.price_ggg) <= 0)) {
+        newErrors.price_ggg = 'Enter GGG amount';
+      }
+      if (!form.is_free && form.payment_type === 'time_only' && (!form.time_credits || parseFloat(form.time_credits) <= 0)) {
+        newErrors.time_credits = 'Enter time credits';
       }
       if (!form.description.trim()) {
         newErrors.description = 'Description is required';
@@ -89,6 +121,18 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const addSkill = (skill) => {
+    const trimmed = skill.trim();
+    if (trimmed && !form.skills.includes(trimmed)) {
+      setForm({ ...form, skills: [...form.skills, trimmed] });
+    }
+    setSkillInput('');
+  };
+
+  const removeSkill = (skill) => {
+    setForm({ ...form, skills: form.skills.filter(s => s !== skill) });
   };
 
   const handleNext = () => {
@@ -225,42 +269,174 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
       case 1:
         return (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3 items-start">
-              <div>
-                <Label className={cn("listing-modal-label", errors.price_amount ? 'text-red-600' : '')}>Price ($)</Label>
+            <div>
+              <Label className="listing-modal-label">Skills & Tags</Label>
+              <p className="text-xs text-slate-500 mt-1 mb-2 listing-modal-hint">
+                Add skills related to this listing to help buyers find you
+              </p>
+              
+              {/* Selected skills */}
+              {form.skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {form.skills.map(skill => (
+                    <Badge key={skill} variant="secondary" className="px-2 py-1 gap-1">
+                      {skill}
+                      <button onClick={() => removeSkill(skill)} className="ml-1 hover:text-red-500">
+                        <X className="w-3 h-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              
+              {/* Skill input */}
+              <div className="flex gap-2">
                 <Input
-                  type="text"
-                  inputMode="decimal"
-                  className={cn("mt-2 listing-modal-input", errors.price_amount && "border-red-300")}
-                  placeholder="0"
-                  value={form.price_amount}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                      setForm({ ...form, price_amount: val });
-                      if (errors.price_amount) setErrors({ ...errors, price_amount: null });
+                  className="listing-modal-input"
+                  placeholder="Type a skill and press Enter"
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addSkill(skillInput);
                     }
                   }}
-                  disabled={form.is_free}
                 />
-                {renderError('price_amount')}
+                <Button 
+                  type="button" 
+                  size="icon"
+                  variant="outline"
+                  onClick={() => addSkill(skillInput)}
+                  disabled={!skillInput.trim()}
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
               </div>
+              
+              {/* Skill suggestions */}
+              <div className="mt-3">
+                <p className="text-xs text-slate-500 mb-2">Suggestions:</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {SKILL_SUGGESTIONS.filter(s => !form.skills.includes(s)).slice(0, 10).map(skill => (
+                    <button
+                      key={skill}
+                      type="button"
+                      onClick={() => addSkill(skill)}
+                      className="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-violet-100 hover:text-violet-700 transition-colors"
+                    >
+                      + {skill}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-4">
+            {/* Payment Type */}
+            <div>
+              <Label className="listing-modal-label">Payment Method</Label>
+              <Select value={form.payment_type} onValueChange={(v) => setForm({ ...form, payment_type: v })}>
+                <SelectTrigger className="mt-2 listing-modal-input">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fiat">USD ($)</SelectItem>
+                  <SelectItem value="ggg_only">GGG Tokens Only</SelectItem>
+                  <SelectItem value="time_only">Time Credits Only</SelectItem>
+                  <SelectItem value="hybrid">Hybrid (GGG + Time)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Price fields based on payment type */}
+            <div className="grid grid-cols-2 gap-3 items-start">
+              {(form.payment_type === 'fiat' || form.payment_type === 'hybrid') && (
+                <div>
+                  <Label className={cn("listing-modal-label", errors.price_amount ? 'text-red-600' : '')}>Price ($)</Label>
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    className={cn("mt-2 listing-modal-input", errors.price_amount && "border-red-300")}
+                    placeholder="0"
+                    value={form.price_amount}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                        setForm({ ...form, price_amount: val });
+                        if (errors.price_amount) setErrors({ ...errors, price_amount: null });
+                      }
+                    }}
+                    disabled={form.is_free}
+                  />
+                  {renderError('price_amount')}
+                </div>
+              )}
+              
+              {(form.payment_type === 'ggg_only' || form.payment_type === 'hybrid') && (
+                <div>
+                  <Label className={cn("listing-modal-label", errors.price_ggg ? 'text-red-600' : '')}>GGG Tokens</Label>
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    className={cn("mt-2 listing-modal-input", errors.price_ggg && "border-red-300")}
+                    placeholder="0"
+                    value={form.price_ggg}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                        setForm({ ...form, price_ggg: val });
+                        if (errors.price_ggg) setErrors({ ...errors, price_ggg: null });
+                      }
+                    }}
+                    disabled={form.is_free}
+                  />
+                  {renderError('price_ggg')}
+                </div>
+              )}
+              
+              {(form.payment_type === 'time_only' || form.payment_type === 'hybrid') && (
+                <div>
+                  <Label className={cn("listing-modal-label", errors.time_credits ? 'text-red-600' : '')}>Time Credits (hrs)</Label>
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    className={cn("mt-2 listing-modal-input", errors.time_credits && "border-red-300")}
+                    placeholder="0"
+                    value={form.time_credits}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                        setForm({ ...form, time_credits: val });
+                        if (errors.time_credits) setErrors({ ...errors, time_credits: null });
+                      }
+                    }}
+                    disabled={form.is_free}
+                  />
+                  {renderError('time_credits')}
+                </div>
+              )}
+              
               <div className="flex items-center gap-2 mt-8">
                 <Checkbox 
                   id="free" 
                   checked={form.is_free} 
                   onCheckedChange={(v) => {
                     setForm({ ...form, is_free: Boolean(v) });
-                    if (v) setErrors({ ...errors, price_amount: null });
+                    if (v) setErrors({ ...errors, price_amount: null, price_ggg: null, time_credits: null });
                   }} 
                 />
                 <label htmlFor="free" className="text-sm text-slate-700 listing-modal-checkbox-label">Offer for free</label>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label className="listing-modal-label">Duration (minutes)</Label>
+                <Label className="listing-modal-label">Duration (min)</Label>
                 <Input
                   type="number"
                   className="mt-2 listing-modal-input"
@@ -270,18 +446,39 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
                 />
               </div>
               <div>
-                <Label className="listing-modal-label">Delivery</Label>
-                <Select value={form.delivery_mode} onValueChange={(v) => setForm({ ...form, delivery_mode: v })}>
-                  <SelectTrigger className="mt-2 listing-modal-input">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="online">Online</SelectItem>
-                    <SelectItem value="in-person">In-person</SelectItem>
-                    <SelectItem value="hybrid">Hybrid</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label className="listing-modal-label">Delivery (days)</Label>
+                <Input
+                  type="number"
+                  className="mt-2 listing-modal-input"
+                  placeholder="7"
+                  value={form.delivery_days}
+                  onChange={(e) => setForm({ ...form, delivery_days: e.target.value })}
+                />
               </div>
+              <div>
+                <Label className="listing-modal-label">Revisions</Label>
+                <Input
+                  type="number"
+                  className="mt-2 listing-modal-input"
+                  placeholder="1"
+                  value={form.revisions_included}
+                  onChange={(e) => setForm({ ...form, revisions_included: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label className="listing-modal-label">Delivery Mode</Label>
+              <Select value={form.delivery_mode} onValueChange={(v) => setForm({ ...form, delivery_mode: v })}>
+                <SelectTrigger className="mt-2 listing-modal-input">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="online">Online</SelectItem>
+                  <SelectItem value="in-person">In-person</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
@@ -289,8 +486,8 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
                 Description <span className="text-red-500">*</span>
               </Label>
               <Textarea
-                className={cn("mt-2 min-h-24 listing-modal-input", errors.description && "border-red-300")}
-                placeholder="Describe what you're offering or looking for. Be specific about what's included, your experience, and what participants can expect."
+                className={cn("mt-2 min-h-20 listing-modal-input", errors.description && "border-red-300")}
+                placeholder="Describe what you're offering or looking for..."
                 value={form.description}
                 onChange={(e) => {
                   setForm({ ...form, description: e.target.value });
@@ -307,7 +504,13 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
           </div>
         );
 
-      case 2:
+      case 3:
+
+      case 99: // unused placeholder
+        return null;
+        
+      // case 3 is the image step (defined above via case 3:)
+      default:
         return (
           <div className="space-y-4">
             <div>
