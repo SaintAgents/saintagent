@@ -41,6 +41,7 @@ export default function Marketplace() {
   const [matrixOpen, setMatrixOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [deliveryFilter, setDeliveryFilter] = useState('all');
+  const [skillFilter, setSkillFilter] = useState('all');
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
@@ -57,16 +58,27 @@ export default function Marketplace() {
   });
   const queryClient = useQueryClient();
 
+  // Extract unique skills from all listings for the filter
+  const allSkills = React.useMemo(() => {
+    const skillSet = new Set();
+    listings.forEach(l => {
+      (l.skills || []).forEach(s => skillSet.add(s));
+    });
+    return Array.from(skillSet).sort();
+  }, [listings]);
+
   const filteredListings = listings.filter((l) => {
     // Only show active listings (allow if status is undefined/null or 'active')
     if (l.status && l.status !== 'active') return false;
     const matchesSearch = !searchQuery ||
     l.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    l.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    l.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (l.skills || []).some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesType = tab === 'offers' ? l.listing_type === 'offer' : tab === 'requests' ? l.listing_type === 'request' : true;
     const matchesCategory = categoryFilter === 'all' || l.category === categoryFilter;
     const matchesDelivery = deliveryFilter === 'all' || l.delivery_mode === deliveryFilter;
-    return matchesSearch && matchesType && matchesCategory && matchesDelivery;
+    const matchesSkill = skillFilter === 'all' || (l.skills || []).includes(skillFilter);
+    return matchesSearch && matchesType && matchesCategory && matchesDelivery && matchesSkill;
   });
 
   const handleAction = async (action, listing) => {
@@ -152,7 +164,7 @@ export default function Marketplace() {
         </div>
 
         {showFilters &&
-        <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
               <label className="text-xs text-slate-500">Category</label>
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -160,7 +172,7 @@ export default function Marketplace() {
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="mentorship">Mentorship</SelectItem>
                   <SelectItem value="session">Session</SelectItem>
                   <SelectItem value="course">Course</SelectItem>
@@ -168,6 +180,29 @@ export default function Marketplace() {
                   <SelectItem value="healing">Healing</SelectItem>
                   <SelectItem value="mutual_aid">Mutual Aid</SelectItem>
                   <SelectItem value="collaboration">Collaboration</SelectItem>
+                  <SelectItem value="strategy">Strategy</SelectItem>
+                  <SelectItem value="legal">Legal Structuring</SelectItem>
+                  <SelectItem value="ai_prompts">AI Prompt Engineering</SelectItem>
+                  <SelectItem value="web_dev">Web Development</SelectItem>
+                  <SelectItem value="design">Design</SelectItem>
+                  <SelectItem value="governance">Governance Advisory</SelectItem>
+                  <SelectItem value="finance">Finance Consulting</SelectItem>
+                  <SelectItem value="digital_rights">Digital Rights</SelectItem>
+                  <SelectItem value="writing">Writing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500">Skill</label>
+              <Select value={skillFilter} onValueChange={setSkillFilter}>
+                <SelectTrigger className="mt-1 bg-white">
+                  <SelectValue placeholder="All Skills" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Skills</SelectItem>
+                  {allSkills.map(skill => (
+                    <SelectItem key={skill} value={skill}>{skill}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -251,9 +286,15 @@ export default function Marketplace() {
               title: data.title,
               description: data.description || '',
               price_amount: data.is_free ? 0 : Number(data.price_amount || 0),
+              price_ggg: Number(data.price_ggg || 0),
+              time_credits: Number(data.time_credits || 0),
+              payment_type: data.payment_type || 'fiat',
               is_free: !!data.is_free,
               duration_minutes: Number(data.duration_minutes || 60),
               delivery_mode: data.delivery_mode || 'online',
+              delivery_days: Number(data.delivery_days || 7),
+              revisions_included: Number(data.revisions_included || 1),
+              skills: data.skills || [],
               status: 'active',
               image_url: data.image_url || undefined
             });
