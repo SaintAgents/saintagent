@@ -15,7 +15,8 @@ import {
   Zap,
   Pause,
   Play,
-  Edit
+  Edit,
+  Coins
 } from "lucide-react";
 import { createPageUrl } from '@/utils';
 import {
@@ -48,6 +49,15 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
     healing: "bg-rose-100 text-rose-700",
     mutual_aid: "bg-pink-100 text-pink-700",
     collaboration: "bg-cyan-100 text-cyan-700",
+    strategy: "bg-indigo-100 text-indigo-700",
+    legal: "bg-slate-100 text-slate-700",
+    ai_prompts: "bg-purple-100 text-purple-700",
+    web_dev: "bg-sky-100 text-sky-700",
+    design: "bg-fuchsia-100 text-fuchsia-700",
+    governance: "bg-teal-100 text-teal-700",
+    finance: "bg-green-100 text-green-700",
+    digital_rights: "bg-orange-100 text-orange-700",
+    writing: "bg-lime-100 text-lime-700",
   };
 
   const deliveryIcons = {
@@ -174,10 +184,45 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
           </div>
         )}
 
+        {/* Skills tags */}
+        {listing.skills?.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-3">
+            {listing.skills.slice(0, 3).map(skill => (
+              <span key={skill} className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                {skill}
+              </span>
+            ))}
+            {listing.skills.length > 3 && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                +{listing.skills.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="flex items-center gap-3 mt-4">
           {!listing.is_free && (
-            <div className="text-lg font-bold text-slate-900 dark:text-white">
-              ${listing.price_amount}
+            <div className="flex flex-col">
+              {listing.payment_type === 'ggg_only' || listing.payment_type === 'hybrid' ? (
+                <div className="flex items-center gap-1 text-lg font-bold text-amber-600 dark:text-amber-400">
+                  <Coins className="w-4 h-4" />
+                  {listing.price_ggg} GGG
+                </div>
+              ) : (
+                <div className="text-lg font-bold text-slate-900 dark:text-white">
+                  ${listing.price_amount}
+                </div>
+              )}
+              {listing.payment_type === 'time_only' && (
+                <div className="text-sm text-violet-600 dark:text-violet-400 font-medium">
+                  {listing.time_credits}h credits
+                </div>
+              )}
+              {listing.payment_type === 'hybrid' && listing.time_credits > 0 && (
+                <div className="text-xs text-slate-500">
+                  + {listing.time_credits}h credits
+                </div>
+              )}
             </div>
           )}
           <Button 
