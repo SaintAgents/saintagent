@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { project_id, claim_note, claim_from_submitter, admin_override } = await req.json();
+    const { project_id, claim_note, claim_from_submitter, admin_override, assign_to_email } = await req.json();
 
     if (!project_id) {
       return Response.json({ error: 'project_id required' }, { status: 400 });
@@ -23,20 +23,36 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    // Admin override - auto-approve immediately
+    // Admin override - auto-approve immediately (optionally assign to another user)
     if (admin_override && user.role === 'admin') {
+      const ownerEmail = assign_to_email || user.email;
+      
       await base44.asServiceRole.entities.Project.update(project_id, {
         claim_status: 'approved',
-        claimed_by: user.email,
+        claimed_by: ownerEmail,
         claimed_at: new Date().toISOString(),
-        claim_note: claim_note || 'Admin override claim',
+        claim_note: claim_note || `Admin override claim${assign_to_email ? ` - assigned to ${assign_to_email}` : ''}`,
         auto_claimed: true
       });
+
+      // Notify the assigned user if different from admin
+      if (assign_to_email && assign_to_email !== user.email) {
+        await base44.asServiceRole.entities.Notification.create({
+          user_id: assign_to_email,
+          type: 'system',
+          title: 'Project Ownership Assigned',
+          message: `An admin has assigned you ownership of "${project.title}". You can now edit and manage this project.`,
+          action_url: `/Projects?id=${project_id}`,
+          priority: 'high'
+        });
+      }
 
       return Response.json({ 
         success: true, 
         auto_approved: true,
-        message: 'Admin override: Ownership granted immediately.'
+        message: assign_to_email && assign_to_email !== user.email 
+          ? `Ownership assigned to ${assign_to_email}.`
+          : 'Admin override: Ownership granted immediately.'
       });
     }
 

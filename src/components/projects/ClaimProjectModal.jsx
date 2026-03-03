@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { 
   CheckCircle, 
@@ -20,6 +21,7 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
   const [claimNote, setClaimNote] = useState('');
   const [claimFromSubmitter, setClaimFromSubmitter] = useState(false);
   const [adminOverride, setAdminOverride] = useState(false);
+  const [assignToEmail, setAssignToEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const queryClient = useQueryClient();
@@ -38,7 +40,8 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
         project_id: project.id,
         claim_note: claimNote,
         claim_from_submitter: claimFromSubmitter,
-        admin_override: adminOverride
+        admin_override: adminOverride,
+        assign_to_email: adminOverride && assignToEmail ? assignToEmail : undefined
       });
 
       setResult(response.data);
@@ -174,7 +177,7 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
 
           {/* Admin Override Option */}
           {isAdmin && (
-            <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800">
+            <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 space-y-3">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -188,10 +191,25 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
                     Admin Override
                   </p>
                   <p className="text-sm text-rose-600 dark:text-rose-400 mt-1">
-                    Bypass verification and claim this project immediately as admin.
+                    Bypass verification and assign ownership immediately.
                   </p>
                 </div>
               </label>
+              
+              {adminOverride && (
+                <div className="ml-7">
+                  <label className="block text-sm font-medium text-rose-700 dark:text-rose-300 mb-1">
+                    Assign to (leave empty to claim for yourself)
+                  </label>
+                  <Input
+                    type="email"
+                    value={assignToEmail}
+                    onChange={(e) => setAssignToEmail(e.target.value)}
+                    placeholder="user@example.com"
+                    className="border-rose-200 dark:border-rose-700 focus:ring-rose-500"
+                  />
+                </div>
+              )}
             </div>
           )}
 
