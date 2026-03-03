@@ -46,6 +46,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
     price_amount: '',
     price_ggg: '',
     time_credits: '',
+    credits_per_hour: '1',
     payment_type: 'fiat',
     is_free: false,
     duration_minutes: 60,
@@ -76,6 +77,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
         price_amount: '',
         price_ggg: '',
         time_credits: '',
+        credits_per_hour: '1',
         payment_type: 'fiat',
         is_free: false,
         duration_minutes: 60,
@@ -400,25 +402,46 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
               )}
               
               {(form.payment_type === 'time_only' || form.payment_type === 'hybrid') && (
-                <div>
-                  <Label className={cn("listing-modal-label", errors.time_credits ? 'text-red-600' : '')}>Time Credits (hrs)</Label>
-                  <Input
-                    type="text"
-                    inputMode="decimal"
-                    className={cn("mt-2 listing-modal-input", errors.time_credits && "border-red-300")}
-                    placeholder="0"
-                    value={form.time_credits}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                        setForm({ ...form, time_credits: val });
-                        if (errors.time_credits) setErrors({ ...errors, time_credits: null });
-                      }
-                    }}
-                    disabled={form.is_free}
-                  />
-                  {renderError('time_credits')}
-                </div>
+                <>
+                  <div>
+                    <Label className={cn("listing-modal-label", errors.time_credits ? 'text-red-600' : '')}>Total Time Credits</Label>
+                    <Input
+                      type="text"
+                      inputMode="decimal"
+                      className={cn("mt-2 listing-modal-input", errors.time_credits && "border-red-300")}
+                      placeholder="0"
+                      value={form.time_credits}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                          setForm({ ...form, time_credits: val });
+                          if (errors.time_credits) setErrors({ ...errors, time_credits: null });
+                        }
+                      }}
+                      disabled={form.is_free}
+                    />
+                    {renderError('time_credits')}
+                  </div>
+                  <div>
+                    <Label className="listing-modal-label">Your Rate (credits/hr)</Label>
+                    <Input
+                      type="text"
+                      inputMode="decimal"
+                      className="mt-2 listing-modal-input"
+                      placeholder="1"
+                      value={form.credits_per_hour}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                          setForm({ ...form, credits_per_hour: val });
+                        }
+                      }}
+                    />
+                    <p className="text-xs text-slate-500 mt-1 listing-modal-hint">
+                      e.g., 1 = standard, 2-3 = specialist
+                    </p>
+                  </div>
+                </>
               )}
               
               <div className="flex items-center gap-2 mt-8">
