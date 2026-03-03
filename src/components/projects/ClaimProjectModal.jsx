@@ -18,9 +18,13 @@ import { cn } from '@/lib/utils';
 
 export default function ClaimProjectModal({ project, currentUser, onClose, onUpdate }) {
   const [claimNote, setClaimNote] = useState('');
+  const [claimFromSubmitter, setClaimFromSubmitter] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const queryClient = useQueryClient();
+
+  // Check if someone else submitted this project
+  const submittedByOther = project.created_by && project.created_by !== currentUser?.email;
 
   const handleSubmitClaim = async () => {
     if (!currentUser?.email) return;
@@ -30,7 +34,8 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
     try {
       const response = await base44.functions.invoke('claimProject', {
         project_id: project.id,
-        claim_note: claimNote
+        claim_note: claimNote,
+        claim_from_submitter: claimFromSubmitter
       });
 
       setResult(response.data);
@@ -163,6 +168,27 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
               </div>
             </div>
           </div>
+
+          {/* "This is my submission" option - only show if submitted by someone else */}
+          {submittedByOther && (
+            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={claimFromSubmitter}
+                  onChange={(e) => setClaimFromSubmitter(e.target.checked)}
+                  className="mt-1 w-4 h-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+                />
+                <div>
+                  <p className="font-medium text-amber-700 dark:text-amber-300">This is my submission</p>
+                  <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
+                    Someone else ({project.created_by}) submitted this project on your behalf. 
+                    Checking this will send them a request to confirm your ownership.
+                  </p>
+                </div>
+              </label>
+            </div>
+          )}
 
           {/* Claim Note */}
           <div>
