@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { project_id, claim_note } = await req.json();
+    const { project_id, claim_note, claim_from_submitter } = await req.json();
 
     if (!project_id) {
       return Response.json({ error: 'project_id required' }, { status: 400 });
@@ -27,6 +27,45 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Project already claimed' }, { status: 400 });
     }
 
+    // If claiming as original submitter, notify the project creator
+    if (claim_from_submitter && project.created_by && project.created_by !== user.email) {
+      await base44.asServiceRole.entities.Project.update(project_id, {
+        claim_status: 'pending',
+        claimed_by: user.email,
+        claimed_at: new Date().toISOString(),
+        claim_note: claim_note || 'User claims this is their submission'
+      });
+
+      // Notify the original submitter
+      await base44.asServiceRole.entities.Notification.create({
+        user_id: project.created_by,
+        type: 'system',
+        title: 'Ownership Claim on Your Submission',
+        message: `${user.full_name || user.email} is claiming ownership of "${project.title}" which you submitted. Please review and approve/reject.`,
+        action_url: `/Projects?id=${project_id}`,
+        priority: 'high'
+      });
+
+      // Also notify admins
+      const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
+      for (const admin of admins) {
+        await base44.asServiceRole.entities.Notification.create({
+          user_id: admin.email,
+          type: 'system',
+          title: 'Project Claim Request (Submitter Notified)',
+          message: `${user.full_name || user.email} claims ownership of "${project.title}". Original submitter (${project.created_by}) has been notified.`,
+          action_url: '/Admin?tab=projects',
+          priority: 'normal'
+        });
+      }
+
+      return Response.json({ 
+        success: true, 
+        auto_approved: false,
+        message: `Request sent to the original submitter (${project.created_by}) for approval.`
+      });
+    }
+
     // Check if user email matches legacy SA list
     const legacySAs = await base44.entities.LegacySaintAgent.filter({ 
       email: user.email.toLowerCase() 
@@ -39,7 +78,7 @@ Deno.serve(async (req) => {
 
     if (isLegacyMatch) {
       // Auto-approve claim
-      await base44.entities.Project.update(project_id, {
+      await base44.asServiceRole.entities.Project.update(project_id, {
         claim_status: 'approved',
         claimed_by: user.email,
         claimed_at: new Date().toISOString(),
@@ -49,7 +88,7 @@ Deno.serve(async (req) => {
 
       // Mark legacy SA as claimed if exists
       if (legacySA && !legacySA.claimed) {
-        await base44.entities.LegacySaintAgent.update(legacySA.id, {
+        await base44.asServiceRole.entities.LegacySaintAgent.update(legacySA.id, {
           claimed: true,
           claimed_by: user.email,
           claimed_at: new Date().toISOString()
@@ -57,7 +96,7 @@ Deno.serve(async (req) => {
       }
 
       // Create notification
-      await base44.entities.Notification.create({
+      await base44.asServiceRole.entities.Notification.create({
         user_id: user.email,
         type: 'system',
         title: 'Project Ownership Confirmed!',
@@ -73,17 +112,17 @@ Deno.serve(async (req) => {
     }
 
     // Not a legacy match - submit for manual review
-    await base44.entities.Project.update(project_id, {
+    await base44.asServiceRole.entities.Project.update(project_id, {
       claim_status: 'pending',
       claimed_by: user.email,
       claimed_at: new Date().toISOString(),
       claim_note: claim_note || ''
     });
 
-    // Notify admins
-    const admins = await base44.entities.User.filter({ role: 'admin' });
+    // Notify admins using service role
+    const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
     for (const admin of admins) {
-      await base44.entities.Notification.create({
+      await base44.asServiceRole.entities.Notification.create({
         user_id: admin.email,
         type: 'system',
         title: 'Project Claim Request',
