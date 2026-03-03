@@ -19,12 +19,14 @@ import { cn } from '@/lib/utils';
 export default function ClaimProjectModal({ project, currentUser, onClose, onUpdate }) {
   const [claimNote, setClaimNote] = useState('');
   const [claimFromSubmitter, setClaimFromSubmitter] = useState(false);
+  const [adminOverride, setAdminOverride] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const queryClient = useQueryClient();
 
   // Check if someone else submitted this project
   const submittedByOther = project.created_by && project.created_by !== currentUser?.email;
+  const isAdmin = currentUser?.role === 'admin';
 
   const handleSubmitClaim = async () => {
     if (!currentUser?.email) return;
@@ -35,7 +37,8 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
       const response = await base44.functions.invoke('claimProject', {
         project_id: project.id,
         claim_note: claimNote,
-        claim_from_submitter: claimFromSubmitter
+        claim_from_submitter: claimFromSubmitter,
+        admin_override: adminOverride
       });
 
       setResult(response.data);
@@ -169,8 +172,31 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
             </div>
           </div>
 
+          {/* Admin Override Option */}
+          {isAdmin && (
+            <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={adminOverride}
+                  onChange={(e) => setAdminOverride(e.target.checked)}
+                  className="mt-1 w-4 h-4 rounded border-rose-300 text-rose-600 focus:ring-rose-500"
+                />
+                <div>
+                  <p className="font-medium text-rose-700 dark:text-rose-300 flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    Admin Override
+                  </p>
+                  <p className="text-sm text-rose-600 dark:text-rose-400 mt-1">
+                    Bypass verification and claim this project immediately as admin.
+                  </p>
+                </div>
+              </label>
+            </div>
+          )}
+
           {/* "This is my submission" option - only show if submitted by someone else */}
-          {submittedByOther && (
+          {submittedByOther && !adminOverride && (
             <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input

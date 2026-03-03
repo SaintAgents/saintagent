@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { project_id, claim_note, claim_from_submitter } = await req.json();
+    const { project_id, claim_note, claim_from_submitter, admin_override } = await req.json();
 
     if (!project_id) {
       return Response.json({ error: 'project_id required' }, { status: 400 });
@@ -21,6 +21,23 @@ Deno.serve(async (req) => {
 
     if (!project) {
       return Response.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    // Admin override - auto-approve immediately
+    if (admin_override && user.role === 'admin') {
+      await base44.asServiceRole.entities.Project.update(project_id, {
+        claim_status: 'approved',
+        claimed_by: user.email,
+        claimed_at: new Date().toISOString(),
+        claim_note: claim_note || 'Admin override claim',
+        auto_claimed: true
+      });
+
+      return Response.json({ 
+        success: true, 
+        auto_approved: true,
+        message: 'Admin override: Ownership granted immediately.'
+      });
     }
 
     if (project.claim_status === 'approved') {
