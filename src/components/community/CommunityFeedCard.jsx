@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X, Video, Link2, Trash2, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Send, Sparkles, Image as ImageIcon, X, Video, Link2, Trash2, MoreHorizontal, Share2 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -572,12 +572,33 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                           <span className="font-medium">{post.comments_count || 0}</span>
                         </button>
                       </div>
-                      <SocialShareButtons 
-                        url={window.location.origin + '/CommunityFeed?post=' + post.id}
-                        text={post.content?.slice(0, 100) + (post.content?.length > 100 ? '...' : '') + ' - via SaintAgent'}
-                        size="sm"
-                        platforms={['twitter', 'telegram', 'facebook', 'instagram', 'tiktok']}
-                      />
+                      <button
+                        onClick={async () => {
+                          const shareUrl = window.location.origin + '/CommunityFeed?post=' + post.id;
+                          const shareText = post.content?.slice(0, 100) + (post.content?.length > 100 ? '...' : '') + ' - via SaintAgent';
+                          
+                          // Try native share on mobile
+                          if (navigator.share) {
+                            try {
+                              await navigator.share({ title: 'SaintAgent Post', text: shareText, url: shareUrl });
+                              return;
+                            } catch (err) {
+                              // User cancelled or error - fall through to copy
+                            }
+                          }
+                          
+                          // Copy to clipboard
+                          try {
+                            await navigator.clipboard.writeText(shareUrl);
+                            toast.success('Link copied to clipboard!');
+                          } catch (err) {
+                            toast.error('Failed to copy link');
+                          }
+                        }}
+                        className="flex items-center gap-1 text-xs text-slate-500 hover:text-violet-600 transition-colors"
+                      >
+                        <Share2 className="w-4 h-4" />
+                      </button>
                     </div>
 
                     {/* Comments Section */}
