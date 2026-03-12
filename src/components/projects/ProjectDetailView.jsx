@@ -20,6 +20,7 @@ import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal';
 import AIProjectAssistant from './AIProjectAssistant';
 import AdvancedDependencyManager from './AdvancedDependencyManager';
 import TaskDependencyGraph from './TaskDependencyGraph';
+import EditProjectModal from './EditProjectModal';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -39,6 +40,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [dependencyTask, setDependencyTask] = useState(null);
   const [showDependencyGraph, setShowDependencyGraph] = useState(false);
+  const [editProjectOpen, setEditProjectOpen] = useState(false);
 
   // Fetch tasks for this project
   const { data: tasks = [] } = useQuery({
@@ -153,6 +155,12 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {(project.owner_id === currentUser?.email || project.claimed_by === currentUser?.email) && (
+            <Button variant="outline" size="sm" onClick={() => setEditProjectOpen(true)}>
+              <Search className="w-4 h-4 mr-1" />
+              Edit Details
+            </Button>
+          )}
           <Button 
             variant={showAIAssistant ? "default" : "outline"} 
             size="sm" 
