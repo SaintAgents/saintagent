@@ -252,6 +252,32 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         </div>
       </div>
 
+      {/* Tab Switcher */}
+      <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1 w-fit">
+        <Button
+          variant={activeTab === 'tasks' ? 'secondary' : 'ghost'}
+          size="sm"
+          onClick={() => setActiveTab('tasks')}
+          className="gap-1.5"
+        >
+          <LayoutGrid className="w-4 h-4" />
+          Tasks
+        </Button>
+        <Button
+          variant={activeTab === 'reviews' ? 'secondary' : 'ghost'}
+          size="sm"
+          onClick={() => setActiveTab('reviews')}
+          className="gap-1.5"
+        >
+          <MessageSquare className="w-4 h-4" />
+          Peer Reviews
+        </Button>
+      </div>
+
+      {activeTab === 'reviews' ? (
+        <PeerReviewsTab project={project} currentUser={currentUser} profile={profile} />
+      ) : (
+      <>
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -464,6 +490,8 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           })}
           onClose={() => setDependencyTask(null)}
         />
+      )}
+      </>
       )}
 
       {/* Edit Project Modal */}
