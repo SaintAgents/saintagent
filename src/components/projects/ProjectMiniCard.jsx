@@ -3,7 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
-import { AlertTriangle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { AlertTriangle, Star } from "lucide-react";
 import MiniProfile from '@/components/profile/MiniProfile';
 
 const RISK_GRADE_COLORS = {
@@ -29,6 +30,16 @@ export default function ProjectMiniCard({ project, onClick }) {
   const i = project.industrial_value;
   const tags = Array.isArray(project.impact_tags) ? project.impact_tags : [];
   const ownerId = project.owner_id || project.creator_id || project.claimed_by;
+
+  const { data: reviews = [] } = useQuery({
+    queryKey: ['projectReviewsMini', project.id],
+    queryFn: () => base44.entities.Review.filter({ project_id: project.id }, '-created_date', 50),
+    enabled: !!project.id,
+    staleTime: 300000,
+  });
+  const reviewAvg = reviews.length > 0
+    ? (reviews.reduce((sum, r) => sum + (r.overall_rating || 0), 0) / reviews.length).toFixed(1)
+    : null;
 
   return (
     <button onClick={onClick} className="text-left w-full">
@@ -110,6 +121,13 @@ export default function ProjectMiniCard({ project, onClick }) {
 
           {/* Scores in bottom right */}
           <div className="flex justify-end items-center gap-2 pt-2 mt-auto">
+            {reviewAvg && (
+              <>
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <span className="text-sm font-bold text-amber-600">{reviewAvg}</span>
+                <span className="text-xs text-slate-400">({reviews.length})</span>
+              </>
+            )}
             <span className="text-xs text-slate-500">Score:</span>
             <span className="text-sm font-bold text-indigo-600">
               {project.final_score ? project.final_score.toFixed(0) : 'N/A'}
