@@ -501,7 +501,16 @@ export default function GlobalChatWidget() {
                         ? "bg-blue-600 text-white rounded-br-sm"
                         : "bg-slate-100 text-slate-900 rounded-bl-sm"
                     )}>
-                      {msg.content}
+                      {msg.message_type === 'image' && msg.file_url ? (
+                        <img 
+                          src={msg.file_url} 
+                          alt="Shared image" 
+                          className="max-w-full rounded cursor-pointer max-h-48 object-cover" 
+                          onClick={() => window.open(msg.file_url, '_blank')}
+                        />
+                      ) : (
+                        msg.content
+                      )}
                     </div>
                     <span className="text-[10px] text-slate-400 mt-0.5">
                       {format(parseISO(msg.created_date), 'h:mm a')}
