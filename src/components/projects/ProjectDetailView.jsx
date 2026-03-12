@@ -21,6 +21,7 @@ import AIProjectAssistant from './AIProjectAssistant';
 import AdvancedDependencyManager from './AdvancedDependencyManager';
 import TaskDependencyGraph from './TaskDependencyGraph';
 import EditProjectModal from './EditProjectModal';
+import PeerReviewsTab from './PeerReviewsTab';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -41,6 +42,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
   const [dependencyTask, setDependencyTask] = useState(null);
   const [showDependencyGraph, setShowDependencyGraph] = useState(false);
   const [editProjectOpen, setEditProjectOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('tasks');
 
   // Fetch tasks for this project
   const { data: tasks = [] } = useQuery({
