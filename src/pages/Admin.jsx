@@ -39,6 +39,7 @@ import AdminRequestsPanel from '@/components/admin/AdminRequestsPanel';
 import PagesControlPanel from '@/components/admin/PagesControlPanel';
 import BetaTickerManager from '@/components/admin/BetaTickerManager';
 import AffiliatePayoutManager from '@/components/admin/AffiliatePayoutManager';
+import TeamWorkloadDashboard from '@/components/admin/TeamWorkloadDashboard';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -215,6 +216,10 @@ export default function Admin() {
               <Layers className="w-4 h-4" />
               Role Groups
             </TabsTrigger>
+            <TabsTrigger value="workload" className="gap-2 px-3 py-2">
+              <BarChart3 className="w-4 h-4" />
+              Workload
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -361,6 +366,10 @@ export default function Admin() {
 
           <TabsContent value="role-groups">
             <RoleGroupsManager />
+          </TabsContent>
+
+          <TabsContent value="workload">
+            <TeamWorkloadDashboard />
           </TabsContent>
         </Tabs>
       </div>
