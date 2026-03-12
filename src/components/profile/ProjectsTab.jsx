@@ -16,7 +16,8 @@ import {
   Users,
   Lock,
   Plus,
-  BarChart3
+  BarChart3,
+  Pencil
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ProjectDetailView from '@/components/projects/ProjectDetailView';
@@ -285,10 +286,22 @@ export default function ProjectsTab({ profile, currentUser }) {
                             <Lock className="w-3 h-3 text-slate-500" />
                           </div>
 
-                          {/* Title */}
-                          <h4 className="font-semibold text-slate-900 dark:text-white text-sm mb-1 line-clamp-1">
-                            {project.title}
-                          </h4>
+                          {/* Title + Edit */}
+                          <div className="flex items-center justify-between mb-1">
+                            <h4 className="font-semibold text-slate-900 dark:text-white text-sm line-clamp-1 flex-1">
+                              {project.title}
+                            </h4>
+                            {(project.owner_id === currentUser?.email || project.claimed_by === currentUser?.email) && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 shrink-0 text-slate-400 hover:text-blue-600"
+                                onClick={(e) => { e.stopPropagation(); setEditProject(project); }}
+                              >
+                                <Pencil className="w-3 h-3" />
+                              </Button>
+                            )}
+                          </div>
 
                           {/* Description */}
                           <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
@@ -369,6 +382,13 @@ export default function ProjectsTab({ profile, currentUser }) {
         onClose={() => setCreateProjectOpen(false)}
         currentUser={currentUser}
         profile={profile}
+      />
+
+      {/* Edit Project Modal */}
+      <EditProjectModal
+        open={!!editProject}
+        onClose={() => setEditProject(null)}
+        project={editProject}
       />
     </div>
   );
