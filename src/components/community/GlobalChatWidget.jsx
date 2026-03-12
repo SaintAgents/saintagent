@@ -299,6 +299,24 @@ export default function GlobalChatWidget() {
     });
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setUploading(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    sendMutation.mutate({
+      circle_id: 'global',
+      author_id: user.email,
+      author_name: userProfile?.display_name || user.full_name,
+      author_avatar: userProfile?.avatar_url,
+      content: '📷 Image',
+      message_type: 'image',
+      file_url
+    });
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   useEffect(() => {
     if (scrollRef.current && isOpen) {
       // ScrollArea uses a viewport div inside - find and scroll it
