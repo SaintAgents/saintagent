@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ProjectDetailView from '@/components/projects/ProjectDetailView';
 import CreateProjectModal from '@/components/projects/CreateProjectModal';
+import EditProjectModal from '@/components/projects/EditProjectModal';
 
 const PIPELINE_STAGES = [
   { id: 'initiation', label: 'INITIATION', icon: Folder, color: 'bg-blue-500' },
@@ -52,31 +53,45 @@ export default function ProjectsTab({ profile, currentUser }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [viewMode, setViewMode] = useState('projects');
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
+  const [editProject, setEditProject] = useState(null);
 
   const userIdentifier = profile?.sa_number || currentUser?.email;
 
-  // Fetch user's projects (owned or team member)
+  // Fetch user's projects: owned, claimed (approved), team member
   const { data: projects = [], isLoading } = useQuery({
-    queryKey: ['userProjects', userIdentifier],
+    queryKey: ['userProjects', userIdentifier, currentUser?.email],
     queryFn: async () => {
-      // Fetch projects owned by user
+      const email = currentUser?.email;
+      // Fetch projects owned by user (any status)
       const ownedProjects = await base44.entities.Project.filter({ 
-        owner_id: currentUser?.email,
-        status: 'funded'
-      }, '-created_date', 100);
-      
-      // Fetch all funded projects to filter team membership
-      const allProjects = await base44.entities.Project.filter({ 
-        status: 'funded'
+        owner_id: email
       }, '-created_date', 200);
       
-      // Filter projects where user is a team member
-      const teamProjects = allProjects.filter(p => 
-        p.team_member_ids?.includes(currentUser?.email) && 
-        p.owner_id !== currentUser?.email
-      );
+      // Fetch projects claimed by user (approved claims)
+      const claimedProjects = await base44.entities.Project.filter({ 
+        claimed_by: email,
+        claim_status: 'approved'
+      }, '-created_date', 200);
+
+      // Fetch all projects to find team membership
+      const allProjects = await base44.entities.Project.list('-created_date', 500);
       
-      return [...ownedProjects, ...teamProjects];
+      // Filter projects where user is a team member but not owner
+      const teamProjects = allProjects.filter(p => 
+        p.team_member_ids?.includes(email) && 
+        p.owner_id !== email &&
+        p.claimed_by !== email
+      );
+
+      // Deduplicate by id
+      const seen = new Set();
+      const merged = [...ownedProjects, ...claimedProjects, ...teamProjects].filter(p => {
+        if (seen.has(p.id)) return false;
+        seen.add(p.id);
+        return true;
+      });
+      
+      return merged;
     },
     enabled: !!currentUser?.email
   });
