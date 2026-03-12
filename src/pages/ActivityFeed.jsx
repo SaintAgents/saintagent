@@ -147,13 +147,27 @@ export default function ActivityFeed() {
   const isRateLimited = isError && error?.message?.toLowerCase()?.includes('rate limit');
 
   const handleOpen = (ev) => {
-    if (ev.type === 'listings') {
-      window.location.href = createPageUrl('ListingDetail') + '?id=' + ev.source.id;
-    } else if (ev.type === 'missions') {
-      window.location.href = createPageUrl('MissionDetail') + '?id=' + ev.source.id;
+    const sourceId = ev.source?.id;
+    if (ev.type === 'listings' && sourceId) {
+      window.location.href = createPageUrl('ListingDetail') + '?id=' + sourceId;
+    } else if (ev.type === 'missions' && sourceId) {
+      window.location.href = createPageUrl('MissionDetail') + '?id=' + sourceId;
+    } else if (ev.type === 'events' && sourceId) {
+      window.location.href = createPageUrl('EventDetail') + '?id=' + sourceId;
+    } else if (ev.type === 'meetings') {
+      window.location.href = createPageUrl('Meetings') + (sourceId ? '?id=' + sourceId : '');
+    } else if (ev.type === 'posts') {
+      window.location.href = createPageUrl('CommunityFeed');
+    } else if (ev.type === 'follows') {
+      const uid = ev.target_id || ev.actor_id;
+      if (uid) document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: uid } }));
     } else if (ev.type === 'testimonials' || ev.type === 'reputation') {
       const uid = ev.target_id || ev.actor_id;
-      document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: uid } }));
+      if (uid) document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: uid } }));
+    } else if (ev.type === 'announcements' || ev.type === 'updates') {
+      // No dedicated detail page — open profile if actor exists, otherwise no-op
+      const uid = ev.actor_id;
+      if (uid) document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: uid } }));
     }
   };
 
