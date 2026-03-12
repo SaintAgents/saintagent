@@ -203,18 +203,25 @@ export default function NotificationBell({ notifications = [], onAction }) {
                       } else {
                         // Smart routing based on notification type
                         const routes = {
-                          match: createPageUrl('Matches'),
-                          meeting: createPageUrl('Meetings'),
-                          mission: createPageUrl('Missions'),
-                          booking: createPageUrl('Meetings'),
-                          message: createPageUrl('Messages'),
-                          follow: notif.source_user_id ? createPageUrl('Profile') + `?id=${notif.source_user_id}` : createPageUrl('Profiles'),
-                          ggg: createPageUrl('CommandDeck'),
-                          rank: createPageUrl('Gamification'),
-                          collaboration: createPageUrl('FindCollaborators'),
-                          post: createPageUrl('CommunityFeed'),
-                          event: createPageUrl('Events'),
-                          system: createPageUrl('CommandDeck'),
+                         match: createPageUrl('Matches'),
+                         meeting: createPageUrl('Meetings'),
+                         mission: createPageUrl('Missions'),
+                         booking: createPageUrl('Meetings'),
+                         message: createPageUrl('Messages'),
+                         follow: notif.source_user_id ? createPageUrl('Profile') + `?id=${notif.source_user_id}` : createPageUrl('Profiles'),
+                         ggg: createPageUrl('CommandDeck'),
+                         rank: createPageUrl('Gamification'),
+                         collaboration: createPageUrl('FindCollaborators'),
+                         post: createPageUrl('CommunityFeed'),
+                         event: createPageUrl('Events'),
+                         system: createPageUrl('CommandDeck'),
+                         peer_review: createPageUrl('Projects'),
+                         task_update: createPageUrl('Projects'),
+                         task_assigned: createPageUrl('Projects'),
+                         task_due: createPageUrl('Projects'),
+                         task_dependency: createPageUrl('Projects'),
+                         milestone: createPageUrl('Projects'),
+                         project: createPageUrl('Projects'),
                         };
                         const targetUrl = routes[notif.type];
                         if (targetUrl) {
