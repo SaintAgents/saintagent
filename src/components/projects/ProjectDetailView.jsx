@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { 
   ArrowLeft, Plus, Calendar, DollarSign, Users, 
   CheckCircle2, Clock, Paperclip, MessageSquare,
-  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch
+  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil
 } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
@@ -157,7 +157,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         <div className="flex items-center gap-2">
           {(project.owner_id === currentUser?.email || project.claimed_by === currentUser?.email) && (
             <Button variant="outline" size="sm" onClick={() => setEditProjectOpen(true)}>
-              <Search className="w-4 h-4 mr-1" />
+              <Pencil className="w-4 h-4 mr-1" />
               Edit Details
             </Button>
           )}
@@ -463,6 +463,13 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           onClose={() => setDependencyTask(null)}
         />
       )}
+
+      {/* Edit Project Modal */}
+      <EditProjectModal
+        open={editProjectOpen}
+        onClose={() => setEditProjectOpen(false)}
+        project={project}
+      />
     </div>
   );
 }
