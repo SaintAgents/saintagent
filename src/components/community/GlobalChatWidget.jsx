@@ -28,6 +28,8 @@ export default function GlobalChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [message, setMessage] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
   const [position, setPosition] = useState({ x: null, y: 280 }); // y from top
   const [dockedSide, setDockedSide] = useState('right'); // 'left' | 'right' | null
   const [size, setSize] = useState({ width: 320, height: 384 });
