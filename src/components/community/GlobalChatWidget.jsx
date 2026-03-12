@@ -525,6 +525,13 @@ export default function GlobalChatWidget() {
 
       {/* Input */}
       <div className="p-3 border-t">
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          accept="image/*" 
+          className="hidden" 
+          onChange={handleImageUpload} 
+        />
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -534,6 +541,16 @@ export default function GlobalChatWidget() {
             title="Join Community Call"
           >
             <Video className="w-4 h-4 text-emerald-600" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="h-9 w-9 shrink-0"
+            title="Upload Image"
+          >
+            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
           </Button>
           <Input
             value={message}
