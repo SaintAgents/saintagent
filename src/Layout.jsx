@@ -326,8 +326,30 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // Initialize live status tracking
   useLiveStatus();
 
-  // Fetch notifications - DISABLED to reduce rate limits
-  const notifications = [];
+  // Fetch notifications with real-time subscription
+  const { data: notifications = [] } = useQuery({
+    queryKey: ['notifications', currentUser?.email],
+    queryFn: () => base44.entities.Notification.filter({ user_id: currentUser.email }, '-created_date', 50),
+    enabled: !!currentUser?.email,
+    staleTime: 60000,
+    gcTime: 120000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
+  });
+
+  // Real-time notification subscription
+  useEffect(() => {
+    if (!currentUser?.email) return;
+    const unsubscribe = base44.entities.Notification.subscribe((event) => {
+      if (event.type === 'create' && event.data?.user_id === currentUser.email) {
+        queryClient.invalidateQueries({ queryKey: ['notifications', currentUser.email] });
+      } else if (event.type === 'delete') {
+        queryClient.invalidateQueries({ queryKey: ['notifications', currentUser.email] });
+      }
+    });
+    return unsubscribe;
+  }, [currentUser?.email, queryClient]);
 
   // Onboarding progress for redirect - cached heavily
   const { data: onboardingRecords, isLoading: onboardingLoading } = useQuery({
