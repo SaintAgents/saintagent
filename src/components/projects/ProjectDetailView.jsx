@@ -504,8 +504,8 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
                   {(() => {
                     const match = getSkillMatch(task);
                     if (!match) return <span className="text-xs text-slate-300">—</span>;
-                    const { computeSkillMatch: _, getMatchScoreStyle: getStyle } = require('./SkillMatchUtils');
-                    return null;
+                    const style = match.score >= 80 ? 'text-emerald-600' : match.score >= 50 ? 'text-amber-600' : 'text-red-500';
+                    return <span className={`text-xs font-medium ${style}`}>{match.score}%</span>;
                   })()}
                 </div>
                 <div className="col-span-2 flex items-center">
