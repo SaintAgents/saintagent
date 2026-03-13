@@ -22,6 +22,7 @@ const DEPENDENCY_TYPE_LABELS = {
   SF: 'Start→Finish'
 };
 import { formatDistanceToNow } from 'date-fns';
+import SkillTagInput from './SkillTagInput';
 
 export default function TaskDetailModal({ task, open, onClose, currentUser, profile, allTasks = [] }) {
   const queryClient = useQueryClient();
@@ -102,7 +103,8 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
       description: task.description || '',
       status: task.status,
       priority: task.priority,
-      due_date: task.due_date || ''
+      due_date: task.due_date || '',
+      skill_tags: task.skill_tags || []
     });
     setIsEditing(true);
   };
@@ -182,6 +184,11 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
                       className="mt-1 min-h-24"
                     />
                   </div>
+                  <SkillTagInput
+                    tags={editData.skill_tags || []}
+                    onChange={(tags) => setEditData({ ...editData, skill_tags: tags })}
+                  />
+
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <Label>Status</Label>
