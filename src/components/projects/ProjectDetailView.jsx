@@ -24,6 +24,7 @@ import EditProjectModal from './EditProjectModal';
 import PeerReviewsTab from './PeerReviewsTab';
 import GanttChart from './GanttChart';
 import TaskCanvas from './canvas/TaskCanvas';
+import SprintPlannerPanel from './sprint/SprintPlannerPanel';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -45,6 +46,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
   const [showDependencyGraph, setShowDependencyGraph] = useState(false);
   const [editProjectOpen, setEditProjectOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('tasks');
+  const [showSprintPlanner, setShowSprintPlanner] = useState(false);
 
   // Fetch tasks for this project
   const { data: tasks = [] } = useQuery({
@@ -174,6 +176,15 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
             <Brain className="w-4 h-4 mr-1" />
             AI Assistant
           </Button>
+          <Button
+            variant={showSprintPlanner ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowSprintPlanner(!showSprintPlanner)}
+            className={showSprintPlanner ? "bg-violet-600 hover:bg-violet-700" : ""}
+          >
+            <Zap className="w-4 h-4 mr-1" />
+            Sprint Plan
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setAddMemberOpen(true)}>
             <Users className="w-4 h-4 mr-1" />
             Add Member
@@ -184,6 +195,14 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           </Button>
         </div>
       </div>
+
+      {/* Sprint Planner Panel */}
+      {showSprintPlanner && (
+        <SprintPlannerPanel
+          projectId={project.id}
+          onClose={() => setShowSprintPlanner(false)}
+        />
+      )}
 
       {/* AI Assistant Panel */}
       {showAIAssistant && (

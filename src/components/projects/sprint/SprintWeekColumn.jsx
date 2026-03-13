@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Calendar, Clock, ArrowRight, Shuffle } from 'lucide-react';
+import { format } from 'date-fns';
 
 const priorityColors = {
   urgent: 'border-l-red-500 bg-red-50/50',
@@ -18,7 +19,6 @@ const priorityBadge = {
 };
 
 export default function SprintWeekColumn({ week }) {
-  const { format } = require('date-fns');
   const start = new Date(week.startDate);
   const end = new Date(week.endDate);
 
