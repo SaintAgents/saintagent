@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle2, Save, X, User } from 'lucide-react';
+import TaskRecommendationPanel from './TaskRecommendationPanel';
 
 export default function CreateTaskModal({ open, onClose, projectId, currentUser, profile }) {
   const queryClient = useQueryClient();
@@ -160,6 +161,16 @@ export default function CreateTaskModal({ open, onClose, projectId, currentUser,
               </SelectContent>
             </Select>
           </div>
+
+          {/* AI Recommendation Engine */}
+          <TaskRecommendationPanel
+            projectId={projectId}
+            taskTitle={formData.title}
+            taskDescription={formData.description}
+            taskPriority={formData.priority}
+            selectedAssignee={formData.assignee_id}
+            onSelectAssignee={(id) => setFormData({ ...formData, assignee_id: id })}
+          />
 
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onClose}>
