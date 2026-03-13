@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { 
   ArrowLeft, Plus, Calendar, DollarSign, Users, 
   CheckCircle2, Clock, Paperclip, MessageSquare,
-  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil
+  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil, Route
 } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
@@ -23,6 +23,7 @@ import TaskDependencyGraph from './TaskDependencyGraph';
 import EditProjectModal from './EditProjectModal';
 import PeerReviewsTab from './PeerReviewsTab';
 import GanttChart from './GanttChart';
+import TaskCanvas from './canvas/TaskCanvas';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -33,7 +34,7 @@ const STATUS_COLUMNS = [
 
 export default function ProjectDetailView({ project, onBack, currentUser, profile }) {
   const queryClient = useQueryClient();
-  const [viewMode, setViewMode] = useState('board'); // board, list, or gantt
+  const [viewMode, setViewMode] = useState('board'); // board, list, gantt, or canvas
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
@@ -338,6 +339,14 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
             >
               <Calendar className="w-4 h-4" />
             </Button>
+            <Button 
+              variant={viewMode === 'canvas' ? 'secondary' : 'ghost'} 
+              size="sm"
+              onClick={() => setViewMode('canvas')}
+              title="Canvas"
+            >
+              <Route className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>
@@ -349,8 +358,10 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         </div>
       )}
 
-      {/* Gantt Chart View */}
-      {viewMode === 'gantt' ? (
+      {/* Canvas View */}
+      {viewMode === 'canvas' ? (
+        <TaskCanvas tasks={tasks} projectId={project.id} />
+      ) : viewMode === 'gantt' ? (
         <GanttChart
           tasks={tasks.filter(t => {
             const matchesSearch = !searchQuery || t.title.toLowerCase().includes(searchQuery.toLowerCase());
