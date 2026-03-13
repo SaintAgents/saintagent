@@ -22,6 +22,7 @@ import AdvancedDependencyManager from './AdvancedDependencyManager';
 import TaskDependencyGraph from './TaskDependencyGraph';
 import EditProjectModal from './EditProjectModal';
 import PeerReviewsTab from './PeerReviewsTab';
+import GanttChart from './GanttChart';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -32,7 +33,7 @@ const STATUS_COLUMNS = [
 
 export default function ProjectDetailView({ project, onBack, currentUser, profile }) {
   const queryClient = useQueryClient();
-  const [viewMode, setViewMode] = useState('board'); // board or list
+  const [viewMode, setViewMode] = useState('board'); // board, list, or gantt
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
@@ -317,6 +318,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
               variant={viewMode === 'board' ? 'secondary' : 'ghost'} 
               size="sm"
               onClick={() => setViewMode('board')}
+              title="Board"
             >
               <LayoutGrid className="w-4 h-4" />
             </Button>
@@ -324,8 +326,17 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
               variant={viewMode === 'list' ? 'secondary' : 'ghost'} 
               size="sm"
               onClick={() => setViewMode('list')}
+              title="List"
             >
               <List className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant={viewMode === 'gantt' ? 'secondary' : 'ghost'} 
+              size="sm"
+              onClick={() => setViewMode('gantt')}
+              title="Gantt"
+            >
+              <Calendar className="w-4 h-4" />
             </Button>
           </div>
         </div>
@@ -338,8 +349,18 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         </div>
       )}
 
-      {/* Kanban Board */}
-      {viewMode === 'board' ? (
+      {/* Gantt Chart View */}
+      {viewMode === 'gantt' ? (
+        <GanttChart
+          tasks={tasks.filter(t => {
+            const matchesSearch = !searchQuery || t.title.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesPriority = filterPriority === 'all' || t.priority === filterPriority;
+            return matchesSearch && matchesPriority;
+          })}
+          projectStartDate={project.start_date}
+          projectEndDate={project.end_date}
+        />
+      ) : viewMode === 'board' ? (
         <div className="grid grid-cols-4 gap-4">
           {STATUS_COLUMNS.map((column) => (
             <div key={column.id} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 min-h-[400px]">
