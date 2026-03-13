@@ -1,40 +1,33 @@
 import React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
-import { getMatchScoreStyle } from './SkillMatchUtils';
-import { Star } from 'lucide-react';
+import { getMatchScoreColor } from './skillMatch';
+import { Target } from 'lucide-react';
 
 /**
- * Renders a small match score badge with a tooltip showing matched/missing skills.
- * Only renders if the task has skill_tags.
+ * Small badge showing skill match score with tooltip detail.
  */
-export default function SkillMatchBadge({ score, matchedSkills = [], missingSkills = [] }) {
-  const style = getMatchScoreStyle(score);
-  if (!style) return null;
+export default function SkillMatchBadge({ score, matchedTags = [], unmatchedTags = [], compact = false }) {
+  if (score === 0 && matchedTags.length === 0) return null;
+
+  const colorClass = getMatchScoreColor(score);
 
   return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge variant="outline" className={`text-[9px] px-1.5 py-0 gap-0.5 cursor-help ${style.color}`}>
-            <Star className="w-2.5 h-2.5" />
-            {score}%
-          </Badge>
+          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-semibold ${colorClass}`}>
+            <Target className="w-2.5 h-2.5" />
+            {compact ? `${score}%` : `${score}% match`}
+          </span>
         </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-[220px] text-xs">
-          <div className="space-y-1">
-            <p className="font-medium">Skill Match: {style.label} ({score}%)</p>
-            {matchedSkills.length > 0 && (
-              <div>
-                <span className="text-emerald-600">Matched:</span>{' '}
-                {matchedSkills.map(s => `${s.tag} (${s.proficiency}/5)`).join(', ')}
-              </div>
+        <TooltipContent side="top" className="max-w-[220px]">
+          <div className="text-xs space-y-1">
+            <div className="font-semibold">Skill Match: {score}%</div>
+            {matchedTags.length > 0 && (
+              <div className="text-emerald-600">✓ {matchedTags.join(', ')}</div>
             )}
-            {missingSkills.length > 0 && (
-              <div>
-                <span className="text-red-500">Missing:</span>{' '}
-                {missingSkills.join(', ')}
-              </div>
+            {unmatchedTags.length > 0 && (
+              <div className="text-slate-400">✗ {unmatchedTags.join(', ')}</div>
             )}
           </div>
         </TooltipContent>
