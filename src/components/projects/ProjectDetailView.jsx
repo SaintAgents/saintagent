@@ -438,6 +438,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
                       onManageDependencies={(t) => setDependencyTask(t)}
                       commentCount={getCommentCount(task.id)}
                       attachmentCount={getAttachmentCount(task.id)}
+                      skillMatchScore={getSkillMatch(task)}
                     />
                   ))}
                   {tasksByStatus[column.id]?.length === 0 && (
