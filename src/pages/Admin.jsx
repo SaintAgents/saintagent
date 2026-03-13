@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -41,6 +41,9 @@ import BetaTickerManager from '@/components/admin/BetaTickerManager';
 import AffiliatePayoutManager from '@/components/admin/AffiliatePayoutManager';
 import TeamWorkloadDashboard from '@/components/admin/TeamWorkloadDashboard';
 import ProjectHealthHeatmap from '@/components/admin/ProjectHealthHeatmap';
+import ExecutiveRoadmap from '@/components/admin/ExecutiveRoadmap';
+import AIRiskScoring from '@/components/admin/AIRiskScoring';
+import SmartReassignment from '@/components/admin/SmartReassignment';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -225,6 +228,18 @@ export default function Admin() {
               <Activity className="w-4 h-4" />
               Health Map
             </TabsTrigger>
+            <TabsTrigger value="roadmap" className="gap-2 px-3 py-2">
+              <Map className="w-4 h-4" />
+              Roadmap
+            </TabsTrigger>
+            <TabsTrigger value="risk" className="gap-2 px-3 py-2">
+              <AlertTriangle className="w-4 h-4" />
+              Risk Score
+            </TabsTrigger>
+            <TabsTrigger value="reassign" className="gap-2 px-3 py-2">
+              <Shuffle className="w-4 h-4" />
+              Reassign
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -379,6 +394,18 @@ export default function Admin() {
 
           <TabsContent value="health">
             <ProjectHealthHeatmap />
+          </TabsContent>
+
+          <TabsContent value="roadmap">
+            <ExecutiveRoadmap />
+          </TabsContent>
+
+          <TabsContent value="risk">
+            <AIRiskScoring />
+          </TabsContent>
+
+          <TabsContent value="reassign">
+            <SmartReassignment />
           </TabsContent>
         </Tabs>
       </div>
