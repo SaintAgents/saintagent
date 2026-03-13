@@ -453,8 +453,9 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
         /* List View */
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="grid grid-cols-12 gap-4 p-4 bg-slate-50 dark:bg-slate-700 text-xs font-medium text-slate-500 uppercase">
-            <div className="col-span-5">Task</div>
+            <div className="col-span-4">Task</div>
             <div className="col-span-2">Assignee</div>
+            <div className="col-span-1">Match</div>
             <div className="col-span-2">Status</div>
             <div className="col-span-1">Priority</div>
             <div className="col-span-2">Due Date</div>
@@ -470,7 +471,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
                 className="grid grid-cols-12 gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer"
                 onClick={() => setSelectedTask(task)}
               >
-                <div className="col-span-5 flex items-center gap-3">
+                <div className="col-span-4 flex items-center gap-3">
                   <CheckCircle2 className={`w-5 h-5 ${task.status === 'completed' ? 'text-emerald-500' : 'text-slate-300'}`} />
                   <span className="font-medium text-slate-900 dark:text-white">{task.title}</span>
                   <div className="flex items-center gap-2 text-slate-400">
@@ -498,6 +499,14 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
                   ) : (
                     <span className="text-sm text-slate-400">Unassigned</span>
                   )}
+                </div>
+                <div className="col-span-1 flex items-center">
+                  {(() => {
+                    const match = getSkillMatch(task);
+                    if (!match) return <span className="text-xs text-slate-300">—</span>;
+                    const { computeSkillMatch: _, getMatchScoreStyle: getStyle } = require('./SkillMatchUtils');
+                    return null;
+                  })()}
                 </div>
                 <div className="col-span-2 flex items-center">
                   <Badge className={
