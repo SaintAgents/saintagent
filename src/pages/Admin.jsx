@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -44,6 +44,7 @@ import ProjectHealthHeatmap from '@/components/admin/ProjectHealthHeatmap';
 import ExecutiveRoadmap from '@/components/admin/ExecutiveRoadmap';
 import AIRiskScoring from '@/components/admin/AIRiskScoring';
 import SmartReassignment from '@/components/admin/SmartReassignment';
+import ResourceCapacityPlanner from '@/components/admin/ResourceCapacityPlanner';
 
 export default function Admin() {
   const { data: user } = useQuery({
@@ -240,6 +241,10 @@ export default function Admin() {
               <Shuffle className="w-4 h-4" />
               Reassign
             </TabsTrigger>
+            <TabsTrigger value="capacity" className="gap-2 px-3 py-2">
+              <Gauge className="w-4 h-4" />
+              Capacity
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -406,6 +411,10 @@ export default function Admin() {
 
           <TabsContent value="reassign">
             <SmartReassignment />
+          </TabsContent>
+
+          <TabsContent value="capacity">
+            <ResourceCapacityPlanner />
           </TabsContent>
         </Tabs>
       </div>
