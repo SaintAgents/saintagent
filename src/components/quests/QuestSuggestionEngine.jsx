@@ -44,8 +44,7 @@ export default function QuestSuggestionEngine({ userId, profile, badges = [], co
       });
     });
 
-    // Default to seeker if no archetypes found
-    return archetypes.length > 0 ? [...new Set(archetypes)] : ['seeker'];
+    return [...new Set(archetypes)];
   };
 
   // Get user's progress patterns
@@ -77,6 +76,7 @@ export default function QuestSuggestionEngine({ userId, profile, badges = [], co
   };
 
   const archetypes = getUserArchetypes();
+  const userRank = profile?.rp_rank_code || profile?.rank_code || 'seeker';
   const progressData = analyzeProgress();
 
   // Generate AI-powered quest suggestions
@@ -90,7 +90,7 @@ Identity Archetypes: ${archetypes.join(', ')}
 Preferred Quest Categories: ${progressData.preferredCategories.join(', ') || 'None yet'}
 Quests Completed: ${progressData.totalCompleted}
 Badges Earned: ${badges.map(b => b.title || b.code).slice(0, 5).join(', ') || 'None yet'}
-Rank: ${profile?.rp_rank_code || 'seeker'}
+Rank: ${userRank}
 
 Create quests that:
 1. Align with their archetype(s) and preferred categories
@@ -207,8 +207,12 @@ For each quest, explain WHY it's suggested for this user.`;
         </p>
       </CardHeader>
       <CardContent>
-        {/* User's Archetypes */}
+        {/* User's Rank & Archetypes */}
         <div className="flex flex-wrap gap-2 mb-4">
+          <Badge variant="outline" className="flex items-center gap-1 border-amber-300 text-amber-700">
+            <Crown className="w-3 h-3" />
+            {userRank.charAt(0).toUpperCase() + userRank.slice(1).replace('_', ' ')}
+          </Badge>
           {archetypes.map(archetype => {
             const config = ARCHETYPE_QUEST_CATEGORIES[archetype];
             const Icon = config?.icon || Compass;
