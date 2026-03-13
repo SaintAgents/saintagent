@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { Tag } from 'lucide-react';
 
 const DEPENDENCY_TYPE_LABELS = {
   FS: 'Finish→Start',
@@ -118,6 +119,23 @@ export default function TaskCard({
         <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
           {task.description}
         </p>
+      )}
+
+      {/* Skill Tags */}
+      {task.skill_tags?.length > 0 && (
+        <div className="flex items-center gap-1 mb-2 flex-wrap">
+          <Tag className="w-3 h-3 text-slate-400 shrink-0" />
+          {task.skill_tags.slice(0, 3).map((tag, i) => (
+            <Badge key={i} variant="outline" className="text-[9px] px-1.5 py-0 border-violet-200 text-violet-600 bg-violet-50">
+              {tag}
+            </Badge>
+          ))}
+          {task.skill_tags.length > 3 && (
+            <Badge variant="outline" className="text-[9px] px-1.5 py-0 text-slate-500">
+              +{task.skill_tags.length - 3}
+            </Badge>
+          )}
+        </div>
       )}
 
       {showProject && projectTitle && (

@@ -8,10 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle2, Save, X, User, Star } from 'lucide-react';
+import { CheckCircle2, Save, X, User, Target } from 'lucide-react';
 import TaskRecommendationPanel from './TaskRecommendationPanel';
 import SkillTagInput from './SkillTagInput';
-import { computeSkillMatch, getMatchScoreStyle } from './SkillMatchUtils';
+import SkillMatchBadge from './SkillMatchBadge';
+import { computeSkillMatch } from './skillMatch';
 
 export default function CreateTaskModal({ open, onClose, projectId, currentUser, profile }) {
   const queryClient = useQueryClient();
@@ -49,17 +50,24 @@ export default function CreateTaskModal({ open, onClose, projectId, currentUser,
   });
 
   // Fetch skills for all team members
+  const teamMemberIds = project ? [project.owner_id, ...(project.team_member_ids || [])].filter(Boolean) : [];
   const { data: allSkills = [] } = useQuery({
-    queryKey: ['teamSkills', project?.owner_id, project?.team_member_ids],
+    queryKey: ['teamSkills', teamMemberIds.join(',')],
     queryFn: async () => {
-      const memberIds = [project.owner_id, ...(project.team_member_ids || [])];
-      const skills = await Promise.all(
-        memberIds.map(id => base44.entities.Skill.filter({ user_id: id, type: 'offer' }))
+      const results = await Promise.all(
+        teamMemberIds.map(id => base44.entities.Skill.filter({ user_id: id, type: 'offer' }))
       );
-      return skills.flat();
+      return results.flat();
     },
-    enabled: !!project
+    enabled: teamMemberIds.length > 0
   });
+
+  // Compute match scores for each team member
+  const memberMatchScores = teamProfiles.map(member => {
+    const memberSkills = allSkills.filter(s => s.user_id === member.user_id);
+    const match = computeSkillMatch(memberSkills, formData.skill_tags);
+    return { ...member, match, skillCount: memberSkills.length };
+  }).sort((a, b) => b.match.score - a.match.score);
 
   const createMutation = useMutation({
     mutationFn: (data) => {
@@ -160,44 +168,36 @@ export default function CreateTaskModal({ open, onClose, projectId, currentUser,
 
           <div>
             <Label>Assign To</Label>
-            <div className="mt-1 space-y-1.5 max-h-[200px] overflow-y-auto border rounded-md p-2">
-              <button
-                type="button"
-                className={`w-full text-left px-2 py-1.5 rounded text-sm hover:bg-slate-50 ${!formData.assignee_id ? 'bg-violet-50 ring-1 ring-violet-300' : ''}`}
-                onClick={() => setFormData({ ...formData, assignee_id: '' })}
-              >
-                <span className="text-slate-400">Unassigned</span>
-              </button>
-              {teamProfiles.map((member) => {
-                const memberSkills = allSkills.filter(s => s.user_id === member.user_id);
-                const match = computeSkillMatch(formData.skill_tags, memberSkills);
-                const matchStyle = getMatchScoreStyle(match.score);
-                const isSelected = formData.assignee_id === member.user_id;
-
-                return (
-                  <button
-                    type="button"
-                    key={member.user_id}
-                    className={`w-full text-left px-2 py-1.5 rounded text-sm hover:bg-slate-50 flex items-center justify-between ${isSelected ? 'bg-violet-50 ring-1 ring-violet-300' : ''}`}
-                    onClick={() => setFormData({ ...formData, assignee_id: member.user_id })}
-                  >
-                    <div className="flex items-center gap-2">
+            <Select
+              value={formData.assignee_id}
+              onValueChange={(v) => setFormData({ ...formData, assignee_id: v })}
+            >
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select team member" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>Unassigned</SelectItem>
+                {(formData.skill_tags.length > 0 ? memberMatchScores : teamProfiles).map((member) => (
+                  <SelectItem key={member.user_id} value={member.user_id}>
+                    <div className="flex items-center gap-2 w-full">
                       <Avatar className="w-5 h-5">
                         <AvatarImage src={member.avatar_url} />
                         <AvatarFallback className="text-[8px]">{member.display_name?.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <span>{member.display_name}</span>
+                      <span className="flex-1">{member.display_name}</span>
+                      {member.match && formData.skill_tags.length > 0 && (
+                        <SkillMatchBadge
+                          score={member.match.score}
+                          matchedTags={member.match.matchedTags}
+                          unmatchedTags={member.match.unmatchedTags}
+                          compact
+                        />
+                      )}
                     </div>
-                    {matchStyle && (
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${matchStyle.color}`}>
-                        <Star className="w-2.5 h-2.5" />
-                        {match.score}%
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* AI Recommendation Engine */}
