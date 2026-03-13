@@ -12,7 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   CheckCircle2, Calendar, User, Paperclip, MessageSquare, 
-  Send, X, Upload, Download, Trash2, Edit, Save, Link2, Clock
+  Send, X, Upload, Download, Trash2, Edit, Save, Link2, Clock, Tag
 } from 'lucide-react';
 
 const DEPENDENCY_TYPE_LABELS = {
@@ -262,6 +262,18 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
                     )}
                   </div>
                   
+                  {/* Skill Tags */}
+                  {task.skill_tags?.length > 0 && (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Tag className="w-4 h-4 text-slate-400" />
+                      {task.skill_tags.map((tag, i) => (
+                        <Badge key={i} className="bg-violet-100 text-violet-700 text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Dependencies Section */}
                   {((task.dependencies && task.dependencies.length > 0) || (task.depends_on && task.depends_on.length > 0)) && (
                     <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
