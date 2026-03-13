@@ -14,6 +14,7 @@ import {
   CheckCircle2, Calendar, User, Paperclip, MessageSquare, 
   Send, X, Upload, Download, Trash2, Edit, Save, Link2, Clock, Tag
 } from 'lucide-react';
+import SkillTagInput from './SkillTagInput';
 
 const DEPENDENCY_TYPE_LABELS = {
   FS: 'Finish→Start',
@@ -22,7 +23,6 @@ const DEPENDENCY_TYPE_LABELS = {
   SF: 'Start→Finish'
 };
 import { formatDistanceToNow } from 'date-fns';
-import SkillTagInput from './SkillTagInput';
 
 export default function TaskDetailModal({ task, open, onClose, currentUser, profile, allTasks = [] }) {
   const queryClient = useQueryClient();
@@ -258,6 +258,16 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
                         Due {new Date(task.due_date).toLocaleDateString()}
                       </div>
                     )}
+                    {task.skill_tags && task.skill_tags.length > 0 && (
+                      <div className="flex items-center gap-1.5">
+                        <Tag className="w-3.5 h-3.5 text-slate-400" />
+                        {task.skill_tags.map((tag, i) => (
+                          <Badge key={i} variant="outline" className="text-[10px] bg-violet-50 border-violet-200 text-violet-600">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                     {task.assignee_name && (
                       <div className="flex items-center gap-2">
                         <Avatar className="w-6 h-6">
@@ -269,18 +279,6 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
                     )}
                   </div>
                   
-                  {/* Skill Tags */}
-                  {task.skill_tags?.length > 0 && (
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Tag className="w-4 h-4 text-slate-400" />
-                      {task.skill_tags.map((tag, i) => (
-                        <Badge key={i} className="bg-violet-100 text-violet-700 text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-
                   {/* Dependencies Section */}
                   {((task.dependencies && task.dependencies.length > 0) || (task.depends_on && task.depends_on.length > 0)) && (
                     <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
