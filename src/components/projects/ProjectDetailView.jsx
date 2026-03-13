@@ -25,6 +25,7 @@ import PeerReviewsTab from './PeerReviewsTab';
 import GanttChart from './GanttChart';
 import TaskCanvas from './canvas/TaskCanvas';
 import SprintPlannerPanel from './sprint/SprintPlannerPanel';
+import { computeSkillMatch } from './SkillMatchUtils';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -82,6 +83,28 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
     },
     enabled: !!project?.team_member_ids?.length
   });
+
+  // Fetch skills for all team members (for skill match scoring)
+  const { data: teamSkills = [] } = useQuery({
+    queryKey: ['teamSkills', project?.owner_id, project?.team_member_ids],
+    queryFn: async () => {
+      const memberIds = [project.owner_id, ...(project.team_member_ids || [])].filter(Boolean);
+      if (memberIds.length === 0) return [];
+      const skills = await Promise.all(
+        memberIds.map(id => base44.entities.Skill.filter({ user_id: id, type: 'offer' }))
+      );
+      return skills.flat();
+    },
+    enabled: !!project,
+    staleTime: 300000,
+  });
+
+  // Compute skill match for a task's current assignee
+  const getSkillMatch = (task) => {
+    if (!task.skill_tags?.length || !task.assignee_id) return null;
+    const memberSkills = teamSkills.filter(s => s.user_id === task.assignee_id);
+    return computeSkillMatch(task.skill_tags, memberSkills);
+  };
 
   // Update task status
   const updateTaskMutation = useMutation({
