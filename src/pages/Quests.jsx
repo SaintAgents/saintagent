@@ -26,6 +26,7 @@ import AILoreQuestGenerator from '@/components/quests/AILoreQuestGenerator';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import AdvancedModeQuest from '@/components/quests/AdvancedModeQuest';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/eda418711_universal_upscale_0_0b3501a9-62c0-4df4-978e-6bf4e8cb3953_0.jpg";
 
@@ -151,6 +152,11 @@ export default function Quests() {
       <div className="max-w-7xl mx-auto px-4 pb-12">
         {activeTab === 'overview' && (
           <>
+            {/* Advanced Mode Quest - Guided Pathway */}
+            <div className="mb-6">
+              <AdvancedModeQuest userId={currentUser?.email} profile={profile} />
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
               {/* Left Column - Quest Tracker */}
               <div className="lg:col-span-3">
