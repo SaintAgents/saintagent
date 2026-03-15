@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { 
   ArrowLeft, Plus, Calendar, DollarSign, Users, 
   CheckCircle2, Clock, Paperclip, MessageSquare,
-  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil, Route, Zap
+  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil, Route, Zap, AlertTriangle
 } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
@@ -25,6 +25,7 @@ import PeerReviewsTab from './PeerReviewsTab';
 import GanttChart from './GanttChart';
 import TaskCanvas from './canvas/TaskCanvas';
 import SprintPlannerPanel from './sprint/SprintPlannerPanel';
+import SlippageConfigPanel from './SlippageConfigPanel';
 import { computeSkillMatch } from './SkillMatchUtils';
 
 const STATUS_COLUMNS = [
@@ -48,6 +49,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
   const [editProjectOpen, setEditProjectOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('tasks');
   const [showSprintPlanner, setShowSprintPlanner] = useState(false);
+  const [showSlippageConfig, setShowSlippageConfig] = useState(false);
 
   // Fetch tasks for this project
   const { data: tasks = [] } = useQuery({
@@ -208,6 +210,15 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
             <Zap className="w-4 h-4 mr-1" />
             Sprint Plan
           </Button>
+          <Button
+            variant={showSlippageConfig ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowSlippageConfig(!showSlippageConfig)}
+            className={showSlippageConfig ? "bg-amber-600 hover:bg-amber-700" : ""}
+          >
+            <AlertTriangle className="w-4 h-4 mr-1" />
+            Risk Alerts
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setAddMemberOpen(true)}>
             <Users className="w-4 h-4 mr-1" />
             Add Member
@@ -218,6 +229,11 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           </Button>
         </div>
       </div>
+
+      {/* Slippage Config Panel */}
+      {showSlippageConfig && (
+        <SlippageConfigPanel projectId={project.id} />
+      )}
 
       {/* Sprint Planner Panel */}
       {showSprintPlanner && (
