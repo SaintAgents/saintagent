@@ -67,8 +67,9 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
   const effectiveMaxUSD = canOverrideCap ? Infinity : configuredCapUSD;
   const effectiveMaxGGG = canOverrideCap ? Infinity : (effectiveMaxUSD / GGG_TO_USD);
 
-  // Handle prefill data or edit mode
+  // Handle prefill data or edit mode — re-populate whenever dialog opens
   useEffect(() => {
+    if (!open) return;
     if (editMission) {
       setFormData({
         title: editMission.title || '',
@@ -86,6 +87,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         milestones: editMission.milestones || [],
         requires_ggg_approval: editMission.requires_ggg_approval || false
       });
+      setActiveTab('basics');
     } else if (prefillData) {
       setFormData(prev => ({
         ...prev,
@@ -99,7 +101,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         milestones: prefillData.milestones || prev.milestones
       }));
     }
-  }, [prefillData, editMission]);
+  }, [open, prefillData, editMission]);
 
   const resetForm = () => {
     setFormData({
