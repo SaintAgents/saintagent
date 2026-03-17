@@ -128,27 +128,43 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
       const gggAmount = parseFloat(data.reward_ggg) || 0;
       const needsApproval = data.requires_ggg_approval || (!canOverrideCap && gggAmount > effectiveMaxGGG);
       
-      const missionData = {
-        ...data,
-        creator_id: user.email,
-        creator_name: profile?.display_name || user.full_name,
-        status: needsApproval ? 'pending_approval' : 'active',
-        requires_ggg_approval: needsApproval,
-        ggg_approval_status: needsApproval ? 'pending' : 'approved',
+      // Build the editable fields only
+      const editableFields = {
+        title: data.title,
+        description: data.description,
+        objective: data.objective,
+        mission_type: data.mission_type,
         reward_ggg: gggAmount,
         reward_rank_points: parseInt(data.reward_rank_points) || 0,
         reward_boost: parseFloat(data.reward_boost) || 0,
+        reward_badge_code: data.reward_badge_code || '',
+        reward_role: data.reward_role || '',
         max_participants: parseInt(data.max_participants) || null,
-        participant_count: 0,
-        participant_ids: []
+        image_url: data.image_url || '',
+        roles_needed: data.roles_needed || [],
+        milestones: data.milestones || [],
+        requires_ggg_approval: needsApproval,
       };
 
-      const mission = editMission 
-        ? await base44.entities.Mission.update(editMission.id, missionData)
-        : await base44.entities.Mission.create(missionData);
+      let mission;
+      if (editMission) {
+        // When editing, only update editable fields — preserve participants, status, etc.
+        mission = await base44.entities.Mission.update(editMission.id, editableFields);
+      } else {
+        // When creating, add creator and participant fields
+        mission = await base44.entities.Mission.create({
+          ...editableFields,
+          creator_id: user.email,
+          creator_name: profile?.display_name || user.full_name,
+          status: needsApproval ? 'pending_approval' : 'active',
+          ggg_approval_status: needsApproval ? 'pending' : 'approved',
+          participant_count: 0,
+          participant_ids: [],
+        });
+      }
 
-      // Create admin request if GGG approval is needed
-      if (needsApproval && gggAmount > 0) {
+      // Create admin request if GGG approval is needed (new missions only)
+      if (!editMission && needsApproval && gggAmount > 0) {
         await base44.entities.AdminRequest.create({
           request_type: 'mission_ggg_approval',
           title: `GGG Approval: ${data.title}`,
@@ -172,8 +188,9 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['missions'] });
+      queryClient.invalidateQueries({ queryKey: ['mission'] });
       onClose();
-      resetForm();
+      if (!editMission) resetForm();
     },
     onError: (err) => {
       console.error('Failed to save mission:', err);
