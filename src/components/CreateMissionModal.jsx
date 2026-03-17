@@ -328,7 +328,6 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         placeholder="e.g., Build AI Agent for Community"
-                        required
                         className="mt-1"
                       />
                     </div>
@@ -339,7 +338,6 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                         value={formData.objective}
                         onChange={(e) => setFormData({ ...formData, objective: e.target.value })}
                         placeholder="What is the goal?"
-                        required
                         className="mt-1"
                       />
                     </div>
