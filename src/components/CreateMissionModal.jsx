@@ -199,7 +199,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
   });
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
+    if (!formData.title || !formData.objective) return;
     createMutation.mutate(formData);
   };
 
@@ -319,7 +320,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
               </div>
 
               <ScrollArea className="flex-1 px-6">
-                <form id="mission-form" onSubmit={handleSubmit} className="py-4 space-y-6">
+                <form id="mission-form" onSubmit={handleSubmit} noValidate className="py-4 space-y-6">
                   {/* Basics Tab */}
                   <TabsContent value="basics" className="mt-0 space-y-4">
                     <div>
