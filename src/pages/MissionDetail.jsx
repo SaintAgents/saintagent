@@ -20,10 +20,12 @@ import {
   MessageSquare,
   Share2,
   Settings,
-  Pencil
+  Pencil,
+  BrainCircuit
 } from "lucide-react";
 import CreateMissionModal from '@/components/CreateMissionModal';
 import MissionTaskTracker, { computeMissionProgress } from '@/components/missions/MissionTaskTracker';
+import MissionAdvisorPanel from '@/components/missions/MissionAdvisorPanel';
 
 import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
@@ -245,21 +247,25 @@ export default function MissionDetail() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="w-full grid grid-cols-5 bg-white rounded-xl border">
+              <TabsList className="w-full grid grid-cols-6 bg-white rounded-xl border">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="copilot">
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  AI Co-pilot
+                <TabsTrigger value="advisor" className="gap-1">
+                  <BrainCircuit className="w-4 h-4" />
+                  Advisor
+                </TabsTrigger>
+                <TabsTrigger value="copilot" className="gap-1">
+                  <Sparkles className="w-4 h-4" />
+                  Co-pilot
                 </TabsTrigger>
                 <TabsTrigger value="ai-brief">
                   AI Brief
                 </TabsTrigger>
-                <TabsTrigger value="team-builder">
-                  <Users className="w-4 h-4 mr-2" />
+                <TabsTrigger value="team-builder" className="gap-1">
+                  <Users className="w-4 h-4" />
                   Team AI
                 </TabsTrigger>
-                <TabsTrigger value="discussion">
-                  <MessageSquare className="w-4 h-4 mr-2" />
+                <TabsTrigger value="discussion" className="gap-1">
+                  <MessageSquare className="w-4 h-4" />
                   Discussion
                 </TabsTrigger>
               </TabsList>
@@ -344,6 +350,10 @@ export default function MissionDetail() {
                     </CardContent>
                   </Card>
                 )}
+              </TabsContent>
+
+              <TabsContent value="advisor" className="mt-6">
+                <MissionAdvisorPanel mission={mission} />
               </TabsContent>
 
               <TabsContent value="copilot" className="mt-6">
