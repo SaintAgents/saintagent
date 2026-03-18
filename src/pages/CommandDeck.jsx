@@ -69,13 +69,9 @@ import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import NewsCard from '@/components/news/NewsCard';
 import { Newspaper, Image, MessageCircle } from 'lucide-react';
-import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
-import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
-import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
-import SpiritTubeCard from '@/components/videos/SpiritTubeCard';
-import GlobalScheduleCard from '@/components/hud/GlobalScheduleCard';
 import AIProfileCompletionPrompt from '@/components/ai/AIProfileCompletionPrompt';
+import ControlsDeck from '@/components/hud/ControlsDeck';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
