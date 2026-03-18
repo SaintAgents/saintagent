@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 export default function VideoPlayerModal({ video, open, onClose, currentUser, profile }) {
   const [comment, setComment] = useState('');
   const [hasLiked, setHasLiked] = useState(false);
+  const [embedError, setEmbedError] = useState(false);
   const queryClient = useQueryClient();
 
   // Increment view count on open
@@ -123,6 +124,11 @@ export default function VideoPlayerModal({ video, open, onClose, currentUser, pr
     return { type: 'direct', url };
   };
 
+  // Reset embed error when video changes
+  useEffect(() => {
+    setEmbedError(false);
+  }, [video?.id]);
+
   if (!video) return null;
 
   const videoEmbed = getVideoEmbed(video.video_url);
@@ -133,12 +139,28 @@ export default function VideoPlayerModal({ video, open, onClose, currentUser, pr
         <div className="flex flex-col lg:flex-row h-full">
           {/* Video Section */}
           <div className="flex-1 bg-black flex flex-col">
-            {videoEmbed.type === 'youtube' ? (
+            {embedError ? (
+              <div className="w-full aspect-video bg-slate-900 flex flex-col items-center justify-center gap-3 text-white">
+                <Play className="w-12 h-12 text-slate-400" />
+                <p className="text-sm text-slate-400">Video unavailable</p>
+                {video.video_url && (
+                  <a 
+                    href={video.video_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-400 hover:underline"
+                  >
+                    Open in new tab
+                  </a>
+                )}
+              </div>
+            ) : videoEmbed.type === 'youtube' ? (
               <iframe
                 src={`https://www.youtube.com/embed/${videoEmbed.id}?autoplay=1`}
                 className="w-full aspect-video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                onError={() => setEmbedError(true)}
               />
             ) : videoEmbed.type === 'vimeo' ? (
               <iframe
