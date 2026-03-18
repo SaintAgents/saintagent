@@ -23,6 +23,7 @@ import {
   Pencil
 } from "lucide-react";
 import CreateMissionModal from '@/components/CreateMissionModal';
+import MissionTaskTracker, { computeMissionProgress } from '@/components/missions/MissionTaskTracker';
 
 import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
@@ -144,9 +145,7 @@ export default function MissionDetail() {
   const isCreator = mission?.creator_id === user?.email;
   const isAdmin = user?.role === 'admin';
   const canEdit = isCreator || isAdmin;
-  const completedTasks = mission?.tasks?.filter(t => t.completed).length || 0;
-  const totalTasks = mission?.tasks?.length || 0;
-  const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+  const { completedCount: completedTasks, totalCount: totalTasks, percent: progress } = computeMissionProgress(mission);
   const heroImage = mission?.image_url || MISSION_IMAGES[mission?.mission_type] || MISSION_IMAGES.default;
 
   return (
@@ -292,31 +291,40 @@ export default function MissionDetail() {
                   </CardContent>
                 </Card>
 
-                {/* Tasks */}
-                {mission.tasks?.length > 0 && (
+                {/* Milestones & Tasks */}
+                {(mission.milestones?.length > 0 || mission.tasks?.length > 0) && (
                   <Card>
                     <CardContent className="p-6">
-                      <h3 className="font-semibold text-slate-900 mb-4">Tasks</h3>
-                      <div className="space-y-2">
-                        {mission.tasks.map((task, i) => (
-                          <div 
-                            key={i} 
-                            className="flex items-center gap-3 p-3 rounded-lg bg-slate-50"
-                          >
-                            {task.completed ? (
-                              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                            ) : (
-                              <div className="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0" />
-                            )}
-                            <span className={cn(
-                              "text-sm flex-1",
-                              task.completed ? "text-slate-500 line-through" : "text-slate-900"
-                            )}>
-                              {task.title}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                      <h3 className="font-semibold text-slate-900 mb-4">
+                        {mission.milestones?.length > 0 ? 'Milestones & Tasks' : 'Tasks'}
+                      </h3>
+                      <MissionTaskTracker 
+                        mission={mission} 
+                        canEdit={canEdit || isParticipant} 
+                      />
+                      {/* Fallback for top-level tasks without milestones */}
+                      {(!mission.milestones || mission.milestones.length === 0) && mission.tasks?.length > 0 && (
+                        <div className="space-y-2">
+                          {mission.tasks.map((task, i) => (
+                            <div 
+                              key={i} 
+                              className="flex items-center gap-3 p-3 rounded-lg bg-slate-50"
+                            >
+                              {task.completed ? (
+                                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                              ) : (
+                                <div className="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0" />
+                              )}
+                              <span className={cn(
+                                "text-sm flex-1",
+                                task.completed ? "text-slate-500 line-through" : "text-slate-900"
+                              )}>
+                                {task.title}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 )}
