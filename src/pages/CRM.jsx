@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Search, Globe, Lock, Eye, Share2, 
   TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle, Sparkles,
-  BarChart3
+  BarChart3, Brain, Bot, Zap
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
@@ -27,6 +27,8 @@ import ContactScoringEngine from '@/components/crm/ContactScoringEngine';
 import FollowUpReminderPanel from '@/components/crm/FollowUpReminderPanel';
 import AutomatedFollowUpSettings from '@/components/crm/AutomatedFollowUpSettings';
 import CRMAIAssistant from '@/components/crm/CRMAIAssistant';
+import SynchronicityEngine from '@/components/crm/SynchronicityEngine';
+import CRMResponseAgentChat from '@/components/crm/CRMResponseAgentChat';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
 
@@ -249,9 +251,17 @@ export default function CRM() {
                 <BarChart3 className="w-4 h-4" />
                 Analytics
               </TabsTrigger>
+              <TabsTrigger value="synchronicity" className="gap-2">
+                <Brain className="w-4 h-4 text-amber-500" />
+                Synchronicity
+              </TabsTrigger>
               <TabsTrigger value="automations" className="gap-2">
-                <Sparkles className="w-4 h-4" />
+                <Zap className="w-4 h-4" />
                 Automations
+              </TabsTrigger>
+              <TabsTrigger value="agent" className="gap-2">
+                <Bot className="w-4 h-4 text-violet-500" />
+                Response Agent
               </TabsTrigger>
               <TabsTrigger value="ai-assistant" className="gap-2">
                 <Sparkles className="w-4 h-4 text-violet-500" />
@@ -376,8 +386,16 @@ export default function CRM() {
             />
           </TabsContent>
 
+          <TabsContent value="synchronicity">
+            <SynchronicityEngine contacts={myContacts} currentUserId={currentUser?.email} />
+          </TabsContent>
+
           <TabsContent value="automations">
             <AutomatedFollowUpSettings currentUserId={currentUser?.email} />
+          </TabsContent>
+
+          <TabsContent value="agent">
+            <CRMResponseAgentChat contacts={myContacts} selectedContact={selectedContact} />
           </TabsContent>
 
           <TabsContent value="ai-assistant">
