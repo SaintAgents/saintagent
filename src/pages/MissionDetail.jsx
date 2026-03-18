@@ -22,7 +22,7 @@ import {
   Settings,
   Pencil,
   BrainCircuit,
-  GanttChart
+  ChartGantt
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import CreateMissionModal from '@/components/CreateMissionModal';
@@ -218,7 +218,7 @@ export default function MissionDetail() {
               )}
               <Link to={`/MissionGantt?id=${missionId}`}>
                 <Button variant="outline" className="bg-white/80 backdrop-blur-sm gap-1.5">
-                  <GanttChart className="w-4 h-4" />
+                  <ChartGantt className="w-4 h-4" />
                   Timeline
                 </Button>
               </Link>
