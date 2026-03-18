@@ -95,6 +95,7 @@ export default function VideosDashboardCard({ profile, currentUser }) {
                 <VideoCard
                   key={video.id}
                   video={video}
+                  compact
                   onClick={() => setSelectedVideo(video)}
                 />
               ))
@@ -111,6 +112,7 @@ export default function VideosDashboardCard({ profile, currentUser }) {
                 <VideoCard
                   key={video.id}
                   video={video}
+                  compact
                   onClick={() => setSelectedVideo(video)}
                 />
               ))
@@ -127,6 +129,7 @@ export default function VideosDashboardCard({ profile, currentUser }) {
                 <VideoCard
                   key={video.id}
                   video={video}
+                  compact
                   onClick={() => setSelectedVideo(video)}
                 />
               ))
