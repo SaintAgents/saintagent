@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { ThumbsUp, ThumbsDown, Share2, MessageCircle, Send, X, Eye, Calendar } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Share2, MessageCircle, Send, X, Eye, Calendar, Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
