@@ -448,6 +448,82 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             )}
           </div>
 
+          {/* AI Dossier */}
+          {contact.ai_dossier && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-violet-500" />
+                <span className="text-sm font-medium" style={isDark ? { color: '#e5e7eb' } : { color: '#374151' }}>AI Dossier</span>
+                {contact.last_enriched_at && (
+                  <span className="text-xs text-slate-400">
+                    {format(new Date(contact.last_enriched_at), 'MMM d')}
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                {contact.ai_dossier.pain_point && (
+                  <div className="p-2 rounded-lg" style={isDark ? { backgroundColor: '#1e293b' } : { backgroundColor: '#fef2f2' }}>
+                    <p className="text-xs font-medium" style={{ color: '#dc2626' }}>Pain Point</p>
+                    <p className="text-sm" style={isDark ? { color: '#cbd5e1' } : { color: '#7f1d1d' }}>{contact.ai_dossier.pain_point}</p>
+                  </div>
+                )}
+                {contact.ai_dossier.value_prop && (
+                  <div className="p-2 rounded-lg" style={isDark ? { backgroundColor: '#1e293b' } : { backgroundColor: '#f5f3ff' }}>
+                    <p className="text-xs font-medium" style={{ color: '#7c3aed' }}>Value Proposition</p>
+                    <p className="text-sm" style={isDark ? { color: '#cbd5e1' } : { color: '#4c1d95' }}>{contact.ai_dossier.value_prop}</p>
+                  </div>
+                )}
+                {contact.ai_dossier.recommended_approach && (
+                  <div className="p-2 rounded-lg" style={isDark ? { backgroundColor: '#1e293b' } : { backgroundColor: '#ecfdf5' }}>
+                    <p className="text-xs font-medium" style={{ color: '#059669' }}>Recommended Approach</p>
+                    <p className="text-sm" style={isDark ? { color: '#cbd5e1' } : { color: '#064e3b' }}>{contact.ai_dossier.recommended_approach}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Sentiment & Priority */}
+          {(contact.sentiment_label || contact.priority_tier) && (
+            <div className="flex flex-wrap gap-2">
+              {contact.sentiment_label && (
+                <Badge className={
+                  contact.sentiment_label === 'hot' ? 'bg-red-100 text-red-700' :
+                  contact.sentiment_label === 'warm' ? 'bg-orange-100 text-orange-700' :
+                  contact.sentiment_label === 'neutral' ? 'bg-blue-100 text-blue-700' :
+                  contact.sentiment_label === 'cold' ? 'bg-cyan-100 text-cyan-700' :
+                  'bg-red-200 text-red-800'
+                }>
+                  Sentiment: {contact.sentiment_label}
+                </Badge>
+              )}
+              {contact.priority_tier && (
+                <Badge className={
+                  contact.priority_tier === 'critical' ? 'bg-red-100 text-red-700' :
+                  contact.priority_tier === 'high' ? 'bg-orange-100 text-orange-700' :
+                  contact.priority_tier === 'medium' ? 'bg-blue-100 text-blue-700' :
+                  'bg-slate-100 text-slate-600'
+                }>
+                  Priority: {contact.priority_tier}
+                </Badge>
+              )}
+            </div>
+          )}
+
+          {/* Intent Signals */}
+          {contact.intent_signals?.length > 0 && (
+            <div>
+              <p className="text-xs font-medium mb-1" style={isDark ? { color: '#94a3b8' } : { color: '#64748b' }}>Intent Signals</p>
+              <div className="flex flex-wrap gap-1">
+                {contact.intent_signals.map((sig, i) => (
+                  <Badge key={i} variant="outline" className="text-xs" style={isDark ? { backgroundColor: '#334155', borderColor: '#475569', color: '#fbbf24' } : { backgroundColor: '#fffbeb', borderColor: '#fde68a', color: '#92400e' }}>
+                    {sig}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Metadata */}
           <div className="flex items-center justify-between text-xs pt-3 border-t" style={isDark ? { borderColor: '#334155', color: '#64748b' } : { color: '#94a3b8' }}>
             <span>Added {contact.created_date && format(new Date(contact.created_date), 'MMM d, yyyy')}</span>
