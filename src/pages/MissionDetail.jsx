@@ -21,8 +21,10 @@ import {
   Share2,
   Settings,
   Pencil,
-  BrainCircuit
+  BrainCircuit,
+  GanttChart
 } from "lucide-react";
+import { Link } from 'react-router-dom';
 import CreateMissionModal from '@/components/CreateMissionModal';
 import MissionTaskTracker, { computeMissionProgress } from '@/components/missions/MissionTaskTracker';
 import MissionAdvisorPanel from '@/components/missions/MissionAdvisorPanel';
@@ -214,6 +216,12 @@ export default function MissionDetail() {
                   Join Mission
                 </Button>
               )}
+              <Link to={`/MissionGantt?id=${missionId}`}>
+                <Button variant="outline" className="bg-white/80 backdrop-blur-sm gap-1.5">
+                  <GanttChart className="w-4 h-4" />
+                  Timeline
+                </Button>
+              </Link>
               <Button variant="outline" size="icon" className="bg-white/80 backdrop-blur-sm">
                 <Share2 className="w-4 h-4" />
               </Button>
