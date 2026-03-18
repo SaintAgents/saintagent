@@ -69,9 +69,17 @@ const menuItems = [
   { id: 'globalchat', label: 'Global Chat', icon: MessagesSquare, action: 'openGlobalChat' },
 ];
 
+const SIMPLE_NAV_IDS = [
+  'command', 'missions', 'projects', 'meetings', 'messages', 'matches',
+  'communityfeed', 'marketplace', 'events', 'activity', 'profile', 'settings'
+];
+
 export default function MobileMenuSheet({ open, onOpenChange }) {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState(getStoredViewMode);
+  const [menuMode, setMenuMode] = useState(() => {
+    try { return localStorage.getItem('mobileMenuMode') || 'simple'; } catch { return 'simple'; }
+  });
 
   // Listen for view mode changes
   useEffect(() => {
@@ -91,8 +99,16 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
     };
   }, []);
 
-  // Filter menu items based on view mode and custom settings
+  const handleMenuModeChange = (mode) => {
+    setMenuMode(mode);
+    try { localStorage.setItem('mobileMenuMode', mode); } catch {}
+  };
+
+  // Filter menu items based on view mode, custom settings, AND simple/advanced toggle
   const filteredMenuItems = menuItems.filter(item => {
+    // Apply simple filter first
+    if (menuMode === 'simple' && !SIMPLE_NAV_IDS.includes(item.id)) return false;
+
     const config = VIEW_MODE_CONFIG[viewMode];
     if (!config) return true;
     
@@ -100,7 +116,6 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
     if (viewMode === 'custom') {
       try {
         const customCards = JSON.parse(localStorage.getItem('deckCustomCards') || '[]');
-        // Map card IDs to nav IDs where applicable
         const cardToNavMap = {
           'circles': 'circles',
           'missions': 'missions',
@@ -116,17 +131,15 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
           'leaderboard': 'activity',
           'news': 'news',
         };
-        // Always show these core items
         const alwaysShow = ['command', 'profile', 'settings', 'faq'];
         if (alwaysShow.includes(item.id)) return true;
-        // Check if this nav item's corresponding card is enabled
         return customCards.some(cardId => cardToNavMap[cardId] === item.id);
       } catch {
         return true;
       }
     }
     
-    if (!config.navIds) return true; // Show all if no filter
+    if (!config.navIds) return true;
     return config.navIds.includes(item.id);
   });
 
@@ -143,15 +156,42 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
           <SheetHeader className="p-3 border-b border-slate-200 dark:border-[#00ff88]/20">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-slate-900 dark:text-white">Menu</SheetTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleLeftSidebar}
-                className="gap-1.5 text-xs mr-6"
-              >
-                <PanelLeft className="w-4 h-4" />
-                Side Nav
-              </Button>
+              <div className="flex items-center gap-2 mr-6">
+                {/* Simple / Advanced toggle */}
+                <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5">
+                  <button
+                    onClick={() => handleMenuModeChange('simple')}
+                    className={cn(
+                      "px-2.5 py-1 rounded-md text-[10px] font-semibold transition-all",
+                      menuMode === 'simple'
+                        ? "bg-white dark:bg-violet-600 text-violet-700 dark:text-white shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                    )}
+                  >
+                    Simple
+                  </button>
+                  <button
+                    onClick={() => handleMenuModeChange('advanced')}
+                    className={cn(
+                      "px-2.5 py-1 rounded-md text-[10px] font-semibold transition-all",
+                      menuMode === 'advanced'
+                        ? "bg-white dark:bg-violet-600 text-violet-700 dark:text-white shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                    )}
+                  >
+                    Advanced
+                  </button>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleLeftSidebar}
+                  className="gap-1.5 text-xs"
+                >
+                  <PanelLeft className="w-4 h-4" />
+                  Side Nav
+                </Button>
+              </div>
             </div>
           </SheetHeader>
           <div className="overflow-y-auto h-[calc(60vh-56px)] p-3 pb-20">
