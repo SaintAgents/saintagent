@@ -47,7 +47,13 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
 
   const deleteMutation = useMutation({
     mutationFn: () => base44.entities.Contact.delete(contact.id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myContacts'] })
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['myContacts'] });
+      queryClient.setQueriesData({ queryKey: ['myContacts'] }, (old) =>
+        old ? old.filter(c => c.id !== contact.id) : old
+      );
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['myContacts'] })
   });
 
   const toggleFederatedMutation = useMutation({
@@ -56,6 +62,17 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
       permission_level: !contact.is_federated ? 'signal_only' : 'private'
     }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myContacts'] })
+  });
+
+  const updateFieldMutation = useMutation({
+    mutationFn: ({ field, value }) => base44.entities.Contact.update(contact.id, { [field]: value }),
+    onMutate: async ({ field, value }) => {
+      await queryClient.cancelQueries({ queryKey: ['myContacts'] });
+      queryClient.setQueriesData({ queryKey: ['myContacts'] }, (old) =>
+        old ? old.map(c => c.id === contact.id ? { ...c, [field]: value } : c) : old
+      );
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['myContacts'] })
   });
 
   if (viewMode === 'list') {
