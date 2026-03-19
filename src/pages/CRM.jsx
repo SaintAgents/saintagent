@@ -467,6 +467,7 @@ export default function CRM() {
         open={cleanupOpen}
         onClose={() => setCleanupOpen(false)}
         contacts={myContacts}
+        currentUserId={currentUser?.email}
       />
 
       <ContactEnrichModal
