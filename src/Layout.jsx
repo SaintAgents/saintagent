@@ -1710,6 +1710,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           sidebarCollapsed={sidebarCollapsed}
           isCollapsed={topbarCollapsed}
           onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
+          currentPageName={currentPageName}
         />
       )}
 
