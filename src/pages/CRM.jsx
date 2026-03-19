@@ -286,51 +286,55 @@ export default function CRM() {
         <Tabs value={tab} onValueChange={setTab}>
           <div className="space-y-4 mb-4">
             <div className="flex items-center justify-between">
-              <TabsList className="flex-wrap">
-                <TabsTrigger value="my-contacts" className="gap-2">
-                  <Lock className="w-4 h-4" />
-                  My Contacts
-                </TabsTrigger>
-                <TabsTrigger value="network" className="gap-2">
-                  <Globe className="w-4 h-4" />
-                  Federated Network
-                </TabsTrigger>
-                <TabsTrigger value="requests" className="gap-2">
-                  <Share2 className="w-4 h-4" />
-                  Access Requests
-                  {accessRequests.length > 0 && (
-                    <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="pipeline" className="gap-2">
-                  <Columns3 className="w-4 h-4" />
-                  Pipeline
-                </TabsTrigger>
-                <TabsTrigger value="analytics" className="gap-2">
-                  <BarChart3 className="w-4 h-4" />
-                  Analytics
-                </TabsTrigger>
-                <TabsTrigger value="ai-assistant" className="gap-2">
-                  <Sparkles className="w-4 h-4 text-violet-500" />
-                  AI Assistant
-                </TabsTrigger>
-                <TabsTrigger value="synchronicity" className="gap-2">
-                  <Brain className="w-4 h-4 text-amber-500" />
-                  Synchronicity
-                </TabsTrigger>
-                <TabsTrigger value="automations" className="gap-2">
-                  <Zap className="w-4 h-4" />
-                  Automations
-                </TabsTrigger>
-                <TabsTrigger value="agent" className="gap-2">
-                  <Bot className="w-4 h-4 text-violet-500" />
-                  Response Agent
-                </TabsTrigger>
-                <TabsTrigger value="google-sync" className="gap-2">
-                  <Mail className="w-4 h-4 text-blue-500" />
-                  Google Sync
-                </TabsTrigger>
-              </TabsList>
+              <div className="space-y-1">
+                <TabsList>
+                  <TabsTrigger value="my-contacts" className="gap-2">
+                    <Lock className="w-4 h-4" />
+                    My Contacts
+                  </TabsTrigger>
+                  <TabsTrigger value="network" className="gap-2">
+                    <Globe className="w-4 h-4" />
+                    Federated Network
+                  </TabsTrigger>
+                  <TabsTrigger value="requests" className="gap-2">
+                    <Share2 className="w-4 h-4" />
+                    Access Requests
+                    {accessRequests.length > 0 && (
+                      <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="pipeline" className="gap-2">
+                    <Columns3 className="w-4 h-4" />
+                    Pipeline
+                  </TabsTrigger>
+                  <TabsTrigger value="analytics" className="gap-2">
+                    <BarChart3 className="w-4 h-4" />
+                    Analytics
+                  </TabsTrigger>
+                </TabsList>
+                <TabsList>
+                  <TabsTrigger value="ai-assistant" className="gap-2">
+                    <Sparkles className="w-4 h-4 text-violet-500" />
+                    AI Assistant
+                  </TabsTrigger>
+                  <TabsTrigger value="synchronicity" className="gap-2">
+                    <Brain className="w-4 h-4 text-amber-500" />
+                    Synchronicity
+                  </TabsTrigger>
+                  <TabsTrigger value="automations" className="gap-2">
+                    <Zap className="w-4 h-4" />
+                    Automations
+                  </TabsTrigger>
+                  <TabsTrigger value="agent" className="gap-2">
+                    <Bot className="w-4 h-4 text-violet-500" />
+                    Response Agent
+                  </TabsTrigger>
+                  <TabsTrigger value="google-sync" className="gap-2">
+                    <Mail className="w-4 h-4 text-blue-500" />
+                    Google Sync
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <div className="flex items-center gap-2">
                 <Button
