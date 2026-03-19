@@ -227,8 +227,9 @@ export default function Profiles() {
       );
     }
 
-    // Helper function to check if user is online (seen in last 5 minutes)
+    // Helper function to check if user is online (seen in last 5 minutes, never for demo users)
     const isOnline = (profile) => {
+      if (profile.user_id?.includes('demo') || profile.user_id?.includes('saintagents.app')) return false;
       if (!profile.last_seen_at) return false;
       const lastSeen = new Date(profile.last_seen_at);
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
