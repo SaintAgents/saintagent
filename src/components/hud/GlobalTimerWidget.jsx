@@ -16,10 +16,10 @@ import {
   Square,
   Sparkles,
   Search,
-  ChevronRight,
   Loader2,
   FolderOpen,
-  Clock
+  Clock,
+  Pencil
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +37,7 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
   const [elapsed, setElapsed] = useState(0);
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [genericLabel, setGenericLabel] = useState('');
   const intervalRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -65,7 +66,8 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
   });
 
   const runningEntry = runningEntries[0] || null;
-  const runningTask = runningEntry ? myTasks.find(t => t.id === runningEntry.task_id) : null;
+  const runningTask = runningEntry?.task_id ? myTasks.find(t => t.id === runningEntry.task_id) : null;
+  const isGenericTimer = runningEntry && !runningEntry.task_id;
 
   // Tick the timer
   useEffect(() => {
@@ -86,21 +88,24 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
   const projectMap = {};
   projects.forEach(p => { projectMap[p.id] = p; });
 
-  // Start timer
+  // Stop any running timer helper
+  const stopRunning = async () => {
+    if (!runningEntry) return;
+    const dur = Math.floor((Date.now() - new Date(runningEntry.start_time).getTime()) / 60000);
+    await base44.entities.TaskTimeEntry.update(runningEntry.id, {
+      is_running: false,
+      end_time: new Date().toISOString(),
+      duration_minutes: Math.max(dur, 1),
+    });
+  };
+
+  // Start timer on a task
   const startMutation = useMutation({
     mutationFn: async (task) => {
-      // Stop any existing running timer first
-      if (runningEntry) {
-        const dur = Math.floor((Date.now() - new Date(runningEntry.start_time).getTime()) / 60000);
-        await base44.entities.TaskTimeEntry.update(runningEntry.id, {
-          is_running: false,
-          end_time: new Date().toISOString(),
-          duration_minutes: dur,
-        });
-      }
+      await stopRunning();
       return base44.entities.TaskTimeEntry.create({
         task_id: task.id,
-        project_id: task.project_id,
+        project_id: task.project_id || '',
         user_id: currentUser.email,
         user_name: currentUser.full_name,
         start_time: new Date().toISOString(),
@@ -114,17 +119,30 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
     },
   });
 
-  // Stop timer
-  const stopMutation = useMutation({
-    mutationFn: async () => {
-      if (!runningEntry) return;
-      const dur = Math.floor((Date.now() - new Date(runningEntry.start_time).getTime()) / 60000);
-      return base44.entities.TaskTimeEntry.update(runningEntry.id, {
-        is_running: false,
-        end_time: new Date().toISOString(),
-        duration_minutes: Math.max(dur, 1),
+  // Start generic timer
+  const startGenericMutation = useMutation({
+    mutationFn: async (label) => {
+      await stopRunning();
+      return base44.entities.TaskTimeEntry.create({
+        task_id: '',
+        project_id: '',
+        user_id: currentUser.email,
+        user_name: currentUser.full_name,
+        start_time: new Date().toISOString(),
+        is_running: true,
+        description: label || 'Time block',
       });
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['runningTimer'] });
+      setGenericLabel('');
+      setOpen(false);
+    },
+  });
+
+  // Stop timer
+  const stopMutation = useMutation({
+    mutationFn: stopRunning,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['runningTimer'] });
     },
@@ -132,10 +150,15 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
 
   // AI suggestion
   const suggestTask = useCallback(async () => {
-    if (aiLoading || myTasks.length === 0) return;
+    if (aiLoading) return;
+    const activeTasks = myTasks.filter(t => t.status !== 'completed');
+    if (activeTasks.length === 0) {
+      setAiSuggestion({ task_id: '', reason: 'No active tasks found. Try the generic timer!' });
+      return;
+    }
     setAiLoading(true);
     setAiSuggestion(null);
-    const activeTasks = myTasks.filter(t => t.status !== 'completed');
+
     const taskList = activeTasks.slice(0, 20).map(t => {
       const proj = projectMap[t.project_id];
       return `- ID:${t.id} | "${t.title}" | Project: "${proj?.title || 'Unknown'}" | Status: ${t.status} | Priority: ${t.priority}`;
@@ -156,18 +179,24 @@ Page context hints:
 
 Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
 
-    const res = await base44.integrations.Core.InvokeLLM({
-      prompt,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          task_id: { type: "string" },
-          reason: { type: "string" },
+    try {
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            task_id: { type: "string" },
+            reason: { type: "string" },
+          },
         },
-      },
-    });
-    setAiSuggestion(res);
-    setAiLoading(false);
+      });
+      setAiSuggestion(res);
+    } catch (err) {
+      console.error('AI suggest failed:', err);
+      setAiSuggestion({ task_id: '', reason: 'Could not generate suggestion. Try selecting a task manually.' });
+    } finally {
+      setAiLoading(false);
+    }
   }, [currentPageName, myTasks, projectMap, aiLoading]);
 
   // Filter tasks
@@ -177,8 +206,11 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
     : activeTasks;
 
   const suggestedTask = aiSuggestion?.task_id ? activeTasks.find(t => t.id === aiSuggestion.task_id) : null;
-
   const isRunning = !!runningEntry;
+
+  const runningLabel = isGenericTimer
+    ? (runningEntry.description || 'Time block')
+    : (runningTask?.title || 'Task');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -190,7 +222,7 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
             "rounded-xl relative group w-8 h-8 md:w-9 md:h-9",
             isRunning && "bg-emerald-50 hover:bg-emerald-100"
           )}
-          title={isRunning ? `Tracking: ${runningTask?.title || 'Task'}` : "Time Tracker"}
+          title={isRunning ? `Tracking: ${runningLabel}` : "Time Tracker"}
         >
           {isRunning ? (
             <div className="flex items-center gap-1">
@@ -220,11 +252,13 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
               <div className="flex-1 min-w-0 mr-3">
                 <p className="text-xs text-emerald-600 font-medium">Currently tracking</p>
                 <p className="text-sm font-semibold text-slate-900 truncate">
-                  {runningTask?.title || 'Unknown Task'}
+                  {runningLabel}
                 </p>
-                <p className="text-xs text-slate-500 truncate">
-                  {projectMap[runningEntry.project_id]?.title || 'Project'}
-                </p>
+                {!isGenericTimer && runningEntry.project_id && (
+                  <p className="text-xs text-slate-500 truncate">
+                    {projectMap[runningEntry.project_id]?.title || 'Project'}
+                  </p>
+                )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-lg font-mono font-bold text-emerald-700">
@@ -244,44 +278,78 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
           </div>
         )}
 
-        {/* Header */}
+        {/* Generic Timer Section */}
         <div className="px-4 py-3 border-b border-slate-100">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-violet-600" />
-              {isRunning ? 'Switch Task' : 'Start Timer'}
-            </h3>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 text-xs gap-1"
-              onClick={suggestTask}
-              disabled={aiLoading || activeTasks.length === 0}
-            >
-              {aiLoading ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
-              ) : (
-                <Sparkles className="w-3 h-3 text-violet-600" />
-              )}
-              AI Suggest
-            </Button>
-          </div>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+          <p className="text-xs font-medium text-slate-500 mb-2">Quick Timer</p>
+          <div className="flex gap-2">
             <Input
-              placeholder="Search tasks..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-8 pl-8 text-sm"
+              placeholder="What are you working on?"
+              value={genericLabel}
+              onChange={(e) => setGenericLabel(e.target.value)}
+              className="h-8 text-sm flex-1"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  startGenericMutation.mutate(genericLabel);
+                }
+              }}
             />
+            <Button
+              size="sm"
+              className="h-8 bg-emerald-600 hover:bg-emerald-700 gap-1 px-3 shrink-0"
+              onClick={() => startGenericMutation.mutate(genericLabel)}
+              disabled={startGenericMutation.isPending}
+            >
+              <Play className="w-3 h-3" />
+              Start
+            </Button>
           </div>
         </div>
 
+        {/* Task Header with AI + Search */}
+        <div className="px-4 py-3 border-b border-slate-100">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
+              <Clock className="w-4 h-4 text-violet-600" />
+              {isRunning ? 'Switch to Task' : 'Start on Task'}
+            </h3>
+            {activeTasks.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs gap-1"
+                onClick={suggestTask}
+                disabled={aiLoading}
+              >
+                {aiLoading ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3 h-3 text-violet-600" />
+                )}
+                AI Suggest
+              </Button>
+            )}
+          </div>
+          {activeTasks.length > 0 && (
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Input
+                placeholder="Search tasks..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-8 pl-8 text-sm"
+              />
+            </div>
+          )}
+        </div>
+
         {/* AI Suggestion */}
-        {suggestedTask && (
+        {aiSuggestion && (
           <div
-            className="px-4 py-2.5 bg-violet-50 border-b border-violet-100 cursor-pointer hover:bg-violet-100 transition-colors"
-            onClick={() => startMutation.mutate(suggestedTask)}
+            className={cn(
+              "px-4 py-2.5 bg-violet-50 border-b border-violet-100 transition-colors",
+              suggestedTask && "cursor-pointer hover:bg-violet-100"
+            )}
+            onClick={() => suggestedTask && startMutation.mutate(suggestedTask)}
           >
             <div className="flex items-center gap-2 mb-1">
               <Sparkles className="w-3.5 h-3.5 text-violet-600" />
@@ -289,23 +357,30 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
             </div>
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0 mr-2">
-                <p className="text-sm font-medium text-slate-900 truncate">{suggestedTask.title}</p>
-                <p className="text-xs text-slate-500 truncate">{aiSuggestion.reason}</p>
+                {suggestedTask ? (
+                  <>
+                    <p className="text-sm font-medium text-slate-900 truncate">{suggestedTask.title}</p>
+                    <p className="text-xs text-slate-500 truncate">{aiSuggestion.reason}</p>
+                  </>
+                ) : (
+                  <p className="text-xs text-slate-600">{aiSuggestion.reason}</p>
+                )}
               </div>
-              <Play className="w-4 h-4 text-emerald-600 shrink-0" />
+              {suggestedTask && <Play className="w-4 h-4 text-emerald-600 shrink-0" />}
             </div>
           </div>
         )}
 
         {/* Task List */}
-        <ScrollArea className="h-64">
+        <ScrollArea className="h-52">
           {activeTasks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-8 text-slate-400">
               <FolderOpen className="w-8 h-8 mb-2 opacity-50" />
               <p className="text-sm">No assigned tasks</p>
+              <p className="text-xs mt-1">Use the quick timer above</p>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-8 text-slate-400">
               <Search className="w-6 h-6 mb-2 opacity-50" />
               <p className="text-sm">No tasks match "{search}"</p>
             </div>
