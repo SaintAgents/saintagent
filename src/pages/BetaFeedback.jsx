@@ -340,6 +340,13 @@ export default function BetaFeedback() {
                         </div>
                         <p className="text-slate-700 text-sm">{feedback.description}</p>
                         
+                        {/* Screenshot */}
+                        {feedback.screenshot_url && (
+                          <a href={feedback.screenshot_url} target="_blank" rel="noopener noreferrer" className="block mt-2">
+                            <img src={feedback.screenshot_url} alt="Screenshot" className="w-full max-h-48 object-cover object-top rounded-lg border hover:opacity-90 transition-opacity" />
+                          </a>
+                        )}
+
                         {/* Stats Row */}
                         <div className="flex items-center gap-4 mt-3 text-sm">
                           <button
