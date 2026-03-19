@@ -45,26 +45,17 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   }
 
   const handleDismiss = (duration) => {
-    try {
-      if (duration === 'never') {
-        localStorage.setItem('mbti_prompt_dismissed_permanently', 'true');
-        // Also clear any temporary dismissal
-        localStorage.removeItem('mbti_prompt_dismissed_until');
-      } else {
-        const dismissUntil = new Date();
-        if (duration === 'hour') {
-          dismissUntil.setHours(dismissUntil.getHours() + 1);
-        } else if (duration === 'day') {
-          dismissUntil.setDate(dismissUntil.getDate() + 1);
-        } else if (duration === 'week') {
-          dismissUntil.setDate(dismissUntil.getDate() + 7);
-        } else if (duration === 'month') {
-          dismissUntil.setMonth(dismissUntil.getMonth() + 1);
-        }
-        localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
-      }
-    } catch (e) {
-      console.error('Failed to save dismiss state:', e);
+    if (duration === 'never') {
+      localStorage.setItem('mbti_prompt_dismissed_permanently', 'never');
+      localStorage.setItem('mbti_prompt_dismissed_until', 'never');
+      localStorage.removeItem('mbti_prompt_dismissed_until');
+    } else {
+      const dismissUntil = new Date();
+      if (duration === 'hour') dismissUntil.setHours(dismissUntil.getHours() + 1);
+      else if (duration === 'day') dismissUntil.setDate(dismissUntil.getDate() + 1);
+      else if (duration === 'week') dismissUntil.setDate(dismissUntil.getDate() + 7);
+      else if (duration === 'month') dismissUntil.setMonth(dismissUntil.getMonth() + 1);
+      localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
     }
     setDismissed(true);
     setShowDismissOptions(false);
@@ -149,7 +140,7 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => handleDismiss('never')}
+              onClick={() => setShowDismissOptions(true)}
               className="shrink-0 text-slate-400 hover:text-slate-600"
             >
               <X className="w-4 h-4" />
