@@ -290,7 +290,7 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
       </div>
 
       {/* Inline Editable Dropdowns - 2 columns */}
-      {isOwner && (
+      {isOwner && !compact && (
         <div className="grid grid-cols-2 gap-1.5 mb-3">
           <InlineSelect field="lead_status" value={contact.lead_status} icon={TrendingUp} placeholder="Status"
             options={[
