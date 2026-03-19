@@ -52,6 +52,7 @@ export default function CRM() {
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [batchFederateOpen, setBatchFederateOpen] = useState(false);
   const [scoringOpen, setScoringOpen] = useState(false);
+  const [compactCards, setCompactCards] = useState(false);
   const queryClient = useQueryClient();
 
   // Check for ?help in URL
