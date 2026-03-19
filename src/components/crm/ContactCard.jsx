@@ -370,6 +370,14 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
           </Button>
         )}
       </div>
+
+      {/* Email Modal */}
+      <EmailOutreachModal
+        open={emailModalOpen}
+        onClose={() => setEmailModalOpen(false)}
+        contact={contact}
+        currentUser={currentUser}
+      />
     </div>
   );
 }
