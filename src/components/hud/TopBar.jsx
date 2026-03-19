@@ -61,6 +61,7 @@ import MastersMessagesTicker from './MastersMessagesTicker';
 import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
 import SaintBrowser from '../browser/SaintBrowser';
 import AdvancedSearchModal from '../search/AdvancedSearchModal';
+import GlobalTimerWidget from './GlobalTimerWidget';
 import { formatDistanceToNow, parseISO } from "date-fns";
 
 // Theme-aware mode icons
@@ -627,6 +628,11 @@ export default function TopBar({
         "flex items-center transition-all duration-300 ml-auto flex-shrink-0 relative",
         isCollapsed ? "gap-0.5" : "gap-1 md:gap-2"
       )} style={{ zIndex: 10000 }}>
+        {/* Global Timer Widget */}
+        {currentUser && (
+          <GlobalTimerWidget currentUser={currentUser} currentPageName={currentPageName} />
+        )}
+
         {/* SaintBrowser */}
         <Button 
           variant="ghost" 
