@@ -330,6 +330,14 @@ export default function ContactCleanupModal({ open, onClose, contacts, currentUs
             </div>
           </div>
         </div>
+
+        {/* Edit Contact Form */}
+        <ContactFormModal
+          open={!!editingContact}
+          onClose={() => setEditingContact(null)}
+          contact={editingContact}
+          currentUserId={currentUserId}
+        />
       </DialogContent>
     </Dialog>
   );
