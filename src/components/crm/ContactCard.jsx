@@ -14,12 +14,13 @@ import {
 import { 
   MoreVertical, Edit, Trash2, Globe, Lock, Eye, EyeOff,
   Building2, MapPin, Star, Calendar, ExternalLink, MessageCircle, Phone,
-  Target, TrendingUp, Sparkles, Signal, Mail, Tag, Send, StickyNote
+  Target, TrendingUp, Sparkles, Signal, Mail, Tag, Send, StickyNote, Telescope
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import EmailOutreachModal from './EmailOutreachModal';
 import ContactNotesPopover from './ContactNotesPopover';
+import DeepDiveAIModal from './DeepDiveAIModal';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -45,6 +46,7 @@ const DOMAIN_COLORS = {
 export default function ContactCard({ contact, viewMode = 'grid', compact = false, isOwner = false, onEdit, onRequestAccess, onClick }) {
   const queryClient = useQueryClient();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [deepDiveOpen, setDeepDiveOpen] = useState(false);
   const permConfig = PERMISSION_CONFIG[contact.permission_level] || PERMISSION_CONFIG.private;
   const PermIcon = permConfig.icon;
 
