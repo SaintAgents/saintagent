@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Globe, Lock, Share2, 
   TrendingUp, LayoutGrid, List, Upload, HelpCircle, Sparkles,
-  BarChart3, Brain, Bot, Zap
+  BarChart3, Brain, Bot, Zap, Eye, EyeOff
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
