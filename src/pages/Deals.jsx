@@ -221,23 +221,18 @@ export default function DealsPage() {
   // Check if user can move deals (admin or auditor role)
   const canMoveDeal = currentUser?.role === 'admin' || profile?.user_role === 'auditor';
 
-  // Handle drag and drop for deals - only admin/auditor can move
+  // Handle drag and drop for deals - auto-triggers notes + tasks
   const handleDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
     
-    // Only admin or auditor can move deals
     if (!canMoveDeal) return;
-    
-    // Dropped outside a valid droppable
     if (!destination) return;
-    
-    // Dropped in the same position
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
     
+    const oldStage = source.droppableId;
     const newStage = destination.droppableId;
     const dealId = draggableId;
     
-    // Find the deal
     const deal = deals.find(d => d.id === dealId);
     if (!deal) return;
     
@@ -246,13 +241,36 @@ export default function DealsPage() {
       return oldDeals.map(d => d.id === dealId ? { ...d, stage: newStage } : d);
     });
     
-    // Update the deal in the database
     try {
+      // 1. Update the deal stage
       await base44.entities.Deal.update(dealId, { stage: newStage });
+      
+      // 2. Auto-trigger: create notes, activities, and follow-up tasks
+      await handleDealStageTransition({
+        deal: { ...deal, id: dealId },
+        oldStage,
+        newStage,
+        currentUser,
+        profile,
+      });
+
+      // 3. Show rich toast notification
+      const oldLabel = STAGE_LABELS[oldStage] || oldStage;
+      const newLabel = STAGE_LABELS[newStage] || newStage;
+      toast.custom(() => (
+        <StageTransitionToast 
+          dealTitle={deal.title}
+          oldStageLabel={oldLabel}
+          newStageLabel={newLabel}
+          tasksCreated={2}
+        />
+      ), { duration: 5000 });
+      
       queryClient.invalidateQueries({ queryKey: ['deals'] });
+      queryClient.invalidateQueries({ queryKey: ['dealNotes'] });
+      queryClient.invalidateQueries({ queryKey: ['dealActivities'] });
     } catch (error) {
       console.error('Failed to update deal stage:', error);
-      // Revert on error
       queryClient.invalidateQueries({ queryKey: ['deals'] });
     }
   };
