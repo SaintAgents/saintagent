@@ -34,7 +34,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     image_url: '',
     roles_needed: [],
     milestones: [],
-    requires_ggg_approval: false
+    requires_ggg_approval: false,
+    join_policy: 'open'
   });
   const [newRole, setNewRole] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -85,7 +86,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         image_url: editMission.image_url || '',
         roles_needed: editMission.roles_needed || [],
         milestones: editMission.milestones || [],
-        requires_ggg_approval: editMission.requires_ggg_approval || false
+        requires_ggg_approval: editMission.requires_ggg_approval || false,
+        join_policy: editMission.join_policy || 'open'
       });
       setActiveTab('basics');
     } else if (prefillData) {
@@ -118,7 +120,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
       image_url: '',
       roles_needed: [],
       milestones: [],
-      requires_ggg_approval: false
+      requires_ggg_approval: false,
+      join_policy: 'open'
     });
     setActiveTab('basics');
   };
@@ -144,6 +147,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         roles_needed: data.roles_needed || [],
         milestones: data.milestones || [],
         requires_ggg_approval: needsApproval,
+        join_policy: data.join_policy || 'open',
       };
 
       let mission;
