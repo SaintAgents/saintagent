@@ -12,6 +12,7 @@ import TeamWorkload from './pages/TeamWorkload';
 import MyDashboard from './pages/MyDashboard';
 import ClientPortal from './pages/ClientPortal';
 import ImpactDashboard from './pages/ImpactDashboard';
+import OutreachSequences from './pages/OutreachSequences';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -72,6 +73,7 @@ const AuthenticatedApp = () => {
       <Route path="/MyDashboard" element={<LayoutWrapper currentPageName="MyDashboard"><MyDashboard /></LayoutWrapper>} />
       <Route path="/ClientPortal" element={<LayoutWrapper currentPageName="ClientPortal"><ClientPortal /></LayoutWrapper>} />
       <Route path="/ImpactDashboard" element={<LayoutWrapper currentPageName="ImpactDashboard"><ImpactDashboard /></LayoutWrapper>} />
+      <Route path="/OutreachSequences" element={<LayoutWrapper currentPageName="OutreachSequences"><OutreachSequences /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
