@@ -43,8 +43,15 @@ const DOMAIN_COLORS = {
 
 export default function ContactCard({ contact, viewMode = 'grid', isOwner = false, onEdit, onRequestAccess, onClick }) {
   const queryClient = useQueryClient();
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
   const permConfig = PERMISSION_CONFIG[contact.permission_level] || PERMISSION_CONFIG.private;
   const PermIcon = permConfig.icon;
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 300000,
+  });
 
   const deleteMutation = useMutation({
     mutationFn: () => base44.entities.Contact.delete(contact.id),
