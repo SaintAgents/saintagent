@@ -27,6 +27,7 @@ import DealAnalyticsTab from '@/components/deals/DealAnalyticsTab.jsx';
 import { handleDealStageTransition, STAGE_LABELS } from '@/components/deals/DealStageTransitionHandler';
 import StageTransitionToast from '@/components/deals/StageTransitionToast';
 import AIEmailTemplateEngine from '@/components/deals/AIEmailTemplateEngine';
+import DealMakerInfoModal from '@/components/deals/DealMakerInfoModal';
 import { toast } from 'sonner';
 
 // Pipeline stages matching the image
