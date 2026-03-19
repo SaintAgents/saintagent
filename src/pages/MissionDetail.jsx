@@ -167,6 +167,11 @@ export default function MissionDetail() {
                 )}>
                   {mission.status}
                 </Badge>
+                {mission.join_policy === 'approval_required' && (
+                  <Badge variant="outline" className="border-amber-300 text-amber-700 bg-white/80">
+                    Approval Required
+                  </Badge>
+                )}
               </div>
               <h1 className="text-3xl font-bold text-slate-900 mb-2 drop-shadow-sm">{mission.title}</h1>
               <p className="text-slate-700 max-w-2xl drop-shadow-sm">{mission.objective}</p>
