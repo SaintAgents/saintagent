@@ -116,11 +116,28 @@ export default function ContactCleanupModal({ open, onClose, contacts }) {
 
   const deleteMutation = useMutation({
     mutationFn: async (ids) => {
-      for (const id of ids) {
-        await base44.entities.Contact.delete(id);
+      // Delete in parallel batches of 20 for speed
+      const batchSize = 20;
+      for (let i = 0; i < ids.length; i += batchSize) {
+        const batch = ids.slice(i, i + batchSize);
+        await Promise.all(batch.map(id => base44.entities.Contact.delete(id)));
       }
     },
-    onSuccess: () => {
+    onMutate: async (ids) => {
+      // Optimistic: immediately remove from cache
+      await queryClient.cancelQueries({ queryKey: ['myContacts'] });
+      const prev = queryClient.getQueryData(['myContacts', undefined]);
+      queryClient.setQueriesData({ queryKey: ['myContacts'] }, (old) => 
+        old ? old.filter(c => !ids.includes(c.id)) : old
+      );
+      return { prev };
+    },
+    onError: (err, ids, context) => {
+      if (context?.prev) {
+        queryClient.setQueriesData({ queryKey: ['myContacts'] }, context.prev);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['myContacts'] });
       setSelectedIds(new Set());
     }
