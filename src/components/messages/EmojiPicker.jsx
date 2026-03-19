@@ -17,7 +17,7 @@ export default function EmojiPicker({ onSelect }) {
           <Smile className="w-4 h-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-64 p-2">
+      <PopoverContent align="start" className="w-64 p-2" style={{ zIndex: 99999 }}>
         <div className="grid grid-cols-8 gap-1">
           {EMOJIS.map((e, idx) =>
           <button
