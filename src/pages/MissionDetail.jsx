@@ -28,6 +28,8 @@ import { Link } from 'react-router-dom';
 import CreateMissionModal from '@/components/CreateMissionModal';
 import MissionTaskTracker, { computeMissionProgress } from '@/components/missions/MissionTaskTracker';
 import MissionAdvisorPanel from '@/components/missions/MissionAdvisorPanel';
+import MissionJoinButton from '@/components/missions/MissionJoinButton';
+import MissionJoinRequestsPanel from '@/components/missions/MissionJoinRequestsPanel';
 
 import AITeamBuilder from '@/components/ai/AITeamBuilder';
 import AIMissionBrief from '@/components/ai/AIMissionBrief';
@@ -84,33 +86,7 @@ export default function MissionDetail() {
     enabled: !!mission?.participant_ids?.length
   });
 
-  const joinMissionMutation = useMutation({
-    mutationFn: async () => {
-      const newParticipants = [...(mission.participant_ids || []), profile.user_id];
-      await base44.entities.Mission.update(mission.id, {
-        participant_ids: newParticipants,
-        participant_count: newParticipants.length
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mission', missionId] });
-      queryClient.invalidateQueries({ queryKey: ['missionParticipants'] });
-    }
-  });
-
-  const leaveMissionMutation = useMutation({
-    mutationFn: async () => {
-      const newParticipants = (mission.participant_ids || []).filter(id => id !== profile.user_id);
-      await base44.entities.Mission.update(mission.id, {
-        participant_ids: newParticipants,
-        participant_count: newParticipants.length
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mission', missionId] });
-      queryClient.invalidateQueries({ queryKey: ['missionParticipants'] });
-    }
-  });
+  // Join/leave logic moved to MissionJoinButton component
 
   if (isLoading) {
     return (
@@ -197,25 +173,7 @@ export default function MissionDetail() {
             </div>
 
             <div className="flex items-center gap-3">
-              {isParticipant ? (
-                <Button 
-                  variant="outline" 
-                  onClick={() => leaveMissionMutation.mutate()}
-                  disabled={leaveMissionMutation.isPending}
-                  className="bg-white/80 backdrop-blur-sm"
-                >
-                  Leave Mission
-                </Button>
-              ) : (
-                <Button 
-                  onClick={() => joinMissionMutation.mutate()}
-                  disabled={joinMissionMutation.isPending}
-                  className="bg-violet-600 hover:bg-violet-700 shadow-lg"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Join Mission
-                </Button>
-              )}
+              <MissionJoinButton mission={mission} profile={profile} user={user} />
               <Link to={`/MissionGantt?id=${missionId}`}>
                 <Button variant="outline" className="bg-white/80 backdrop-blur-sm gap-1.5">
                   <ChartGantt className="w-4 h-4" />
