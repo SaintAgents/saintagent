@@ -1035,7 +1035,7 @@ export default function Sidebar({
         >
           <div className={cn(
             "rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none",
-            isCollapsed ? "w-12 h-12" : "w-10 h-10"
+            isCollapsed ? "w-10 h-10" : "w-8 h-8"
           )}>
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
