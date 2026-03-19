@@ -19,9 +19,14 @@ import {
   Loader2,
   FolderOpen,
   Clock,
-  Pencil
+  Pencil,
+  ChevronDown,
+  ChevronUp,
+  History
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { format, subDays, parseISO } from "date-fns";
+import TimerLogEntry from './TimerLogEntry';
 
 function formatElapsed(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -38,6 +43,7 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [genericLabel, setGenericLabel] = useState('');
+  const [showLog, setShowLog] = useState(false);
   const intervalRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -63,6 +69,18 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
     enabled: !!currentUser?.email,
     staleTime: 5000,
     refetchInterval: 30000,
+  });
+
+  // Fetch recent completed time entries for the log
+  const { data: recentEntries = [] } = useQuery({
+    queryKey: ['timerLog', currentUser?.email],
+    queryFn: () => base44.entities.TaskTimeEntry.filter(
+      { user_id: currentUser.email, is_running: false },
+      '-created_date',
+      30
+    ),
+    enabled: !!currentUser?.email && open,
+    staleTime: 15000,
   });
 
   const runningEntry = runningEntries[0] || null;
@@ -145,8 +163,48 @@ export default function GlobalTimerWidget({ currentUser, currentPageName }) {
     mutationFn: stopRunning,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['runningTimer'] });
+      queryClient.invalidateQueries({ queryKey: ['timerLog'] });
     },
   });
+
+  // Delete a log entry
+  const deleteLogMutation = useMutation({
+    mutationFn: (id) => base44.entities.TaskTimeEntry.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['timerLog'] }),
+  });
+
+  // Send to Notes
+  const sendToNotes = async (entry) => {
+    const label = entry.description || 'Time block';
+    const dur = entry.duration_minutes || 0;
+    const h = Math.floor(dur / 60);
+    const m = dur % 60;
+    const proj = projectMap[entry.project_id];
+    const timeStr = entry.start_time ? format(parseISO(entry.start_time), 'MMM d, h:mm a') : '';
+    await base44.entities.Note.create({
+      title: `Timer: ${label}`,
+      content: `Duration: ${h > 0 ? `${h}h ` : ''}${m}m\nStarted: ${timeStr}${proj ? `\nProject: ${proj.title}` : ''}\n\n--- Add your notes below ---\n`,
+      tags: ['timer-log'],
+      color: 'blue',
+    });
+    queryClient.invalidateQueries({ queryKey: ['notes'] });
+  };
+
+  // Send to My Tasks (create a ProjectTask)
+  const sendToTasks = async (entry) => {
+    const label = entry.description || 'Follow-up from time block';
+    await base44.entities.ProjectTask.create({
+      project_id: entry.project_id || '',
+      title: label,
+      description: `Auto-created from timer log (${entry.duration_minutes || 0}m logged)`,
+      assignee_id: currentUser.email,
+      assignee_name: currentUser.full_name,
+      status: 'todo',
+      priority: 'medium',
+    });
+    queryClient.invalidateQueries({ queryKey: ['globalTimerTasks'] });
+    queryClient.invalidateQueries({ queryKey: ['dashTasks'] });
+  };
 
   // AI suggestion
   const suggestTask = useCallback(async () => {
@@ -372,16 +430,16 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
         )}
 
         {/* Task List */}
-        <ScrollArea className="h-52">
+        <ScrollArea className="h-40">
           {activeTasks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-slate-400">
-              <FolderOpen className="w-8 h-8 mb-2 opacity-50" />
+            <div className="flex flex-col items-center justify-center py-6 text-slate-400">
+              <FolderOpen className="w-7 h-7 mb-2 opacity-50" />
               <p className="text-sm">No assigned tasks</p>
               <p className="text-xs mt-1">Use the quick timer above</p>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-slate-400">
-              <Search className="w-6 h-6 mb-2 opacity-50" />
+            <div className="flex flex-col items-center justify-center py-6 text-slate-400">
+              <Search className="w-5 h-5 mb-2 opacity-50" />
               <p className="text-sm">No tasks match "{search}"</p>
             </div>
           ) : (
@@ -437,6 +495,43 @@ Return JSON: {"task_id": "...", "reason": "brief 1-sentence reason"}`;
             </div>
           )}
         </ScrollArea>
+
+        {/* Timer Log Section */}
+        <div className="border-t border-slate-200">
+          <button
+            className="w-full flex items-center justify-between px-4 py-2 hover:bg-slate-50 transition-colors"
+            onClick={() => setShowLog(!showLog)}
+          >
+            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+              <History className="w-3.5 h-3.5 text-slate-500" />
+              Timer Log
+              {recentEntries.length > 0 && (
+                <Badge variant="secondary" className="text-[10px] h-4 px-1.5">{recentEntries.length}</Badge>
+              )}
+            </span>
+            {showLog ? <ChevronDown className="w-3.5 h-3.5 text-slate-400" /> : <ChevronUp className="w-3.5 h-3.5 text-slate-400" />}
+          </button>
+          {showLog && (
+            <ScrollArea className="max-h-48">
+              {recentEntries.length === 0 ? (
+                <p className="text-xs text-slate-400 text-center py-4">No completed entries yet</p>
+              ) : (
+                <div className="divide-y divide-slate-100">
+                  {recentEntries.map(entry => (
+                    <TimerLogEntry
+                      key={entry.id}
+                      entry={entry}
+                      projectTitle={projectMap[entry.project_id]?.title}
+                      onDelete={(id) => deleteLogMutation.mutate(id)}
+                      onSendToNotes={sendToNotes}
+                      onSendToTasks={sendToTasks}
+                    />
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          )}
+        </div>
       </PopoverContent>
     </Popover>
   );

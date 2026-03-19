@@ -10,6 +10,7 @@ import MissionGantt from './pages/MissionGantt';
 import ResourceScheduler from './pages/ResourceScheduler';
 import TeamWorkload from './pages/TeamWorkload';
 import MyDashboard from './pages/MyDashboard';
+import ClientPortal from './pages/ClientPortal';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -68,6 +69,7 @@ const AuthenticatedApp = () => {
       <Route path="/ResourceScheduler" element={<LayoutWrapper currentPageName="ResourceScheduler"><ResourceScheduler /></LayoutWrapper>} />
       <Route path="/TeamWorkload" element={<LayoutWrapper currentPageName="TeamWorkload"><TeamWorkload /></LayoutWrapper>} />
       <Route path="/MyDashboard" element={<LayoutWrapper currentPageName="MyDashboard"><MyDashboard /></LayoutWrapper>} />
+      <Route path="/ClientPortal" element={<LayoutWrapper currentPageName="ClientPortal"><ClientPortal /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
