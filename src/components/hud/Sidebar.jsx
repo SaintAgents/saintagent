@@ -380,14 +380,14 @@ export default function Sidebar({
       <div className={cn("overflow-y-auto", navOpen ? "flex-1" : "flex-shrink-0")}>
         {/* Nav Header with Popout */}
         {(!isCollapsed || inPopup) && (
-          <div className="px-3 pt-2 pb-1">
+          <div className="px-2 pt-1.5 pb-0.5">
             <button
               onClick={() => {
                 setNavPopupOpen(true);
                 // Collapse the sidebar when Quick Nav is opened
                 if (!isCollapsed && onToggle) onToggle();
               }}
-              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
+              className="w-full flex items-center justify-between px-1.5 py-1 rounded-lg hover:bg-slate-50 transition-colors"
               title="Pop out navigation"
             >
               <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Quick Nav</span>
