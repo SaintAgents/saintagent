@@ -68,6 +68,7 @@ export default function DealsPage() {
   const [teamMemberModal, setTeamMemberModal] = useState({ open: false, dealId: null, teamIds: [] });
   const [noteModal, setNoteModal] = useState({ open: false, dealId: null });
   const [emailEngineModal, setEmailEngineModal] = useState({ open: false, deal: null });
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
