@@ -1,9 +1,28 @@
 import React from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Flame } from "lucide-react";
 import HelpHint from '@/components/hud/HelpHint';
 
 export default function InfluenceReach({ profile, onBoost }) {
+  const userId = profile?.user_id;
+
+  const { data: followers = [] } = useQuery({
+    queryKey: ['followersCount', userId],
+    queryFn: () => base44.entities.Follow.filter({ following_id: userId }),
+    enabled: !!userId,
+  });
+
+  const { data: following = [] } = useQuery({
+    queryKey: ['followingCount', userId],
+    queryFn: () => base44.entities.Follow.filter({ follower_id: userId }),
+    enabled: !!userId,
+  });
+
+  const followerCount = followers.length;
+  const followingCount = following.length;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end -mt-2 mb-2">
@@ -11,11 +30,11 @@ export default function InfluenceReach({ profile, onBoost }) {
       </div>
       <div className="grid grid-cols-3 gap-3">
         <div className="text-center p-3 rounded-xl bg-slate-50">
-          <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>
+          <p className="text-2xl font-bold text-slate-900">{followerCount}</p>
           <p className="text-xs text-slate-500">Followers</p>
         </div>
         <div className="text-center p-3 rounded-xl bg-slate-50">
-          <p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p>
+          <p className="text-2xl font-bold text-slate-900">{followingCount}</p>
           <p className="text-xs text-slate-500">Following</p>
         </div>
         <div className="text-center p-3 rounded-xl bg-violet-50">
