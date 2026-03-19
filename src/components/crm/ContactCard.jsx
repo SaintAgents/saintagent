@@ -191,6 +191,9 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
                   <Send className="w-4 h-4 mr-2" /> Send Email
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem onClick={() => setDeepDiveOpen(true)}>
+                <Telescope className="w-4 h-4 mr-2 text-violet-500" /> Deep Dive AI
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={() => toggleFederatedMutation.mutate()}>
                 <Globe className="w-4 h-4 mr-2" />{contact.is_federated ? 'Remove from Network' : 'Share to Network'}
@@ -208,6 +211,11 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
           onClose={() => setEmailModalOpen(false)}
           contact={contact}
           currentUser={currentUser}
+        />
+        <DeepDiveAIModal
+          open={deepDiveOpen}
+          onClose={() => setDeepDiveOpen(false)}
+          contact={contact}
         />
       </div>
     );
@@ -255,6 +263,9 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setDeepDiveOpen(true)}>
+                <Telescope className="w-4 h-4 mr-2 text-violet-500" /> Deep Dive AI
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={() => toggleFederatedMutation.mutate()}>
                 <Globe className="w-4 h-4 mr-2" />{contact.is_federated ? 'Remove from Network' : 'Share to Network'}
@@ -455,6 +466,11 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
         onClose={() => setEmailModalOpen(false)}
         contact={contact}
         currentUser={currentUser}
+      />
+      <DeepDiveAIModal
+        open={deepDiveOpen}
+        onClose={() => setDeepDiveOpen(false)}
+        contact={contact}
       />
     </div>
   );
