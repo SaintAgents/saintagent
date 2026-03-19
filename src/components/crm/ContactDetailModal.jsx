@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import EmailOutreachModal from './EmailOutreachModal';
 import SetFollowUpModal from './SetFollowUpModal';
+import ContactEmailHistory from './ContactEmailHistory';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -447,6 +448,9 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
               </div>
             )}
           </div>
+
+          {/* Email History */}
+          <ContactEmailHistory contactId={contact.id} />
 
           {/* AI Dossier */}
           {contact.ai_dossier && (
