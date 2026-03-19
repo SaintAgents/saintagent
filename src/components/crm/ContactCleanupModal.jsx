@@ -315,6 +315,15 @@ export default function ContactCleanupModal({ open, onClose, contacts, currentUs
                         {contact.domain}
                       </Badge>
                     )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      onClick={(e) => { e.stopPropagation(); setEditingContact(contact); }}
+                      title="Edit contact"
+                    >
+                      <Pencil className="w-4 h-4 text-slate-500" />
+                    </Button>
                   </div>
                 ))
               )}
