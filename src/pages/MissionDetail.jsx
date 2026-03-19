@@ -455,6 +455,11 @@ export default function MissionDetail() {
               </CardContent>
             </Card>
 
+            {/* Join Requests - only visible to creator/admin */}
+            {canEdit && mission.join_policy === 'approval_required' && (
+              <MissionJoinRequestsPanel mission={mission} />
+            )}
+
             {/* Creator */}
             {mission.creator_name && (
               <Card>
