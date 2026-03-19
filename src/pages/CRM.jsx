@@ -257,64 +257,46 @@ export default function CRM() {
 
         {/* Main Content */}
         <Tabs value={tab} onValueChange={setTab}>
-          <div className="flex items-center justify-between mb-4">
-            <TabsList>
-              <TabsTrigger value="my-contacts" className="gap-2">
-                <Lock className="w-4 h-4" />
-                My Contacts
-              </TabsTrigger>
-              <TabsTrigger value="network" className="gap-2">
-                <Globe className="w-4 h-4" />
-                Federated Network
-              </TabsTrigger>
-              <TabsTrigger value="requests" className="gap-2">
-                <Share2 className="w-4 h-4" />
-                Access Requests
-                {accessRequests.length > 0 && (
-                  <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
-                )}
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value="synchronicity" className="gap-2">
-                <Brain className="w-4 h-4 text-amber-500" />
-                Synchronicity
-              </TabsTrigger>
-              <TabsTrigger value="automations" className="gap-2">
-                <Zap className="w-4 h-4" />
-                Automations
-              </TabsTrigger>
-              <TabsTrigger value="agent" className="gap-2">
-                <Bot className="w-4 h-4 text-violet-500" />
-                Response Agent
-              </TabsTrigger>
-              <TabsTrigger value="ai-assistant" className="gap-2">
-                <Sparkles className="w-4 h-4 text-violet-500" />
-                AI Assistant
-              </TabsTrigger>
-            </TabsList>
+          <div className="space-y-4 mb-4">
+            <div className="flex items-center justify-between">
+              <TabsList className="flex-wrap">
+                <TabsTrigger value="my-contacts" className="gap-2">
+                  <Lock className="w-4 h-4" />
+                  My Contacts
+                </TabsTrigger>
+                <TabsTrigger value="network" className="gap-2">
+                  <Globe className="w-4 h-4" />
+                  Federated Network
+                </TabsTrigger>
+                <TabsTrigger value="requests" className="gap-2">
+                  <Share2 className="w-4 h-4" />
+                  Access Requests
+                  {accessRequests.length > 0 && (
+                    <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="analytics" className="gap-2">
+                  <BarChart3 className="w-4 h-4" />
+                  Analytics
+                </TabsTrigger>
+                <TabsTrigger value="synchronicity" className="gap-2">
+                  <Brain className="w-4 h-4 text-amber-500" />
+                  Synchronicity
+                </TabsTrigger>
+                <TabsTrigger value="automations" className="gap-2">
+                  <Zap className="w-4 h-4" />
+                  Automations
+                </TabsTrigger>
+                <TabsTrigger value="agent" className="gap-2">
+                  <Bot className="w-4 h-4 text-violet-500" />
+                  Response Agent
+                </TabsTrigger>
+                <TabsTrigger value="ai-assistant" className="gap-2">
+                  <Sparkles className="w-4 h-4 text-violet-500" />
+                  AI Assistant
+                </TabsTrigger>
+              </TabsList>
 
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input 
-                  placeholder="Search contacts..." 
-                  className="pl-9 w-64"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-              <select 
-                className="h-9 px-3 rounded-md border border-slate-200 text-sm bg-white text-slate-900"
-                value={domainFilter}
-                onChange={(e) => setDomainFilter(e.target.value)}
-              >
-                {domains.map(d => (
-                  <option key={d} value={d}>{d === 'all' ? 'All Domains' : d.charAt(0).toUpperCase() + d.slice(1)}</option>
-                ))}
-              </select>
               <div className="flex items-center border rounded-md">
                 <Button 
                   variant="ghost" 
@@ -334,6 +316,15 @@ export default function CRM() {
                 </Button>
               </div>
             </div>
+
+            {(tab === 'my-contacts' || tab === 'network') && (
+              <CRMFilterPanel
+                filters={filters}
+                onChange={setFilters}
+                contactCount={filteredContacts.length}
+                totalCount={sourceContacts.length}
+              />
+            )}
           </div>
 
           <TabsContent value="my-contacts">
