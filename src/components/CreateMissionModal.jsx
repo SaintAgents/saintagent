@@ -290,7 +290,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0">
+      <DialogContent className="max-w-4xl max-h-[90vh] h-[90vh] flex flex-col p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <Target className="w-5 h-5 text-violet-600" />
@@ -298,7 +298,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-1 min-h-0">
+        <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Main Form */}
           <div className="flex-1 flex flex-col min-w-0">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
@@ -578,7 +578,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
           </div>
 
           {/* AI Assistant Sidebar */}
-          <div className="w-80 border-l bg-slate-50/50 p-4 shrink-0 hidden lg:block">
+          <div className="w-80 border-l bg-slate-50/50 shrink-0 hidden lg:block overflow-y-auto p-4">
             <MissionAIAssistant
               title={formData.title}
               description={formData.description}
