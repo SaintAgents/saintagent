@@ -298,23 +298,34 @@ export default function CRM() {
                 </TabsTrigger>
               </TabsList>
 
-              <div className="flex items-center border rounded-md">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className={cn("h-9 w-9 rounded-r-none", viewMode === 'grid' && "bg-slate-100")}
-                  onClick={() => setViewMode('grid')}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn("gap-1.5 h-9 text-xs", compactCards && "bg-violet-50 border-violet-200")}
+                  onClick={() => setCompactCards(!compactCards)}
                 >
-                  <LayoutGrid className="w-4 h-4" />
+                  {compactCards ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                  {compactCards ? 'Show Details' : 'Simple'}
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className={cn("h-9 w-9 rounded-l-none", viewMode === 'list' && "bg-slate-100")}
-                  onClick={() => setViewMode('list')}
-                >
-                  <List className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center border rounded-md">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className={cn("h-9 w-9 rounded-r-none", viewMode === 'grid' && "bg-slate-100")}
+                    onClick={() => setViewMode('grid')}
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className={cn("h-9 w-9 rounded-l-none", viewMode === 'list' && "bg-slate-100")}
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
