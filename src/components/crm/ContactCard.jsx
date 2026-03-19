@@ -14,7 +14,7 @@ import {
 import { 
   MoreVertical, Edit, Trash2, Globe, Lock, Eye, EyeOff,
   Building2, MapPin, Star, Calendar, ExternalLink, MessageCircle, Phone,
-  Target, TrendingUp, Sparkles, Signal, Mail, Tag
+  Target, TrendingUp, Sparkles, Signal, Mail, Tag, Send
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
