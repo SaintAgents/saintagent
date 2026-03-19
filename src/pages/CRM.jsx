@@ -223,14 +223,26 @@ export default function CRM() {
 
         {/* Header Actions */}
         <div className="flex items-center justify-between">
-          <Button 
-            variant="outline" 
-            onClick={() => window.location.href = createPageUrl('Deals')}
-            className="gap-2"
-          >
-            <TrendingUp className="w-4 h-4" />
-            Deal Tracker
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link to="/Deals">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                <TrendingUp className="w-3.5 h-3.5" />
+                Deals
+              </Button>
+            </Link>
+            <Link to="/OutreachSequences">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                <Send className="w-3.5 h-3.5" />
+                Outreach
+              </Button>
+            </Link>
+            <Link to="/ImpactDashboard">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                <FileBarChart className="w-3.5 h-3.5" />
+                Impact
+              </Button>
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             {accessRequests.length > 0 && (
               <Badge className="bg-amber-100 text-amber-700">
