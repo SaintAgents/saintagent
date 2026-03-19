@@ -8,6 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 
+import { getRPRank } from '@/components/reputation/rpUtils';
 import ImpactStatCard from '@/components/impact/ImpactStatCard';
 import ContributionTimeline from '@/components/impact/ContributionTimeline';
 import GlobalGoalsProgress from '@/components/impact/GlobalGoalsProgress';
@@ -177,7 +178,7 @@ export default function ImpactDashboard() {
               {profile?.display_name || currentUser?.full_name || 'Agent'}
             </Badge>
             <Badge variant="outline" className="text-sm px-3 py-1 bg-amber-400/20 border-amber-300/40 text-amber-100 backdrop-blur-sm capitalize">
-              {profile?.rp_rank_code || profile?.rank_code || 'seeker'}
+              {profile?.rp_rank_code || profile?.rank_code || getRPRank(rankPoints).title}
             </Badge>
           </div>
         </div>
