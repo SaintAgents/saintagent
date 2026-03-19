@@ -25,6 +25,9 @@ export default function ContactNotesPopover({ notes, onSave, isOwner }) {
 
   const handleOpen = (isOpen) => {
     setOpen(isOpen);
+    if (isOpen && !notes && isOwner) {
+      setEditing(true);
+    }
     if (!isOpen) {
       setEditing(false);
       setDraft(notes || '');
