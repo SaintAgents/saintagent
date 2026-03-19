@@ -29,6 +29,7 @@ import AutomatedFollowUpSettings from '@/components/crm/AutomatedFollowUpSetting
 import CRMAIAssistant from '@/components/crm/CRMAIAssistant';
 import SynchronicityEngine from '@/components/crm/SynchronicityEngine';
 import CRMResponseAgentChat from '@/components/crm/CRMResponseAgentChat';
+import CRMFilterPanel from '@/components/crm/CRMFilterPanel';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
 
@@ -36,11 +37,13 @@ const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/obje
 
 export default function CRM() {
   const [tab, setTab] = useState('my-contacts');
-  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState({
+    search: '', domain: 'all', leadStatus: 'all', leadSource: 'all',
+    priority: 'all', strengthMin: 0, federated: 'all', tag: '', sortBy: 'newest',
+  });
   const [viewMode, setViewMode] = useState('grid');
   const [formOpen, setFormOpen] = useState(false);
   const [editingContact, setEditingContact] = useState(null);
-  const [domainFilter, setDomainFilter] = useState('all');
   const [importOpen, setImportOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
@@ -91,13 +94,37 @@ export default function CRM() {
     enabled: !!currentUser?.email
   });
 
-  const filteredContacts = (tab === 'my-contacts' ? myContacts : federatedContacts).filter(c => {
-    const matchesSearch = !search || 
-      c.name?.toLowerCase().includes(search.toLowerCase()) ||
-      c.company?.toLowerCase().includes(search.toLowerCase()) ||
-      c.domain?.toLowerCase().includes(search.toLowerCase());
-    const matchesDomain = domainFilter === 'all' || c.domain === domainFilter;
-    return matchesSearch && matchesDomain;
+  const sourceContacts = tab === 'my-contacts' ? myContacts : federatedContacts;
+
+  const filteredContacts = sourceContacts.filter(c => {
+    const q = filters.search.toLowerCase();
+    const matchesSearch = !q ||
+      c.name?.toLowerCase().includes(q) ||
+      c.company?.toLowerCase().includes(q) ||
+      c.email?.toLowerCase().includes(q) ||
+      c.domain?.toLowerCase().includes(q) ||
+      (c.tags || []).some(t => t.toLowerCase().includes(q));
+    const matchesDomain = filters.domain === 'all' || c.domain === filters.domain;
+    const matchesStatus = filters.leadStatus === 'all' || c.lead_status === filters.leadStatus;
+    const matchesSource = filters.leadSource === 'all' || c.lead_source === filters.leadSource;
+    const matchesPriority = filters.priority === 'all' || c.priority_tier === filters.priority;
+    const matchesStrength = (c.relationship_strength || 0) >= filters.strengthMin;
+    const matchesFederated = filters.federated === 'all' ||
+      (filters.federated === 'yes' && c.is_federated) ||
+      (filters.federated === 'no' && !c.is_federated);
+    const matchesTag = !filters.tag || (c.tags || []).some(t => t.toLowerCase().includes(filters.tag.toLowerCase()));
+    return matchesSearch && matchesDomain && matchesStatus && matchesSource && matchesPriority && matchesStrength && matchesFederated && matchesTag;
+  }).sort((a, b) => {
+    switch (filters.sortBy) {
+      case 'oldest': return new Date(a.created_date) - new Date(b.created_date);
+      case 'name_asc': return (a.name || '').localeCompare(b.name || '');
+      case 'name_desc': return (b.name || '').localeCompare(a.name || '');
+      case 'quality_desc': return (b.quality_score || 0) - (a.quality_score || 0);
+      case 'strength_desc': return (b.relationship_strength || 0) - (a.relationship_strength || 0);
+      case 'last_contact': return new Date(b.last_contact_date || 0) - new Date(a.last_contact_date || 0);
+      case 'stale': return (b.stale_days || 0) - (a.stale_days || 0);
+      default: return new Date(b.created_date) - new Date(a.created_date);
+    }
   });
 
   const handleEdit = (contact) => {
