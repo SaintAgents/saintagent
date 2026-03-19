@@ -43,8 +43,26 @@ export default function OnlineUsersModal({ open, onClose }) {
     enabled: open
   });
 
-  // Filter online users (status = online)
-  const onlineProfiles = profiles.filter(p => p.status === 'online' || p.status === 'focus');
+  // Fetch actual LiveStatus records to determine who's really online
+  const { data: liveStatuses = [] } = useQuery({
+    queryKey: ['allLiveStatuses'],
+    queryFn: () => base44.entities.LiveStatus.list('-updated_date', 500),
+    enabled: open,
+    refetchInterval: 30000,
+  });
+
+  // Build a set of user_ids that are actually online (heartbeat within last 5 minutes)
+  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  const onlineUserIds = new Set(
+    liveStatuses
+      .filter(ls => ls.status !== 'offline' && ls.last_heartbeat && ls.last_heartbeat > fiveMinAgo)
+      .map(ls => ls.user_id)
+  );
+
+  // Filter online users using LiveStatus data, fall back to profile status
+  const onlineProfiles = profiles.filter(p => 
+    onlineUserIds.has(p.user_id) || p.status === 'online' || p.status === 'focus'
+  );
 
   // Apply filters
   let filteredProfiles = onlineProfiles.filter(profile => {
