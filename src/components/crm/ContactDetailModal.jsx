@@ -462,10 +462,10 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             )}
           </div>
 
-          {/* Interaction Timeline (Gmail + Calendar auto-captured) */}
+          {/* Interaction Timeline (Gmail/Calendar auto-captured) */}
           <ContactInteractionTimeline contactId={contact.id} />
 
-          {/* Email History (CRM outreach) */}
+          {/* Email History */}
           <ContactEmailHistory contactId={contact.id} />
 
           {/* AI Dossier */}
