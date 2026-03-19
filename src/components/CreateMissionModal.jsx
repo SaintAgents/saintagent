@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Sparkles, X, Image, Target, ListTodo, Award, Users, Info } from "lucide-react";
+import { Loader2, Sparkles, X, Image, Target, ListTodo, Award, Users, Info, ShieldCheck, Globe } from "lucide-react";
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 import MissionMilestoneEditor from './missions/MissionMilestoneEditor';
 import MissionRewardEditor from './missions/MissionRewardEditor';
@@ -463,7 +463,46 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                   </TabsContent>
 
                   {/* Team Tab */}
-                  <TabsContent value="team" className="mt-0 space-y-4">
+                  <TabsContent value="team" className="mt-0 space-y-6">
+                    {/* Join Policy */}
+                    <div>
+                      <Label className="flex items-center gap-2 mb-2">
+                        <ShieldCheck className="w-4 h-4 text-violet-500" />
+                        Join Policy
+                      </Label>
+                      <p className="text-sm text-slate-500 mb-3">
+                        Control how people join this mission
+                      </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, join_policy: 'open' })}
+                          className={`p-4 rounded-xl border-2 text-left transition-all ${
+                            formData.join_policy === 'open'
+                              ? 'border-violet-500 bg-violet-50'
+                              : 'border-slate-200 hover:border-slate-300'
+                          }`}
+                        >
+                          <Globe className="w-5 h-5 text-emerald-600 mb-2" />
+                          <p className="font-medium text-sm text-slate-900">Open</p>
+                          <p className="text-xs text-slate-500 mt-0.5">Anyone can join instantly</p>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, join_policy: 'approval_required' })}
+                          className={`p-4 rounded-xl border-2 text-left transition-all ${
+                            formData.join_policy === 'approval_required'
+                              ? 'border-violet-500 bg-violet-50'
+                              : 'border-slate-200 hover:border-slate-300'
+                          }`}
+                        >
+                          <ShieldCheck className="w-5 h-5 text-amber-600 mb-2" />
+                          <p className="font-medium text-sm text-slate-900">Approval Required</p>
+                          <p className="text-xs text-slate-500 mt-0.5">You review requests before adding members</p>
+                        </button>
+                      </div>
+                    </div>
+
                     <div>
                       <Label className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-emerald-500" />
