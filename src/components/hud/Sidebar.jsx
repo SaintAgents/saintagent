@@ -79,7 +79,8 @@ import {
   Medal,
   IterationCcw,
   Paintbrush,
-  Quote
+  Quote,
+  CircleAlert
 } from "lucide-react";
 import {
   Tooltip,
@@ -106,7 +107,7 @@ const NAV_ITEMS = [
   { id: 'gamification', label: 'Gamification', Icon: Sparkles, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
   { id: 'leaderboards', label: 'Leaderboards', Icon: Medal, page: 'Leaderboards', hint: 'View rankings, top players, and your position' },
   { id: 'mentorship', label: 'Mentorship', Icon: Users, page: 'Mentorship', hint: 'Find mentors or become one' },
-  { id: 'matches', label: 'Matches', Icon: Sparkles, page: 'Matches', hint: 'AI-powered connections based on your profile' },
+  { id: 'matches', label: 'Matches', Icon: CircleAlert, page: 'Matches', hint: 'AI-powered connections based on your profile' },
   { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
   { id: 'missions', label: 'Missions', Icon: Zap, page: 'Missions', hint: 'Join collaborative missions and quests' },
   { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
