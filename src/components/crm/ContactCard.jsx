@@ -244,6 +244,24 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
         )}
       </div>
 
+      {/* Quick Actions Row */}
+      {isOwner && contact.email && (
+        <div className="flex items-center gap-1.5 mb-2" onClick={e => e.stopPropagation()}>
+          <Button
+            variant="outline" size="sm"
+            className="h-7 text-xs gap-1 flex-1"
+            onClick={() => setEmailModalOpen(true)}
+          >
+            <Send className="w-3 h-3" /> Send Email
+          </Button>
+          {contact.email_outreach_count > 0 && (
+            <Badge variant="outline" className="text-[10px] h-7 px-2 shrink-0">
+              {contact.email_outreach_count} sent
+            </Badge>
+          )}
+        </div>
+      )}
+
       {/* Relationship Strength - clickable stars */}
       <div className="flex items-center gap-1 mb-3" onClick={e => e.stopPropagation()}>
         <span className="text-[10px] text-slate-500 mr-1">Strength:</span>
