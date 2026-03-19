@@ -66,11 +66,50 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
   });
 
   const toggleFederatedMutation = useMutation({
-    mutationFn: () => base44.entities.Contact.update(contact.id, { 
-      is_federated: !contact.is_federated,
-      permission_level: !contact.is_federated ? 'signal_only' : 'private'
-    }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myContacts'] })
+    mutationFn: async () => {
+      const newFederated = !contact.is_federated;
+      await base44.entities.Contact.update(contact.id, { 
+        is_federated: newFederated,
+        permission_level: newFederated ? 'signal_only' : 'private'
+      });
+      // Award GGG when federating for the first time
+      if (newFederated && !contact.ggg_federated_awarded) {
+        await base44.entities.Contact.update(contact.id, { ggg_federated_awarded: true });
+        const ownerEmail = contact.owner_id;
+        if (!ownerEmail) return;
+        // Update contribution record
+        const contribRecords = await base44.entities.CRMContribution.filter({ user_id: ownerEmail });
+        let contribution = contribRecords?.[0];
+        if (!contribution) {
+          contribution = await base44.entities.CRMContribution.create({
+            user_id: ownerEmail, federated_contacts: 1, total_ggg_earned: 0.0154
+          });
+        } else {
+          await base44.entities.CRMContribution.update(contribution.id, {
+            federated_contacts: (contribution.federated_contacts || 0) + 1,
+            total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.0154
+          });
+        }
+        // Award GGG to user profile
+        const userProfiles = await base44.entities.UserProfile.filter({ user_id: ownerEmail });
+        const userProfile = userProfiles?.[0];
+        if (userProfile) {
+          const newBalance = (userProfile.ggg_balance || 0) + 0.0154;
+          await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
+          await base44.entities.GGGTransaction.create({
+            user_id: ownerEmail, source_type: 'reward', source_id: contact.id,
+            delta: 0.0154, reason_code: 'crm_federated',
+            description: 'Contact shared to federated network', balance_after: newBalance
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myContacts'] });
+      queryClient.invalidateQueries({ queryKey: ['myContribution'] });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    }
   });
 
   const updateFieldMutation = useMutation({

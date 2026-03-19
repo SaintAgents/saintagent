@@ -64,29 +64,32 @@ export default function ContactCleanupModal({ open, onClose, contacts, currentUs
   const categories = useMemo(() => {
     if (!contacts?.length) return {};
 
-    // Find duplicates (similar names or same email)
+    // Find duplicates (similar names or same email) - use separate maps
     const duplicates = [];
-    const seen = new Map();
+    const seenNames = new Map();
+    const seenEmails = new Map();
     contacts.forEach(c => {
       const nameKey = c.name?.toLowerCase().trim();
       const emailKey = c.email?.toLowerCase().trim();
       
-      if (nameKey && seen.has(nameKey)) {
+      if (nameKey && seenNames.has(nameKey)) {
         duplicates.push(c);
-        if (!duplicates.includes(seen.get(nameKey))) {
-          duplicates.push(seen.get(nameKey));
+        const original = seenNames.get(nameKey);
+        if (!duplicates.includes(original)) {
+          duplicates.push(original);
         }
       } else if (nameKey) {
-        seen.set(nameKey, c);
+        seenNames.set(nameKey, c);
       }
       
-      if (emailKey && seen.has(emailKey)) {
+      if (emailKey && seenEmails.has(emailKey)) {
         duplicates.push(c);
-        if (!duplicates.includes(seen.get(emailKey))) {
-          duplicates.push(seen.get(emailKey));
+        const original = seenEmails.get(emailKey);
+        if (!duplicates.includes(original)) {
+          duplicates.push(original);
         }
       } else if (emailKey) {
-        seen.set(emailKey, c);
+        seenEmails.set(emailKey, c);
       }
     });
 
