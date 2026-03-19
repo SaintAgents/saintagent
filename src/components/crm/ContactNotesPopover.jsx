@@ -34,21 +34,31 @@ export default function ContactNotesPopover({ notes, onSave, isOwner }) {
   return (
     <Popover open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild>
-        <div
-          className="mb-3 p-2 bg-amber-50 rounded-lg border border-amber-100 cursor-pointer hover:bg-amber-100/60 transition-colors group"
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1">
-              <StickyNote className="w-3 h-3 text-amber-600" />
-              <span className="text-[10px] font-medium text-amber-700">Notes</span>
+        {notes ? (
+          <div
+            className="mb-3 p-2 bg-amber-50 rounded-lg border border-amber-100 cursor-pointer hover:bg-amber-100/60 transition-colors group"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-1">
+                <StickyNote className="w-3 h-3 text-amber-600" />
+                <span className="text-[10px] font-medium text-amber-700">Notes</span>
+              </div>
+              {isOwner && (
+                <Pencil className="w-3 h-3 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+              )}
             </div>
-            {isOwner && (
-              <Pencil className="w-3 h-3 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-            )}
+            <p className="text-xs text-amber-900 line-clamp-2">{notes}</p>
           </div>
-          <p className="text-xs text-amber-900 line-clamp-2">{notes}</p>
-        </div>
+        ) : (
+          <button
+            className="mb-3 w-full p-2 bg-slate-50 rounded-lg border border-dashed border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors flex items-center gap-1.5 justify-center"
+            onClick={e => e.stopPropagation()}
+          >
+            <StickyNote className="w-3 h-3 text-slate-400" />
+            <span className="text-[10px] text-slate-400">Add notes...</span>
+          </button>
+        )}
       </PopoverTrigger>
       <PopoverContent
         className="w-80 p-3"
