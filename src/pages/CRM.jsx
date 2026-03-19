@@ -335,7 +335,7 @@ export default function CRM() {
               </div>
             </div>
 
-            {(tab === 'my-contacts' || tab === 'network') && (
+            {(tab === 'my-contacts' || tab === 'network' || tab === 'pipeline') && (
               <CRMFilterPanel
                 filters={filters}
                 onChange={setFilters}
