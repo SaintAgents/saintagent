@@ -13,78 +13,118 @@ import {
   CheckCircle2,
   Compass,
   Zap,
-  Crown
+  Crown,
+  Lightbulb,
+  MessageSquare,
+  Calendar,
+  Gift,
+  Shield,
+  Star,
+  TrendingUp,
+  BookOpen
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 const STEPS = [
   {
     id: 1,
-    title: "Calibrate Your Agent Blueprint",
-    subtitle: "Your profile is more than just a bio; it's your archetypal signature.",
+    title: "Set Up Your Agent Blueprint",
+    subtitle: "Your profile is your reputation. Make it count from Day 1.",
     icon: User,
     color: "violet",
     content: [
       {
-        title: "Sync Your Cards",
-        description: "Input your birth data to integrate your Destiny Card archetype. This helps the system suggest projects and partners aligned with your natural timing."
+        title: "Complete Your Profile",
+        description: "Go to your Profile page. Add a professional photo, write a short bio, and set your region/timezone. This is what others see when deciding to collaborate with you."
       },
       {
-        title: "Identify Your Pillars",
-        description: "Choose 2–3 \"Humanitarian Pillars\" (e.g., Sustainable Tech, Spiritual Education, Clean Water) to define your mission."
+        title: "Set Your Intentions",
+        description: "Under your profile's 'Basic Info' tab, scroll to 'Intentions' and click Edit. Add 2–3 keywords like 'service', 'building', 'healing' — these help the matching engine connect you with aligned members."
+      },
+      {
+        title: "Add Your Skills",
+        description: "Click 'Add Skills' on your profile. Tag what you offer (e.g., Web Dev, Strategy, Writing) and what you seek. This powers the collaboration engine."
       }
     ],
-    action: { label: "Edit Profile", url: "Profile" }
+    proTip: "A complete profile earns more trust and gets 3x more collaboration requests. Don't skip the spiritual profile tab either — many members match on shared practices.",
+    action: { label: "Go to Profile", url: "Profile" }
   },
   {
     id: 2,
-    title: "Initiate Your First Quest",
-    subtitle: "We don't just \"post\" here; we execute.",
+    title: "Complete Your First Actions",
+    subtitle: "The platform rewards action. Here's your starter checklist.",
     icon: Target,
     color: "emerald",
     content: [
       {
-        title: "Onboarding Mission",
-        description: "Head to the Quest Hub and select the \"Onboarding Mission.\" This mini-quest will walk you through the platform's layout while rewarding you with your first Saint Points—the internal metric for ethical contribution."
+        title: "Follow 5 Leaders",
+        description: "Head to 'Find Collaborators' and follow members whose work inspires you. This populates your activity feed and signals your interests to the community."
+      },
+      {
+        title: "Send Your First Message",
+        description: "Go to Messages and reach out to someone. Introduce yourself — a simple 'Hi, I'm interested in your project' goes a long way."
+      },
+      {
+        title: "Book a Meeting",
+        description: "Schedule a 1-on-1 meeting through the Meetings page. Real-time connection accelerates trust faster than any text exchange."
+      },
+      {
+        title: "Join a Mission",
+        description: "Browse active Missions and join one that aligns with your skills. Missions are team-based objectives with milestones and GGG rewards."
       }
     ],
-    action: { label: "View Quests", url: "Quests" }
+    proTip: "Each of these actions earns you GGG tokens. Check the Quick Start checklist on your Command Deck — it tracks your progress and awards bonus tokens when you hit milestones.",
+    action: { label: "Find Collaborators", url: "FindCollaborators" }
   },
   {
     id: 3,
-    title: "Enter the Synergy Engine",
-    subtitle: "SaintAgent.World thrives on collaboration.",
+    title: "Connect & Collaborate",
+    subtitle: "SaintAgent.World is built for collaboration, not consumption.",
     icon: Users,
     color: "blue",
     content: [
       {
-        title: "Find Your \"Eddie\"",
-        description: "Use the Synergy Search to look for members whose skills complement yours. If you are a Visionary (King of Spades logic), look for a \"Builder\" (Ten of Diamonds logic) to ground your ideas."
+        title: "Find Your Complement",
+        description: "Use 'Find Collaborators' to search by skill. If you're a strategist, look for builders. If you're a healer, look for organizers. Diverse teams build the strongest projects."
       },
       {
-        title: "Join a Project",
-        description: "Browse active project boards. Each project displays its Ethical Weighting—look for one that matches your humanitarian pillars."
+        title: "Join or Create a Circle",
+        description: "Circles are topic-based groups. Find one that matches your interest (e.g., 'Clean Tech', 'Digital Rights') or create your own to attract like-minded agents."
+      },
+      {
+        title: "Create a Marketplace Offer",
+        description: "Go to the Marketplace and create your first listing. Offer a skill, consultation, or service. This is how you build reputation and earn GGG."
       }
     ],
-    action: { label: "Find Collaborators", url: "FindCollaborators" }
+    proTip: "The strongest members don't just participate — they initiate. Creating a mission or listing signals leadership and attracts top collaborators to you.",
+    action: { label: "Browse Marketplace", url: "Marketplace" }
   },
   {
     id: 4,
-    title: "Master the Logic Framework",
-    subtitle: "To move into high-level status, you must learn the \"Agent Logic.\"",
+    title: "Level Up Your Impact",
+    subtitle: "Go from participant to leader. Here's the advanced playbook.",
     icon: Brain,
     color: "amber",
     content: [
       {
-        title: "Use the Logic Templates",
-        description: "When starting a task, use a \"High-Level Synergy\" template. This structures your project with industrial efficiency while maintaining a humanitarian soul."
+        title: "Create Your First Mission",
+        description: "Once you've joined a few missions, create your own. Go to Missions → Create. Define clear milestones, set rewards, and recruit your team. The AI assistant can help you structure it."
       },
       {
-        title: "Track Your Impact",
-        description: "Watch your Impact Dashboard to see how your digital actions translate into real-world energy and project growth."
+        title: "Submit a Project for Review",
+        description: "Have a bigger initiative? Go to Projects → Add Project. Projects go through an evaluation pipeline and can receive funding and team support."
+      },
+      {
+        title: "Track Your Reputation",
+        description: "Check your Stats tab on your Profile. Your trust score, influence score, and rank all grow as you contribute. Higher ranks unlock more platform capabilities."
+      },
+      {
+        title: "Refer Others & Earn",
+        description: "Go to the Affiliate Center to get your referral link. Every activated referral earns you ongoing GGG commissions — this is a sustainable income stream."
       }
     ],
-    action: { label: "View Projects", url: "Projects" }
+    proTip: "The GGG economy rewards consistent contribution, not one-time activity. Daily check-ins, completing mission tasks, and peer reviews all compound your earnings over time. Think long-term.",
+    action: { label: "View Missions", url: "Missions" }
   }
 ];
 
@@ -124,7 +164,7 @@ export default function QuickStartGuideModal({ open, onOpenChange }) {
         <DialogHeader>
           <div className="flex items-center gap-2 mb-2">
             <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600">
-              <Sparkles className="w-5 h-5 text-white" />
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
             <div>
               <DialogTitle className="text-lg">SaintAgent.World Quick Start</DialogTitle>
@@ -169,8 +209,10 @@ export default function QuickStartGuideModal({ open, onOpenChange }) {
           <div className="space-y-3 pl-2">
             {step.content.map((item, idx) => (
               <div key={idx} className="flex gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
-                <div className="mt-0.5">
-                  <Zap className="w-4 h-4 text-violet-500" />
+                <div className="mt-0.5 shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-violet-100 flex items-center justify-center text-xs font-bold text-violet-600">
+                    {idx + 1}
+                  </div>
                 </div>
                 <div>
                   <h4 className="font-medium text-sm text-slate-800">{item.title}</h4>
@@ -180,21 +222,16 @@ export default function QuickStartGuideModal({ open, onOpenChange }) {
             ))}
           </div>
 
-          {/* Pro Tip (only on last step) */}
-          {currentStep === STEPS.length - 1 && (
-            <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
-              <div className="flex items-start gap-2">
-                <Crown className="w-5 h-5 text-amber-600 mt-0.5" />
-                <div>
-                  <h4 className="font-semibold text-amber-800 text-sm">Pro Tip</h4>
-                  <p className="text-sm text-amber-700 mt-1">
-                    Don't just watch the feed. SaintAgent.World is built for the initiators. 
-                    The more quests you start, the more the platform's logic adapts to help you expand.
-                  </p>
-                </div>
+          {/* Pro Tip - on EVERY step */}
+          <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+              <div>
+                <h4 className="font-semibold text-amber-800 text-sm">Pro Tip</h4>
+                <p className="text-sm text-amber-700 mt-1">{step.proTip}</p>
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Navigation */}
