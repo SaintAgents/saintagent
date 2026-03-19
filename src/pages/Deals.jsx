@@ -722,6 +722,15 @@ export default function DealsPage() {
         entityType="deal"
         entityId={noteModal.dealId}
       />
+
+      {/* AI Email Template Engine */}
+      <AIEmailTemplateEngine
+        open={emailEngineModal.open}
+        onClose={() => setEmailEngineModal({ open: false, deal: null })}
+        contact={findContactForDeal(emailEngineModal.deal)}
+        deal={emailEngineModal.deal}
+        currentUser={currentUser}
+      />
     </div>
   );
 }
