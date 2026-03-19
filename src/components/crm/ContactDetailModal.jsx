@@ -9,13 +9,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { 
   Building2, MapPin, Star, Calendar, Mail, Phone, Globe, 
   Linkedin, Twitter, ExternalLink, FileText, Tag, Lock, Eye, EyeOff,
-  Edit, Trash2, Plus, Save, X, Sparkles, Loader2, Bell, Send, Target
+  Edit, Trash2, Plus, Save, X, Sparkles, Loader2, Bell, Send, Target, Telescope
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import EmailOutreachModal from './EmailOutreachModal';
 import SetFollowUpModal from './SetFollowUpModal';
 import ContactEmailHistory from './ContactEmailHistory';
+import DeepDiveAIModal from './DeepDiveAIModal';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -69,6 +70,7 @@ export default function ContactDetailModal({ open, onClose, contact, onEdit, onD
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [followUpModalOpen, setFollowUpModalOpen] = useState(false);
+  const [deepDiveOpen, setDeepDiveOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -233,6 +235,16 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             >
               <Bell className="w-3 h-3" />
               {contact.next_followup_date ? 'Edit Reminder' : 'Set Reminder'}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeepDiveOpen(true)}
+              className="gap-1 text-xs border-violet-300 bg-violet-50 hover:bg-violet-100"
+              style={isDark ? { backgroundColor: '#1e1b4b', borderColor: '#6d28d9', color: '#c4b5fd' } : {}}
+            >
+              <Telescope className="w-3 h-3 text-violet-500" />
+              Deep Dive AI
             </Button>
           </div>
 
@@ -580,6 +592,12 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
         <SetFollowUpModal
           open={followUpModalOpen}
           onClose={() => setFollowUpModalOpen(false)}
+          contact={contact}
+        />
+
+        <DeepDiveAIModal
+          open={deepDiveOpen}
+          onClose={() => setDeepDiveOpen(false)}
           contact={contact}
         />
       </DialogContent>
