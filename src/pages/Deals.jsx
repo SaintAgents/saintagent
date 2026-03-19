@@ -384,6 +384,16 @@ export default function DealsPage() {
                 >
                   <MessageSquarePlus className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEmailEngineModal({ open: true, deal });
+                  }}
+                  className="p-1.5 rounded-md hover:bg-violet-100 dark:hover:bg-violet-500/20 text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+                  title="AI Email"
+                >
+                  <Mail className="w-4 h-4" />
+                </button>
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700/50">
