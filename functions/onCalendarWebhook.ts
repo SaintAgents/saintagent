@@ -5,127 +5,137 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const base44 = createClientFromRequest(req);
 
-    const state = body.data._provider_meta?.['x-goog-resource-state'];
+    // Check resource state from provider metadata
+    const state = body.data?._provider_meta?.['x-goog-resource-state'];
     if (state === 'sync') {
-      console.log('Calendar sync ack');
       return Response.json({ status: 'sync_ack' });
     }
 
-    console.log('Calendar webhook:', state);
-
+    // Get Calendar access token
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
     const authHeader = { Authorization: `Bearer ${accessToken}` };
 
-    // Load sync token
-    const existing = await base44.asServiceRole.entities.SyncState.filter({ sync_type: 'google_calendar' });
+    // Load sync token from SyncState
+    const existing = await base44.asServiceRole.entities.SyncState.filter({ sync_type: 'googlecalendar' });
     const syncRecord = existing.length > 0 ? existing[0] : null;
 
-    let url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=100&singleEvents=true';
+    let url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=50&singleEvents=true';
     if (syncRecord?.sync_token) {
       url += `&syncToken=${syncRecord.sync_token}`;
     } else {
-      // First sync — get events from last 30 days
+      // First sync: get events from last 30 days
       url += '&timeMin=' + new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
     }
 
     let res = await fetch(url, { headers: authHeader });
+
+    // If syncToken expired (410 Gone), do fresh sync
     if (res.status === 410) {
-      // syncToken expired — fresh sync
-      url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=100&singleEvents=true'
-        + '&timeMin=' + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=50&singleEvents=true'
+        + '&timeMin=' + new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
       res = await fetch(url, { headers: authHeader });
     }
 
     if (!res.ok) {
       const errText = await res.text();
       console.error('Calendar API error:', res.status, errText);
-      return Response.json({ status: 'api_error' });
+      return Response.json({ status: 'api_error', detail: errText });
     }
 
-    // Drain all pages
+    // Drain all pages to get nextSyncToken
     const allItems = [];
     let pageData = await res.json();
     let newSyncToken = null;
+
     while (true) {
       allItems.push(...(pageData.items || []));
       if (pageData.nextSyncToken) newSyncToken = pageData.nextSyncToken;
       if (!pageData.nextPageToken) break;
-      const nextRes = await fetch(
-        url + `&pageToken=${pageData.nextPageToken}`,
-        { headers: authHeader }
-      );
+
+      const nextUrl = url + `&pageToken=${pageData.nextPageToken}`;
+      const nextRes = await fetch(nextUrl, { headers: authHeader });
       if (!nextRes.ok) break;
       pageData = await nextRes.json();
     }
 
-    console.log(`Calendar: ${allItems.length} changed events`);
-
-    // Load contacts for attendee matching
-    const contacts = await base44.asServiceRole.entities.Contact.filter({});
-    const emailToContact = {};
+    // Load all contacts for email matching
+    const contacts = await base44.asServiceRole.entities.Contact.list('-created_date', 5000);
+    const contactByEmail = {};
     for (const c of contacts) {
       if (c.email) {
-        emailToContact[c.email.toLowerCase()] = c;
+        contactByEmail[c.email.toLowerCase()] = c;
       }
     }
 
-    let matched = 0;
+    // Get the authorized user's email for filtering
+    const profileRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary', {
+      headers: authHeader
+    });
+    const calendarOwnerEmail = profileRes.ok ? (await profileRes.json()).id : '';
+
+    let created = 0;
 
     for (const event of allItems) {
+      // Skip cancelled events, all-day events without attendees
       if (event.status === 'cancelled') continue;
-      if (!event.attendees?.length) continue;
+      if (!event.attendees || event.attendees.length === 0) continue;
 
       const eventId = event.id;
+      const externalId = `gcal_${eventId}`;
 
-      // Check if already processed
-      const existingInteraction = await base44.asServiceRole.entities.ContactInteraction.filter({ external_id: `gcal_${eventId}` });
-      if (existingInteraction.length > 0) continue;
+      // Check if already tracked
+      const existingInteractions = await base44.asServiceRole.entities.ContactInteraction.filter({
+        external_id: externalId
+      });
+      if (existingInteractions.length > 0) continue;
 
+      // Find matching contacts from attendees
       const attendeeEmails = event.attendees
         .map(a => a.email?.toLowerCase())
-        .filter(Boolean);
+        .filter(e => e && e !== calendarOwnerEmail.toLowerCase());
 
-      const startTime = event.start?.dateTime || event.start?.date;
-      const endTime = event.end?.dateTime || event.end?.date;
-      let durationMinutes = 0;
-      if (startTime && endTime) {
-        durationMinutes = Math.round((new Date(endTime) - new Date(startTime)) / 60000);
-      }
+      for (const attendeeEmail of attendeeEmails) {
+        const matchedContact = contactByEmail[attendeeEmail];
+        if (!matchedContact) continue;
 
-      // Match attendees to contacts
-      for (const email of attendeeEmails) {
-        const contact = emailToContact[email];
-        if (contact) {
-          await base44.asServiceRole.entities.ContactInteraction.create({
-            contact_id: contact.id,
-            contact_name: contact.name,
-            contact_email: email,
-            owner_id: contact.owner_id,
-            type: 'meeting',
-            subject: event.summary || '(No title)',
-            summary: `Meeting: "${event.summary || 'Untitled'}" (${durationMinutes}min)`,
-            external_id: `gcal_${eventId}`,
-            occurred_at: startTime ? new Date(startTime).toISOString() : new Date().toISOString(),
-            duration_minutes: durationMinutes,
-            attendees: attendeeEmails,
-            source: 'google_calendar',
-            metadata: {
-              location: event.location,
-              hangout_link: event.hangoutLink,
-              event_status: event.status
-            }
-          });
-
-          // Update contact last_contact_date
-          await base44.asServiceRole.entities.Contact.update(contact.id, {
-            last_contact_date: new Date(startTime || Date.now()).toISOString().split('T')[0]
-          });
-          matched++;
+        // Calculate duration
+        let durationMinutes = 30;
+        if (event.start?.dateTime && event.end?.dateTime) {
+          const start = new Date(event.start.dateTime);
+          const end = new Date(event.end.dateTime);
+          durationMinutes = Math.round((end - start) / 60000);
         }
+
+        const occurredAt = event.start?.dateTime || event.start?.date || new Date().toISOString();
+
+        await base44.asServiceRole.entities.ContactInteraction.create({
+          contact_id: matchedContact.id,
+          contact_name: matchedContact.name,
+          contact_email: attendeeEmail,
+          interaction_type: 'meeting',
+          direction: 'outbound',
+          subject: event.summary || 'Meeting',
+          snippet: event.description?.substring(0, 200) || '',
+          body: event.description || '',
+          occurred_at: new Date(occurredAt).toISOString(),
+          duration_minutes: durationMinutes,
+          source: 'gcal',
+          external_id: externalId,
+          attendees: event.attendees.map(a => a.email).filter(Boolean),
+          location: event.location || '',
+          meeting_link: event.hangoutLink || '',
+          owner_id: matchedContact.owner_id || ''
+        });
+
+        // Update contact's last_contact_date
+        await base44.asServiceRole.entities.Contact.update(matchedContact.id, {
+          last_contact_date: new Date(occurredAt).toISOString().split('T')[0]
+        });
+        created++;
       }
     }
 
-    // Save new sync token
+    // Save the new syncToken
     if (newSyncToken) {
       if (syncRecord) {
         await base44.asServiceRole.entities.SyncState.update(syncRecord.id, {
@@ -134,15 +144,16 @@ Deno.serve(async (req) => {
         });
       } else {
         await base44.asServiceRole.entities.SyncState.create({
-          sync_type: 'google_calendar',
+          sync_type: 'googlecalendar',
           sync_token: newSyncToken,
           last_synced_at: new Date().toISOString()
         });
       }
     }
 
-    console.log(`Calendar sync complete: ${allItems.length} events, ${matched} matched to contacts`);
-    return Response.json({ status: 'ok', processed: allItems.length, matched });
+    console.log(`Calendar sync complete: processed ${allItems.length} events, created ${created} interactions`);
+    return Response.json({ status: 'ok', processed: allItems.length, created });
+
   } catch (error) {
     console.error('Calendar webhook error:', error);
     return Response.json({ error: error.message }, { status: 500 });
