@@ -91,6 +91,23 @@ export default function DealsPage() {
     queryFn: () => base44.entities.UserProfile.list('-created_date', 100)
   });
 
+  // Fetch contacts for email engine
+  const { data: contacts = [] } = useQuery({
+    queryKey: ['myContacts', currentUser?.email],
+    queryFn: () => base44.entities.Contact.filter({ owner_id: currentUser.email }, '-created_date', 5000),
+    enabled: !!currentUser?.email
+  });
+
+  // Find matching contact for a deal
+  const findContactForDeal = (deal) => {
+    if (!deal) return null;
+    return contacts.find(c => 
+      c.email === deal.contact_email || 
+      c.name === deal.contact_name ||
+      (deal.company_name && c.company === deal.company_name)
+    );
+  };
+
   // Calculate all metrics
   const metrics = useMemo(() => {
     const activeDeals = deals.filter(d => !['closed_won', 'closed_lost'].includes(d.stage));
