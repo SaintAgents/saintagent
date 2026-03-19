@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Globe, Lock, Share2, 
   TrendingUp, LayoutGrid, List, Upload, HelpCircle, Sparkles,
-  BarChart3, Brain, Bot, Zap, Eye, EyeOff, Columns3
+  BarChart3, Brain, Bot, Zap, Eye, EyeOff, Columns3, Mail, Calendar
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
@@ -32,6 +32,7 @@ import CRMResponseAgentChat from '@/components/crm/CRMResponseAgentChat';
 import CRMFilterPanel from '@/components/crm/CRMFilterPanel';
 import PipelineKanban from '@/components/crm/PipelineKanban';
 import CRMAnalyticsPage from '@/components/crm/CRMAnalyticsPage';
+import GoogleSyncPanel from '@/components/crm/GoogleSyncPanel';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
 
@@ -295,6 +296,10 @@ export default function CRM() {
                   <BarChart3 className="w-4 h-4" />
                   Analytics
                 </TabsTrigger>
+                <TabsTrigger value="ai-assistant" className="gap-2">
+                  <Sparkles className="w-4 h-4 text-violet-500" />
+                  AI Assistant
+                </TabsTrigger>
                 <TabsTrigger value="synchronicity" className="gap-2">
                   <Brain className="w-4 h-4 text-amber-500" />
                   Synchronicity
@@ -307,9 +312,9 @@ export default function CRM() {
                   <Bot className="w-4 h-4 text-violet-500" />
                   Response Agent
                 </TabsTrigger>
-                <TabsTrigger value="ai-assistant" className="gap-2">
-                  <Sparkles className="w-4 h-4 text-violet-500" />
-                  AI Assistant
+                <TabsTrigger value="google-sync" className="gap-2">
+                  <Mail className="w-4 h-4 text-blue-500" />
+                  Google Sync
                 </TabsTrigger>
               </TabsList>
 
@@ -456,6 +461,10 @@ export default function CRM() {
                 selectedContact={selectedContact}
               />
             </div>
+          </TabsContent>
+
+          <TabsContent value="google-sync">
+            <GoogleSyncPanel contacts={myContacts} />
           </TabsContent>
         </Tabs>
       </div>
