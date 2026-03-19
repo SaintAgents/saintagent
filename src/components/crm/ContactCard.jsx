@@ -306,7 +306,10 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
               { value: 'social_media', label: 'Social Media' }, { value: 'event', label: 'Event' },
               { value: 'cold_outreach', label: 'Cold Outreach' }, { value: 'inbound', label: 'Inbound' },
               { value: 'partner', label: 'Partner' }, { value: 'advertisement', label: 'Advertisement' },
-              { value: 'content', label: 'Content' }, { value: 'other', label: 'Other' },
+              { value: 'content', label: 'Content' },
+              { value: 'friend', label: 'Friend' }, { value: 'family', label: 'Family' },
+              { value: 'soul_fam', label: 'Soul-Fam' },
+              { value: 'other', label: 'Other' },
             ]}
           />
           <InlineSelect field="priority_tier" value={contact.priority_tier} icon={Target} placeholder="Priority"
