@@ -1021,9 +1021,9 @@ export default function Sidebar({
       "hidden md:flex" // Hide sidebar on mobile
     )} data-sidebar>
       {/* Logo */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-100">
+      <div className="flex items-center justify-between px-2 py-2 border-b border-slate-100">
         <div
-          className={cn("flex items-center gap-3 cursor-pointer", isCollapsed && "justify-center w-full")}
+          className={cn("flex items-center gap-2 cursor-pointer", isCollapsed && "justify-center w-full")}
           onClick={() => {
             if (isCollapsed) {
               onToggle?.();
