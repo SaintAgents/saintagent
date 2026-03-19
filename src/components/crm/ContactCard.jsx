@@ -144,6 +144,11 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {contact.email && (
+                <DropdownMenuItem onClick={() => setEmailModalOpen(true)}>
+                  <Send className="w-4 h-4 mr-2" /> Send Email
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={() => toggleFederatedMutation.mutate()}>
                 <Globe className="w-4 h-4 mr-2" />{contact.is_federated ? 'Remove from Network' : 'Share to Network'}
@@ -155,6 +160,13 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
             </DropdownMenuContent>
           </DropdownMenu>
         )}
+
+        <EmailOutreachModal
+          open={emailModalOpen}
+          onClose={() => setEmailModalOpen(false)}
+          contact={contact}
+          currentUser={currentUser}
+        />
       </div>
     );
   }
