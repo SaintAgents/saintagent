@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Users, Plus, Search, Globe, Lock, Eye, Share2, 
-  TrendingUp, Award, Filter, LayoutGrid, List, Upload, HelpCircle, Sparkles,
+  Users, Plus, Globe, Lock, Share2, 
+  TrendingUp, LayoutGrid, List, Upload, HelpCircle, Sparkles,
   BarChart3, Brain, Bot, Zap
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
@@ -137,7 +137,7 @@ export default function CRM() {
     setEditingContact(null);
   };
 
-  const domains = ['all', 'finance', 'tech', 'governance', 'health', 'education', 'media', 'legal', 'spiritual', 'creative', 'nonprofit', 'other'];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative">
