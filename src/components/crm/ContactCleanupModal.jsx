@@ -53,10 +53,11 @@ const CATEGORY_CONFIG = {
   }
 };
 
-export default function ContactCleanupModal({ open, onClose, contacts }) {
+export default function ContactCleanupModal({ open, onClose, contacts, currentUserId }) {
   const [activeCategory, setActiveCategory] = useState('duplicates');
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [processing, setProcessing] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
   const queryClient = useQueryClient();
 
   // Organize contacts into categories
