@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Users, Copy, AlertCircle, Clock, Star, AlertTriangle,
-  Sparkles, Trash2, ChevronRight, Calculator, TrendingUp
+  Sparkles, Trash2, ChevronRight, Calculator, TrendingUp, HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { differenceInDays } from 'date-fns';
@@ -136,14 +137,29 @@ export default function ContactSummaryHeader({
             <Trash2 className="w-4 h-4" />
             Cleanup
           </Button>
-          <Button 
-            size="sm" 
-            onClick={onOpenEnrich}
-            className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span className="text-white">AI Enrich All</span>
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button 
+              size="sm" 
+              onClick={onOpenEnrich}
+              className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="text-white">AI Enrich All</span>
+            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="p-1 rounded-full hover:bg-slate-100 transition-colors">
+                    <HelpCircle className="w-4 h-4 text-slate-400" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs text-xs">
+                  <p className="font-semibold mb-1">AI Enrich All</p>
+                  <p>Uses AI to research each contact and generate intelligence reports including pain points, value propositions, talking points, and recommended approach. Enriched contacts show better quality scores.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </div>
     </div>
