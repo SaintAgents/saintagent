@@ -17,6 +17,7 @@ import {
   generateWeeklyBurnData,
   calculatePortfolioSummary,
 } from '@/components/projects/forecast/ForecastUtils';
+import BudgetDelayAlerts from '@/components/projects/forecast/BudgetDelayAlerts';
 import BackButton from '@/components/hud/BackButton';
 
 function SummaryTile({ icon: Icon, label, value, sub, color }) {
@@ -182,6 +183,9 @@ export default function BudgetForecast() {
                 color={portfolio.criticalCount > 0 ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'}
               />
             </div>
+
+            {/* Budget & Delay Alerts */}
+            <BudgetDelayAlerts projectForecasts={projectForecasts} />
 
             {/* Variance Chart */}
             {varianceChartData.length > 0 && (

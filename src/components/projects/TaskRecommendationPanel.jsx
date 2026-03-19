@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Sparkles, Zap, Clock, BarChart3, Tag, ChevronDown, ChevronUp, Loader2, Brain } from 'lucide-react';
+import { Sparkles, Zap, Clock, BarChart3, Tag, ChevronDown, ChevronUp, Loader2, Brain, CheckCircle } from 'lucide-react';
 
 function ScoreBar({ label, score, icon: Icon, color }) {
   return (
@@ -80,6 +80,9 @@ function RecommendationCard({ rec, rank, onSelect, isSelected }) {
           <ScoreBar label="Speed" score={rec.speed_score} icon={Zap} color="text-amber-500" />
           <ScoreBar label="Capacity" score={rec.capacity_score} icon={BarChart3} color="text-blue-500" />
           <ScoreBar label="Skills" score={rec.skill_score} icon={Tag} color="text-violet-500" />
+          {rec.on_time_rate !== null && rec.on_time_rate !== undefined && (
+            <ScoreBar label="On-Time" score={rec.on_time_rate} icon={CheckCircle} color="text-emerald-500" />
+          )}
 
           {rec.matched_skills.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1">
@@ -105,7 +108,7 @@ function RecommendationCard({ rec, rank, onSelect, isSelected }) {
   );
 }
 
-export default function TaskRecommendationPanel({ projectId, taskTitle, taskDescription, taskPriority, estimatedHours, selectedAssignee, onSelectAssignee }) {
+export default function TaskRecommendationPanel({ projectId, taskTitle, taskDescription, taskPriority, estimatedHours, skillTags, selectedAssignee, onSelectAssignee }) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['taskRecommendations', projectId, taskTitle, taskDescription],
     queryFn: async () => {
@@ -115,6 +118,7 @@ export default function TaskRecommendationPanel({ projectId, taskTitle, taskDesc
         task_description: taskDescription,
         task_priority: taskPriority,
         estimated_hours: estimatedHours,
+        skill_tags: skillTags || [],
       });
       return res.data;
     },
@@ -123,6 +127,7 @@ export default function TaskRecommendationPanel({ projectId, taskTitle, taskDesc
   });
 
   const recommendations = data?.recommendations || [];
+  const aiInsight = data?.ai_insight;
 
   if (!projectId) return null;
 
@@ -134,7 +139,7 @@ export default function TaskRecommendationPanel({ projectId, taskTitle, taskDesc
         <span className="text-[10px] text-slate-400 ml-auto">Speed · Capacity · Skills</span>
       </div>
 
-      <div className="p-2 space-y-1.5 max-h-64 overflow-y-auto">
+      <div className="p-2 space-y-1.5 max-h-72 overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center py-6 gap-2 text-xs text-slate-400">
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -145,15 +150,31 @@ export default function TaskRecommendationPanel({ projectId, taskTitle, taskDesc
         ) : recommendations.length === 0 ? (
           <p className="text-xs text-slate-400 text-center py-4">Enter a task title to get recommendations</p>
         ) : (
-          recommendations.map((rec, i) => (
-            <RecommendationCard
-              key={rec.member_id}
-              rec={rec}
-              rank={i + 1}
-              isSelected={selectedAssignee === rec.member_id}
-              onSelect={onSelectAssignee}
-            />
-          ))
+          <>
+            {aiInsight?.top_pick_insight && (
+              <div className="p-2 rounded-lg bg-violet-50 border border-violet-200 mb-2">
+                <div className="flex items-start gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-violet-500 mt-0.5 flex-shrink-0" />
+                  <p className="text-[11px] text-violet-700">{aiInsight.top_pick_insight}</p>
+                </div>
+                {aiInsight.overload_warning && (
+                  <div className="flex items-start gap-1.5 mt-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-[11px] text-amber-700">{aiInsight.overload_warning}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {recommendations.map((rec, i) => (
+              <RecommendationCard
+                key={rec.member_id}
+                rec={rec}
+                rank={i + 1}
+                isSelected={selectedAssignee === rec.member_id}
+                onSelect={onSelectAssignee}
+              />
+            ))}
+          </>
         )}
       </div>
     </div>
