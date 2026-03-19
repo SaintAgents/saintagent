@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,13 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
   DropdownMenuSeparator, DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+} from '@/components/ui/select';
 import { 
   MoreVertical, Edit, Trash2, Globe, Lock, Eye, EyeOff,
-  Building2, MapPin, Star, Calendar, ExternalLink, MessageCircle, Phone
+  Building2, MapPin, Star, Calendar, ExternalLink, MessageCircle, Phone,
+  Target, TrendingUp, Sparkles, Signal, Mail, Tag
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
