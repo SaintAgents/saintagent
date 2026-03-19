@@ -69,7 +69,7 @@ export default function CRM() {
 
   const { data: myContacts = [], isLoading: loadingContacts } = useQuery({
     queryKey: ['myContacts', currentUser?.email],
-    queryFn: () => base44.entities.Contact.filter({ owner_id: currentUser.email }, '-created_date'),
+    queryFn: () => base44.entities.Contact.filter({ owner_id: currentUser.email }, '-created_date', 500),
     enabled: !!currentUser?.email
   });
 
