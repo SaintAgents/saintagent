@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,31 +12,33 @@ import {
   MessageCircle, 
   X,
   ChevronRight,
-  Zap
+  Zap,
+  Loader2,
+  RefreshCw,
+  Brain
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createPageUrl } from '@/utils';
 
 export default function CollaborationSuggestions({ profile, compact = false }) {
   const queryClient = useQueryClient();
+  const [aiSuggestions, setAiSuggestions] = useState(null);
 
-  // DRASTICALLY reduced API calls to prevent rate limiting
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['collaborationProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-last_seen_at', 50),
-    staleTime: 30 * 60 * 1000, // 30 minutes cache
-    gcTime: 60 * 60 * 1000, // 1 hour
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: 0,
     enabled: !!profile?.user_id
   });
 
-  // DISABLED - skills fetching causes too many API calls
   const mySkills = [];
 
-  // Calculate collaboration suggestions
-  const suggestions = React.useMemo(() => {
+  // Calculate collaboration suggestions using basic scoring
+  const basicSuggestions = React.useMemo(() => {
     if (!profile?.user_id || !allProfiles.length) return [];
 
     const myValues = profile.values_tags || [];
@@ -50,29 +52,21 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
       .map(other => {
         const otherValues = other.values_tags || [];
         const otherSkills = other.skills || [];
-        
-        // Calculate value overlap
         const sharedValues = myValues.filter(v => 
           otherValues.some(ov => ov.toLowerCase() === v.toLowerCase())
         );
-        
-        // Calculate skill complementarity
         const sharedSkills = mySkillNames.filter(s => 
           otherSkills.some(os => os.toLowerCase().includes(s) || s.includes(os.toLowerCase()))
         );
-        
-        // Check online status
         const isOnline = other.last_seen_at && new Date(other.last_seen_at) > fiveMinutesAgo;
         const isNew = other.created_date && new Date(other.created_date) > sevenDaysAgo;
         
-        // Calculate relevance score
         let score = 0;
         score += sharedValues.length * 15;
         score += sharedSkills.length * 20;
         if (isOnline) score += 25;
         if (isNew) score += 10;
         
-        // Bonus for similar intentions
         const myIntentions = profile?.intentions || [];
         const otherIntentions = other.intentions || [];
         const sharedIntentions = myIntentions.filter(i => 
@@ -80,20 +74,90 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
         );
         score += sharedIntentions.length * 10;
 
-        return {
-          ...other,
-          score,
-          sharedValues,
-          sharedSkills,
-          sharedIntentions,
-          isOnline,
-          isNew
-        };
+        return { ...other, score, sharedValues, sharedSkills, sharedIntentions, isOnline, isNew };
       })
-      .filter(p => p.score >= 20) // Minimum threshold
+      .filter(p => p.score >= 20)
       .sort((a, b) => b.score - a.score)
       .slice(0, compact ? 3 : 10);
   }, [allProfiles, profile, mySkills, compact]);
+
+  // AI Synergy Matcher — runs when basic scoring has no results
+  const synergyMutation = useMutation({
+    mutationFn: async () => {
+      const candidates = allProfiles
+        .filter(p => p.user_id !== profile?.user_id && p.display_name)
+        .slice(0, 20);
+      if (candidates.length === 0) return { matches: [] };
+
+      const prompt = `You are a collaboration matchmaker for a professional platform. Analyze synergy between users.
+
+MY PROFILE:
+Name: ${profile?.display_name}
+Bio: ${profile?.bio || 'N/A'}
+Skills: ${(profile?.skills || []).join(', ') || 'N/A'}
+Values: ${(profile?.values_tags || []).join(', ') || 'N/A'}
+Location: ${profile?.location || 'N/A'}
+Rank: ${profile?.rank_code || 'seeker'}
+
+POTENTIAL COLLABORATORS:
+${candidates.map((c, i) => `${i+1}. ${c.display_name} (ID: ${c.user_id}) — Bio: ${c.bio?.slice(0,100) || 'N/A'}, Skills: ${(c.skills || []).join(', ') || 'N/A'}, Location: ${c.location || 'N/A'}`).join('\n')}
+
+Find the TOP 5 best collaboration matches based on:
+1. Complementary skills (they have what I lack)
+2. Shared vision/values alignment
+3. Potential project synergies
+4. Geographic or timezone compatibility
+
+For each match, provide a synergy_reason (why we'd work well together) and a suggested_project (what we could build together).`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            matches: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  user_id: { type: "string" },
+                  synergy_score: { type: "number" },
+                  synergy_reason: { type: "string" },
+                  suggested_project: { type: "string" },
+                  complementary_skills: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Enrich with profile data
+      const enriched = (response.matches || []).map(m => {
+        const up = candidates.find(c => c.user_id === m.user_id);
+        return {
+          ...m,
+          display_name: up?.display_name || m.user_id?.split('@')[0],
+          avatar_url: up?.avatar_url,
+          bio: up?.bio,
+          isAI: true,
+          score: m.synergy_score || 75,
+          sharedValues: [],
+          sharedSkills: m.complementary_skills || [],
+          sharedIntentions: [],
+          isOnline: false,
+          isNew: false,
+          user_id: m.user_id,
+          id: m.user_id,
+        };
+      });
+      return { matches: enriched };
+    },
+    onSuccess: (data) => setAiSuggestions(data.matches),
+  });
+
+  // Use AI suggestions if basic scoring returned nothing
+  const suggestions = (basicSuggestions.length > 0 ? basicSuggestions : aiSuggestions) || [];
 
   // Create notification for collaboration suggestion
   const createNotification = useMutation({
@@ -143,7 +207,38 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
     return null;
   }
 
-  if (suggestions.length === 0) return null;
+  // If no suggestions yet, show the AI synergy button
+  if (suggestions.length === 0) {
+    return (
+      <Card className="border-violet-200 bg-gradient-to-br from-white to-violet-50/30">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Zap className="w-4 h-4 text-violet-500" />
+            Potential Collaborators
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-6">
+            <Brain className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <p className="text-sm text-slate-500 mb-4">
+              No obvious matches found. Run AI synergy analysis to discover hidden collaborators.
+            </p>
+            <Button
+              onClick={() => synergyMutation.mutate()}
+              disabled={synergyMutation.isPending}
+              className="gap-2 bg-violet-600 hover:bg-violet-700"
+            >
+              {synergyMutation.isPending ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing synergies...</>
+              ) : (
+                <><Sparkles className="w-4 h-4" /> Run Synergy Match</>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (compact) {
     return (
@@ -193,10 +288,22 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
   return (
     <Card className="border-violet-200 bg-gradient-to-br from-white to-violet-50/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Zap className="w-4 h-4 text-violet-500" />
-          Potential Collaborators
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Zap className="w-4 h-4 text-violet-500" />
+            Potential Collaborators
+            {aiSuggestions && <Badge className="text-[9px] bg-violet-100 text-violet-700 ml-1">AI</Badge>}
+          </CardTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2"
+            onClick={() => synergyMutation.mutate()}
+            disabled={synergyMutation.isPending}
+          >
+            {synergyMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-auto max-h-96">
@@ -253,6 +360,9 @@ export default function CollaborationSuggestions({ profile, compact = false }) {
                     <Sparkles className="w-3 h-3 mr-1" />
                     {s.score}% match
                   </Badge>
+                  {s.synergy_reason && (
+                    <p className="text-[10px] text-violet-600 text-right max-w-[160px] leading-tight">{s.synergy_reason}</p>
+                  )}
                   <Button
                     size="sm"
                     variant="ghost"
