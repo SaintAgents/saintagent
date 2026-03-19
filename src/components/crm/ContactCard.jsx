@@ -344,8 +344,19 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
         </div>
       )}
 
+      {/* Notes preview */}
+      {contact.notes && !compact && (
+        <div className="mb-3 p-2 bg-amber-50 rounded-lg border border-amber-100" onClick={e => e.stopPropagation()}>
+          <div className="flex items-center gap-1 mb-1">
+            <StickyNote className="w-3 h-3 text-amber-600" />
+            <span className="text-[10px] font-medium text-amber-700">Notes</span>
+          </div>
+          <p className="text-xs text-amber-900 line-clamp-2">{contact.notes}</p>
+        </div>
+      )}
+
       {/* Tags */}
-      <div className="flex flex-wrap gap-1 mb-3">
+      <div className={cn("flex flex-wrap gap-1 mb-3", compact && "hidden")}>
         {contact.domain && (
           <Badge className={cn("text-[10px] px-1.5 py-0", DOMAIN_COLORS[contact.domain])}>
             {contact.domain}
