@@ -8,8 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Globe, Lock, Share2, 
   TrendingUp, LayoutGrid, List, Upload, HelpCircle, Sparkles,
-  BarChart3, Brain, Bot, Zap, Eye, EyeOff, Columns3, Mail, Calendar
+  BarChart3, Brain, Bot, Zap, Eye, EyeOff, Columns3, Mail, Calendar,
+  ExternalLink, Send, FileBarChart
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
 import FederatedGraphView from '@/components/crm/FederatedGraphView';
