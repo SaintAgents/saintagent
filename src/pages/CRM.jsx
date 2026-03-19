@@ -346,14 +346,14 @@ export default function CRM() {
               <div className="text-center py-16 bg-white rounded-xl border">
                 <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h3 className="font-semibold text-slate-900 mb-2">
-                  {search ? 'No contacts found' : 'Start building your network'}
+                  {filters.search ? 'No contacts found' : 'Start building your network'}
                 </h3>
                 <p className="text-sm text-slate-500 mb-4 max-w-md mx-auto">
-                  {search 
+                  {filters.search 
                     ? 'Try adjusting your search or filters' 
                     : 'Add contacts to your private CRM. You control what gets shared.'}
                 </p>
-                {!search && (
+                {!filters.search && (
                   <Button onClick={() => setFormOpen(true)} className="bg-violet-600 hover:bg-violet-700">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Your First Contact
