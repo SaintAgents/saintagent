@@ -78,8 +78,8 @@ export default function CRM() {
 
   const { data: federatedContacts = [] } = useQuery({
     queryKey: ['federatedContacts'],
-    queryFn: () => base44.entities.Contact.filter({ is_federated: true, permission_level: { $ne: 'private' } }, '-quality_score', 100),
-    enabled: tab === 'network'
+    queryFn: () => base44.entities.Contact.filter({ is_federated: true, permission_level: { $ne: 'private' } }, '-quality_score', 500),
+    enabled: !!currentUser?.email
   });
 
   const { data: accessRequests = [] } = useQuery({
@@ -100,13 +100,22 @@ export default function CRM() {
   const sourceContacts = tab === 'my-contacts' ? myContacts : federatedContacts;
 
   const filteredContacts = sourceContacts.filter(c => {
-    const q = filters.search.toLowerCase();
-    const matchesSearch = !q ||
-      c.name?.toLowerCase().includes(q) ||
-      c.company?.toLowerCase().includes(q) ||
-      c.email?.toLowerCase().includes(q) ||
-      c.domain?.toLowerCase().includes(q) ||
-      (c.tags || []).some(t => t.toLowerCase().includes(q));
+    const q = filters.search.toLowerCase().trim();
+    let matchesSearch = true;
+    if (q) {
+      // Split by spaces to allow multi-word search (all words must match somewhere)
+      const words = q.split(/\s+/).filter(Boolean);
+      const searchable = [
+        c.name, c.company, c.email, c.domain, c.role, c.location,
+        c.phone, c.notes, c.lead_status, c.lead_source, c.priority_tier,
+        c.sentiment_label, c.followup_note,
+        ...(c.tags || []),
+        ...(c.intent_signals || []),
+        c.ai_dossier?.pain_point, c.ai_dossier?.value_prop,
+        c.ai_dossier?.recommended_approach, c.ai_dossier?.company_intel,
+      ].filter(Boolean).join(' ').toLowerCase();
+      matchesSearch = words.every(w => searchable.includes(w));
+    }
     const matchesDomain = filters.domain === 'all' || c.domain === filters.domain;
     const matchesStatus = filters.leadStatus === 'all' || c.lead_status === filters.leadStatus;
     const matchesSource = filters.leadSource === 'all' || c.lead_source === filters.leadSource;
@@ -441,10 +450,12 @@ export default function CRM() {
           </TabsContent>
 
           <TabsContent value="ai-assistant">
-            <CRMAIAssistant 
-              contacts={myContacts}
-              selectedContact={selectedContact}
-            />
+            <div className="max-w-3xl mx-auto">
+              <CRMAIAssistant 
+                contacts={myContacts}
+                selectedContact={selectedContact}
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

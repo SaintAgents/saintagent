@@ -21,6 +21,7 @@ import { format } from 'date-fns';
 import EmailOutreachModal from './EmailOutreachModal';
 import ContactNotesPopover from './ContactNotesPopover';
 import DeepDiveAIModal from './DeepDiveAIModal';
+import RelationshipScoreBadge from './RelationshipScoreBadge';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -162,6 +163,10 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
           {[...Array(5)].map((_, i) => (
             <Star key={i} className={cn("w-3 h-3", i < (contact.relationship_strength || 0) ? "fill-amber-400 text-amber-400" : "text-slate-200")} />
           ))}
+        </div>
+
+        <div className="shrink-0">
+          <RelationshipScoreBadge contact={contact} />
         </div>
 
         {contact.sentiment_label && (
@@ -327,19 +332,22 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
         </div>
       )}
 
-      {/* Relationship Strength - clickable stars */}
-      <div className="flex items-center gap-1 mb-3" onClick={e => e.stopPropagation()}>
-        <span className="text-[10px] text-slate-500 mr-1">Strength:</span>
-        {[...Array(5)].map((_, i) => (
-          <Star 
-            key={i}
-            onClick={() => updateFieldMutation.mutate({ field: 'relationship_strength', value: i + 1 })}
-            className={cn(
-              "w-4 h-4 cursor-pointer hover:scale-110 transition-transform",
-              i < (contact.relationship_strength || 0) ? "fill-amber-400 text-amber-400" : "text-slate-200 hover:text-amber-300"
-            )} 
-          />
-        ))}
+      {/* Relationship Strength - clickable stars + engagement score */}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+          <span className="text-[10px] text-slate-500 mr-1">Strength:</span>
+          {[...Array(5)].map((_, i) => (
+            <Star 
+              key={i}
+              onClick={() => updateFieldMutation.mutate({ field: 'relationship_strength', value: i + 1 })}
+              className={cn(
+                "w-4 h-4 cursor-pointer hover:scale-110 transition-transform",
+                i < (contact.relationship_strength || 0) ? "fill-amber-400 text-amber-400" : "text-slate-200 hover:text-amber-300"
+              )} 
+            />
+          ))}
+        </div>
+        <RelationshipScoreBadge contact={contact} showBar />
       </div>
 
       {/* Inline Editable Dropdowns - 2 columns */}

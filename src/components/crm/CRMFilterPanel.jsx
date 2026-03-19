@@ -62,7 +62,7 @@ export default function CRMFilterPanel({ filters, onChange, contactCount, totalC
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input
-            placeholder="Search by name, company, email, or tags..."
+            placeholder="Search by name, company, email, notes, tags..."
             className="pl-9"
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}

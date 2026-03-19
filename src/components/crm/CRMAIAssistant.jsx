@@ -98,8 +98,8 @@ Provide practical, actionable advice. If composing an email or message, make it 
   };
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
+    <Card className="flex flex-col max-h-[calc(100vh-300px)] overflow-hidden">
+      <CardHeader className="pb-3 shrink-0">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Sparkles className="w-5 h-5 text-violet-500" />
           AI Assistant
@@ -110,7 +110,7 @@ Provide practical, actionable advice. If composing an email or message, make it 
           </Badge>
         )}
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-4">
+      <CardContent className="flex-1 flex flex-col gap-4 overflow-y-auto">
         {/* Quick Actions */}
         <div className="flex flex-wrap gap-2">
           {QUICK_ACTIONS.map(action => (
