@@ -12,7 +12,7 @@ import {
   Plus, Search, Building2, TrendingUp, AlertTriangle, Clock, 
   CheckCircle2, ListTodo, Target, Filter, Upload,
   Calendar, FileText, MessageSquare, ChevronRight, GripVertical,
-  UserPlus, MessageSquarePlus, BarChart3, Mail
+  UserPlus, MessageSquarePlus, BarChart3, Mail, HelpCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
