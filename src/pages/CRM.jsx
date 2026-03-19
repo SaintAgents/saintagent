@@ -383,6 +383,7 @@ export default function CRM() {
                                           key={contact.id} 
                                           contact={contact} 
                                           viewMode={viewMode}
+                                          compact={compactCards}
                                           isOwner={true}
                                           onEdit={() => handleEdit(contact)}
                                           onClick={() => setSelectedContact(contact)}
