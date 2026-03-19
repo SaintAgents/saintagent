@@ -41,7 +41,7 @@ const DOMAIN_COLORS = {
   other: 'bg-gray-100 text-gray-700'
 };
 
-export default function ContactCard({ contact, viewMode = 'grid', isOwner = false, onEdit, onRequestAccess, onClick }) {
+export default function ContactCard({ contact, viewMode = 'grid', compact = false, isOwner = false, onEdit, onRequestAccess, onClick }) {
   const queryClient = useQueryClient();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const permConfig = PERMISSION_CONFIG[contact.permission_level] || PERMISSION_CONFIG.private;
