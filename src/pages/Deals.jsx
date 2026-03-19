@@ -24,6 +24,10 @@ import DealDetailModal from '@/components/deals/DealDetailModal.jsx';
 import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal.jsx';
 import AddNoteModal from '@/components/deals/AddNoteModal.jsx';
 import DealAnalyticsTab from '@/components/deals/DealAnalyticsTab.jsx';
+import { handleDealStageTransition, STAGE_LABELS } from '@/components/deals/DealStageTransitionHandler';
+import StageTransitionToast from '@/components/deals/StageTransitionToast';
+import AIEmailTemplateEngine from '@/components/deals/AIEmailTemplateEngine';
+import { toast } from 'sonner';
 
 // Pipeline stages matching the image
 const PIPELINE_STAGES = {
