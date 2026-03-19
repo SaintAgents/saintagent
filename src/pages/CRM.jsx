@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Users, Plus, Globe, Lock, Share2, 
   TrendingUp, LayoutGrid, List, Upload, HelpCircle, Sparkles,
-  BarChart3, Brain, Bot, Zap, Eye, EyeOff
+  BarChart3, Brain, Bot, Zap, Eye, EyeOff, Columns3
 } from 'lucide-react';
 import ContactCard from '@/components/crm/ContactCard';
 import ContactFormModal from '@/components/crm/ContactFormModal';
@@ -30,6 +30,8 @@ import CRMAIAssistant from '@/components/crm/CRMAIAssistant';
 import SynchronicityEngine from '@/components/crm/SynchronicityEngine';
 import CRMResponseAgentChat from '@/components/crm/CRMResponseAgentChat';
 import CRMFilterPanel from '@/components/crm/CRMFilterPanel';
+import PipelineKanban from '@/components/crm/PipelineKanban';
+import CRMAnalyticsPage from '@/components/crm/CRMAnalyticsPage';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
 
@@ -276,6 +278,10 @@ export default function CRM() {
                     <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
                   )}
                 </TabsTrigger>
+                <TabsTrigger value="pipeline" className="gap-2">
+                  <Columns3 className="w-4 h-4" />
+                  Pipeline
+                </TabsTrigger>
                 <TabsTrigger value="analytics" className="gap-2">
                   <BarChart3 className="w-4 h-4" />
                   Analytics
@@ -408,12 +414,17 @@ export default function CRM() {
             />
           </TabsContent>
 
+          <TabsContent value="pipeline">
+            <PipelineKanban 
+              contacts={filteredContacts}
+              onClickContact={(contact) => setSelectedContact(contact)}
+            />
+          </TabsContent>
+
           <TabsContent value="analytics">
-            <CRMAnalyticsDashboard 
+            <CRMAnalyticsPage 
               contacts={myContacts}
-              contributions={myContribution ? [myContribution] : []}
-              currentUserId={currentUser?.email}
-              deals={[]}
+              emailCampaigns={[]}
             />
           </TabsContent>
 
