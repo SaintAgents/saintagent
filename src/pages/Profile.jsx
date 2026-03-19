@@ -59,7 +59,8 @@ import {
   BookOpen,
   Folder,
   BarChart3,
-  Contact
+  Contact,
+  Activity
 } from
 "lucide-react";
 
@@ -99,6 +100,7 @@ import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import DealsTab from '@/components/deals/DealsTab.jsx';
 import ProjectsTab from '@/components/profile/ProjectsTab';
 import PersonalAnalyticsDashboard from '@/components/profile/PersonalAnalyticsDashboard';
+import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import {
@@ -754,6 +756,12 @@ export default function Profile() {
                 <TabsTrigger value="crm" className="text-xs sm:text-sm px-2 sm:px-3" title="CRM">
                   <span className="hidden sm:inline">CRM</span>
                   <Contact className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
+              {isOwnProfile && (
+                <TabsTrigger value="impact" className="text-xs sm:text-sm px-2 sm:px-3" title="Impact">
+                  <span className="hidden sm:inline">Impact</span>
+                  <Activity className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1792,6 +1800,12 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="crm" className="space-y-6">
               <MyContactsTab currentUser={currentUser} profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
+            <TabsContent value="impact" className="space-y-6">
+              <ImpactDashboardTab currentUser={currentUser} profile={profile} />
             </TabsContent>
           )}
 
