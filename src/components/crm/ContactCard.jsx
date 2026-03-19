@@ -19,6 +19,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import EmailOutreachModal from './EmailOutreachModal';
+import ContactNotesPopover from './ContactNotesPopover';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
