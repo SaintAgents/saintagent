@@ -78,10 +78,10 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
   if (viewMode === 'list') {
     return (
       <div 
-        className="bg-white rounded-lg border p-3 flex items-center gap-4 hover:shadow-sm transition-shadow cursor-pointer"
+        className="bg-white rounded-lg border p-3 flex items-center gap-3 hover:shadow-sm transition-shadow cursor-pointer"
         onClick={onClick}
       >
-        <Avatar className="w-10 h-10">
+        <Avatar className="w-10 h-10 shrink-0">
           <AvatarImage src={contact.avatar_url} />
           <AvatarFallback className="bg-violet-100 text-violet-600">
             {contact.name?.charAt(0)}
@@ -91,65 +91,57 @@ export default function ContactCard({ contact, viewMode = 'grid', isOwner = fals
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="font-medium text-slate-900 truncate">{contact.name}</span>
-            {contact.domain && (
-              <Badge className={cn("text-xs", DOMAIN_COLORS[contact.domain])}>
-                {contact.domain}
-              </Badge>
+            {contact.domain && <Badge className={cn("text-[10px]", DOMAIN_COLORS[contact.domain])}>{contact.domain}</Badge>}
+            {contact.lead_status && <Badge variant="outline" className="text-[10px]">{contact.lead_status}</Badge>}
+            {contact.priority_tier && (
+              <Badge className={cn("text-[10px]", {
+                'bg-red-100 text-red-700': contact.priority_tier === 'critical',
+                'bg-orange-100 text-orange-700': contact.priority_tier === 'high',
+                'bg-blue-100 text-blue-700': contact.priority_tier === 'medium',
+                'bg-slate-100 text-slate-600': contact.priority_tier === 'low',
+              })}>{contact.priority_tier}</Badge>
             )}
           </div>
           <div className="text-sm text-slate-500 truncate">
             {contact.role} {contact.company && `at ${contact.company}`}
+            {contact.email && ` • ${contact.email}`}
           </div>
-          {contact.phone && (
-            <div className="text-xs text-slate-400 truncate flex items-center gap-1">
-              <Phone className="w-3 h-3" />
-              {contact.phone}
-            </div>
-          )}
-          </div>
+        </div>
 
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 shrink-0">
           {[...Array(5)].map((_, i) => (
-            <Star 
-              key={i} 
-              className={cn(
-                "w-3 h-3",
-                i < (contact.relationship_strength || 0) 
-                  ? "fill-amber-400 text-amber-400" 
-                  : "text-slate-200"
-              )} 
-            />
+            <Star key={i} className={cn("w-3 h-3", i < (contact.relationship_strength || 0) ? "fill-amber-400 text-amber-400" : "text-slate-200")} />
           ))}
         </div>
 
-        <Badge className={cn("text-xs", permConfig.color)}>
-          <PermIcon className="w-3 h-3 mr-1" />
-          {permConfig.label}
+        {contact.sentiment_label && (
+          <Badge className={cn("text-[10px] shrink-0", {
+            'bg-red-100 text-red-700': contact.sentiment_label === 'frustrated',
+            'bg-blue-100 text-blue-700': contact.sentiment_label === 'cold',
+            'bg-slate-100 text-slate-600': contact.sentiment_label === 'neutral',
+            'bg-amber-100 text-amber-700': contact.sentiment_label === 'warm',
+            'bg-emerald-100 text-emerald-700': contact.sentiment_label === 'hot',
+          })}>{contact.sentiment_label}</Badge>
+        )}
+
+        <Badge className={cn("text-[10px] shrink-0", permConfig.color)}>
+          <PermIcon className="w-3 h-3 mr-0.5" />{permConfig.label}
         </Badge>
 
         {isOwner && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                 <MoreVertical className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={onEdit}>
-                <Edit className="w-4 h-4 mr-2" /> Edit
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 mr-2" /> Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={() => toggleFederatedMutation.mutate()}>
-                <Globe className="w-4 h-4 mr-2" />
-                {contact.is_federated ? 'Remove from Network' : 'Share to Network'}
+                <Globe className="w-4 h-4 mr-2" />{contact.is_federated ? 'Remove from Network' : 'Share to Network'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="text-rose-600"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteMutation.mutate();
-                }}
-              >
+              <DropdownMenuItem className="text-rose-600" onClick={e => { e.stopPropagation(); deleteMutation.mutate(); }}>
                 <Trash2 className="w-4 h-4 mr-2" /> Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
