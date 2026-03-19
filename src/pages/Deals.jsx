@@ -742,6 +742,12 @@ export default function DealsPage() {
         deal={emailEngineModal.deal}
         currentUser={currentUser}
       />
+
+      {/* Deal Maker Info Modal */}
+      <DealMakerInfoModal
+        open={infoModalOpen}
+        onClose={() => setInfoModalOpen(false)}
+      />
     </div>
   );
 }
