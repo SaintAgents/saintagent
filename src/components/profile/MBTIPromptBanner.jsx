@@ -149,7 +149,7 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => setShowDismissOptions(true)}
+              onClick={() => handleDismiss('never')}
               className="shrink-0 text-slate-400 hover:text-slate-600"
             >
               <X className="w-4 h-4" />
