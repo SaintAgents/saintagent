@@ -345,15 +345,25 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
         </div>
       )}
 
-      {/* Notes preview */}
-      {contact.notes && !compact && (
-        <div className="mb-3 p-2 bg-amber-50 rounded-lg border border-amber-100" onClick={e => e.stopPropagation()}>
-          <div className="flex items-center gap-1 mb-1">
-            <StickyNote className="w-3 h-3 text-amber-600" />
-            <span className="text-[10px] font-medium text-amber-700">Notes</span>
+      {/* Notes - clickable popover for view/edit */}
+      {!compact && (contact.notes || isOwner) && (
+        contact.notes ? (
+          <div onClick={e => e.stopPropagation()}>
+            <ContactNotesPopover
+              notes={contact.notes}
+              isOwner={isOwner}
+              onSave={(val) => updateFieldMutation.mutate({ field: 'notes', value: val })}
+            />
           </div>
-          <p className="text-xs text-amber-900 line-clamp-2">{contact.notes}</p>
-        </div>
+        ) : isOwner ? (
+          <div onClick={e => e.stopPropagation()}>
+            <ContactNotesPopover
+              notes=""
+              isOwner={true}
+              onSave={(val) => updateFieldMutation.mutate({ field: 'notes', value: val })}
+            />
+          </div>
+        ) : null
       )}
 
       {/* Tags */}
