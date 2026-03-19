@@ -14,10 +14,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   AlertTriangle, Copy, UserX, Clock, Star, AlertCircle,
-  Trash2, Merge, CheckCircle, Loader2, ChevronRight
+  Trash2, Merge, CheckCircle, Loader2, ChevronRight, Pencil
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { differenceInDays } from 'date-fns';
+import ContactFormModal from './ContactFormModal';
 
 const CATEGORY_CONFIG = {
   duplicates: { 
