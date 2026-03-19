@@ -76,12 +76,6 @@ export default function ContactDetailModal({ open, onClose, contact, onEdit, onD
     queryFn: () => base44.auth.me()
   });
 
-  if (!contact) return null;
-  
-  const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
-  const permConfig = PERMISSION_CONFIG[contact.permission_level] || PERMISSION_CONFIG.private;
-  const PermIcon = permConfig.icon;
-
   const updateNotesMutation = useMutation({
     mutationFn: (notes) => base44.entities.Contact.update(contact.id, { notes }),
     onSuccess: () => {
@@ -98,6 +92,12 @@ export default function ContactDetailModal({ open, onClose, contact, onEdit, onD
       onClose();
     }
   });
+
+  if (!contact) return null;
+  
+  const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+  const permConfig = PERMISSION_CONFIG[contact.permission_level] || PERMISSION_CONFIG.private;
+  const PermIcon = permConfig.icon;
 
   const handleAddNote = () => {
     const existingNotes = contact.notes || '';
