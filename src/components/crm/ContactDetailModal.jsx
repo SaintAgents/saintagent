@@ -17,6 +17,7 @@ import EmailOutreachModal from './EmailOutreachModal';
 import SetFollowUpModal from './SetFollowUpModal';
 import ContactEmailHistory from './ContactEmailHistory';
 import DeepDiveAIModal from './DeepDiveAIModal';
+import ContactInteractionTimeline from './ContactInteractionTimeline';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -461,7 +462,10 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             )}
           </div>
 
-          {/* Email History */}
+          {/* Interaction Timeline (Gmail + Calendar auto-captured) */}
+          <ContactInteractionTimeline contactId={contact.id} />
+
+          {/* Email History (CRM outreach) */}
           <ContactEmailHistory contactId={contact.id} />
 
           {/* AI Dossier */}
