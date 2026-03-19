@@ -100,7 +100,7 @@ import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import DealsTab from '@/components/deals/DealsTab.jsx';
 import ProjectsTab from '@/components/profile/ProjectsTab';
 import PersonalAnalyticsDashboard from '@/components/profile/PersonalAnalyticsDashboard';
-import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab';
+import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab.jsx';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import {
