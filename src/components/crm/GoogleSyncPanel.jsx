@@ -187,12 +187,12 @@ export default function GoogleSyncPanel({ contacts }) {
               {recentInteractions.map(interaction => (
                 <div key={interaction.id} className="flex items-start gap-3 p-3 rounded-lg border hover:bg-slate-50 transition-colors">
                   <div className={`p-1.5 rounded-lg ${
-                    interaction.type === 'email_sent' ? 'bg-blue-100' : 
-                    interaction.type === 'meeting' ? 'bg-emerald-100' : 'bg-slate-100'
+                    interaction.interaction_type === 'email_sent' ? 'bg-blue-100' : 
+                    interaction.interaction_type === 'meeting' ? 'bg-emerald-100' : 'bg-slate-100'
                   }`}>
-                    {interaction.type === 'email_sent' ? (
+                    {interaction.interaction_type === 'email_sent' ? (
                       <Mail className="w-4 h-4 text-blue-600" />
-                    ) : interaction.type === 'meeting' ? (
+                    ) : interaction.interaction_type === 'meeting' ? (
                       <Calendar className="w-4 h-4 text-emerald-600" />
                     ) : (
                       <Clock className="w-4 h-4 text-slate-500" />

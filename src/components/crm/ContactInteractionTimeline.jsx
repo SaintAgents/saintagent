@@ -15,6 +15,8 @@ const TYPE_CONFIG = {
   file: { icon: FileText, color: 'text-purple-500', bg: 'bg-purple-50', label: 'File' },
 };
 
+// Field is named interaction_type in entity to avoid reserved word 'type'
+
 export default function ContactInteractionTimeline({ contactId }) {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -48,7 +50,7 @@ export default function ContactInteractionTimeline({ contactId }) {
       </div>
       <div className="space-y-2">
         {shown.map(interaction => {
-          const cfg = TYPE_CONFIG[interaction.type] || TYPE_CONFIG.note;
+          const cfg = TYPE_CONFIG[interaction.interaction_type] || TYPE_CONFIG.note;
           const Icon = cfg.icon;
           return (
             <div key={interaction.id} className={cn("p-2.5 rounded-lg border", cfg.bg)}>
