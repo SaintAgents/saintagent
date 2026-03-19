@@ -76,7 +76,10 @@ import {
   Play,
   FileText,
   Key,
-  Medal
+  Medal,
+  IterationCcw,
+  Paintbrush,
+  Quote
 } from "lucide-react";
 import {
   Tooltip,
@@ -96,7 +99,7 @@ const NAV_ITEMS = [
   { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
   { id: 'betafeedback', label: 'Beta Feedback', Icon: Smile, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
   { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
-  { id: 'advice', label: 'Wisdom Exchange', Icon: Sparkles, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
+  { id: 'advice', label: 'Wisdom Exchange', Icon: IterationCcw, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
   { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
@@ -122,7 +125,7 @@ const NAV_ITEMS = [
   { id: 'schedule', label: 'Global Schedule', Icon: Globe, page: 'Schedule', hint: 'View all meetings, events & broadcasts in one place' },
   { id: 'leader', label: 'Leader Channel', Icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
   { id: 'circles', label: 'Circles', Icon: Users, page: 'Circles', hint: 'Join interest and value-based communities' },
-  { id: 'studio', label: 'Creator Studio', Icon: Star, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
+  { id: 'studio', label: 'Creator Studio', Icon: Paintbrush, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
   { id: 'contentstudio', label: 'Content Studio', Icon: FileText, page: 'ContentStudio', hint: 'Create, collaborate, and publish content with AI assistance' },
   { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
   { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
@@ -131,7 +134,7 @@ const NAV_ITEMS = [
   { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
   { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
   { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
-  { id: 'testimonials', label: 'Testimonials', Icon: Star, page: 'Testimonials', hint: 'View and share community testimonials' },
+  { id: 'testimonials', label: 'Testimonials', Icon: Quote, page: 'Testimonials', hint: 'View and share community testimonials' },
   // Web Pages Group - grouped together with special styling
   { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation', isWebPage: true },
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
