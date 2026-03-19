@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Folder, Search, Plus, Filter, AlertCircle, BarChart3, CalendarRange } from 'lucide-react';
+import { Folder, Search, Plus, Filter, AlertCircle, BarChart3, CalendarRange, Users } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
@@ -99,10 +99,16 @@ export default function Projects() {
             <p className="text-slate-500 dark:text-slate-400 mt-1 ml-7">Filter and manage all projects</p>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/TeamWorkload">
+              <Button variant="outline" className="rounded-xl gap-2">
+                <Users className="w-4 h-4" />
+                <span className="hidden md:inline">Workloads</span>
+              </Button>
+            </Link>
             <Link to="/ResourceScheduler">
               <Button variant="outline" className="rounded-xl gap-2">
                 <CalendarRange className="w-4 h-4" />
-                <span className="hidden md:inline">Resource Scheduler</span>
+                <span className="hidden md:inline">Scheduler</span>
               </Button>
             </Link>
             <Link to="/BudgetForecast">
