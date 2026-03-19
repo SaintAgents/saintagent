@@ -66,6 +66,7 @@ export default function DealsPage() {
   const [viewMode, setViewMode] = useState('pipeline'); // 'pipeline', 'analytics', or redirect to 'projects'
   const [teamMemberModal, setTeamMemberModal] = useState({ open: false, dealId: null, teamIds: [] });
   const [noteModal, setNoteModal] = useState({ open: false, dealId: null });
+  const [emailEngineModal, setEmailEngineModal] = useState({ open: false, deal: null });
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
