@@ -415,34 +415,36 @@ export default function CRM() {
                 )}
               </div>
             ) : (
-              <div className={cn(
-                viewMode === 'grid' 
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-                  : "space-y-2"
-              )}>
-                {filteredContacts.slice(0, visibleCount).map(contact => (
-                  <ContactCard 
-                    key={contact.id} 
-                    contact={contact} 
-                    viewMode={viewMode}
-                    compact={compactCards}
-                    isOwner={true}
-                    onEdit={() => handleEdit(contact)}
-                    onClick={() => setSelectedContact(contact)}
-                  />
-                ))}
-              </div>
-              {visibleCount < filteredContacts.length && (
-                <div className="flex justify-center pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => setVisibleCount(prev => prev + 50)}
-                    className="gap-2"
-                  >
-                    Load More ({filteredContacts.length - visibleCount} remaining)
-                  </Button>
+              <>
+                <div className={cn(
+                  viewMode === 'grid' 
+                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    : "space-y-2"
+                )}>
+                  {filteredContacts.slice(0, visibleCount).map(contact => (
+                    <ContactCard 
+                      key={contact.id} 
+                      contact={contact} 
+                      viewMode={viewMode}
+                      compact={compactCards}
+                      isOwner={true}
+                      onEdit={() => handleEdit(contact)}
+                      onClick={() => setSelectedContact(contact)}
+                    />
+                  ))}
                 </div>
-              )}
+                {visibleCount < filteredContacts.length && (
+                  <div className="flex justify-center pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setVisibleCount(prev => prev + 50)}
+                      className="gap-2"
+                    >
+                      Load More ({filteredContacts.length - visibleCount} remaining)
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </TabsContent>
 
