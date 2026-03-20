@@ -58,6 +58,7 @@ export default function CRM() {
   const [batchFederateOpen, setBatchFederateOpen] = useState(false);
   const [scoringOpen, setScoringOpen] = useState(false);
   const [compactCards, setCompactCards] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(50);
   const queryClient = useQueryClient();
 
   // Check for ?help in URL
