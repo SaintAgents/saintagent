@@ -101,6 +101,9 @@ export default function CRM() {
     enabled: !!currentUser?.email
   });
 
+  // Reset pagination when tab or filters change
+  React.useEffect(() => { setVisibleCount(50); }, [tab, filters]);
+
   const sourceContacts = tab === 'my-contacts' ? myContacts : federatedContacts;
 
   const filteredContacts = sourceContacts.filter(c => {
