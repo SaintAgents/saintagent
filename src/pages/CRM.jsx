@@ -121,7 +121,7 @@ export default function CRM() {
         c.ai_dossier?.pain_point, c.ai_dossier?.value_prop,
         c.ai_dossier?.recommended_approach, c.ai_dossier?.company_intel,
       ].filter(Boolean).join(' ').toLowerCase();
-      matchesSearch = words.every(w => searchable.includes(w));
+      matchesSearch = words.every(w => searchable.indexOf(w) !== -1);
     }
     const matchesDomain = filters.domain === 'all' || c.domain === filters.domain;
     const matchesStatus = filters.leadStatus === 'all' || c.lead_status === filters.leadStatus;
