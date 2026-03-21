@@ -29,6 +29,7 @@ import {
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import TaskNotificationSettings from '@/components/notifications/TaskNotificationSettings';
 import BackButton from '@/components/hud/BackButton';
+import BackgroundSettings from '@/components/settings/BackgroundSettings';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
 import { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
@@ -495,6 +496,8 @@ export default function Settings() {
                 }
               </CardContent>
             </Card>
+
+            <BackgroundSettings />
 
             <Card className="bg-violet-50/50">
               <CardHeader>

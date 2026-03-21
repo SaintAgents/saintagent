@@ -30,6 +30,7 @@ import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
 import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
 import CanvasBackgrounds from '@/components/hud/CanvasBackgrounds';
+import LightThemeBackgroundRotator from '@/components/hud/LightThemeBackgroundRotator';
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home', 'DemoPreview'];
 
@@ -571,6 +572,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
+      <LightThemeBackgroundRotator theme={theme} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
 
       <style>{`
