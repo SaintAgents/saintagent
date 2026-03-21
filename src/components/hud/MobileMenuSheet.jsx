@@ -104,43 +104,12 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
     try { localStorage.setItem('mobileMenuMode', mode); } catch {}
   };
 
-  // Filter menu items based on view mode, custom settings, AND simple/advanced toggle
+  // Filter menu items based on mobile simple/advanced toggle
+  // When mobile toggle is "advanced", show ALL pages regardless of Command Deck view mode
   const filteredMenuItems = menuItems.filter(item => {
-    // Apply simple filter first
     if (menuMode === 'simple' && !SIMPLE_NAV_IDS.includes(item.id)) return false;
-
-    const config = VIEW_MODE_CONFIG[viewMode];
-    if (!config) return true;
-    
-    // For custom mode, check localStorage for custom nav items
-    if (viewMode === 'custom') {
-      try {
-        const customCards = JSON.parse(localStorage.getItem('deckCustomCards') || '[]');
-        const cardToNavMap = {
-          'circles': 'circles',
-          'missions': 'missions',
-          'meetings': 'meetings',
-          'inbox': 'messages',
-          'syncEngine': 'synchronicity',
-          'projects': 'projects',
-          'market': 'marketplace',
-          'collaborators': 'collaborators',
-          'leader': 'leader',
-          'dailyops': 'dailyops',
-          'communityFeed': 'communityfeed',
-          'leaderboard': 'activity',
-          'news': 'news',
-        };
-        const alwaysShow = ['command', 'profile', 'settings', 'faq'];
-        if (alwaysShow.includes(item.id)) return true;
-        return customCards.some(cardId => cardToNavMap[cardId] === item.id);
-      } catch {
-        return true;
-      }
-    }
-    
-    if (!config.navIds) return true;
-    return config.navIds.includes(item.id);
+    // Advanced mode = show everything
+    return true;
   });
 
   // Toggle left sidebar (icons only)
