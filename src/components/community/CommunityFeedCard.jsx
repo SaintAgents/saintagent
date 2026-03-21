@@ -431,7 +431,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
         </div>
 
         {/* Feed */}
-        <ScrollArea style={{ height: maxHeight }} ref={scrollRef}>
+        <ScrollArea style={{ maxHeight }} ref={scrollRef}>
           <div className="space-y-3 pr-2">
             {posts.length === 0 ? (
               <div className="text-center py-8 text-slate-400">
