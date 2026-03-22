@@ -654,6 +654,9 @@ function CircuitCanvas() {
 }
 
 export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
+  // Light theme NEVER shows canvas background effects
+  if (theme === 'light') return null;
+
   const hasEffect = bgEffect && bgEffect !== 'off';
   const showStarfield = hasEffect && bgEffect === 'starfield';
   const showMatrixRain = hasEffect && bgEffect === 'matrix';
@@ -665,10 +668,6 @@ export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
 
   return (
     <>
-      {/* Dark backdrop for light theme when canvas effects are active */}
-      {theme === 'light' && hasEffect && (
-        <div className="fixed inset-0 bg-[#050505] pointer-events-none" style={{ zIndex: -2 }} />
-      )}
       {showStarfield && !forceMatrixForHacker && <StarfieldCanvas rankCode={rankCode} />}
       {(showMatrixRain || forceMatrixForHacker) && <MatrixRainCanvas />}
       {showNebula && !forceMatrixForHacker && <NebulaCanvas />}
