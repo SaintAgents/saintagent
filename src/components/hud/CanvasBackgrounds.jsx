@@ -660,6 +660,8 @@ export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
   const showNebula = hasEffect && bgEffect === 'nebula';
   const showCircuit = hasEffect && bgEffect === 'circuit';
   const showFractal = hasEffect && bgEffect === 'fractal';
+  // Hacker theme ALWAYS shows matrix rain regardless of bgEffect setting
+  const forceMatrixForHacker = theme === 'hacker';
 
   return (
     <>
@@ -667,11 +669,11 @@ export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
       {theme === 'light' && hasEffect && (
         <div className="fixed inset-0 bg-[#050505] pointer-events-none" style={{ zIndex: -2 }} />
       )}
-      {showStarfield && <StarfieldCanvas rankCode={rankCode} />}
-      {showMatrixRain && <MatrixRainCanvas />}
-      {showNebula && <NebulaCanvas />}
-      {showCircuit && <CircuitCanvas />}
-      {showFractal && <FractalCanvas />}
+      {showStarfield && !forceMatrixForHacker && <StarfieldCanvas rankCode={rankCode} />}
+      {(showMatrixRain || forceMatrixForHacker) && <MatrixRainCanvas />}
+      {showNebula && !forceMatrixForHacker && <NebulaCanvas />}
+      {showCircuit && !forceMatrixForHacker && <CircuitCanvas />}
+      {showFractal && !forceMatrixForHacker && <FractalCanvas />}
     </>
   );
 }
