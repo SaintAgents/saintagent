@@ -164,16 +164,15 @@ export default function SidePanel({
   const popDragRef = React.useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = React.useRef({ startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
-  // Load pop-off state from localStorage on mount
+  // Load pop-off position/size from localStorage on mount (but NOT the popped-off state itself)
+  // The panel always starts in docked/slide-out mode. User must explicitly pop off.
   React.useEffect(() => {
     try {
-      const savedPop = localStorage.getItem('sidePanelPoppedOff');
       const savedPos = localStorage.getItem('sidePanelPopPosition');
       const savedSize = localStorage.getItem('sidePanelPopSize');
       
       if (savedPos) {
         const pos = JSON.parse(savedPos);
-        // Validate position is within viewport - minimum 64px from top to stay below topbar
         const maxX = Math.max(0, (window.innerWidth || 1200) - 380);
         const maxY = Math.max(0, (window.innerHeight || 800) - 100);
         setPopPosition({
@@ -188,10 +187,8 @@ export default function SidePanel({
           height: Math.max(300, Math.min(size.height || 600, window.innerHeight - 50))
         });
       }
-      // Set popped off state AFTER position/size are restored
-      if (savedPop === 'true') {
-        setIsPoppedOff(true);
-      }
+      // Clear any persisted popped-off state so panel always starts docked
+      localStorage.removeItem('sidePanelPoppedOff');
     } catch (e) {
       console.warn('Failed to restore side panel state', e);
     }
