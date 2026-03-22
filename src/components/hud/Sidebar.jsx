@@ -717,8 +717,7 @@ export default function Sidebar({
                   </button>
                 </div>
 
-                {/* Background Effects - only for Dark/Hacker themes */}
-                {(theme === 'dark' || theme === 'hacker') && (
+                {/* Background Effects - available for all themes */}
               <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
                 <CollapsibleTrigger className="w-full flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50 bg-slate-50/50">
                   <div className="flex items-center gap-2">
@@ -805,7 +804,6 @@ export default function Sidebar({
                   )}
                 </CollapsibleContent>
               </Collapsible>
-                )}
               </>
             )}
           </div>
@@ -1279,8 +1277,7 @@ export default function Sidebar({
               </CollapsibleContent>
             </Collapsible>
 
-            {/* Background Effects - only for Dark/Hacker themes */}
-            {(theme === 'dark' || theme === 'hacker') && (
+            {/* Background Effects - available for all themes */}
             <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
               <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
                 <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Background Effect</span>
@@ -1375,7 +1372,6 @@ export default function Sidebar({
                 )}
               </CollapsibleContent>
             </Collapsible>
-            )}
 
             {/* Profile Link */}
             <Link
