@@ -34,6 +34,20 @@ import LightThemeBackgroundRotator from '@/components/hud/LightThemeBackgroundRo
 
 const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home', 'DemoPreview'];
 
+// Tiny component to set data-bg-active on <html> when light theme has canvas effects
+function LightBgActiveFlag({ theme, bgEffect }) {
+  React.useEffect(() => {
+    const isActive = theme === 'light' && bgEffect && bgEffect !== 'off';
+    if (isActive) {
+      document.documentElement.setAttribute('data-bg-active', 'true');
+    } else {
+      document.documentElement.removeAttribute('data-bg-active');
+    }
+    return () => document.documentElement.removeAttribute('data-bg-active');
+  }, [theme, bgEffect]);
+  return null;
+}
+
 // Global hacker theme draggable popup handler
 function useHackerDraggablePopups() {
   useEffect(() => {
@@ -574,6 +588,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
+      {/* Set data-bg-active on html for light theme canvas effects */}
+      <LightBgActiveFlag theme={theme} bgEffect={bgEffect} />
 
       <style>{`
         :root {
