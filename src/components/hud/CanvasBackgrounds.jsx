@@ -1,4 +1,5 @@
 import React from 'react';
+import FractalCanvas from './FractalCanvas';
 
 // Starfield canvas component for cosmic background effect
 function StarfieldCanvas({ rankCode = 'seeker' }) {
@@ -658,6 +659,7 @@ export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
   const showMatrixRain = hasEffect && bgEffect === 'matrix';
   const showNebula = hasEffect && bgEffect === 'nebula';
   const showCircuit = hasEffect && bgEffect === 'circuit';
+  const showFractal = hasEffect && bgEffect === 'fractal';
 
   return (
     <>
@@ -669,6 +671,7 @@ export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
       {showMatrixRain && <MatrixRainCanvas />}
       {showNebula && <NebulaCanvas />}
       {showCircuit && <CircuitCanvas />}
+      {showFractal && <FractalCanvas />}
     </>
   );
 }
