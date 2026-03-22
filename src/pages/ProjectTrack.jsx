@@ -18,6 +18,7 @@ import {
 import ProjectTrackingModal from '@/components/projects/ProjectTrackingModal.jsx';
 import AddTeamMemberModal from '@/components/deals/AddTeamMemberModal.jsx';
 import AddNoteModal from '@/components/deals/AddNoteModal.jsx';
+import ProjectIntakeWizard from '@/components/projects/ProjectIntakeWizard.jsx';
 
 // Stage configuration matching the image
 const STAGES = [
@@ -41,6 +42,7 @@ export default function ProjectTrackPage() {
   const [timeFilter, setTimeFilter] = useState('90');
   const [teamMemberModal, setTeamMemberModal] = useState({ open: false, projectId: null, teamIds: [] });
   const [noteModal, setNoteModal] = useState({ open: false, projectId: null });
+  const [intakeOpen, setIntakeOpen] = useState(false);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -188,7 +190,7 @@ export default function ProjectTrackPage() {
                 <Plus className="w-4 h-4" />
                 New Deal
               </Button>
-              <Button className="h-9 bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+              <Button className="h-9 bg-emerald-600 hover:bg-emerald-700 text-white gap-2" onClick={() => setIntakeOpen(true)}>
                 <Plus className="w-4 h-4" />
                 Project
               </Button>
@@ -450,6 +452,14 @@ export default function ProjectTrackPage() {
         onClose={() => setNoteModal({ open: false, projectId: null })}
         entityType="project"
         entityId={noteModal.projectId}
+      />
+
+      {/* Project Intake Wizard */}
+      <ProjectIntakeWizard
+        open={intakeOpen}
+        onClose={() => setIntakeOpen(false)}
+        currentUser={currentUser}
+        profile={profile}
       />
     </div>
   );
