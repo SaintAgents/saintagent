@@ -124,7 +124,7 @@ export default function NotificationBell({ notifications = [], onAction }) {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
+      <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-[32rem] max-w-[32rem] p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100">Notifications</h3>
           {displayNotifications.length > 0 && (
