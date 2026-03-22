@@ -44,7 +44,12 @@ import {
   MapPin,
   Key,
   CircleDot,
-  MessageCircle } from
+  MessageCircle,
+  Heart,
+  Share2,
+  Send,
+  Video,
+  Mic } from
   "lucide-react";
 
 // Card icon mapping - must be defined here to resolve icons from stored card data
