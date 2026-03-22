@@ -18,6 +18,7 @@ import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButto
 import BackButton from '@/components/hud/BackButton';
 import { format } from 'date-fns';
 import UserActivityDashboard from '@/components/activity/UserActivityDashboard';
+import CommunityIntentionsPanel from '@/components/activity/CommunityIntentionsPanel';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]', textColor: 'text-white' },
@@ -219,6 +220,9 @@ export default function ActivityFeed() {
         {currentUser && scope === 'me' && (
           <UserActivityDashboard userId={currentUser.id} userEmail={currentUser.email} />
         )}
+
+        {/* Community Intentions & Goals */}
+        <CommunityIntentionsPanel />
 
         {/* AI Recommendations Section */}
         <div className="mb-8">
