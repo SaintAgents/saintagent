@@ -947,17 +947,26 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                   html[data-theme='light'] .min-h-screen, html[data-theme='light'] main { background-color: #f8fafc !important; background-image: none; }
                   html[data-theme='light'] .rounded-xl:not(img), html[data-theme='light'] .rounded-lg:not(img), html[data-theme='light'] .rounded-2xl:not(img), html[data-theme='light'] [class*='Card']:not(img) { background-color: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
                   html[data-theme='light'] input, html[data-theme='light'] textarea, html[data-theme='light'] select { background-color: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
-                  html[data-theme='light'] button, html[data-theme='light'] [role="button"] { background-color: transparent !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] [data-sidebar] { background-color: #ffffff !important; background: #ffffff !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] aside, html[data-theme='light'] nav { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
+                  html[data-theme='light'] header { background-color: rgba(255,255,255,0.8) !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] [role="dialog"], html[data-theme='light'] [data-radix-popper-content-wrapper] > * { background-color: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; }
-                  html[data-theme='light'] [role="menu"], html[data-theme='light'] [data-radix-menu-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
+                  html[data-theme='light'] [role="menu"], html[data-theme='light'] [data-radix-menu-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; }
+                  html[data-theme='light'] [role="menu"] *, html[data-theme='light'] [data-radix-menu-content] * { color: #1e293b !important; }
+                  html[data-theme='light'] [role="menu"] [role="menuitem"]:hover, html[data-theme='light'] [data-radix-menu-content] [role="menuitem"]:hover { background-color: #f1f5f9 !important; }
                   html[data-theme='light'] [role="option"], html[data-theme='light'] [role="tooltip"] { background-color: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; }
+                  html[data-theme='light'] [role="listbox"], html[data-theme='light'] [data-radix-select-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
+                  html[data-theme='light'] [data-radix-popover-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] img { filter: none !important; }
+                  /* Light theme - SVG icons use inherited color, no green */
+                  html[data-theme='light'] svg { filter: none !important; color: inherit !important; }
+                  html[data-theme='light'] svg path, html[data-theme='light'] svg circle, html[data-theme='light'] svg rect, html[data-theme='light'] svg line, html[data-theme='light'] svg polyline { stroke: currentColor !important; }
                   /* Light theme - reset body pseudo-elements (removes hacker scanlines/vignette) */
                   html[data-theme='light'] body::before, html[data-theme='light'] body::after { content: none !important; display: none !important; }
                   /* Light theme - reset font to system default */
                   html[data-theme='light'] * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+                  /* Light theme - reset button styling (undo dark/hacker overrides) */
+                  html[data-theme='light'] button, html[data-theme='light'] [role="button"] { border-color: inherit !important; box-shadow: none !important; }
 
                   [data-theme='light'] input::placeholder,
                   [data-theme='light'] textarea::placeholder {
