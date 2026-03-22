@@ -37,12 +37,8 @@ const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms'
 // Tiny component to set data-bg-active on <html> when light theme has canvas effects
 function LightBgActiveFlag({ theme, bgEffect }) {
   React.useEffect(() => {
-    const isActive = theme === 'light' && bgEffect && bgEffect !== 'off';
-    if (isActive) {
-      document.documentElement.setAttribute('data-bg-active', 'true');
-    } else {
-      document.documentElement.removeAttribute('data-bg-active');
-    }
+    // Light theme NEVER has bg-active - canvas effects are disabled for light theme
+    document.documentElement.removeAttribute('data-bg-active');
     return () => document.documentElement.removeAttribute('data-bg-active');
   }, [theme, bgEffect]);
   return null;
