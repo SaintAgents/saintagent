@@ -67,7 +67,9 @@ export default function LightThemeBackgroundRotator({ theme, bgEffect }) {
     setCurrentIndex(0);
   }, [backgrounds.length]);
 
+  // Hide when not light theme, or when a background effect is active
   if (theme !== 'light') return null;
+  if (bgEffect && bgEffect !== 'off') return null;
 
   return (
     <div
