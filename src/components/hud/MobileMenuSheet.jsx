@@ -144,12 +144,32 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
             <div className="flex items-center justify-between">
               <SheetTitle className="text-slate-900 dark:text-white">Menu</SheetTitle>
               <div className="flex items-center gap-2 mr-6">
+                {/* Theme switcher */}
+                <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 gap-0.5">
+                  {[
+                    { id: 'light', Icon: Sun, label: 'Light', activeClass: 'bg-white text-amber-600 shadow-sm', iconColor: 'text-amber-500' },
+                    { id: 'dark', Icon: Moon, label: 'Dark', activeClass: 'bg-slate-700 text-blue-300 shadow-sm', iconColor: 'text-indigo-400' },
+                    { id: 'hacker', Icon: Terminal, label: 'Hack', activeClass: 'bg-black text-green-400 shadow-sm', iconColor: 'text-green-500' },
+                  ].map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => switchTheme(t.id)}
+                      className={cn(
+                        "flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-semibold transition-all",
+                        currentTheme === t.id ? t.activeClass : "text-slate-500 dark:text-slate-400"
+                      )}
+                    >
+                      <t.Icon className={cn("w-3 h-3", currentTheme === t.id ? undefined : t.iconColor)} />
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
                 {/* Simple / Advanced toggle */}
                 <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5">
                   <button
                     onClick={() => handleMenuModeChange('simple')}
                     className={cn(
-                      "px-2.5 py-1 rounded-md text-[10px] font-semibold transition-all",
+                      "px-2 py-1 rounded-md text-[10px] font-semibold transition-all",
                       menuMode === 'simple'
                         ? "bg-white dark:bg-violet-600 text-violet-700 dark:text-white shadow-sm"
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
@@ -160,23 +180,23 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
                   <button
                     onClick={() => handleMenuModeChange('advanced')}
                     className={cn(
-                      "px-2.5 py-1 rounded-md text-[10px] font-semibold transition-all",
+                      "px-2 py-1 rounded-md text-[10px] font-semibold transition-all",
                       menuMode === 'advanced'
                         ? "bg-white dark:bg-violet-600 text-violet-700 dark:text-white shadow-sm"
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
                     )}
                   >
-                    Advanced
+                    Adv
                   </button>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={toggleLeftSidebar}
-                  className="gap-1.5 text-xs"
+                  className="gap-1 text-[10px] px-2 h-7"
                 >
-                  <PanelLeft className="w-4 h-4" />
-                  Side Nav
+                  <PanelLeft className="w-3.5 h-3.5" />
+                  Nav
                 </Button>
               </div>
             </div>
