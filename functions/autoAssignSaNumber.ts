@@ -54,13 +54,12 @@ Deno.serve(async (req) => {
       return Response.json({ sa_number: saStr, assigned: true });
     }
     
-    // Get or initialize the SA counter in PlatformSetting  
-    // Counter tracks the NEXT number to assign
+    // Get or initialize the SA counter in PlatformSetting
     const settings = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_counter' });
     let setting = settings?.[0] || null;
     let current = Number(setting?.value || 0) || 0;
     
-    const next = current + 1;
+    const next = setting ? current + 1 : 1;
     const saStr = padSix(next);
     
     console.log('Assigning SA#' + saStr + ' to profile:', profile.id);
