@@ -373,85 +373,20 @@ main {
   border-color: #00ff00 !important;
 }
 
-/* DISABLED - images should display normally */
-/* [data-theme='hacker'] img:not(.gauge-image):not([alt="Trust Gauge"]):not([data-no-filter="true"]) {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-  -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-} */
-
-/* =====================================================
-   HERO IMAGES - PRESERVE
-   ===================================================== */
-
-.hero-image,
-img.hero-image,
-img[data-no-filter="true"],
-[data-no-filter="true"] {
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* ALL images visible - no filters */
-.hero-image,
-img.hero-image,
-img[data-no-filter="true"],
-img {
-  filter: none !important;
-  -webkit-filter: none !important;
-  display: block !important;
-  opacity: 1 !important;
-}
-
-/* Gauge images always preserved */
-img.gauge-image,
-img[alt="Trust Gauge"],
-[data-theme='dark'] img.gauge-image,
-[data-theme='dark'] img[alt="Trust Gauge"] {
-  filter: none !important;
-  -webkit-filter: none !important;
-}
-
-/* Hacker theme gauge gets green filter */
-[data-theme='hacker'] img.gauge-image,
-[data-theme='hacker'] img[alt="Trust Gauge"] {
-  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-}
-
-/* Hacker theme mode icons - green monochrome filter - STRONGER */
-html[data-theme='hacker'] .hacker-mode-icon,
-[data-theme='hacker'] .hacker-mode-icon,
-html[data-theme='hacker'] .topbar-mode-icon,
-[data-theme='hacker'] .topbar-mode-icon {
-  filter: grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%) !important;
-  -webkit-filter: grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%) !important;
-}
-
-/* Hacker theme - TopBar mode selector icons FORCE green */
-[data-theme='hacker'] [data-no-top] img,
-html[data-theme='hacker'] [data-no-top] img {
-  filter: grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%) !important;
-  -webkit-filter: grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%) !important;
-}
-
-/* Hacker theme - ALL labels and text bright green */
-[data-theme='hacker'] label,
-[data-theme='hacker'] .text-slate-500,
-[data-theme='hacker'] .text-slate-600,
-[data-theme='hacker'] .text-slate-700,
-[data-theme='hacker'] .text-gray-500,
-[data-theme='hacker'] .text-gray-600,
-[data-theme='hacker'] .text-zinc-500,
-[data-theme='hacker'] [class*="text-muted"],
-[data-theme='hacker'] ::placeholder {
-  color: #00ff00 !important;
-}
-
-/* Hacker theme placeholder text */
-[data-theme='hacker'] input::placeholder,
-[data-theme='hacker'] textarea::placeholder {
-  color: rgba(0, 255, 0, 0.5) !important;
-}
+/* HACKER - Monospace font + scanlines + CRT vignette */
+html[data-theme='hacker'] *, [data-theme='hacker'] * { font-family: 'Courier New', Consolas, monospace !important; }
+html[data-theme='hacker'] body::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99990; background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 1px, transparent 1px, transparent 3px); mix-blend-mode: overlay; }
+html[data-theme='hacker'] body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99989; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.5) 100%); }
+/* HACKER - ALL images green monochrome */
+html[data-theme='hacker'] img:not(.gauge-image):not([data-no-filter="true"]) { filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; }
+/* Gauge + mode icons */
+[data-theme='hacker'] img.gauge-image, [data-theme='hacker'] img[alt="Trust Gauge"],
+[data-theme='hacker'] .topbar-mode-icon, [data-theme='hacker'] [data-no-top] img { filter: grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%) !important; }
+/* Dark/Light gauge preserve */
+[data-theme='dark'] img.gauge-image, [data-theme='dark'] img[alt="Trust Gauge"] { filter: none !important; }
+/* Hacker text */
+[data-theme='hacker'] label, [data-theme='hacker'] [class*="text-muted"], [data-theme='hacker'] ::placeholder { color: #00ff00 !important; }
+[data-theme='hacker'] input::placeholder, [data-theme='hacker'] textarea::placeholder { color: rgba(0,255,0,0.5) !important; }
 
 /* =====================================================
    TIP DIALOG - HIGHEST Z-INDEX
