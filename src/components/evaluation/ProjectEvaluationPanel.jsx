@@ -12,6 +12,7 @@ import {
   FileText, Clock, Loader2, ChevronRight, AlertCircle, Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import ScoringEnginePanel from '../projects/ScoringEnginePanel';
 
 const TIER_CONFIG = {
   approve_fund: { label: 'Approve & Fund', color: 'emerald', icon: CheckCircle },
@@ -219,26 +220,14 @@ export default function ProjectEvaluationPanel({ project: initialProject, onUpda
         </div>
       )}
 
-      {/* Run Evaluation Button */}
-      {(!project.ai_evaluated_at || project.status === 'pending_review') && (
-        <Button
-          onClick={() => runEvaluationMutation.mutate()}
-          disabled={runEvaluationMutation.isPending}
-          className="w-full bg-violet-600 hover:bg-violet-700 gap-2"
-        >
-          {runEvaluationMutation.isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Running AI Evaluation...
-            </>
-          ) : (
-            <>
-              <Brain className="w-4 h-4" />
-              Run AI Evaluation
-            </>
-          )}
-        </Button>
-      )}
+      {/* Automated Scoring Engine */}
+      <ScoringEnginePanel project={project} onUpdate={() => {
+        refetchProject();
+        queryClient.invalidateQueries({ queryKey: ['projectEvaluations', project.id] });
+        queryClient.invalidateQueries({ queryKey: ['evaluationAuditLogs', project.id] });
+        queryClient.invalidateQueries({ queryKey: ['projects'] });
+        onUpdate?.();
+      }} />
 
       {/* Detailed Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
