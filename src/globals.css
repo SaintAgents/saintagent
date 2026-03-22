@@ -842,30 +842,7 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   color: #ffffff !important;
 }
 
-/* Dark/Hacker theme buttons - ensure readable text */
-[data-theme='dark'] button,
-[data-theme='dark'] [role="button"] {
-  color: #ffffff !important;
-}
-
-[data-theme='dark'] button span,
-[data-theme='dark'] button svg,
-[data-theme='dark'] [role="button"] span,
-[data-theme='dark'] [role="button"] svg {
-  color: inherit !important;
-}
-
 /* Dark mode: Outline/ghost buttons need visible text */
-[data-theme='dark'] button[class*='outline'],
-[data-theme='dark'] button[class*='ghost'],
-[data-theme='dark'] button[class*='secondary'],
-[data-theme='dark'] [class*='Button'][class*='outline'],
-[data-theme='dark'] [class*='Button'][class*='ghost'],
-[data-theme='dark'] [class*='Button'][class*='secondary'] {
-  color: #ffffff !important;
-  border-color: rgba(0, 255, 136, 0.4) !important;
-}
-
 [data-theme='dark'] button[class*='outline']:hover,
 [data-theme='dark'] button[class*='ghost']:hover,
 [data-theme='dark'] button[class*='secondary']:hover {
@@ -873,21 +850,23 @@ html[data-theme='hacker'] img[alt*="Badge"] {
   color: #00ff88 !important;
 }
 
-/* Dark mode: Primary/default buttons - ensure contrast */
-[data-theme='dark'] button[class*='bg-violet'],
-[data-theme='dark'] button[class*='bg-purple'],
-[data-theme='dark'] button[class*='bg-emerald'],
-[data-theme='dark'] button[class*='bg-blue'],
-[data-theme='dark'] button[class*='primary'] {
+/* Dark/Hacker - Select trigger text MUST be visible */
+html[data-theme='dark'] button[role="combobox"],
+html[data-theme='dark'] button[role="combobox"] span,
+[data-theme='dark'] button[role="combobox"],
+[data-theme='dark'] button[role="combobox"] span {
   color: #ffffff !important;
+  background-color: #0a0a0a !important;
+  border-color: rgba(0, 255, 136, 0.3) !important;
 }
-
-/* Dark mode: Fix all button variants text visibility */
-      [data-theme='dark'] .btn,
-      [data-theme='dark'] [class*='btn-'],
-      [data-theme='dark'] button:not([class*='bg-']) {
-        color: #ffffff !important;
-      }
+html[data-theme='hacker'] button[role="combobox"],
+html[data-theme='hacker'] button[role="combobox"] span,
+[data-theme='hacker'] button[role="combobox"],
+[data-theme='hacker'] button[role="combobox"] span {
+  color: #00ff00 !important;
+  background-color: #000000 !important;
+  border-color: #00ff00 !important;
+}
 
       /* GLOBAL THEME FONT COLORS - Single source of truth */
                   /* Light theme defaults */
