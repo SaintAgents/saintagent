@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Minimize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip, Move, Loader2 } from "lucide-react";
+import { X, Send, Minimize2, Maximize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip, Move, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
@@ -20,6 +20,9 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const [videoFullscreen, setVideoFullscreen] = useState(false);
   const [showIcebreakers, setShowIcebreakers] = useState(false);
   const [creatingZoom, setCreatingZoom] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const SMALL_SIZE = { width: 320, height: 384 };
+  const LARGE_SIZE = { width: 640, height: 700 };
   const scrollRef = useRef(null);
   const typingRef = useRef({ lastSentAt: 0 });
   const queryClient = useQueryClient();
@@ -326,6 +329,26 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
             onMouseDown={(e) => e.stopPropagation()}
           >
             {creatingZoom ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => {
+              const next = !expanded;
+              setExpanded(next);
+              const newSize = next ? LARGE_SIZE : SMALL_SIZE;
+              setSize(newSize);
+              // Adjust position to keep it on screen
+              setPosition(prev => ({
+                x: Math.max(0, Math.min(prev.x, window.innerWidth - newSize.width)),
+                y: Math.max(0, Math.min(prev.y, window.innerHeight - newSize.height))
+              }));
+            }}
+            className="h-7 w-7 text-white hover:bg-violet-700"
+            title={expanded ? "Shrink chat" : "Expand chat"}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <Maximize2 className="w-4 h-4" />
           </Button>
           <Button
             size="icon"
