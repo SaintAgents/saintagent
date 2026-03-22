@@ -78,6 +78,7 @@ const CARD_ICONS = {
   events: CircleDot,
   globalSchedule: Calendar
 };
+import EmojiPicker from '@/components/messages/EmojiPicker';
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
