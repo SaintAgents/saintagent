@@ -951,9 +951,11 @@ html[data-theme='hacker'] img[alt*="Badge"] {
                   html[data-theme='light'] aside, html[data-theme='light'] nav { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] header { background-color: rgba(255,255,255,0.8) !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] [role="dialog"], html[data-theme='light'] [data-radix-popper-content-wrapper] > * { background-color: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; }
-                  html[data-theme='light'] [role="menu"], html[data-theme='light'] [data-radix-menu-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; }
-                  html[data-theme='light'] [role="menu"] *, html[data-theme='light'] [data-radix-menu-content] * { color: #1e293b !important; }
+                  html[data-theme='light'] [role="menu"], html[data-theme='light'] [data-radix-menu-content], html[data-theme='light'] [data-radix-dropdown-menu-content] { background-color: #ffffff !important; background: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; opacity: 1 !important; }
+                  html[data-theme='light'] [role="menu"] *, html[data-theme='light'] [data-radix-menu-content] *, html[data-theme='light'] [data-radix-dropdown-menu-content] * { color: #1e293b !important; background-color: transparent !important; }
+                  html[data-theme='light'] [role="menu"] > div, html[data-theme='light'] [data-radix-menu-content] > div, html[data-theme='light'] [data-radix-dropdown-menu-content] > div { background-color: #ffffff !important; }
                   html[data-theme='light'] [role="menu"] [role="menuitem"]:hover, html[data-theme='light'] [data-radix-menu-content] [role="menuitem"]:hover { background-color: #f1f5f9 !important; }
+                  html[data-theme='light'] [data-radix-popper-content-wrapper] { z-index: 99999 !important; }
                   html[data-theme='light'] [role="option"], html[data-theme='light'] [role="tooltip"] { background-color: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; }
                   html[data-theme='light'] [role="listbox"], html[data-theme='light'] [data-radix-select-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
                   html[data-theme='light'] [data-radix-popover-content] { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
