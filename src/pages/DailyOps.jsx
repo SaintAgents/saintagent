@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarDays, Plus, Check, Clock, Pencil, Save, Trash2, Sparkles, Lightbulb, Target, FileText, ListChecks, CheckCircle2 } from 'lucide-react';
 import { format, parseISO, startOfWeek, endOfWeek, isSameDay, isWithinInterval } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import MyTasksSection from '@/components/dailyops/MyTasksSection';
 
 export default function DailyOps() {
   const queryClient = useQueryClient();
@@ -350,6 +351,9 @@ Return JSON with this exact structure:
             </div>
           </CardContent>
         </Card>
+
+        {/* My Tasks (from Projects) */}
+        <MyTasksSection userEmail={user?.email} />
 
         {/* Schedule / To-Do */}
         <Card className="dark:bg-slate-800/50 dark:border-slate-700">
