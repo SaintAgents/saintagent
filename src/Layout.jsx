@@ -602,6 +602,55 @@ function AuthenticatedLayout({ children, currentPageName }) {
           -moz-osx-font-smoothing: grayscale;
         }
         
+        /* SLIDER THUMB - visible in all dark themes */
+        [data-theme='dark'] [role="slider"],
+        html[data-theme='dark'] [role="slider"] {
+          background-color: #ffffff !important;
+          border-color: #10b981 !important;
+          box-shadow: 0 0 8px rgba(16, 185, 129, 0.5) !important;
+          min-height: auto !important;
+          min-width: auto !important;
+        }
+        [data-theme='hacker'] [role="slider"],
+        html[data-theme='hacker'] [role="slider"] {
+          background-color: #00ff00 !important;
+          border-color: #00ff00 !important;
+          box-shadow: 0 0 8px rgba(0, 255, 0, 0.6) !important;
+          min-height: auto !important;
+          min-width: auto !important;
+        }
+
+        /* LIGHT THEME + BG EFFECT ACTIVE — make page bg dark for canvas */
+        html[data-bg-active='true'] body {
+          background-color: #050505 !important;
+        }
+        html[data-bg-active='true'] .min-h-screen,
+        html[data-bg-active='true'] main {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+        }
+        html[data-bg-active='true'] main[data-page='CommandDeck'] {
+          background-image: none !important;
+        }
+        /* Cards semi-transparent white so text stays readable */
+        html[data-bg-active='true'] .rounded-xl:not(img):not([data-no-filter]),
+        html[data-bg-active='true'] .rounded-lg:not(img):not([data-no-filter]),
+        html[data-bg-active='true'] .rounded-2xl:not(img):not([data-no-filter]),
+        html[data-bg-active='true'] [class*='Card']:not(img) {
+          background-color: rgba(255, 255, 255, 0.85) !important;
+        }
+        /* Gradient bgs transparent */
+        html[data-bg-active='true'] [class*='bg-gradient-']:not(.mission-card *):not(.hero-gradient):not(.page-hero *) {
+          background: transparent !important;
+          background-image: none !important;
+        }
+        /* White/slate bgs transparent except cards and sidebar */
+        html[data-bg-active='true'] [class*='bg-white']:not([data-sidebar]):not([data-sidebar] *):not(.rounded-xl):not(.rounded-lg):not(.rounded-2xl):not([class*='Card']),
+        html[data-bg-active='true'] [class*='bg-slate-']:not([data-sidebar]):not([data-sidebar] *):not(.rounded-xl):not(.rounded-lg):not(.rounded-2xl):not([class*='Card']) {
+          background-color: transparent !important;
+        }
+
         /* Custom scrollbar */
         ::-webkit-scrollbar {
           width: 6px;
