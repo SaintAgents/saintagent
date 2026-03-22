@@ -172,7 +172,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [floatingChat, setFloatingChat] = useState(null);
   const [theme, setTheme] = useState('light');
   const [bgEffect, setBgEffect] = useState(() => {
-    try { return localStorage.getItem('bgEffect') || 'matrix'; } catch { return 'matrix'; }
+    try { return localStorage.getItem('bgEffect') || 'off'; } catch { return 'off'; }
   });
   const [floatingSidePanelOpen, setFloatingSidePanelOpen] = useState(false);
   const [userTourOpen, setUserTourOpen] = useState(false);
