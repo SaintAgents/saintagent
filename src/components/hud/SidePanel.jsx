@@ -28,7 +28,6 @@ import {
   ExternalLink,
   Maximize2,
   Minimize2,
-  Coins,
   Move,
   PanelRight,
   Undo2,
