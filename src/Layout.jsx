@@ -633,12 +633,59 @@ function AuthenticatedLayout({ children, currentPageName }) {
         html[data-bg-active='true'] main[data-page='CommandDeck'] {
           background-image: none !important;
         }
-        /* Cards semi-transparent white so text stays readable */
+        /* Cards solid white so text stays readable on dark canvas bg */
         html[data-bg-active='true'] .rounded-xl:not(img):not([data-no-filter]),
         html[data-bg-active='true'] .rounded-lg:not(img):not([data-no-filter]),
         html[data-bg-active='true'] .rounded-2xl:not(img):not([data-no-filter]),
         html[data-bg-active='true'] [class*='Card']:not(img) {
-          background-color: rgba(255, 255, 255, 0.85) !important;
+          background-color: rgba(255, 255, 255, 0.92) !important;
+          border-color: #e2e8f0 !important;
+        }
+        /* Force dark readable text when bg-active */
+        html[data-bg-active='true'] p,
+        html[data-bg-active='true'] span,
+        html[data-bg-active='true'] div:not([data-sidebar]):not([data-sidebar] *),
+        html[data-bg-active='true'] label,
+        html[data-bg-active='true'] h1, html[data-bg-active='true'] h2,
+        html[data-bg-active='true'] h3, html[data-bg-active='true'] h4,
+        html[data-bg-active='true'] h5, html[data-bg-active='true'] h6,
+        html[data-bg-active='true'] li, html[data-bg-active='true'] td,
+        html[data-bg-active='true'] th, html[data-bg-active='true'] a:not([class*="bg-"]) {
+          color: #1e293b !important;
+        }
+        html[data-bg-active='true'] input,
+        html[data-bg-active='true'] textarea,
+        html[data-bg-active='true'] select {
+          color: #1e293b !important;
+          background-color: #ffffff !important;
+          border-color: #cbd5e1 !important;
+        }
+        html[data-bg-active='true'] input::placeholder,
+        html[data-bg-active='true'] textarea::placeholder {
+          color: #94a3b8 !important;
+        }
+        /* Colored buttons keep white text */
+        html[data-bg-active='true'] .bg-violet-600, html[data-bg-active='true'] .bg-violet-600 *,
+        html[data-bg-active='true'] .bg-purple-600, html[data-bg-active='true'] .bg-purple-600 *,
+        html[data-bg-active='true'] .bg-emerald-600, html[data-bg-active='true'] .bg-emerald-600 *,
+        html[data-bg-active='true'] .bg-blue-600, html[data-bg-active='true'] .bg-blue-600 *,
+        html[data-bg-active='true'] .bg-red-600, html[data-bg-active='true'] .bg-red-600 *,
+        html[data-bg-active='true'] .bg-slate-800, html[data-bg-active='true'] .bg-slate-800 *,
+        html[data-bg-active='true'] .bg-slate-900, html[data-bg-active='true'] .bg-slate-900 * {
+          color: #ffffff !important;
+        }
+        /* Dialogs/popups and profile drawers get solid white bg */
+        html[data-bg-active='true'] [role="dialog"],
+        html[data-bg-active='true'] [data-radix-dialog-content],
+        html[data-bg-active='true'] #profile-drawer {
+          background-color: #ffffff !important;
+        }
+        /* Messages input area stays visible and pinned */
+        html[data-bg-active='true'] .sticky,
+        html[data-bg-active='true'] [class*="sticky"] {
+          background-color: rgba(255, 255, 255, 0.95) !important;
+          position: sticky !important;
+          z-index: 10 !important;
         }
         /* Gradient bgs transparent */
         html[data-bg-active='true'] [class*='bg-gradient-']:not(.mission-card *):not(.hero-gradient):not(.page-hero *) {
