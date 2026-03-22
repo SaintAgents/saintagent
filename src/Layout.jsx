@@ -572,7 +572,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
-      <LightThemeBackgroundRotator theme={theme} />
+      <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
 
       <style>{`
