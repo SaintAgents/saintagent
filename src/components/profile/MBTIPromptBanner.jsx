@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -11,44 +12,47 @@ import {
 import { Brain, Gift, X, Sparkles, Clock, ChevronDown } from "lucide-react";
 import MBTIAssessment from './MBTIAssessment';
 
+// Check dismissal synchronously to prevent any flash
+function isDismissed(profile) {
+  // Check profile-level flag first (survives localStorage clears)
+  if (profile?.mbti_prompt_dismissed === true) return true;
+  try {
+    const val = localStorage.getItem('mbti_prompt_dismissed_permanently');
+    if (val === 'true' || val === 'never') return true;
+    const dismissedUntil = localStorage.getItem('mbti_prompt_dismissed_until');
+    if (dismissedUntil && new Date(dismissedUntil) > new Date()) return true;
+  } catch {}
+  return false;
+}
+
 export default function MBTIPromptBanner({ profile, onDismiss }) {
+  // Synchronous initial check — never render if already dismissed
+  const initiallyDismissed = isDismissed(profile);
+  
   const [showAssessment, setShowAssessment] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(initiallyDismissed);
   const [showDismissOptions, setShowDismissOptions] = useState(false);
 
-  // Check if already dismissed temporarily or permanently - run IMMEDIATELY on mount
+  // Re-check when profile changes (e.g. after profile loads)
   useEffect(() => {
-    try {
-      const dismissedPermanently = localStorage.getItem('mbti_prompt_dismissed_permanently');
-      if (dismissedPermanently === 'true' || dismissedPermanently === 'never') {
-        setDismissed(true);
-        return;
-      }
-      const dismissedUntil = localStorage.getItem('mbti_prompt_dismissed_until');
-      if (dismissedUntil && new Date(dismissedUntil) > new Date()) {
-        setDismissed(true);
-      }
-    } catch {}
-  }, []);
+    if (isDismissed(profile)) setDismissed(true);
+  }, [profile?.id, profile?.mbti_prompt_dismissed]);
 
-  // Also check synchronously during render to prevent flash
-  const isPermanentlyDismissed = (() => {
-    try {
-      const val = localStorage.getItem('mbti_prompt_dismissed_permanently');
-      return val === 'true' || val === 'never';
-    } catch { return false; }
-  })();
-
-  // Don't show if user already has MBTI type or dismissed (check both state and localStorage)
-  if (profile?.mbti_type || dismissed || isPermanentlyDismissed) {
+  // Don't show if user already has MBTI type or dismissed
+  if (profile?.mbti_type || dismissed) {
     return null;
   }
 
-  const handleDismiss = (duration) => {
+  const handleDismiss = async (duration) => {
+    // Always set localStorage
     if (duration === 'never') {
       localStorage.setItem('mbti_prompt_dismissed_permanently', 'never');
-      localStorage.setItem('mbti_prompt_dismissed_until', 'never');
-      localStorage.removeItem('mbti_prompt_dismissed_until');
+      // Also persist to profile so it survives localStorage clears
+      if (profile?.id) {
+        try {
+          await base44.entities.UserProfile.update(profile.id, { mbti_prompt_dismissed: true });
+        } catch {}
+      }
     } else {
       const dismissUntil = new Date();
       if (duration === 'hour') dismissUntil.setHours(dismissUntil.getHours() + 1);
