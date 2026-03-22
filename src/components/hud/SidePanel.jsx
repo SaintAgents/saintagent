@@ -28,6 +28,7 @@ import {
   ExternalLink,
   Maximize2,
   Minimize2,
+  Coins,
   Move,
   PanelRight,
   Undo2,
@@ -146,6 +147,9 @@ export default function SidePanel({
   const [recentJoinsPopupOpen, setRecentJoinsPopupOpen] = useState(false);
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
+  const [storedCardsCollapsed, setStoredCardsCollapsed] = useState(() => {
+    try { return localStorage.getItem('storedCardsCollapsed') === 'true'; } catch { return false; }
+  });
 
   // Docking & Dragging
   const [dockSide, setDockSide] = useState('right'); // 'left' | 'right'
