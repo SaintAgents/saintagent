@@ -837,114 +837,19 @@ export default function SidePanel({
                 </div>
               </CollapsibleCard>
 
-              {/* Community Feed */}
+              {/* Community Feed - link to full page */}
               <CollapsibleCard title="Community Feed" icon={MessageCircle} defaultOpen={false} onPopout={() => setFeedPopupOpen(true)}>
-                {/* Create Post */}
-                <div className="mb-4 p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="w-9 h-9 cursor-pointer" data-user-id={profile?.user_id}>
-                      <AvatarImage src={profile?.avatar_url} />
-                      <AvatarFallback className="bg-violet-100 text-violet-600 text-sm">
-                        {profile?.display_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <Textarea
-                      value={newPostText}
-                      onChange={(e) => setNewPostText(e.target.value)}
-                      placeholder="What's on your mind?"
-                      className="flex-1 resize-none text-sm"
-                      rows={3} />
-                  </div>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
-                      <Video className="w-4 h-4" />
-                      Video
-                      <input type="file" accept="video/*" onChange={onVideoChange} className="hidden" />
-                    </label>
-                    <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
-                      <Mic className="w-4 h-4" />
-                      Audio
-                      <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
-                    </label>
-                    {videoError && <span className="text-xs text-rose-600">{videoError}</span>}
-                  </div>
-                  {videoPreview && !videoError && <video src={videoPreview} controls className="w-full rounded-lg" />}
-                  {audioPreview && <audio src={audioPreview} controls className="w-full" />}
-                  <div className="flex items-center justify-between">
-                    <EmojiPicker onSelect={(e) => setNewPostText((prev) => (prev || '') + e)} />
-                    <Button
-                      onClick={handleCreatePost}
-                      disabled={(!newPostText.trim() && !videoFile && !audioFile) || createPostMutation.isPending}
-                      className="bg-violet-600 hover:bg-violet-700"
-                      size="sm">
-                      <Send className="w-3 h-3 mr-1" />
-                      Post
-                    </Button>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  {posts.length === 0 ?
-                    <p className="text-sm text-slate-400 py-4 text-center">No posts yet</p> :
-                    posts.slice(0, 3).map((post) => {
-                      const postComments = computePostComments(post.id);
-                      const isLiked = isLikedByUser(post.id);
-                      const showComments = expandedComments[post.id];
-                      return (
-                        <div key={post.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-                          <div className="flex items-center justify-between gap-3">
-                            <MiniProfile userId={post.author_id} name={post.author_name} avatar={post.author_avatar} size={36} />
-                            <p className="text-xs text-slate-500">{format(parseISO(post.created_date), 'MMM d, h:mm a')}</p>
-                          </div>
-                          <p className="text-sm text-slate-700 leading-relaxed">{post.content}</p>
-                          {post.video_url ? <video src={post.video_url} controls className="w-full rounded-lg" /> :
-                           post.audio_url ? <audio src={post.audio_url} controls className="w-full" /> :
-                           post.image_urls && post.image_urls.length > 0 ? <img src={post.image_urls[0]} alt="" className="w-full rounded-lg" /> : null}
-                          <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
-                            <button onClick={() => handleLike(post.id)} className={cn("flex items-center gap-1.5 text-xs transition-colors", isLiked ? "text-rose-600" : "text-slate-500 hover:text-rose-600")}>
-                              <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
-                              <span className="font-medium">{post.likes_count || 0}</span>
-                            </button>
-                            <button onClick={() => setExpandedComments({ ...expandedComments, [post.id]: !showComments })} className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-violet-600 transition-colors">
-                              <MessageCircle className="w-4 h-4" />
-                              <span className="font-medium">{post.comments_count || 0}</span>
-                            </button>
-                            <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors">
-                              <Share2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                          {showComments &&
-                            <div className="space-y-3 pt-2">
-                              {postComments.map((comment) =>
-                                <div key={comment.id} className="flex items-start gap-2">
-                                  <Avatar className="w-7 h-7 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={comment.author_id}>
-                                    <AvatarImage src={comment.author_avatar} />
-                                    <AvatarFallback className="bg-slate-100 text-slate-600 text-xs">{comment.author_name?.charAt(0)}</AvatarFallback>
-                                  </Avatar>
-                                  <div className="flex-1 p-2 rounded-lg bg-slate-50">
-                                    <p className="text-xs font-medium text-slate-900">{comment.author_name}</p>
-                                    <p className="text-xs text-slate-700 mt-0.5">{comment.content}</p>
-                                  </div>
-                                </div>
-                              )}
-                              <div className="flex items-start gap-2">
-                                <Avatar className="w-7 h-7 cursor-pointer" data-user-id={profile?.user_id}>
-                                  <AvatarImage src={profile?.avatar_url} />
-                                  <AvatarFallback className="bg-violet-100 text-violet-600 text-xs">{profile?.display_name?.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1 flex items-end gap-2">
-                                  <Textarea value={commentText[post.id] || ''} onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })} placeholder="Write a comment..." className="text-xs h-8 resize-none" rows={1} />
-                                  <EmojiPicker onSelect={(e) => setCommentText({ ...commentText, [post.id]: (commentText[post.id] || '') + e })} />
-                                  <Button size="sm" onClick={() => handleComment(post.id)} disabled={!commentText[post.id]?.trim()} className="h-8 w-8 p-0">
-                                    <Send className="w-3 h-3" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          }
-                        </div>
-                      );
-                    })
-                  }
+                <div className="p-4 text-center">
+                  <MessageCircle className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm text-slate-500 mb-3">View the community feed</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-violet-600 border-violet-200 hover:bg-violet-50"
+                    onClick={() => window.location.href = createPageUrl('CommunityFeed')}
+                  >
+                    Open Community Feed
+                  </Button>
                 </div>
               </CollapsibleCard>
             </div>
