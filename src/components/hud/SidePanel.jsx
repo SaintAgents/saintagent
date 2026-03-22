@@ -43,7 +43,8 @@ import {
   Compass,
   MapPin,
   Key,
-  CircleDot } from
+  CircleDot,
+  MessageCircle } from
   "lucide-react";
 
 // Card icon mapping - must be defined here to resolve icons from stored card data
