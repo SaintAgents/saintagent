@@ -27,7 +27,7 @@ function getStoredInterval() {
   return 30;
 }
 
-export default function LightThemeBackgroundRotator({ theme }) {
+export default function LightThemeBackgroundRotator({ theme, bgEffect }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [backgrounds, setBackgrounds] = useState(getStoredBackgrounds);
   const [interval, setIntervalSec] = useState(getStoredInterval);
