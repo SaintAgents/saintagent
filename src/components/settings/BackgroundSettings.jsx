@@ -6,7 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Image, Trash2, Upload, Plus } from 'lucide-react';
 
+const ORIGINAL_CMD_DECK_BG = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ccd2173e5_universal_upscale_0_cd3894c1-6a97-4a04-8d63-916963fb681c_0.jpg';
+
 const DEFAULT_BACKGROUNDS = [
+  ORIGINAL_CMD_DECK_BG,
   'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80',
   'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80',
   'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1920&q=80',
@@ -145,14 +148,32 @@ export default function BackgroundSettings() {
           </div>
         </div>
 
-        {/* Reset button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleReset}
-        >
-          Reset to Defaults
-        </Button>
+        {/* Action buttons */}
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+          >
+            Reset to Defaults
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const newBgs = backgrounds.includes(ORIGINAL_CMD_DECK_BG)
+                ? backgrounds
+                : [ORIGINAL_CMD_DECK_BG, ...backgrounds];
+              setBackgrounds(newBgs);
+              persist(newBgs, intervalSec);
+            }}
+          >
+            Restore Original Background
+          </Button>
+        </div>
+        <p className="text-xs text-slate-500">
+          The first image is the original Command Deck background. Changes apply to the Command Deck page background.
+        </p>
       </CardContent>
     </Card>
   );
