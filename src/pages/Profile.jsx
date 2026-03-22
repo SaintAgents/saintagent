@@ -73,6 +73,7 @@ import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affili
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import TrustScoreCard from '@/components/trust/TrustScoreCard';
 import ReputationScoresCard from '@/components/reputation/ReputationScoresCard';
+import InfluenceRatingVisualizer from '@/components/profile/InfluenceRatingVisualizer';
 import UserRolesPanel from '@/components/roles/UserRolesPanel';
 import MetricTile from '@/components/hud/MetricTile';
 import BadgesBar from '@/components/badges/BadgesBar';
@@ -1621,6 +1622,9 @@ export default function Profile() {
           }
 
           <TabsContent value="stats" className="space-y-6">
+            {/* Influence Rating - Full Width */}
+            <InfluenceRatingVisualizer userId={profile?.user_id} profile={profile} />
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Right Column - Stats */}
               <div className="space-y-6">
