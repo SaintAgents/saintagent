@@ -2,9 +2,10 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Star } from "lucide-react";
+import { AlertTriangle, Star, ShieldCheck } from "lucide-react";
 import MiniProfile from '@/components/profile/MiniProfile';
 
 const RISK_GRADE_COLORS = {
@@ -92,8 +93,24 @@ export default function ProjectMiniCard({ project, onClick }) {
             </div>
           }
 
-          {/* Claim ownership controls */}
-          {(!project.claim_status || project.claim_status === 'unclaimed') && (
+          {/* Ownership / Claim controls */}
+          {project.owner_id && project.claim_status === 'approved' ? (
+            <div className="pt-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium cursor-default">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      Owned
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Owner: {project.owner_name || project.claimed_by || project.owner_id}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          ) : (!project.claim_status || project.claim_status === 'unclaimed') ? (
             <div className="pt-2">
               <Button
                 size="sm"
@@ -112,12 +129,11 @@ export default function ProjectMiniCard({ project, onClick }) {
                 Claim Project
               </Button>
             </div>
-          )}
-          {project.claim_status && project.claim_status !== 'unclaimed' && (
-            <div className="pt-2 text-xs text-slate-500">
-              {project.claim_status === 'pending' ? 'Claim pending approval' : project.claim_status === 'approved' ? `Claimed by ${project.claimed_by || 'owner'}` : 'Claim rejected'}
-            </div>
-          )}
+          ) : project.claim_status === 'pending' ? (
+            <div className="pt-2 text-xs text-slate-500">Claim pending approval</div>
+          ) : project.claim_status === 'rejected' ? (
+            <div className="pt-2 text-xs text-rose-500">Claim rejected</div>
+          ) : null}
 
           {/* Scores in bottom right */}
           <div className="flex justify-end items-center gap-2 pt-2 mt-auto">
