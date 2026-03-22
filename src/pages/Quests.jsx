@@ -27,6 +27,7 @@ import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import AdvancedModeQuest from '@/components/quests/AdvancedModeQuest';
+import QuestManagementPanel from '@/components/quests/QuestManagementPanel';
 
 const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/eda418711_universal_upscale_0_0b3501a9-62c0-4df4-978e-6bf4e8cb3953_0.jpg";
 
@@ -123,10 +124,14 @@ export default function Quests() {
       {/* Tab Navigation */}
       <div className="max-w-7xl mx-auto px-4 py-4">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-5 w-full max-w-2xl mx-auto">
+          <TabsList className="grid grid-cols-6 w-full max-w-3xl mx-auto">
             <TabsTrigger value="overview" className="gap-2">
               <Trophy className="w-4 h-4" />
               <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="manage" className="gap-2">
+              <Target className="w-4 h-4" />
+              <span className="hidden sm:inline">Manage</span>
             </TabsTrigger>
             <TabsTrigger value="timeline" className="gap-2">
               <Compass className="w-4 h-4" />
@@ -182,6 +187,10 @@ export default function Quests() {
 
 
           </>
+        )}
+
+        {activeTab === 'manage' && (
+          <QuestManagementPanel userId={currentUser?.email} profile={profile} />
         )}
 
         {activeTab === 'timeline' && (
