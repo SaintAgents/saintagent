@@ -345,51 +345,32 @@ export default function TopBar({
       {/* Theme dots - shows when collapsed */}
       {isCollapsed && (
         <div className="flex items-center gap-2 mr-2">
-          <button
-            onClick={() => {
-              localStorage.setItem('theme', 'light');
-              document.documentElement.setAttribute('data-theme', 'light');
-            }}
-            className={cn(
-              "w-5 h-5 rounded-full transition-all",
-              "bg-gradient-to-br from-amber-300 to-orange-400",
-              currentTheme === 'light' 
-                ? "ring-2 ring-offset-1 ring-amber-500" 
-                : "hover:ring-2 hover:ring-[#00ff88] hover:ring-offset-1"
-            )}
-            style={{ boxShadow: '0 0 6px rgba(0, 255, 136, 0.4), 0 0 0 2px rgba(0, 255, 136, 0.2)' }}
-            title="Light theme"
-          />
-          <button
-            onClick={() => {
-              localStorage.setItem('theme', 'dark');
-              document.documentElement.setAttribute('data-theme', 'dark');
-            }}
-            className={cn(
-              "w-5 h-5 rounded-full transition-all",
-              "bg-gradient-to-br from-slate-600 to-slate-900",
-              currentTheme === 'dark' 
-                ? "ring-2 ring-offset-1 ring-[#00ff88]" 
-                : "hover:ring-2 hover:ring-[#00ff88] hover:ring-offset-1"
-            )}
-            style={{ boxShadow: '0 0 6px rgba(0, 255, 136, 0.4), 0 0 0 2px rgba(0, 255, 136, 0.2)' }}
-            title="Dark theme"
-          />
-          <button
-            onClick={() => {
-              localStorage.setItem('theme', 'hacker');
-              document.documentElement.setAttribute('data-theme', 'hacker');
-            }}
-            className={cn(
-              "w-5 h-5 rounded-full transition-all",
-              "bg-[#00ff00]",
-              currentTheme === 'hacker' 
-                ? "ring-2 ring-offset-1 ring-[#00ff00]" 
-                : "hover:ring-2 hover:ring-[#00ff00] hover:ring-offset-1"
-            )}
-            style={{ boxShadow: '0 0 8px rgba(0, 255, 0, 0.5), 0 0 0 2px rgba(0, 255, 0, 0.25)' }}
-            title="Hacker theme"
-          />
+          {[
+            { id: 'light', title: 'Light theme', className: 'bg-gradient-to-br from-amber-300 to-orange-400', activeRing: 'ring-amber-500', shadow: '0 0 6px rgba(245,158,11,0.4)' },
+            { id: 'dark', title: 'Dark theme', className: 'bg-gradient-to-br from-slate-600 to-slate-900', activeRing: 'ring-[#00ff88]', shadow: '0 0 6px rgba(0,255,136,0.4)' },
+            { id: 'hacker', title: 'Hacker theme', className: 'bg-[#00ff00]', activeRing: 'ring-[#00ff00]', shadow: '0 0 8px rgba(0,255,0,0.5)' },
+          ].map(t => (
+            <button
+              key={t.id}
+              onClick={() => {
+                if (onThemeToggle) {
+                  onThemeToggle(t.id);
+                } else {
+                  localStorage.setItem('theme', t.id);
+                  document.documentElement.setAttribute('data-theme', t.id);
+                }
+              }}
+              className={cn(
+                "w-5 h-5 rounded-full transition-all",
+                t.className,
+                currentTheme === t.id 
+                  ? `ring-2 ring-offset-1 ${t.activeRing}` 
+                  : "hover:ring-2 hover:ring-offset-1 hover:ring-slate-400"
+              )}
+              style={{ boxShadow: currentTheme === t.id ? t.shadow : 'none' }}
+              title={t.title}
+            />
+          ))}
         </div>
       )}
       {/* Mode Selector - hidden when collapsed */}
