@@ -1,242 +1,219 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import HelpHint from "@/components/hud/HelpHint";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2, ChevronLeft } from "lucide-react";
 import { createPageUrl } from "@/utils";
-import { UserPlus } from "lucide-react";
+
+import IntakeStepIndicator from "@/components/projects/intake/IntakeStepIndicator";
+import IntakeStepBasicInfo from "@/components/projects/intake/IntakeStepBasicInfo";
+import IntakeStepOverview from "@/components/projects/intake/IntakeStepOverview";
+import IntakeStepFunding from "@/components/projects/intake/IntakeStepFunding";
+import IntakeStepFinancial from "@/components/projects/intake/IntakeStepFinancial";
+import IntakeStepImpact from "@/components/projects/intake/IntakeStepImpact";
+import IntakeStepReadiness from "@/components/projects/intake/IntakeStepReadiness";
+import IntakeStepDocuments from "@/components/projects/intake/IntakeStepDocuments";
+import IntakeStepAlignment from "@/components/projects/intake/IntakeStepAlignment";
+
+const TOTAL_STEPS = 8;
+
+const INITIAL_FORM = {
+  title: '', contact_name: '', organization_name: '', contact_email: '', contact_phone: '',
+  website_url: '', description: '', problem_statement: '', stage: 'idea',
+  funding_type: '', amount_requested: '', use_of_funds: '', funding_timeline: '',
+  other_funding_sources: '', revenue_model: '', current_revenue: '', projected_revenue: '',
+  exit_repayment_plan: '', open_to_structures: [], impact_beneficiaries: '', impact_scale: '',
+  geographic_focus: '', readiness_items: [], pitch_deck_url: '', business_plan_url: '',
+  financial_projections_url: '', other_documents_urls: [], alignment_statement: '',
+  success_definition: '',
+};
+
+const STEP_TITLES = [
+  '', 'Basic Information', 'Project Overview', 'Funding Type & Details',
+  'Financial Structure', 'Impact & Reach', 'Readiness Assessment',
+  'Supporting Documents', 'Final Alignment'
+];
+
+const STEP_DESCS = [
+  '', 'Tell us about yourself and the project.',
+  'Help us understand your project at a high level.',
+  'What kind of funding are you looking for?',
+  'Financial details and structure preferences.',
+  'Describe the impact your project will have.',
+  'What do you currently have in place?',
+  'Upload any supporting materials.',
+  'Final thoughts on alignment and success.'
+];
 
 export default function ProjectCreate() {
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    budget: "",
-    industrial_value: "",
-    humanitarian_score: "",
-    impact_tags: "",
-    strategic_intent: "",
-    negative_environmental_impact: false,
-    introduced_by: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
+  const queryClient = useQueryClient();
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState(INITIAL_FORM);
 
-  const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-
-  // Fetch profiles for introducer selection
-  const { data: profiles = [] } = useQuery({
-    queryKey: ['allProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 200),
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.title.trim()) return;
-    setSubmitting(true);
-    
-    // Find introducer profile for name
-    const introducerProfile = form.introduced_by 
-      ? profiles.find(p => p.user_id === form.introduced_by) 
-      : null;
-    
-    const payload = {
-      title: form.title.trim(),
-      description: form.description?.trim() || "",
-      budget: form.budget ? Number(form.budget) : 0,
-      industrial_value: form.industrial_value ? Number(form.industrial_value) : 0,
-      humanitarian_score: form.humanitarian_score ? Number(form.humanitarian_score) : undefined,
-      impact_tags: form.impact_tags ? form.impact_tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
-      strategic_intent: form.strategic_intent || "",
-      negative_environmental_impact: !!form.negative_environmental_impact,
-      status: "pending_review",
-      introduced_by: form.introduced_by || undefined,
-      introducer_name: introducerProfile?.display_name || undefined,
-    };
-    await base44.entities.Project.create(payload);
-    // Gamification: points + badge for project contribution
-    try {
-      const me = await base44.auth.me();
-      const profs = await base44.entities.UserProfile.filter({ user_id: me.email });
-      const myProfile = (profs || [])[0];
-      if (myProfile) {
-        await base44.entities.UserProfile.update(myProfile.id, {
-          engagement_points: (myProfile.engagement_points || 0) + 30
-        });
-        const existing = await base44.entities.Badge.filter({ user_id: myProfile.user_id, code: 'project_contributor' });
-        if (!(existing && existing.length)) {
-          await base44.entities.Badge.create({ user_id: myProfile.user_id, code: 'project_contributor', status: 'active' });
+  const { data: profiles } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const profile = profiles?.[0];
+
+  const createMutation = useMutation({
+    mutationFn: async (data) => {
+      const project = await base44.entities.Project.create(data);
+      // Gamification: points + badge
+      try {
+        if (profile) {
+          await base44.entities.UserProfile.update(profile.id, {
+            engagement_points: (profile.engagement_points || 0) + 30
+          });
+          const existing = await base44.entities.Badge.filter({ user_id: profile.user_id, code: 'project_contributor' });
+          if (!(existing && existing.length)) {
+            await base44.entities.Badge.create({ user_id: profile.user_id, code: 'project_contributor', status: 'active' });
+          }
         }
+      } catch (e) {
+        console.error('Gamification project award failed', e);
       }
-    } catch (e) {
-      console.error('Gamification project award failed', e);
+      return project;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['fundedProjects'] });
+      window.location.href = createPageUrl("Projects");
     }
-    window.location.href = createPageUrl("CommandDeck");
+  });
+
+  const canProceed = () => {
+    switch (step) {
+      case 1: return formData.title && formData.contact_name && formData.contact_email;
+      case 2: return formData.description && formData.problem_statement;
+      case 3: return formData.funding_type && formData.amount_requested && formData.use_of_funds;
+      case 4: return true;
+      case 5: return formData.impact_beneficiaries && formData.impact_scale;
+      case 6: return true;
+      case 7: return true;
+      case 8: return formData.alignment_statement && formData.success_definition;
+      default: return false;
+    }
+  };
+
+  const handleSubmit = () => {
+    const payload = {
+      ...formData,
+      amount_requested: parseFloat(formData.amount_requested) || 0,
+      budget: parseFloat(formData.amount_requested) || 0,
+      owner_id: currentUser?.email,
+      owner_name: profile?.display_name || currentUser?.full_name,
+      owner_avatar: profile?.avatar_url,
+      status: 'pending_review',
+      project_status: 'planned',
+      progress_percent: 0,
+      intake_completed: true,
+      intake_completed_at: new Date().toISOString(),
+      geography: formData.geographic_focus,
+    };
+    createMutation.mutate(payload);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1: return <IntakeStepBasicInfo formData={formData} onChange={setFormData} />;
+      case 2: return <IntakeStepOverview formData={formData} onChange={setFormData} />;
+      case 3: return <IntakeStepFunding formData={formData} onChange={setFormData} />;
+      case 4: return <IntakeStepFinancial formData={formData} onChange={setFormData} />;
+      case 5: return <IntakeStepImpact formData={formData} onChange={setFormData} />;
+      case 6: return <IntakeStepReadiness formData={formData} onChange={setFormData} />;
+      case 7: return <IntakeStepDocuments formData={formData} onChange={setFormData} />;
+      case 8: return <IntakeStepAlignment formData={formData} onChange={setFormData} />;
+      default: return null;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">Add Project
-            <HelpHint
-              content={(
-                <div>
-                  <h3 className="font-semibold text-slate-900 mb-1">How to Evaluate Project Impact</h3>
-                  <p className="text-slate-700 mb-2">Understanding Industrial Value vs. Humanitarian Score. These are independent dimensions; score each honestly before any ethical weighting is applied.</p>
-                  <ol className="list-decimal pl-5 space-y-2">
-                    <li>
-                      <strong>Industrial Value (0.0–10.0)</strong>
-                      <div className="mt-1 text-slate-700">
-                        <div className="font-medium">What it measures:</div>
-                        <div>Economic strength, operational advantage, and long-term resilience.</div>
-                        <div className="font-medium mt-1">Consider:</div>
-                        <ul className="list-disc pl-5">
-                          <li>Revenue, cost reduction, funding/market unlocks</li>
-                          <li>Scalability, IP/systems created</li>
-                          <li>Strategic advantage, supplier resilience, stability</li>
-                        </ul>
-                        <div className="mt-1 text-xs text-slate-500">Scale: 0–2.9 minimal • 3–4.9 limited • 5–6.9 solid • 7–8.9 strong • 9–10 transformational.</div>
-                      </div>
-                    </li>
-                    <li>
-                      <strong>Humanitarian Score (1–10)</strong>
-                      <div className="mt-1 text-slate-700">
-                        <div className="font-medium">What it measures:</div>
-                        <div>Impact on human well-being, equity, safety, and sustainability.</div>
-                        <div className="font-medium mt-1">Consider:</div>
-                        <ul className="list-disc pl-5">
-                          <li>Safety & health (risk reduction, prevention)</li>
-                          <li>Equity & inclusion (access, underserved groups)</li>
-                          <li>Sustainability & long-term stewardship</li>
-                        </ul>
-                        <div className="mt-1 text-xs text-rose-600">Ethical floor: scores below 4 are flagged for review.</div>
-                      </div>
-                    </li>
-                    <li>
-                      <strong>Keep Scores Separate</strong>
-                      <div>Industrial uses decimals; Humanitarian uses whole numbers for moral clarity.</div>
-                    </li>
-                    <li>
-                      <strong>Guidance</strong>
-                      <ul className="list-disc pl-5">
-                        <li>Don’t offset one score to compensate the other</li>
-                        <li>Score what is, not hopes</li>
-                        <li>Ask: would I defend this publicly if weights were reversed?</li>
-                      </ul>
-                    </li>
-                  </ol>
-                </div>
-              )}
-            />
-          </h1>
-          <p className="text-slate-600 mt-1">Create a single project for ethical review.</p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-5 bg-white p-6 rounded-2xl border border-slate-200">
-          <div>
-            <Label className="text-sm">Title</Label>
-            <Input value={form.title} onChange={(e) => update("title", e.target.value)} placeholder="Project title" required className="mt-1" />
-          </div>
-          <div>
-            <Label className="text-sm">Description</Label>
-            <Textarea value={form.description} onChange={(e) => update("description", e.target.value)} placeholder="Brief description" className="mt-1 min-h-24" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <Label className="text-sm">Budget</Label>
-              <Input type="number" step="0.01" value={form.budget} onChange={(e) => update("budget", e.target.value)} placeholder="0" className="mt-1" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-4 md:p-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          className="mb-4 gap-1 text-slate-600 hover:text-slate-900"
+          onClick={() => window.history.back()}
+        >
+          <ChevronLeft className="w-4 h-4" /> Back to Projects
+        </Button>
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          {/* Header */}
+          <div className="px-6 pt-6 pb-4 border-b border-slate-100">
+            <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <ClipboardList className="w-6 h-6 text-violet-600" />
+              Project Submission & Funding Intake
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Complete this questionnaire to submit your project for review.
+            </p>
+            <div className="mt-4">
+              <IntakeStepIndicator currentStep={step} />
             </div>
-            <div>
-              <Label className="text-sm flex items-center gap-1">Industrial Value
-                <HelpHint
-                  content={(
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-1">Industrial Value (0.0–10.0)</h4>
-                      <p className="mb-2">Economic viability and strategic strength.</p>
-                      <ul className="list-disc pl-5 space-y-1">
-                        <li>Revenue impact, cost reduction, new funding/markets</li>
-                        <li>Scalability, replicability, creation of IP/systems</li>
-                        <li>Strategic advantage, resilience, vendor independence</li>
-                      </ul>
-                      <p className="text-xs mt-2">0–2.9 minimal • 3–4.9 limited • 5–6.9 solid • 7–8.9 strong • 9–10 transformational</p>
-                      <p className="text-xs text-slate-500 mt-1">High industrial value ≠ automatic approval.</p>
-                    </div>
-                  )}
-                />
-              </Label>
-              <Input type="number" step="0.01" value={form.industrial_value} onChange={(e) => update("industrial_value", e.target.value)} placeholder="0" className="mt-1" />
-            </div>
-            <div>
-              <Label className="text-sm flex items-center gap-1">Humanitarian Score (1-10)
-                <HelpHint
-                  content={(
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-1">Humanitarian Score (1–10)</h4>
-                      <p className="mb-2">Impact on well-being, equity, safety, and sustainability. No zero allowed.</p>
-                      <ul className="list-disc pl-5 space-y-1">
-                        <li>Safety & health (risk reduction, prevention)</li>
-                        <li>Equity & inclusion (access, underserved populations)</li>
-                        <li>Sustainability & long-term benefit vs. burden</li>
-                      </ul>
-                      <p className="text-xs mt-2">1–2 weak • 3 marginal • 4 minimum ethical floor • 5–6 clear positive • 7–8 strong • 9–10 life-improving at scale</p>
-                      <p className="text-xs text-rose-600 mt-1">Scores &lt; 4 are auto-flagged for ethical review.</p>
-                    </div>
-                  )}
-                />
-              </Label>
-              <Input type="number" min="1" max="10" step="1" value={form.humanitarian_score} onChange={(e) => update("humanitarian_score", e.target.value)} placeholder="8" className="mt-1" />
-            </div>
-          </div>
-          <div>
-            <Label className="text-sm">Impact Tags (comma separated)</Label>
-            <Input value={form.impact_tags} onChange={(e) => update("impact_tags", e.target.value)} placeholder="health, education" className="mt-1" />
-          </div>
-          <div>
-            <Label className="text-sm">Strategic Intent</Label>
-            <Input value={form.strategic_intent} onChange={(e) => update("strategic_intent", e.target.value)} placeholder="Alignment with mission" className="mt-1" />
-          </div>
-          {/* Introducer Field */}
-          <div className="p-3 rounded-lg bg-violet-50 border border-violet-200">
-            <Label className="text-sm flex items-center gap-2 mb-2">
-              <UserPlus className="w-4 h-4 text-violet-600" />
-              Introduced By (Optional)
-              <HelpHint content="If someone introduced you to this project opportunity, select them here. They may earn a commission if the project gets funded." />
-            </Label>
-            <Select value={form.introduced_by} onValueChange={(v) => update("introduced_by", v)}>
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="Select introducer (if applicable)" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={null}>None</SelectItem>
-                {profiles.map((p) => (
-                  <SelectItem key={p.user_id} value={p.user_id}>
-                    {p.display_name || p.handle || p.user_id}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="text-xs text-violet-600 mt-1">Introducers may earn commission on funded projects.</div>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border">
-            <div>
-              <Label className="text-sm">Negative Environmental Impact</Label>
-              <div className="text-xs text-slate-500">Toggle if this project has known negative environmental effects.</div>
+          {/* Step Content */}
+          <div className="px-6 pt-4 pb-2">
+            <h3 className="text-sm font-semibold text-slate-800">
+              Step {step}: {STEP_TITLES[step]}
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5 mb-4">{STEP_DESCS[step]}</p>
+          </div>
+
+          <ScrollArea className="px-6 max-h-[55vh]">
+            <div className="pb-4">
+              {renderStep()}
             </div>
-            <Switch checked={form.negative_environmental_impact} onCheckedChange={(v) => update("negative_environmental_impact", v)} />
+          </ScrollArea>
+
+          {/* Footer */}
+          <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50">
+            <span className="text-xs text-slate-400">Step {step} of {TOTAL_STEPS}</span>
+            <div className="flex items-center gap-2">
+              {step > 1 && (
+                <Button type="button" variant="outline" size="sm" onClick={() => setStep(step - 1)}>
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </Button>
+              )}
+              {step < TOTAL_STEPS ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  className="bg-violet-600 hover:bg-violet-700"
+                  onClick={() => setStep(step + 1)}
+                  disabled={!canProceed()}
+                >
+                  Next <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  size="sm"
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                  onClick={handleSubmit}
+                  disabled={!canProceed() || createMutation.isPending}
+                >
+                  {createMutation.isPending ? (
+                    <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Submitting...</>
+                  ) : (
+                    <><Send className="w-4 h-4 mr-1" /> Submit for Review</>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" className="rounded-xl" onClick={() => (window.location.href = createPageUrl("CommandDeck"))}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={submitting} className="rounded-xl bg-violet-600 hover:bg-violet-700">
-              {submitting ? "Saving..." : "Create Project"}
-            </Button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );
