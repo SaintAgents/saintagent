@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 function padSix(n) {
   try { return String(n).padStart(6, '0'); } catch { return String(n); }
