@@ -125,18 +125,25 @@ export default function TopBar({
   const searchRef = useRef(null);
   const [currentTheme, setCurrentTheme] = useState('light');
   
-  // Track theme changes
+  // Sync with prop or observe DOM
   useEffect(() => {
+    if (themeProp) {
+      setCurrentTheme(themeProp);
+    }
+  }, [themeProp]);
+  
+  // Track theme changes from DOM when no prop
+  useEffect(() => {
+    if (themeProp) return; // prop takes priority
     const updateTheme = () => {
       const theme = document.documentElement.getAttribute('data-theme') || 'light';
       setCurrentTheme(theme);
     };
     updateTheme();
-    
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     return () => observer.disconnect();
-  }, []);
+  }, [themeProp]);
   
   // Listen for boost activation event
   useEffect(() => {
