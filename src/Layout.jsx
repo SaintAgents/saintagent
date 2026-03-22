@@ -252,22 +252,22 @@ function AuthenticatedLayout({ children, currentPageName }) {
     };
     }, []);
 
-  // Initialize theme from localStorage
+  // Initialize theme from localStorage + listen for external theme changes
   useEffect(() => {
     try {
       const saved = localStorage.getItem('theme');
       if (saved === 'dark' || saved === 'light' || saved === 'custom' || saved === 'hacker') {
         setTheme(saved);
-        // Apply immediately to prevent flash
         document.documentElement.setAttribute('data-theme', saved);
       }
     } catch {}
+    const handleExternalThemeChange = (e) => { if (e.detail?.theme) setTheme(e.detail.theme); };
+    window.addEventListener('themeChange', handleExternalThemeChange);
+    return () => window.removeEventListener('themeChange', handleExternalThemeChange);
   }, []);
 
   useEffect(() => {
-    try { 
-      localStorage.setItem('theme', theme); 
-    } catch {}
+    try { localStorage.setItem('theme', theme); } catch {}
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
       if (theme === 'custom') {
