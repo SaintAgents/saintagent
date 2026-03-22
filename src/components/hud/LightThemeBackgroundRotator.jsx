@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 
+const ORIGINAL_CMD_DECK_BG = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ccd2173e5_universal_upscale_0_cd3894c1-6a97-4a04-8d63-916963fb681c_0.jpg';
+
 const DEFAULT_BACKGROUNDS = [
+  ORIGINAL_CMD_DECK_BG,
   'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80',
   'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80',
   'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1920&q=80',
@@ -31,7 +34,6 @@ export default function LightThemeBackgroundRotator({ theme, bgEffect }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [backgrounds, setBackgrounds] = useState(getStoredBackgrounds);
   const [interval, setIntervalSec] = useState(getStoredInterval);
-  const [opacity, setOpacity] = useState(1);
   const timerRef = useRef(null);
 
   // Listen for settings changes
@@ -49,12 +51,7 @@ export default function LightThemeBackgroundRotator({ theme, bgEffect }) {
     if (theme !== 'light' || backgrounds.length <= 1) return;
 
     timerRef.current = window.setInterval(() => {
-      // Fade out
-      setOpacity(0);
-      setTimeout(() => {
-        setCurrentIndex(prev => (prev + 1) % backgrounds.length);
-        setOpacity(1);
-      }, 800);
+      setCurrentIndex(prev => (prev + 1) % backgrounds.length);
     }, interval * 1000);
 
     return () => {
@@ -67,27 +64,51 @@ export default function LightThemeBackgroundRotator({ theme, bgEffect }) {
     setCurrentIndex(0);
   }, [backgrounds.length]);
 
-  // Hide when not light theme, or when a background effect is active
-  if (theme !== 'light') return null;
-  if (bgEffect && bgEffect !== 'off') return null;
+  // CORE FIX: Directly apply the background image to the Command Deck <main> element
+  // This overrides the hardcoded CSS rule and actually changes what the user sees
+  useEffect(() => {
+    if (theme !== 'light') return;
+    if (bgEffect && bgEffect !== 'off') return;
 
-  return (
-    <div
-      className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: -1 }}
-    >
-      <div
-        className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-        style={{
-          opacity,
-          backgroundImage: `url(${backgrounds[currentIndex]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-      {/* Subtle overlay so content stays readable */}
-      <div className="absolute inset-0 bg-white/60" />
-    </div>
-  );
+    const mainEl = document.querySelector('main[data-page="CommandDeck"]');
+    if (mainEl) {
+      mainEl.style.backgroundImage = `url(${backgrounds[currentIndex]})`;
+      mainEl.style.backgroundSize = 'cover';
+      mainEl.style.backgroundPosition = 'center';
+      mainEl.style.backgroundAttachment = 'fixed';
+    }
+
+    return () => {
+      // Clean up when unmounting or theme changes
+      const el = document.querySelector('main[data-page="CommandDeck"]');
+      if (el) {
+        el.style.backgroundImage = '';
+        el.style.backgroundSize = '';
+        el.style.backgroundPosition = '';
+        el.style.backgroundAttachment = '';
+      }
+    };
+  }, [theme, bgEffect, backgrounds, currentIndex]);
+
+  // Also observe for the main element appearing (page navigation)
+  useEffect(() => {
+    if (theme !== 'light') return;
+    if (bgEffect && bgEffect !== 'off') return;
+
+    const observer = new MutationObserver(() => {
+      const mainEl = document.querySelector('main[data-page="CommandDeck"]');
+      if (mainEl && !mainEl.style.backgroundImage?.includes(backgrounds[currentIndex])) {
+        mainEl.style.backgroundImage = `url(${backgrounds[currentIndex]})`;
+        mainEl.style.backgroundSize = 'cover';
+        mainEl.style.backgroundPosition = 'center';
+        mainEl.style.backgroundAttachment = 'fixed';
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-page'] });
+    return () => observer.disconnect();
+  }, [theme, bgEffect, backgrounds, currentIndex]);
+
+  // No visual DOM output needed — we apply directly to <main>
+  return null;
 }
