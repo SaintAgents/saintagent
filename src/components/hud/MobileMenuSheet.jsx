@@ -80,6 +80,24 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
   const [menuMode, setMenuMode] = useState(() => {
     try { return localStorage.getItem('mobileMenuMode') || 'simple'; } catch { return 'simple'; }
   });
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    try { return localStorage.getItem('theme') || 'light'; } catch { return 'light'; }
+  });
+
+  useEffect(() => {
+    const handleThemeChange = (e) => {
+      if (e.detail?.theme) setCurrentTheme(e.detail.theme);
+    };
+    window.addEventListener('themeChange', handleThemeChange);
+    return () => window.removeEventListener('themeChange', handleThemeChange);
+  }, []);
+
+  const switchTheme = (themeId) => {
+    setCurrentTheme(themeId);
+    localStorage.setItem('theme', themeId);
+    document.documentElement.setAttribute('data-theme', themeId);
+    window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme: themeId } }));
+  };
 
   // Listen for view mode changes
   useEffect(() => {
