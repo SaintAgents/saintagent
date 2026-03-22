@@ -420,25 +420,56 @@ export default function SidePanel({
   const walletAvailable = profile?.ggg_balance ?? 0;
   // RP info no longer needed in wallet display
 
-  // Fetch total users and online users - DRASTICALLY reduced to prevent rate limits
-  const { data: allUserProfiles = [] } = useQuery({
-    queryKey: ['allUserProfilesCount'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
+  // Fetch total users from User entity (has ALL users, not capped at 100)
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsersCount'],
+    queryFn: () => base44.entities.User.list('-created_date', 500),
     staleTime: 600000,
     refetchInterval: 600000,
     refetchOnWindowFocus: false,
     retry: 1
   });
 
-  const totalUsers = allUserProfiles.length;
-  const onlineUsers = allUserProfiles.filter(u => {
-    if (!u.last_seen_at) return false;
-    const lastSeen = new Date(u.last_seen_at);
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    return lastSeen > fiveMinutesAgo;
-  }).length;
+  // Fetch ALL user profiles for region/avatar data
+  const { data: allUserProfiles = [] } = useQuery({
+    queryKey: ['allUserProfilesPanel'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
+    staleTime: 600000,
+    refetchInterval: 600000,
+    refetchOnWindowFocus: false,
+    retry: 1
+  });
 
-  // Region breakdown
+  // Use LiveStatus entity for accurate online detection
+  const { data: liveStatuses = [] } = useQuery({
+    queryKey: ['liveStatusesPanel'],
+    queryFn: () => base44.entities.LiveStatus.list('-last_heartbeat', 200),
+    staleTime: 30000,
+    refetchInterval: 30000,
+    refetchOnWindowFocus: false,
+    retry: 1
+  });
+
+  const totalUsers = allUsers.length;
+  const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+  const onlineLiveStatuses = liveStatuses.filter(ls =>
+    ls.status !== 'offline' && ls.last_heartbeat && new Date(ls.last_heartbeat) > twoMinutesAgo
+  );
+  const onlineUsers = onlineLiveStatuses.length;
+  // Build online user details (avatar + name) by matching to profiles
+  const onlineUserDetails = React.useMemo(() => {
+    return onlineLiveStatuses.map(ls => {
+      const prof = allUserProfiles.find(p => p.user_id === ls.user_id);
+      return {
+        user_id: ls.user_id,
+        display_name: prof?.display_name || ls.user_id?.split('@')[0] || 'User',
+        avatar_url: prof?.avatar_url,
+        status: ls.status,
+      };
+    });
+  }, [onlineLiveStatuses, allUserProfiles]);
+
+  // Region breakdown - use allUsers for total count, profiles for region data
   const regionCounts = React.useMemo(() => {
     const counts = { 'North America': 0, 'Europe': 0, 'Asia': 0, 'Other': 0 };
     allUserProfiles.forEach(u => {
@@ -1072,16 +1103,42 @@ export default function SidePanel({
               </button>
             </div>
             <CollapsibleCard title="Online Now" icon={Users} onPopout={() => setOnlinePopupOpen(true)}>
-              <div 
-                className="p-4 rounded-xl bg-slate-50 border cursor-pointer hover:bg-emerald-50 hover:border-emerald-200 transition-colors"
-                onClick={() => window.location.href = createPageUrl('Profiles') + '?filter=online'}
-              >
-                <p className="text-xs text-slate-500 mb-1">Online Now</p>
-                <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  {onlineUsers}
-                </p>
-                <p className="text-xs text-slate-400 mt-1">Updates every 10s</p>
+              <div className="p-4 rounded-xl bg-slate-50 border">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs text-slate-500">Online Now</p>
+                  <p className="text-lg font-bold text-emerald-600 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    {onlineUsers}
+                  </p>
+                </div>
+                {onlineUserDetails.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {onlineUserDetails.slice(0, 12).map((u) => (
+                      <button
+                        key={u.user_id}
+                        onClick={() => {
+                          const event = new CustomEvent('openProfile', { detail: { userId: u.user_id } });
+                          document.dispatchEvent(event);
+                        }}
+                        className="relative group"
+                        title={u.display_name}
+                      >
+                        <Avatar className="w-7 h-7 ring-2 ring-emerald-400 ring-offset-1">
+                          <AvatarImage src={u.avatar_url} />
+                          <AvatarFallback className="bg-emerald-100 text-emerald-700 text-[10px] font-medium">
+                            {u.display_name?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
+                      </button>
+                    ))}
+                    {onlineUserDetails.length > 12 && (
+                      <span className="text-[10px] text-slate-400 self-center ml-1">+{onlineUserDetails.length - 12}</span>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 mt-1">No users online right now</p>
+                )}
               </div>
             </CollapsibleCard>
 
