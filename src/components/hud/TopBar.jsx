@@ -360,11 +360,15 @@ export default function TopBar({
             <button
               key={t.id}
               onClick={() => {
+                // Always set immediately for instant feedback
+                localStorage.setItem('theme', t.id);
+                document.documentElement.setAttribute('data-theme', t.id);
+                setCurrentTheme(t.id);
+                // Notify Layout via prop callback or custom event
                 if (onThemeToggle) {
                   onThemeToggle(t.id);
                 } else {
-                  localStorage.setItem('theme', t.id);
-                  document.documentElement.setAttribute('data-theme', t.id);
+                  window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme: t.id } }));
                 }
               }}
               className={cn(
