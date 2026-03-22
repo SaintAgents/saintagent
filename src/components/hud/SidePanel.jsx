@@ -671,12 +671,29 @@ export default function SidePanel({
 
               <CollapsibleCard title="Online Now" icon={Users} onPopout={() => setOnlinePopupOpen(true)}>
                 <div className="p-4 rounded-xl bg-slate-50 border">
-                  <p className="text-xs text-slate-500 mb-1">Online Now</p>
-                  <p className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    {onlineUsers}
-                  </p>
-                  <p className="text-xs text-slate-400 mt-1">Updates every 10s</p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-slate-500">Online Now</p>
+                    <p className="text-lg font-bold text-emerald-600 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      {onlineUsers}
+                    </p>
+                  </div>
+                  {onlineUserDetails.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {onlineUserDetails.slice(0, 8).map((u) => (
+                        <div key={u.user_id} className="relative" title={u.display_name}>
+                          <Avatar className="w-7 h-7 ring-2 ring-emerald-400 ring-offset-1">
+                            <AvatarImage src={u.avatar_url} />
+                            <AvatarFallback className="bg-emerald-100 text-emerald-700 text-[10px]">
+                              {u.display_name?.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-400 mt-1">No users online</p>
+                  )}
                 </div>
               </CollapsibleCard>
 
