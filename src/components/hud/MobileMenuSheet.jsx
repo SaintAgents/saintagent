@@ -7,7 +7,7 @@ import {
   Trophy, Folder, Radio, UserCircle, HelpCircle,
   Heart, Zap, LayoutDashboard, MessageSquare, Compass,
   UserPlus, BookOpen, Activity, Globe, Briefcase, PanelLeft, Orbit, Newspaper,
-  LifeBuoy, MessagesSquare
+  LifeBuoy, MessagesSquare, Sun, Moon, Terminal
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
