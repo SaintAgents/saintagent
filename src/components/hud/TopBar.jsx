@@ -107,7 +107,9 @@ export default function TopBar({
   sidebarCollapsed,
   isCollapsed,
   onToggleCollapse,
-  currentPageName
+  currentPageName,
+  theme: themeProp,
+  onThemeToggle
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
