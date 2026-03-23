@@ -8,7 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, Loader2, Save, X, Tag, Plus } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Sparkles, Loader2, Save, X, Tag, Plus, ChevronDown, Wand2, MessageSquare, Handshake, TrendingUp, Heart, RefreshCw, UserPlus, Megaphone, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_OPTIONS = [
@@ -40,6 +41,7 @@ export default function PitchEditorDialog({ open, onClose, template, currentUser
   });
   const [tagInput, setTagInput] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [aiMenuOpen, setAiMenuOpen] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -74,33 +76,78 @@ export default function PitchEditorDialog({ open, onClose, template, currentUser
     }
   });
 
-  const generateAI = async () => {
+  const AI_SUGGESTIONS = [
+    { id: 'cold_intro', label: 'Cold Introduction', desc: 'First contact with a new lead', icon: UserPlus, category: 'cold_pitch' },
+    { id: 'warm_followup', label: 'Warm Follow-Up', desc: 'After an initial meeting or call', icon: MessageSquare, category: 'warm_pitch' },
+    { id: 'partnership_proposal', label: 'Partnership Proposal', desc: 'Strategic collaboration pitch', icon: Handshake, category: 'partnership' },
+    { id: 'investor_pitch', label: 'Investor Pitch', desc: 'Funding or investment ask', icon: DollarSign, category: 'investor' },
+    { id: 'referral_ask', label: 'Referral Request', desc: 'Ask for an intro or referral', icon: Heart, category: 'referral' },
+    { id: 're_engage', label: 'Re-engagement', desc: 'Reconnect with a cold contact', icon: RefreshCw, category: 're_engagement' },
+    { id: 'value_offer', label: 'Value-First Offer', desc: 'Lead with free value or insight', icon: TrendingUp, category: 'nurture' },
+    { id: 'announcement', label: 'News / Announcement', desc: 'Share an update or launch', icon: Megaphone, category: 'custom' },
+    { id: 'custom_ai', label: 'Custom from Current Fields', desc: 'Generate based on what you\'ve typed', icon: Wand2, category: null },
+  ];
+
+  const generateAI = async (suggestion) => {
+    setAiMenuOpen(false);
     setGenerating(true);
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Generate a professional ${form.category.replace('_', ' ')} email pitch template.
+
+    // If a suggestion has a category, update the form category
+    if (suggestion?.category) {
+      setForm(prev => ({ ...prev, category: suggestion.category }));
+    }
+
+    const styleContext = suggestion?.id === 'custom_ai'
+      ? `Based on the user's existing input:
+Name: ${form.name || 'not set'}
 Category: ${form.category}
 Type: ${form.pitch_type}
-${form.name ? `Purpose: ${form.name}` : ''}
+Current subject: ${form.subject || 'none'}
+Current body: ${form.body || 'none'}
 
-Use these placeholders where appropriate: {name}, {first_name}, {company}, {role}, {domain}, {your_name}, {topic}, {value_prop}
+Improve and expand on what they have, or generate fresh if empty.`
+      : `Style: ${suggestion?.label || 'Professional pitch'}
+Description: ${suggestion?.desc || ''}`;
 
-Create a compelling, personalized pitch that:
-1. Has an engaging subject line
-2. Opens with a hook relevant to the recipient
-3. Delivers clear value proposition
-4. Ends with a specific call to action
-5. Is under 200 words for the body
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are an expert email copywriter. Generate a high-converting email pitch template.
 
-Return JSON.`,
+${styleContext}
+
+Category: ${suggestion?.category || form.category}
+Pitch Type: ${form.pitch_type}
+${form.name ? `Purpose/Name: ${form.name}` : ''}
+
+IMPORTANT: Use these placeholders in the email where appropriate:
+- {name} or {first_name} for recipient's name
+- {company} for their company
+- {role} for their role
+- {domain} for their industry
+- {your_name} for the sender
+- {topic} for the main topic
+- {value_prop} for the value proposition
+
+Requirements:
+1. Catchy, specific subject line (not generic)
+2. Strong opening hook (first line must grab attention)
+3. Clear value proposition in 1-2 sentences
+4. Social proof or credibility element if possible
+5. Specific, easy call to action
+6. Professional but conversational tone
+7. Under 180 words for the body
+8. Include a compelling pitch name
+
+Return as JSON with name, subject, and body fields.`,
       response_json_schema: {
         type: "object",
         properties: {
-          name: { type: "string" },
-          subject: { type: "string" },
-          body: { type: "string" }
+          name: { type: "string", description: "A short descriptive name for this pitch template" },
+          subject: { type: "string", description: "The email subject line" },
+          body: { type: "string", description: "The full email body" }
         }
       }
     });
+
     if (result) {
       setForm(prev => ({
         ...prev,
@@ -208,16 +255,46 @@ Return JSON.`,
           <div>
             <div className="flex items-center justify-between mb-1">
               <Label>Email Body</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs gap-1.5"
-                onClick={generateAI}
-                disabled={generating}
-              >
-                {generating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-amber-500" />}
-                AI Generate
-              </Button>
+              <Popover open={aiMenuOpen} onOpenChange={setAiMenuOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs gap-1.5"
+                    disabled={generating}
+                  >
+                    {generating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-amber-500" />}
+                    AI Generate
+                    <ChevronDown className="w-3 h-3 ml-0.5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-80 p-1.5">
+                  <div className="px-2 py-1.5 mb-1">
+                    <p className="text-xs font-semibold text-slate-700">Choose a pitch style</p>
+                    <p className="text-xs text-slate-400">AI will generate a full pitch template</p>
+                  </div>
+                  <div className="space-y-0.5 max-h-72 overflow-y-auto">
+                    {AI_SUGGESTIONS.map(s => {
+                      const Icon = s.icon;
+                      return (
+                        <button
+                          key={s.id}
+                          onClick={() => generateAI(s)}
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-violet-50 transition-colors text-left group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-violet-100 group-hover:bg-violet-200 flex items-center justify-center shrink-0 transition-colors">
+                            <Icon className="w-4 h-4 text-violet-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-800">{s.label}</p>
+                            <p className="text-xs text-slate-500 truncate">{s.desc}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <Textarea
               placeholder="Write your pitch email..."
