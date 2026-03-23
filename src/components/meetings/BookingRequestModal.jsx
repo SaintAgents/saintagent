@@ -282,83 +282,57 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               />
             </div>
 
-            {/* Meeting Type */}
-            <div className="space-y-2">
-              <Label>Meeting Type</Label>
-              <Select value={meetingType} onValueChange={setMeetingType}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="casual">Casual Chat</SelectItem>
-                  <SelectItem value="collaboration">Collaboration</SelectItem>
-                  <SelectItem value="mentorship">Mentorship</SelectItem>
-                  <SelectItem value="consultation">Consultation</SelectItem>
-                  <SelectItem value="mission">Mission Planning</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Date & Time */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Meeting Type & Duration Row */}
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !selectedDate && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {selectedDate ? format(selectedDate, "MMM d, yyyy") : "Pick a date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Time</Label>
-                <Select value={selectedTime} onValueChange={setSelectedTime}>
+                <Label>Meeting Type</Label>
+                <Select value={meetingType} onValueChange={setMeetingType}>
                   <SelectTrigger>
-                    <Clock className="w-4 h-4 mr-2" />
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="max-h-60">
-                    {timeSlots.map(time => (
-                      <SelectItem key={time} value={time}>{time}</SelectItem>
-                    ))}
+                  <SelectContent>
+                    <SelectItem value="casual">Casual Chat</SelectItem>
+                    <SelectItem value="collaboration">Collaboration</SelectItem>
+                    <SelectItem value="mentorship">Mentorship</SelectItem>
+                    <SelectItem value="consultation">Consultation</SelectItem>
+                    <SelectItem value="mission">Mission Planning</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Duration</Label>
+                <Select value={duration.toString()} onValueChange={(v) => { setDuration(parseInt(v)); setSelectedSlot(null); }}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="15">15 minutes</SelectItem>
+                    <SelectItem value="30">30 minutes</SelectItem>
+                    <SelectItem value="45">45 minutes</SelectItem>
+                    <SelectItem value="60">1 hour</SelectItem>
+                    <SelectItem value="90">1.5 hours</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            {/* Duration */}
+            {/* Availability Slot Picker */}
             <div className="space-y-2">
-              <Label>Duration</Label>
-              <Select value={duration.toString()} onValueChange={(v) => setDuration(parseInt(v))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="15">15 minutes</SelectItem>
-                  <SelectItem value="30">30 minutes</SelectItem>
-                  <SelectItem value="45">45 minutes</SelectItem>
-                  <SelectItem value="60">1 hour</SelectItem>
-                  <SelectItem value="90">1.5 hours</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>Pick an Available Time</Label>
+              <div className="border rounded-xl p-3 bg-slate-50/50">
+                <AvailabilitySlotPicker
+                  targetUserId={selectedUser?.user_id || selectedUser?.email}
+                  duration={duration}
+                  onSelect={setSelectedSlot}
+                  selectedSlot={selectedSlot}
+                />
+              </div>
+              {selectedSlot && (
+                <p className="text-xs text-emerald-600 flex items-center gap-1">
+                  <CalendarIcon className="w-3 h-3" />
+                  Selected: {format(new Date(selectedSlot.start), 'EEE, MMM d · h:mm a')} – {format(new Date(selectedSlot.end), 'h:mm a')}
+                </p>
+              )}
             </div>
 
             {/* Location Type */}
@@ -422,6 +396,21 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               </>
             )}
 
+            {/* Google Calendar Option */}
+            <div className="flex items-center justify-between p-3 rounded-lg bg-violet-50 border border-violet-100">
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="w-4 h-4 text-violet-600" />
+                <div>
+                  <p className="text-sm font-medium text-violet-900">Add to Google Calendar</p>
+                  <p className="text-xs text-violet-600">Creates a calendar event with invite</p>
+                </div>
+              </div>
+              <Switch
+                checked={addToGoogleCalendar}
+                onCheckedChange={setAddToGoogleCalendar}
+              />
+            </div>
+
             {/* Message */}
             <div className="space-y-2">
               <Label>Message (optional)</Label>
@@ -436,7 +425,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
             {/* Submit */}
             <Button
               onClick={handleSubmit}
-              disabled={!selectedDate || submitting}
+              disabled={!selectedSlot || submitting}
               className="w-full bg-violet-600 hover:bg-violet-700 gap-2"
             >
               {submitting ? (
