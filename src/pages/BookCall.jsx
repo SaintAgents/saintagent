@@ -19,17 +19,23 @@ import { toast } from 'sonner';
 import BackButton from '@/components/hud/BackButton';
 import TimeSlotGrid from '@/components/booking/TimeSlotGrid';
 import BookingConfirmation from '@/components/booking/BookingConfirmation';
+import CallIntakeForm from '@/components/booking/CallIntakeForm';
+import BookingNotAvailable from '@/components/booking/BookingNotAvailable';
 
 export default function BookCall() {
   const urlParams = new URLSearchParams(window.location.search);
   const hostUserId = urlParams.get('host');
 
-  const [step, setStep] = useState(1); // 1=select date, 2=select time, 3=confirm details, 4=success
+  const [step, setStep] = useState(1); // 1=select date, 2=select time, 3=intake form, 4=success
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
-  const [meetingType, setMeetingType] = useState('casual');
+  const [intakeForm, setIntakeForm] = useState({
+    title: '',
+    meetingType: 'casual',
+    topics: [],
+    message: '',
+    additionalNotes: ''
+  });
   const [bookedEvent, setBookedEvent] = useState(null);
   const queryClient = useQueryClient();
 
