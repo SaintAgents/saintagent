@@ -8,99 +8,96 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action, ...params } = await req.json();
+    const body = await req.json();
+    const { action } = body;
 
+    // Get Google Calendar access token
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+    const authHeader = { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' };
 
-    switch (action) {
-      case 'getFreeBusy': {
-        // Get busy times for a date range
-        const { timeMin, timeMax } = params;
-        const res = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            timeMin,
-            timeMax,
-            items: [{ id: 'primary' }]
-          })
-        });
+    if (action === 'getFreeBusy') {
+      // Get free/busy info for a date range
+      const { dateFrom, dateTo } = body;
+      
+      const freeBusyRes = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
+        method: 'POST',
+        headers: authHeader,
+        body: JSON.stringify({
+          timeMin: dateFrom,
+          timeMax: dateTo,
+          items: [{ id: 'primary' }]
+        })
+      });
 
-        if (!res.ok) {
-          const err = await res.text();
-          console.error('FreeBusy error:', err);
-          return Response.json({ error: 'Failed to fetch calendar availability' }, { status: 500 });
-        }
-
-        const data = await res.json();
-        const busySlots = data.calendars?.primary?.busy || [];
-        return Response.json({ success: true, busySlots });
+      if (!freeBusyRes.ok) {
+        const err = await freeBusyRes.text();
+        console.error('FreeBusy API error:', freeBusyRes.status, err);
+        return Response.json({ error: 'Failed to fetch calendar availability', detail: err }, { status: 500 });
       }
 
-      case 'createEvent': {
-        // Create a Google Calendar event
-        const { summary, description, startTime, endTime, attendeeEmails } = params;
-        
-        const eventBody = {
-          summary,
-          description: description || '',
-          start: {
-            dateTime: startTime,
-            timeZone: 'UTC'
-          },
-          end: {
-            dateTime: endTime,
-            timeZone: 'UTC'
-          },
-          attendees: (attendeeEmails || []).map(email => ({ email })),
-          reminders: {
-            useDefault: false,
-            overrides: [
-              { method: 'email', minutes: 30 },
-              { method: 'popup', minutes: 10 }
-            ]
-          }
-        };
-
-        const res = await fetch(
-          'https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=all',
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(eventBody)
-          }
-        );
-
-        if (!res.ok) {
-          const err = await res.text();
-          console.error('Create event error:', err);
-          return Response.json({ error: 'Failed to create calendar event' }, { status: 500 });
-        }
-
-        const event = await res.json();
-        return Response.json({
-          success: true,
-          event: {
-            id: event.id,
-            htmlLink: event.htmlLink,
-            summary: event.summary,
-            start: event.start,
-            end: event.end
-          }
-        });
-      }
-
-      default:
-        return Response.json({ error: 'Invalid action. Use: getFreeBusy, createEvent' }, { status: 400 });
+      const freeBusyData = await freeBusyRes.json();
+      const busySlots = freeBusyData.calendars?.primary?.busy || [];
+      
+      return Response.json({ success: true, busySlots });
     }
+
+    if (action === 'createEvent') {
+      // Create a Google Calendar event
+      const { summary, description, startTime, endTime, attendeeEmail, location, meetingLink } = body;
+
+      const event = {
+        summary,
+        description: description || '',
+        start: {
+          dateTime: startTime,
+          timeZone: 'UTC'
+        },
+        end: {
+          dateTime: endTime,
+          timeZone: 'UTC'
+        },
+        attendees: attendeeEmail ? [{ email: attendeeEmail }] : [],
+        reminders: {
+          useDefault: false,
+          overrides: [
+            { method: 'email', minutes: 60 },
+            { method: 'popup', minutes: 15 }
+          ]
+        }
+      };
+
+      if (location) event.location = location;
+      if (meetingLink) {
+        event.description = (event.description ? event.description + '\n\n' : '') + 
+          `Join meeting: ${meetingLink}`;
+      }
+
+      const createRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=all', {
+        method: 'POST',
+        headers: authHeader,
+        body: JSON.stringify(event)
+      });
+
+      if (!createRes.ok) {
+        const err = await createRes.text();
+        console.error('Create event error:', err);
+        return Response.json({ error: 'Failed to create calendar event' }, { status: 500 });
+      }
+
+      const createdEvent = await createRes.json();
+      return Response.json({ 
+        success: true, 
+        event: {
+          id: createdEvent.id,
+          htmlLink: createdEvent.htmlLink,
+          hangoutLink: createdEvent.hangoutLink
+        }
+      });
+    }
+
+    return Response.json({ error: 'Unknown action' }, { status: 400 });
   } catch (error) {
-    console.error('Calendar API error:', error);
+    console.error('Calendar booking error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
