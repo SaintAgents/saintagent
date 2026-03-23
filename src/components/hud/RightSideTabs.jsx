@@ -451,14 +451,25 @@ export default function RightSideTabs() {
                 <p className="text-xs text-white/70">Here to help</p>
               </div>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
-              onClick={() => { setHelpOpen(false); setHelpHovered(false); }}
-            >
-              <X className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
+                onClick={toggleAutoOpen}
+                title={autoOpenHelp ? "Auto-open is ON — click to stop auto-opening on new pages" : "Auto-open is OFF — click to auto-open on new pages"}
+              >
+                {autoOpenHelp ? <BellRing className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
+                onClick={() => { setHelpOpen(false); setHelpHovered(false); }}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Messages */}
