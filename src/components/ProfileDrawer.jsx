@@ -200,8 +200,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   };
 
   const handleBook = () => {
-    // Navigate to marketplace with this user's listings
-    window.location.href = createPageUrl('Marketplace') + `?seller=${userId}`;
+    window.location.href = '/BookCall?host=' + encodeURIComponent(userId);
   };
 
   if (!profile) return null;
