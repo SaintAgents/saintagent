@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, ArrowLeft } from 'lucide-react';
+import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
