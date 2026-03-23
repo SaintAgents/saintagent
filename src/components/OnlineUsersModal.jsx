@@ -67,10 +67,9 @@ export default function OnlineUsersModal({ open, onClose }) {
     }
   });
 
-  // Filter online users using LiveStatus data, fall back to profile status
-  const onlineProfiles = profiles.filter(p => 
-    onlineUserIds.has(p.user_id) || p.status === 'online' || p.status === 'focus'
-  );
+  // Filter online users using ONLY LiveStatus data — profile.status is unreliable
+  // (it reflects a preference, not actual presence)
+  const onlineProfiles = profiles.filter(p => onlineUserIds.has(p.user_id));
 
   // Apply filters
   let filteredProfiles = onlineProfiles.filter(profile => {
