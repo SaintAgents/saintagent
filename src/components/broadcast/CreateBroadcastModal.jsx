@@ -515,13 +515,33 @@ export default function CreateBroadcastModal({ open, onClose }) {
             currentUserEmail={currentUser?.email}
           />
 
-          {/* Submit */}
+          {/* Start Now */}
+          <Button
+            onClick={handleStartNow}
+            disabled={!title || submitting}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
+          >
+            {submitting && startNowMode ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {createZoomLink ? 'Creating Zoom & Starting...' : 'Starting...'}
+              </>
+            ) : (
+              <>
+                <Zap className="w-4 h-4" />
+                Start Meeting Now!
+              </>
+            )}
+          </Button>
+
+          {/* Schedule for Later */}
           <Button
             onClick={handleSubmit}
             disabled={!title || !selectedDate || submitting}
-            className="w-full bg-violet-600 hover:bg-violet-700 gap-2"
+            variant="outline"
+            className="w-full gap-2"
           >
-            {submitting ? (
+            {submitting && !startNowMode ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
                 {createZoomLink ? 'Creating Zoom & Scheduling...' : 'Scheduling...'}
