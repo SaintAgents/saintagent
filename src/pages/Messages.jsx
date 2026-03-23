@@ -349,11 +349,22 @@ export default function Messages() {
                   size="sm"
                   className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
                   onClick={async () => {
-                    const mine = allMessages || [];
-                    for (const m of mine) {
+                    const mine = (allMessages || []).filter(m => {
                       const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                      if (list.includes(user?.email)) continue;
-                      try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); } catch (_) {}
+                      return !list.includes(user?.email);
+                    });
+                    for (let i = 0; i < mine.length; i++) {
+                      const m = mine[i];
+                      const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                      try { 
+                        await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); 
+                      } catch (_) {
+                        // Rate limited - wait and retry
+                        await new Promise(r => setTimeout(r, 2000));
+                        try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); } catch (_2) {}
+                      }
+                      // Throttle: pause every 5 messages
+                      if ((i + 1) % 5 === 0) await new Promise(r => setTimeout(r, 1000));
                     }
                     queryClient.invalidateQueries({ queryKey: ['messages'] });
                   }}>
@@ -407,11 +418,21 @@ export default function Messages() {
                     return msgConvId === conv.id || 
                       (!conv.isGroup && (m.from_user_id === conv.otherUser.id || m.to_user_id === conv.otherUser.id));
                   });
-                  // Delete all messages for this user (sequential to avoid rate limits)
-                  for (const m of msgs) {
+                  // Delete all messages for this user (throttled to avoid rate limits)
+                  const toDelete = msgs.filter(m => {
                     const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                    if (list.includes(user?.email)) continue;
-                    try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); } catch (_) {}
+                    return !list.includes(user?.email);
+                  });
+                  for (let i = 0; i < toDelete.length; i++) {
+                    const m = toDelete[i];
+                    const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                    try { 
+                      await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); 
+                    } catch (_) {
+                      await new Promise(r => setTimeout(r, 2000));
+                      try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); } catch (_2) {}
+                    }
+                    if ((i + 1) % 5 === 0) await new Promise(r => setTimeout(r, 1000));
                   }
                   // Also try to remove from Conversation entity if it exists
                   const convEntity = conversations.find((c) => c.id === conv.id);
@@ -491,10 +512,21 @@ export default function Messages() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={async () => {
-                    const msgs = allMessages.filter((m) => m.conversation_id === selectedConversation.id);
-                    for (const m of msgs) {
+                    const msgs = allMessages.filter((m) => {
+                      if (m.conversation_id !== selectedConversation.id) return false;
                       const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                      if (!list.includes(user.email)) await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user.email] });
+                      return !list.includes(user.email);
+                    });
+                    for (let i = 0; i < msgs.length; i++) {
+                      const m = msgs[i];
+                      const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
+                      try {
+                        await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user.email] });
+                      } catch (_) {
+                        await new Promise(r => setTimeout(r, 2000));
+                        try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user.email] }); } catch (_2) {}
+                      }
+                      if ((i + 1) % 5 === 0) await new Promise(r => setTimeout(r, 1000));
                     }
                     queryClient.invalidateQueries({ queryKey: ['messages'] });
                   }}>
