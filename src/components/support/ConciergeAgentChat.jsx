@@ -278,7 +278,8 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
 
     try {
       const convo = await base44.agents.getConversation(conversationId);
-      await base44.agents.addMessage(convo, { role: 'user', content: text });
+      const contextPrefix = currentPage ? `[User is on the ${currentPage} page] ` : '';
+      await base44.agents.addMessage(convo, { role: 'user', content: contextPrefix + text });
     } catch (err) {
       console.error('Failed to send message:', err);
       setIsSending(false);
@@ -290,7 +291,8 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
     setIsSending(true);
     try {
       const convo = await base44.agents.getConversation(conversationId);
-      await base44.agents.addMessage(convo, { role: 'user', content: text });
+      const contextPrefix = currentPage ? `[User is on the ${currentPage} page] ` : '';
+      await base44.agents.addMessage(convo, { role: 'user', content: contextPrefix + text });
     } catch (err) {
       console.error('Failed to send message:', err);
       setIsSending(false);
