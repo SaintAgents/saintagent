@@ -805,6 +805,7 @@ export default function Sidebar({
                   )}
                 </CollapsibleContent>
               </Collapsible>
+              )}
               </>
             )}
           </div>
