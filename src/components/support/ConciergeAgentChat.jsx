@@ -150,6 +150,18 @@ export default function ConciergeAgentChat({ onClose }) {
     }
   };
 
+  const sendQuickAction = async (text) => {
+    if (isSending || !conversationId) return;
+    setIsSending(true);
+    try {
+      const convo = await base44.agents.getConversation(conversationId);
+      await base44.agents.addMessage(convo, { role: 'user', content: text });
+    } catch (err) {
+      console.error('Failed to send message:', err);
+      setIsSending(false);
+    }
+  };
+
   const QUICK_ACTIONS = [
     { label: 'Show my upcoming meetings', icon: '📅' },
     { label: 'Update my status to online', icon: '🟢' },
@@ -196,7 +208,7 @@ export default function ConciergeAgentChat({ onClose }) {
                 {QUICK_ACTIONS.map((action, idx) => (
                   <button
                     key={idx}
-                    onClick={() => { setInput(action.label); setTimeout(() => sendMessage(), 0); }}
+                    onClick={() => sendQuickAction(action.label)}
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors text-left"
                   >
                     <span>{action.icon}</span>
