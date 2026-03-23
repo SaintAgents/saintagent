@@ -349,20 +349,20 @@ export default function BookCall() {
           </div>
         )}
 
-        {/* Step 3: Confirm Details */}
+        {/* Step 3: Intake Form + Confirm */}
         {step === 3 && selectedSlot && (
           <div className="bg-white rounded-xl border p-6 space-y-5">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-900 flex items-center gap-2">
                 <Send className="w-5 h-5 text-violet-600" />
-                Confirm Booking
+                Tell {hostProfile?.display_name || 'the host'} about your call
               </h3>
               <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
                 <ArrowLeft className="w-4 h-4 mr-1" /> Change Time
               </Button>
             </div>
 
-            {/* Summary */}
+            {/* Time Summary */}
             <div className="bg-violet-50 rounded-lg p-4 border border-violet-100">
               <div className="flex items-center gap-3">
                 <CalendarIcon className="w-5 h-5 text-violet-600" />
@@ -377,42 +377,11 @@ export default function BookCall() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <Label>Meeting Title (optional)</Label>
-                <Input
-                  placeholder={`Meeting with ${hostProfile?.display_name || 'Host'}`}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label>Meeting Type</Label>
-                <Select value={meetingType} onValueChange={setMeetingType}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="casual">Casual Chat</SelectItem>
-                    <SelectItem value="collaboration">Collaboration</SelectItem>
-                    <SelectItem value="mentorship">Mentorship</SelectItem>
-                    <SelectItem value="consultation">Consultation</SelectItem>
-                    <SelectItem value="mission">Mission Planning</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Message (optional)</Label>
-                <Textarea
-                  placeholder="What would you like to discuss?"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  rows={3}
-                />
-              </div>
-            </div>
+            <CallIntakeForm
+              form={intakeForm}
+              onChange={setIntakeForm}
+              hostName={hostProfile?.display_name}
+            />
 
             <Button
               onClick={() => bookingMutation.mutate()}
