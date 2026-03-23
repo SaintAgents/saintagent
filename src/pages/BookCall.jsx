@@ -223,16 +223,16 @@ export default function BookCall() {
     setStep(3);
   };
 
+  const isOwnProfile = currentUser?.email === hostUserId;
+
+  // No host param
   if (!hostUserId) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 flex items-center justify-center p-6">
-        <div className="text-center max-w-md">
-          <CalendarIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">No Host Selected</h2>
-          <p className="text-slate-500">This booking page requires a host parameter. Navigate to a user's profile to book a call with them.</p>
-        </div>
-      </div>
-    );
+    return <BookingNotAvailable hostProfile={null} isOwnProfile={false} />;
+  }
+
+  // Host hasn't enabled booking (or no pref record)
+  if (availPrefs !== undefined && (!availPref || !availPref.booking_enabled)) {
+    return <BookingNotAvailable hostProfile={hostProfile} isOwnProfile={isOwnProfile} />;
   }
 
   if (step === 4 && bookedEvent) {
@@ -240,7 +240,7 @@ export default function BookCall() {
       event={bookedEvent} 
       hostProfile={hostProfile} 
       selectedSlot={selectedSlot}
-      meetingType={meetingType}
+      meetingType={intakeForm.meetingType}
     />;
   }
 
