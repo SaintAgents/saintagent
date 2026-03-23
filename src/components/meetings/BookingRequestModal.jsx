@@ -7,13 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin, Loader2, Mail } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import AvailabilitySlotPicker from './AvailabilitySlotPicker';
 
 export default function BookingRequestModal({ open, onClose, preSelectedUser = null }) {
   const [step, setStep] = useState(preSelectedUser ? 2 : 1);
@@ -30,8 +29,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
       setStep(1);
     }
   }, [preSelectedUser]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState('10:00');
+  const [selectedSlot, setSelectedSlot] = useState(null);
   const [meetingType, setMeetingType] = useState('casual');
   const [locationType, setLocationType] = useState('online');
   const [message, setMessage] = useState('');
@@ -40,6 +38,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   const [submitting, setSubmitting] = useState(false);
   const [createZoomLink, setCreateZoomLink] = useState(true);
   const [sendEmailInvite, setSendEmailInvite] = useState(true);
+  const [addToGoogleCalendar, setAddToGoogleCalendar] = useState(true);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -81,7 +80,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   };
 
   const handleSubmit = async () => {
-    if (!selectedUser || !selectedDate || !currentUser) return;
+    if (!selectedUser || !selectedSlot || !currentUser) return;
     
     // Get guest user_id - handle both direct user_id and email fallbacks
     const guestUserId = selectedUser.user_id || selectedUser.email || selectedUser.id;
@@ -92,9 +91,8 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
     
     setSubmitting(true);
     try {
-      const [hours, minutes] = selectedTime.split(':');
-      const scheduledTime = new Date(selectedDate);
-      scheduledTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      const scheduledTime = new Date(selectedSlot.start);
+      const endTime = new Date(selectedSlot.end);
 
       const me = myProfile?.[0];
       const guestName = selectedUser.display_name || selectedUser.name || 'User';
@@ -133,6 +131,26 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
         }
       }
 
+      // Create Google Calendar event if enabled
+      let calendarEventLink = '';
+      if (addToGoogleCalendar) {
+        try {
+          const calRes = await base44.functions.invoke('calendarBooking', {
+            action: 'createEvent',
+            summary: title || `Meeting with ${guestName}`,
+            description: `${meetingType} meeting\n${message || ''}\n${zoomJoinUrl ? 'Zoom: ' + zoomJoinUrl : ''}`.trim(),
+            startTime: scheduledTime.toISOString(),
+            endTime: endTime.toISOString(),
+            attendeeEmails: [currentUser.email, guestUserId].filter(Boolean)
+          });
+          if (calRes.data?.success) {
+            calendarEventLink = calRes.data.event.htmlLink;
+          }
+        } catch (calError) {
+          console.error('Failed to create Google Calendar event:', calError);
+        }
+      }
+
       // Create the meeting request
       await base44.entities.Meeting.create({
         title: title || `Meeting with ${guestName}`,
@@ -168,8 +186,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
       // Reset form
       setStep(1);
       setSelectedUser(null);
-      setSelectedDate(null);
-      setSelectedTime('10:00');
+      setSelectedSlot(null);
       setMessage('');
       setTitle('');
     } catch (error) {
