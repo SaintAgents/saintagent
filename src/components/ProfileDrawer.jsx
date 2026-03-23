@@ -200,7 +200,12 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   };
 
   const handleBook = () => {
-    window.location.href = '/BookCall?host=' + encodeURIComponent(userId);
+    if (isOwnProfile) {
+      // Guide user to settings to set up availability
+      window.location.href = '/Settings';
+    } else {
+      window.location.href = '/BookCall?host=' + encodeURIComponent(userId);
+    }
   };
 
   if (!profile) return null;
@@ -320,7 +325,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
-                  <Button onClick={handleBook} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm px-3">
+                  <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2 text-sm px-3 border-violet-300 text-violet-700 hover:bg-violet-50">
                     <Calendar className="w-4 h-4" />
                     Book
                   </Button>
