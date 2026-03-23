@@ -1375,6 +1375,7 @@ export default function Sidebar({
                 )}
               </CollapsibleContent>
             </Collapsible>
+            )}
 
             {/* Profile Link */}
             <Link
