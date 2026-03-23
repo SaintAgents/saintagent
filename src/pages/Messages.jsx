@@ -407,12 +407,12 @@ export default function Messages() {
                     return msgConvId === conv.id || 
                       (!conv.isGroup && (m.from_user_id === conv.otherUser.id || m.to_user_id === conv.otherUser.id));
                   });
-                  // Delete all messages for this user
-                  await Promise.all(msgs.map((m) => {
+                  // Delete all messages for this user (sequential to avoid rate limits)
+                  for (const m of msgs) {
                     const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                    if (list.includes(user?.email)) return Promise.resolve();
-                    return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
-                  }));
+                    if (list.includes(user?.email)) continue;
+                    try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); } catch (_) {}
+                  }
                   // Also try to remove from Conversation entity if it exists
                   const convEntity = conversations.find((c) => c.id === conv.id);
                   if (convEntity) {
