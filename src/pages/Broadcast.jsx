@@ -146,7 +146,7 @@ export default function Broadcast() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent">
       {/* Hero Section */}
-      <div className="relative h-64 md:h-72 overflow-hidden">
+      <div className="relative h-96 md:h-[432px] overflow-hidden">
         <img 
           src={HERO_IMAGE}
           alt="Broadcast"
