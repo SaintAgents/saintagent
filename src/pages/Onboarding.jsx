@@ -149,9 +149,11 @@ export default function Onboarding() {
             if (!existingProfiles?.length) {
               const baseHandle = (user.full_name?.split(' ')?.[0] || user.email.split('@')[0] || 'agent').toLowerCase().replace(/[^a-z0-9_]/g, '');
               let handle = baseHandle || 'agent';
-              const collision = await base44.entities.UserProfile.filter({ handle });
-              if (collision?.length) {
-                handle = `${handle}${Math.floor(Math.random() * 1000)}`;
+              // Check for handle collision and keep adding random suffix until unique
+              let collision = await base44.entities.UserProfile.filter({ handle });
+              while (collision?.length) {
+                handle = `${baseHandle}${Math.floor(Math.random() * 10000)}`;
+                collision = await base44.entities.UserProfile.filter({ handle });
               }
               // Create profile WITHOUT sa_number - let assignSaNumber handle it
               await base44.entities.UserProfile.create({
