@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin, Loader2, Mail } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -68,11 +69,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
     );
   }).slice(0, 10);
 
-  const timeSlots = [];
-  for (let h = 6; h <= 22; h++) {
-    timeSlots.push(`${h.toString().padStart(2, '0')}:00`);
-    timeSlots.push(`${h.toString().padStart(2, '0')}:30`);
-  }
+  // timeSlots replaced by AvailabilitySlotPicker
 
   const handleSelectUser = (profile) => {
     setSelectedUser(profile);
