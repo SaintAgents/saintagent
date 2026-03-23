@@ -442,122 +442,138 @@ export default function RightSideTabs() {
           )}
           style={{ maxHeight: 'calc(100vh - 200px)', bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)', right: showChatPanel ? '396px' : '0px' }}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-violet-500 to-purple-600">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <Shield className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white text-sm">Saint Support</h3>
-                <p className="text-xs text-white/70">Here to help</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
-                onClick={toggleAutoOpen}
-                title={autoOpenHelp ? "Auto-open is ON — click to stop auto-opening on new pages" : "Auto-open is OFF — click to auto-open on new pages"}
-              >
-                {autoOpenHelp ? <BellRing className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
-                onClick={() => { setHelpOpen(false); setHelpHovered(false); }}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <ScrollArea className="h-[45vh] p-4" ref={helpScrollRef}>
-            <div className="space-y-4">
-              {helpMessages.map((msg, idx) => (
-                <div key={idx} className={cn("flex gap-2", msg.role === 'user' ? "justify-end" : "justify-start")}>
-                  {msg.role === 'assistant' && (
-                    <Avatar className="w-7 h-7 shrink-0">
-                      <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-300 text-xs">
-                        <Shield className="w-3 h-3" />
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div className={cn(
-                    "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
-                    msg.role === 'user' 
-                      ? "bg-violet-600 text-white rounded-br-sm" 
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm"
-                  )}>
-                    {msg.role === 'assistant' ? (
-                      <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
-                        {msg.content}
-                      </ReactMarkdown>
-                    ) : msg.content}
+          {conciergeMode ? (
+            <ConciergeAgentChat onClose={() => setConciergeMode(false)} />
+          ) : (
+            <>
+              {/* Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-violet-500 to-purple-600">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                    <Shield className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white text-sm">Saint Support</h3>
+                    <p className="text-xs text-white/70">Here to help</p>
                   </div>
                 </div>
-              ))}
-              {helpLoading && (
-                <div className="flex gap-2 justify-start">
-                  <Avatar className="w-7 h-7 shrink-0">
-                    <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-300 text-xs">
-                      <Shield className="w-3 h-3" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3">
-                    <Loader2 className="w-4 h-4 animate-spin text-violet-500" />
-                  </div>
+                <div className="flex items-center gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
+                    onClick={toggleAutoOpen}
+                    title={autoOpenHelp ? "Auto-open is ON — click to stop auto-opening on new pages" : "Auto-open is OFF — click to auto-open on new pages"}
+                  >
+                    {autoOpenHelp ? <BellRing className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
+                    onClick={() => { setHelpOpen(false); setHelpHovered(false); }}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* Quick Questions */}
-            {helpMessages.length <= 1 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Quick questions:</p>
-                <div className="flex flex-wrap gap-2">
-                  {QUICK_QUESTIONS.map((q, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => sendHelpMessage(q.question)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors"
-                    >
-                      <q.icon className="w-3 h-3" />
-                      {q.label}
-                    </button>
+              {/* Messages */}
+              <ScrollArea className="h-[45vh] p-4" ref={helpScrollRef}>
+                <div className="space-y-4">
+                  {helpMessages.map((msg, idx) => (
+                    <div key={idx} className={cn("flex gap-2", msg.role === 'user' ? "justify-end" : "justify-start")}>
+                      {msg.role === 'assistant' && (
+                        <Avatar className="w-7 h-7 shrink-0">
+                          <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-300 text-xs">
+                            <Shield className="w-3 h-3" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      <div className={cn(
+                        "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
+                        msg.role === 'user' 
+                          ? "bg-violet-600 text-white rounded-br-sm" 
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm"
+                      )}>
+                        {msg.role === 'assistant' ? (
+                          <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                            {msg.content}
+                          </ReactMarkdown>
+                        ) : msg.content}
+                      </div>
+                    </div>
                   ))}
+                  {helpLoading && (
+                    <div className="flex gap-2 justify-start">
+                      <Avatar className="w-7 h-7 shrink-0">
+                        <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-300 text-xs">
+                          <Shield className="w-3 h-3" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3">
+                        <Loader2 className="w-4 h-4 animate-spin text-violet-500" />
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-          </ScrollArea>
 
-          {/* Input */}
-          <div className="p-3 border-t border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-[#050505]/80">
-            <button
-              type="button"
-              onClick={() => setFeedbackOpen(true)}
-              className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
-            >
-              <Smile className="w-3.5 h-3.5" />
-              Submit Beta Feedback
-            </button>
-            <form onSubmit={(e) => { e.preventDefault(); sendHelpMessage(helpInput); }} className="flex gap-2">
-              <Input
-                ref={helpInputRef}
-                value={helpInput}
-                onChange={(e) => setHelpInput(e.target.value)}
-                placeholder="Ask anything..."
-                className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
-                disabled={helpLoading}
-              />
-              <Button type="submit" size="icon" className="rounded-xl bg-violet-600 hover:bg-violet-700 shrink-0" disabled={!helpInput.trim() || helpLoading}>
-                <Send className="w-4 h-4" />
-              </Button>
-            </form>
-          </div>
+                {/* Quick Questions */}
+                {helpMessages.length <= 1 && (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Quick questions:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {QUICK_QUESTIONS.map((q, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => sendHelpMessage(q.question)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors"
+                        >
+                          <q.icon className="w-3 h-3" />
+                          {q.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </ScrollArea>
+
+              {/* Input */}
+              <div className="p-3 border-t border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-[#050505]/80">
+                {/* Concierge Agent Button */}
+                <button
+                  type="button"
+                  onClick={() => setConciergeMode(true)}
+                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-900/30 dark:hover:to-teal-900/30 border border-emerald-200 dark:border-emerald-800 transition-all hover:shadow-sm"
+                >
+                  <Bot className="w-4 h-4" />
+                  AI Concierge — Let me do things for you
+                  <Sparkles className="w-3 h-3 text-emerald-500" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFeedbackOpen(true)}
+                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
+                >
+                  <Smile className="w-3.5 h-3.5" />
+                  Submit Beta Feedback
+                </button>
+                <form onSubmit={(e) => { e.preventDefault(); sendHelpMessage(helpInput); }} className="flex gap-2">
+                  <Input
+                    ref={helpInputRef}
+                    value={helpInput}
+                    onChange={(e) => setHelpInput(e.target.value)}
+                    placeholder="Ask anything..."
+                    className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                    disabled={helpLoading}
+                  />
+                  <Button type="submit" size="icon" className="rounded-xl bg-violet-600 hover:bg-violet-700 shrink-0" disabled={!helpInput.trim() || helpLoading}>
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </form>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
