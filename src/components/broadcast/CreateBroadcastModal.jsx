@@ -231,11 +231,6 @@ export default function CreateBroadcastModal({ open, onClose }) {
       setDuration(60);
       setTopics('');
       setCoverImageUrl('');
-    } catch (error) {
-      console.error('Failed to create broadcast:', error);
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   return (
