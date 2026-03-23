@@ -55,6 +55,21 @@ export default function CreateBroadcastModal({ open, onClose }) {
     timeSlots.push(`${h.toString().padStart(2, '0')}:30`);
   }
 
+  const handleStartNow = async () => {
+    if (!title || !currentUser) return;
+    setStartNowMode(true);
+    setSubmitting(true);
+    try {
+      const scheduledTime = new Date(); // right now
+      await doSubmit(scheduledTime);
+    } catch (error) {
+      console.error('Failed to start meeting now:', error);
+    } finally {
+      setSubmitting(false);
+      setStartNowMode(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!title || !selectedDate || !currentUser) return;
     
@@ -63,6 +78,15 @@ export default function CreateBroadcastModal({ open, onClose }) {
       const [hours, minutes] = selectedTime.split(':');
       const scheduledTime = new Date(selectedDate);
       scheduledTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      await doSubmit(scheduledTime);
+    } catch (error) {
+      console.error('Failed to create broadcast:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const doSubmit = async (scheduledTime) => {
 
       const me = myProfile?.[0];
       
