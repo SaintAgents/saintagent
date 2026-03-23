@@ -131,6 +131,25 @@ export default function BookCall() {
     return availPref.days_of_week.includes(dayMap[date.getDay()]);
   };
 
+  // Build structured notes from intake form
+  const buildMeetingNotes = () => {
+    const parts = [];
+    if (intakeForm.meetingType) {
+      const typeLabels = { casual: 'Casual Chat', collaboration: 'Collaboration', mentorship: 'Mentorship', consultation: 'Consultation', mission: 'Mission Planning', in_person: 'In-Person Meetup' };
+      parts.push(`Call Type: ${typeLabels[intakeForm.meetingType] || intakeForm.meetingType}`);
+    }
+    if (intakeForm.topics?.length > 0) {
+      parts.push(`Topics: ${intakeForm.topics.join(', ')}`);
+    }
+    if (intakeForm.message) {
+      parts.push(`\nContext:\n${intakeForm.message}`);
+    }
+    if (intakeForm.additionalNotes) {
+      parts.push(`\nAdditional Notes:\n${intakeForm.additionalNotes}`);
+    }
+    return parts.join('\n');
+  };
+
   const bookingMutation = useMutation({
     mutationFn: async () => {
       if (!selectedSlot || !currentUser) throw new Error('Missing data');
@@ -138,13 +157,14 @@ export default function BookCall() {
       const me = myProfile?.[0];
       const hostName = hostProfile?.display_name || hostUserId;
       const guestName = currentUser.full_name || me?.display_name || 'Guest';
-      const meetingTitle = title || `Meeting with ${hostName}`;
+      const meetingTitle = intakeForm.title || `Meeting with ${hostName}`;
+      const notes = buildMeetingNotes();
 
       // 1. Create Google Calendar event
       const calRes = await base44.functions.invoke('calendarBooking', {
         action: 'createEvent',
         title: meetingTitle,
-        description: `${meetingType} meeting\n\n${message || ''}`.trim(),
+        description: notes,
         startTime: selectedSlot.start,
         endTime: selectedSlot.end,
         guestEmail: currentUser.email,
@@ -162,18 +182,19 @@ export default function BookCall() {
         guest_avatar: me?.avatar_url,
         scheduled_time: selectedSlot.start,
         duration_minutes: availPref?.slot_duration_minutes || 30,
-        meeting_type: meetingType,
+        meeting_type: intakeForm.meetingType,
         location: 'Online',
-        notes: message,
+        notes: notes,
         status: 'scheduled'
       });
 
       // 3. Notify host
+      const typeLabels = { casual: 'casual', collaboration: 'collaboration', mentorship: 'mentorship', consultation: 'consultation', mission: 'mission planning', in_person: 'in-person' };
       await base44.entities.Notification.create({
         user_id: hostUserId,
         type: 'meeting',
         title: 'New Meeting Booked',
-        message: `${guestName} booked a ${meetingType} call on ${format(new Date(selectedSlot.start), 'MMM d')} at ${format(new Date(selectedSlot.start), 'h:mm a')}`,
+        message: `${guestName} booked a ${typeLabels[intakeForm.meetingType] || 'casual'} call on ${format(new Date(selectedSlot.start), 'MMM d')} at ${format(new Date(selectedSlot.start), 'h:mm a')}${intakeForm.topics?.length ? ` — Topics: ${intakeForm.topics.join(', ')}` : ''}`,
         action_url: '/Meetings',
         action_label: 'View Meeting',
         source_user_id: currentUser.email,
