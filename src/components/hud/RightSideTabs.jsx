@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff } from 'lucide-react';
+import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 import TownHallCall from '@/components/video/TownHallCall';
+import ConciergeAgentChat from '@/components/support/ConciergeAgentChat';
 import { format, parseISO } from 'date-fns';
 
 const QUICK_QUESTIONS = [
