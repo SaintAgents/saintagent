@@ -190,7 +190,7 @@ export default function Schedule() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent">
       {/* Hero Section */}
-      <div className="relative h-48 md:h-56 overflow-hidden">
+      <div className="page-hero relative overflow-hidden">
         <img 
           src={HERO_IMAGE}
           alt="Schedule"
