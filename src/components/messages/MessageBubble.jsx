@@ -151,7 +151,7 @@ export default function MessageBubble({
         );
 
       default:
-        return <p className="text-sm dark:text-white">{msg.content}</p>;
+        return <p className={cn("text-sm font-normal", isOwn ? "text-white" : "text-slate-900")}>{msg.content}</p>;
     }
   };
 
