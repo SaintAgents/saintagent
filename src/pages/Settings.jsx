@@ -314,19 +314,6 @@ export default function Settings() {
             </Card>
           </TabsContent>
 
-          {/* Availability / Open Call Times */}
-          <TabsContent value="account" className="space-y-6">
-            <Card className="bg-violet-50/50">
-              <CardHeader>
-                <CardTitle>Open Call Times</CardTitle>
-                <CardDescription>Let others book meetings based on your Google Calendar availability</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <AvailabilitySettings />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           {/* Bank Tab */}
           <TabsContent value="bank" className="space-y-6">
             <GaiaBankTab />
