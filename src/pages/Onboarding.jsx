@@ -383,8 +383,10 @@ export default function Onboarding() {
             <Button
               variant="ghost"
               onClick={async () => {
-                // Skip all remaining steps - go directly to final step so handleStepComplete runs
+                // Skip all remaining steps — jump to final step and immediately complete it
                 setCurrentStep(STEPS.length - 1);
+                // Small delay to let state settle, then auto-complete the final step
+                setTimeout(() => handleStepComplete({}), 300);
               }}
               className="text-amber-600 hover:text-amber-700"
             >
