@@ -35,6 +35,7 @@ import CRMFilterPanel from '@/components/crm/CRMFilterPanel';
 import PipelineKanban from '@/components/crm/PipelineKanban';
 import CRMAnalyticsPage from '@/components/crm/CRMAnalyticsPage';
 import GoogleSyncPanel from '@/components/crm/GoogleSyncPanel';
+import PitchCampaignDesigner from '@/components/crm/PitchCampaignDesigner';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
 
@@ -333,6 +334,10 @@ export default function CRM() {
                     <Bot className="w-4 h-4 text-violet-500" />
                     Response Agent
                   </TabsTrigger>
+                  <TabsTrigger value="pitches" className="gap-2">
+                    <FileBarChart className="w-4 h-4 text-emerald-500" />
+                    Pitches
+                  </TabsTrigger>
                   <TabsTrigger value="google-sync" className="gap-2">
                     <Mail className="w-4 h-4 text-blue-500" />
                     Google Sync
@@ -496,6 +501,10 @@ export default function CRM() {
                 selectedContact={selectedContact}
               />
             </div>
+          </TabsContent>
+
+          <TabsContent value="pitches">
+            <PitchCampaignDesigner currentUserId={currentUser?.email} />
           </TabsContent>
 
           <TabsContent value="google-sync">
