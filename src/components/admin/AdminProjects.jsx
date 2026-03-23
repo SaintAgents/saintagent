@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Loader2, CheckCircle, XCircle, AlertTriangle, Clock, Eye } from "lucide-react";
+import { Brain, Loader2, CheckCircle, XCircle, AlertTriangle, Clock, Eye, Trash2 } from "lucide-react";
 import ProjectCSVImport from "@/components/projects/ProjectCSVImport";
 import LegacySAImport from "@/components/admin/LegacySAImport";
 import FloatingPanel from "@/components/hud/FloatingPanel";
@@ -253,6 +253,19 @@ export default function AdminProjects() {
                         <Brain className="w-4 h-4" />
                       )}
                       {p.ai_evaluated_at ? 'Re-eval' : 'Eval'}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (!window.confirm(`Delete "${p.title}"? This cannot be undone.`)) return;
+                        await base44.entities.Project.delete(p.id);
+                        qc.invalidateQueries({ queryKey: ["projects"] });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 </td>
