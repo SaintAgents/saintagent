@@ -66,7 +66,7 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
     }
   });
 
-  // Heartbeat effect - update every 2 minutes when online (reduced from 30s)
+  // Heartbeat effect - update every 5 minutes when online (generous interval to avoid rate limits)
   useEffect(() => {
     if (!currentUser?.email || userId !== currentUser.email) return;
     
@@ -84,8 +84,13 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
       }
     };
 
-    const interval = setInterval(heartbeat, 120000); // 2 minutes instead of 30s
-    return () => clearInterval(interval);
+    // Initial heartbeat after 30s delay to avoid competing with page load
+    const initialTimeout = setTimeout(heartbeat, 30000);
+    const interval = setInterval(heartbeat, 300000); // 5 minutes
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
   }, [currentUser?.email, userId]);
 
   const status = liveStatus?.status || 'offline';

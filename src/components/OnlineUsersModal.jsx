@@ -51,13 +51,21 @@ export default function OnlineUsersModal({ open, onClose }) {
     refetchInterval: 30000,
   });
 
-  // Build a set of user_ids that are actually online (heartbeat within last 5 minutes)
-  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  // Build a set of user_ids that are actually online (heartbeat within last 15 minutes)
+  // Using 15 min window because heartbeats fire every 2 min but can be delayed by rate limiting
+  const fifteenMinAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
   const onlineUserIds = new Set(
     liveStatuses
-      .filter(ls => ls.status !== 'offline' && ls.last_heartbeat && ls.last_heartbeat > fiveMinAgo)
+      .filter(ls => ls.status !== 'offline' && ls.last_heartbeat && ls.last_heartbeat > fifteenMinAgo)
       .map(ls => ls.user_id)
   );
+
+  // Also include users whose LiveStatus was updated recently (within 15 min) even if heartbeat is stale
+  liveStatuses.forEach(ls => {
+    if (ls.status !== 'offline' && ls.updated_date && ls.updated_date > fifteenMinAgo) {
+      onlineUserIds.add(ls.user_id);
+    }
+  });
 
   // Filter online users using LiveStatus data, fall back to profile status
   const onlineProfiles = profiles.filter(p => 
