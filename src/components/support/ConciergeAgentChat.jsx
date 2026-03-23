@@ -297,12 +297,13 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
     }
   };
 
-  const QUICK_ACTIONS = [
+  const DEFAULT_QUICK_ACTIONS = [
     { label: 'Show my upcoming meetings', icon: '📅' },
     { label: 'Update my status to online', icon: '🟢' },
     { label: 'What missions can I join?', icon: '🎯' },
     { label: 'Create a marketplace listing', icon: '🏪' },
   ];
+  const QUICK_ACTIONS = PAGE_QUICK_ACTIONS[currentPage] || DEFAULT_QUICK_ACTIONS;
 
   const isStreaming = isSending || messages.some(m => 
     m.role === 'assistant' && m.tool_calls?.some(tc => tc.status === 'running' || tc.status === 'in_progress')
@@ -337,7 +338,7 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
               <Bot className="w-12 h-12 text-emerald-300 mx-auto mb-3" />
               <h4 className="font-semibold text-slate-800 dark:text-slate-200 mb-1">Hi! I'm your Concierge</h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 max-w-[260px] mx-auto">
-                I can take actions for you — schedule meetings, join missions, update your profile, and more.
+                {PAGE_GREETING[currentPage] || "I can take actions for you — schedule meetings, join missions, update your profile, and more."}
               </p>
               <div className="space-y-2">
                 {QUICK_ACTIONS.map((action, idx) => (
@@ -411,7 +412,7 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Tell me what to do..."
+            placeholder={PAGE_PLACEHOLDERS[currentPage] || "Tell me what to do..."}
             className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm"
             disabled={isStreaming}
           />
