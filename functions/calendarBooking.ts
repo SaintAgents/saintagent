@@ -16,35 +16,33 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case 'getFreeBusy': {
-        // Fetch free/busy for a given date range
+        // Derive busy slots from actual calendar events
         if (!date) {
           return Response.json({ error: 'date is required (YYYY-MM-DD)' }, { status: 400 });
         }
 
-        const dayStart = new Date(date + 'T00:00:00Z');
-        const dayEnd = new Date(date + 'T23:59:59Z');
+        const timeMin = new Date(date + 'T00:00:00Z').toISOString();
+        const timeMax = new Date(date + 'T23:59:59Z').toISOString();
 
-        const fbRes = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            timeMin: dayStart.toISOString(),
-            timeMax: dayEnd.toISOString(),
-            items: [{ id: 'primary' }]
-          })
-        });
+        const evRes = await fetch(
+          `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime&maxResults=50`,
+          { headers: { 'Authorization': `Bearer ${accessToken}` } }
+        );
 
-        if (!fbRes.ok) {
-          const errText = await fbRes.text();
-          console.error('FreeBusy API error:', fbRes.status, errText);
+        if (!evRes.ok) {
+          const errText = await evRes.text();
+          console.error('Events API error:', evRes.status, errText);
           return Response.json({ error: 'Failed to fetch calendar data', details: errText }, { status: 500 });
         }
 
-        const fbData = await fbRes.json();
-        const busySlots = fbData.calendars?.primary?.busy || [];
+        const evData = await evRes.json();
+        // Convert events to busy slots (start/end pairs)
+        const busySlots = (evData.items || [])
+          .filter(e => e.status !== 'cancelled' && e.start?.dateTime && e.end?.dateTime)
+          .map(e => ({
+            start: e.start.dateTime,
+            end: e.end.dateTime
+          }));
 
         return Response.json({ success: true, busySlots, date });
       }
