@@ -717,7 +717,8 @@ export default function Sidebar({
                   </button>
                 </div>
 
-                {/* Background Effects - available for all themes */}
+                {/* Background Effects - only for dark and hacker themes */}
+              {theme !== 'light' && (
               <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
                 <CollapsibleTrigger className="w-full flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50 bg-slate-50/50">
                   <div className="flex items-center gap-2">
