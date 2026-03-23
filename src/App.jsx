@@ -18,6 +18,8 @@ import DailyPlanner from './pages/DailyPlanner';
 import Analytics from './pages/Analytics';
 import BookCall from './pages/BookCall';
 import WhatsAppDashboard from './pages/WhatsAppDashboard';
+import BusinessEntities from './pages/BusinessEntities';
+import BusinessEntityProfile from './pages/BusinessEntityProfile';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -83,6 +85,8 @@ const AuthenticatedApp = () => {
       <Route path="/Analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
       <Route path="/BookCall" element={<LayoutWrapper currentPageName="BookCall"><BookCall /></LayoutWrapper>} />
       <Route path="/WhatsAppDashboard" element={<LayoutWrapper currentPageName="WhatsAppDashboard"><WhatsAppDashboard /></LayoutWrapper>} />
+      <Route path="/BusinessEntities" element={<LayoutWrapper currentPageName="BusinessEntities"><BusinessEntities /></LayoutWrapper>} />
+      <Route path="/BusinessEntityProfile" element={<LayoutWrapper currentPageName="BusinessEntityProfile"><BusinessEntityProfile /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
