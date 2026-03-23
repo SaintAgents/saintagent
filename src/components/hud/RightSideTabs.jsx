@@ -164,6 +164,7 @@ export default function RightSideTabs() {
   const [helpMessages, setHelpMessages] = useState([]);
   const [helpInput, setHelpInput] = useState('');
   const [helpLoading, setHelpLoading] = useState(false);
+  const [conciergeMode, setConciergeMode] = useState(false);
   const helpScrollRef = useRef(null);
   const helpInputRef = useRef(null);
 
