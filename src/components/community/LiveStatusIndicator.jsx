@@ -35,8 +35,8 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
       }
     },
     enabled: !!userId,
-    refetchInterval: 60000, // Poll every 60s instead of 10s to reduce API calls
-    staleTime: 30000,
+    refetchInterval: 120000, // Poll every 2 min to reduce API calls
+    staleTime: 60000,
     retry: false,
   });
 
