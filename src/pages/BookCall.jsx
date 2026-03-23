@@ -7,9 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { 
   Calendar as CalendarIcon, Clock, Loader2, Check, ArrowLeft, 
-  Video, MapPin, User, Send, ChevronRight
+  Send, ChevronRight
 } from "lucide-react";
-import { format, addDays, isBefore, startOfDay, addMinutes, parseISO } from "date-fns";
+import { format, addDays, isBefore, startOfDay, addMinutes } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from 'sonner';
 import BackButton from '@/components/hud/BackButton';
