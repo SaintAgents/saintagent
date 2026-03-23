@@ -7,13 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar as CalendarIcon, Clock, Send, Search, User, Video, MapPin, Loader2, Mail } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import AvailabilitySlotPicker from './AvailabilitySlotPicker';
 
 export default function BookingRequestModal({ open, onClose, preSelectedUser = null }) {
   const [step, setStep] = useState(preSelectedUser ? 2 : 1);
@@ -30,7 +30,8 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
       setStep(1);
     }
   }, [preSelectedUser]);
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState('10:00');
   const [meetingType, setMeetingType] = useState('casual');
   const [locationType, setLocationType] = useState('online');
   const [message, setMessage] = useState('');
@@ -39,7 +40,6 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   const [submitting, setSubmitting] = useState(false);
   const [createZoomLink, setCreateZoomLink] = useState(true);
   const [sendEmailInvite, setSendEmailInvite] = useState(true);
-  const [addToGoogleCalendar, setAddToGoogleCalendar] = useState(true);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -69,7 +69,11 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
     );
   }).slice(0, 10);
 
-  // timeSlots replaced by AvailabilitySlotPicker
+  const timeSlots = [];
+  for (let h = 6; h <= 22; h++) {
+    timeSlots.push(`${h.toString().padStart(2, '0')}:00`);
+    timeSlots.push(`${h.toString().padStart(2, '0')}:30`);
+  }
 
   const handleSelectUser = (profile) => {
     setSelectedUser(profile);
@@ -77,7 +81,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
   };
 
   const handleSubmit = async () => {
-    if (!selectedUser || !selectedSlot || !currentUser) return;
+    if (!selectedUser || !selectedDate || !currentUser) return;
     
     // Get guest user_id - handle both direct user_id and email fallbacks
     const guestUserId = selectedUser.user_id || selectedUser.email || selectedUser.id;
@@ -88,8 +92,9 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
     
     setSubmitting(true);
     try {
-      const scheduledTime = new Date(selectedSlot.start);
-      const endTime = new Date(selectedSlot.end);
+      const [hours, minutes] = selectedTime.split(':');
+      const scheduledTime = new Date(selectedDate);
+      scheduledTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
       const me = myProfile?.[0];
       const guestName = selectedUser.display_name || selectedUser.name || 'User';
@@ -128,24 +133,21 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
         }
       }
 
-      // Create Google Calendar event if enabled
-      let calendarEventLink = '';
-      if (addToGoogleCalendar) {
-        try {
-          const calRes = await base44.functions.invoke('calendarBooking', {
-            action: 'createEvent',
-            summary: title || `Meeting with ${guestName}`,
-            description: `${meetingType} meeting\n${message || ''}\n${zoomJoinUrl ? 'Zoom: ' + zoomJoinUrl : ''}`.trim(),
-            startTime: scheduledTime.toISOString(),
-            endTime: endTime.toISOString(),
-            attendeeEmails: [currentUser.email, guestUserId].filter(Boolean)
-          });
-          if (calRes.data?.success) {
-            calendarEventLink = calRes.data.event.htmlLink;
-          }
-        } catch (calError) {
-          console.error('Failed to create Google Calendar event:', calError);
-        }
+      // Create Google Calendar event
+      try {
+        const slotEnd = new Date(scheduledTime);
+        slotEnd.setMinutes(slotEnd.getMinutes() + duration);
+        await base44.functions.invoke('calendarBooking', {
+          action: 'createEvent',
+          title: title || `Meeting with ${guestName}`,
+          description: `${meetingType} meeting\n\n${message || ''}`.trim(),
+          startTime: scheduledTime.toISOString(),
+          endTime: slotEnd.toISOString(),
+          guestEmail: guestUserId,
+          guestName: guestName
+        });
+      } catch (calError) {
+        console.error('Failed to create Google Calendar event:', calError);
       }
 
       // Create the meeting request
@@ -183,7 +185,8 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
       // Reset form
       setStep(1);
       setSelectedUser(null);
-      setSelectedSlot(null);
+      setSelectedDate(null);
+      setSelectedTime('10:00');
       setMessage('');
       setTitle('');
     } catch (error) {
@@ -279,57 +282,83 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               />
             </div>
 
-            {/* Meeting Type & Duration Row */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Meeting Type */}
+            <div className="space-y-2">
+              <Label>Meeting Type</Label>
+              <Select value={meetingType} onValueChange={setMeetingType}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="casual">Casual Chat</SelectItem>
+                  <SelectItem value="collaboration">Collaboration</SelectItem>
+                  <SelectItem value="mentorship">Mentorship</SelectItem>
+                  <SelectItem value="consultation">Consultation</SelectItem>
+                  <SelectItem value="mission">Mission Planning</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Date & Time */}
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Meeting Type</Label>
-                <Select value={meetingType} onValueChange={setMeetingType}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="casual">Casual Chat</SelectItem>
-                    <SelectItem value="collaboration">Collaboration</SelectItem>
-                    <SelectItem value="mentorship">Mentorship</SelectItem>
-                    <SelectItem value="consultation">Consultation</SelectItem>
-                    <SelectItem value="mission">Mission Planning</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !selectedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {selectedDate ? format(selectedDate, "MMM d, yyyy") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
+
               <div className="space-y-2">
-                <Label>Duration</Label>
-                <Select value={duration.toString()} onValueChange={(v) => { setDuration(parseInt(v)); setSelectedSlot(null); }}>
+                <Label>Time</Label>
+                <Select value={selectedTime} onValueChange={setSelectedTime}>
                   <SelectTrigger>
+                    <Clock className="w-4 h-4 mr-2" />
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="15">15 minutes</SelectItem>
-                    <SelectItem value="30">30 minutes</SelectItem>
-                    <SelectItem value="45">45 minutes</SelectItem>
-                    <SelectItem value="60">1 hour</SelectItem>
-                    <SelectItem value="90">1.5 hours</SelectItem>
+                  <SelectContent className="max-h-60">
+                    {timeSlots.map(time => (
+                      <SelectItem key={time} value={time}>{time}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            {/* Availability Slot Picker */}
+            {/* Duration */}
             <div className="space-y-2">
-              <Label>Pick an Available Time</Label>
-              <div className="border rounded-xl p-3 bg-slate-50/50">
-                <AvailabilitySlotPicker
-                  targetUserId={selectedUser?.user_id || selectedUser?.email}
-                  duration={duration}
-                  onSelect={setSelectedSlot}
-                  selectedSlot={selectedSlot}
-                />
-              </div>
-              {selectedSlot && (
-                <p className="text-xs text-emerald-600 flex items-center gap-1">
-                  <CalendarIcon className="w-3 h-3" />
-                  Selected: {format(new Date(selectedSlot.start), 'EEE, MMM d · h:mm a')} – {format(new Date(selectedSlot.end), 'h:mm a')}
-                </p>
-              )}
+              <Label>Duration</Label>
+              <Select value={duration.toString()} onValueChange={(v) => setDuration(parseInt(v))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15">15 minutes</SelectItem>
+                  <SelectItem value="30">30 minutes</SelectItem>
+                  <SelectItem value="45">45 minutes</SelectItem>
+                  <SelectItem value="60">1 hour</SelectItem>
+                  <SelectItem value="90">1.5 hours</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Location Type */}
@@ -393,21 +422,6 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
               </>
             )}
 
-            {/* Google Calendar Option */}
-            <div className="flex items-center justify-between p-3 rounded-lg bg-violet-50 border border-violet-100">
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4 text-violet-600" />
-                <div>
-                  <p className="text-sm font-medium text-violet-900">Add to Google Calendar</p>
-                  <p className="text-xs text-violet-600">Creates a calendar event with invite</p>
-                </div>
-              </div>
-              <Switch
-                checked={addToGoogleCalendar}
-                onCheckedChange={setAddToGoogleCalendar}
-              />
-            </div>
-
             {/* Message */}
             <div className="space-y-2">
               <Label>Message (optional)</Label>
@@ -422,7 +436,7 @@ export default function BookingRequestModal({ open, onClose, preSelectedUser = n
             {/* Submit */}
             <Button
               onClick={handleSubmit}
-              disabled={!selectedSlot || submitting}
+              disabled={!selectedDate || submitting}
               className="w-full bg-violet-600 hover:bg-violet-700 gap-2"
             >
               {submitting ? (
