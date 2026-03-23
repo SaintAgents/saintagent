@@ -350,11 +350,11 @@ export default function Messages() {
                   className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
                   onClick={async () => {
                     const mine = allMessages || [];
-                    await Promise.all(mine.map((m) => {
+                    for (const m of mine) {
                       const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
-                      if (list.includes(user?.email)) return Promise.resolve();
-                      return base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] });
-                    }));
+                      if (list.includes(user?.email)) continue;
+                      try { await base44.entities.Message.update(m.id, { deleted_for_user_ids: [...list, user?.email] }); } catch (_) {}
+                    }
                     queryClient.invalidateQueries({ queryKey: ['messages'] });
                   }}>
                 Clear all
