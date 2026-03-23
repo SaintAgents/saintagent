@@ -17,6 +17,24 @@ import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import CreateBroadcastModal from '@/components/broadcast/CreateBroadcastModal';
 import BroadcastCard from '@/components/broadcast/BroadcastCard';
 
+const BROADCAST_TYPE_COLORS = {
+  podcast: 'bg-violet-100 text-violet-700',
+  webinar: 'bg-blue-100 text-blue-700',
+  town_hall: 'bg-amber-100 text-amber-700',
+  interview: 'bg-emerald-100 text-emerald-700',
+  workshop: 'bg-pink-100 text-pink-700',
+  ama: 'bg-cyan-100 text-cyan-700'
+};
+
+const BROADCAST_TYPE_LABELS = {
+  podcast: 'Podcast',
+  webinar: 'Webinar',
+  town_hall: 'Town Hall',
+  interview: 'Interview',
+  workshop: 'Workshop',
+  ama: 'AMA'
+};
+
 export default function Broadcast() {
   const [tab, setTab] = useState('upcoming');
   const [createModalOpen, setCreateModalOpen] = useState(false);
