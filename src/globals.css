@@ -1601,12 +1601,12 @@ html[data-theme='dark'] [data-sidebar] {
    ===================================================== */
 
 .page-hero {
-  height: 256px;
+  height: 384px;
 }
 
 @media (min-width: 768px) {
   .page-hero {
-    height: 288px;
+    height: 432px;
   }
 }
 
