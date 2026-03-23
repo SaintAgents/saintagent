@@ -32,6 +32,7 @@ export default function CreateBroadcastModal({ open, onClose }) {
   const [selectedRecipients, setSelectedRecipients] = useState(null); // { userIds, profiles, teamIds }
   const [showRecipientModal, setShowRecipientModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [startNowMode, setStartNowMode] = useState(false);
 
   const queryClient = useQueryClient();
 
