@@ -157,44 +157,71 @@ export function useLiveStatus() {
   useEffect(() => {
     if (!currentUser?.email) return;
     let isMounted = true;
+    let retryTimeout = null;
 
-    const initStatus = async () => {
+    const initStatus = async (attempt = 0) => {
+      if (!isMounted) return;
       try {
         const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1);
         if (!isMounted) return;
         
+        const now = new Date().toISOString();
         if (!existing?.length) {
           await base44.entities.LiveStatus.create({
             user_id: currentUser.email,
             status: 'online',
-            last_heartbeat: new Date().toISOString()
+            last_heartbeat: now
           });
         } else {
           await base44.entities.LiveStatus.update(existing[0].id, {
             status: 'online',
-            last_heartbeat: new Date().toISOString()
+            last_heartbeat: now
           });
         }
         if (isMounted) {
           queryClient.invalidateQueries({ queryKey: ['liveStatus', currentUser.email] });
         }
       } catch (err) {
-        // Silently ignore rate limit or other errors - non-critical feature
-        console.warn('LiveStatus init skipped:', err?.message);
+        console.warn('LiveStatus init attempt', attempt + 1, 'skipped:', err?.message);
+        // Retry up to 3 times with increasing delay (10s, 20s, 40s)
+        if (isMounted && attempt < 3) {
+          const delay = (attempt + 1) * 10000;
+          retryTimeout = setTimeout(() => initStatus(attempt + 1), delay);
+        }
       }
     };
 
-    initStatus();
+    // CRITICAL: Delay init by 5 seconds to let the main page load first
+    // This avoids competing with all the other API calls that fire on mount
+    const initDelay = setTimeout(() => initStatus(0), 5000);
 
-    // Set offline on page unload
-    const handleUnload = () => {
-      navigator.sendBeacon && navigator.sendBeacon('/api/offline', JSON.stringify({ user_id: currentUser.email }));
+    // Set offline on page unload by updating the LiveStatus record directly
+    // The sendBeacon to /api/offline doesn't exist, so we mark offline via visibility change
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        // When tab becomes hidden, update heartbeat so we know when user left
+        // The user will appear "stale" after the window expires
+        base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1)
+          .then(existing => {
+            if (existing?.[0]) {
+              base44.entities.LiveStatus.update(existing[0].id, {
+                last_heartbeat: new Date().toISOString()
+              }).catch(() => {});
+            }
+          }).catch(() => {});
+      } else if (document.visibilityState === 'visible') {
+        // When tab becomes visible again, refresh status
+        initStatus(0);
+      }
     };
 
-    window.addEventListener('beforeunload', handleUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       isMounted = false;
-      window.removeEventListener('beforeunload', handleUnload);
+      clearTimeout(initDelay);
+      if (retryTimeout) clearTimeout(retryTimeout);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [currentUser?.email]);
 }
