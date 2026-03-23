@@ -273,25 +273,27 @@ export default function Messages() {
     });
   }, [selectedConversation?.id, currentMessages.length, user?.email]);
 
-  // Typing: helper to upsert typing status (throttled)
+  // Typing: helper to upsert typing status (throttled to 5s to avoid rate limits)
   const sendTypingPing = async () => {
     const now = Date.now();
     if (!selectedConversation?.id || !user?.email) return;
-    if (now - (typingRef.current.lastSentAt || 0) < 1200) return;
+    if (now - (typingRef.current.lastSentAt || 0) < 5000) return;
     typingRef.current.lastSentAt = now;
-    const existing = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: selectedConversation.id });
-    if (existing?.[0]) {
-      await base44.entities.TypingStatus.update(existing[0].id, { is_typing: true });
-    } else {
-      await base44.entities.TypingStatus.create({ user_id: user.email, conversation_id: selectedConversation.id, is_typing: true });
-    }
-    // auto-clear after 3s
-    setTimeout(async () => {
-      try {
-        const ex = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: selectedConversation.id });
-        if (ex?.[0]) await base44.entities.TypingStatus.update(ex[0].id, { is_typing: false });
-      } catch (_) {}
-    }, 3000);
+    try {
+      const existing = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: selectedConversation.id });
+      if (existing?.[0]) {
+        await base44.entities.TypingStatus.update(existing[0].id, { is_typing: true });
+      } else {
+        await base44.entities.TypingStatus.create({ user_id: user.email, conversation_id: selectedConversation.id, is_typing: true });
+      }
+      // auto-clear after 6s
+      setTimeout(async () => {
+        try {
+          const ex = await base44.entities.TypingStatus.filter({ user_id: user.email, conversation_id: selectedConversation.id });
+          if (ex?.[0]) await base44.entities.TypingStatus.update(ex[0].id, { is_typing: false });
+        } catch (_) {}
+      }, 6000);
+    } catch (_) {}
   };
 
   return (
