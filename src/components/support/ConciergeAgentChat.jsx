@@ -70,7 +70,142 @@ function FunctionDisplay({ toolCall }) {
   );
 }
 
-export default function ConciergeAgentChat({ onClose }) {
+// Page-specific quick actions and context
+const PAGE_QUICK_ACTIONS = {
+  Projects: [
+    { label: 'Add a new project', icon: '📁' },
+    { label: 'Show my active projects', icon: '📊' },
+    { label: 'Find team members for a project', icon: '👥' },
+    { label: 'Update a project status', icon: '✏️' },
+  ],
+  Missions: [
+    { label: 'Create a new mission', icon: '🎯' },
+    { label: 'Show active missions I can join', icon: '🔍' },
+    { label: 'Check my mission progress', icon: '📈' },
+    { label: 'Find collaborators for a mission', icon: '🤝' },
+  ],
+  Meetings: [
+    { label: 'Schedule a new meeting', icon: '📅' },
+    { label: 'Show my upcoming meetings', icon: '🕐' },
+    { label: 'Set my availability preferences', icon: '⚙️' },
+    { label: 'Cancel a meeting', icon: '❌' },
+  ],
+  Matches: [
+    { label: 'Find new matches for me', icon: '✨' },
+    { label: 'Tune my matching preferences', icon: '🎛️' },
+    { label: 'Send a connection request', icon: '💬' },
+    { label: 'Check my match score details', icon: '📊' },
+  ],
+  Marketplace: [
+    { label: 'Create a marketplace listing', icon: '🏪' },
+    { label: 'Search for a service', icon: '🔍' },
+    { label: 'Update my listing status', icon: '✏️' },
+    { label: 'Book a service', icon: '📅' },
+  ],
+  Circles: [
+    { label: 'Create a new circle', icon: '⭕' },
+    { label: 'Find circles to join', icon: '🔍' },
+    { label: 'Post in a circle', icon: '💬' },
+    { label: 'Invite someone to my circle', icon: '📨' },
+  ],
+  Events: [
+    { label: 'Create a new event', icon: '🎉' },
+    { label: 'Show upcoming events', icon: '📅' },
+    { label: 'RSVP to an event', icon: '✅' },
+    { label: 'Find events near me', icon: '📍' },
+  ],
+  Messages: [
+    { label: 'Start a new conversation', icon: '💬' },
+    { label: 'Find unread messages', icon: '📩' },
+    { label: 'Create a group chat', icon: '👥' },
+    { label: 'Send a quick hello to a match', icon: '👋' },
+  ],
+  Profile: [
+    { label: 'Update my bio', icon: '✏️' },
+    { label: 'Add skills to my profile', icon: '🛠️' },
+    { label: 'Upload a new avatar', icon: '📷' },
+    { label: 'Change my status', icon: '🟢' },
+  ],
+  CommandDeck: [
+    { label: 'Show my upcoming meetings', icon: '📅' },
+    { label: 'What missions can I join?', icon: '🎯' },
+    { label: 'Check my GGG balance', icon: '💰' },
+    { label: 'Find new matches', icon: '✨' },
+  ],
+  Settings: [
+    { label: 'Update my notification preferences', icon: '🔔' },
+    { label: 'Change my theme', icon: '🎨' },
+    { label: 'Set my availability hours', icon: '🕐' },
+    { label: 'Update my privacy settings', icon: '🔒' },
+  ],
+  Broadcast: [
+    { label: 'Schedule a new broadcast', icon: '📡' },
+    { label: 'Show upcoming broadcasts', icon: '📅' },
+    { label: 'Join a live broadcast', icon: '▶️' },
+    { label: 'RSVP to a broadcast', icon: '✅' },
+  ],
+  CRM: [
+    { label: 'Add a new contact', icon: '👤' },
+    { label: 'Import contacts', icon: '📥' },
+    { label: 'Send a follow-up email', icon: '📧' },
+    { label: 'Check my pipeline', icon: '📊' },
+  ],
+  Deals: [
+    { label: 'Create a new deal', icon: '🤝' },
+    { label: 'Show my active deals', icon: '📊' },
+    { label: 'Log a deal activity', icon: '📝' },
+    { label: 'Move a deal to next stage', icon: '➡️' },
+  ],
+  Forum: [
+    { label: 'Start a new discussion', icon: '💬' },
+    { label: 'Search forum topics', icon: '🔍' },
+    { label: 'Reply to a thread', icon: '↩️' },
+    { label: 'Find unanswered questions', icon: '❓' },
+  ],
+  News: [
+    { label: 'Show latest articles', icon: '📰' },
+    { label: 'Find announcements', icon: '📢' },
+    { label: 'Search news by topic', icon: '🔍' },
+    { label: 'Check featured stories', icon: '⭐' },
+  ],
+};
+
+const PAGE_PLACEHOLDERS = {
+  Projects: 'e.g. "Add a project called..."',
+  Missions: 'e.g. "Create a mission for..."',
+  Meetings: 'e.g. "Schedule a meeting with..."',
+  Matches: 'e.g. "Find matches with..."',
+  Marketplace: 'e.g. "List my service..."',
+  Circles: 'e.g. "Create a circle for..."',
+  Events: 'e.g. "Create an event..."',
+  Messages: 'e.g. "Message someone about..."',
+  Profile: 'e.g. "Update my bio to..."',
+  Settings: 'e.g. "Change my notifications..."',
+  Broadcast: 'e.g. "Schedule a broadcast..."',
+  CRM: 'e.g. "Add a contact..."',
+  Deals: 'e.g. "Create a deal for..."',
+};
+
+const PAGE_GREETING = {
+  Projects: "I can help you add projects, manage teams, update statuses, and more.",
+  Missions: "I can help you create missions, join existing ones, track progress, and find collaborators.",
+  Meetings: "I can help you schedule meetings, manage availability, and coordinate with others.",
+  Matches: "I can help you find matches, tune preferences, and initiate connections.",
+  Marketplace: "I can help you create listings, search for services, and manage your offerings.",
+  Circles: "I can help you create or join circles, post content, and invite members.",
+  Events: "I can help you create events, RSVP, and discover upcoming gatherings.",
+  Messages: "I can help you start conversations, manage group chats, and reach out to connections.",
+  Profile: "I can help you update your profile, add skills, and customize your presence.",
+  CommandDeck: "I can help you navigate your dashboard, check stats, and take quick actions.",
+  Settings: "I can help you configure notifications, themes, privacy, and availability.",
+  Broadcast: "I can help you schedule broadcasts, join live sessions, and manage RSVPs.",
+  CRM: "I can help you manage contacts, track interactions, and send outreach.",
+  Deals: "I can help you create deals, track pipeline stages, and log activities.",
+  Forum: "I can help you start discussions, find topics, and engage in conversations.",
+  News: "I can help you find articles, check announcements, and browse updates.",
+};
+
+export default function ConciergeAgentChat({ onClose, currentPage }) {
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');

@@ -443,7 +443,7 @@ export default function RightSideTabs() {
           style={{ maxHeight: 'calc(100vh - 200px)', bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)', right: showChatPanel ? '396px' : '0px' }}
         >
           {conciergeMode ? (
-            <ConciergeAgentChat onClose={() => setConciergeMode(false)} />
+            <ConciergeAgentChat onClose={() => setConciergeMode(false)} currentPage={trackedPage} />
           ) : (
             <>
               {/* Header */}
