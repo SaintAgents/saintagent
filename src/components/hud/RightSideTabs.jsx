@@ -231,20 +231,31 @@ export default function RightSideTabs() {
     return () => clearInterval(interval);
   }, [trackedPage]);
 
-  // Auto-open help on first visit to each page
+  // Auto-open help toggle - persisted preference
+  const [autoOpenHelp, setAutoOpenHelp] = useState(() => {
+    try { return localStorage.getItem('help_auto_open') !== 'off'; } catch { return true; }
+  });
+
+  const toggleAutoOpen = () => {
+    const newVal = !autoOpenHelp;
+    setAutoOpenHelp(newVal);
+    try { localStorage.setItem('help_auto_open', newVal ? 'on' : 'off'); } catch {}
+  };
+
+  // Auto-open help on first visit to each page (if enabled)
   useEffect(() => {
+    if (!autoOpenHelp) return;
     const currentPage = getCurrentPage();
     const visitedKey = `visited_page_${currentPage}`;
     try {
       const hasVisited = localStorage.getItem(visitedKey);
       if (!hasVisited && PAGE_CONTEXT[currentPage]) {
-        // First visit to this page - auto open help
         setHelpOpen(true);
         setHelpHovered(true);
         localStorage.setItem(visitedKey, '1');
       }
     } catch {}
-  }, [trackedPage]);
+  }, [trackedPage, autoOpenHelp]);
 
   // Focus input when help opens and set initial greeting with page context
   useEffect(() => {
