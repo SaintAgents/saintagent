@@ -1467,24 +1467,24 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
                   /* Hero section sizing */
                   .page-hero {
-                    height: 256px;
+                    height: 384px;
                   }
                   @media (min-width: 768px) {
                     .page-hero {
-                      height: 288px;
+                      height: 432px;
                     }
                   }
                   [data-theme='dark'] .page-hero {
-                    height: 160px !important;
-                    min-height: 160px !important;
-                    max-height: 160px !important;
+                    height: 240px !important;
+                    min-height: 240px !important;
+                    max-height: 240px !important;
                     padding-top: 0 !important;
                     margin-top: -64px !important;
                   }
                   [data-theme='hacker'] .page-hero {
-                    height: 320px !important;
-                    min-height: 320px !important;
-                    max-height: 320px !important;
+                    height: 480px !important;
+                    min-height: 480px !important;
+                    max-height: 480px !important;
                     padding-top: 0 !important;
                     margin-top: -64px !important;
                   }
