@@ -11,6 +11,8 @@ const CATEGORIES = {
   spiritual_education: { label: 'Spiritual Education', color: 'bg-purple-100 text-purple-700' },
   sacred_arts: { label: 'Sacred Arts', color: 'bg-pink-100 text-pink-700' },
   regenerative_finance: { label: 'Regenerative Finance', color: 'bg-amber-100 text-amber-700' },
+  fintech: { label: 'Fintech', color: 'bg-indigo-100 text-indigo-700' },
+  financial_services: { label: 'Financial Services', color: 'bg-teal-100 text-teal-700' },
   community_building: { label: 'Community Building', color: 'bg-cyan-100 text-cyan-700' },
   earth_stewardship: { label: 'Earth Stewardship', color: 'bg-lime-100 text-lime-700' },
   media_publishing: { label: 'Media & Publishing', color: 'bg-orange-100 text-orange-700' },

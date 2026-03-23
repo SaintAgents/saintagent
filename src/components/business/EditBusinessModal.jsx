@@ -16,6 +16,8 @@ const CATEGORIES = [
   { value: 'spiritual_education', label: 'Spiritual Education' },
   { value: 'sacred_arts', label: 'Sacred Arts' },
   { value: 'regenerative_finance', label: 'Regenerative Finance' },
+  { value: 'fintech', label: 'Fintech' },
+  { value: 'financial_services', label: 'Financial Services' },
   { value: 'community_building', label: 'Community Building' },
   { value: 'earth_stewardship', label: 'Earth Stewardship' },
   { value: 'media_publishing', label: 'Media & Publishing' },
