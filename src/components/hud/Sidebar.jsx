@@ -1279,7 +1279,8 @@ export default function Sidebar({
               </CollapsibleContent>
             </Collapsible>
 
-            {/* Background Effects - available for all themes */}
+            {/* Background Effects - only for dark and hacker themes */}
+            {theme !== 'light' && (
             <Collapsible open={bgEffectOpen} onOpenChange={setBgEffectOpen}>
               <CollapsibleTrigger className="w-full flex items-center justify-between mt-2 py-1.5 px-1 rounded-lg hover:bg-slate-50">
                 <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Background Effect</span>
