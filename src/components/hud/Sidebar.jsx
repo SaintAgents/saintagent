@@ -80,7 +80,8 @@ import {
   IterationCcw,
   Paintbrush,
   Quote,
-  CircleAlert
+  CircleAlert,
+  Building2
 } from "lucide-react";
 import {
   Tooltip,
@@ -115,6 +116,7 @@ const NAV_ITEMS = [
   { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
   { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
   { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
+  { id: 'business5d', label: '5D Business Entities', Icon: Building2, page: 'BusinessEntities', hint: 'Conscious businesses & transformational organizations' },
   { id: 'drx', label: 'Digital Rights Exchange', Icon: Key, page: 'DigitalRightsExchange', hint: 'Programmable digital asset rights - license, rent, and monetize your content' },
   { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
   { id: 'communityfeed', label: 'Community Feed', Icon: FileText, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
