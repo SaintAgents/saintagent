@@ -10,10 +10,11 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Mail, Send, Sparkles, Loader2, CheckCircle, AlertCircle,
-  FileText, Clock
+  FileText, Clock, BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { useQuery, useMutation as useRQMutation } from '@tanstack/react-query';
 
 const EMAIL_TEMPLATES = [
   {
@@ -84,7 +85,15 @@ export default function EmailOutreachModal({ open, onClose, contact, currentUser
   const [body, setBody] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [sendStatus, setSendStatus] = useState(null);
+  const [showSaved, setShowSaved] = useState(false);
   const queryClient = useQueryClient();
+
+  // Fetch saved pitch templates
+  const { data: savedPitches = [] } = useQuery({
+    queryKey: ['pitchTemplates', currentUser?.email],
+    queryFn: () => base44.entities.CRMEmailTemplate.filter({ owner_id: currentUser?.email }, '-is_favorite', 100),
+    enabled: !!currentUser?.email && open
+  });
 
   const recipientEmail = contact?.email || (contact?.name?.includes('@') ? contact.name : null);
 
@@ -305,7 +314,61 @@ Return in JSON format.`,
                       )}
                       AI Generate
                     </Button>
+                    {savedPitches.length > 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className={cn("text-xs gap-1", showSaved && "bg-emerald-100 border-emerald-300")}
+                        onClick={() => setShowSaved(!showSaved)}
+                      >
+                        <BookOpen className="w-3 h-3 text-emerald-600" />
+                        Saved Pitches ({savedPitches.length})
+                      </Button>
+                    )}
                   </div>
+
+                  {/* Saved Pitches Dropdown */}
+                  {showSaved && savedPitches.length > 0 && (
+                    <div className="mt-2 border rounded-lg p-2 bg-slate-50 max-h-40 overflow-y-auto space-y-1">
+                      {savedPitches.map(pitch => (
+                        <button
+                          key={pitch.id}
+                          className="w-full text-left px-3 py-2 rounded hover:bg-violet-50 transition-colors text-sm flex items-center justify-between"
+                          onClick={() => {
+                            let subj = pitch.subject
+                              .replace('{your_name}', currentUser?.full_name || '')
+                              .replace('{name}', contact?.name?.split(' ')[0] || '')
+                              .replace('{first_name}', contact?.name?.split(' ')[0] || '')
+                              .replace('{company}', contact?.company || '')
+                              .replace('{role}', contact?.role || '')
+                              .replace('{domain}', contact?.domain || '');
+                            let bd = pitch.body
+                              .replace(/{your_name}/g, currentUser?.full_name || '')
+                              .replace(/{name}/g, contact?.name?.split(' ')[0] || '')
+                              .replace(/{first_name}/g, contact?.name?.split(' ')[0] || '')
+                              .replace(/{company}/g, contact?.company || '')
+                              .replace(/{role}/g, contact?.role || '')
+                              .replace(/{domain}/g, contact?.domain || '');
+                            setSubject(subj);
+                            setBody(bd);
+                            setSelectedTemplate('saved_' + pitch.id);
+                            setShowSaved(false);
+                            // Update times_used
+                            base44.entities.CRMEmailTemplate.update(pitch.id, { 
+                              times_used: (pitch.times_used || 0) + 1, 
+                              last_used_at: new Date().toISOString() 
+                            });
+                          }}
+                        >
+                          <div>
+                            <span className="font-medium text-slate-900">{pitch.name}</span>
+                            <span className="text-xs text-slate-500 ml-2">{pitch.category?.replace('_', ' ')}</span>
+                          </div>
+                          {pitch.is_favorite && <span className="text-amber-400 text-xs">★</span>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Subject */}
