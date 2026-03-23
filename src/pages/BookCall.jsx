@@ -286,7 +286,7 @@ export default function BookCall() {
           {[
             { num: 1, label: 'Date' },
             { num: 2, label: 'Time' },
-            { num: 3, label: 'Details' }
+            { num: 3, label: 'About Call' }
           ].map(({ num, label }) => (
             <React.Fragment key={num}>
               <button
