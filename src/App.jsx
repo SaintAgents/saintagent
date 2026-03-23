@@ -16,6 +16,7 @@ import ImpactDashboard from './pages/ImpactDashboard';
 import OutreachSequences from './pages/OutreachSequences';
 import DailyPlanner from './pages/DailyPlanner';
 import Analytics from './pages/Analytics';
+import BookCall from './pages/BookCall';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -79,6 +80,7 @@ const AuthenticatedApp = () => {
       <Route path="/OutreachSequences" element={<LayoutWrapper currentPageName="OutreachSequences"><OutreachSequences /></LayoutWrapper>} />
       <Route path="/DailyPlanner" element={<LayoutWrapper currentPageName="DailyPlanner"><DailyPlanner /></LayoutWrapper>} />
       <Route path="/Analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
+      <Route path="/BookCall" element={<LayoutWrapper currentPageName="BookCall"><BookCall /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
