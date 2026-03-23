@@ -31,6 +31,7 @@ import TaskNotificationSettings from '@/components/notifications/TaskNotificatio
 import BackButton from '@/components/hud/BackButton';
 import BackgroundSettings from '@/components/settings/BackgroundSettings';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
+import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
 import { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -309,6 +310,19 @@ export default function Settings() {
                   />
                   <p className="text-xs text-slate-500 mt-1">This message shows when others hover over your avatar</p>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Availability / Open Call Times */}
+          <TabsContent value="account" className="space-y-6">
+            <Card className="bg-violet-50/50">
+              <CardHeader>
+                <CardTitle>Open Call Times</CardTitle>
+                <CardDescription>Let others book meetings based on your Google Calendar availability</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AvailabilitySettings />
               </CardContent>
             </Card>
           </TabsContent>
