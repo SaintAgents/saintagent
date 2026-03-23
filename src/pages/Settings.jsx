@@ -312,6 +312,16 @@ export default function Settings() {
                 </div>
               </CardContent>
             </Card>
+
+            <Card className="bg-violet-50/50">
+              <CardHeader>
+                <CardTitle>Open Call Times</CardTitle>
+                <CardDescription>Let others book meetings based on your Google Calendar availability</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AvailabilitySettings />
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Bank Tab */}
