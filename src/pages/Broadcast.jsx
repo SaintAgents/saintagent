@@ -258,15 +258,71 @@ export default function Broadcast() {
           <div className="space-y-4">
             {(tab === 'upcoming' ? upcoming : tab === 'live' ? live : past).length === 0 ? (
               <div className="text-center py-16">
-                <Radio className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                  {tab === 'upcoming' ? 'No upcoming broadcasts' : 
-                   tab === 'live' ? 'Nothing live right now' : 'No past broadcasts'}
-                </h3>
-                <p className="text-slate-500">
-                  {tab === 'upcoming' ? 'Check back soon for scheduled shows!' : 
-                   tab === 'live' ? 'Tune in when a broadcast goes live' : 'Past episodes will appear here'}
-                </p>
+                {/* If on upcoming tab and something is live, show live info instead of empty state */}
+                {tab === 'upcoming' && live.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 text-red-700 font-semibold text-sm mb-2">
+                      <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
+                      LIVE RIGHT NOW
+                    </div>
+                    {live.map(b => (
+                      <div key={b.id} className="max-w-lg mx-auto p-5 rounded-xl bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-left">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          <Badge className={cn("text-xs", BROADCAST_TYPE_COLORS[b.broadcast_type] || 'bg-violet-100 text-violet-700')}>
+                            {BROADCAST_TYPE_LABELS[b.broadcast_type] || b.broadcast_type}
+                          </Badge>
+                          <Badge className="bg-red-100 text-red-700 text-xs gap-1">
+                            <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                            Live
+                          </Badge>
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900 mb-1">{b.title}</h3>
+                        {b.description && <p className="text-sm text-slate-600 mb-3 line-clamp-2">{b.description}</p>}
+                        <div className="flex items-center gap-3 mb-3 text-sm text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <Mic className="w-4 h-4" />
+                            {b.host_name || 'Unknown Host'}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {b.duration_minutes} min
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Users className="w-4 h-4" />
+                            {(b.going_count || 0) + (b.interested_count || 0)} attendees
+                          </span>
+                        </div>
+                        {b.topics?.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {b.topics.slice(0, 4).map((topic, i) => (
+                              <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-white text-slate-600 border">{topic}</span>
+                            ))}
+                          </div>
+                        )}
+                        <Button 
+                          className="bg-red-500 hover:bg-red-600 gap-2 w-full"
+                          onClick={() => window.open(b.live_stream_url, '_blank')}
+                        >
+                          <Play className="w-4 h-4" />
+                          Join Live Now
+                        </Button>
+                      </div>
+                    ))}
+                    <p className="text-slate-500 text-sm mt-4">No other upcoming broadcasts scheduled yet.</p>
+                  </div>
+                ) : (
+                  <>
+                    <Radio className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                      {tab === 'upcoming' ? 'No upcoming broadcasts' : 
+                       tab === 'live' ? 'Nothing live right now' : 'No past broadcasts'}
+                    </h3>
+                    <p className="text-slate-500">
+                      {tab === 'upcoming' ? 'Check back soon for scheduled shows!' : 
+                       tab === 'live' ? 'Tune in when a broadcast goes live' : 'Past episodes will appear here'}
+                    </p>
+                  </>
+                )}
               </div>
             ) : (
               (tab === 'upcoming' ? upcoming : tab === 'live' ? live : past).map(broadcast => (
