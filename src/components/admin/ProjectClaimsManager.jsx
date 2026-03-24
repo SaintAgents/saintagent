@@ -15,7 +15,9 @@ import {
   AlertCircle,
   Loader2,
   Search,
-  Filter
+  Filter,
+  Eye,
+  Maximize2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -27,6 +29,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 
 export default function ProjectClaimsManager() {
   const [filter, setFilter] = useState('pending');
