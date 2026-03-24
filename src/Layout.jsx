@@ -1828,8 +1828,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Beta Ticker removed - out of beta */}
 
-      {/* Live Broadcast Banner */}
-      <LiveBroadcastBanner sidebarCollapsed={sidebarCollapsed} />
+      {/* Live Broadcast Banner - now rendered inside TopBar */}
 
       {/* System-wide Announcement Banner */}
       <AnnouncementBanner 
