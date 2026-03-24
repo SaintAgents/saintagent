@@ -106,7 +106,7 @@ export default function CreateBusinessModal({ open, onClose }) {
         <DialogHeader>
           <DialogTitle>Register 5D Business Entity</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 pb-20">
           <div>
             <Label>Entity Name *</Label>
             <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Your organization name" required />
