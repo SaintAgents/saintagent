@@ -62,6 +62,7 @@ import QuickStartGuideModal from '../onboarding/QuickStartGuideModal';
 import SaintBrowser from '../browser/SaintBrowser';
 import AdvancedSearchModal from '../search/AdvancedSearchModal';
 import GlobalTimerWidget from './GlobalTimerWidget';
+import LiveBroadcastBanner from './LiveBroadcastBanner';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import CollapsedViewModeToggle from './CollapsedViewModeToggle';
 
@@ -664,6 +665,9 @@ export default function TopBar({
         "flex items-center transition-all duration-300 ml-auto flex-shrink-0 relative",
         isCollapsed ? "gap-0.5" : "gap-1 md:gap-2"
       )} style={{ zIndex: 10000 }}>
+        {/* Live Broadcast Indicator */}
+        <LiveBroadcastBanner />
+
         {/* Global Timer Widget */}
         {currentUser && (
           <GlobalTimerWidget currentUser={currentUser} currentPageName={currentPageName} />
