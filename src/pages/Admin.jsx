@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -45,6 +45,7 @@ import ExecutiveRoadmap from '@/components/admin/ExecutiveRoadmap';
 import AIRiskScoring from '@/components/admin/AIRiskScoring';
 import SmartReassignment from '@/components/admin/SmartReassignment';
 import ResourceCapacityPlanner from '@/components/admin/ResourceCapacityPlanner';
+import AdminOverviewDashboard from '@/components/admin/AdminOverviewDashboard';
 
 export default function Admin() {
   const { data: user } = useQuery({
