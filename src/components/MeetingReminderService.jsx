@@ -35,8 +35,13 @@ export default function MeetingReminderService() {
   // Reuse the notifications already fetched in Layout instead of fetching separately
   const { data: existingNotifications = [] } = useQuery({
     queryKey: ['notifications', currentUser?.email],
-    // This query is already defined in Layout - just reuse the cached data
-    enabled: false, // Don't fetch, just read cache
+    queryFn: () => base44.entities.Notification.filter({ user_id: currentUser?.email }, '-created_date', 30),
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
   });
 
   // Today's Daily Ops log for schedule reminders
