@@ -174,6 +174,8 @@ export default function TopBar({
   const { data: myBusinessEntities = [] } = useQuery({
     queryKey: ['myBusinessEntities', currentUser?.email],
     queryFn: async () => {
+      // Small delay to avoid competing with critical page-load queries
+      await new Promise(r => setTimeout(r, 3000));
       const all = await base44.entities.BusinessEntity5D.list('-created_date', 100);
       return all.filter(e => 
         e.owner_id === currentUser.email || 
@@ -186,7 +188,8 @@ export default function TopBar({
     gcTime: 1200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    retry: 1,
+    retry: 2,
+    retryDelay: (attempt) => Math.min(5000 * (attempt + 1), 15000),
   });
 
   const { data: unreadMessages = [] } = useQuery({
