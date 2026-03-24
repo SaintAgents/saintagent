@@ -170,23 +170,19 @@ export default function TopBar({
   };
 
 
-  // Check if user owns or is team member of a 5D Business Entity
+  // Check if user owns or is team member of a 5D Business Entity (single API call)
   const { data: myBusinessEntities = [] } = useQuery({
     queryKey: ['myBusinessEntities', currentUser?.email],
     queryFn: async () => {
-      // First get owned entities (cheap filter)
-      const owned = await base44.entities.BusinessEntity5D.filter({ owner_id: currentUser.email }, '-created_date', 5);
-      // Then get all to check team membership (single call)
       const all = await base44.entities.BusinessEntity5D.list('-created_date', 100);
-      const teamMember = all.filter(e => 
-        e.owner_id !== currentUser.email && 
-        (e.team_member_ids?.includes(currentUser.email) || 
-         e.team_roles?.some(r => r.user_id === currentUser.email))
+      return all.filter(e => 
+        e.owner_id === currentUser.email || 
+        e.team_member_ids?.includes(currentUser.email) || 
+        e.team_roles?.some(r => r.user_id === currentUser.email)
       );
-      return [...owned, ...teamMember];
     },
     enabled: !!currentUser?.email,
-    staleTime: 600000, // Cache for 10 minutes to reduce rate limit hits
+    staleTime: 600000,
     gcTime: 1200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -195,11 +191,12 @@ export default function TopBar({
 
   const { data: unreadMessages = [] } = useQuery({
     queryKey: ['unreadMessages', currentUser?.email],
-    queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 50),
+    queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 20),
     enabled: !!currentUser?.email,
-    staleTime: 60000, // Cache for 1 minute
-    refetchInterval: 60000, // Only poll every 60 seconds instead of 5
-    refetchOnWindowFocus: false
+    staleTime: 120000,
+    refetchInterval: 180000, // Poll every 3 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Available pages for search
@@ -234,29 +231,45 @@ export default function TopBar({
     { name: 'AffiliateCenter', label: 'Affiliate Center', description: 'Referral program' },
   ];
 
-  // Search data - always fetch so results are instant
+  // Search data - LAZY: only fetch when user focuses search or types
   const { data: searchProfiles = [] } = useQuery({
     queryKey: ['topbarSearchProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 200),
-    staleTime: 120000
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
+    enabled: searchFocused || searchQuery.length > 0,
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   const { data: searchListings = [] } = useQuery({
     queryKey: ['topbarSearchListings'],
-    queryFn: () => base44.entities.Listing.list('-created_date', 50),
-    staleTime: 120000
+    queryFn: () => base44.entities.Listing.list('-created_date', 30),
+    enabled: searchFocused || searchQuery.length > 0,
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   const { data: searchMissions = [] } = useQuery({
     queryKey: ['topbarSearchMissions'],
-    queryFn: () => base44.entities.Mission.list('-created_date', 50),
-    staleTime: 120000
+    queryFn: () => base44.entities.Mission.list('-created_date', 30),
+    enabled: searchFocused || searchQuery.length > 0,
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   const { data: searchCircles = [] } = useQuery({
     queryKey: ['topbarSearchCircles'],
-    queryFn: () => base44.entities.Circle.list('-created_date', 50),
-    staleTime: 120000
+    queryFn: () => base44.entities.Circle.list('-created_date', 30),
+    enabled: searchFocused || searchQuery.length > 0,
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Filter results based on query - match at word boundaries only
