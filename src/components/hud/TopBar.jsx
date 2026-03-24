@@ -47,7 +47,8 @@ import {
   ChevronDown,
   PoundSterling,
   ArrowLeft,
-  LayoutDashboard
+  LayoutDashboard,
+  Pencil
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -751,7 +752,7 @@ export default function TopBar({
           className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9" 
           title="Notes (Ctrl+Shift+N)"
         >
-          <PenLine className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
+          <Pencil className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
           <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
             Notes
           </span>
