@@ -61,8 +61,17 @@ export default function OnboardingRewardsManager() {
     return acc;
   }, {});
 
-  // Create a set of user_ids who have received onboarding GGG
-  const awardedUserIds = new Set(gggTransactions.map(tx => tx.user_id));
+  // Also check WalletTransaction records (new wallet system)
+  const { data: walletTx = [] } = useQuery({
+    queryKey: ['adminOnboardingWalletTransactions'],
+    queryFn: () => base44.entities.WalletTransaction.filter({ memo: 'Onboarding completion bonus' }, '-created_date', 500)
+  });
+
+  // Create a set of user_ids who have received onboarding GGG (from either system)
+  const awardedUserIds = new Set([
+    ...gggTransactions.map(tx => tx.user_id),
+    ...walletTx.map(tx => tx.actor_user_id)
+  ]);
 
   // Mutation to award GGG to a user
   const awardMutation = useMutation({
