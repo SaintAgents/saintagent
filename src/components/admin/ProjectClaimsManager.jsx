@@ -403,6 +403,44 @@ export default function ProjectClaimsManager() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Deep Review Modal - Full Project Detail */}
+      <Dialog open={!!deepReviewProject} onOpenChange={(open) => !open && setDeepReviewProject(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="p-4 pb-0 sticky top-0 bg-white dark:bg-slate-900 z-10 border-b">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="flex items-center gap-2">
+                <Maximize2 className="w-5 h-5 text-violet-600" />
+                Deep Review: {deepReviewProject?.title}
+              </DialogTitle>
+              {deepReviewProject?.claim_status === 'pending' && (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setReviewingClaim(deepReviewProject);
+                  }}
+                  className="bg-violet-600 hover:bg-violet-700 gap-1.5"
+                >
+                  <Eye className="w-4 h-4" />
+                  Review Claim
+                </Button>
+              )}
+            </div>
+            {deepReviewProject?.claimed_by && (
+              <div className="flex items-center gap-2 text-sm text-slate-500 pb-3 pt-1">
+                <User className="w-4 h-4" />
+                Claimed by: <span className="font-medium text-slate-700 dark:text-slate-300">{deepReviewProject.claimed_by}</span>
+                {deepReviewProject.claim_note && (
+                  <span className="text-slate-400">— "{deepReviewProject.claim_note}"</span>
+                )}
+              </div>
+            )}
+          </DialogHeader>
+          <div className="p-4">
+            {deepReviewProject && <ProjectDetailCard project={deepReviewProject} />}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
