@@ -26,6 +26,7 @@ import MediaAttachment from '@/components/messages/MediaAttachment';
 import MessageBubble from '@/components/messages/MessageBubble';
 import TypingIndicator from '@/components/messages/TypingIndicator';
 import ShareAffiliateLinkButton from '@/components/messages/ShareAffiliateLinkButton';
+import VideoCallModal from '@/components/messages/VideoCallModal';
 import { trackSendMessage } from '@/components/gamification/challengeTracker';
 
 export default function Messages() {
