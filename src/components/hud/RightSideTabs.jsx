@@ -438,29 +438,13 @@ export default function RightSideTabs() {
         <div 
           className={cn(
             "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
-            // Mobile: full screen
+            // Mobile: full screen overlay
             "inset-0",
-            // Desktop: positioned panel
-            "md:inset-auto md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)]",
+            // Desktop: positioned bottom-right panel
+            "md:inset-auto md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:max-h-[calc(100vh-200px)]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
-          style={{ 
-            // Desktop positioning via media query is handled by inset-auto override above;
-            // we apply bottom/right/maxHeight for md+ via a CSS custom property approach:
-          }}
-          ref={(el) => {
-            if (!el) return;
-            const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-            if (isDesktop) {
-              el.style.maxHeight = 'calc(100vh - 200px)';
-              el.style.bottom = 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)';
-              el.style.right = showChatPanel ? '396px' : '0px';
-            } else {
-              el.style.maxHeight = '';
-              el.style.bottom = '';
-              el.style.right = '';
-            }
-          }}
+          style={{ right: showChatPanel ? '396px' : '0px' }}
         >
           {conciergeMode ? (
             <ConciergeAgentChat onClose={() => setConciergeMode(false)} currentPage={trackedPage} />
