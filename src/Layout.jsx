@@ -26,6 +26,7 @@ import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
+import LiveBroadcastBanner from '@/components/hud/LiveBroadcastBanner';
 
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
 import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
@@ -1825,6 +1826,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
       )}
 
       {/* Beta Ticker removed - out of beta */}
+
+      {/* Live Broadcast Banner */}
+      <LiveBroadcastBanner sidebarCollapsed={sidebarCollapsed} />
 
       {/* System-wide Announcement Banner */}
       <AnnouncementBanner 
