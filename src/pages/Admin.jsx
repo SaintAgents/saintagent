@@ -48,6 +48,7 @@ import ResourceCapacityPlanner from '@/components/admin/ResourceCapacityPlanner'
 import AdminOverviewDashboard from '@/components/admin/AdminOverviewDashboard';
 
 export default function Admin() {
+  const [activeTab, setActiveTab] = React.useState('overview');
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -96,8 +97,12 @@ export default function Admin() {
         </div>
 
         {/* Admin Tabs */}
-        <Tabs defaultValue="users" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid grid-cols-7 w-full bg-white/[0.88] dark:bg-black/[0.88] backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg p-2 h-auto">
+            <TabsTrigger value="overview" className="gap-2 px-3 py-2">
+              <LayoutDashboard className="w-4 h-4" />
+              Overview
+            </TabsTrigger>
             <TabsTrigger value="users" className="gap-2 px-3 py-2">
               <Users className="w-4 h-4" />
               Users
