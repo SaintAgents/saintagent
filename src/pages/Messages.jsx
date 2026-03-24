@@ -38,6 +38,7 @@ export default function Messages() {
   const [incomingCall, setIncomingCall] = useState(null);
   const [imageViewerUrl, setImageViewerUrl] = useState(null);
   const typingRef = React.useRef({ lastSentAt: 0 });
+  const messagesEndRef = React.useRef(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -48,8 +49,7 @@ export default function Messages() {
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages'],
     queryFn: () => base44.entities.Message.list('-created_date', 200),
-    refetchInterval: 10000, // Poll every 10s instead of 3s to reduce rate limits
-    staleTime: 5000,
+    staleTime: 10000,
     refetchOnWindowFocus: false,
     retry: false
   });
@@ -57,11 +57,26 @@ export default function Messages() {
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations'],
     queryFn: () => base44.entities.Conversation.list('-updated_date', 100),
-    refetchInterval: 15000, // Poll every 15s instead of 5s
-    staleTime: 10000,
+    staleTime: 15000,
     refetchOnWindowFocus: false,
     retry: false
   });
+
+  // Real-time: subscribe to new/updated messages
+  React.useEffect(() => {
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+    });
+    return unsubscribe;
+  }, [queryClient]);
+
+  // Real-time: subscribe to conversation updates
+  React.useEffect(() => {
+    const unsubscribe = base44.entities.Conversation.subscribe((event) => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    });
+    return unsubscribe;
+  }, [queryClient]);
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['profiles'],
@@ -183,6 +198,13 @@ export default function Messages() {
     const p = profiles.find((pr) => pr.user_id === uid);
     return p?.status || 'offline';
   }, [profiles]);
+
+  // Auto-scroll to bottom when messages change or conversation is selected
+  React.useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [currentMessages.length, selectedConversation?.id]);
   const STATUS_COLORS = { online: 'bg-emerald-500', focus: 'bg-amber-500', dnd: 'bg-rose-500', offline: 'bg-slate-400' };
   const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
 
@@ -609,6 +631,7 @@ export default function Messages() {
             {typingUsers.length > 0 && (
               <TypingIndicator users={typingUsers} profiles={profiles} />
             )}
+            <div ref={messagesEndRef} />
           </ScrollArea>
 
           {/* Input */}
