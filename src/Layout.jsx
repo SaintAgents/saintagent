@@ -154,13 +154,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // Enable hacker theme draggable popups
   useHackerDraggablePopups();
   
-  // On mobile, sidebar starts collapsed
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-      if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        return true;
+  const [sidebarCollapsed, _setSC] = useState(() => {
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth < 768) return true;
+        try { const s = localStorage.getItem('sidebarCollapsed'); if (s !== null) return s === 'true'; } catch {}
       }
       return false;
     });
+    const setSidebarCollapsed = (v) => { const val = typeof v === 'function' ? v(sidebarCollapsed) : v; _setSC(val); try { localStorage.setItem('sidebarCollapsed', String(val)); } catch {} };
   const [topbarCollapsed, setTopbarCollapsed] = useState(false);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
