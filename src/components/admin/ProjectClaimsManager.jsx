@@ -437,8 +437,13 @@ export default function ProjectClaimsManager() {
               </div>
             )}
           </DialogHeader>
-          <div className="p-4">
-            {deepReviewProject && <ProjectDetailCard project={deepReviewProject} />}
+          <div className="p-4 space-y-4">
+            {deepReviewProject && (
+              <>
+                <AIClaimReviewSuggestions project={deepReviewProject} />
+                <ProjectDetailCard project={deepReviewProject} />
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>
