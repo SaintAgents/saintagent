@@ -63,6 +63,7 @@ import SaintBrowser from '../browser/SaintBrowser';
 import AdvancedSearchModal from '../search/AdvancedSearchModal';
 import GlobalTimerWidget from './GlobalTimerWidget';
 import LiveBroadcastBanner from './LiveBroadcastBanner';
+import FloatingNotesWidget from '../notes/FloatingNotesWidget';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import CollapsedViewModeToggle from './CollapsedViewModeToggle';
 
@@ -124,6 +125,7 @@ export default function TopBar({
   const [datingSearching, setDatingSearching] = useState(false);
   const [browserOpen, setBrowserOpen] = useState(false);
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
   const searchRef = useRef(null);
   const [currentTheme, setCurrentTheme] = useState('light');
   
@@ -741,6 +743,20 @@ export default function TopBar({
           </Button>
         )}
 
+        {/* Notes */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => setNotesOpen(prev => !prev)}
+          className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9" 
+          title="Notes (Ctrl+Shift+N)"
+        >
+          <PenLine className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
+          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
+            Notes
+          </span>
+        </Button>
+
         <Link to={createPageUrl('DailyOps')} className="hidden md:block">
           <Button variant="ghost" size="icon" className="rounded-xl relative group w-8 h-8 md:w-9 md:h-9" title="Calendar">
             <Calendar className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
@@ -1157,6 +1173,9 @@ export default function TopBar({
       
       {/* SaintBrowser Modal */}
       <SaintBrowser open={browserOpen} onClose={() => setBrowserOpen(false)} />
+      
+      {/* Notes Widget */}
+      {notesOpen && <FloatingNotesWidget isOpen={notesOpen} onClose={() => setNotesOpen(false)} />}
       
       {/* Advanced Search Modal */}
       <AdvancedSearchModal

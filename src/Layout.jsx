@@ -29,7 +29,7 @@ import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import LiveBroadcastBanner from '@/components/hud/LiveBroadcastBanner';
 
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
-import FloatingNotesWidget from '@/components/notes/FloatingNotesWidget';
+
 import CanvasBackgrounds from '@/components/hud/CanvasBackgrounds';
 import LightThemeBackgroundRotator from '@/components/hud/LightThemeBackgroundRotator';
 
@@ -1933,8 +1933,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Meeting Reminder Service */}
               {currentUser && <MeetingReminderService />}
 
-      {/* Floating Notes Widget */}
-      <FloatingNotesWidget />
+      {/* Floating Notes Widget removed - now in TopBar */}
 
               {/* Mobile Close Button - shows X on secondary pages */}
               <MobileCloseButton currentPageName={currentPageName} />

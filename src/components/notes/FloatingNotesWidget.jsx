@@ -22,8 +22,8 @@ const COLORS = {
   orange: 'bg-orange-200 dark:bg-orange-800/50 border-orange-400 dark:border-orange-500',
 };
 
-export default function FloatingNotesWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function FloatingNotesWidget({ isOpen: externalOpen, onClose: externalClose }) {
+  const [isOpen, setIsOpen] = useState(externalOpen ?? false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -196,29 +196,17 @@ export default function FloatingNotesWidget() {
   const pinnedNotes = filteredNotes.filter(n => n.is_pinned);
   const regularNotes = filteredNotes.filter(n => !n.is_pinned);
 
-  // Keyboard shortcut to toggle
+  // Sync with external open state
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'n') {
-        e.preventDefault();
-        setIsOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+    if (externalOpen !== undefined) setIsOpen(externalOpen);
+  }, [externalOpen]);
 
-  if (!isOpen) {
-    return (
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-14 z-[100] w-11 h-11 rounded-full shadow-lg notes-fab-button bg-amber-500 hover:bg-amber-600 md:bottom-[180px] md:right-3 md:w-12 md:h-12"
-        title="Notes (Ctrl+Shift+N)"
-      >
-        <StickyNote className="w-5 h-5 text-white" />
-      </Button>
-    );
-  }
+  const handleClose = () => {
+    setIsOpen(false);
+    externalClose?.();
+  };
+
+  if (!isOpen) return null;
 
   const positionStyle = position.x !== null 
     ? { 
@@ -265,7 +253,7 @@ export default function FloatingNotesWidget() {
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setIsOpen(false)}>
+          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleClose}>
             <X className="w-4 h-4" />
           </Button>
         </div>
