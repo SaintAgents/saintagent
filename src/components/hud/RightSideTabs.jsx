@@ -437,10 +437,20 @@ export default function RightSideTabs() {
         {/* Sliding Panel */}
         <div 
           className={cn(
-            "fixed w-[380px] md:w-[380px] max-w-[calc(100vw-1rem)] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl rounded-xl overflow-hidden transition-all duration-300 ease-out z-[70]",
+            "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
+            "inset-0 md:inset-auto md:rounded-xl",
+            "md:w-[380px] md:max-w-[calc(100vw-1rem)]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
-          style={{ maxHeight: 'calc(100vh - 200px)', bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)', right: showChatPanel ? '396px' : '0px' }}
+          style={{ 
+            maxHeight: undefined,
+            // Desktop: positioned from bottom-right
+            ...(typeof window !== 'undefined' && window.innerWidth >= 768 ? {
+              maxHeight: 'calc(100vh - 200px)',
+              bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)', 
+              right: showChatPanel ? '396px' : '0px' 
+            } : {})
+          }}
         >
           {conciergeMode ? (
             <ConciergeAgentChat onClose={() => setConciergeMode(false)} currentPage={trackedPage} />
