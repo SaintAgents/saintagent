@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Globe, MapPin, Mail, Phone, Star, Shield, Users, Eye, TrendingUp, 
   Sparkles, ArrowLeft, ExternalLink, Edit, UserPlus, Heart, Share2,
-  Target, Award, Calendar, Briefcase, MessageCircle
+  Target, Award, Calendar, Briefcase, MessageCircle, BarChart3
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import BusinessDashboardTab from '@/components/business/BusinessDashboardTab';
@@ -16,6 +16,9 @@ import BusinessTeamTab from '@/components/business/BusinessTeamTab';
 import BusinessServicesTab from '@/components/business/BusinessServicesTab';
 import EditBusinessModal from '@/components/business/EditBusinessModal';
 import AddTeamMemberModal from '@/components/business/AddTeamMemberModal';
+import BusinessAnalyticsTab from '@/components/business/BusinessAnalyticsTab';
+import BusinessReviewsTab from '@/components/business/BusinessReviewsTab';
+import BusinessTrustScore from '@/components/business/BusinessTrustScore';
 
 const HERO_FALLBACK = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/6ba2b63c4_universal_upscale_0_d50f73c9-693f-450b-977e-64eea1b7922d_02.jpg";
 
@@ -186,6 +189,9 @@ export default function BusinessEntityProfile() {
             </div>
           </div>
 
+          {/* Trust Score Inline */}
+          <BusinessTrustScore entityId={entity.id} />
+
           {/* Impact Stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6 pt-6 border-t border-slate-100">
             <div className="text-center p-3 rounded-xl bg-violet-50">
@@ -213,8 +219,10 @@ export default function BusinessEntityProfile() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-6">
+          <TabsList className="mb-6 flex-wrap">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-1"><BarChart3 className="w-3.5 h-3.5" /> Analytics</TabsTrigger>
+            <TabsTrigger value="reviews" className="gap-1"><Star className="w-3.5 h-3.5" /> Reviews</TabsTrigger>
             <TabsTrigger value="team">Team ({entity.team_roles?.length || 0})</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
@@ -222,6 +230,14 @@ export default function BusinessEntityProfile() {
 
           <TabsContent value="dashboard">
             <BusinessDashboardTab entity={entity} isOwner={isOwner} />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <BusinessAnalyticsTab entity={entity} />
+          </TabsContent>
+
+          <TabsContent value="reviews">
+            <BusinessReviewsTab entity={entity} />
           </TabsContent>
 
           <TabsContent value="team">
