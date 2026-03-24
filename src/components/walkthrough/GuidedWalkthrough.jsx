@@ -17,7 +17,7 @@ const BUSINESS_ENTITY_STEPS = [
     id: 'click-register',
     speech: "Great! Now click the Register Your Entity button to begin creating your business profile.",
     description: "Click the 'Register Your Entity' button",
-    selector: 'button:has(.lucide-plus)',
+    selector: '[data-walkthrough-register]',
     fallbackText: 'Register Your Entity',
     action: 'click',
     delay: 2000,
@@ -179,25 +179,24 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     // Speak the instruction
     speak(s.speech, ttsEnabled, () => setIsSpeaking(false));
 
-    // Wait for speech to start, then perform action
-    await new Promise(resolve => setTimeout(resolve, s.delay || 1500));
-
     if (s.action === 'navigate') {
-      // Check if we're already on the right page
+      // Wait a moment then navigate
+      await new Promise(resolve => setTimeout(resolve, s.delay || 1500));
       const currentPath = window.location.pathname;
       if (!currentPath.includes(s.target)) {
         window.location.href = createPageUrl(s.target);
       } else {
-        // Already on page, advance
         setCurrentStep(prev => prev + 1);
       }
       return;
     }
 
-    // Wait for element to appear (modal might be opening)
+    // For click/focus/highlight — wait for element to appear with longer timeout
+    // This handles cases where a modal needs to open first
     let el = null;
     let attempts = 0;
-    while (!el && attempts < 20) {
+    const maxAttempts = 30; // up to 9 seconds
+    while (!el && attempts < maxAttempts) {
       el = findElement(s);
       if (!el) {
         await new Promise(r => setTimeout(r, 300));
@@ -205,20 +204,25 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
       }
     }
 
-    if (!el) return;
+    if (!el) {
+      // Element not found — still allow user to advance manually
+      console.warn(`Walkthrough: element not found for step "${s.id}"`);
+      return;
+    }
 
     highlightElement(el);
 
     if (s.action === 'click') {
-      await new Promise(r => setTimeout(r, 800));
+      await new Promise(r => setTimeout(r, 1200));
       el.click();
       // After click, wait for UI to update then advance
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 800));
       setCurrentStep(prev => prev + 1);
     } else if (s.action === 'focus') {
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 600));
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await new Promise(r => setTimeout(r, 300));
       el.focus();
-      el.click();
     }
     // 'highlight' action just highlights, user controls next
   }, [steps, ttsEnabled, highlightElement, removeHighlight]);
@@ -279,6 +283,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   }, [walkthroughId]);
 
   const handleNext = () => {
+    window.speechSynthesis?.cancel();
     removeHighlight();
     if (currentStep < steps.length - 1) {
       setCurrentStep(prev => prev + 1);
@@ -288,6 +293,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   };
 
   const handlePrev = () => {
+    window.speechSynthesis?.cancel();
     removeHighlight();
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
@@ -319,10 +325,10 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
           </p>
           <div className="flex items-center justify-center gap-3 mb-6">
             <Button
-              variant={ttsEnabled ? "default" : "outline"}
+              variant="outline"
               size="sm"
               onClick={() => setTtsEnabled(!ttsEnabled)}
-              className="gap-2"
+              className={`gap-2 ${ttsEnabled ? 'border-violet-400 text-violet-700 bg-violet-50' : 'text-slate-500'}`}
             >
               {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               {ttsEnabled ? 'Voice ON' : 'Voice OFF'}

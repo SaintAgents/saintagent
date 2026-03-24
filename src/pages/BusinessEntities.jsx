@@ -76,7 +76,7 @@ export default function BusinessEntities() {
             Leaders of transformational solutions — conscious businesses building the new paradigm.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2" onClick={() => setCreateOpen(true)}>
+            <Button data-walkthrough-register className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2" onClick={() => setCreateOpen(true)}>
               <Plus className="w-4 h-4" /> Register Your Entity
             </Button>
             <Button variant="outline" className="rounded-xl gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20">
