@@ -953,6 +953,19 @@ export default function TopBar({
                       <span>My Dashboard/Profile</span>
                     </Link>
                   </DropdownMenuItem>
+                  {myBusinessEntities.length > 0 && myBusinessEntities.map(biz => (
+                    <DropdownMenuItem key={biz.id} asChild>
+                      <Link to={createPageUrl('BusinessEntityProfile') + `?id=${biz.id}`} className="flex items-center gap-3 px-4 py-2.5">
+                        <Globe className="w-4 h-4 text-emerald-500" />
+                        <span className="truncate">{biz.name || '5D Business'}</span>
+                        {biz.owner_id === currentUser?.email ? (
+                          <Badge className="ml-auto bg-violet-100 text-violet-700 text-[10px] px-1.5">Owner</Badge>
+                        ) : (
+                          <Badge className="ml-auto bg-emerald-100 text-emerald-700 text-[10px] px-1.5">Team</Badge>
+                        )}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
                   <DropdownMenuItem asChild>
                     <Link to={createPageUrl('Settings')} className="flex items-center gap-3 px-4 py-2.5">
                       <Settings className="w-4 h-4 text-slate-500" />
