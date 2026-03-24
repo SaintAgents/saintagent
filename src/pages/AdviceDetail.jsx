@@ -25,6 +25,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 import AIInsightPanel from '@/components/advice/AIInsightPanel';
+import SaintAgentChat from '@/components/advice/SaintAgentChat';
 import AnswerCard from '@/components/advice/AnswerCard';
 import WisdomLeaderboard from '@/components/advice/WisdomLeaderboard';
 
@@ -388,6 +389,9 @@ export default function AdviceDetailPage() {
                 canRegenerate={isQuestionAuthor}
               />
             )}
+
+            {/* Interactive AI Chat */}
+            <SaintAgentChat question={question} />
 
             {/* Answers Section */}
             <div className="space-y-4">
