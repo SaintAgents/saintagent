@@ -123,15 +123,17 @@ export default function CommunityIntentionsPanel() {
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ['communityIntentions'],
     queryFn: async () => {
-      const all = await base44.entities.UserProfile.list('-updated_date', 30);
-      // Filter to those with intentions or goals
+      const all = await base44.entities.UserProfile.list('-updated_date', 20);
       return all.filter(p =>
         (p.intentions && p.intentions.length > 0) ||
         (p.personal_goals && p.personal_goals.some(g => g.title))
       );
     },
-    staleTime: 120000,
-    refetchOnWindowFocus: false
+    staleTime: 600000,
+    gcTime: 900000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1,
   });
 
   if (isLoading) {

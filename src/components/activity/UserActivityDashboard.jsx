@@ -100,47 +100,42 @@ function RecentActivityList({ activities }) {
 }
 
 export default function UserActivityDashboard({ userId, userEmail }) {
-  // Fetch user's posts
-  const { data: posts = [] } = useQuery({
-    queryKey: ['userPosts', userEmail],
-    queryFn: () => base44.entities.Post.filter({ created_by: userEmail }, '-created_date', 100),
-    enabled: !!userEmail
+  // Fetch all user activity data in a single query to reduce API calls
+  const { data: activityData } = useQuery({
+    queryKey: ['userActivityAll', userEmail],
+    queryFn: async () => {
+      // Stagger requests to avoid rate limits - fetch in 2 batches
+      const [posts, missions, meetings] = await Promise.all([
+        base44.entities.Post.filter({ created_by: userEmail }, '-created_date', 30),
+        base44.entities.Mission.list('-created_date', 50),
+        base44.entities.Meeting.filter({ created_by: userEmail }, '-scheduled_time', 20),
+      ]);
+      
+      // Small delay before second batch
+      await new Promise(r => setTimeout(r, 300));
+      
+      const [circles, testimonials, follows] = await Promise.all([
+        base44.entities.Circle.list('-created_date', 30),
+        base44.entities.Testimonial.filter({ author_id: userEmail }, '-created_date', 20),
+        base44.entities.Follow.filter({ follower_id: userEmail }, '-created_date', 50),
+      ]);
+      
+      return { posts, missions, meetings, circles, testimonials, follows };
+    },
+    enabled: !!userEmail,
+    staleTime: 600000,
+    gcTime: 900000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1,
   });
 
-  // Fetch missions user joined
-  const { data: missions = [] } = useQuery({
-    queryKey: ['userMissions', userEmail],
-    queryFn: () => base44.entities.Mission.list('-created_date', 200),
-    enabled: !!userEmail
-  });
-
-  // Fetch circles
-  const { data: circles = [] } = useQuery({
-    queryKey: ['userCircles'],
-    queryFn: () => base44.entities.Circle.list('-created_date', 100),
-    enabled: !!userEmail
-  });
-
-  // Fetch meetings
-  const { data: meetings = [] } = useQuery({
-    queryKey: ['userMeetings', userEmail],
-    queryFn: () => base44.entities.Meeting.filter({ created_by: userEmail }, '-scheduled_time', 50),
-    enabled: !!userEmail
-  });
-
-  // Fetch testimonials given
-  const { data: testimonials = [] } = useQuery({
-    queryKey: ['userTestimonials', userEmail],
-    queryFn: () => base44.entities.Testimonial.filter({ author_id: userEmail }, '-created_date', 50),
-    enabled: !!userEmail
-  });
-
-  // Fetch follows
-  const { data: follows = [] } = useQuery({
-    queryKey: ['userFollows', userEmail],
-    queryFn: () => base44.entities.Follow.filter({ follower_id: userEmail }, '-created_date', 100),
-    enabled: !!userEmail
-  });
+  const posts = activityData?.posts || [];
+  const missions = activityData?.missions || [];
+  const circles = activityData?.circles || [];
+  const meetings = activityData?.meetings || [];
+  const testimonials = activityData?.testimonials || [];
+  const follows = activityData?.follows || [];
 
   // Calculate metrics
   const metrics = useMemo(() => {
