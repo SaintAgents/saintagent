@@ -92,23 +92,51 @@ function findElement(step) {
   return null;
 }
 
-// Text-to-speech
+// Text-to-speech — voices load async, so we cache them after voiceschanged fires
+let cachedVoices = [];
+if (typeof window !== 'undefined' && window.speechSynthesis) {
+  cachedVoices = window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    cachedVoices = window.speechSynthesis.getVoices();
+  };
+}
+
 function speak(text, enabled, onEnd) {
   if (!enabled || !window.speechSynthesis) {
     onEnd?.();
     return;
   }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 0.95;
-  utterance.pitch = 1.0;
-  utterance.volume = 0.8;
-  // Pick a good voice
-  const voices = window.speechSynthesis.getVoices();
-  const preferred = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Microsoft'));
-  if (preferred) utterance.voice = preferred;
-  utterance.onend = onEnd;
-  window.speechSynthesis.speak(utterance);
+
+  const doSpeak = () => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
+    const preferred = voices.find(v =>
+      v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Microsoft Zira')
+    ) || voices.find(v => v.lang.startsWith('en'));
+    if (preferred) utterance.voice = preferred;
+    utterance.onend = onEnd;
+    utterance.onerror = () => onEnd?.();
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // If voices aren't loaded yet, wait for them
+  if (cachedVoices.length === 0) {
+    const check = () => {
+      cachedVoices = window.speechSynthesis.getVoices();
+      if (cachedVoices.length > 0) {
+        doSpeak();
+      } else {
+        setTimeout(check, 100);
+      }
+    };
+    check();
+  } else {
+    doSpeak();
+  }
 }
 
 export default function GuidedWalkthrough({ walkthroughId = 'business_entity', onClose }) {
@@ -132,9 +160,14 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     };
   }, []);
 
-  // Load voices
+  // Ensure voices are warmed up
   useEffect(() => {
-    window.speechSynthesis?.getVoices();
+    if (window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        cachedVoices = window.speechSynthesis.getVoices();
+      };
+    }
   }, []);
 
   const removeHighlight = useCallback(() => {
