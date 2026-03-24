@@ -36,6 +36,7 @@ export default function Messages() {
   const [dmOpen, setDMOpen] = useState(false);
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [videoCallFullscreen, setVideoCallFullscreen] = useState(false);
+  const [zoomModalOpen, setZoomModalOpen] = useState(false);
   const [incomingCall, setIncomingCall] = useState(null);
   const [imageViewerUrl, setImageViewerUrl] = useState(null);
   const typingRef = React.useRef({ lastSentAt: 0 });
