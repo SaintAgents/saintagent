@@ -94,8 +94,8 @@ export default function BasicsWalkthrough({ open, onClose }) {
   const Icon = current.icon;
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+    <Dialog open={open} onOpenChange={() => { /* prevent dismiss by outside click */ }}>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden z-[99999]" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         {/* Progress dots */}
         <div className="flex items-center justify-center gap-1.5 pt-4 px-6">
           {STEPS.map((_, i) => (

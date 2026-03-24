@@ -267,16 +267,22 @@ export default function GlobalChatWidget() {
     }
   }, [messages.length, isOpen]);
 
-  // Count online users
+  // Count online users via LiveStatus entity (matches right panel)
   const { data: onlineUsers = [] } = useQuery({
     queryKey: ['onlineUsersGlobalChat'],
     queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.list('-last_seen_at', 100);
-      const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000);
-      return profiles.filter(p => p.last_seen_at && new Date(p.last_seen_at) > fiveMinAgo);
+      const statuses = await base44.entities.LiveStatus.filter({ status: 'online' }, '-last_heartbeat', 50);
+      const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000);
+      const online = statuses.filter(s => s.last_heartbeat && new Date(s.last_heartbeat) > tenMinAgo);
+      // Fetch profiles for avatar display
+      if (online.length === 0) return [];
+      const profiles = await base44.entities.UserProfile.list('-updated_date', 200);
+      const profileMap = {};
+      profiles.forEach(p => { profileMap[p.user_id] = p; });
+      return online.map(s => ({ ...s, ...(profileMap[s.user_id] || {}) }));
     },
-    enabled: isOpen,
-    refetchInterval: 10000
+    refetchInterval: 30000,
+    staleTime: 15000
   });
 
   const sendMutation = useMutation({
