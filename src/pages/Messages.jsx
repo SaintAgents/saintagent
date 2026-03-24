@@ -508,24 +508,14 @@ export default function Messages() {
               </div>
             )}
             <div className="ml-auto flex items-center gap-2">
-              {/* Video Call Button */}
+              {/* Video Call Button — Zoom Integration */}
               {!selectedConversation.isGroup && (
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={async () => {
-                    // Create notification for recipient
-                    await base44.entities.Notification.create({
-                      user_id: selectedConversation.otherUser.id,
-                      type: 'meeting',
-                      title: 'Incoming Video Call',
-                      message: `${user.full_name} is calling you`,
-                      action_url: createPageUrl('Messages'),
-                      priority: 'high'
-                    });
-                    setVideoCallOpen(true);
-                  }}
+                  onClick={() => setZoomModalOpen(true)}
                   className="h-8 w-8 rounded-full bg-emerald-50 border-emerald-200 hover:bg-emerald-100"
+                  title="Start or schedule a Zoom video call"
                 >
                   <Video className="w-4 h-4 text-emerald-600" />
                 </Button>
