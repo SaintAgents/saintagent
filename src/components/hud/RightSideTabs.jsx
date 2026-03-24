@@ -613,11 +613,11 @@ export default function RightSideTabs() {
         {/* Sliding Panel */}
         <div 
           className={cn(
-            "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out flex flex-col z-[60]",
+            "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out flex flex-col z-[70]",
             // Mobile: full screen
             "inset-0",
             // Desktop: positioned right panel
-            "md:inset-auto md:right-0 md:bottom-24 md:rounded-l-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:max-h-[500px]",
+            "md:inset-auto md:right-0 md:bottom-24 md:rounded-l-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:max-h-[calc(100vh-200px)]",
             showChatPanel ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
         >
