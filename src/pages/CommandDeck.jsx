@@ -14,7 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy, Eye, EyeOff, AlertCircle, RefreshCw, Play } from "lucide-react";
+import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy, Eye, EyeOff, AlertCircle, RefreshCw, Play, HelpCircle } from "lucide-react";
+import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
+import BasicsWalkthrough from '@/components/walkthrough/BasicsWalkthrough';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import InboxSignals from '@/components/sections/InboxSignals';
 import CirclesRegions from '@/components/sections/CirclesRegions';
@@ -187,6 +189,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Tour and loading states
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [showTour, setShowTour] = useState(false);
+  const [showOnboardingTour, setShowOnboardingTour] = useState(false);
+  const [showBasicsWalkthrough, setShowBasicsWalkthrough] = useState(false);
 
   // Hide/Unhide functionality for cards
   const [hiddenCards, setHiddenCards] = useState(() => {
@@ -1961,8 +1965,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           }}
         />
         
-        {/* Command Deck Tour */}
         <CommandDeckTour autoStart={showTour} onComplete={handleTourComplete} />
+        {showOnboardingTour && <InteractiveOnboardingTour open onClose={() => { setShowOnboardingTour(false); setTimeout(() => setShowBasicsWalkthrough(true), 300); }} />}
+        {showBasicsWalkthrough && <BasicsWalkthrough open onClose={() => { setShowBasicsWalkthrough(false); setTimeout(() => document.dispatchEvent(new CustomEvent('openRightSideTab', { detail: { tab: 'help' } })), 400); }} />}
       </div>
     </div>);
 
