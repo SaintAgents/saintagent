@@ -337,13 +337,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // Initialize live status tracking
   useLiveStatus();
 
-  // Fetch notifications with real-time subscription
+  // Fetch notifications with real-time subscription (rely on subscription for updates)
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', currentUser?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_id: currentUser.email }, '-created_date', 50),
+    queryFn: () => base44.entities.Notification.filter({ user_id: currentUser.email }, '-created_date', 30),
     enabled: !!currentUser?.email,
-    staleTime: 60000,
-    gcTime: 120000,
+    staleTime: 300000,
+    gcTime: 600000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,
