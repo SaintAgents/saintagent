@@ -8,17 +8,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Globe, MapPin, Mail, Phone, Star, Shield, Users, Eye, TrendingUp, 
   Sparkles, ArrowLeft, ExternalLink, Edit, UserPlus, Heart, Share2,
-  Target, Award, Calendar, Briefcase, MessageCircle, BarChart3
+  Target, Award, Calendar, Briefcase, MessageCircle
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import BusinessDashboardTab from '@/components/business/BusinessDashboardTab';
 import BusinessTeamTab from '@/components/business/BusinessTeamTab';
 import BusinessServicesTab from '@/components/business/BusinessServicesTab';
+import BusinessAnalyticsTab from '@/components/business/BusinessAnalyticsTab';
+import TrustScoreCard from '@/components/business/TrustScoreCard';
+import BusinessReviewForm from '@/components/business/BusinessReviewForm';
+import BusinessReviewsList from '@/components/business/BusinessReviewsList';
 import EditBusinessModal from '@/components/business/EditBusinessModal';
 import AddTeamMemberModal from '@/components/business/AddTeamMemberModal';
-import BusinessAnalyticsTab from '@/components/business/BusinessAnalyticsTab';
-import BusinessReviewsTab from '@/components/business/BusinessReviewsTab';
-import BusinessTrustScore from '@/components/business/BusinessTrustScore';
 
 const HERO_FALLBACK = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/6ba2b63c4_universal_upscale_0_d50f73c9-693f-450b-977e-64eea1b7922d_02.jpg";
 
@@ -63,6 +64,12 @@ export default function BusinessEntityProfile() {
       const results = await base44.entities.BusinessEntity5D.filter({ id: entityId });
       return results[0];
     },
+    enabled: !!entityId
+  });
+
+  const { data: reviews = [] } = useQuery({
+    queryKey: ['businessReviews', entityId],
+    queryFn: () => base44.entities.BusinessReview.filter({ entity_id: entityId, status: 'published' }, '-created_date', 100),
     enabled: !!entityId
   });
 
@@ -189,8 +196,22 @@ export default function BusinessEntityProfile() {
             </div>
           </div>
 
-          {/* Trust Score Inline */}
-          <BusinessTrustScore entityId={entity.id} />
+          {/* Trust Score inline */}
+          {reviews.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-slate-100">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-violet-600" />
+                  <span className="text-sm font-semibold text-slate-700">Trust Score:</span>
+                  <span className="text-xl font-bold text-violet-700">
+                    {(reviews.reduce((s, r) => s + ((r.overall_rating + (r.transparency_rating || r.overall_rating) + (r.impact_rating || r.overall_rating) + (r.communication_rating || r.overall_rating)) / 4), 0) / reviews.length).toFixed(1)}/5
+                  </span>
+                </div>
+                <Badge className="bg-violet-100 text-violet-700">{reviews.length} reviews</Badge>
+                <Badge className="bg-emerald-100 text-emerald-700">{reviews.filter(r => r.is_verified).length} verified</Badge>
+              </div>
+            </div>
+          )}
 
           {/* Impact Stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6 pt-6 border-t border-slate-100">
@@ -221,8 +242,8 @@ export default function BusinessEntityProfile() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6 flex-wrap">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="analytics" className="gap-1"><BarChart3 className="w-3.5 h-3.5" /> Analytics</TabsTrigger>
-            <TabsTrigger value="reviews" className="gap-1"><Star className="w-3.5 h-3.5" /> Reviews</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
             <TabsTrigger value="team">Team ({entity.team_roles?.length || 0})</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
@@ -237,7 +258,17 @@ export default function BusinessEntityProfile() {
           </TabsContent>
 
           <TabsContent value="reviews">
-            <BusinessReviewsTab entity={entity} />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-1">
+                <TrustScoreCard reviews={reviews} entity={entity} />
+              </div>
+              <div className="lg:col-span-2 space-y-6">
+                {currentUser?.email !== entity.owner_id && (
+                  <BusinessReviewForm entity={entity} />
+                )}
+                <BusinessReviewsList reviews={reviews} />
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="team">
