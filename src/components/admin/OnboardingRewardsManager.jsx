@@ -37,11 +37,17 @@ export default function OnboardingRewardsManager() {
     queryFn: () => base44.entities.OnboardingProgress.list('-created_date', 500)
   });
 
-  // Fetch all GGG transactions for onboarding
-  const { data: gggTransactions = [], isLoading: loadingTx } = useQuery({
-    queryKey: ['adminOnboardingGGGTransactions'],
+  // Fetch all GGG transactions for onboarding (check both old and new reason codes)
+  const { data: gggTxOld = [], isLoading: loadingTxOld } = useQuery({
+    queryKey: ['adminOnboardingGGGTransactions_old'],
     queryFn: () => base44.entities.GGGTransaction.filter({ reason_code: 'onboarding_completion' }, '-created_date', 500)
   });
+  const { data: gggTxNew = [], isLoading: loadingTxNew } = useQuery({
+    queryKey: ['adminOnboardingGGGTransactions_new'],
+    queryFn: () => base44.entities.GGGTransaction.filter({ reason_code: 'profile_completed' }, '-created_date', 500)
+  });
+  const gggTransactions = [...gggTxOld, ...gggTxNew];
+  const loadingTx = loadingTxOld || loadingTxNew;
 
   // Fetch user profiles for display names
   const { data: userProfiles = [] } = useQuery({
