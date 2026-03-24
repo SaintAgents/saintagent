@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronUp, ChevronDown, CheckCircle2, Flag, Heart, Award } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
+import WisdomBadgeRow from './WisdomBadgeRow';
 
 const TAG_STYLES = {
   practical: 'bg-blue-100 text-blue-700',
@@ -158,6 +159,7 @@ export default function AnswerCard({
                           {verification.label}
                         </Badge>
                       )}
+                      <WisdomBadgeRow wisdomScore={wisdomScore} maxShow={3} size="sm" />
                     </div>
                   </div>
                 </div>
