@@ -8,8 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Globe, MapPin, Mail, Phone, Star, Shield, Users, Eye, TrendingUp, 
   Sparkles, ArrowLeft, ExternalLink, Edit, UserPlus, Heart, Share2,
-  Target, Award, Calendar, Briefcase, MessageCircle
+  Target, Award, Calendar, Briefcase, MessageCircle, Check, Copy
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
 import BusinessDashboardTab from '@/components/business/BusinessDashboardTab';
 import BusinessTeamTab from '@/components/business/BusinessTeamTab';
@@ -52,6 +53,36 @@ export default function BusinessEntityProfile() {
   const [editOpen, setEditOpen] = useState(false);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [copied, setCopied] = useState(false);
+
+  const handleContact = () => {
+    if (entity?.email) {
+      window.location.href = `mailto:${entity.email}?subject=Inquiry about ${entity.name}`;
+    } else if (entity?.owner_id) {
+      document.dispatchEvent(new CustomEvent('openFloatingChat', {
+        detail: {
+          recipientId: entity.owner_id,
+          recipientName: entity.owner_name || entity.name,
+          recipientAvatar: entity.owner_avatar || ''
+        }
+      }));
+    } else {
+      toast.info('No contact information available for this entity.');
+    }
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = entity?.name || '5D Business Entity';
+    if (navigator.share) {
+      navigator.share({ title, url }).catch(() => {});
+    } else {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success('Link copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -187,11 +218,12 @@ export default function BusinessEntityProfile() {
               <Button className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2">
                 <Heart className="w-4 h-4" /> Follow
               </Button>
-              <Button variant="outline" className="rounded-xl gap-2">
+              <Button variant="outline" className="rounded-xl gap-2" onClick={handleContact}>
                 <MessageCircle className="w-4 h-4" /> Contact
               </Button>
-              <Button variant="outline" className="rounded-xl gap-2">
-                <Share2 className="w-4 h-4" /> Share
+              <Button variant="outline" className="rounded-xl gap-2" onClick={handleShare}>
+                {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                {copied ? 'Copied!' : 'Share'}
               </Button>
             </div>
           </div>
