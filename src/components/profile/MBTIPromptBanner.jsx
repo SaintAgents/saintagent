@@ -14,13 +14,22 @@ import MBTIAssessment from './MBTIAssessment';
 
 // Check dismissal synchronously to prevent any flash
 function isDismissed(profile) {
-  // Check profile-level flag first (survives localStorage clears)
+  // Check profile-level permanent flag (survives everything)
   if (profile?.mbti_prompt_dismissed === true) return true;
+  // Check profile-level timed dismissal (survives localStorage clears)
+  if (profile?.mbti_prompt_dismissed_until) {
+    const untilDate = new Date(profile.mbti_prompt_dismissed_until);
+    if (untilDate.getTime() > Date.now()) return true;
+  }
+  // Fallback to localStorage
   try {
     const val = localStorage.getItem('mbti_prompt_dismissed_permanently');
     if (val === 'true' || val === 'never') return true;
     const dismissedUntil = localStorage.getItem('mbti_prompt_dismissed_until');
-    if (dismissedUntil && new Date(dismissedUntil) > new Date()) return true;
+    if (dismissedUntil) {
+      if (new Date(dismissedUntil).getTime() > Date.now()) return true;
+      localStorage.removeItem('mbti_prompt_dismissed_until');
+    }
   } catch {}
   return false;
 }
@@ -59,7 +68,11 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
       else if (duration === 'day') dismissUntil.setDate(dismissUntil.getDate() + 1);
       else if (duration === 'week') dismissUntil.setDate(dismissUntil.getDate() + 7);
       else if (duration === 'month') dismissUntil.setMonth(dismissUntil.getMonth() + 1);
-      localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString());
+      try { localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString()); } catch {}
+      // Also persist to profile entity so it survives localStorage clears
+      if (profile?.id) {
+        try { base44.entities.UserProfile.update(profile.id, { mbti_prompt_dismissed_until: dismissUntil.toISOString() }); } catch {}
+      }
     }
     setDismissed(true);
     setShowDismissOptions(false);

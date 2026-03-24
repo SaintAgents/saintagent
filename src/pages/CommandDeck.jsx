@@ -882,11 +882,14 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       <div className="px-0 md:px-6 pt-6 pb-4 w-full" style={{ marginTop: '48px' }}>
           <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
-            <div className="relative z-10 flex items-center gap-4">
+            <div className="relative z-10 flex items-center gap-3">
               <div>
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]">Command Deck</h1>
                 <p className="text-teal-500 dark:text-[#00ff88] mt-1">Your mission control center</p>
               </div>
+              <button onClick={() => setShowOnboardingTour(true)} className="p-2 rounded-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/40 dark:hover:bg-violet-800/60 transition-colors shrink-0" title="Replay Platform Tour">
+                <HelpCircle className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+              </button>
             </div>
             <div className="flex items-center gap-3 relative z-10">
               <button
