@@ -191,9 +191,9 @@ export function useLiveStatus() {
       }
     };
 
-    // CRITICAL: Delay init by 5 seconds to let the main page load first
+    // CRITICAL: Delay init by 15 seconds to let the main page load first
     // This avoids competing with all the other API calls that fire on mount
-    const initDelay = setTimeout(() => initStatus(0), 5000);
+    const initDelay = setTimeout(() => initStatus(0), 15000);
 
     // Set offline on page unload by updating the LiveStatus record directly
     // The sendBeacon to /api/offline doesn't exist, so we mark offline via visibility change
