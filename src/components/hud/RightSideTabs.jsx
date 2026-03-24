@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, Sparkles } from 'lucide-react';
+import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, Sparkles, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -12,6 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 import TownHallCall from '@/components/video/TownHallCall';
 import ConciergeAgentChat from '@/components/support/ConciergeAgentChat';
+import LearnPanel from '@/components/learn/LearnPanel';
 import { format, parseISO } from 'date-fns';
 
 const QUICK_QUESTIONS = [
@@ -165,6 +166,7 @@ export default function RightSideTabs() {
   const [helpInput, setHelpInput] = useState('');
   const [helpLoading, setHelpLoading] = useState(false);
   const [conciergeMode, setConciergeMode] = useState(false);
+  const [learnMode, setLearnMode] = useState(false);
   const helpScrollRef = useRef(null);
   const helpInputRef = useRef(null);
 
@@ -448,6 +450,8 @@ export default function RightSideTabs() {
         >
           {conciergeMode ? (
             <ConciergeAgentChat onClose={() => setConciergeMode(false)} currentPage={trackedPage} />
+          ) : learnMode ? (
+            <LearnPanel onClose={() => setLearnMode(false)} />
           ) : (
             <>
               {/* Header */}
@@ -544,20 +548,29 @@ export default function RightSideTabs() {
 
               {/* Input */}
               <div className="p-3 border-t border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-[#050505]/80">
-                {/* Concierge Agent Button */}
-                <button
-                  type="button"
-                  onClick={() => setConciergeMode(true)}
-                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-900/30 dark:hover:to-teal-900/30 border border-emerald-200 dark:border-emerald-800 transition-all hover:shadow-sm"
-                >
-                  <Bot className="w-4 h-4" />
-                  AI Concierge — Let me do things for you
-                  <Sparkles className="w-3 h-3 text-emerald-500" />
-                </button>
+                {/* Action Buttons Row */}
+                <div className="flex gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setConciergeMode(true)}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-teal-100 border border-emerald-200 dark:border-emerald-800 transition-all hover:shadow-sm"
+                  >
+                    <Bot className="w-3.5 h-3.5" />
+                    AI Concierge
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLearnMode(true)}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 text-amber-700 dark:text-amber-300 hover:from-amber-100 hover:to-orange-100 border border-amber-200 dark:border-amber-800 transition-all hover:shadow-sm"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Learn
+                  </button>
+                </div>
                 <button
                   type="button"
                   onClick={() => setFeedbackOpen(true)}
-                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
+                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 transition-colors"
                 >
                   <Smile className="w-3.5 h-3.5" />
                   Submit Beta Feedback
