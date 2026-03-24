@@ -27,6 +27,7 @@ import AskQuestionModal from '@/components/advice/AskQuestionModal';
 import QuestionCard from '@/components/advice/QuestionCard';
 import WisdomLeaderboard from '@/components/advice/WisdomLeaderboard';
 import TopicDashboard from '@/components/advice/TopicDashboard';
+import WisdomAnalyticsDashboard from '@/components/advice/WisdomAnalyticsDashboard';
 
 const CATEGORIES = [
   { value: 'all', label: 'All Topics' },
@@ -231,6 +232,9 @@ export default function AdvicePage() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Analytics Dashboard */}
+        <WisdomAnalyticsDashboard questions={questions} />
+
         {/* Topic Dashboard */}
         <TopicDashboard 
           questions={questions} 
