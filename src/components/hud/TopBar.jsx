@@ -63,8 +63,7 @@ import SaintBrowser from '../browser/SaintBrowser';
 import AdvancedSearchModal from '../search/AdvancedSearchModal';
 import GlobalTimerWidget from './GlobalTimerWidget';
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { getStoredViewMode } from './DeckViewModeSelector';
-import { createPageUrl as createPageUrlUtil } from '@/utils';
+import CollapsedViewModeToggle from './CollapsedViewModeToggle';
 
 // Theme-aware mode icons
 const MODE_ICONS = {
