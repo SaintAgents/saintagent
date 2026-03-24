@@ -15,12 +15,13 @@ const TUTORIAL_STEPS = [
     title: 'Welcome to 5D Business Entities',
     icon: Building2,
     color: 'violet',
-    content: `A **5D Business Entity** is your organization's presence on the SaintAgent platform. It represents a conscious business, project, or collective that's building the new paradigm.`,
+    content: `A **5D Business Entity** is your organization's presence on the SaintAgent platform. It represents a conscious business, project, or collective that's building the new paradigm. **You don't need to sign out** — when you register an entity, you automatically become the owner.`,
     highlights: [
       'Showcase your business to the entire SaintAgent community',
       'Build trust through reviews, verification, and impact metrics',
       'Attract collaborators, team members, and clients',
-      'Track your entity\'s growth with built-in analytics'
+      'Track your entity\'s growth with built-in analytics',
+      'You are automatically the **owner** — no separate login needed'
     ],
     image: 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/6ba2b63c4_universal_upscale_0_d50f73c9-693f-450b-977e-64eea1b7922d_02.jpg'
   },
@@ -140,14 +141,16 @@ const TUTORIAL_STEPS = [
     title: 'Step 9: Build Your Team',
     icon: Users,
     color: 'blue',
-    content: `One of the most powerful features — invite other SaintAgent members to join your entity's team!`,
+    content: `One of the most powerful features — invite other SaintAgent members to join your entity's team and manage them directly!`,
     highlights: [
       'Go to the **Team** tab on your entity profile',
       'Click **Add Team Member** and search for people by name or handle',
-      'Assign roles like "Co-Founder", "Advisor", "Marketing Lead"',
-      'Team members get the entity listed in their profile dropdown menu'
+      'Assign roles (**Admin** or **Member**) and custom titles like "Marketing Lead" or "Advisor"',
+      'Click the **pencil icon** on any member to update their role or title anytime',
+      'Click the **trash icon** to remove a member (with confirmation)',
+      'Only the **owner** can manage team roles — members cannot edit each other'
     ],
-    tip: 'Building a team increases your entity\'s visibility and trust score.'
+    tip: 'Building a team increases your entity\'s visibility and trust score. Use custom titles to showcase each member\'s unique contribution.'
   },
   {
     id: 'complete',
