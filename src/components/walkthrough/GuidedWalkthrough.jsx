@@ -145,17 +145,19 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   const [started, setStarted] = useState(false);
   const [highlightRect, setHighlightRect] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const observerRef = useRef(null);
-  const highlightTimerRef = useRef(null);
+  const cancelRef = useRef(0);
+  const ttsRef = useRef(true);
 
   const steps = BUSINESS_ENTITY_STEPS;
   const step = steps[currentStep];
 
+  useEffect(() => { ttsRef.current = ttsEnabled; }, [ttsEnabled]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      cancelRef.current++;
       window.speechSynthesis?.cancel();
-      clearTimeout(highlightTimerRef.current);
       removeHighlight();
     };
   }, []);
@@ -184,11 +186,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   const highlightElement = useCallback((el) => {
     if (!el) return;
     removeHighlight();
-    
-    // Scroll into view
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    
-    // Apply pulsing glow
     el.setAttribute('data-walkthrough-highlight', 'true');
     el.style.boxShadow = '0 0 0 4px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.2)';
     el.style.outline = '2px solid rgba(139, 92, 246, 0.8)';
@@ -196,74 +194,77 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     if (getComputedStyle(el).position === 'static') {
       el.style.position = 'relative';
     }
-    
-    // Update position for the tooltip
     const rect = el.getBoundingClientRect();
     setHighlightRect(rect);
   }, [removeHighlight]);
 
-  const executeStep = useCallback(async (stepIndex) => {
-    const s = steps[stepIndex];
-    if (!s) return;
-
-    removeHighlight();
-    setIsSpeaking(true);
-
-    // Speak the instruction
-    speak(s.speech, ttsEnabled, () => setIsSpeaking(false));
-
-    if (s.action === 'navigate') {
-      // Wait a moment then navigate
-      await new Promise(resolve => setTimeout(resolve, s.delay || 1500));
-      const currentPath = window.location.pathname;
-      if (!currentPath.includes(s.target)) {
-        window.location.href = createPageUrl(s.target);
-      } else {
-        setCurrentStep(prev => prev + 1);
-      }
-      return;
-    }
-
-    // For click/focus/highlight — wait for element to appear with longer timeout
-    // This handles cases where a modal needs to open first
-    let el = null;
-    let attempts = 0;
-    const maxAttempts = 30; // up to 9 seconds
-    while (!el && attempts < maxAttempts) {
-      el = findElement(s);
-      if (!el) {
-        await new Promise(r => setTimeout(r, 300));
-        attempts++;
-      }
-    }
-
-    if (!el) {
-      // Element not found — still allow user to advance manually
-      console.warn(`Walkthrough: element not found for step "${s.id}"`);
-      return;
-    }
-
-    highlightElement(el);
-
-    if (s.action === 'click') {
-      await new Promise(r => setTimeout(r, 1200));
-      el.click();
-      // After click, wait for UI to update then advance
-      await new Promise(r => setTimeout(r, 800));
-      setCurrentStep(prev => prev + 1);
-    } else if (s.action === 'focus') {
-      await new Promise(r => setTimeout(r, 600));
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      await new Promise(r => setTimeout(r, 300));
-      el.focus();
-    }
-    // 'highlight' action just highlights, user controls next
-  }, [steps, ttsEnabled, highlightElement, removeHighlight]);
-
   // Execute step when currentStep changes
   useEffect(() => {
     if (!started) return;
-    executeStep(currentStep);
+
+    // Cancel any previous async step execution
+    cancelRef.current++;
+    const myToken = cancelRef.current;
+    const cancelled = () => myToken !== cancelRef.current;
+
+    const run = async () => {
+      const s = steps[currentStep];
+      if (!s) return;
+
+      removeHighlight();
+      setIsSpeaking(true);
+      speak(s.speech, ttsRef.current, () => setIsSpeaking(false));
+
+      if (s.action === 'navigate') {
+        await new Promise(r => setTimeout(r, s.delay || 1500));
+        if (cancelled()) return;
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes(s.target)) {
+          window.location.href = createPageUrl(s.target);
+        } else {
+          setCurrentStep(prev => prev + 1);
+        }
+        return;
+      }
+
+      // Wait for element to appear
+      let el = null;
+      let attempts = 0;
+      while (!el && attempts < 30) {
+        if (cancelled()) return;
+        el = findElement(s);
+        if (!el) {
+          await new Promise(r => setTimeout(r, 300));
+          attempts++;
+        }
+      }
+
+      if (cancelled()) return;
+      if (!el) {
+        console.warn(`Walkthrough: element not found for step "${s.id}"`);
+        return;
+      }
+
+      highlightElement(el);
+
+      if (s.action === 'click') {
+        await new Promise(r => setTimeout(r, 1200));
+        if (cancelled()) return;
+        el.click();
+        await new Promise(r => setTimeout(r, 800));
+        if (cancelled()) return;
+        setCurrentStep(prev => prev + 1);
+      } else if (s.action === 'focus') {
+        await new Promise(r => setTimeout(r, 600));
+        if (cancelled()) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await new Promise(r => setTimeout(r, 300));
+        if (cancelled()) return;
+        el.focus();
+      }
+    };
+
+    run();
   }, [currentStep, started]);
 
   // Re-highlight on scroll/resize
@@ -316,6 +317,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   }, [walkthroughId]);
 
   const handleNext = () => {
+    cancelRef.current++; // cancel any running async step
     window.speechSynthesis?.cancel();
     removeHighlight();
     if (currentStep < steps.length - 1) {
@@ -326,6 +328,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   };
 
   const handlePrev = () => {
+    cancelRef.current++;
     window.speechSynthesis?.cancel();
     removeHighlight();
     if (currentStep > 0) {
@@ -334,6 +337,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
   };
 
   const handleClose = () => {
+    cancelRef.current++;
     window.speechSynthesis?.cancel();
     removeHighlight();
     sessionStorage.removeItem('activeWalkthrough');
