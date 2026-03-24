@@ -483,7 +483,7 @@ export default function RightSideTabs() {
               </div>
 
               {/* Messages */}
-              <ScrollArea className="h-[45vh] p-4" ref={helpScrollRef}>
+              <ScrollArea className="flex-1 min-h-0 p-4" ref={helpScrollRef}>
                 <div className="space-y-4">
                   {helpMessages.map((msg, idx) => (
                     <div key={idx} className={cn("flex gap-2", msg.role === 'user' ? "justify-end" : "justify-start")}>
