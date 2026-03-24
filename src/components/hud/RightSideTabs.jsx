@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, Sparkles, BookOpen } from 'lucide-react';
+import { HelpCircle, Globe, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, Users, Video, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -479,16 +479,36 @@ export default function RightSideTabs() {
             "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
             // Mobile: full screen overlay
             "inset-0",
-            // Desktop: positioned bottom-right panel
-            "md:inset-auto md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:max-h-[calc(100vh-200px)]",
+            // Desktop: positioned bottom-right panel with fixed height
+            "md:inset-auto md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           style={{ right: showChatPanel ? '396px' : '0px' }}
         >
           {conciergeMode ? (
-            <ConciergeAgentChat onClose={() => setConciergeMode(false)} currentPage={trackedPage} />
+            <div className="flex flex-col h-full min-h-0">
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 shrink-0">
+                <button onClick={() => setConciergeMode(false)} className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                  <ArrowLeft className="w-4 h-4 text-slate-500" />
+                </button>
+                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Back to Help</span>
+              </div>
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <ConciergeAgentChat onClose={() => setConciergeMode(false)} currentPage={trackedPage} />
+              </div>
+            </div>
           ) : learnMode ? (
-            <LearnPanel onClose={() => setLearnMode(false)} />
+            <div className="flex flex-col h-full min-h-0">
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 shrink-0">
+                <button onClick={() => setLearnMode(false)} className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                  <ArrowLeft className="w-4 h-4 text-slate-500" />
+                </button>
+                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Back to Help</span>
+              </div>
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <LearnPanel onClose={() => setLearnMode(false)} />
+              </div>
+            </div>
           ) : (
             <>
               {/* Header */}
@@ -524,7 +544,7 @@ export default function RightSideTabs() {
               </div>
 
               {/* Messages */}
-              <ScrollArea className="flex-1 min-h-0 p-4" ref={helpScrollRef}>
+              <div className="flex-1 min-h-0 overflow-y-auto p-4" ref={helpScrollRef}>
                 <div className="space-y-4">
                   {helpMessages.map((msg, idx) => (
                     <div key={idx} className={cn("flex gap-2", msg.role === 'user' ? "justify-end" : "justify-start")}>
@@ -592,7 +612,7 @@ export default function RightSideTabs() {
                     </div>
                   </div>
                 )}
-              </ScrollArea>
+              </div>
 
               {/* Input */}
               <div className="p-3 border-t border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-[#050505]/80">
