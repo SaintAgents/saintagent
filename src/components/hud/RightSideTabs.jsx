@@ -16,11 +16,11 @@ import LearnPanel from '@/components/learn/LearnPanel';
 import { format, parseISO } from 'date-fns';
 
 const QUICK_QUESTIONS = [
+  { icon: Globe, label: '5D Business Walkthrough', question: 'Walk me through creating a 5D business entity step by step' },
   { icon: Target, label: 'How do I find matches?', question: 'How does the Synchronicity Engine work and how do I find good matches?' },
   { icon: Coins, label: 'What are GGG rewards?', question: 'What are GGG tokens and how do I earn them?' },
   { icon: TrendingUp, label: 'How do Rank Points work?', question: 'Explain the rank system and how I can level up from Seeker to Guardian.' },
   { icon: Heart, label: 'Dating features', question: 'How do I use the dating and compatibility features?' },
-  { icon: Users, label: 'Finding collaborators', question: 'How can I find people to collaborate with on projects or missions?' },
 ];
 
 // Page-specific context for AI Help - two paragraphs each for detailed explanations
@@ -281,12 +281,38 @@ export default function RightSideTabs() {
     }
   }, [helpOpen, helpHovered]);
 
+  // Check if user is asking for a walkthrough
+  const detectWalkthroughRequest = (text) => {
+    const lower = text.toLowerCase();
+    const wantsWalkthrough = /walk.?through|guide me|show me|step.?by.?step|how (do i|to) (create|register|set up|make)/.test(lower);
+    const about5D = /5d|business entit|register.*entity|entity.*register/.test(lower);
+    return wantsWalkthrough && about5D;
+  };
+
+  const launchWalkthrough = (id) => {
+    document.dispatchEvent(new CustomEvent('launchWalkthrough', { detail: { id } }));
+    setHelpOpen(false);
+    setHelpHovered(false);
+  };
+
   // Help send message
   const sendHelpMessage = async (text) => {
     if (!text.trim() || helpLoading) return;
     const userMessage = { role: 'user', content: text };
     setHelpMessages(prev => [...prev, userMessage]);
     setHelpInput('');
+
+    // Check for walkthrough requests first
+    if (detectWalkthroughRequest(text)) {
+      setHelpMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: "I'll launch the **interactive walkthrough** for registering a 5D Business Entity! I'll highlight each step, navigate for you, and talk you through the process. 🚀",
+        hasWalkthrough: true,
+        walkthroughId: 'business_entity'
+      }]);
+      return;
+    }
+
     setHelpLoading(true);
 
     try {
@@ -300,9 +326,20 @@ export default function RightSideTabs() {
       const contextNote = pageContext ? `\n\nCURRENT PAGE CONTEXT: ${pageContext}\nBe ready to help with questions specific to this page.` : "";
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${SYSTEM_CONTEXT}${contextNote}\n\nCONVERSATION HISTORY:\n${conversationHistory}\n\nUser: ${text}\n\nRespond helpfully and concisely. Use markdown formatting when helpful (bullet points, bold for emphasis). Keep responses under 200 words unless the topic requires more detail.`,
+        prompt: `${SYSTEM_CONTEXT}${contextNote}\n\nIMPORTANT: If the user asks you to walk them through creating a 5D Business Entity, registering a business, or setting up a business entity, respond with EXACTLY: "LAUNCH_WALKTHROUGH:business_entity" and nothing else.\n\nCONVERSATION HISTORY:\n${conversationHistory}\n\nUser: ${text}\n\nRespond helpfully and concisely. Use markdown formatting when helpful (bullet points, bold for emphasis). Keep responses under 200 words unless the topic requires more detail.`,
       });
-      setHelpMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      
+      // Check if LLM detected a walkthrough request
+      if (response.includes('LAUNCH_WALKTHROUGH:business_entity')) {
+        setHelpMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: "I'll launch the **interactive walkthrough** for registering a 5D Business Entity! I'll highlight each step, navigate for you, and talk you through the process. 🚀",
+          hasWalkthrough: true,
+          walkthroughId: 'business_entity'
+        }]);
+      } else {
+        setHelpMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      }
     } catch (error) {
       setHelpMessages(prev => [...prev, { 
         role: 'assistant', 
@@ -505,9 +542,20 @@ export default function RightSideTabs() {
                           : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm"
                       )}>
                         {msg.role === 'assistant' ? (
-                          <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
-                            {msg.content}
-                          </ReactMarkdown>
+                          <>
+                            <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                              {msg.content}
+                            </ReactMarkdown>
+                            {msg.hasWalkthrough && (
+                              <button
+                                onClick={() => launchWalkthrough(msg.walkthroughId)}
+                                className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition-colors"
+                              >
+                                <Sparkles className="w-3.5 h-3.5" />
+                                Start Interactive Walkthrough
+                              </button>
+                            )}
+                          </>
                         ) : msg.content}
                       </div>
                     </div>

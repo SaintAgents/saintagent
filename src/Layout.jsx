@@ -25,6 +25,7 @@ import MobileCloseButton from '@/components/hud/MobileCloseButton';
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
+import WalkthroughManager from '@/components/walkthrough/WalkthroughManager';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import LiveBroadcastBanner from '@/components/hud/LiveBroadcastBanner';
 
@@ -1920,6 +1921,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Photo Viewer */}
       <GlobalPhotoViewer />
+      <WalkthroughManager />
 
       {/* Hero Gallery Viewer */}
       <HeroGalleryViewer />
