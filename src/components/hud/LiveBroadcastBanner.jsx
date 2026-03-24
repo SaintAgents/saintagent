@@ -11,7 +11,14 @@ export default function LiveBroadcastBanner() {
     staleTime: 15000,
   });
 
-  const broadcast = liveBroadcasts[0];
+  // Filter out broadcasts that have exceeded their scheduled duration
+  const activeBroadcasts = liveBroadcasts.filter(b => {
+    if (!b.scheduled_time || !b.duration_minutes) return true;
+    const endTime = new Date(b.scheduled_time).getTime() + b.duration_minutes * 60000;
+    return Date.now() < endTime;
+  });
+
+  const broadcast = activeBroadcasts[0];
   if (!broadcast) return null;
 
   const handleClick = () => {
