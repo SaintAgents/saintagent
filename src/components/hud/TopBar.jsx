@@ -170,6 +170,26 @@ export default function TopBar({
   };
 
 
+  // Check if user owns or is team member of a 5D Business Entity
+  const { data: myBusinessEntities = [] } = useQuery({
+    queryKey: ['myBusinessEntities', currentUser?.email],
+    queryFn: async () => {
+      const [owned, all] = await Promise.all([
+        base44.entities.BusinessEntity5D.filter({ owner_id: currentUser.email }, '-created_date', 5),
+        base44.entities.BusinessEntity5D.list('-created_date', 200)
+      ]);
+      const teamMember = all.filter(e => 
+        e.owner_id !== currentUser.email && 
+        (e.team_member_ids?.includes(currentUser.email) || 
+         e.team_roles?.some(r => r.user_id === currentUser.email))
+      );
+      return [...owned, ...teamMember];
+    },
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+  });
+
   const { data: unreadMessages = [] } = useQuery({
     queryKey: ['unreadMessages', currentUser?.email],
     queryFn: () => base44.entities.Message.filter({ to_user_id: currentUser.email, is_read: false }, '-created_date', 50),
