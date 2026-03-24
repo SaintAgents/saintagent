@@ -438,18 +438,28 @@ export default function RightSideTabs() {
         <div 
           className={cn(
             "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
-            "inset-0 md:inset-auto md:rounded-xl",
-            "md:w-[380px] md:max-w-[calc(100vw-1rem)]",
+            // Mobile: full screen
+            "inset-0",
+            // Desktop: positioned panel
+            "md:inset-auto md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           style={{ 
-            maxHeight: undefined,
-            // Desktop: positioned from bottom-right
-            ...(typeof window !== 'undefined' && window.innerWidth >= 768 ? {
-              maxHeight: 'calc(100vh - 200px)',
-              bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)', 
-              right: showChatPanel ? '396px' : '0px' 
-            } : {})
+            // Desktop positioning via media query is handled by inset-auto override above;
+            // we apply bottom/right/maxHeight for md+ via a CSS custom property approach:
+          }}
+          ref={(el) => {
+            if (!el) return;
+            const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+            if (isDesktop) {
+              el.style.maxHeight = 'calc(100vh - 200px)';
+              el.style.bottom = 'calc(5rem + env(safe-area-inset-bottom, 0px) + 16px)';
+              el.style.right = showChatPanel ? '396px' : '0px';
+            } else {
+              el.style.maxHeight = '';
+              el.style.bottom = '';
+              el.style.right = '';
+            }
           }}
         >
           {conciergeMode ? (
