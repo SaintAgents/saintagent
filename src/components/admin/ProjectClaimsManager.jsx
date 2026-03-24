@@ -35,6 +35,7 @@ export default function ProjectClaimsManager() {
   const [filter, setFilter] = useState('pending');
   const [search, setSearch] = useState('');
   const [reviewingClaim, setReviewingClaim] = useState(null);
+  const [deepReviewProject, setDeepReviewProject] = useState(null);
   const [adminReason, setAdminReason] = useState('');
   const [processing, setProcessing] = useState(false);
   const queryClient = useQueryClient();
