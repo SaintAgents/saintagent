@@ -277,14 +277,27 @@ export default function ProjectClaimsManager() {
                     </div>
 
                     {/* Actions */}
-                    {project.claim_status === 'pending' && (
+                    <div className="flex flex-col gap-2 shrink-0">
                       <Button
-                        onClick={() => setReviewingClaim(project)}
-                        className="bg-violet-600 hover:bg-violet-700"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDeepReviewProject(project)}
+                        className="gap-1.5"
                       >
-                        Review
+                        <Maximize2 className="w-4 h-4" />
+                        Deep Review
                       </Button>
-                    )}
+                      {project.claim_status === 'pending' && (
+                        <Button
+                          size="sm"
+                          onClick={() => setReviewingClaim(project)}
+                          className="bg-violet-600 hover:bg-violet-700 gap-1.5"
+                        >
+                          <Eye className="w-4 h-4" />
+                          Review Claim
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
