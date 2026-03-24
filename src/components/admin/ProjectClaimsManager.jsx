@@ -30,6 +30,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
+import AIClaimReviewSuggestions from '@/components/admin/AIClaimReviewSuggestions';
 
 export default function ProjectClaimsManager() {
   const [filter, setFilter] = useState('pending');
