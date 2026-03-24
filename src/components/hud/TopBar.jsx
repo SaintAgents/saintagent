@@ -63,6 +63,8 @@ import SaintBrowser from '../browser/SaintBrowser';
 import AdvancedSearchModal from '../search/AdvancedSearchModal';
 import GlobalTimerWidget from './GlobalTimerWidget';
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { getStoredViewMode } from './DeckViewModeSelector';
+import { createPageUrl as createPageUrlUtil } from '@/utils';
 
 // Theme-aware mode icons
 const MODE_ICONS = {
@@ -360,11 +362,9 @@ export default function TopBar({
             <button
               key={t.id}
               onClick={() => {
-                // Always set immediately for instant feedback
                 localStorage.setItem('theme', t.id);
                 document.documentElement.setAttribute('data-theme', t.id);
                 setCurrentTheme(t.id);
-                // Notify Layout via prop callback or custom event
                 if (onThemeToggle) {
                   onThemeToggle(t.id);
                 } else {
@@ -384,6 +384,9 @@ export default function TopBar({
           ))}
         </div>
       )}
+      
+      {/* View Mode Toggle - shows when collapsed */}
+      {isCollapsed && <CollapsedViewModeToggle />}
       {/* Mode Selector - hidden when collapsed */}
       <div className={cn(
         "flex items-center gap-0.5 bg-slate-100/80 rounded-xl p-1 transition-all duration-300 shrink-0",
