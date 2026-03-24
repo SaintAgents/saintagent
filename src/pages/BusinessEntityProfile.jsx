@@ -58,9 +58,7 @@ export default function BusinessEntityProfile() {
   const [copied, setCopied] = useState(false);
 
   const handleContact = () => {
-    if (entity?.email) {
-      window.location.href = `mailto:${entity.email}?subject=Inquiry about ${entity.name}`;
-    } else if (entity?.owner_id) {
+    if (entity?.owner_id) {
       document.dispatchEvent(new CustomEvent('openFloatingChat', {
         detail: {
           recipientId: entity.owner_id,
