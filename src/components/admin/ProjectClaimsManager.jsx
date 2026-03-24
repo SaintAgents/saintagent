@@ -320,8 +320,21 @@ export default function ProjectClaimsManager() {
             <div className="space-y-4 mt-4">
               {/* Project Info */}
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border dark:border-slate-700">
-                <h4 className="font-semibold text-slate-900 dark:text-white">{reviewingClaim.title}</h4>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{reviewingClaim.description}</p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-slate-900 dark:text-white">{reviewingClaim.title}</h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{reviewingClaim.description}</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDeepReviewProject(reviewingClaim)}
+                    className="gap-1.5 shrink-0"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                    Deep Review
+                  </Button>
+                </div>
               </div>
 
               {/* Claimer Info */}
