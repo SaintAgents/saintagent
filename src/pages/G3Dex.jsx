@@ -550,91 +550,91 @@ export default function G3Dex() {
             <TabsList className={`bg-black/60 border border-${currentTheme.border} p-1 w-full flex overflow-x-auto scrollbar-hide gap-0.5`}>
               <TabsTrigger 
                 value="swap" 
-                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs shrink-0`}
               >
                 <Repeat className="w-3 h-3 mr-1" />
                 Swap
               </TabsTrigger>
               <TabsTrigger 
                 value="limit" 
-                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs shrink-0`}
               >
                 <TrendingUp className="w-3 h-3 mr-1" />
                 Limit
               </TabsTrigger>
               <TabsTrigger 
                 value="dca" 
-                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs shrink-0`}
               >
                 <Clock className="w-3 h-3 mr-1" />
                 DCA
               </TabsTrigger>
               <TabsTrigger 
                 value="perps" 
-                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs shrink-0`}
               >
                 <Activity className="w-3 h-3 mr-1" />
                 Perps
               </TabsTrigger>
               <TabsTrigger 
                 value="neonft" 
-                className={`data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 text-xs`}
+                className={`data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 text-xs shrink-0`}
               >
                 <Shield className="w-3 h-3 mr-1" />
                 Neo-NFT
               </TabsTrigger>
               <TabsTrigger 
                 value="escrow" 
-                className={`data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400 text-xs`}
+                className={`data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400 text-xs shrink-0`}
               >
                 <Lock className="w-3 h-3 mr-1" />
                 Escrow
               </TabsTrigger>
               <TabsTrigger 
                 value="bridge" 
-                className={`data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 text-xs`}
+                className={`data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 text-xs shrink-0`}
               >
                 <Sparkles className="w-3 h-3 mr-1" />
                 Bridge
               </TabsTrigger>
               <TabsTrigger 
                 value="staking" 
-                className={`data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 text-xs`}
+                className={`data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 text-xs shrink-0`}
               >
                 <Shield className="w-3 h-3 mr-1" />
                 Staking
               </TabsTrigger>
               <TabsTrigger 
                 value="analytics" 
-                className={`data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400 text-xs`}
+                className={`data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400 text-xs shrink-0`}
               >
                 <BarChart3 className="w-3 h-3 mr-1" />
                 Analytics
               </TabsTrigger>
               <TabsTrigger 
                 value="adoption" 
-                className={`data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-400 text-xs`}
+                className={`data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-400 text-xs shrink-0`}
               >
                 <Globe className="w-3 h-3 mr-1" />
                 Adoption
               </TabsTrigger>
               <TabsTrigger 
                 value="orderbook" 
-                className={`data-[state=active]:bg-rose-500/20 data-[state=active]:text-rose-400 text-xs`}
+                className={`data-[state=active]:bg-rose-500/20 data-[state=active]:text-rose-400 text-xs shrink-0`}
               >
                 <Activity className="w-3 h-3 mr-1" />
                 Order Book
               </TabsTrigger>
               <TabsTrigger 
                 value="kyc" 
-                className={`data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-400 text-xs`}
+                className={`data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-400 text-xs shrink-0`}
               >
                 <Shield className="w-3 h-3 mr-1" />
                 KYC
               </TabsTrigger>
               <TabsTrigger 
                 value="history" 
-                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs`}
+                className={`data-[state=active]:bg-${currentTheme.accent}-500/20 data-[state=active]:text-${currentTheme.accent}-400 text-xs shrink-0`}
               >
                 <History className="w-3 h-3 mr-1" />
                 History
