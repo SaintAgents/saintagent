@@ -732,7 +732,47 @@ export default function Messages() {
           });
         }} />
 
-    {/* Direct Video Call */}
+    {/* Zoom Video Call Modal */}
+    {selectedConversation && !selectedConversation.isGroup && (
+      <VideoCallModal
+        open={zoomModalOpen}
+        onClose={() => setZoomModalOpen(false)}
+        user={user}
+        recipientId={selectedConversation.otherUser.id}
+        recipientName={selectedConversation.otherUser.name}
+        conversationId={selectedConversation.id}
+        onCallCreated={async (meeting, type) => {
+          // Send the Zoom link as a message in the conversation
+          const label = type === 'scheduled'
+            ? `📅 Scheduled a Zoom meeting: ${meeting.topic}\n🔗 ${meeting.join_url}`
+            : `📹 Started a Zoom call: ${meeting.topic}\n🔗 ${meeting.join_url}`;
+          await base44.entities.Message.create({
+            conversation_id: selectedConversation.id,
+            from_user_id: user.email,
+            to_user_id: selectedConversation.otherUser.id,
+            from_name: user.full_name,
+            to_name: selectedConversation.otherUser.name,
+            content: label,
+          });
+          // Notify the recipient
+          await base44.entities.Notification.create({
+            user_id: selectedConversation.otherUser.id,
+            type: 'meeting',
+            title: type === 'scheduled' ? 'Meeting Scheduled' : 'Zoom Call Started',
+            message: `${user.full_name} ${type === 'scheduled' ? 'scheduled a Zoom meeting with you' : 'started a Zoom call with you'}`,
+            action_url: meeting.join_url,
+            priority: 'high',
+          });
+          queryClient.invalidateQueries({ queryKey: ['messages'] });
+          // Auto-open for instant calls
+          if (type === 'instant') {
+            window.open(meeting.join_url, '_blank');
+          }
+        }}
+      />
+    )}
+
+    {/* Direct Video Call (fallback P2P UI) */}
     {videoCallOpen && selectedConversation && (
       <div className={cn(
         "fixed z-50",
