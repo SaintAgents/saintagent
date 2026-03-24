@@ -246,6 +246,15 @@ main {
    HACKER THEME - GREEN EVERYTHING
    ===================================================== */
 
+/* Hacker theme - SOLID black for Saint Support / Help / Chat side panels */
+html[data-theme='hacker'] [data-solid-panel],
+html[data-theme='hacker'] [data-solid-panel] > div,
+[data-theme='hacker'] [data-solid-panel],
+[data-theme='hacker'] [data-solid-panel] > div {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
 /* Hacker theme - SOLID black popup/menu containers - NO transparency */
 [data-theme='hacker'] [role="menu"],
 [data-theme='hacker'] [role="dialog"],

@@ -476,13 +476,15 @@ export default function RightSideTabs() {
         {/* Sliding Panel */}
         <div 
           className={cn(
-            "fixed bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
+            "fixed border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
+            "bg-white dark:bg-[#050505]",
             // Mobile: full screen overlay
             "inset-0",
             // Desktop: positioned bottom-right panel with fixed height
             "md:inset-auto md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
+          data-solid-panel="true"
           style={{ right: showChatPanel ? '396px' : '0px' }}
         >
           {conciergeMode ? (
@@ -701,6 +703,7 @@ export default function RightSideTabs() {
             "md:inset-auto md:right-0 md:bottom-24 md:rounded-l-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:max-h-[calc(100vh-200px)]",
             showChatPanel ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
+          data-solid-panel="true"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">

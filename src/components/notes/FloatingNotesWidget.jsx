@@ -218,9 +218,10 @@ export default function FloatingNotesWidget({ isOpen: externalOpen, onClose: ext
         height: size.height
       }
     : { 
-        top: '50%', 
-        left: '50%', 
-        transform: 'translate(-50%, -50%)',
+        top: `${Math.max(80, Math.round(window.innerHeight / 2 - size.height / 2))}px`, 
+        left: `${Math.max(16, Math.round(window.innerWidth / 2 - size.width / 2))}px`, 
+        right: 'auto',
+        bottom: 'auto',
         width: size.width,
         height: size.height
       };
