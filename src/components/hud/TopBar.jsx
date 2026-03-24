@@ -174,10 +174,10 @@ export default function TopBar({
   const { data: myBusinessEntities = [] } = useQuery({
     queryKey: ['myBusinessEntities', currentUser?.email],
     queryFn: async () => {
-      const [owned, all] = await Promise.all([
-        base44.entities.BusinessEntity5D.filter({ owner_id: currentUser.email }, '-created_date', 5),
-        base44.entities.BusinessEntity5D.list('-created_date', 200)
-      ]);
+      // First get owned entities (cheap filter)
+      const owned = await base44.entities.BusinessEntity5D.filter({ owner_id: currentUser.email }, '-created_date', 5);
+      // Then get all to check team membership (single call)
+      const all = await base44.entities.BusinessEntity5D.list('-created_date', 100);
       const teamMember = all.filter(e => 
         e.owner_id !== currentUser.email && 
         (e.team_member_ids?.includes(currentUser.email) || 
@@ -186,8 +186,11 @@ export default function TopBar({
       return [...owned, ...teamMember];
     },
     enabled: !!currentUser?.email,
-    staleTime: 300000,
+    staleTime: 600000, // Cache for 10 minutes to reduce rate limit hits
+    gcTime: 1200000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: 1,
   });
 
   const { data: unreadMessages = [] } = useQuery({
