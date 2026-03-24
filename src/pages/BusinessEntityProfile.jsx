@@ -19,6 +19,8 @@ import BusinessAnalyticsTab from '@/components/business/BusinessAnalyticsTab';
 import TrustScoreCard from '@/components/business/TrustScoreCard';
 import BusinessReviewForm from '@/components/business/BusinessReviewForm';
 import BusinessReviewsList from '@/components/business/BusinessReviewsList';
+import BusinessProjectsTab from '@/components/business/BusinessProjectsTab';
+import BusinessDealsTab from '@/components/business/BusinessDealsTab';
 import EditBusinessModal from '@/components/business/EditBusinessModal';
 import AddTeamMemberModal from '@/components/business/AddTeamMemberModal';
 
@@ -276,6 +278,8 @@ export default function BusinessEntityProfile() {
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+            <TabsTrigger value="projects">Projects</TabsTrigger>
+            <TabsTrigger value="deals">Deals</TabsTrigger>
             <TabsTrigger value="team">Team ({entity.team_roles?.length || 0})</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
@@ -301,6 +305,14 @@ export default function BusinessEntityProfile() {
                 <BusinessReviewsList reviews={reviews} />
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="projects">
+            <BusinessProjectsTab entity={entity} />
+          </TabsContent>
+
+          <TabsContent value="deals">
+            <BusinessDealsTab entity={entity} />
           </TabsContent>
 
           <TabsContent value="team">
