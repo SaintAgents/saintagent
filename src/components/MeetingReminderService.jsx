@@ -13,25 +13,30 @@ export default function MeetingReminderService() {
 
   const { data: meetings = [] } = useQuery({
     queryKey: ['upcomingMeetings'],
-    queryFn: () => base44.entities.Meeting.filter({ status: 'scheduled' }, '-scheduled_time', 50),
+    queryFn: () => base44.entities.Meeting.filter({ status: 'scheduled' }, '-scheduled_time', 20),
     enabled: !!currentUser,
-    refetchInterval: 60000, // Check every minute
+    staleTime: 300000,
+    refetchInterval: 300000, // Check every 5 minutes instead of 1
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Host's upcoming events
   const { data: myEvents = [] } = useQuery({
     queryKey: ['upcomingEvents', currentUser?.email],
-    queryFn: () => base44.entities.Event.filter({ host_id: currentUser.email }, '-start_time', 100),
+    queryFn: () => base44.entities.Event.filter({ host_id: currentUser.email }, '-start_time', 20),
     enabled: !!currentUser?.email,
-    refetchInterval: 60000,
+    staleTime: 300000,
+    refetchInterval: 300000, // Check every 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
+  // Reuse the notifications already fetched in Layout instead of fetching separately
   const { data: existingNotifications = [] } = useQuery({
-    queryKey: ['calendarNotifications', currentUser?.email],
-    queryFn: () => base44.entities.Notification.filter({ 
-      user_id: currentUser?.email
-    }, '-created_date', 200),
-    enabled: !!currentUser,
+    queryKey: ['notifications', currentUser?.email],
+    // This query is already defined in Layout - just reuse the cached data
+    enabled: false, // Don't fetch, just read cache
   });
 
   // Today's Daily Ops log for schedule reminders
@@ -40,7 +45,10 @@ export default function MeetingReminderService() {
     queryKey: ['dailyLogReminder', currentUser?.email, todayStr],
     queryFn: () => base44.entities.DailyLog.filter({ user_id: currentUser.email, date: todayStr }),
     enabled: !!currentUser?.email,
-    refetchInterval: 60000,
+    staleTime: 300000,
+    refetchInterval: 300000, // Check every 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   const createNotification = useMutation({
