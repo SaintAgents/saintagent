@@ -201,13 +201,20 @@ export default function AdvicePage() {
   return (
     <div className="min-h-screen bg-[#faf9f6]">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-16 md:py-20">
+      <div className="relative text-white overflow-hidden" style={{ minHeight: 340 }}>
+        <img 
+          src="https://media.base44.com/images/public/694f3e0401b05e6e8a042002/936b6c1f4_universal_upscale_0_92ae3995-95f3-40a4-a02c-bd88966c75a5_0.jpg" 
+          alt="Wisdom Exchange" 
+          className="absolute inset-0 w-full h-full object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
+        <div className="relative max-w-6xl mx-auto px-4 py-20 md:py-24">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 drop-shadow-lg">
               Wisdom Exchange
             </h1>
-            <p className="text-xl text-indigo-200 mb-8">
+            <p className="text-xl text-white/80 mb-8 drop-shadow">
               Seek guidance. Share wisdom. Rise together.
             </p>
             <Button
