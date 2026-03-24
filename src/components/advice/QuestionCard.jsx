@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronUp, MessageSquare, Sparkles, CheckCircle2, User, Heart, Waves } from 'lucide-react';
+import { ChevronUp, MessageSquare, Sparkles, CheckCircle2, User, Heart, Waves, Flag } from 'lucide-react';
 import { format, isToday, isYesterday } from 'date-fns';
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,7 @@ const CATEGORY_LABELS = {
   other: 'Other'
 };
 
-export default function QuestionCard({ question, onUpvote, hasVoted, onLike, hasLiked, onResonance, hasResonated }) {
+export default function QuestionCard({ question, onUpvote, hasVoted, onLike, hasLiked, onResonance, hasResonated, onFlag }) {
   return (
     <Link to={createPageUrl('AdviceDetail') + `?id=${question.id}`}>
       <Card className="bg-white border-slate-200 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer">
@@ -155,7 +155,7 @@ export default function QuestionCard({ question, onUpvote, hasVoted, onLike, has
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
                 {question.is_anonymous ? (
                   <div className="flex items-center gap-2 text-slate-500">
                     <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center">
@@ -172,6 +172,13 @@ export default function QuestionCard({ question, onUpvote, hasVoted, onLike, has
                     <span className="text-sm text-slate-600">{question.author_name}</span>
                   </div>
                 )}
+                <button
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); onFlag?.(question); }}
+                  className="ml-auto p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  title="Report this question"
+                >
+                  <Flag className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>

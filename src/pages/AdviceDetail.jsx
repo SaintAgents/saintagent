@@ -28,6 +28,7 @@ import AIInsightPanel from '@/components/advice/AIInsightPanel';
 import SaintAgentChat from '@/components/advice/SaintAgentChat';
 import AnswerCard from '@/components/advice/AnswerCard';
 import WisdomLeaderboard from '@/components/advice/WisdomLeaderboard';
+import FlagContentModal from '@/components/advice/FlagContentModal';
 
 const CATEGORY_COLORS = {
   relationships: 'bg-pink-100 text-pink-700',
@@ -71,6 +72,7 @@ export default function AdviceDetailPage() {
 
   const [answerContent, setAnswerContent] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
+  const [flagTarget, setFlagTarget] = useState(null);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -377,6 +379,13 @@ export default function AdviceDetailPage() {
                       <MessageSquare className="w-4 h-4" />
                       {question.answer_count || 0}
                     </div>
+                    <button
+                      onClick={() => setFlagTarget({ type: 'question', id: question.id, authorId: question.author_id, authorName: question.author_name, preview: question.title + ' — ' + question.description })}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                      title="Report this question"
+                    >
+                      <AlertTriangle className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </CardContent>
@@ -410,7 +419,10 @@ export default function AdviceDetailPage() {
                   onDownvote={(id) => voteMutation.mutate({ answerId: id, voteType: 'downvote' })}
                   onMarkHelpful={(id) => voteMutation.mutate({ answerId: id, voteType: 'helpful' })}
                   onAccept={(id) => acceptMutation.mutate(id)}
-                  onFlag={(id) => console.log('Flag answer:', id)}
+                  onFlag={(id) => {
+                    const answer = answers.find(a => a.id === id);
+                    setFlagTarget({ type: 'answer', id, authorId: answer?.author_id, authorName: answer?.author_name, preview: answer?.content });
+                  }}
                   userVote={getUserVote(answer.id)}
                   userHelpful={getUserHelpful(answer.id)}
                 />
@@ -499,6 +511,20 @@ export default function AdviceDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Flag Content Modal */}
+      {flagTarget && (
+        <FlagContentModal
+          open={!!flagTarget}
+          onClose={() => setFlagTarget(null)}
+          targetType={flagTarget.type}
+          targetId={flagTarget.id}
+          targetAuthorId={flagTarget.authorId}
+          targetAuthorName={flagTarget.authorName}
+          contentPreview={flagTarget.preview}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   );
 }

@@ -46,6 +46,7 @@ import AIRiskScoring from '@/components/admin/AIRiskScoring';
 import SmartReassignment from '@/components/admin/SmartReassignment';
 import ResourceCapacityPlanner from '@/components/admin/ResourceCapacityPlanner';
 import AdminOverviewDashboard from '@/components/admin/AdminOverviewDashboard';
+import WisdomModerationQueue from '@/components/admin/WisdomModerationQueue';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -206,6 +207,10 @@ export default function Admin() {
             <TabsTrigger value="moderation" className="gap-2 px-3 py-2">
               <AlertTriangle className="w-4 h-4" />
               Moderation
+            </TabsTrigger>
+            <TabsTrigger value="wisdom-mod" className="gap-2 px-3 py-2">
+              <Shield className="w-4 h-4" />
+              Wisdom Mod
             </TabsTrigger>
             <TabsTrigger value="demo-users" className="gap-2 px-3 py-2">
               <UserPlus className="w-4 h-4" />
@@ -381,6 +386,10 @@ export default function Admin() {
 
           <TabsContent value="moderation">
             <ModeratorReviewPanel />
+          </TabsContent>
+
+          <TabsContent value="wisdom-mod">
+            <WisdomModerationQueue />
           </TabsContent>
 
           <TabsContent value="demo-users">

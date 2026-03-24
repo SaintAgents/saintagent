@@ -28,6 +28,7 @@ import QuestionCard from '@/components/advice/QuestionCard';
 import WisdomLeaderboard from '@/components/advice/WisdomLeaderboard';
 import TopicDashboard from '@/components/advice/TopicDashboard';
 import WisdomAnalyticsDashboard from '@/components/advice/WisdomAnalyticsDashboard';
+import FlagContentModal from '@/components/advice/FlagContentModal';
 
 const CATEGORIES = [
   { value: 'all', label: 'All Topics' },
@@ -48,6 +49,7 @@ export default function AdvicePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
+  const [flagTarget, setFlagTarget] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -334,6 +336,7 @@ export default function AdvicePage() {
                       hasLiked={userLikes.some(v => v.target_id === question.id)}
                       onResonance={(id) => resonanceMutation.mutate(id)}
                       hasResonated={userResonances.some(v => v.target_id === question.id)}
+                      onFlag={(q) => setFlagTarget({ type: 'question', id: q.id, authorId: q.author_id, authorName: q.author_name, preview: q.title + ' — ' + q.description })}
                     />
                   ))
                 )}
@@ -356,6 +359,7 @@ export default function AdvicePage() {
                       hasLiked={userLikes.some(v => v.target_id === question.id)}
                       onResonance={(id) => resonanceMutation.mutate(id)}
                       hasResonated={userResonances.some(v => v.target_id === question.id)}
+                      onFlag={(q) => setFlagTarget({ type: 'question', id: q.id, authorId: q.author_id, authorName: q.author_name, preview: q.title + ' — ' + q.description })}
                     />
                   ))
                 )}
@@ -408,6 +412,20 @@ export default function AdvicePage() {
         currentUser={currentUser}
         profile={profile}
       />
+
+      {/* Flag Content Modal */}
+      {flagTarget && (
+        <FlagContentModal
+          open={!!flagTarget}
+          onClose={() => setFlagTarget(null)}
+          targetType={flagTarget.type}
+          targetId={flagTarget.id}
+          targetAuthorId={flagTarget.authorId}
+          targetAuthorName={flagTarget.authorName}
+          contentPreview={flagTarget.preview}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   );
 }
