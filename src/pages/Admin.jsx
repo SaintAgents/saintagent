@@ -253,6 +253,10 @@ export default function Admin() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="overview">
+            <AdminOverviewDashboard onNavigateTab={setActiveTab} />
+          </TabsContent>
+
           <TabsContent value="users">
             <UserManagement />
           </TabsContent>
