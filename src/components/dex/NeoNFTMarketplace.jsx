@@ -8,11 +8,12 @@ import {
   Image, Landmark, Zap, FileText, Droplet, Diamond, 
   Shield, Lock, TrendingUp, Search, Filter, Star,
   Coins, MapPin, Calendar, CheckCircle, ArrowRight, Sparkles,
-  Grid3X3, List, Globe, SortAsc, Package, History
+  Grid3X3, List, Globe, SortAsc, Package, History, ArrowLeftRight
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import NeoNFTDetailModal from './NeoNFTDetailModal';
 import NeoNFTListView from './NeoNFTListView';
+import BarterTradeModal from './BarterTradeModal';
 
 const NEO_NFT_CATEGORIES = [
   { id: 'all', label: 'All Assets', icon: Sparkles },
@@ -423,6 +424,7 @@ export default function NeoNFTMarketplace({ theme = 'lime' }) {
   const [category, setCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [selectedNFT, setSelectedNFT] = useState(null);
+  const [barterOpen, setBarterOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [sortField, setSortField] = useState('price_ggg');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -464,6 +466,14 @@ export default function NeoNFTMarketplace({ theme = 'lime' }) {
             <p className="text-xs text-gray-400 mt-1">Resource-backed digital titles • Sacred-Digital Bridge • Geo-Fenced Trading</p>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={() => setBarterOpen(true)}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-semibold text-xs gap-1.5"
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5" />
+              P2P Barter
+            </Button>
             <Badge className={`bg-amber-500/20 text-amber-400 border-amber-500/30`}>
               <Coins className="w-3 h-3 mr-1" />
               Gold-Anchored
@@ -624,6 +634,14 @@ export default function NeoNFTMarketplace({ theme = 'lime' }) {
         nft={selectedNFT}
         open={!!selectedNFT}
         onClose={() => setSelectedNFT(null)}
+        theme={theme}
+      />
+
+      {/* Barter Trade Modal */}
+      <BarterTradeModal
+        open={barterOpen}
+        onClose={() => setBarterOpen(false)}
+        allAssets={MOCK_NEO_NFTS}
         theme={theme}
       />
     </div>
