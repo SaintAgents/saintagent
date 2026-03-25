@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -12,8 +13,13 @@ import {
 import { Brain, Gift, X, Sparkles, Clock, ChevronDown } from "lucide-react";
 import MBTIAssessment from './MBTIAssessment';
 
+// Session-level flag — once dismissed in this browser session, stays dismissed
+let sessionDismissed = false;
+
 // Check dismissal synchronously to prevent any flash
 function isDismissed(profile) {
+  // Session-level flag (survives re-renders and query refreshes within same session)
+  if (sessionDismissed) return true;
   // Check profile-level permanent flag (survives everything)
   if (profile?.mbti_prompt_dismissed === true) return true;
   // Check profile-level timed dismissal (survives localStorage clears)
@@ -41,6 +47,7 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   const [showAssessment, setShowAssessment] = useState(false);
   const [dismissed, setDismissed] = useState(initiallyDismissed);
   const [showDismissOptions, setShowDismissOptions] = useState(false);
+  const queryClient = useQueryClient();
 
   // Re-check when profile changes (e.g. after profile loads)
   useEffect(() => {
@@ -53,13 +60,19 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   }
 
   const handleDismiss = async (duration) => {
+    // Set session-level flag immediately — prevents re-showing even if queries refresh
+    sessionDismissed = true;
+    setDismissed(true);
+    setShowDismissOptions(false);
+
     // Always set localStorage
     if (duration === 'never') {
-      localStorage.setItem('mbti_prompt_dismissed_permanently', 'never');
+      try { localStorage.setItem('mbti_prompt_dismissed_permanently', 'never'); } catch {}
       // Also persist to profile so it survives localStorage clears
       if (profile?.id) {
         try {
           await base44.entities.UserProfile.update(profile.id, { mbti_prompt_dismissed: true });
+          queryClient.invalidateQueries({ queryKey: ['myProfile'] });
         } catch {}
       }
     } else {
@@ -71,11 +84,13 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
       try { localStorage.setItem('mbti_prompt_dismissed_until', dismissUntil.toISOString()); } catch {}
       // Also persist to profile entity so it survives localStorage clears
       if (profile?.id) {
-        try { base44.entities.UserProfile.update(profile.id, { mbti_prompt_dismissed_until: dismissUntil.toISOString() }); } catch {}
+        try {
+          await base44.entities.UserProfile.update(profile.id, { mbti_prompt_dismissed_until: dismissUntil.toISOString() });
+          queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+        } catch {}
       }
     }
-    setDismissed(true);
-    setShowDismissOptions(false);
+
     if (onDismiss) onDismiss();
   };
 
