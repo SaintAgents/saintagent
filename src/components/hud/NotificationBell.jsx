@@ -88,6 +88,9 @@ export default function NotificationBell({ notifications = [], onAction }) {
     task_dependency: CheckCircle,
     milestone: Trophy,
     project: Folder,
+    business_listing: Folder,
+    digital_product: Coins,
+    project_update: Folder,
   };
 
   const typeColors = {
@@ -110,6 +113,9 @@ export default function NotificationBell({ notifications = [], onAction }) {
     task_dependency: "text-cyan-500 bg-cyan-50 dark:bg-cyan-900/30 dark:text-cyan-400",
     milestone: "text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400",
     project: "text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400",
+    business_listing: "text-teal-500 bg-teal-50 dark:bg-teal-900/30 dark:text-teal-400",
+    digital_product: "text-amber-500 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400",
+    project_update: "text-blue-500 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400",
   };
 
   return (
@@ -222,6 +228,9 @@ export default function NotificationBell({ notifications = [], onAction }) {
                          task_dependency: createPageUrl('Projects'),
                          milestone: createPageUrl('Projects'),
                          project: createPageUrl('Projects'),
+                         business_listing: createPageUrl('BusinessEntities'),
+                         digital_product: createPageUrl('Marketplace'),
+                         project_update: createPageUrl('Projects'),
                         };
                         const targetUrl = routes[notif.type];
                         if (targetUrl) {

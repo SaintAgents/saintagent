@@ -226,7 +226,7 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
             {/* Image */}
             {step.image && (
               <div className="mb-6 rounded-xl overflow-hidden">
-                <img src={step.image} alt={step.title} className="w-full h-40 object-cover" />
+                <img src={step.image} alt={step.title} className="w-full h-40 object-cover object-top" />
               </div>
             )}
 

@@ -35,7 +35,9 @@ import {
   Zap,
   Clock,
   X,
-  Wand2
+  Wand2,
+  Map,
+  Grid3X3
 } from "lucide-react";
 
 import MissionCard from '@/components/hud/MissionCard';
@@ -50,6 +52,7 @@ import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import AgentTestimonialsMarquee from '@/components/missions/AgentTestimonialsMarquee';
+import MissionMapView from '@/components/missions/MissionMapView';
 
 export default function Missions() {
   const [tab, setTab] = useState('active');
@@ -70,6 +73,7 @@ export default function Missions() {
   const [participantCountFilter, setParticipantCountFilter] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
   const [showRecommended, setShowRecommended] = useState(true);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'map'
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -386,6 +390,28 @@ export default function Missions() {
               <SelectItem value="newest">Newest First</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-white rounded-xl border p-1">
+            <Button
+              variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="rounded-lg h-8 w-8"
+              onClick={() => setViewMode('grid')}
+              title="Grid view"
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'map' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="rounded-lg h-8 w-8"
+              onClick={() => setViewMode('map')}
+              title="Map view"
+            >
+              <Map className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Advanced Filters Panel */}
@@ -567,36 +593,31 @@ export default function Missions() {
           </p>
         )}
 
-        {/* Missions Grid */}
-        {isLoading ?
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Missions Grid / Map */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) =>
-          <div key={i} className="h-80 bg-white rounded-xl animate-pulse" />
-          )}
-          </div> :
-        filteredMissions.length === 0 ?
-        <div className="text-center py-16">
+              <div key={i} className="h-80 bg-white rounded-xl animate-pulse" />
+            )}
+          </div>
+        ) : filteredMissions.length === 0 ? (
+          <div className="text-center py-16">
             <Target className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No missions available</h3>
             <p className="text-slate-500 mb-6">Create your own mission or check back later</p>
-            <Button
-            onClick={() => setCreateModalOpen(true)}
-            className="rounded-xl bg-violet-600 hover:bg-violet-700">
-
+            <Button onClick={() => setCreateModalOpen(true)} className="rounded-xl bg-violet-600 hover:bg-violet-700">
               Create Mission
             </Button>
-          </div> :
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMissions.map((mission) =>
-          <MissionCard
-            key={mission.id}
-            mission={mission}
-            onAction={handleAction} />
-
-          )}
           </div>
-        }
+        ) : viewMode === 'map' ? (
+          <MissionMapView missions={filteredMissions} onAction={handleAction} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredMissions.map((mission) =>
+              <MissionCard key={mission.id} mission={mission} onAction={handleAction} />
+            )}
+          </div>
+        )}
 
         {/* Agent Testimonials */}
         <AgentTestimonialsMarquee />

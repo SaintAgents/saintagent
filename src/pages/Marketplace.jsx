@@ -19,11 +19,13 @@ import {
   Plus,
   Filter,
   Grid3X3,
-  List } from
+  List,
+  Package } from
 "lucide-react";
 
 import ListingCard from '@/components/hud/ListingCard';
 import CreateListingModal from '@/components/marketplace/CreateListingModal';
+import DigitalProductsTab from '@/components/marketplace/DigitalProductsTab';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import BookingRequestModal from '@/components/matches/BookingRequestModal';
 import BackButton from '@/components/hud/BackButton';
@@ -128,8 +130,8 @@ export default function Marketplace() {
 
       <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
 
-        {/* Search & Filters */}
-        <div className="flex items-center gap-4 mb-6">
+        {/* Search & Filters - hidden on digital tab */}
+        {tab !== 'digital' && <div className="flex items-center gap-4 mb-6">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <Input
@@ -161,9 +163,9 @@ export default function Marketplace() {
               <List className="w-4 h-4" />
             </Button>
           </div>
-        </div>
+        </div>}
 
-        {showFilters &&
+        {showFilters && tab !== 'digital' &&
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
               <label className="text-xs text-slate-500">Category</label>
@@ -224,7 +226,7 @@ export default function Marketplace() {
         }
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-3 h-11 bg-white rounded-xl border">
+          <TabsList className="w-full grid grid-cols-4 h-11 bg-white rounded-xl border">
             <TabsTrigger value="browse" className="rounded-lg">
               All Listings
             </TabsTrigger>
@@ -234,11 +236,18 @@ export default function Marketplace() {
             <TabsTrigger value="requests" className="rounded-lg">
               Requests ({listings.filter((l) => l.listing_type === 'request').length})
             </TabsTrigger>
+            <TabsTrigger value="digital" className="rounded-lg gap-1.5">
+              <Package className="w-3.5 h-3.5" />
+              Digital Assets
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
+        {/* Digital Products Tab Content */}
+        {tab === 'digital' && <DigitalProductsTab />}
+
         {/* Listings Grid */}
-        {isLoading ?
+        {tab === 'digital' ? null : isLoading ?
         <div className={cn(
           "gap-6",
           viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "space-y-4"
