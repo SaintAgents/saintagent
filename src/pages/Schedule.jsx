@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar } from "@/components/ui/calendar";
 import { 
   Calendar as CalendarIcon, Clock, Users, Video, MapPin, 
-  Radio, Target, Filter, ChevronLeft, ChevronRight, Copy, Check
+  Radio, Target, Filter, ChevronLeft, ChevronRight, Copy, Check, Plus
 } from "lucide-react";
 import { toast } from 'sonner';
 import { format, parseISO, isAfter, isBefore, startOfDay, endOfDay, addDays, isSameDay } from "date-fns";
@@ -163,13 +163,12 @@ export default function Schedule() {
     return items;
   }, [allItems, filter, viewMode, selectedDate]);
 
-  // Get upcoming items (next 7 days) for list view
+  // Get all upcoming items for list view (no 7-day limit — master list)
   const upcomingItems = useMemo(() => {
     const now = new Date();
-    const weekFromNow = addDays(now, 7);
     return filteredItems.filter(i => {
       const itemDate = parseISO(i.time);
-      return isAfter(itemDate, now) && isBefore(itemDate, weekFromNow);
+      return isAfter(itemDate, now);
     });
   }, [filteredItems]);
 
@@ -233,8 +232,20 @@ export default function Schedule() {
             </Tabs>
           </div>
 
-          {/* View Toggle */}
+          {/* View Toggle & Add Button */}
           <div className="flex items-center gap-2">
+            <Link to={
+              filter === 'meeting' ? createPageUrl('Meetings') :
+              filter === 'event' ? createPageUrl('Events') :
+              filter === 'broadcast' ? createPageUrl('Broadcast') :
+              filter === 'mission' ? createPageUrl('Missions') :
+              createPageUrl('Meetings')
+            }>
+              <Button size="sm" className="gap-1 bg-violet-600 hover:bg-violet-700 text-white">
+                <Plus className="w-4 h-4" />
+                Add {filter === 'all' ? 'New' : ITEM_TYPE_CONFIG[filter]?.label || 'New'}
+              </Button>
+            </Link>
             <Button
               variant={viewMode === 'list' ? 'default' : 'outline'}
               size="sm"
@@ -333,12 +344,12 @@ export default function Schedule() {
                         
                         {/* Date column */}
                         <div className={cn(
-                          "w-20 p-3 flex flex-col items-center justify-center border-r",
+                          "w-24 p-4 flex flex-col items-center justify-center border-r",
                           isToday && "bg-violet-50"
                         )}>
-                          <span className="text-lg font-bold text-slate-900">{format(itemDate, 'd')}</span>
-                          <span className="text-xs text-slate-500">{format(itemDate, 'MMM')}</span>
-                          <span className="text-xs text-slate-400">{format(itemDate, 'EEE')}</span>
+                          <span className="text-2xl font-bold text-slate-900">{format(itemDate, 'd')}</span>
+                          <span className="text-sm font-medium text-slate-600">{format(itemDate, 'MMM')}</span>
+                          <span className="text-xs font-medium text-slate-400">{format(itemDate, 'EEE')}</span>
                         </div>
 
                         {/* Content */}
@@ -346,17 +357,17 @@ export default function Schedule() {
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex-1 min-w-0">
                               {/* Type badge & time */}
-                              <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <Badge className={cn("text-xs", config.color, "text-white")}>
+                              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                <Badge className={cn("text-xs font-semibold px-2 py-0.5", config.color, "text-white")}>
                                   <ItemIcon className="w-3 h-3 mr-1" />
                                   {config.label}
                                 </Badge>
-                                <span className="text-sm text-slate-500 flex items-center gap-1">
-                                  <Clock className="w-3 h-3" />
+                                <span className="text-sm font-medium text-slate-700 flex items-center gap-1">
+                                  <Clock className="w-3.5 h-3.5" />
                                   {format(itemDate, 'h:mm a')}
                                 </span>
                                 {item.duration && (
-                                  <span className="text-xs text-slate-400">({item.duration} min)</span>
+                                  <span className="text-sm text-slate-500">({item.duration} min)</span>
                                 )}
                                 {item.status === 'live' && (
                                   <Badge className="bg-red-500 text-white text-xs animate-pulse">LIVE</Badge>
@@ -367,10 +378,10 @@ export default function Schedule() {
                               </div>
 
                               {/* Title */}
-                              <h3 className="font-semibold text-slate-900 mb-1">{item.title}</h3>
+                              <h3 className="font-bold text-lg text-slate-900 mb-2">{item.title}</h3>
 
                               {/* Meta info */}
-                              <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
+                              <div className="flex items-center gap-4 text-sm text-slate-600 flex-wrap">
                                 {item.host && (
                                   <span className="flex items-center gap-1">
                                     <Avatar className="w-4 h-4">
