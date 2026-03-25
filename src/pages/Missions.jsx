@@ -409,7 +409,7 @@ export default function Missions() {
               onClick={() => setViewMode('map')}
               title="Map view"
             >
-              <Map className="w-4 h-4" />
+              <MapIcon className="w-4 h-4" />
             </Button>
           </div>
         </div>
