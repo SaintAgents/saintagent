@@ -79,6 +79,7 @@ import {
   Medal,
   IterationCcw,
   Paintbrush,
+  Palette,
   Quote,
   CircleAlert,
   Building2
@@ -129,7 +130,7 @@ const NAV_ITEMS = [
   { id: 'leader', label: 'Leader Channel', Icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
   { id: 'circles', label: 'Circles', Icon: Users, page: 'Circles', hint: 'Join interest and value-based communities' },
   { id: 'studio', label: 'Creator Studio', Icon: Paintbrush, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
-  { id: 'contentstudio', label: 'Content Studio', Icon: FileText, page: 'ContentStudio', hint: 'Create, collaborate, and publish content with AI assistance' },
+  { id: 'contentstudio', label: 'Content Studio', Icon: Palette, page: 'ContentStudio', hint: 'Create, collaborate, and publish content with AI assistance' },
   { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
   { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
   { id: 'gallery', label: 'Hero Gallery', Icon: Eye, page: 'CommandDeck', hint: 'View and explore the hero image gallery', action: 'openGallery' },
