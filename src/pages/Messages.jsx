@@ -64,18 +64,48 @@ export default function Messages() {
     retry: false
   });
 
-  // Real-time: subscribe to new/updated messages
+  // Real-time: subscribe to new/updated messages — update cache directly to avoid re-fetch storms
   React.useEffect(() => {
     const unsubscribe = base44.entities.Message.subscribe((event) => {
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      if (event.type === 'create' && event.data) {
+        queryClient.setQueryData(['messages'], (old) => {
+          if (!old) return [event.data];
+          // Avoid duplicates
+          if (old.some(m => m.id === event.data.id)) return old;
+          return [event.data, ...old];
+        });
+      } else if (event.type === 'update' && event.data) {
+        queryClient.setQueryData(['messages'], (old) => {
+          if (!old) return old;
+          return old.map(m => m.id === event.data.id ? event.data : m);
+        });
+      } else if (event.type === 'delete') {
+        queryClient.setQueryData(['messages'], (old) => {
+          if (!old) return old;
+          return old.filter(m => m.id !== event.id);
+        });
+      }
     });
     return unsubscribe;
   }, [queryClient]);
 
-  // Real-time: subscribe to conversation updates
+  // Real-time: subscribe to conversation updates — update cache directly
   React.useEffect(() => {
     const unsubscribe = base44.entities.Conversation.subscribe((event) => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      if (event.type === 'create' && event.data) {
+        queryClient.setQueryData(['conversations'], (old) => {
+          if (!old) return [event.data];
+          if (old.some(c => c.id === event.data.id)) return old;
+          return [event.data, ...old];
+        });
+      } else if (event.type === 'update' && event.data) {
+        queryClient.setQueryData(['conversations'], (old) => {
+          if (!old) return old;
+          return old.map(c => c.id === event.data.id ? event.data : c);
+        });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      }
     });
     return unsubscribe;
   }, [queryClient]);
@@ -90,12 +120,40 @@ export default function Messages() {
 
   const sendMutation = useMutation({
     mutationFn: (data) => base44.entities.Message.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
+    onMutate: async (newMsg) => {
+      // Optimistic update: add message to cache immediately
+      const optimisticMsg = {
+        ...newMsg,
+        id: 'optimistic-' + Date.now(),
+        created_date: new Date().toISOString(),
+        is_read: false,
+      };
+      queryClient.setQueryData(['messages'], (old) => {
+        if (!old) return [optimisticMsg];
+        return [optimisticMsg, ...old];
+      });
       setMessageText('');
-      // Track challenge progress for sending messages
+      return { optimisticMsg };
+    },
+    onSuccess: (created, variables, context) => {
+      // Replace optimistic message with real one
+      if (context?.optimisticMsg && created) {
+        queryClient.setQueryData(['messages'], (old) => {
+          if (!old) return [created];
+          return old.map(m => m.id === context.optimisticMsg.id ? created : m);
+        });
+      }
       if (user?.email) {
         trackSendMessage(user.email);
+      }
+    },
+    onError: (err, variables, context) => {
+      // Remove optimistic message on error
+      if (context?.optimisticMsg) {
+        queryClient.setQueryData(['messages'], (old) => {
+          if (!old) return old;
+          return old.filter(m => m.id !== context.optimisticMsg.id);
+        });
       }
     }
   });
@@ -272,7 +330,6 @@ export default function Messages() {
       } catch (_) {}
     }
     setMessageText('');
-    queryClient.invalidateQueries({ queryKey: ['messages'] });
   };
 
   React.useEffect(() => {
@@ -285,15 +342,25 @@ export default function Messages() {
     }
   }, [selectedConversation]);
 
-  // Delivery receipts: mark incoming as delivered for me
+  // Delivery receipts: mark incoming as delivered for me (throttled, max 3 at a time)
+  const deliveryProcessedRef = React.useRef(new Set());
   React.useEffect(() => {
     if (!selectedConversation || !user?.email) return;
-    const incoming = currentMessages.filter((m) => m.to_user_id === user.email && !(m.delivered_for_user_ids || []).includes(user.email));
+    const incoming = currentMessages.filter((m) => 
+      m.to_user_id === user.email && 
+      !(m.delivered_for_user_ids || []).includes(user.email) &&
+      !m.id.startsWith('optimistic-') &&
+      !deliveryProcessedRef.current.has(m.id)
+    );
     if (incoming.length === 0) return;
-    incoming.forEach((m) => {
+    // Only process up to 3 at a time to avoid rate limits
+    const batch = incoming.slice(0, 3);
+    batch.forEach((m) => {
+      deliveryProcessedRef.current.add(m.id);
       const list = Array.isArray(m.delivered_for_user_ids) ? m.delivered_for_user_ids : [];
-      base44.entities.Message.update(m.id, { delivered_for_user_ids: [...list, user.email] }).
-      then(() => queryClient.invalidateQueries({ queryKey: ['messages'] }));
+      base44.entities.Message.update(m.id, { delivered_for_user_ids: [...list, user.email] }).catch(() => {
+        deliveryProcessedRef.current.delete(m.id);
+      });
     });
   }, [selectedConversation?.id, currentMessages.length, user?.email]);
 
