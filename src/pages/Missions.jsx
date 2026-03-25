@@ -36,7 +36,7 @@ import {
   Clock,
   X,
   Wand2,
-  Map,
+  Map as MapIcon,
   Grid3X3
 } from "lucide-react";
 
