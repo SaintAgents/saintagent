@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Plus, Star, Users, Globe, MapPin, Shield, TrendingUp, Sparkles, ArrowRight, Eye } from 'lucide-react';
 import BusinessEntityCard from '@/components/business/BusinessEntityCard';
 import CreateBusinessModal from '@/components/business/CreateBusinessModal';
+import AdminBusinessPanel from '@/components/business/AdminBusinessPanel';
 
 const HERO_IMAGE = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/6ba2b63c4_universal_upscale_0_d50f73c9-693f-450b-977e-64eea1b7922d_02.jpg";
 
@@ -148,17 +149,27 @@ export default function BusinessEntities() {
             <TabsTrigger value="all">All Entities</TabsTrigger>
             <TabsTrigger value="featured">Featured</TabsTrigger>
             <TabsTrigger value="mine">My Entities</TabsTrigger>
+            {currentUser?.role === 'admin' && (
+              <TabsTrigger value="admin" className="gap-1">
+                <Shield className="w-3.5 h-3.5" /> Admin
+              </TabsTrigger>
+            )}
           </TabsList>
         </Tabs>
 
+        {/* Admin Panel */}
+        {tab === 'admin' && currentUser?.role === 'admin' && (
+          <AdminBusinessPanel />
+        )}
+
         {/* Grid */}
-        {isLoading ? (
+        {tab !== 'admin' && isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1,2,3,4,5,6].map(i => (
               <div key={i} className="h-72 rounded-2xl bg-slate-100 animate-pulse" />
             ))}
           </div>
-        ) : filtered.length === 0 ? (
+        ) : tab !== 'admin' && filtered.length === 0 ? (
           <div className="text-center py-16">
             <Globe className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-700 mb-2">No entities found</h3>
@@ -167,13 +178,13 @@ export default function BusinessEntities() {
               <Plus className="w-4 h-4" /> Register Entity
             </Button>
           </div>
-        ) : (
+        ) : tab !== 'admin' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map(entity => (
               <BusinessEntityCard key={entity.id} entity={entity} />
             ))}
           </div>
-        )}
+        ) : null}
       </div>
 
       <CreateBusinessModal open={createOpen} onClose={() => setCreateOpen(false)} />
