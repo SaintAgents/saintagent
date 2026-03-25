@@ -4,18 +4,38 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 
 export default function LiveBroadcastBanner() {
-  const { data: liveBroadcasts = [] } = useQuery({
+  // Fetch both explicitly live AND scheduled broadcasts (which may be in their time window)
+  const { data: broadcasts = [] } = useQuery({
     queryKey: ['liveBroadcasts'],
-    queryFn: () => base44.entities.Broadcast.filter({ status: 'live' }, '-updated_date', 5),
+    queryFn: async () => {
+      const [live, scheduled] = await Promise.all([
+        base44.entities.Broadcast.filter({ status: 'live' }, '-updated_date', 5),
+        base44.entities.Broadcast.filter({ status: 'scheduled' }, '-scheduled_time', 20),
+      ]);
+      return [...live, ...scheduled];
+    },
     refetchInterval: 30000,
     staleTime: 15000,
   });
 
-  // Filter out broadcasts that have exceeded their scheduled duration
-  const activeBroadcasts = liveBroadcasts.filter(b => {
-    if (!b.scheduled_time || !b.duration_minutes) return true;
-    const endTime = new Date(b.scheduled_time).getTime() + b.duration_minutes * 60000;
-    return Date.now() < endTime;
+  const now = Date.now();
+
+  // A broadcast is "active" if explicitly live, OR if scheduled and within its time window
+  const activeBroadcasts = broadcasts.filter(b => {
+    if (b.status === 'live') {
+      // If explicitly live, check it hasn't exceeded duration
+      if (!b.scheduled_time || !b.duration_minutes) return true;
+      const endTime = new Date(b.scheduled_time).getTime() + b.duration_minutes * 60000;
+      return now < endTime;
+    }
+    // For scheduled broadcasts: check if current time is within [scheduled_time, scheduled_time + duration]
+    if (b.status === 'scheduled' && b.scheduled_time) {
+      const startTime = new Date(b.scheduled_time).getTime();
+      const duration = (b.duration_minutes || 60) * 60000;
+      const endTime = startTime + duration;
+      return now >= startTime && now < endTime;
+    }
+    return false;
   });
 
   const broadcast = activeBroadcasts[0];
