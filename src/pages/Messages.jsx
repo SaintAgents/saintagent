@@ -191,9 +191,13 @@ export default function Messages() {
     });
     
     // Process messages and group them
+    const entityConvIds = new Set(myConvs.map(c => c.id));
     visibleMsgs.forEach((msg) => {
       const convId = msg.conversation_id || [msg.from_user_id, msg.to_user_id].sort().join('_');
       const otherUserId = msg.from_user_id === user?.email ? msg.to_user_id : msg.from_user_id;
+      
+      // Skip self-addressed messages that don't belong to a known conversation
+      if (otherUserId === user?.email && !convMap[convId]) return;
       
       // Check if this message belongs to an existing Conversation entity
       if (convMap[convId]) {
@@ -207,8 +211,9 @@ export default function Messages() {
       }
       
       // For direct messages without a Conversation entity, dedupe by other user
-      // Find if we already have a conversation with this user
+      // ONLY merge into other non-entity conversations (never into Conversation entity entries)
       const existingConvKey = Object.keys(convMap).find((key) => {
+        if (entityConvIds.has(key)) return false; // Never merge loose messages into entity-defined conversations
         const conv = convMap[key];
         return !conv.isGroup && conv.otherUser.id === otherUserId;
       });
