@@ -99,7 +99,6 @@ export default function MiniProfile({
   })();
 
   const handleAvatarClick = (e) => {
-    if (disableProfileClick) return;
     e.preventDefault();
     e.stopPropagation();
     if (userId) {
@@ -125,7 +124,7 @@ export default function MiniProfile({
   const actualSize = Math.max(56, size);
 
   return (
-    <div className={cn('min-w-0', className)} data-user-id={userId}>
+    <div className={cn('min-w-0', className)} {...(!disableProfileClick ? { 'data-user-id': userId } : {})}>
       {showHeroLayout ? (
         <div className="relative">
           {/* Mini Hero Banner - smaller */}
