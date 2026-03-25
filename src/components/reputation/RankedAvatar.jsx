@@ -59,7 +59,7 @@ export default function RankedAvatar({
   galleryImages = [],
   affiliatePaidCount,
   saNumber,
-
+  onClick,
 }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   
@@ -153,7 +153,11 @@ export default function RankedAvatar({
       >
         {/* Inner ring: white bg */}
         <div className="rounded-full bg-white dark:bg-[#050505] p-1 relative">
-          <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600">
+          <div 
+            className="w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600"
+            style={onClick ? { cursor: 'pointer' } : undefined}
+            onClick={onClick}
+          >
             {finalAvatarUrl ? (
               <img 
                 src={finalAvatarUrl} 

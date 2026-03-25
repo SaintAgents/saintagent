@@ -143,7 +143,7 @@ export default function MiniProfile({
           
           {/* Avatar and info side by side, avatar at top where data starts */}
           <div className="flex items-start gap-4 px-3 pt-3">
-            <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
+            <div className="relative shrink-0">
               <RankedAvatar
                 src={avatar || profile?.avatar_url}
                 name={displayName}
@@ -155,6 +155,7 @@ export default function MiniProfile({
                 rpPoints={profile?.rp_points || profile?.rank_points}
                 showPhotoIcon={true}
                 galleryImages={profile?.gallery_images || []}
+                onClick={handleAvatarClick}
               />
             </div>
             
@@ -205,7 +206,7 @@ export default function MiniProfile({
         </div>
       ) : (
         <div className="flex items-start gap-3 relative">
-        <div className="relative cursor-pointer shrink-0" onClick={handleAvatarClick}>
+        <div className="relative shrink-0">
           <RankedAvatar
             src={avatar || profile?.avatar_url}
             name={displayName}
@@ -217,6 +218,7 @@ export default function MiniProfile({
             rpPoints={profile?.rp_points || profile?.rank_points}
             showPhotoIcon={true}
             galleryImages={profile?.gallery_images || []}
+            onClick={handleAvatarClick}
           />
         </div>
         {(showName || showHandle) && (
