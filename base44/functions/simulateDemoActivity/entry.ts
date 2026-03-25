@@ -239,31 +239,8 @@ Deno.serve(async (req) => {
       results.meetings_created++;
     }
     
-    // 5. Create some messages/conversations (limited)
-    const messagesToCreate = Math.floor(Math.random() * 2) + 1;
-    for (let i = 0; i < messagesToCreate; i++) {
-      const [sender, receiver] = randomItems(DEMO_USERS, 2);
-      const senderProfile = demoProfiles.find(p => p.user_id === sender.email);
-      
-      const conversationId = [sender.email, receiver.email].sort().join('_');
-      
-      await base44.asServiceRole.entities.Message.create({
-        conversation_id: conversationId,
-        from_user_id: sender.email,
-        to_user_id: receiver.email,
-        from_name: sender.name,
-        from_avatar: senderProfile?.avatar_url,
-        content: randomItem([
-          "Hey! Loved your recent post. Would love to connect!",
-          "Thanks for the great session today! Looking forward to more.",
-          "Saw we have similar interests. Want to collaborate on something?",
-          "Your energy is amazing! Let's chat soon.",
-          "Just checking in. Hope you're having a great day! ✨",
-        ]),
-        is_read: Math.random() > 0.5,
-      });
-      results.messages_created++;
-    }
+    // 5. Messages/conversations — DISABLED (no simulations)
+    // messages_created stays 0
     
     // 6. Create notifications for real users (limited)
     const realUsers = allProfiles.filter(p => !p.user_id?.includes('@demo.'));
