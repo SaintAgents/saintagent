@@ -62,7 +62,8 @@ export default function MiniProfile({
   showTrustBadge = true,
   showReachBadge = true,
   showHelpHint = true,
-  showTipButton = true
+  showTipButton = true,
+  disableProfileClick = false
 }) {
   // DRASTICALLY reduced API calls - cache for 30 min, don't refetch on mount
   const { data: profs = [] } = useQuery({
@@ -98,15 +99,16 @@ export default function MiniProfile({
   })();
 
   const handleAvatarClick = (e) => {
+    if (disableProfileClick) return;
     e.preventDefault();
     e.stopPropagation();
-    // Open profile drawer, not navigate to page
     if (userId) {
       document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
     }
   };
   
   const handleNameClick = (e) => {
+    if (disableProfileClick) return;
     e.preventDefault();
     e.stopPropagation();
     if (userId) {
