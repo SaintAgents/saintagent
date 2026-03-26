@@ -91,7 +91,16 @@ export default function Admin() {
               <Shield className="w-6 h-6 text-violet-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
+                <button
+                  onClick={() => setActiveTab('settings')}
+                  className="p-2 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors"
+                  title="Platform Settings"
+                >
+                  <Settings className="w-5 h-5 text-violet-600" />
+                </button>
+              </div>
               <p className="text-slate-500 mt-1">Platform management and controls</p>
             </div>
           </div>
