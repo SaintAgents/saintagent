@@ -80,7 +80,14 @@ export default function PlatformSettings() {
             <span className={`text-sm font-bold ${form.broadcasts_enabled ? 'text-emerald-700' : 'text-red-700'}`}>
               {form.broadcasts_enabled ? 'ON' : 'OFF'}
             </span>
-            <Switch checked={!!form.broadcasts_enabled} onCheckedChange={(v) => handleChange('broadcasts_enabled', v)} />
+            <Switch checked={!!form.broadcasts_enabled} onCheckedChange={(v) => {
+              handleChange('broadcasts_enabled', v);
+              // Auto-save immediately so it takes effect right away
+              if (current?.id) {
+                base44.entities.PlatformSetting.update(current.id, { broadcasts_enabled: v })
+                  .then(() => qc.invalidateQueries({ queryKey: ['platformSettings'] }));
+              }
+            }} />
           </div>
         </CardContent>
       </Card>
