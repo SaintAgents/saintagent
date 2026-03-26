@@ -5,9 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Briefcase, DollarSign, ArrowRight, Calendar, TrendingUp } from 'lucide-react';
+import { Briefcase, DollarSign, ArrowRight, Calendar, TrendingUp, Plus } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import DealFormModal from '@/components/deals/DealFormModal';
+import DealDetailModal from '@/components/deals/DealDetailModal';
 
 const STAGE_STYLES = {
   prospecting: { label: 'Prospecting', color: 'bg-slate-100 text-slate-700' },
@@ -24,12 +25,12 @@ const PRIORITY_STYLES = {
   high: 'bg-red-100 text-red-600',
 };
 
-function DealCard({ deal }) {
+function DealCard({ deal, onClick }) {
   const stage = STAGE_STYLES[deal.stage] || STAGE_STYLES.prospecting;
 
   return (
     <div className="bg-white rounded-2xl border p-5 hover:shadow-md transition-shadow cursor-pointer"
-         onClick={() => window.location.href = createPageUrl('Deals') + `?id=${deal.id}`}>
+         onClick={onClick}>
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
           <h4 className="font-semibold text-slate-900 truncate">{deal.title}</h4>
@@ -69,9 +70,23 @@ function DealCard({ deal }) {
   );
 }
 
-export default function BusinessDealsTab({ entity }) {
+export default function BusinessDealsTab({ entity, isOwner, isTeamMember, currentUser }) {
   const [search, setSearch] = useState('');
   const [stageFilter, setStageFilter] = useState('all');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState(null);
+
+  const { data: myProfile } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const profile = myProfile?.[0];
+
+  const { data: allProfiles = [] } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 100)
+  });
 
   const { data: deals = [], isLoading } = useQuery({
     queryKey: ['bizDeals', entity.owner_id],
@@ -92,6 +107,8 @@ export default function BusinessDealsTab({ entity }) {
   const activeCount = deals.filter(d => !['closed_won', 'closed_lost'].includes(d.stage)).length;
   const wonValue = deals.filter(d => d.stage === 'closed_won').reduce((s, d) => s + (d.amount || 0), 0);
 
+  const canCreate = isOwner || isTeamMember;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -102,6 +119,16 @@ export default function BusinessDealsTab({ entity }) {
 
   return (
     <div className="space-y-6">
+      {/* Header with Create button */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-slate-900">Deals</h3>
+        {canCreate && (
+          <Button className="bg-emerald-600 hover:bg-emerald-700 gap-2 rounded-xl" onClick={() => setCreateOpen(true)}>
+            <Plus className="w-4 h-4" /> New Deal
+          </Button>
+        )}
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-2xl bg-slate-50 border text-center">
@@ -159,20 +186,48 @@ export default function BusinessDealsTab({ entity }) {
         <div className="text-center py-12 bg-white rounded-2xl border">
           <Briefcase className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <p className="text-sm text-slate-500">No deals found</p>
-          <p className="text-xs text-slate-400 mt-1">Deals associated with this entity will appear here</p>
+          <p className="text-xs text-slate-400 mt-1">
+            {canCreate ? 'Create a deal to get started' : 'Deals associated with this entity will appear here'}
+          </p>
+          {canCreate && (
+            <Button className="mt-4 bg-emerald-600 hover:bg-emerald-700 gap-2 rounded-xl" onClick={() => setCreateOpen(true)}>
+              <Plus className="w-4 h-4" /> Create First Deal
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtered.map(d => <DealCard key={d.id} deal={d} />)}
+          {filtered.map(d => <DealCard key={d.id} deal={d} onClick={() => setSelectedDeal(d)} />)}
         </div>
       )}
 
       {deals.length > 0 && (
         <div className="text-center">
           <Button variant="outline" className="rounded-xl gap-2" onClick={() => window.location.href = createPageUrl('Deals')}>
-            View All in Deals Hub <ArrowRight className="w-4 h-4" />
+            View All in Deal Maker <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
+      )}
+
+      {/* Create Deal Modal */}
+      <DealFormModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        currentUser={currentUser}
+        profile={profile}
+        allProfiles={allProfiles}
+        skipApproval={true}
+      />
+
+      {/* Deal Detail Modal */}
+      {selectedDeal && (
+        <DealDetailModal
+          deal={selectedDeal}
+          onClose={() => setSelectedDeal(null)}
+          currentUser={currentUser}
+          profile={profile}
+          allProfiles={allProfiles}
+        />
       )}
     </div>
   );

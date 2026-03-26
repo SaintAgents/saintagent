@@ -284,7 +284,7 @@ export default function BusinessEntityProfile() {
           </TabsList>
 
           <TabsContent value="dashboard">
-            <BusinessDashboardTab entity={entity} isOwner={isOwner} />
+            <BusinessDashboardTab entity={entity} isOwner={isOwner} isTeamMember={isTeamMember} currentUser={currentUser} />
           </TabsContent>
 
           <TabsContent value="analytics">
@@ -306,11 +306,11 @@ export default function BusinessEntityProfile() {
           </TabsContent>
 
           <TabsContent value="projects">
-            <BusinessProjectsTab entity={entity} />
+            <BusinessProjectsTab entity={entity} isOwner={isOwner} isTeamMember={isTeamMember} currentUser={currentUser} />
           </TabsContent>
 
           <TabsContent value="deals">
-            <BusinessDealsTab entity={entity} />
+            <BusinessDealsTab entity={entity} isOwner={isOwner} isTeamMember={isTeamMember} currentUser={currentUser} />
           </TabsContent>
 
           <TabsContent value="team">
