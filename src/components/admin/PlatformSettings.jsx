@@ -64,6 +64,27 @@ export default function PlatformSettings() {
         <p className="text-sm text-slate-600">Configure global platform preferences.</p>
       </div>
 
+      {/* KILL SWITCH — Live Broadcast Banner */}
+      <Card className={`border-2 ${form.broadcasts_enabled ? 'border-emerald-400 bg-emerald-50/50' : 'border-red-400 bg-red-50/50'}`}>
+        <CardContent className="flex items-center justify-between py-5 px-6">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-full ${form.broadcasts_enabled ? 'bg-emerald-100' : 'bg-red-100'}`}>
+              <Zap className={`w-5 h-5 ${form.broadcasts_enabled ? 'text-emerald-600' : 'text-red-600'}`} />
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">Live Broadcast Banner — Kill Switch</p>
+              <p className="text-xs text-slate-500">Force the live broadcast button ON or OFF globally</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`text-sm font-bold ${form.broadcasts_enabled ? 'text-emerald-700' : 'text-red-700'}`}>
+              {form.broadcasts_enabled ? 'ON' : 'OFF'}
+            </span>
+            <Switch checked={!!form.broadcasts_enabled} onCheckedChange={(v) => handleChange('broadcasts_enabled', v)} />
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -114,7 +135,6 @@ export default function PlatformSettings() {
             <ToggleRow label="Marketplace Enabled" value={form.marketplace_enabled} onChange={(v) => handleChange('marketplace_enabled', v)} />
             <ToggleRow label="Messaging Enabled" value={form.messages_enabled} onChange={(v) => handleChange('messages_enabled', v)} />
             <ToggleRow label="Synchronicity Engine Enabled" value={form.synchronicity_engine_enabled} onChange={(v) => handleChange('synchronicity_engine_enabled', v)} />
-            <ToggleRow label="Live Broadcasts Enabled" value={form.broadcasts_enabled} onChange={(v) => handleChange('broadcasts_enabled', v)} />
           </CardContent>
         </Card>
 
