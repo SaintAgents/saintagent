@@ -33,7 +33,7 @@ export default function BusinessEntityCard({ entity, featured = false }) {
   return (
     <div
       className={`group cursor-pointer rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-        featured ? 'border-amber-300 shadow-lg shadow-amber-100/50' : 'border-slate-200 bg-white'
+        featured ? 'border-amber-300 shadow-lg shadow-amber-100/50' : 'border-slate-200'
       }`}
       onClick={() => window.location.href = createPageUrl('BusinessEntityProfile') + `?id=${entity.id}`}
     >
@@ -100,7 +100,7 @@ export default function BusinessEntityCard({ entity, featured = false }) {
         )}
 
         {/* Footer stats */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700">
           <div className="flex items-center gap-3 text-xs text-slate-500">
             {entity.location && (
               <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{entity.location}</span>

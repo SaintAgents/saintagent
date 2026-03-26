@@ -164,7 +164,7 @@ export default function BusinessEntityProfile() {
 
       {/* Profile Header */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 -mt-20 relative z-10">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 mb-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-6">
             {/* Logo */}
             <Avatar className="w-24 h-24 border-4 border-white shadow-lg shrink-0 -mt-16 md:-mt-12">
