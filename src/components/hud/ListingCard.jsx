@@ -16,7 +16,8 @@ import {
   Pause,
   Play,
   Edit,
-  Coins
+  Coins,
+  Repeat
 } from "lucide-react";
 import { createPageUrl } from '@/utils';
 import {
@@ -88,6 +89,12 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
         {listing.is_free && (
           <Badge className="absolute top-3 right-3 bg-emerald-500 text-white">
             Free
+          </Badge>
+        )}
+        {listing.recurring_available && (
+          <Badge className="absolute bottom-3 left-3 bg-violet-600 text-white gap-1">
+            <Repeat className="w-3 h-3" />
+            Recurring
           </Badge>
         )}
       </div>

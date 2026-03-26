@@ -5,13 +5,16 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import MiniProfile from '@/components/profile/MiniProfile';
-import { Clock, Share2, MapPin, Video, Zap, CheckCircle2 } from 'lucide-react';
+import { Clock, Share2, MapPin, Video, Zap, CheckCircle2, Repeat } from 'lucide-react';
 import Breadcrumb from '@/components/hud/Breadcrumb';
+import RecurringBookingModal from '@/components/marketplace/RecurringBookingModal';
+import ProviderAvailabilityManager from '@/components/marketplace/ProviderAvailabilityManager';
 
 export default function ListingDetail() {
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const listingId = urlParams.get('id');
+  const [recurringModalOpen, setRecurringModalOpen] = React.useState(false);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -126,6 +129,12 @@ export default function ListingDetail() {
                 <Button className="bg-violet-600 hover:bg-violet-700 rounded-lg" onClick={() => bookMutation.mutate()} disabled={bookMutation.isPending}>
                   {bookMutation.isPending ? 'Sending Request…' : listing.listing_type === 'request' ? 'Offer to Help' : 'Request to Book'}
                 </Button>
+                {listing.recurring_available && listing.listing_type === 'offer' && listing.owner_id !== currentUser?.email && (
+                  <Button variant="outline" className="gap-1.5 rounded-lg border-violet-300 text-violet-700 hover:bg-violet-50" onClick={() => setRecurringModalOpen(true)}>
+                    <Repeat className="w-4 h-4" />
+                    Book Recurring
+                  </Button>
+                )}
                 <p className="text-xs text-slate-500 max-w-[200px]">
                   {listing.listing_type === 'request' 
                     ? 'The host will be notified and can accept your offer' 
@@ -139,6 +148,11 @@ export default function ListingDetail() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-6 space-y-4">
+        {/* Provider Availability Manager - only for listing owner */}
+        {listing.owner_id === currentUser?.email && (
+          <ProviderAvailabilityManager listing={listing} onUpdate={() => queryClient.invalidateQueries({ queryKey: ['listing', listingId] })} />
+        )}
+
         <div className="bg-white rounded-xl border p-4">
           <h3 className="font-semibold text-slate-900 mb-3">Hosted by</h3>
           <MiniProfile userId={listing.owner_id} name={listing.owner_name} avatar={listing.owner_avatar} size={40} />
@@ -156,6 +170,12 @@ export default function ListingDetail() {
           </div>
         </div>
       </div>
+
+      <RecurringBookingModal
+        open={recurringModalOpen}
+        onOpenChange={setRecurringModalOpen}
+        listing={listing}
+      />
     </div>
   );
 }

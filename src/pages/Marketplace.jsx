@@ -20,12 +20,14 @@ import {
   Filter,
   Grid3X3,
   List,
-  Package } from
+  Package,
+  Repeat } from
 "lucide-react";
 
 import ListingCard from '@/components/hud/ListingCard';
 import CreateListingModal from '@/components/marketplace/CreateListingModal';
 import DigitalProductsTab from '@/components/marketplace/DigitalProductsTab';
+import RecurringBookingsManager from '@/components/marketplace/RecurringBookingsManager';
 import EarningsMatrixModal from '@/components/earnings/EarningsMatrixModal';
 import BookingRequestModal from '@/components/matches/BookingRequestModal';
 import BackButton from '@/components/hud/BackButton';
@@ -130,8 +132,8 @@ export default function Marketplace() {
 
       <div className="max-w-6xl mx-auto px-6 pt-6 relative z-[5]">
 
-        {/* Search & Filters - hidden on digital tab */}
-        {tab !== 'digital' && <div className="flex items-center gap-4 mb-6">
+        {/* Search & Filters - hidden on digital/recurring tabs */}
+        {tab !== 'digital' && tab !== 'recurring' && <div className="flex items-center gap-4 mb-6">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <Input
@@ -165,7 +167,7 @@ export default function Marketplace() {
           </div>
         </div>}
 
-        {showFilters && tab !== 'digital' &&
+        {showFilters && tab !== 'digital' && tab !== 'recurring' &&
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
               <label className="text-xs text-slate-500">Category</label>
@@ -226,7 +228,7 @@ export default function Marketplace() {
         }
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-4 h-11 bg-white rounded-xl border">
+          <TabsList className="w-full grid grid-cols-5 h-11 bg-white rounded-xl border">
             <TabsTrigger value="browse" className="rounded-lg">
               All Listings
             </TabsTrigger>
@@ -240,14 +242,21 @@ export default function Marketplace() {
               <Package className="w-3.5 h-3.5" />
               Digital Assets
             </TabsTrigger>
+            <TabsTrigger value="recurring" className="rounded-lg gap-1.5">
+              <Repeat className="w-3.5 h-3.5" />
+              Recurring
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Digital Products Tab Content */}
         {tab === 'digital' && <DigitalProductsTab />}
 
+        {/* Recurring Bookings Tab */}
+        {tab === 'recurring' && <RecurringBookingsManager />}
+
         {/* Listings Grid */}
-        {tab === 'digital' ? null : isLoading ?
+        {tab === 'digital' || tab === 'recurring' ? null : isLoading ?
         <div className={cn(
           "gap-6",
           viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "space-y-4"
@@ -319,7 +328,8 @@ export default function Marketplace() {
               revisions_included: Number(data.revisions_included || 1),
               skills: data.skills || [],
               status: 'active',
-              image_url: data.image_url || undefined
+              image_url: data.image_url || undefined,
+              recurring_available: !!data.recurring_available
             });
             queryClient.invalidateQueries({ queryKey: ['listings'] });
             setCreateOpen(false);
