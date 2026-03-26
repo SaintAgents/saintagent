@@ -185,11 +185,11 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
-      <DialogContent className="sm:max-w-2xl p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-2xl p-0 overflow-hidden !bg-white !text-slate-900" style={{ backgroundColor: '#ffffff', color: '#1e293b' }}>
         {/* Progress Bar */}
         <div className="px-6 pt-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-slate-500">
+            <span className="text-xs font-medium" style={{ color: '#64748b' }}>
               Step {currentStep + 1} of {TOUR_STEPS.length}
             </span>
             <Button variant="ghost" size="sm" onClick={handleSkipToEnd} className="text-xs text-slate-400 h-6">
@@ -218,8 +218,8 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
                 <Icon className="w-7 h-7 text-white" />
               </div>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold text-slate-900 mb-1">{step.title}</h2>
-                <p className="text-slate-600">{step.description}</p>
+                <h2 className="text-2xl font-bold mb-1" style={{ color: '#0f172a' }}>{step.title}</h2>
+                <p style={{ color: '#475569' }}>{step.description}</p>
               </div>
             </div>
 
@@ -242,7 +242,7 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
                     )}
                   >
                     <feature.icon className={cn("w-5 h-5", colors.text)} />
-                    <span className="text-sm font-medium text-slate-700">{feature.label}</span>
+                    <span className="text-sm font-medium" style={{ color: '#334155' }}>{feature.label}</span>
                   </div>
                 ))}
               </div>
@@ -257,7 +257,7 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
                 </h4>
                 <ul className="space-y-2">
                   {step.tips.map((tip, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                    <li key={idx} className="flex items-start gap-2 text-sm" style={{ color: '#334155' }}>
                       <CheckCircle2 className={cn("w-4 h-4 mt-0.5 flex-shrink-0", colors.text)} />
                       {tip}
                     </li>
@@ -269,7 +269,7 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
             {/* Actions (final step) */}
             {step.actions && (
               <div className="space-y-3 mb-6">
-                <h4 className="font-semibold text-slate-700 mb-3">Get Started:</h4>
+                <h4 className="font-semibold mb-3" style={{ color: '#334155' }}>Get Started:</h4>
                 {step.actions.map((action, idx) => (
                   <Button
                     key={idx}
@@ -302,7 +302,7 @@ export default function InteractiveOnboardingTour({ open, onClose, userTrack }) 
         </AnimatePresence>
 
         {/* Navigation */}
-        <div className="px-6 pb-6 flex items-center justify-between border-t pt-4">
+        <div className="px-6 pb-6 flex items-center justify-between border-t pt-4" style={{ borderColor: '#e2e8f0' }}>
           <Button
             variant="ghost"
             onClick={handlePrev}
