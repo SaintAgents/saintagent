@@ -4,6 +4,14 @@ import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 
 export default function LiveBroadcastBanner() {
+  // Check if broadcasts are enabled via platform settings
+  const { data: settingsList = [] } = useQuery({
+    queryKey: ['platformSettings'],
+    queryFn: () => base44.entities.PlatformSetting.list(),
+    staleTime: 30000,
+  });
+  const broadcastsEnabled = settingsList[0]?.broadcasts_enabled !== false;
+
   // Fetch both explicitly live AND scheduled broadcasts (which may be in their time window)
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['liveBroadcasts'],
@@ -16,6 +24,7 @@ export default function LiveBroadcastBanner() {
     },
     refetchInterval: 30000,
     staleTime: 15000,
+    enabled: broadcastsEnabled,
   });
 
   const now = Date.now();
@@ -39,7 +48,7 @@ export default function LiveBroadcastBanner() {
   });
 
   const broadcast = activeBroadcasts[0];
-  if (!broadcast) return null;
+  if (!broadcast || !broadcastsEnabled) return null;
 
   const handleClick = () => {
     if (broadcast.live_stream_url) {

@@ -32,6 +32,7 @@ export default function PlatformSettings() {
     synchronicity_engine_enabled: true,
     mission_reward_cap_usd: 55,
     mission_cap_override_emails: [],
+    broadcasts_enabled: true,
     beta_bonus_active: false,
     beta_bonus_multiplier: 2,
     beta_bonus_end_time: '',
@@ -113,6 +114,7 @@ export default function PlatformSettings() {
             <ToggleRow label="Marketplace Enabled" value={form.marketplace_enabled} onChange={(v) => handleChange('marketplace_enabled', v)} />
             <ToggleRow label="Messaging Enabled" value={form.messages_enabled} onChange={(v) => handleChange('messages_enabled', v)} />
             <ToggleRow label="Synchronicity Engine Enabled" value={form.synchronicity_engine_enabled} onChange={(v) => handleChange('synchronicity_engine_enabled', v)} />
+            <ToggleRow label="Live Broadcasts Enabled" value={form.broadcasts_enabled} onChange={(v) => handleChange('broadcasts_enabled', v)} />
           </CardContent>
         </Card>
 
