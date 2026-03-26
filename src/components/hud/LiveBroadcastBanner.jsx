@@ -12,15 +12,16 @@ export default function LiveBroadcastBanner() {
   });
   const broadcastsEnabled = settingsList[0]?.broadcasts_enabled !== false;
 
-  // Fetch both explicitly live AND scheduled broadcasts (which may be in their time window)
+  // Fetch broadcasts — when kill switch is ON, also grab the most recent one as fallback
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['liveBroadcasts'],
     queryFn: async () => {
-      const [live, scheduled] = await Promise.all([
+      const [live, scheduled, recent] = await Promise.all([
         base44.entities.Broadcast.filter({ status: 'live' }, '-updated_date', 5),
         base44.entities.Broadcast.filter({ status: 'scheduled' }, '-scheduled_time', 20),
+        base44.entities.Broadcast.list('-scheduled_time', 1),
       ]);
-      return [...live, ...scheduled];
+      return { live, scheduled, recent };
     },
     refetchInterval: 30000,
     staleTime: 15000,
@@ -30,14 +31,12 @@ export default function LiveBroadcastBanner() {
   const now = Date.now();
 
   // A broadcast is "active" if explicitly live, OR if scheduled and within its time window
-  const activeBroadcasts = broadcasts.filter(b => {
+  const activeBroadcasts = [...(broadcasts.live || []), ...(broadcasts.scheduled || [])].filter(b => {
     if (b.status === 'live') {
-      // If explicitly live, check it hasn't exceeded duration
       if (!b.scheduled_time || !b.duration_minutes) return true;
       const endTime = new Date(b.scheduled_time).getTime() + b.duration_minutes * 60000;
       return now < endTime;
     }
-    // For scheduled broadcasts: check if current time is within [scheduled_time, scheduled_time + duration]
     if (b.status === 'scheduled' && b.scheduled_time) {
       const startTime = new Date(b.scheduled_time).getTime();
       const duration = (b.duration_minutes || 60) * 60000;
@@ -47,7 +46,8 @@ export default function LiveBroadcastBanner() {
     return false;
   });
 
-  const broadcast = activeBroadcasts[0];
+  // Kill switch ON = force-show the Live pill using the most recent broadcast as fallback
+  const broadcast = activeBroadcasts[0] || (broadcastsEnabled ? (broadcasts.recent || [])[0] : null);
   if (!broadcast || !broadcastsEnabled) return null;
 
   const handleClick = () => {
