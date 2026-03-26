@@ -4,7 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2 } from 'lucide-react';
+import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2, HelpCircle } from 'lucide-react';
+import ProjectSubmissionTutorial from '@/components/learn/ProjectSubmissionTutorial';
 
 import IntakeStepIndicator from './intake/IntakeStepIndicator';
 import IntakeStepBasicInfo from './intake/IntakeStepBasicInfo';
@@ -33,6 +34,7 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Project.create(data),
@@ -116,6 +118,15 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
             <DialogTitle className="flex items-center gap-2 text-lg">
               <ClipboardList className="w-5 h-5 text-violet-600" />
               Project Submission & Funding Intake
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="ml-auto gap-1 text-violet-600 hover:text-violet-700 hover:bg-violet-50 text-xs h-7"
+                onClick={() => setTutorialOpen(true)}
+              >
+                <HelpCircle className="w-3.5 h-3.5" /> How it works
+              </Button>
             </DialogTitle>
           </DialogHeader>
           <div className="mt-3">
@@ -186,6 +197,8 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
           </div>
         </div>
       </DialogContent>
+
+      <ProjectSubmissionTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     </Dialog>
   );
 }

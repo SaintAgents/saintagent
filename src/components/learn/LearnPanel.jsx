@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
-  GraduationCap, Building2, ChevronLeft, ArrowRight, Sparkles
+  GraduationCap, Building2, ClipboardList, ChevronLeft, ArrowRight, Sparkles
 } from 'lucide-react';
 import BusinessEntityTutorial from './BusinessEntityTutorial';
+import ProjectSubmissionTutorial from './ProjectSubmissionTutorial';
 
 const TUTORIALS = [
   {
@@ -16,6 +17,16 @@ const TUTORIALS = [
     duration: '5 min read',
     steps: 10,
     tag: 'Popular'
+  },
+  {
+    id: 'project_submission',
+    title: 'Submit a Project for Funding',
+    description: 'Complete walkthrough of the 8-step project intake process — from basics to final alignment.',
+    icon: ClipboardList,
+    color: 'emerald',
+    duration: '6 min read',
+    steps: 11,
+    tag: 'New'
   },
 ];
 
@@ -52,7 +63,9 @@ export default function LearnPanel({ onClose }) {
                   className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-violet-300 hover:shadow-md transition-all bg-white group"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center shrink-0">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                      t.color === 'emerald' ? 'bg-emerald-100 text-emerald-600' : 'bg-violet-100 text-violet-600'
+                    }`}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -88,6 +101,10 @@ export default function LearnPanel({ onClose }) {
       <BusinessEntityTutorial 
         open={activeTutorial === 'business_entity'} 
         onClose={() => setActiveTutorial(null)} 
+      />
+      <ProjectSubmissionTutorial
+        open={activeTutorial === 'project_submission'}
+        onClose={() => setActiveTutorial(null)}
       />
     </>
   );
