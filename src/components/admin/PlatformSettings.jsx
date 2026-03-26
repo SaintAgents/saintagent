@@ -41,7 +41,16 @@ export default function PlatformSettings() {
   const [overrideEmailInput, setOverrideEmailInput] = React.useState('');
 
   React.useEffect(() => {
-    if (current) setForm({ ...form, ...current });
+    if (current) {
+      // Only override defaults with non-null DB values
+      const merged = { ...form };
+      for (const [key, val] of Object.entries(current)) {
+        if (val !== null && val !== undefined && key in merged) {
+          merged[key] = val;
+        }
+      }
+      setForm(merged);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current?.id]);
 
