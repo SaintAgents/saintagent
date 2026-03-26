@@ -236,6 +236,11 @@ export default function TopBar({
     { name: 'Profiles', label: 'Profiles', description: 'Browse profiles' },
     { name: 'Matches', label: 'Matches', description: 'Your matches' },
     { name: 'AffiliateCenter', label: 'Affiliate Center', description: 'Referral program' },
+    { name: 'BusinessEntities', label: '5D Business Entities', description: '5D business directory' },
+    { name: 'Advice', label: 'Advice', description: 'Ask & give advice' },
+    { name: 'Teams', label: 'Teams', description: 'Team management' },
+    { name: 'Videos', label: 'Videos', description: 'Video library' },
+    { name: 'Mentorship', label: 'Mentorship', description: 'Mentorship sessions' },
   ];
 
   // Search data - LAZY: only fetch when user focuses search or types
