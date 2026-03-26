@@ -21,6 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Check, Upload, Link, Image, AlertCircle, X, Plus } from 'lucide-react';
+import PostAsSelector from '@/components/shared/PostAsSelector';
 
 const STEPS = [
   { id: 'basics', label: 'Basics' },
@@ -61,7 +62,8 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
   const [errors, setErrors] = React.useState({});
   const [uploading, setUploading] = React.useState(false);
   const [localFile, setLocalFile] = React.useState(null);
-  const [imageMode, setImageMode] = React.useState('upload'); // 'upload' or 'url'
+  const [imageMode, setImageMode] = React.useState('upload');
+  const [postAsEntityId, setPostAsEntityId] = React.useState(null);
 
   React.useEffect(() => {
     if (!open) {
@@ -70,6 +72,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
       setLocalFile(null);
       setImageMode('upload');
       setSkillInput('');
+      setPostAsEntityId(null);
       setForm({
         title: '',
         listing_type: 'offer',
@@ -149,7 +152,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
 
   const handleSubmit = () => {
     if (validateStep(step)) {
-      onCreate?.(form);
+      onCreate?.({ ...form, postAsEntityId });
     }
   };
 
@@ -695,6 +698,8 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
         <DialogHeader>
           <DialogTitle className="listing-modal-title">Create Listing</DialogTitle>
         </DialogHeader>
+
+        <PostAsSelector value={postAsEntityId} onChange={setPostAsEntityId} />
         
         {renderStepIndicator()}
         

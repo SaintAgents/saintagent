@@ -286,10 +286,24 @@ export default function Marketplace() {
           onOpenChange={setCreateOpen}
           onCreate={async (data) => {
             if (!currentUser) return;
+            // If posting as a business entity, look up entity details
+            let entityFields = {};
+            if (data.postAsEntityId) {
+              const entities = await base44.entities.BusinessEntity5D.filter({ id: data.postAsEntityId });
+              const entity = entities?.[0];
+              if (entity) {
+                entityFields = {
+                  entity_id: entity.id,
+                  entity_name: entity.name,
+                  entity_logo: entity.logo_url || ''
+                };
+              }
+            }
             await base44.entities.Listing.create({
               owner_id: currentUser.email,
               owner_name: currentUser.full_name,
               owner_avatar: undefined,
+              ...entityFields,
               listing_type: data.listing_type || 'offer',
               category: data.category || 'session',
               title: data.title,

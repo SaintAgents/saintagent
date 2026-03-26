@@ -17,6 +17,7 @@ import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 import MissionMilestoneEditor from './missions/MissionMilestoneEditor';
 import MissionRewardEditor from './missions/MissionRewardEditor';
 import MissionAIAssistant from './missions/MissionAIAssistant';
+import PostAsSelector from '@/components/shared/PostAsSelector';
 
 export default function CreateMissionModal({ open, onClose, prefillData, editMission }) {
   const [activeTab, setActiveTab] = useState('basics');
@@ -40,6 +41,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
   const [newRole, setNewRole] = useState('');
   const [uploading, setUploading] = useState(false);
   const [localFile, setLocalFile] = useState(null);
+  const [postAsEntityId, setPostAsEntityId] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -150,14 +152,27 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         join_policy: data.join_policy || 'open',
       };
 
+      // If posting as a business entity, look up entity details
+      let entityFields = {};
+      if (postAsEntityId) {
+        const entities = await base44.entities.BusinessEntity5D.filter({ id: postAsEntityId });
+        const ent = entities?.[0];
+        if (ent) {
+          entityFields = {
+            entity_id: ent.id,
+            entity_name: ent.name,
+            entity_logo: ent.logo_url || ''
+          };
+        }
+      }
+
       let mission;
       if (editMission) {
-        // When editing, only update editable fields — preserve participants, status, etc.
-        mission = await base44.entities.Mission.update(editMission.id, editableFields);
+        mission = await base44.entities.Mission.update(editMission.id, { ...editableFields, ...entityFields });
       } else {
-        // When creating, add creator and participant fields
         mission = await base44.entities.Mission.create({
           ...editableFields,
+          ...entityFields,
           creator_id: user.email,
           creator_name: profile?.display_name || user.full_name,
           status: needsApproval ? 'pending_approval' : 'active',
@@ -301,8 +316,11 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Main Form */}
           <div className="flex-1 flex flex-col min-w-0">
+            <div className="px-6 pt-2 shrink-0">
+              <PostAsSelector value={postAsEntityId} onChange={setPostAsEntityId} />
+            </div>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-              <div className="px-6 pt-4 shrink-0">
+              <div className="px-6 pt-2 shrink-0">
                 <TabsList className="w-full grid grid-cols-4">
                   <TabsTrigger value="basics" className="gap-1">
                     <Target className="w-4 h-4" />
