@@ -657,22 +657,23 @@ export default function CanvasBackgrounds({ theme, bgEffect, rankCode }) {
   // Light theme NEVER shows canvas background effects
   if (theme === 'light') return null;
 
+  // If user explicitly set "off", respect it — even in hacker theme
+  if (bgEffect === 'off') return null;
+
   const hasEffect = bgEffect && bgEffect !== 'off';
-  const showStarfield = hasEffect && bgEffect === 'starfield';
-  const showMatrixRain = hasEffect && bgEffect === 'matrix';
-  const showNebula = hasEffect && bgEffect === 'nebula';
-  const showCircuit = hasEffect && bgEffect === 'circuit';
-  const showFractal = hasEffect && bgEffect === 'fractal';
-  // Hacker theme ALWAYS shows matrix rain regardless of bgEffect setting
-  const forceMatrixForHacker = theme === 'hacker';
+  const isHacker = theme === 'hacker';
+  // Hacker theme defaults to matrix if no specific effect is chosen
+  const effectiveEffect = hasEffect ? bgEffect : (isHacker ? 'matrix' : null);
+
+  if (!effectiveEffect) return null;
 
   return (
     <>
-      {showStarfield && !forceMatrixForHacker && <StarfieldCanvas rankCode={rankCode} />}
-      {(showMatrixRain || forceMatrixForHacker) && <MatrixRainCanvas />}
-      {showNebula && !forceMatrixForHacker && <NebulaCanvas />}
-      {showCircuit && !forceMatrixForHacker && <CircuitCanvas />}
-      {showFractal && !forceMatrixForHacker && <FractalCanvas />}
+      {effectiveEffect === 'starfield' && <StarfieldCanvas rankCode={rankCode} />}
+      {effectiveEffect === 'matrix' && <MatrixRainCanvas />}
+      {effectiveEffect === 'nebula' && <NebulaCanvas />}
+      {effectiveEffect === 'circuit' && <CircuitCanvas />}
+      {effectiveEffect === 'fractal' && <FractalCanvas />}
     </>
   );
 }
