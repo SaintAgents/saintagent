@@ -16,12 +16,11 @@ export default function LiveBroadcastBanner() {
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['liveBroadcasts'],
     queryFn: async () => {
-      const [live, scheduled, recent] = await Promise.all([
+      const [live, scheduled] = await Promise.all([
         base44.entities.Broadcast.filter({ status: 'live' }, '-updated_date', 5),
         base44.entities.Broadcast.filter({ status: 'scheduled' }, '-scheduled_time', 20),
-        base44.entities.Broadcast.list('-scheduled_time', 1),
       ]);
-      return { live, scheduled, recent };
+      return { live, scheduled };
     },
     refetchInterval: 30000,
     staleTime: 15000,
@@ -46,9 +45,11 @@ export default function LiveBroadcastBanner() {
     return false;
   });
 
-  // Kill switch ON = force-show the Live pill using the most recent broadcast as fallback
-  const broadcast = activeBroadcasts[0] || (broadcastsEnabled ? (broadcasts.recent || [])[0] : null);
-  if (!broadcast || !broadcastsEnabled) return null;
+  // Kill switch OFF = force-hide the Live pill no matter what
+  if (!broadcastsEnabled) return null;
+
+  const broadcast = activeBroadcasts[0];
+  if (!broadcast) return null;
 
   const handleClick = () => {
     if (broadcast.live_stream_url) {
