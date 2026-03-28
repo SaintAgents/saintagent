@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Folder, Search, Plus, AlertCircle, BarChart3, CalendarRange, Users } from 'lucide-react';
+import { Folder, Search, Plus, AlertCircle, BarChart3, CalendarRange, Users, Wand2, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
@@ -26,6 +27,8 @@ export default function Projects() {
   const [sector, setSector] = useState('all');
   const [selected, setSelected] = useState(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [classifying, setClassifying] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -66,6 +69,27 @@ export default function Projects() {
   const handleSectorClick = (s) => {
     setSector(s);
     setVisibleCount(ITEMS_PER_PAGE);
+  };
+
+  const handleClassifyAll = async () => {
+    const unclassified = (projects || []).filter(p => !p.sector);
+    if (unclassified.length === 0) {
+      toast.info('All projects already have sectors assigned');
+      return;
+    }
+    setClassifying(true);
+    const mapped = unclassified.map(p => ({ id: p.id, sector: classifyProjectSector(p) }));
+    // Send in batches of 25 to avoid timeout
+    const batchSize = 25;
+    let total = 0;
+    for (let i = 0; i < mapped.length; i += batchSize) {
+      const batch = mapped.slice(i, i + batchSize);
+      const res = await base44.functions.invoke('classifyProjectSectors', { projects: batch });
+      total += res.data?.classified || 0;
+    }
+    toast.success(`Classified ${total} projects`);
+    queryClient.invalidateQueries({ queryKey: ['projects_all'] });
+    setClassifying(false);
   };
 
   return (
@@ -112,6 +136,17 @@ export default function Projects() {
             <p className="text-slate-500 dark:text-slate-400 mt-1 ml-7">Filter and manage all projects</p>
           </div>
           <div className="flex items-center gap-2">
+            {currentUser?.role === 'admin' && (
+              <Button 
+                variant="outline" 
+                className="rounded-xl gap-2"
+                onClick={handleClassifyAll}
+                disabled={classifying}
+              >
+                {classifying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+                <span className="hidden md:inline">{classifying ? 'Classifying...' : 'Classify All'}</span>
+              </Button>
+            )}
             <Link to="/TeamWorkload">
               <Button variant="outline" className="rounded-xl gap-2">
                 <Users className="w-4 h-4" />
