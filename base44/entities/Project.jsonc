@@ -1,0 +1,441 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "budget": {
+      "type": "number",
+      "default": 0
+    },
+    "deal_id": {
+      "type": "string",
+      "description": "Reference to originating Deal"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "User ID of project owner"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_avatar": {
+      "type": "string"
+    },
+    "introduced_by": {
+      "type": "string",
+      "description": "User ID of the person who introduced this project opportunity"
+    },
+    "introducer_name": {
+      "type": "string"
+    },
+    "introduction_id": {
+      "type": "string"
+    },
+    "introduction_commission_paid": {
+      "type": "boolean",
+      "default": false
+    },
+    "lane_code": {
+      "type": "string",
+      "description": "Primary lane code from taxonomy"
+    },
+    "lane_secondary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sector": {
+      "type": "string",
+      "enum": [
+        "water",
+        "food",
+        "housing",
+        "power",
+        "healing",
+        "mining",
+        "environment",
+        "education",
+        "technology",
+        "infrastructure",
+        "governance",
+        "other"
+      ],
+      "description": "Primary sector classification for this project"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "prototype",
+        "pilot",
+        "scaling",
+        "mature_ops"
+      ],
+      "default": "idea"
+    },
+    "geography": {
+      "type": "string"
+    },
+    "team_size": {
+      "type": "number"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "attachment_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_review",
+        "phase1_review",
+        "phase2_scoring",
+        "phase3_risk",
+        "phase4_decision",
+        "approved",
+        "incubate",
+        "declined",
+        "flagged",
+        "rfi_pending",
+        "funding_review",
+        "funded",
+        "in_progress",
+        "completed",
+        "on_hold"
+      ],
+      "default": "draft"
+    },
+    "project_status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "in_progress",
+        "completed",
+        "on_hold",
+        "cancelled"
+      ],
+      "default": "planned",
+      "description": "Active project tracking status"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "progress_percent": {
+      "type": "number",
+      "default": 0,
+      "description": "Overall project completion percentage"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact name for intake"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Primary contact email"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Primary contact phone"
+    },
+    "problem_statement": {
+      "type": "string",
+      "description": "What problem does this project solve?"
+    },
+    "funding_type": {
+      "type": "string",
+      "enum": [
+        "grant",
+        "investment",
+        "bridge_funding"
+      ],
+      "description": "Type of funding being sought"
+    },
+    "amount_requested": {
+      "type": "number",
+      "description": "Amount of funding requested"
+    },
+    "use_of_funds": {
+      "type": "string",
+      "description": "Breakdown of how funds will be used"
+    },
+    "funding_timeline": {
+      "type": "string",
+      "description": "Timeline for use of funds"
+    },
+    "other_funding_sources": {
+      "type": "string",
+      "description": "Other funding sources if any"
+    },
+    "revenue_model": {
+      "type": "string",
+      "description": "How the project generates revenue"
+    },
+    "current_revenue": {
+      "type": "string",
+      "description": "Current revenue if any"
+    },
+    "projected_revenue": {
+      "type": "string",
+      "description": "Projected revenue"
+    },
+    "exit_repayment_plan": {
+      "type": "string",
+      "description": "Exit or repayment plan"
+    },
+    "open_to_structures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Open to: equity, revenue_share, structured_return, success_fee"
+    },
+    "impact_beneficiaries": {
+      "type": "string",
+      "description": "Who does this project benefit?"
+    },
+    "impact_scale": {
+      "type": "string",
+      "description": "What is the scale of impact?"
+    },
+    "geographic_focus": {
+      "type": "string",
+      "description": "Geographic focus area"
+    },
+    "readiness_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "What is in place: team, prototype, partnerships, legal_structure"
+    },
+    "pitch_deck_url": {
+      "type": "string",
+      "description": "Uploaded pitch deck URL"
+    },
+    "financial_projections_url": {
+      "type": "string",
+      "description": "Uploaded financial projections URL"
+    },
+    "business_plan_url": {
+      "type": "string",
+      "description": "Uploaded business plan URL"
+    },
+    "other_documents_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "alignment_statement": {
+      "type": "string",
+      "description": "Why this project aligns with our funding mission"
+    },
+    "success_definition": {
+      "type": "string",
+      "description": "What does success look like?"
+    },
+    "intake_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the full intake form was completed"
+    },
+    "intake_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase1_result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "uncertain",
+        "pending"
+      ],
+      "default": "pending"
+    },
+    "phase1_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phase1_rationale": {
+      "type": "string"
+    },
+    "phase1_rfi_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phase2_scores": {
+      "type": "object"
+    },
+    "phase2_base_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "phase2_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "phase2_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phase3_execution_multiplier": {
+      "type": "number",
+      "minimum": 0.6,
+      "maximum": 1.0
+    },
+    "phase3_harm_gates": {
+      "type": "object"
+    },
+    "phase3_risk_grade": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "F"
+      ]
+    },
+    "phase3_derisking_plan": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "final_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "decision_tier": {
+      "type": "string",
+      "enum": [
+        "approve_fund",
+        "incubate_derisk",
+        "review_reevaluate",
+        "decline"
+      ]
+    },
+    "decision_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "derived_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "portfolio_fit_scores": {
+      "type": "object"
+    },
+    "ai_evaluation_id": {
+      "type": "string"
+    },
+    "ai_evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "human_reviewed": {
+      "type": "boolean",
+      "default": false
+    },
+    "human_reviewer_id": {
+      "type": "string"
+    },
+    "human_reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "impact_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "strategic_intent": {
+      "type": "string"
+    },
+    "negative_environmental_impact": {
+      "type": "boolean",
+      "default": false
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "legacy_sa_id": {
+      "type": "string"
+    },
+    "legacy_sa_email": {
+      "type": "string"
+    },
+    "claim_status": {
+      "type": "string",
+      "enum": [
+        "unclaimed",
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "unclaimed"
+    },
+    "claimed_by": {
+      "type": "string"
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "claim_note": {
+      "type": "string"
+    },
+    "auto_claimed": {
+      "type": "boolean",
+      "default": false
+    },
+    "team_member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs of team members"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

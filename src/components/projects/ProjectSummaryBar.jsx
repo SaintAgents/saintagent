@@ -40,6 +40,11 @@ export const SECTOR_CONFIG = {
 };
 
 export function classifyProjectSector(project) {
+  // Use stored sector if available
+  if (project.sector && SECTOR_CONFIG[project.sector]) {
+    return project.sector;
+  }
+  // Fallback to keyword classification
   const text = [
     project.title || '',
     project.description || '',
