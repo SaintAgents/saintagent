@@ -87,14 +87,14 @@ export default function BusinessEntityCard({ entity, featured = false }) {
           <p className="text-sm text-slate-600 line-clamp-2 mb-3">{entity.description}</p>
         )}
 
-        {/* Focus areas */}
+        {/* Focus areas - show up to 6, +N for remainder */}
         {entity.focus_areas?.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {entity.focus_areas.slice(0, 3).map((tag, i) => (
+          <div className="flex flex-wrap gap-1 mb-3 max-h-[3.25rem] overflow-hidden relative">
+            {entity.focus_areas.slice(0, 6).map((tag, i) => (
               <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
             ))}
-            {entity.focus_areas.length > 3 && (
-              <Badge variant="outline" className="text-xs">+{entity.focus_areas.length - 3}</Badge>
+            {entity.focus_areas.length > 6 && (
+              <Badge variant="outline" className="text-xs">+{entity.focus_areas.length - 6}</Badge>
             )}
           </div>
         )}
