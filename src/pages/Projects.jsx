@@ -8,7 +8,7 @@ import { Folder, Search, Plus, AlertCircle, BarChart3, CalendarRange, Users } fr
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
-import ProjectSummaryBar from '@/components/projects/ProjectSummaryBar';
+import ProjectSummaryBar, { classifyProjectSector } from '@/components/projects/ProjectSummaryBar';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
@@ -23,6 +23,7 @@ export default function Projects() {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState('all');
   const [stage, setStage] = useState('all');
+  const [sector, setSector] = useState('all');
   const [selected, setSelected] = useState(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
@@ -46,9 +47,10 @@ export default function Projects() {
   const filtered = (projects || []).filter((p) => {
     const okStatus = status === 'all' || p.status === status;
     const okStage = stage === 'all' || (p.stage || 'idea') === stage;
+    const okSector = sector === 'all' || classifyProjectSector(p) === sector;
     const qq = q.trim().toLowerCase();
     const okQ = !qq || (p.title || '').toLowerCase().includes(qq) || (p.description || '').toLowerCase().includes(qq);
-    return okStatus && okStage && okQ;
+    return okStatus && okStage && okSector && okQ;
   });
 
   const handleStatusClick = (s) => {
@@ -58,6 +60,11 @@ export default function Projects() {
 
   const handleStageClick = (s) => {
     setStage(s);
+    setVisibleCount(ITEMS_PER_PAGE);
+  };
+
+  const handleSectorClick = (s) => {
+    setSector(s);
     setVisibleCount(ITEMS_PER_PAGE);
   };
 
@@ -155,8 +162,10 @@ export default function Projects() {
           projects={projects} 
           activeStatus={status} 
           activeStage={stage}
+          activeSector={sector}
           onStatusClick={handleStatusClick}
           onStageClick={handleStageClick}
+          onSectorClick={handleSectorClick}
         />
 
         {/* Search */}
