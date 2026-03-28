@@ -71,7 +71,7 @@ const menuItems = [
 
 const SIMPLE_NAV_IDS = [
   'command', 'missions', 'projects', 'meetings', 'messages', 'matches',
-  'communityfeed', 'marketplace', 'events', 'activity', 'profile', 'settings'
+  'communityfeed', 'marketplace', 'events', 'activity', 'affiliate', 'profile', 'settings'
 ];
 
 export default function MobileMenuSheet({ open, onOpenChange }) {
