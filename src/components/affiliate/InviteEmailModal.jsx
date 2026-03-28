@@ -120,15 +120,18 @@ ${noteHtml}
 </div>`;
 
     let successCount = 0;
+    let alreadyRegistered = 0;
     let lastError = null;
     for (const email of validEmails) {
       try {
-        // First invite the user to the app (this sends them a registration email)
+        // inviteUser sends a platform registration email to the recipient
         await base44.users.inviteUser(email.trim(), 'user');
         successCount++;
       } catch (err) {
-        // If already registered, try sending email directly
-        if (err?.message?.includes('already') || err?.response?.status === 409) {
+        const msg = err?.message || err?.response?.data?.detail || '';
+        if (msg.toLowerCase().includes('already') || err?.response?.status === 409) {
+          // User already registered — send them the custom email instead
+          alreadyRegistered++;
           try {
             await base44.integrations.Core.SendEmail({
               to: email.trim(),
@@ -139,11 +142,11 @@ ${noteHtml}
             successCount++;
           } catch (emailErr) {
             lastError = emailErr;
-            console.error('SendEmail fallback error:', emailErr?.message);
+            console.error('SendEmail to existing user failed:', emailErr?.message);
           }
         } else {
           lastError = err;
-          console.error('InviteUser error:', err?.message);
+          console.error('InviteUser error:', msg);
         }
       }
     }
@@ -152,7 +155,7 @@ ${noteHtml}
 
     if (successCount > 0) {
       setSent(true);
-      toast.success(`Sent to ${successCount} recipient${successCount > 1 ? 's' : ''}!`);
+      toast.success(`Invitation${successCount > 1 ? 's' : ''} sent to ${successCount} recipient${successCount > 1 ? 's' : ''}!`);
       setTimeout(() => {
         setSent(false);
         setEmails(['']);
@@ -269,7 +272,7 @@ ${noteHtml}
             {/* Preview hint */}
             <div className="p-3 rounded-lg bg-violet-50 border border-violet-200">
               <p className="text-xs text-violet-700">
-                <strong>What they'll receive:</strong> A comprehensive email covering earning, selling, collaborating, learning, community, business tools, and more — plus your personal note and affiliate signup link.
+                <strong>What they'll receive:</strong> A platform invitation email with a registration link that includes your affiliate referral. Once they sign up through your link, they'll be tracked as your referral.
               </p>
             </div>
 
