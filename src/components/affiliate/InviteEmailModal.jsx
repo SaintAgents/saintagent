@@ -100,6 +100,7 @@ Make it feel genuine, enthusiastic but not salesy. Vary the angle — sometimes 
       : '';
 
     const messageHtml = DEFAULT_MESSAGE
+      .replace(/[^\x00-\x7F]/g, '') // strip emoji/non-ASCII for email compatibility
       .replace(/\n\n/g, '</p><p style="color:#334155;font-size:14px;line-height:1.7;margin:8px 0;">')
       .replace(/\n/g, '<br/>');
 
@@ -129,7 +130,8 @@ ${noteHtml}
         });
         successCount++;
       } catch (err) {
-        console.error(`Failed to send to ${email}:`, err);
+        console.error(`Failed to send to ${email}:`, err?.message || err?.response?.data || JSON.stringify(err));
+        toast.error(`Failed to send to ${email.trim()}: ${err?.message || 'Unknown error'}`);
       }
     }
 
