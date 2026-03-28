@@ -24,65 +24,20 @@ const SUBJECT_SUGGESTIONS = [
 
 const DEFAULT_MESSAGE = `Hi there,
 
-I've been building and collaborating on SaintAgent — a platform designed for conscious creators, healers, entrepreneurs, coaches, and visionaries who want to connect, grow, and create meaningful impact together.
+I've been building and collaborating on SaintAgent — a platform for conscious creators, healers, entrepreneurs, and visionaries.
 
-Here's everything you can do on SaintAgent:
+Here's what you can do:
 
-💰 EARN
-• Complete missions and earn GGG tokens (backed by real value)
-• Get paid for referrals through the affiliate program
-• Sell your services, courses, and digital products on the marketplace
-• Earn rewards for community contributions, feedback, and participation
-• Climb affiliate tiers (Bronze → Silver → Gold) for higher commissions
+💰 EARN — Complete missions, sell services, earn GGG tokens and referral rewards
+📚 LEARN — Courses, mentorship, workshops, live broadcasts, and AI insights
+💼 SELL — List your skills, manage bookings, sell digital products
+🤝 COLLABORATE — AI-matched collaborators, funded projects, shared docs and video calls
+🎯 MISSIONS — Real projects with milestones, tasks, and completion rewards
+🏆 REPUTATION — Badges, ranks, leaderboards, challenges, and trust scores
+🌍 COMMUNITY — Circles, events, messaging, forums, and matching
+🔧 BUSINESS TOOLS — CRM, deal tracking, project management, and analytics
 
-📚 LEARN
-• Access courses and educational content from community leaders
-• Join workshops, webinars, and live broadcasts
-• Get mentorship from experienced practitioners
-• Explore guides on conscious business, healing, and personal growth
-• AI-powered insights and personalized recommendations
-
-💼 SELL & OFFER SERVICES
-• List your skills — coaching, healing, consulting, design, writing, strategy, and more
-• Set your own pricing in USD, GGG tokens, or time credits
-• Manage bookings, recurring sessions, and client relationships
-• Build your portfolio, collect testimonials, and grow your reputation
-• Create and sell digital products (courses, templates, guides)
-
-🤝 COLLABORATE
-• Get AI-matched with collaborators aligned with your goals and skills
-• Join or create missions — real projects with milestones and rewards
-• Work on funded projects with team management tools
-• Use built-in collaboration tools: shared docs, whiteboards, video calls
-• Find co-creators for events, content, and business ventures
-
-🎯 MISSIONS & QUESTS
-• Take on platform missions or create your own
-• Track milestones, manage tasks, and earn completion rewards
-• Join epic quests with mystical themes and narrative arcs
-• Contribute to community goals and global impact metrics
-
-🏆 GROW YOUR REPUTATION
-• Earn badges, climb ranks (Seeker → Guardian), and unlock perks
-• Build trust through verified contributions and peer reviews
-• Gamification: leaderboards, challenges, streaks, and seasons
-• Your reputation score opens doors to premium opportunities
-
-🌍 COMMUNITY & CONNECTION
-• Join circles (groups) around shared interests and regions
-• Attend events, town halls, and community broadcasts
-• Direct messaging, group chats, and video calls
-• Dating & friendship matching for deeper connections
-• Forum and advice board for community wisdom
-
-🔧 BUSINESS TOOLS
-• Register your business entity with a full profile page
-• CRM and contact management built in
-• Deal pipeline tracking and project management
-• Team management, invoicing, and analytics
-• WhatsApp integration for client communication
-
-I'd love for you to join me. Use my personal invite link below to sign up — it only takes a few minutes to get started, and there's a guided onboarding to help you find your path.`;
+I'd love for you to join me — it only takes a few minutes to get started.`;
 
 export default function InviteEmailModal({ open, onOpenChange, affiliateUrl, senderName }) {
   const [emails, setEmails] = useState(['']);
@@ -140,28 +95,27 @@ Make it feel genuine, enthusiastic but not salesy. Vary the angle — sometimes 
 
     setSending(true);
 
-    const fullBody = `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #ffffff;">
-  <div style="text-align: center; margin-bottom: 24px;">
-    <h1 style="color: #6d28d9; font-size: 28px; margin: 0;">SaintAgent</h1>
-    <p style="color: #64748b; font-size: 14px; margin-top: 4px;">A Platform for Conscious Creators</p>
-  </div>
-  
-  <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
-    <p style="color: #334155; font-size: 15px; line-height: 1.7; white-space: pre-line; margin: 0;">${personalNote ? personalNote + '\n\n---\n\n' : ''}${DEFAULT_MESSAGE}</p>
-  </div>
+    const noteHtml = personalNote 
+      ? `<p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 16px 0;padding-bottom:16px;border-bottom:1px solid #e2e8f0;">${personalNote.replace(/\n/g, '<br/>')}</p>` 
+      : '';
 
-  <div style="text-align: center; margin: 28px 0;">
-    <a href="${affiliateUrl}" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">
-      Join SaintAgent Now →
-    </a>
-  </div>
+    const messageHtml = DEFAULT_MESSAGE
+      .replace(/\n\n/g, '</p><p style="color:#334155;font-size:14px;line-height:1.7;margin:8px 0;">')
+      .replace(/\n/g, '<br/>');
 
-  <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; text-align: center;">
-    <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-      Invited by ${senderName || 'a SaintAgent member'}
-    </p>
-  </div>
+    const fullBody = `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;padding:24px;background:#fff;">
+<div style="text-align:center;margin-bottom:24px;">
+<h1 style="color:#6d28d9;font-size:28px;margin:0;">SaintAgent</h1>
+<p style="color:#64748b;font-size:14px;margin-top:4px;">A Platform for Conscious Creators</p>
+</div>
+<div style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid #e2e8f0;">
+${noteHtml}
+<p style="color:#334155;font-size:14px;line-height:1.7;margin:0;">${messageHtml}</p>
+</div>
+<div style="text-align:center;margin:28px 0;">
+<a href="${affiliateUrl}" style="display:inline-block;background:#6d28d9;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:600;font-size:16px;">Join SaintAgent Now</a>
+</div>
+<p style="color:#94a3b8;font-size:12px;text-align:center;border-top:1px solid #e2e8f0;padding-top:16px;">Invited by ${senderName || 'a SaintAgent member'}</p>
 </div>`;
 
     let successCount = 0;
