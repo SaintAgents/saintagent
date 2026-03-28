@@ -41,7 +41,11 @@ export default function Projects() {
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects_all'],
-    queryFn: () => base44.entities.Project.list('-created_date', 500),
+    queryFn: async () => {
+      const all = await base44.entities.Project.list('-created_date', 500);
+      // Exclude demo/seeded projects
+      return all.filter(p => !(p.title || '').includes('(demo)'));
+    },
   });
 
   const filtered = (projects || []).filter((p) => {

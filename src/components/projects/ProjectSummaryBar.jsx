@@ -18,6 +18,7 @@ const STAGE_CONFIG = {
 const STATUS_CHIPS = [
   { key: 'approved', label: 'Approved', icon: CheckCircle2, color: 'bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200' },
   { key: 'pending_review', label: 'Pending', icon: Clock, color: 'bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-200' },
+  { key: 'rfi_pending', label: 'RFI Pending', icon: Clock, color: 'bg-cyan-100 text-cyan-700 border-cyan-200 hover:bg-cyan-200' },
   { key: 'declined', label: 'Rejected', icon: XCircle, color: 'bg-red-100 text-red-700 border-red-200 hover:bg-red-200' },
   { key: 'flagged', label: 'Flagged', icon: Flag, color: 'bg-rose-100 text-rose-700 border-rose-200 hover:bg-rose-200' },
   { key: 'draft', label: 'Drafts', icon: FileEdit, color: 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200' },
@@ -43,6 +44,10 @@ export function classifyProjectSector(project) {
     project.title || '',
     project.description || '',
     project.problem_statement || '',
+    project.use_of_funds || '',
+    project.alignment_statement || '',
+    project.success_definition || '',
+    project.impact_beneficiaries || '',
     project.lane_code || '',
     ...(project.derived_tags || []),
     ...(project.impact_tags || []),
@@ -96,9 +101,9 @@ export default function ProjectSummaryBar({ projects = [], activeStatus, activeS
     stageCounts[s] = (stageCounts[s] || 0) + 1;
   }
 
-  // Only show sectors that have at least 1 project, plus always show the main ones
+  // Only show sectors that have at least 1 project
   const visibleSectors = Object.entries(SECTOR_CONFIG).filter(
-    ([key]) => key === 'other' ? (sectorCounts[key] || 0) > 0 : true
+    ([key]) => (sectorCounts[key] || 0) > 0
   );
 
   return (
