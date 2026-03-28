@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ProjectDetailView from '@/components/projects/ProjectDetailView';
 import CreateProjectModal from '@/components/projects/CreateProjectModal';
 import EditProjectModal from '@/components/projects/EditProjectModal';
+import ProjectCardFooter from '@/components/projects/ProjectCardFooter';
 
 const PIPELINE_STAGES = [
   { id: 'initiation', label: 'INITIATION', icon: Folder, color: 'bg-blue-500' },
@@ -336,35 +337,8 @@ export default function ProjectsTab({ profile, currentUser }) {
                             )}
                           </div>
 
-                          {/* Team Avatars */}
-                          <div className="flex items-center -space-x-2">
-                            {project.owner_avatar ? (
-                              <Avatar className="w-8 h-8 border-2 border-white dark:border-slate-800">
-                                <AvatarImage src={project.owner_avatar} />
-                                <AvatarFallback className={`${getAvatarColor(project.owner_name)} text-white text-xs`}>
-                                  {getInitials(project.owner_name)}
-                                </AvatarFallback>
-                              </Avatar>
-                            ) : (
-                              <Avatar className="w-8 h-8 border-2 border-white dark:border-slate-800">
-                                <AvatarFallback className={`${getAvatarColor(project.owner_name)} text-white text-xs`}>
-                                  {getInitials(project.owner_name)}
-                                </AvatarFallback>
-                              </Avatar>
-                            )}
-                            {project.team_member_ids?.slice(0, 2).map((_, idx) => (
-                              <Avatar key={idx} className="w-8 h-8 border-2 border-white dark:border-slate-800">
-                                <AvatarFallback className={`${getAvatarColor(`member${idx}`)} text-white text-xs`}>
-                                  {String.fromCharCode(65 + idx)}
-                                </AvatarFallback>
-                              </Avatar>
-                            ))}
-                            {(project.team_member_ids?.length || 0) > 2 && (
-                              <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 border-2 border-white dark:border-slate-800 flex items-center justify-center text-xs text-slate-600 dark:text-slate-400">
-                                +{project.team_member_ids.length - 2}
-                              </div>
-                            )}
-                          </div>
+                          {/* Summary Footer */}
+                          <ProjectCardFooter project={project} />
                         </div>
                       );
                     })

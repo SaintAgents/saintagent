@@ -48,6 +48,30 @@ export default function ProjectDetailCard({ project: initialProject }) {
   });
 
   // Fetch fresh project data to get latest evaluation results
+  // Fetch discussion & update counts for tab badges
+  const { data: discussions = [] } = useQuery({
+    queryKey: ['projectDiscussions', initialProject?.id],
+    queryFn: () => base44.entities.ProjectDiscussion.filter({ project_id: initialProject.id }, '-created_date', 200),
+    enabled: !!initialProject?.id,
+    staleTime: 300000,
+  });
+
+  const { data: updates = [] } = useQuery({
+    queryKey: ['projectUpdates', initialProject?.id],
+    queryFn: () => base44.entities.ProjectUpdate.filter({ project_id: initialProject.id }, '-created_date', 200),
+    enabled: !!initialProject?.id,
+    staleTime: 300000,
+  });
+
+  const { data: teamMembers = [] } = useQuery({
+    queryKey: ['projectTeamMembers', initialProject?.id],
+    queryFn: () => base44.entities.ProjectTeamMember.filter({ project_id: initialProject.id }),
+    enabled: !!initialProject?.id,
+    staleTime: 300000,
+  });
+
+  const activeBlockers = discussions.filter(d => d.discussion_type === 'blocker' && !d.is_resolved).length;
+
   const { data: freshProject, refetch: refetchProject } = useQuery({
     queryKey: ['projectDetail', initialProject?.id],
     queryFn: async () => {
@@ -142,14 +166,25 @@ export default function ProjectDetailCard({ project: initialProject }) {
           <TabsTrigger value="team" className="gap-1">
             <Users className="w-4 h-4" />
             Team
+            {teamMembers.length > 0 && (
+              <Badge variant="secondary" className="text-[10px] h-4 px-1 ml-1">{teamMembers.length}</Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="discussions" className="gap-1">
             <MessageSquare className="w-4 h-4" />
             Discussions
+            {discussions.length > 0 && (
+              <Badge variant="secondary" className={cn("text-[10px] h-4 px-1 ml-1", activeBlockers > 0 && "bg-red-100 text-red-700")}>
+                {discussions.length}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="updates" className="gap-1">
             <Megaphone className="w-4 h-4" />
             Updates
+            {updates.length > 0 && (
+              <Badge variant="secondary" className="text-[10px] h-4 px-1 ml-1">{updates.length}</Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="evaluation" className="gap-1">
             <Brain className="w-4 h-4" />

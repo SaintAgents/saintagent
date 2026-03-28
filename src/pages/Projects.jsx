@@ -4,12 +4,13 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Folder, Search, Plus, AlertCircle, BarChart3, CalendarRange, Users, Wand2, Loader2 } from 'lucide-react';
+import { Folder, Search, Plus, AlertCircle, BarChart3, CalendarRange, Users, Wand2, Loader2, SlidersHorizontal, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import ProjectSummaryBar, { classifyProjectSector } from '@/components/projects/ProjectSummaryBar';
+import ProjectSearchSidebar from '@/components/projects/ProjectSearchSidebar';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
@@ -22,12 +23,15 @@ const ITEMS_PER_PAGE = 12;
 
 export default function Projects() {
   const [q, setQ] = useState('');
-  const [status, setStatus] = useState('all');
-  const [stage, setStage] = useState('all');
-  const [sector, setSector] = useState('all');
   const [selected, setSelected] = useState(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [classifying, setClassifying] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [advFilters, setAdvFilters] = useState({
+    status: 'all', stage: 'all', sector: 'all', fundingType: 'all',
+    region: '', minBudget: '', maxBudget: '', dateFrom: '', dateTo: '',
+    hasTeam: 'all', riskGrade: 'all',
+  });
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -48,26 +52,39 @@ export default function Projects() {
   });
 
   const filtered = (projects || []).filter((p) => {
-    const okStatus = status === 'all' || p.status === status;
-    const okStage = stage === 'all' || (p.stage || 'idea') === stage;
-    const okSector = sector === 'all' || classifyProjectSector(p) === sector;
+    const f = advFilters;
+    if (f.status !== 'all' && p.status !== f.status) return false;
+    if (f.stage !== 'all' && (p.stage || 'idea') !== f.stage) return false;
+    if (f.sector !== 'all' && classifyProjectSector(p) !== f.sector) return false;
+    if (f.fundingType !== 'all' && p.funding_type !== f.fundingType) return false;
+    if (f.region) {
+      const geo = (p.geography || p.geographic_focus || '').toLowerCase();
+      if (!geo.includes(f.region.toLowerCase())) return false;
+    }
+    if (f.minBudget && (p.budget || 0) < Number(f.minBudget)) return false;
+    if (f.maxBudget && (p.budget || 0) > Number(f.maxBudget)) return false;
+    if (f.dateFrom && p.created_date && p.created_date < f.dateFrom) return false;
+    if (f.dateTo && p.created_date && p.created_date > f.dateTo + 'T23:59:59') return false;
+    if (f.riskGrade !== 'all' && p.phase3_risk_grade !== f.riskGrade) return false;
+    if (f.hasTeam === 'yes' && (!p.team_member_ids || p.team_member_ids.length === 0)) return false;
+    if (f.hasTeam === 'no' && p.team_member_ids?.length > 0) return false;
     const qq = q.trim().toLowerCase();
-    const okQ = !qq || (p.title || '').toLowerCase().includes(qq) || (p.description || '').toLowerCase().includes(qq);
-    return okStatus && okStage && okSector && okQ;
+    if (qq && !(p.title || '').toLowerCase().includes(qq) && !(p.description || '').toLowerCase().includes(qq)) return false;
+    return true;
   });
 
   const handleStatusClick = (s) => {
-    setStatus(s);
+    setAdvFilters(prev => ({ ...prev, status: s }));
     setVisibleCount(ITEMS_PER_PAGE);
   };
 
   const handleStageClick = (s) => {
-    setStage(s);
+    setAdvFilters(prev => ({ ...prev, stage: s }));
     setVisibleCount(ITEMS_PER_PAGE);
   };
 
   const handleSectorClick = (s) => {
-    setSector(s);
+    setAdvFilters(prev => ({ ...prev, sector: s }));
     setVisibleCount(ITEMS_PER_PAGE);
   };
 
@@ -195,18 +212,28 @@ export default function Projects() {
         {/* Summary Bar */}
         <ProjectSummaryBar 
           projects={projects} 
-          activeStatus={status} 
-          activeStage={stage}
-          activeSector={sector}
+          activeStatus={advFilters.status} 
+          activeStage={advFilters.stage}
+          activeSector={advFilters.sector}
           onStatusClick={handleStatusClick}
           onStageClick={handleStageClick}
           onSectorClick={handleSectorClick}
         />
 
-        {/* Search */}
-        <div className="mb-4 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects..." className="pl-9" />
+        {/* Search + sidebar toggle */}
+        <div className="mb-4 flex items-center gap-2">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects..." className="pl-9" />
+          </div>
+          <Button 
+            variant={sidebarOpen ? "default" : "outline"} 
+            className={cn("rounded-xl gap-2 shrink-0", sidebarOpen && "bg-violet-600 hover:bg-violet-700")}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            <span className="hidden md:inline">Filters</span>
+          </Button>
         </div>
 
         {/* Results count */}
@@ -214,6 +241,17 @@ export default function Projects() {
           Showing {Math.min(visibleCount, filtered.length)} of {filtered.length} projects
         </div>
 
+        {/* Main content with optional sidebar */}
+        <div className={cn("flex gap-4", sidebarOpen && "flex-row")}>
+          {sidebarOpen && (
+            <ProjectSearchSidebar 
+              filters={advFilters} 
+              onFilterChange={(f) => { setAdvFilters(f); setVisibleCount(ITEMS_PER_PAGE); }}
+              onClose={() => setSidebarOpen(false)}
+            />
+          )}
+
+          <div className="flex-1 min-w-0">
         {/* List */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -258,7 +296,10 @@ export default function Projects() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className={cn(
+              "grid gap-4",
+              sidebarOpen ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            )}>
               {filtered.slice(0, visibleCount).map((p) => (
                 <ProjectMiniCard key={p.id} project={p} onClick={() => setSelected(p)} />
               ))}
@@ -276,6 +317,9 @@ export default function Projects() {
             )}
           </>
         )}
+
+          </div>
+        </div>
 
         {/* Detail Popout */}
         {selected && (

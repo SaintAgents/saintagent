@@ -7,6 +7,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Star, ShieldCheck } from "lucide-react";
 import MiniProfile from '@/components/profile/MiniProfile';
+import ProjectCardFooter from './ProjectCardFooter';
 
 const RISK_GRADE_COLORS = {
   A: 'text-emerald-600',
@@ -153,6 +154,9 @@ export default function ProjectMiniCard({ project, onClick }) {
               {project.phase3_risk_grade || 'N/A'}
             </span>
           </div>
+
+          {/* Summary footer with discussions, team, updates */}
+          <ProjectCardFooter project={project} />
         </CardContent>
       </Card>
     </button>);
