@@ -46,17 +46,27 @@ export default function ProjectTeamPanel({ projectId, isOwner = false }) {
     enabled: !!projectId
   });
 
+  const debouncedSearch = searchQuery.trim().toLowerCase();
+
   const { data: allProfiles = [] } = useQuery({
-    queryKey: ['profilesForInvite'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
-    enabled: inviteOpen
+    queryKey: ['profilesForInvite', debouncedSearch],
+    queryFn: async () => {
+      if (!debouncedSearch || debouncedSearch.length < 2) return [];
+      // Fetch a large set and filter client-side since there's no server-side text search
+      const results = await base44.entities.UserProfile.list('-created_date', 500);
+      return results.filter(p => 
+        p.display_name?.toLowerCase().includes(debouncedSearch) ||
+        p.handle?.toLowerCase().includes(debouncedSearch) ||
+        p.user_id?.toLowerCase().includes(debouncedSearch)
+      );
+    },
+    enabled: inviteOpen && debouncedSearch.length >= 2,
+    staleTime: 30000
   });
 
   // Filter profiles not already in team
   const availableProfiles = allProfiles.filter(
-    p => !members.some(m => m.user_id === p.user_id) && 
-    (p.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-     p.handle?.toLowerCase().includes(searchQuery.toLowerCase()))
+    p => !members.some(m => m.user_id === p.user_id)
   );
 
   const inviteMutation = useMutation({
