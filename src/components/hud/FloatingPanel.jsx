@@ -77,9 +77,70 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
   return (
     <div
       ref={containerRef}
+      data-floating-panel="true"
       className="fixed z-[110] bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.3)] rounded-2xl shadow-2xl overflow-hidden"
       style={{ left: pos.x, top: pos.y, width: size.w, height: size.h }}
     >
+      <style>{`
+        [data-floating-panel-content] { color: #1e293b; }
+        [data-floating-panel-content] * { color: inherit; }
+        [data-floating-panel-content] h1, [data-floating-panel-content] h2, [data-floating-panel-content] h3, [data-floating-panel-content] h4 { color: #0f172a !important; }
+        [data-floating-panel-content] .text-slate-500, [data-floating-panel-content] .text-slate-400 { color: #64748b !important; }
+        [data-floating-panel-content] .text-blue-600 { color: #2563eb !important; }
+        [data-floating-panel-content] .text-blue-700 { color: #1d4ed8 !important; }
+        [data-floating-panel-content] .text-blue-800 { color: #1e40af !important; }
+        [data-floating-panel-content] .text-blue-900 { color: #1e3a5f !important; }
+        [data-floating-panel-content] .text-blue-500 { color: #3b82f6 !important; }
+        [data-floating-panel-content] .text-emerald-600 { color: #059669 !important; }
+        [data-floating-panel-content] .text-emerald-700 { color: #047857 !important; }
+        [data-floating-panel-content] .text-emerald-800 { color: #065f46 !important; }
+        [data-floating-panel-content] .text-amber-600 { color: #d97706 !important; }
+        [data-floating-panel-content] .text-amber-700 { color: #b45309 !important; }
+        [data-floating-panel-content] .text-amber-800 { color: #92400e !important; }
+        [data-floating-panel-content] .text-rose-600 { color: #e11d48 !important; }
+        [data-floating-panel-content] .text-rose-700 { color: #be123c !important; }
+        [data-floating-panel-content] .text-rose-800 { color: #9f1239 !important; }
+        [data-floating-panel-content] .text-violet-600 { color: #7c3aed !important; }
+        [data-floating-panel-content] .text-violet-700 { color: #6d28d9 !important; }
+        [data-floating-panel-content] .text-indigo-700 { color: #4338ca !important; }
+        [data-floating-panel-content] .text-orange-600 { color: #ea580c !important; }
+        [data-floating-panel-content] .text-green-600 { color: #16a34a !important; }
+        [data-floating-panel-content] .text-red-700 { color: #b91c1c !important; }
+        [data-floating-panel-content] .text-slate-600 { color: #475569 !important; }
+        [data-floating-panel-content] .text-slate-700 { color: #334155 !important; }
+        [data-floating-panel-content] .text-slate-800 { color: #1e293b !important; }
+        [data-floating-panel-content] .text-slate-900 { color: #0f172a !important; }
+        [data-floating-panel-content] .bg-white { background-color: #ffffff !important; }
+        [data-floating-panel-content] .bg-slate-50 { background-color: #f8fafc !important; }
+        [data-floating-panel-content] .bg-blue-50 { background-color: #eff6ff !important; }
+        [data-floating-panel-content] .bg-emerald-50 { background-color: #ecfdf5 !important; }
+        [data-floating-panel-content] .bg-amber-50 { background-color: #fffbeb !important; }
+        [data-floating-panel-content] .bg-rose-50 { background-color: #fff1f2 !important; }
+        [data-floating-panel-content] .bg-violet-50 { background-color: #f5f3ff !important; }
+        [data-floating-panel-content] .bg-indigo-50 { background-color: #eef2ff !important; }
+        [data-floating-panel-content] .bg-cyan-50 { background-color: #ecfeff !important; }
+        [data-floating-panel-content] .border-blue-200 { border-color: #bfdbfe !important; }
+        [data-floating-panel-content] .border-blue-300 { border-color: #93c5fd !important; }
+        [data-floating-panel-content] .border-emerald-200 { border-color: #a7f3d0 !important; }
+        [data-floating-panel-content] .border-amber-200 { border-color: #fde68a !important; }
+        [data-floating-panel-content] .border-amber-300 { border-color: #fcd34d !important; }
+        [data-floating-panel-content] .border-rose-200 { border-color: #fecdd3 !important; }
+        [data-floating-panel-content] .border-rose-300 { border-color: #fda4af !important; }
+        [data-floating-panel-content] .border-violet-200 { border-color: #ddd6fe !important; }
+        [data-floating-panel-content] .border-indigo-200 { border-color: #c7d2fe !important; }
+        [data-floating-panel-content] .border-slate-200 { border-color: #e2e8f0 !important; }
+        [data-floating-panel-content] .rounded-xl:not(img), [data-floating-panel-content] .rounded-lg:not(img) { border-radius: 0.75rem; }
+        [data-floating-panel-content] button.bg-violet-600, [data-floating-panel-content] button.bg-violet-600 * { color: #ffffff !important; }
+        [data-floating-panel-content] button.bg-violet-700, [data-floating-panel-content] button.bg-violet-700 * { color: #ffffff !important; }
+        [data-floating-panel-content] button[class*="bg-violet-6"], [data-floating-panel-content] button[class*="bg-violet-6"] * { color: #ffffff !important; background-color: #7c3aed !important; }
+        [data-floating-panel-content] button[class*="bg-violet-7"], [data-floating-panel-content] button[class*="bg-violet-7"] * { color: #ffffff !important; }
+        [data-floating-panel-content] .bg-blue-200 { background-color: #bfdbfe !important; }
+        [data-floating-panel-content] .bg-emerald-100 { background-color: #d1fae5 !important; }
+        [data-floating-panel-content] .bg-amber-100 { background-color: #fef3c7 !important; }
+        [data-floating-panel-content] .bg-rose-100 { background-color: #ffe4e6 !important; }
+        [data-floating-panel-content] .bg-violet-100 { background-color: #ede9fe !important; }
+        [data-floating-panel-content] .bg-blue-100 { background-color: #dbeafe !important; }
+      `}</style>
       <div
         onMouseDown={startDrag}
         className="h-10 w-full border-b border-slate-200 dark:border-[rgba(0,255,136,0.2)] bg-slate-50 dark:bg-[#0a0a0a] backdrop-blur-sm cursor-grab active:cursor-grabbing select-none flex items-center justify-between px-3 text-sm font-medium text-violet-600 dark:text-[#00ff88]"
@@ -112,7 +173,11 @@ export default function FloatingPanel({ title, children, onClose, onTossToSidePa
           </Button>
         </div>
       </div>
-      <div className="h-[calc(100%-2.5rem)] overflow-auto p-4 bg-white dark:bg-[#050505] text-slate-900 dark:text-white">
+      <div 
+        data-floating-panel-content="true"
+        className="h-[calc(100%-2.5rem)] overflow-auto p-4 bg-white dark:bg-[#050505] text-slate-900 dark:text-white"
+        style={{ color: '#1e293b' }}
+      >
         {children}
       </div>
       {/* Resize handles */}
