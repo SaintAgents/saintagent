@@ -123,18 +123,28 @@ ${noteHtml}
     let lastError = null;
     for (const email of validEmails) {
       try {
-        const result = await base44.integrations.Core.SendEmail({
-          to: email.trim(),
-          subject: subject || DEFAULT_SUBJECT,
-          body: fullBody,
-          from_name: senderName || 'SaintAgent'
-        });
-        console.log('SendEmail result:', email.trim(), result);
+        // First invite the user to the app (this sends them a registration email)
+        await base44.users.inviteUser(email.trim(), 'user');
         successCount++;
       } catch (err) {
-        lastError = err;
-        console.error('SendEmail error:', JSON.stringify(err, Object.getOwnPropertyNames(err || {})));
-        console.error('SendEmail error raw:', err);
+        // If already registered, try sending email directly
+        if (err?.message?.includes('already') || err?.response?.status === 409) {
+          try {
+            await base44.integrations.Core.SendEmail({
+              to: email.trim(),
+              subject: subject || DEFAULT_SUBJECT,
+              body: fullBody,
+              from_name: senderName || 'SaintAgent'
+            });
+            successCount++;
+          } catch (emailErr) {
+            lastError = emailErr;
+            console.error('SendEmail fallback error:', emailErr?.message);
+          }
+        } else {
+          lastError = err;
+          console.error('InviteUser error:', err?.message);
+        }
       }
     }
 
