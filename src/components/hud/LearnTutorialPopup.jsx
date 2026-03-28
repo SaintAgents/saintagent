@@ -9,6 +9,8 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 const TUTORIALS = [
   {
@@ -75,30 +77,69 @@ const TUTORIALS = [
 
 const STORAGE_KEY = 'learnPopup_hidden';
 const COMPLETED_KEY = 'learnPopup_completed';
-const LAST_SHOWN_KEY = 'learnPopup_lastShown';
-const COOLDOWN_MS = 60 * 60 * 1000; // 1 hour between auto-shows
+const SHOW_TIMESTAMPS_KEY = 'learnPopup_showTimestamps';
+
+const FREQUENCY_COOLDOWNS = {
+  every_visit: { maxShows: 999, windowMs: 0 },
+  once_per_hour: { maxShows: 1, windowMs: 60 * 60 * 1000 },
+  once_per_day: { maxShows: 1, windowMs: 24 * 60 * 60 * 1000 },
+  three_per_week: { maxShows: 3, windowMs: 7 * 24 * 60 * 60 * 1000 },
+  once_per_week: { maxShows: 1, windowMs: 7 * 24 * 60 * 60 * 1000 },
+  three_per_month: { maxShows: 3, windowMs: 30 * 24 * 60 * 60 * 1000 },
+  once_per_month: { maxShows: 1, windowMs: 30 * 24 * 60 * 60 * 1000 },
+};
+
+function canShowPopup(frequency) {
+  const rule = FREQUENCY_COOLDOWNS[frequency] || FREQUENCY_COOLDOWNS.once_per_day;
+  if (rule.windowMs === 0) return true;
+  try {
+    const timestamps = JSON.parse(localStorage.getItem(SHOW_TIMESTAMPS_KEY) || '[]');
+    const cutoff = Date.now() - rule.windowMs;
+    const recent = timestamps.filter(t => t > cutoff);
+    return recent.length < rule.maxShows;
+  } catch { return true; }
+}
+
+function recordShow() {
+  try {
+    const timestamps = JSON.parse(localStorage.getItem(SHOW_TIMESTAMPS_KEY) || '[]');
+    timestamps.push(Date.now());
+    // Keep only last 30 entries
+    localStorage.setItem(SHOW_TIMESTAMPS_KEY, JSON.stringify(timestamps.slice(-30)));
+  } catch {}
+}
 
 export default function LearnTutorialPopup({ profile, onRewardGGG }) {
   const [visible, setVisible] = useState(false);
   const [selectedTutorial, setSelectedTutorial] = useState(null);
 
+  // Fetch admin settings
+  const { data: settingsRecords } = useQuery({
+    queryKey: ['platformSetting', 'learn_popup_config'],
+    queryFn: () => base44.entities.PlatformSetting.filter({ key: 'learn_popup_config' }),
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
+  });
+
+  const adminConfig = React.useMemo(() => {
+    const defaults = { enabled: true, frequency: 'once_per_day', reward_amount: 0.20, delay_seconds: 5, max_tutorials_shown: 3 };
+    if (!settingsRecords?.[0]?.value) return defaults;
+    try { return { ...defaults, ...JSON.parse(settingsRecords[0].value) }; } catch { return defaults; }
+  }, [settingsRecords]);
+
   useEffect(() => {
-    // Check if permanently hidden
+    if (!adminConfig.enabled) return;
     const hidden = localStorage.getItem(STORAGE_KEY) === 'true';
     if (hidden) return;
+    if (!canShowPopup(adminConfig.frequency)) return;
 
-    // Check cooldown
-    const lastShown = localStorage.getItem(LAST_SHOWN_KEY);
-    if (lastShown && Date.now() - Number(lastShown) < COOLDOWN_MS) return;
-
-    // Show after a short delay
     const timer = setTimeout(() => {
       setVisible(true);
-      localStorage.setItem(LAST_SHOWN_KEY, String(Date.now()));
-    }, 5000);
+      recordShow();
+    }, (adminConfig.delay_seconds || 5) * 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [adminConfig]);
 
   const getCompletedTutorials = () => {
     try {
@@ -107,7 +148,9 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
   };
 
   const completedIds = getCompletedTutorials();
-  const availableTutorials = TUTORIALS.filter(t => !completedIds.includes(t.id));
+  const rewardAmount = adminConfig.reward_amount;
+  const tutorialsWithReward = TUTORIALS.map(t => ({ ...t, reward: rewardAmount }));
+  const availableTutorials = tutorialsWithReward.filter(t => !completedIds.includes(t.id));
 
   const handleHidePermanently = () => {
     localStorage.setItem(STORAGE_KEY, 'true');
@@ -137,7 +180,7 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
     setVisible(false);
   };
 
-  if (!visible || availableTutorials.length === 0) return null;
+  if (!visible || availableTutorials.length === 0 || !adminConfig.enabled) return null;
 
   return (
     <AnimatePresence>
@@ -187,7 +230,7 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
           ) : (
             /* Tutorial List */
             <div className="p-3 max-h-80 overflow-y-auto space-y-2">
-              {availableTutorials.slice(0, 3).map(t => {
+              {availableTutorials.slice(0, adminConfig.max_tutorials_shown).map(t => {
                 const Icon = t.icon;
                 return (
                   <button
@@ -218,9 +261,9 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
                 );
               })}
 
-              {availableTutorials.length > 3 && (
+              {availableTutorials.length > adminConfig.max_tutorials_shown && (
                 <p className="text-center text-[10px] text-slate-400 pt-1">
-                  +{availableTutorials.length - 3} more tutorials available
+                  +{availableTutorials.length - adminConfig.max_tutorials_shown} more tutorials available
                 </p>
               )}
             </div>

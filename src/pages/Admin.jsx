@@ -47,6 +47,7 @@ import SmartReassignment from '@/components/admin/SmartReassignment';
 import ResourceCapacityPlanner from '@/components/admin/ResourceCapacityPlanner';
 import AdminOverviewDashboard from '@/components/admin/AdminOverviewDashboard';
 import WisdomModerationQueue from '@/components/admin/WisdomModerationQueue';
+import LearnPopupSettings from '@/components/admin/LearnPopupSettings';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -265,6 +266,10 @@ export default function Admin() {
               <Gauge className="w-4 h-4" />
               Capacity
             </TabsTrigger>
+            <TabsTrigger value="learn-popup" className="gap-2 px-3 py-2">
+              <BookOpen className="w-4 h-4" />
+              Learn Popup
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -443,6 +448,10 @@ export default function Admin() {
 
           <TabsContent value="capacity">
             <ResourceCapacityPlanner />
+          </TabsContent>
+
+          <TabsContent value="learn-popup">
+            <LearnPopupSettings />
           </TabsContent>
         </Tabs>
       </div>
