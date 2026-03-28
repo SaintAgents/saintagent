@@ -4,12 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Folder, Search, Plus, Filter, AlertCircle, BarChart3, CalendarRange, Users } from 'lucide-react';
+import { Folder, Search, Plus, AlertCircle, BarChart3, CalendarRange, Users } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectMiniCard from '@/components/projects/ProjectMiniCard';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
+import ProjectSummaryBar from '@/components/projects/ProjectSummaryBar';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import HelpHint from '@/components/hud/HelpHint';
 import BackButton from '@/components/hud/BackButton';
@@ -23,6 +22,7 @@ const ITEMS_PER_PAGE = 12;
 export default function Projects() {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState('all');
+  const [stage, setStage] = useState('all');
   const [selected, setSelected] = useState(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
@@ -45,15 +45,21 @@ export default function Projects() {
 
   const filtered = (projects || []).filter((p) => {
     const okStatus = status === 'all' || p.status === status;
+    const okStage = stage === 'all' || (p.stage || 'idea') === stage;
     const qq = q.trim().toLowerCase();
     const okQ = !qq || (p.title || '').toLowerCase().includes(qq) || (p.description || '').toLowerCase().includes(qq);
-    return okStatus && okQ;
+    return okStatus && okStage && okQ;
   });
 
-  const total = projects.length;
-  const approved = projects.filter((p) => p.status === 'approved').length;
-  const pending = projects.filter((p) => p.status === 'pending_review').length;
-  const drafts = projects.filter((p) => p.status === 'draft').length;
+  const handleStatusClick = (s) => {
+    setStatus(s);
+    setVisibleCount(ITEMS_PER_PAGE);
+  };
+
+  const handleStageClick = (s) => {
+    setStage(s);
+    setVisibleCount(ITEMS_PER_PAGE);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none relative z-10">
@@ -144,33 +150,19 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{total}</div></div>
-          <div className="p-3 rounded-xl bg-emerald-50 border"><div className="text-xs text-emerald-700">Approved</div><div className="text-xl font-bold text-emerald-700">{approved}</div></div>
-          <div className="p-3 rounded-xl bg-amber-50 border"><div className="text-xs text-amber-700">Pending</div><div className="text-xl font-bold text-amber-700">{pending}</div></div>
-          <div className="p-3 rounded-xl bg-slate-100 border"><div className="text-xs text-slate-700">Drafts</div><div className="text-xl font-bold text-slate-800">{drafts}</div></div>
-        </div>
+        {/* Summary Bar */}
+        <ProjectSummaryBar 
+          projects={projects} 
+          activeStatus={status} 
+          activeStage={stage}
+          onStatusClick={handleStatusClick}
+          onStageClick={handleStageClick}
+        />
 
-        {/* Filters */}
-        <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="md:col-span-2 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects..." className="pl-9" />
-          </div>
-          <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="pending_review">Pending Review</SelectItem>
-              <SelectItem value="approved">Approved</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-              <SelectItem value="flagged">Flagged</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Search */}
+        <div className="mb-4 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects..." className="pl-9" />
         </div>
 
         {/* Results count */}
