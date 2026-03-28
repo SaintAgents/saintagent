@@ -37,7 +37,9 @@ Here's what you can do:
 🌍 COMMUNITY — Circles, events, messaging, forums, and matching
 🔧 BUSINESS TOOLS — CRM, deal tracking, project management, and analytics
 
-I'd love for you to join me — it only takes a few minutes to get started.`;
+I'd love for you to join me — it only takes a few minutes to get started.
+
+Visit us at https://saintagent.world`;
 
 export default function InviteEmailModal({ open, onOpenChange, affiliateUrl, senderName }) {
   const [emails, setEmails] = useState(['']);
@@ -95,76 +97,34 @@ Make it feel genuine, enthusiastic but not salesy. Vary the angle — sometimes 
 
     setSending(true);
 
-    const noteHtml = personalNote 
-      ? `<p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 16px 0;padding-bottom:16px;border-bottom:1px solid #e2e8f0;">${personalNote.replace(/\n/g, '<br/>')}</p>` 
-      : '';
+    try {
+      const sendResult = await base44.functions.invoke('sendInviteEmail', {
+        emails: validEmails.map(e => e.trim()),
+        subject: subject || DEFAULT_SUBJECT,
+        personalNote: personalNote || '',
+        senderName: senderName || 'SaintAgent',
+        affiliateUrl: affiliateUrl || 'https://saintagent.world'
+      });
 
-    const messageHtml = DEFAULT_MESSAGE
-      .replace(/[^\x00-\x7F]/g, '') // strip emoji/non-ASCII for email compatibility
-      .replace(/\n\n/g, '</p><p style="color:#334155;font-size:14px;line-height:1.7;margin:8px 0;">')
-      .replace(/\n/g, '<br/>');
+      setSending(false);
 
-    const fullBody = `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;padding:24px;background:#fff;">
-<div style="text-align:center;margin-bottom:24px;">
-<h1 style="color:#6d28d9;font-size:28px;margin:0;">SaintAgent</h1>
-<p style="color:#64748b;font-size:14px;margin-top:4px;">A Platform for Conscious Creators</p>
-</div>
-<div style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid #e2e8f0;">
-${noteHtml}
-<p style="color:#334155;font-size:14px;line-height:1.7;margin:0;">${messageHtml}</p>
-</div>
-<div style="text-align:center;margin:28px 0;">
-<a href="${affiliateUrl}" style="display:inline-block;background:#6d28d9;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:600;font-size:16px;">Join SaintAgent Now</a>
-</div>
-<p style="color:#94a3b8;font-size:12px;text-align:center;border-top:1px solid #e2e8f0;padding-top:16px;">Invited by ${senderName || 'a SaintAgent member'}</p>
-</div>`;
-
-    let successCount = 0;
-    let alreadyRegistered = 0;
-    let lastError = null;
-    for (const email of validEmails) {
-      try {
-        // inviteUser sends a platform registration email to the recipient
-        await base44.users.inviteUser(email.trim(), 'user');
-        successCount++;
-      } catch (err) {
-        const msg = err?.message || err?.response?.data?.detail || '';
-        if (msg.toLowerCase().includes('already') || err?.response?.status === 409) {
-          // User already registered — send them the custom email instead
-          alreadyRegistered++;
-          try {
-            await base44.integrations.Core.SendEmail({
-              to: email.trim(),
-              subject: subject || DEFAULT_SUBJECT,
-              body: fullBody,
-              from_name: senderName || 'SaintAgent'
-            });
-            successCount++;
-          } catch (emailErr) {
-            lastError = emailErr;
-            console.error('SendEmail to existing user failed:', emailErr?.message);
-          }
-        } else {
-          lastError = err;
-          console.error('InviteUser error:', msg);
-        }
+      const data = sendResult.data;
+      if (data?.success) {
+        setSent(true);
+        toast.success(`Invitation${data.sent > 1 ? 's' : ''} sent to ${data.sent} recipient${data.sent > 1 ? 's' : ''}!`);
+        setTimeout(() => {
+          setSent(false);
+          setEmails(['']);
+          setPersonalNote('');
+          onOpenChange(false);
+        }, 2000);
+      } else {
+        const errorMsg = data?.results?.[0]?.error || data?.error || 'Failed to send';
+        toast.error(errorMsg);
       }
-    }
-
-    setSending(false);
-
-    if (successCount > 0) {
-      setSent(true);
-      toast.success(`Invitation${successCount > 1 ? 's' : ''} sent to ${successCount} recipient${successCount > 1 ? 's' : ''}!`);
-      setTimeout(() => {
-        setSent(false);
-        setEmails(['']);
-        setPersonalNote('');
-        onOpenChange(false);
-      }, 2000);
-    } else {
-      const msg = lastError?.message || lastError?.response?.data?.detail || 'Unknown error';
-      toast.error(`Failed to send: ${msg}`);
+    } catch (err) {
+      setSending(false);
+      toast.error(err?.message || 'Failed to send invitations');
     }
   };
 

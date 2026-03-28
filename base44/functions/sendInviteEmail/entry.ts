@@ -42,7 +42,7 @@ I'd love for you to join me — it only takes a few minutes to get started.`;
       .replace(/\n/g, '<br/>');
 
     const fromName = senderName || 'SaintAgent';
-    const link = affiliateUrl || 'https://saintag.app';
+    const link = affiliateUrl || 'https://saintagent.world';
 
     const fullBody = `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;padding:24px;background:#fff;">
 <div style="text-align:center;margin-bottom:24px;">
