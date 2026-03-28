@@ -22,7 +22,8 @@ import {
   Lock,
   Zap,
   Plus,
-  BarChart3
+  BarChart3,
+  Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ import { Progress } from "@/components/ui/progress";
 import CreateCampaignModal from '@/components/affiliate/CreateCampaignModal';
 import CampaignAnalytics from '@/components/affiliate/CampaignAnalytics';
 import SocialShareButtons, { OfferShareRow } from '@/components/affiliate/SocialShareButtons';
+import InviteEmailModal from '@/components/affiliate/InviteEmailModal';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
@@ -96,6 +98,7 @@ function getNextTier(paidReferrals) {
 export default function AffiliateCenter() {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [createCampaignOpen, setCreateCampaignOpen] = useState(false);
+  const [inviteEmailOpen, setInviteEmailOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('links');
   const queryClient = useQueryClient();
 
@@ -292,7 +295,15 @@ export default function AffiliateCenter() {
 
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
-        <div className="flex items-center justify-end mb-8">
+        <div className="flex items-center justify-end gap-3 mb-8">
+          <Button 
+            onClick={() => setInviteEmailOpen(true)}
+            variant="outline"
+            className="gap-2 border-violet-300 text-violet-700 hover:bg-violet-50"
+          >
+            <Mail className="w-4 h-4" />
+            Send Invite Email
+          </Button>
           <Button 
             onClick={() => setCreateCampaignOpen(true)}
             className="bg-violet-600 hover:bg-violet-700 gap-2"
@@ -848,6 +859,14 @@ export default function AffiliateCenter() {
           </div>
         </div>
       </div>
+
+      {/* Invite Email Modal */}
+      <InviteEmailModal
+        open={inviteEmailOpen}
+        onOpenChange={setInviteEmailOpen}
+        affiliateUrl={affiliateUrl}
+        senderName={profile?.display_name || currentUser?.full_name}
+      />
 
       {/* Create Campaign Modal */}
       <CreateCampaignModal
