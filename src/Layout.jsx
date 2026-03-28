@@ -30,6 +30,7 @@ import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import LiveBroadcastBanner from '@/components/hud/LiveBroadcastBanner';
 
 import GlobalAlertPopup from '@/components/hud/GlobalAlertPopup';
+import LearnTutorialPopup from '@/components/hud/LearnTutorialPopup';
 
 import CanvasBackgrounds from '@/components/hud/CanvasBackgrounds';
 import LightThemeBackgroundRotator from '@/components/hud/LightThemeBackgroundRotator';
@@ -1931,11 +1932,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Alert Popup */}
       <GlobalAlertPopup />
+      <LearnTutorialPopup profile={profile} onRewardGGG={async (amount, reason) => { if (profile?.id) { await base44.entities.UserProfile.update(profile.id, { ggg_balance: (profile.ggg_balance || 0) + amount }); queryClient.invalidateQueries({ queryKey: ['myProfile'] }); } }} />
 
       {/* Meeting Reminder Service */}
               {currentUser && <MeetingReminderService />}
-
-      {/* Floating Notes Widget removed - now in TopBar */}
 
               {/* Mobile Close Button - shows X on secondary pages */}
               <MobileCloseButton currentPageName={currentPageName} />
