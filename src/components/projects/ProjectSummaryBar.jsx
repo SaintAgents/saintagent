@@ -86,29 +86,56 @@ function ChipButton({ isActive, onClick, icon: Icon, label, count, colorClass })
 }
 
 export default function ProjectSummaryBar({ projects = [], activeStatus, activeSector, activeStage, onStatusClick, onSectorClick, onStageClick }) {
-  // Count by status
-  const statusCounts = {};
-  for (const chip of STATUS_CHIPS) {
-    statusCounts[chip.key] = projects.filter(p => p.status === chip.key).length;
-  }
+  // Helper: filter by status + stage (for sector counts)
+  const filterByStatusAndStage = (p) => {
+    if (activeStatus !== 'all' && p.status !== activeStatus) return false;
+    if (activeStage !== 'all' && (p.stage || 'idea') !== activeStage) return false;
+    return true;
+  };
+  // Helper: filter by sector + stage (for status counts)
+  const filterBySectorAndStage = (p) => {
+    if (activeSector !== 'all' && classifyProjectSector(p) !== activeSector) return false;
+    if (activeStage !== 'all' && (p.stage || 'idea') !== activeStage) return false;
+    return true;
+  };
+  // Helper: filter by sector + status (for stage counts)
+  const filterBySectorAndStatus = (p) => {
+    if (activeSector !== 'all' && classifyProjectSector(p) !== activeSector) return false;
+    if (activeStatus !== 'all' && p.status !== activeStatus) return false;
+    return true;
+  };
 
-  // Count by sector
+  // Sector counts: filtered by current status + stage
+  const sectorFiltered = projects.filter(filterByStatusAndStage);
   const sectorCounts = {};
-  for (const p of projects) {
+  for (const p of sectorFiltered) {
     const sector = classifyProjectSector(p);
     sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
   }
 
-  // Count by stage
+  // Stage counts: filtered by current sector + status
+  const stageFiltered = projects.filter(filterBySectorAndStatus);
   const stageCounts = {};
-  for (const p of projects) {
+  for (const p of stageFiltered) {
     const s = p.stage || 'idea';
     stageCounts[s] = (stageCounts[s] || 0) + 1;
   }
 
-  // Only show sectors that have at least 1 project
+  // Status counts: filtered by current sector + stage
+  const statusFiltered = projects.filter(filterBySectorAndStage);
+  const statusCounts = {};
+  for (const chip of STATUS_CHIPS) {
+    statusCounts[chip.key] = statusFiltered.filter(p => p.status === chip.key).length;
+  }
+
+  // Only show sectors that have at least 1 project (from full list, so they don't disappear)
+  const allSectorCounts = {};
+  for (const p of projects) {
+    const sector = classifyProjectSector(p);
+    allSectorCounts[sector] = (allSectorCounts[sector] || 0) + 1;
+  }
   const visibleSectors = Object.entries(SECTOR_CONFIG).filter(
-    ([key]) => (sectorCounts[key] || 0) > 0
+    ([key]) => (allSectorCounts[key] || 0) > 0
   );
 
   return (
@@ -130,7 +157,7 @@ export default function ProjectSummaryBar({ projects = [], activeStatus, activeS
           >
             <LayoutGrid className="w-5 h-5" />
             <span className="text-xs font-semibold">All</span>
-            <span className={cn("text-lg font-bold", activeSector === 'all' ? 'text-white' : 'text-slate-900')}>{projects.length}</span>
+            <span className={cn("text-lg font-bold", activeSector === 'all' ? 'text-white' : 'text-slate-900')}>{sectorFiltered.length}</span>
           </button>
           {visibleSectors.map(([key, cfg]) => {
             const count = sectorCounts[key] || 0;
@@ -194,7 +221,7 @@ export default function ProjectSummaryBar({ projects = [], activeStatus, activeS
             onClick={() => onStatusClick('all')}
             icon={LayoutGrid}
             label="All"
-            count={projects.length}
+            count={statusFiltered.length}
             colorClass="bg-white text-slate-600 border-slate-200 hover:bg-slate-100"
           />
           {STATUS_CHIPS.map(chip => (
