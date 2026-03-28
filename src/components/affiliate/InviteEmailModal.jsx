@@ -120,18 +120,21 @@ ${noteHtml}
 </div>`;
 
     let successCount = 0;
+    let lastError = null;
     for (const email of validEmails) {
       try {
-        await base44.integrations.Core.SendEmail({
+        const result = await base44.integrations.Core.SendEmail({
           to: email.trim(),
-          subject,
+          subject: subject || DEFAULT_SUBJECT,
           body: fullBody,
           from_name: senderName || 'SaintAgent'
         });
+        console.log('SendEmail result:', email.trim(), result);
         successCount++;
       } catch (err) {
-        console.error(`Failed to send to ${email}:`, err?.message || err?.response?.data || JSON.stringify(err));
-        toast.error(`Failed to send to ${email.trim()}: ${err?.message || 'Unknown error'}`);
+        lastError = err;
+        console.error('SendEmail error:', JSON.stringify(err, Object.getOwnPropertyNames(err || {})));
+        console.error('SendEmail error raw:', err);
       }
     }
 
@@ -139,7 +142,7 @@ ${noteHtml}
 
     if (successCount > 0) {
       setSent(true);
-      toast.success(`Invitation${successCount > 1 ? 's' : ''} sent to ${successCount} recipient${successCount > 1 ? 's' : ''}!`);
+      toast.success(`Sent to ${successCount} recipient${successCount > 1 ? 's' : ''}!`);
       setTimeout(() => {
         setSent(false);
         setEmails(['']);
@@ -147,7 +150,8 @@ ${noteHtml}
         onOpenChange(false);
       }, 2000);
     } else {
-      toast.error('Failed to send invitations. Please try again.');
+      const msg = lastError?.message || lastError?.response?.data?.detail || 'Unknown error';
+      toast.error(`Failed to send: ${msg}`);
     }
   };
 
