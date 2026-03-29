@@ -79,6 +79,7 @@ const CARD_ICONS = {
   globalSchedule: Calendar
 };
 import EmojiPicker from '@/components/messages/EmojiPicker';
+import SidePanelGlobalChat from '@/components/hud/SidePanelGlobalChat';
 import ProgressRing from './ProgressRing';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import FloatingPanel from '@/components/hud/FloatingPanel';
@@ -697,6 +698,9 @@ export default function SidePanel({
                 </div>
               </CollapsibleCard>
 
+              {/* Global Chat - below Online Now */}
+              <SidePanelGlobalChat />
+
               <CollapsibleCard title="Users & Regions" icon={Users} onPopout={() => setUsersPopupOpen(true)}>
                 <div className="p-4 rounded-xl bg-white border border-slate-200">
                   <div className="flex items-center justify-between mb-3">
@@ -1158,6 +1162,11 @@ export default function SidePanel({
                 )}
               </div>
             </CollapsibleCard>
+
+            {/* Global Chat - below Online Now */}
+            <div className="mt-4">
+              <SidePanelGlobalChat />
+            </div>
 
             <div className="mt-4">
               <CollapsibleCard title="Users & Regions" icon={Users} onPopout={() => setUsersPopupOpen(true)}>
