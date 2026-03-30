@@ -46,18 +46,18 @@ export default function AdminProjects() {
   };
 
   const runBulkEvaluation = async () => {
-    const pending = projects.filter(p => p.status === 'pending_review' && !p.ai_evaluated_at);
-    if (pending.length === 0) return;
+    const unevaluated = projects.filter(p => !p.ai_evaluated_at);
+    if (unevaluated.length === 0) return;
     
     setBulkEvaluating(true);
-    for (const project of pending.slice(0, 10)) { // Limit to 10 at a time
+    for (const project of unevaluated.slice(0, 10)) { // Limit to 10 at a time
       await runSingleEvaluation(project.id);
     }
     setBulkEvaluating(false);
   };
 
   const pendingCount = projects.filter(p => p.status === 'pending_review').length;
-  const unevaluatedCount = projects.filter(p => !p.ai_evaluated_at && p.status === 'pending_review').length;
+  const unevaluatedCount = projects.filter(p => !p.ai_evaluated_at).length;
 
   const filtered = (projects || []).filter((p) => {
     const text = (p.title + " " + (p.description || "")).toLowerCase();
