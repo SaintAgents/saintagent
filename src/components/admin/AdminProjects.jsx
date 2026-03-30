@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Loader2, CheckCircle, XCircle, AlertTriangle, Clock, Eye, Trash2 } from "lucide-react";
+import { Brain, Loader2, CheckCircle, XCircle, AlertTriangle, Clock, Eye, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import ProjectCSVImport from "@/components/projects/ProjectCSVImport";
 import LegacySAImport from "@/components/admin/LegacySAImport";
 import FloatingPanel from "@/components/hud/FloatingPanel";
@@ -18,6 +18,8 @@ export default function AdminProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [bulkEvaluating, setBulkEvaluating] = useState(false);
   const [evaluatingIds, setEvaluatingIds] = useState(new Set());
+  const [sortKey, setSortKey] = useState(null);
+  const [sortDir, setSortDir] = useState('asc');
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["projects"],
@@ -59,12 +61,38 @@ export default function AdminProjects() {
   const pendingCount = projects.filter(p => p.status === 'pending_review').length;
   const unevaluatedCount = projects.filter(p => !p.ai_evaluated_at).length;
 
+  const toggleSort = (key) => {
+    if (sortKey === key) {
+      setSortDir(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'title' || key === 'status' ? 'asc' : 'desc');
+    }
+  };
+
+  const RISK_ORDER = { A: 1, B: 2, C: 3, D: 4, F: 5 };
+  const TIER_ORDER = { approve_fund: 1, incubate_derisk: 2, review_reevaluate: 3, decline: 4 };
+
   const filtered = (projects || []).filter((p) => {
     const text = (p.title + " " + (p.description || "")).toLowerCase();
     const textOk = !q || text.includes(q.toLowerCase());
     const statusOk = status === "all" || p.status === status;
     return textOk && statusOk;
   });
+
+  const sorted = sortKey ? [...filtered].sort((a, b) => {
+    let av, bv;
+    if (sortKey === 'title') { av = (a.title || '').toLowerCase(); bv = (b.title || '').toLowerCase(); }
+    else if (sortKey === 'status') { av = a.status || ''; bv = b.status || ''; }
+    else if (sortKey === 'score') { av = a.final_score ?? -1; bv = b.final_score ?? -1; }
+    else if (sortKey === 'risk') { av = RISK_ORDER[a.phase3_risk_grade] ?? 99; bv = RISK_ORDER[b.phase3_risk_grade] ?? 99; }
+    else if (sortKey === 'tier') { av = TIER_ORDER[a.decision_tier] ?? 99; bv = TIER_ORDER[b.decision_tier] ?? 99; }
+    else if (sortKey === 'budget') { av = a.budget ?? 0; bv = b.budget ?? 0; }
+    else return 0;
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  }) : filtered;
 
   const total = projects.length;
   const approved = projects.filter((p) => p.status === "approved").length;
@@ -144,12 +172,29 @@ export default function AdminProjects() {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 text-slate-600">
             <tr>
-              <th className="text-left p-3">Title</th>
-              <th className="text-left p-3">Status</th>
-              <th className="text-center p-3">Score</th>
-              <th className="text-center p-3">Risk</th>
-              <th className="text-center p-3">Tier</th>
-              <th className="text-right p-3">Budget</th>
+              {[
+                { key: 'title', label: 'Title', align: 'text-left' },
+                { key: 'status', label: 'Status', align: 'text-left' },
+                { key: 'score', label: 'Score', align: 'text-center' },
+                { key: 'risk', label: 'Risk', align: 'text-center' },
+                { key: 'tier', label: 'Tier', align: 'text-center' },
+                { key: 'budget', label: 'Budget', align: 'text-right' },
+              ].map(col => (
+                <th
+                  key={col.key}
+                  className={`${col.align} p-3 cursor-pointer select-none hover:bg-slate-100 transition-colors`}
+                  onClick={() => toggleSort(col.key)}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    {col.label}
+                    {sortKey === col.key ? (
+                      sortDir === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+                    ) : (
+                      <ArrowUpDown className="w-3 h-3 opacity-30" />
+                    )}
+                  </span>
+                </th>
+              ))}
               <th className="text-left p-3">Actions</th>
             </tr>
           </thead>
@@ -158,7 +203,7 @@ export default function AdminProjects() {
               <tr><td colSpan={7} className="p-6 text-center text-slate-400">Loading...</td></tr>
             ) : filtered.length === 0 ? (
               <tr><td colSpan={7} className="p-6 text-center text-slate-400">No projects found</td></tr>
-            ) : filtered.map((p) => (
+            ) : sorted.map((p) => (
               <tr key={p.id} className="border-t hover:bg-slate-50">
                 <td className="p-3">
                   <div className="font-medium text-slate-900">{p.title}</div>
