@@ -94,7 +94,7 @@ export default function CoherenceSlider({
         </div>
         <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-center">
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Reward</p>
-          <p className="font-semibold text-sm text-amber-500">{config.rewardMultiplier}x</p>
+          <p className="font-semibold text-sm text-amber-500">{config.reward}x</p>
         </div>
       </div>
 

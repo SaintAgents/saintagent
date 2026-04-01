@@ -1608,10 +1608,17 @@ export const COHERENCE_MULTIPLIERS = {
 };
 
 // Calculate quest rewards based on coherence
-export function calculateQuestRewards(baseReward, coherenceLevel) {
+export function calculateQuestRewards(baseRP, baseGGG, coherenceLevel) {
+  // Support old 2-param signature: (baseReward, coherenceLevel)
+  if (coherenceLevel === undefined) {
+    coherenceLevel = baseGGG;
+    baseGGG = 0;
+  }
   const multiplier = COHERENCE_MULTIPLIERS[coherenceLevel] || COHERENCE_MULTIPLIERS[5];
   return {
-    reward: Math.round(baseReward * multiplier.reward),
+    rp: Math.round(baseRP * multiplier.reward),
+    ggg: (baseGGG * multiplier.reward).toFixed(2),
+    reward: Math.round(baseRP * multiplier.reward),
     difficulty: multiplier.difficulty,
     label: multiplier.label
   };
