@@ -120,15 +120,15 @@ export default function UserActivityLog() {
     queryFn: () => base44.entities.GGGTransaction.list('-created_date', 1000),
   });
 
-  // Build online user set from LiveStatus (heartbeat within 10 min OR status not offline + updated recently)
+  // Build online user set from LiveStatus — ONLY use heartbeat recency
+  // Demo users are NEVER online
   const onlineUserIds = useMemo(() => {
     const set = new Set();
     const cutoff = moment().subtract(10, 'minutes');
     liveStatuses.forEach(ls => {
-      const heartbeat = ls.last_heartbeat ? moment(ls.last_heartbeat) : moment(ls.updated_date);
-      const isActive = heartbeat.isAfter(cutoff);
-      const notOffline = ls.status && ls.status !== 'offline';
-      if (isActive || notOffline) {
+      if (!ls.user_id || !ls.last_heartbeat) return;
+      if (ls.user_id.includes('demo') || ls.user_id.includes('saintagents.app')) return;
+      if (moment(ls.last_heartbeat).isAfter(cutoff)) {
         set.add(ls.user_id);
       }
     });

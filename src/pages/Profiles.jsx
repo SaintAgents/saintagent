@@ -160,16 +160,18 @@ export default function Profiles() {
     return Math.min(score, 100);
   };
 
-  // Build online user IDs set from LiveStatus entity (same logic as SidePanel)
+  // Build online user IDs set from LiveStatus entity
+  // ONLY use heartbeat recency — status field is unreliable (never set to offline)
+  // Demo users are NEVER online
   const onlineUserIds = useMemo(() => {
     const set = new Set();
     const cutoff = Date.now() - 10 * 60 * 1000; // 10 minutes
     liveStatuses.forEach(ls => {
-      if (ls.user_id?.includes('demo') || ls.user_id?.includes('saintagents.app')) return;
-      const heartbeat = ls.last_heartbeat ? new Date(ls.last_heartbeat).getTime() : new Date(ls.updated_date).getTime();
-      const isActive = heartbeat > cutoff;
-      const notOffline = ls.status && ls.status !== 'offline';
-      if (isActive || notOffline) {
+      if (!ls.user_id) return;
+      if (ls.user_id.includes('demo') || ls.user_id.includes('saintagents.app')) return;
+      if (!ls.last_heartbeat) return;
+      const heartbeat = new Date(ls.last_heartbeat).getTime();
+      if (heartbeat > cutoff) {
         set.add(ls.user_id);
       }
     });
