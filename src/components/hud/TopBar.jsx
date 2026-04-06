@@ -948,16 +948,15 @@ export default function TopBar({
             >
               {/* Admin Dashboard Banner - TOP OF MENU for admin users */}
               {currentUser?.role === 'admin' && (
-                <Link 
-                  to={createPageUrl('Admin')} 
-                  className="block bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3"
-                  onClick={() => document.body.click()}
+                <div 
+                  className="block bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3 cursor-pointer"
+                  onClick={() => { window.location.href = createPageUrl('Admin'); }}
                 >
                   <div className="flex items-center gap-3 text-white font-bold hover:opacity-90 transition-opacity">
                     <Shield className="w-5 h-5" />
                     <span>🔐 ADMIN DASHBOARD</span>
                   </div>
-                </Link>
+                </div>
               )}
 
               {/* Avatar Card Header */}
@@ -1059,11 +1058,9 @@ export default function TopBar({
                   <>
                     <DropdownMenuSeparator className="my-0" />
                     <div className="py-2 bg-violet-50 dark:bg-violet-900/20">
-                      <DropdownMenuItem asChild>
-                        <Link to={createPageUrl('Admin')} onClick={() => document.body.click()} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold">
-                          <Shield className="w-4 h-4" />
-                          <span>⚡ Admin Dashboard</span>
-                        </Link>
+                      <DropdownMenuItem onClick={() => { window.location.href = createPageUrl('Admin'); }} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold cursor-pointer">
+                        <Shield className="w-4 h-4" />
+                        <span>⚡ Admin Dashboard</span>
                       </DropdownMenuItem>
                     </div>
                   </>
