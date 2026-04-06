@@ -104,6 +104,14 @@ export default function Profiles() {
     enabled: viewMode === 'dating'
   });
 
+  // Fetch LiveStatus for online detection (same source as SidePanel PRESENCE)
+  const { data: liveStatuses = [] } = useQuery({
+    queryKey: ['profilesLiveStatuses'],
+    queryFn: () => base44.entities.LiveStatus.list('-updated_date', 500),
+    refetchInterval: 30000,
+    staleTime: 15000,
+  });
+
   // Fetch recent missions for expanded cards
   const { data: missions = [] } = useQuery({
     queryKey: ['recentMissions'],
@@ -227,13 +235,10 @@ export default function Profiles() {
       );
     }
 
-    // Helper function to check if user is online (seen in last 5 minutes, never for demo users)
+    // Helper function to check if user is online using LiveStatus entity
     const isOnline = (profile) => {
       if (profile.user_id?.includes('demo') || profile.user_id?.includes('saintagents.app')) return false;
-      if (!profile.last_seen_at) return false;
-      const lastSeen = new Date(profile.last_seen_at);
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-      return lastSeen > fiveMinutesAgo;
+      return onlineUserIds.has(profile.user_id);
     };
 
     // Online only filter
@@ -265,19 +270,27 @@ export default function Profiles() {
     });
 
     return result;
-  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, astroFilter, humanDesignFilter, enneagramFilter, mbtiFilter, practiceFilter, locationFilter, currentProfile, showOnlineOnly]);
+  }, [profiles, searchQuery, sortBy, rankFilter, regionFilter, rpRange, skillFilter, astroFilter, humanDesignFilter, enneagramFilter, mbtiFilter, practiceFilter, locationFilter, currentProfile, showOnlineOnly, onlineUserIds]);
 
-  // Separate online and offline profiles for grouped display
-  // Only consider a user online if they have a recent last_seen_at timestamp
-  // Demo users are NEVER online
+  // Build online user IDs set from LiveStatus entity (same logic as SidePanel)
+  const onlineUserIds = useMemo(() => {
+    const set = new Set();
+    const cutoff = Date.now() - 10 * 60 * 1000; // 10 minutes
+    liveStatuses.forEach(ls => {
+      if (ls.user_id?.includes('demo') || ls.user_id?.includes('saintagents.app')) return;
+      const heartbeat = ls.last_heartbeat ? new Date(ls.last_heartbeat).getTime() : new Date(ls.updated_date).getTime();
+      const isActive = heartbeat > cutoff;
+      const notOffline = ls.status && ls.status !== 'offline';
+      if (isActive || notOffline) {
+        set.add(ls.user_id);
+      }
+    });
+    return set;
+  }, [liveStatuses]);
+
   const isUserOnline = (profile) => {
-    // Demo users are never online
     if (profile.user_id?.includes('demo') || profile.user_id?.includes('saintagents.app')) return false;
-    // Must have last_seen_at within last 5 minutes to be considered online
-    if (!profile.last_seen_at) return false;
-    const lastSeen = new Date(profile.last_seen_at);
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    return lastSeen > fiveMinutesAgo;
+    return onlineUserIds.has(profile.user_id);
   };
 
   const onlineProfiles = filteredProfiles.filter(isUserOnline);
