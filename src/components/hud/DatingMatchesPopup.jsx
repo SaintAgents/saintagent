@@ -489,11 +489,14 @@ export default function DatingMatchesPopup({ currentUser }) {
               >
                 <RefreshCw className="w-4 h-4" />
               </Button>
-              <a href={createPageUrl('DatingMatches')} onClick={() => setOpen(false)}>
-                <Button variant="ghost" size="sm" className="text-xs h-7 text-pink-400 hover:text-pink-300">
-                  View All
-                </Button>
-              </a>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs h-7 text-pink-400 hover:text-pink-300"
+                onClick={() => { setOpen(false); window.location.href = '/DatingMatches'; }}
+              >
+                View All
+              </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => setOpen(false)}>
                 <X className="w-4 h-4" />
               </Button>
@@ -505,12 +508,15 @@ export default function DatingMatchesPopup({ currentUser }) {
             <Heart className="w-10 h-10 mb-3 opacity-50" />
             <p className="text-sm text-center">No new matches found</p>
             <p className="text-xs text-center mt-1 mb-4">Try adjusting your preferences or check again later</p>
-            <a href={createPageUrl('DatingMatches')}>
-              <Button variant="outline" size="sm" className="gap-2 border-pink-200 text-pink-600 hover:bg-pink-50">
-                <Heart className="w-4 h-4" />
-                View All Dating Profiles
-              </Button>
-            </a>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-2 border-pink-200 text-pink-600 hover:bg-pink-50"
+              onClick={() => { setOpen(false); window.location.href = '/DatingMatches'; }}
+            >
+              <Heart className="w-4 h-4" />
+              View All Dating Profiles
+            </Button>
           </div> :
 
         <div className="relative">
