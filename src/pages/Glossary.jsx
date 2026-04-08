@@ -53,7 +53,7 @@ export default function Glossary() {
   }, [filtered]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 pb-24 -mt-28 md:-mt-28">
       {/* Hero */}
       <div className="relative w-full h-64 md:h-80 overflow-hidden page-hero">
         <img
