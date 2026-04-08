@@ -139,6 +139,7 @@ const NAV_ITEMS = [
   { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
   { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
   { id: 'testimonials', label: 'Testimonials', Icon: Quote, page: 'Testimonials', hint: 'View and share community testimonials' },
+  { id: 'glossary', label: 'Glossary', Icon: BookOpen, page: 'Glossary', hint: 'Reference guide to SaintAgent terms, Ultranet, and ecosystem concepts' },
   // Web Pages Group - grouped together with special styling
   { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation', isWebPage: true },
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
