@@ -40,32 +40,29 @@ export default function TipButton({
     queryFn: () => base44.auth.me()
   });
 
-  const { data: userProfile } = useQuery({
-    queryKey: ['userProfile'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
-      return profiles[0];
-    }
+  const { data: myProfiles } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
   });
+  const userProfile = myProfiles?.[0];
 
   // Wallet for authoritative GGG balance
   const { data: walletRes } = useQuery({
     queryKey: ['wallet', currentUser?.email],
     queryFn: async () => {
-      try {
-        const { data } = await base44.functions.invoke('walletEngine', {
-          action: 'getWallet',
-          payload: { user_id: currentUser.email }
-        });
-        return data;
-      } catch {
-        return null;
-      }
+      const { data } = await base44.functions.invoke('walletEngine', {
+        action: 'getWallet',
+        payload: { user_id: currentUser.email }
+      });
+      return data;
     },
     enabled: !!currentUser?.email,
     staleTime: 10000,
   });
+
+  // Use wallet balance first, then fall back to profile ggg_balance
   const walletBalance = walletRes?.wallet?.available_balance ?? walletRes?.wallet?.ggg_balance ?? userProfile?.ggg_balance ?? 0;
 
   const tipMutation = useMutation({

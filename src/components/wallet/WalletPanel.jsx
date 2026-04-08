@@ -31,7 +31,8 @@ export default function WalletPanel() {
       return data;
     },
     enabled: !!user?.email,
-    refetchInterval: 5000
+    staleTime: 30000,
+    refetchInterval: 60000
   });
 
   const { data: txRes } = useQuery({
@@ -44,7 +45,8 @@ export default function WalletPanel() {
       return data;
     },
     enabled: !!user?.email,
-    refetchInterval: 5000
+    staleTime: 30000,
+    refetchInterval: 60000
   });
 
   const wallet = walletRes?.wallet;
