@@ -26,12 +26,14 @@ import ROLE_DEFS from '@/components/roles/RoleDefinitions';
 import { toast } from 'sonner';
 import RoleHierarchyTree from './RoleHierarchyTree';
 import PermissionsMatrix from './PermissionsMatrix';
+import RoleGroupUsersDrilldown from './RoleGroupUsersDrilldown';
 
 const GROUP_COLORS = ['slate', 'emerald', 'amber', 'violet', 'rose', 'blue', 'cyan', 'pink', 'orange', 'teal'];
 
 export default function RoleGroupsManager() {
   const [editingGroup, setEditingGroup] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [drilldownGroup, setDrilldownGroup] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: roleGroups = [], isLoading } = useQuery({
@@ -212,27 +214,38 @@ export default function RoleGroupsManager() {
                         </div>
                       </div>
 
-                      {!group._isDefault && (
-                        <div className="flex justify-end gap-2 mt-3 pt-3 border-t">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => setEditingGroup(group)}
-                          >
-                            <Pencil className="w-3 h-3 mr-1" />
-                            Edit
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="text-red-600 hover:bg-red-50"
-                            onClick={() => deleteMutation.mutate(group.id)}
-                          >
-                            <Trash2 className="w-3 h-3 mr-1" />
-                            Delete
-                          </Button>
-                        </div>
-                      )}
+                      <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1"
+                          onClick={() => setDrilldownGroup(group)}
+                        >
+                          <Users className="w-3 h-3" />
+                          View Members
+                        </Button>
+                        {!group._isDefault && (
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => setEditingGroup(group)}
+                            >
+                              <Pencil className="w-3 h-3 mr-1" />
+                              Edit
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="text-red-600 hover:bg-red-50"
+                              onClick={() => deleteMutation.mutate(group.id)}
+                            >
+                              <Trash2 className="w-3 h-3 mr-1" />
+                              Delete
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -249,6 +262,13 @@ export default function RoleGroupsManager() {
           <PermissionsMatrix roleGroups={roleGroups} />
         </TabsContent>
       </Tabs>
+
+      {/* Users Drilldown */}
+      <RoleGroupUsersDrilldown
+        group={drilldownGroup}
+        open={!!drilldownGroup}
+        onClose={() => setDrilldownGroup(null)}
+      />
 
       {/* Edit/Create Dialog */}
       <Dialog open={!!editingGroup} onOpenChange={() => { setEditingGroup(null); setIsCreating(false); }}>
