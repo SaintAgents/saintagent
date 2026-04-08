@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 function padSix(n) {
   try { return String(n).padStart(6, '0'); } catch { return String(n); }
@@ -18,38 +18,48 @@ Deno.serve(async (req) => {
     }
 
     // If already assigned, return existing
-    if (profile.sa_number && /^\d{1,10}$/.test(String(profile.sa_number))) {
+    if (profile.sa_number && /^\d{6}$/.test(String(profile.sa_number))) {
       return Response.json({ sa_number: profile.sa_number, assigned: false });
     }
 
     const isCreator = String(user.email).toLowerCase() === 'germaintrust@gmail.com';
 
-    // Creator: force #000001 and ensure counter >= 1
     if (isCreator) {
-      const desired = 1;
-      const saStr = padSix(desired);
+      const saStr = padSix(1);
       await base44.entities.UserProfile.update(profile.id, { sa_number: saStr });
 
       const counterSettings = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_counter' });
       const existing = counterSettings?.[0];
-      const currentVal = Number(existing?.value || 0) || 0;
       if (existing) {
-        if (currentVal < desired) {
-          await base44.asServiceRole.entities.PlatformSetting.update(existing.id, { value: String(desired) });
+        const currentVal = Number(existing.value || 0) || 0;
+        if (currentVal < 1) {
+          await base44.asServiceRole.entities.PlatformSetting.update(existing.id, { value: '1' });
         }
       } else {
-        await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: String(desired) });
+        await base44.asServiceRole.entities.PlatformSetting.create({ key: 'sa_counter', value: '1' });
       }
       return Response.json({ sa_number: saStr, assigned: true });
     }
 
-    // Get or initialize the SA counter in PlatformSetting
+    // --- SAFE COUNTER INCREMENT ---
+    // Read counter
     const settings = await base44.asServiceRole.entities.PlatformSetting.filter({ key: 'sa_counter' });
     let setting = settings?.[0] || null;
     let current = Number(setting?.value || 0) || 0;
 
-    const next = setting ? current + 1 : 1;
+    // Scan existing profiles to find actual max SA# to prevent gaps/dupes
+    const allProfiles = await base44.asServiceRole.entities.UserProfile.list('-created_date', 500);
+    let maxSa = current;
+    for (const p of allProfiles) {
+      if (p.sa_number && /^\d+$/.test(String(p.sa_number))) {
+        const num = parseInt(String(p.sa_number), 10);
+        if (num > maxSa) maxSa = num;
+      }
+    }
+
+    const next = Math.max(current, maxSa) + 1;
     const saStr = padSix(next);
+
     await base44.entities.UserProfile.update(profile.id, { sa_number: saStr });
 
     if (setting) {
