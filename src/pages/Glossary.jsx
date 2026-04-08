@@ -57,7 +57,7 @@ export default function Glossary() {
       {/* Hero */}
       <div className="relative w-full h-64 md:h-80 overflow-hidden page-hero">
         <img
-          src="https://media.base44.com/images/public/694f3e0401b05e6e8a042002/c721abd9d_universal_upscale_0_92ae3995-95f3-40a4-a02c-bd88966c75a5_0.jpg"
+          src="https://media.base44.com/images/public/694f3e0401b05e6e8a042002/4f5d71898_image.png"
           alt="SaintAgent Glossary"
           className="w-full h-full object-cover hero-image"
           data-no-filter="true"
