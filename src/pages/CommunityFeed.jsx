@@ -515,14 +515,24 @@ export default function CommunityFeed() {
                       if (!embedUrl) return null;
                       
                       return (
-                        <div className="aspect-video rounded-lg overflow-hidden bg-black">
+                        <div className="aspect-video rounded-lg overflow-hidden bg-black relative group">
                           <iframe
                             src={embedUrl}
                             className="w-full h-full"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             title="Embedded video"
+                            onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                           />
+                          <a 
+                            href={post.link_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="hidden absolute inset-0 items-center justify-center flex-col gap-2 bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                          >
+                            <Video className="w-10 h-10 text-red-500" />
+                            <span className="text-sm font-medium">Watch on YouTube</span>
+                          </a>
                         </div>
                       );
                     })()}

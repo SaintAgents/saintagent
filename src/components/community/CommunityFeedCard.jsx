@@ -534,13 +534,23 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                       } catch {}
                       if (!embedUrl) return null;
                       return (
-                        <div className="mt-2 aspect-video rounded-lg overflow-hidden">
+                        <div className="mt-2 aspect-video rounded-lg overflow-hidden relative">
                           <iframe
                             src={embedUrl}
                             className="w-full h-full"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
+                            onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                           />
+                          <a 
+                            href={post.link_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="hidden absolute inset-0 items-center justify-center flex-col gap-2 bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                          >
+                            <Video className="w-8 h-8 text-red-500" />
+                            <span className="text-xs font-medium">Watch on YouTube</span>
+                          </a>
                         </div>
                       );
                     })()}
