@@ -135,7 +135,11 @@ export default function Profile() {
     queryKey: ['currentUser'],
     queryFn: async () => {
       try { return await base44.auth.me(); } catch { return null; }
-    }
+    },
+    staleTime: 1800000,
+    gcTime: 3600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Current user's profile (for friend requests)
@@ -145,7 +149,10 @@ export default function Profile() {
       const user = await base44.auth.me();
       return base44.entities.UserProfile.filter({ user_id: user.email });
     },
-    enabled: !!currentUser
+    enabled: !!currentUser,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
   const currentUserProfile = currentUserProfiles?.[0];
 
@@ -166,14 +173,18 @@ export default function Profile() {
       const user = await base44.auth.me();
       return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
     },
-    enabled: !!targetUserId
+    enabled: !!targetUserId,
+    staleTime: 600000,
+    refetchOnWindowFocus: false,
   });
 
   // Also fetch dating profile for the target user (for demo profiles that may not have UserProfile)
   const { data: datingProfiles } = useQuery({
     queryKey: ['datingProfile', targetUserId],
     queryFn: () => base44.entities.DatingProfile.filter({ user_id: targetUserId }, '-updated_date', 1),
-    enabled: !!targetUserId && !!viewingUserId
+    enabled: !!targetUserId && !!viewingUserId,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
   const datingProfile = datingProfiles?.[0];
 
@@ -228,63 +239,81 @@ export default function Profile() {
   const { data: skills = [] } = useQuery({
     queryKey: ['skills', userIdentifier],
     queryFn: () => base44.entities.Skill.filter({ user_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch desires
   const { data: desires = [] } = useQuery({
     queryKey: ['desires', userIdentifier],
     queryFn: () => base44.entities.UserDesire.filter({ user_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch hopes
   const { data: hopes = [] } = useQuery({
     queryKey: ['hopes', userIdentifier],
     queryFn: () => base44.entities.UserHope.filter({ user_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch intentions
   const { data: intentions = [] } = useQuery({
     queryKey: ['intentions', userIdentifier],
     queryFn: () => base44.entities.UserIntention.filter({ user_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch badges by SA# (preferred identifier)
   const { data: profileBadges = [] } = useQuery({
     queryKey: ['userBadges', userIdentifier],
     queryFn: () => base44.entities.Badge.filter({ user_id: userIdentifier, status: 'active' }, '-created_date', 500),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Active roles (for Founder badge)
   const { data: activeRoles = [] } = useQuery({
     queryKey: ['userRoles', userIdentifier],
     queryFn: () => base44.entities.UserRole.filter({ user_id: userIdentifier, status: 'active' }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch testimonials
   const { data: testimonials = [] } = useQuery({
     queryKey: ['userTestimonials', userIdentifier],
     queryFn: () => base44.entities.Testimonial.filter({ to_user_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 600000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch followers
   const { data: followers = [] } = useQuery({
     queryKey: ['followers', userIdentifier],
     queryFn: () => base44.entities.Follow.filter({ following_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 600000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch following
   const { data: following = [] } = useQuery({
     queryKey: ['following', userIdentifier],
     queryFn: () => base44.entities.Follow.filter({ follower_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 600000,
+    refetchOnWindowFocus: false,
   });
 
   // Unfollow mutation
@@ -384,7 +413,9 @@ export default function Profile() {
   const { data: affiliateCodes = [] } = useQuery({
     queryKey: ['affiliateCodes', userIdentifier],
     queryFn: () => base44.entities.AffiliateCode.filter({ user_id: userIdentifier }),
-    enabled: !!userIdentifier
+    enabled: !!userIdentifier,
+    staleTime: 3600000,
+    refetchOnWindowFocus: false,
   });
   const affiliateCode = affiliateCodes?.[0];
   const affiliatePaidCount = affiliateCode?.total_paid || 0;

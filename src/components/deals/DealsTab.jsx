@@ -37,12 +37,16 @@ export default function DealsTab({ currentUser, profile }) {
   const { data: deals = [], isLoading } = useQuery({
     queryKey: ['myDeals', currentUser?.email],
     queryFn: () => base44.entities.Deal.filter({ owner_id: currentUser.email }, '-created_date', 100),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['allProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 100)
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
+    staleTime: 1800000,
+    refetchOnWindowFocus: false,
   });
 
   // Filter deals
