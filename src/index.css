@@ -86,3 +86,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* =====================================================
+   LIGHT THEME - Switch/Toggle Visibility Fix
+   Switch tracks need a darker background so users can see them
+   ===================================================== */
+html[data-theme='light'] button[role="switch"],
+[data-theme='light'] button[role="switch"] {
+  background-color: #94a3b8 !important;
+  border-color: #94a3b8 !important;
+}
+
+html[data-theme='light'] button[role="switch"][data-state="checked"],
+[data-theme='light'] button[role="switch"][data-state="checked"] {
+  background-color: #7c3aed !important;
+  border-color: #7c3aed !important;
+}
+
+html[data-theme='light'] button[role="switch"] span,
+[data-theme='light'] button[role="switch"] span {
+  background-color: #ffffff !important;
+}
