@@ -19,6 +19,7 @@ import BackButton from '@/components/hud/BackButton';
 import { format } from 'date-fns';
 import UserActivityDashboard from '@/components/activity/UserActivityDashboard';
 import CommunityIntentionsPanel from '@/components/activity/CommunityIntentionsPanel';
+import TopReferrersLeaderboard from '@/components/affiliate/TopReferrersLeaderboard';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]', textColor: 'text-white' },
@@ -223,6 +224,11 @@ export default function ActivityFeed() {
 
         {/* Community Intentions & Goals */}
         <CommunityIntentionsPanel />
+
+        {/* Top Referrers Leaderboard */}
+        <div className="mb-8">
+          <TopReferrersLeaderboard limit={10} />
+        </div>
 
         {/* AI Recommendations Section */}
         <div className="mb-8">
