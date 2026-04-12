@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -50,6 +50,7 @@ import WisdomModerationQueue from '@/components/admin/WisdomModerationQueue';
 import LearnPopupSettings from '@/components/admin/LearnPopupSettings';
 import UserActivityLog from '@/components/admin/UserActivityLog';
 import AdminProgressTab from '@/components/admin/AdminProgressTab';
+import CacheAdminTab from '@/components/admin/CacheAdminTab';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -280,6 +281,10 @@ export default function Admin() {
               <Target className="w-4 h-4" />
               Progress
             </TabsTrigger>
+            <TabsTrigger value="cache" className="gap-2 px-3 py-2">
+              <Database className="w-4 h-4" />
+              Cache
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -470,6 +475,10 @@ export default function Admin() {
 
           <TabsContent value="progress">
             <AdminProgressTab />
+          </TabsContent>
+
+          <TabsContent value="cache">
+            <CacheAdminTab />
           </TabsContent>
         </Tabs>
       </div>
