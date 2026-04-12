@@ -430,11 +430,13 @@ export default function MasterActivityLog() {
       if (!activity.user_id) return;
       
       if (!userMap[activity.user_id]) {
+        const userProfile = profileMap[activity.user_id];
         userMap[activity.user_id] = {
           user_id: activity.user_id,
           user_name: activity.user_name,
           user_avatar: activity.user_avatar,
           total_ggg_earned: 0,
+          profile_ggg_balance: userProfile?.ggg_balance || 0,
           total_activities: 0,
           activities: [],
         };
@@ -445,6 +447,21 @@ export default function MasterActivityLog() {
       
       if (activity.amount && activity.amount > 0) {
         userMap[activity.user_id].total_ggg_earned += activity.amount;
+      }
+    });
+
+    // Also include users who have a GGG balance but no activities in the window
+    realUserProfiles.forEach(p => {
+      if (!userMap[p.user_id] && (p.ggg_balance || 0) > 0) {
+        userMap[p.user_id] = {
+          user_id: p.user_id,
+          user_name: p.display_name || p.user_id,
+          user_avatar: p.avatar_url,
+          total_ggg_earned: 0,
+          profile_ggg_balance: p.ggg_balance || 0,
+          total_activities: 0,
+          activities: [],
+        };
       }
     });
 
@@ -690,9 +707,17 @@ export default function MasterActivityLog() {
                     <div>
                       <p className="text-xs text-slate-500">GGG Earned</p>
                       <p className="font-semibold text-emerald-600">
-                        {user.total_ggg_earned < 1 
-                          ? user.total_ggg_earned.toFixed(4) 
-                          : user.total_ggg_earned.toLocaleString()}
+                        {user.total_ggg_earned > 0
+                          ? (user.total_ggg_earned < 1 ? user.total_ggg_earned.toFixed(4) : user.total_ggg_earned.toLocaleString())
+                          : '—'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Balance</p>
+                      <p className="font-semibold text-violet-600">
+                        {(user.profile_ggg_balance || 0) < 1
+                          ? (user.profile_ggg_balance || 0).toFixed(4)
+                          : (user.profile_ggg_balance || 0).toLocaleString()}
                       </p>
                     </div>
                     <ChevronRight className="w-5 h-5 text-slate-400" />
@@ -732,17 +757,25 @@ export default function MasterActivityLog() {
           {selectedUser && (
             <div className="flex-1 overflow-hidden">
               {/* Summary stats */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="p-3 bg-slate-50 rounded-lg">
                   <p className="text-xs text-slate-500">Total Activities</p>
                   <p className="text-xl font-bold text-slate-700">{selectedUser.total_activities}</p>
                 </div>
                 <div className="p-3 bg-emerald-50 rounded-lg">
-                  <p className="text-xs text-emerald-600">Total GGG Earned</p>
+                  <p className="text-xs text-emerald-600">GGG Earned (period)</p>
                   <p className="text-xl font-bold text-emerald-700">
                     {selectedUser.total_ggg_earned < 1 
                       ? selectedUser.total_ggg_earned.toFixed(4) 
                       : selectedUser.total_ggg_earned.toLocaleString()}
+                  </p>
+                </div>
+                <div className="p-3 bg-violet-50 rounded-lg">
+                  <p className="text-xs text-violet-600">Current Balance</p>
+                  <p className="text-xl font-bold text-violet-700">
+                    {(selectedUser.profile_ggg_balance || 0) < 1 
+                      ? (selectedUser.profile_ggg_balance || 0).toFixed(4) 
+                      : (selectedUser.profile_ggg_balance || 0).toLocaleString()}
                   </p>
                 </div>
               </div>
