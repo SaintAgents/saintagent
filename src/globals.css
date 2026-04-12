@@ -255,6 +255,26 @@ html[data-theme='hacker'] [data-solid-panel] > div,
   background-color: #000000 !important;
 }
 
+/* Hacker theme - ALL nested elements inside solid panels must also be opaque black */
+html[data-theme='hacker'] [data-solid-panel] *,
+[data-theme='hacker'] [data-solid-panel] * {
+  background-color: #000000 !important;
+}
+
+/* Hacker theme - Preserve colored elements inside solid panels */
+html[data-theme='hacker'] [data-solid-panel] .bg-violet-600,
+html[data-theme='hacker'] [data-solid-panel] .bg-violet-50,
+html[data-theme='hacker'] [data-solid-panel] .bg-gradient-to-r,
+html[data-theme='hacker'] [data-solid-panel] [class*='bg-gradient-'],
+html[data-theme='hacker'] [data-solid-panel] .bg-slate-100,
+html[data-theme='hacker'] [data-solid-panel] .bg-slate-50,
+html[data-theme='hacker'] [data-solid-panel] button[type='submit'],
+[data-theme='hacker'] [data-solid-panel] .bg-violet-600,
+[data-theme='hacker'] [data-solid-panel] [class*='bg-gradient-'],
+[data-theme='hacker'] [data-solid-panel] button[type='submit'] {
+  background-color: rgba(0, 255, 0, 0.1) !important;
+}
+
 /* Hacker theme - SOLID black popup/menu containers - NO transparency */
 [data-theme='hacker'] [role="menu"],
 [data-theme='hacker'] [role="dialog"],
