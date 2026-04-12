@@ -52,31 +52,8 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   });
   const profile = profiles?.[0];
 
-  // Wallet for this user (authoritative GGG)
-  const { data: walletRes } = useQuery({
-    queryKey: ['wallet', userId || 'none'],
-    queryFn: async () => {
-      const { data } = await base44.functions.invoke('walletEngine', {
-        action: 'getWallet',
-        payload: { user_id: userId }
-      });
-      return data;
-    },
-    enabled: !!userId,
-    refetchInterval: 5000
-  });
-
-  // Compute GGG from transactions as fallback (single source of truth)
-  const { data: userGGGTx = [] } = useQuery({
-    queryKey: ['profileDrawerGGG', userId || 'none'],
-    queryFn: () => base44.entities.GGGTransaction.filter({ user_id: userId }, '-created_date', 500),
-    enabled: !!userId,
-    staleTime: 60000,
-  });
-  const computedGGG = userGGGTx.reduce((sum, t) => sum + (t.delta || 0), 0);
-  const walletBalance = walletRes?.wallet?.available_balance;
-  // Use wallet if it has a real value, otherwise computed from transactions, then profile field
-  const walletAvailable = (walletBalance && walletBalance > 0) ? walletBalance : (computedGGG > 0 ? computedGGG : (profile?.ggg_balance || 0));
+  // GGG balance is maintained on profile.ggg_balance — single source of truth
+  const gggBalance = profile?.ggg_balance || 0;
 
   const { data: listings = [] } = useQuery({
     queryKey: ['userListings', userId || 'none'],
@@ -375,7 +352,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
               <Coins className="w-5 h-5 text-amber-500 dark:text-amber-400 mx-auto mb-1" />
-              <p className="text-xl font-bold text-slate-900 dark:text-white">{typeof walletAvailable === 'number' ? parseFloat(walletAvailable.toFixed(2)) : 0}</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">{typeof gggBalance === 'number' ? parseFloat(gggBalance.toFixed(2)) : 0}</p>
               <p className="text-xs text-slate-500 dark:text-[#00ff88]">GGG</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">

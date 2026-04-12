@@ -52,10 +52,11 @@ export default function UserDrilldownPanel({ profile, isOnline, onClose }) {
     enabled: !!profile.user_id,
   });
 
-  // GGG earned vs spent - computed from transactions as single source of truth
+  // GGG balance is maintained on profile.ggg_balance — single source of truth
+  const gggBalance = profile?.ggg_balance || 0;
+  // Earned/spent breakdown from transactions (for admin detail view only)
   const gggEarned = userTransactions.filter(t => t.delta > 0).reduce((sum, t) => sum + t.delta, 0);
   const gggSpent = userTransactions.filter(t => t.delta < 0).reduce((sum, t) => sum + Math.abs(t.delta), 0);
-  const computedBalance = gggEarned - gggSpent;
 
   return (
     <Card className="sticky top-32">
@@ -100,7 +101,7 @@ export default function UserDrilldownPanel({ profile, isOnline, onClose }) {
       <CardContent className="pb-2">
         <div className="grid grid-cols-3 gap-2 mb-3">
           <div className="p-2 rounded-lg bg-amber-50 text-center">
-            <p className="text-lg font-bold text-amber-700">{loadingTx ? '...' : computedBalance.toFixed(2)}</p>
+            <p className="text-lg font-bold text-amber-700">{parseFloat(gggBalance.toFixed(2))}</p>
             <p className="text-[10px] text-amber-500">GGG Balance</p>
           </div>
           <div className="p-2 rounded-lg bg-violet-50 text-center">
