@@ -105,6 +105,7 @@ import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab.jsx';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
+import MilestoneProgressTracker from '@/components/profile/MilestoneProgressTracker';
 import {
   Tooltip,
   TooltipContent,
@@ -1662,6 +1663,9 @@ export default function Profile() {
           <TabsContent value="stats" className="space-y-6">
             {/* Influence Rating - Full Width */}
             <InfluenceRatingVisualizer userId={profile?.user_id} profile={profile} />
+
+            {/* Mission Milestone Tracker */}
+            <MilestoneProgressTracker profile={profile} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Right Column - Stats */}
