@@ -352,7 +352,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
               <Coins className="w-5 h-5 text-amber-500 dark:text-amber-400 mx-auto mb-1" />
-              <p className="text-xl font-bold text-slate-900 dark:text-white">{typeof gggBalance === 'number' ? parseFloat(gggBalance.toFixed(2)) : 0}</p>
+              <p className="font-bold text-slate-900 dark:text-white truncate" style={{ fontSize: String(typeof gggBalance === 'number' ? parseFloat(gggBalance.toFixed(2)) : 0).length > 6 ? '0.75rem' : '1.25rem' }}>{typeof gggBalance === 'number' ? parseFloat(gggBalance.toFixed(2)) : 0}</p>
               <p className="text-xs text-slate-500 dark:text-[#00ff88]">GGG</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-[rgba(0,255,136,0.05)] dark:border dark:border-[rgba(0,255,136,0.2)]">
