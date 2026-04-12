@@ -139,7 +139,7 @@ export default function G3Dex() {
     if (!isDragging) return;
     
     const handleMouseMove = (e) => {
-      setFloatingPosition({
+      updateFloatingPosition('chart', {
         x: Math.max(0, Math.min(window.innerWidth - floatingSize.width, e.clientX - dragOffset.x)),
         y: Math.max(0, Math.min(window.innerHeight - floatingSize.height, e.clientY - dragOffset.y))
       });
@@ -160,7 +160,7 @@ export default function G3Dex() {
     if (!isResizing) return;
     
     const handleMouseMove = (e) => {
-      setFloatingSize({
+      updateFloatingSize('chart', {
         width: Math.max(400, e.clientX - floatingPosition.x),
         height: Math.max(300, e.clientY - floatingPosition.y)
       });

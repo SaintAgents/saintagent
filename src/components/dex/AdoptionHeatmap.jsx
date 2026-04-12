@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { 
   Globe, Users, MapPin, TrendingUp, Activity, Zap
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const REGION_DATA = [
   { region: 'North America', users: 4280, wallets: 5120, volume: 2850000, growth: 18.5, color: '#22c55e' },

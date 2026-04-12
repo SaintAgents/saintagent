@@ -97,7 +97,8 @@ export default function OnboardingRewardsManager() {
       return userId;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminOnboardingGGGTransactions'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOnboardingGGGTransactions_old'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOnboardingGGGTransactions_new'] });
       queryClient.invalidateQueries({ queryKey: ['adminUserProfiles'] });
     }
   });
