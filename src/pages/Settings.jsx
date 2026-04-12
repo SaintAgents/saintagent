@@ -261,7 +261,15 @@ export default function Settings() {
               <CardContent className="space-y-4">
                 <Select
                   value={settings.status}
-                  onValueChange={(v) => setSettings({ ...settings, status: v })}>
+                  onValueChange={(v) => {
+                    setSettings({ ...settings, status: v });
+                    if (profile?.id) {
+                      base44.entities.UserProfile.update(profile.id, { status: v }).then(() => {
+                        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+                        queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+                      });
+                    }
+                  }}>
 
                   <SelectTrigger>
                     <SelectValue />
