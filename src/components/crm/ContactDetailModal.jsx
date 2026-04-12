@@ -213,13 +213,35 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              {/* Check if name looks like an email - if so, don't show it here */}
-              {contact.name && !contact.name.includes('@') ? (
-                <h2 className="text-xl font-semibold truncate" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
+              {/* Editable Name */}
+              {editingField === 'name' ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    autoFocus
+                    className="text-xl font-semibold w-full border-b-2 border-violet-400 outline-none bg-transparent"
+                    style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}
+                    value={fieldDraft}
+                    onChange={(e) => setFieldDraft(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') saveField('name'); if (e.key === 'Escape') { setEditingField(null); setFieldDraft(''); } }}
+                  />
+                  <button onClick={() => saveField('name')} className="text-emerald-600 hover:text-emerald-700"><Save className="w-4 h-4" /></button>
+                  <button onClick={() => { setEditingField(null); setFieldDraft(''); }} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
+                </div>
+              ) : contact.name && !contact.name.includes('@') ? (
+                <h2
+                  className="text-xl font-semibold truncate cursor-pointer group flex items-center gap-2"
+                  style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}
+                  onClick={() => startEdit('name', contact.name)}
+                >
                   {contact.name}
+                  <Edit className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity" />
                 </h2>
               ) : (
-                <h2 className="text-xl font-semibold truncate italic" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }}>
+                <h2
+                  className="text-xl font-semibold truncate italic cursor-pointer"
+                  style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }}
+                  onClick={() => startEdit('name', '')}
+                >
                   No name
                 </h2>
               )}
