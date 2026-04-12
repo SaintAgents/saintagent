@@ -66,32 +66,49 @@ export default function BookCall() {
   const { data: busyData, isLoading: loadingSlots } = useQuery({
     queryKey: ['busySlots', selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null],
     queryFn: async () => {
+      const dateStr = format(selectedDate, 'yyyy-MM-dd');
       const res = await base44.functions.invoke('calendarBooking', {
         action: 'getFreeBusy',
-        date: format(selectedDate, 'yyyy-MM-dd')
+        timeMin: `${dateStr}T00:00:00Z`,
+        timeMax: `${dateStr}T23:59:59Z`
       });
       return res.data;
     },
     enabled: !!selectedDate
   });
 
-  // Generate available time slots
+  // Generate available time slots from weekly_slots or legacy fields
   const availableSlots = useMemo(() => {
     if (!selectedDate || !busyData?.success) return [];
 
-    const startHour = availPref?.start_hour ?? 9;
-    const endHour = availPref?.end_hour ?? 17;
+    const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const dayCode = dayMap[selectedDate.getDay()];
     const slotDuration = availPref?.slot_duration_minutes ?? 30;
     const buffer = availPref?.buffer_minutes ?? 15;
     const busySlots = busyData.busySlots || [];
-
-    const slots = [];
     const now = new Date();
-    
-    for (let h = startHour; h < endHour; h++) {
-      for (let m = 0; m < 60; m += slotDuration) {
+    const slots = [];
+
+    // Get time windows for this day from weekly_slots or fallback
+    let windows = [];
+    if (availPref?.weekly_slots?.length > 0) {
+      windows = availPref.weekly_slots.filter(s => s.day === dayCode);
+    } else {
+      // Legacy fallback: single window from start_hour to end_hour
+      const startHour = availPref?.start_hour ?? 9;
+      const endHour = availPref?.end_hour ?? 17;
+      windows = [{ start_hour: startHour, start_minute: 0, end_hour: endHour, end_minute: 0 }];
+    }
+
+    for (const window of windows) {
+      const winStartMin = window.start_hour * 60 + (window.start_minute || 0);
+      const winEndMin = window.end_hour * 60 + (window.end_minute || 0);
+
+      for (let totalMin = winStartMin; totalMin + slotDuration <= winEndMin; totalMin += slotDuration) {
+        const h = Math.floor(totalMin / 60);
+        const m = totalMin % 60;
         const slotStart = new Date(selectedDate);
-        slotStart.setUTCHours(h, m, 0, 0);
+        slotStart.setHours(h, m, 0, 0);
         const slotEnd = addMinutes(slotStart, slotDuration);
 
         // Skip past slots
@@ -100,7 +117,7 @@ export default function BookCall() {
         // Check if slot conflicts with any busy period (including buffer)
         const bufferedStart = addMinutes(slotStart, -buffer);
         const bufferedEnd = addMinutes(slotEnd, buffer);
-        
+
         const isBusy = busySlots.some(busy => {
           const busyStart = new Date(busy.start);
           const busyEnd = new Date(busy.end);
@@ -122,9 +139,15 @@ export default function BookCall() {
 
   // Check which days of week are allowed
   const isDayAllowed = (date) => {
-    if (!availPref?.days_of_week?.length) return true; // No restriction = all days
     const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-    return availPref.days_of_week.includes(dayMap[date.getDay()]);
+    const dayCode = dayMap[date.getDay()];
+    // If weekly_slots exist, check if any slot is for this day
+    if (availPref?.weekly_slots?.length > 0) {
+      return availPref.weekly_slots.some(s => s.day === dayCode);
+    }
+    // Legacy fallback
+    if (!availPref?.days_of_week?.length) return true;
+    return availPref.days_of_week.includes(dayCode);
   };
 
   // Build structured notes from intake form

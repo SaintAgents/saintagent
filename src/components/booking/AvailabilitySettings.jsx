@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Save, Loader2, Copy, Check, Link as LinkIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from 'sonner';
+import WeeklySlotEditor from './WeeklySlotEditor';
 
 const DAYS = [
   { code: 'mon', label: 'Mon' },
@@ -21,6 +22,19 @@ const DAYS = [
   { code: 'sat', label: 'Sat' },
   { code: 'sun', label: 'Sun' },
 ];
+
+// Build weekly_slots from legacy start_hour/end_hour + days_of_week
+function migrateToWeeklySlots(pref) {
+  if (pref.weekly_slots?.length > 0) return pref.weekly_slots;
+  const days = pref.days_of_week?.length ? pref.days_of_week : ['mon', 'tue', 'wed', 'thu', 'fri'];
+  return days.map(day => ({
+    day,
+    start_hour: pref.start_hour ?? 9,
+    start_minute: 0,
+    end_hour: pref.end_hour ?? 17,
+    end_minute: 0
+  }));
+}
 
 export default function AvailabilitySettings() {
   const queryClient = useQueryClient();
@@ -40,40 +54,46 @@ export default function AvailabilitySettings() {
 
   const [form, setForm] = useState({
     booking_enabled: false,
-    days_of_week: ['mon', 'tue', 'wed', 'thu', 'fri'],
-    start_hour: 9,
-    end_hour: 17,
+    weekly_slots: [],
     slot_duration_minutes: 30,
     buffer_minutes: 15,
     meeting_format: 'online',
     booking_message: '',
-    timezone: 'UTC'
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
   });
 
   useEffect(() => {
     if (pref) {
       setForm({
         booking_enabled: pref.booking_enabled ?? false,
-        days_of_week: pref.days_of_week?.length ? pref.days_of_week : ['mon', 'tue', 'wed', 'thu', 'fri'],
-        start_hour: pref.start_hour ?? 9,
-        end_hour: pref.end_hour ?? 17,
+        weekly_slots: migrateToWeeklySlots(pref),
         slot_duration_minutes: pref.slot_duration_minutes ?? 30,
         buffer_minutes: pref.buffer_minutes ?? 15,
         meeting_format: pref.meeting_format ?? 'online',
         booking_message: pref.booking_message ?? '',
-        timezone: pref.timezone ?? 'UTC'
+        timezone: pref.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
       });
     }
   }, [pref]);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      // Derive days_of_week and start/end hour from weekly_slots for backward compat
+      const days_of_week = [...new Set(form.weekly_slots.map(s => s.day))];
+      const allStarts = form.weekly_slots.map(s => s.start_hour);
+      const allEnds = form.weekly_slots.map(s => s.end_hour);
+      const saveData = {
+        ...form,
+        days_of_week,
+        start_hour: allStarts.length ? Math.min(...allStarts) : 9,
+        end_hour: allEnds.length ? Math.max(...allEnds) : 17
+      };
       if (pref) {
-        await base44.entities.AvailabilityPreference.update(pref.id, form);
+        await base44.entities.AvailabilityPreference.update(pref.id, saveData);
       } else {
         await base44.entities.AvailabilityPreference.create({
           user_id: currentUser.email,
-          ...form
+          ...saveData
         });
       }
     },
@@ -83,14 +103,7 @@ export default function AvailabilitySettings() {
     }
   });
 
-  const toggleDay = (day) => {
-    setForm(f => ({
-      ...f,
-      days_of_week: f.days_of_week.includes(day)
-        ? f.days_of_week.filter(d => d !== day)
-        : [...f.days_of_week, day]
-    }));
-  };
+  // No longer needed - weekly slots handle day selection
 
   const bookingUrl = currentUser
     ? `${window.location.origin}/BookCall?host=${encodeURIComponent(currentUser.email)}`
@@ -141,55 +154,13 @@ export default function AvailabilitySettings() {
             </div>
           </div>
 
-          {/* Days of Week */}
+          {/* Weekly Availability Slots */}
           <div>
-            <Label className="mb-2 block">Available Days</Label>
-            <div className="flex gap-2">
-              {DAYS.map(d => (
-                <button
-                  key={d.code}
-                  onClick={() => toggleDay(d.code)}
-                  className={cn(
-                    "w-10 h-10 rounded-lg text-sm font-medium transition-all border",
-                    form.days_of_week.includes(d.code)
-                      ? "bg-violet-600 text-white border-violet-600"
-                      : "bg-white text-slate-500 border-slate-200 hover:border-violet-300"
-                  )}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Hours */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Start Hour</Label>
-              <Select value={form.start_hour.toString()} onValueChange={(v) => setForm(f => ({ ...f, start_hour: parseInt(v) }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 18 }, (_, i) => i + 6).map(h => (
-                    <SelectItem key={h} value={h.toString()}>
-                      {h === 0 ? '12 AM' : h < 12 ? `${h} AM` : h === 12 ? '12 PM' : `${h - 12} PM`}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>End Hour</Label>
-              <Select value={form.end_hour.toString()} onValueChange={(v) => setForm(f => ({ ...f, end_hour: parseInt(v) }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 18 }, (_, i) => i + 6).map(h => (
-                    <SelectItem key={h} value={h.toString()}>
-                      {h === 0 ? '12 AM' : h < 12 ? `${h} AM` : h === 12 ? '12 PM' : `${h - 12} PM`}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Label className="mb-2 block">Weekly Availability</Label>
+            <WeeklySlotEditor
+              slots={form.weekly_slots}
+              onChange={(slots) => setForm(f => ({ ...f, weekly_slots: slots }))}
+            />
           </div>
 
           {/* Slot Duration & Buffer */}
@@ -219,6 +190,18 @@ export default function AvailabilitySettings() {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          {/* Timezone */}
+          <div>
+            <Label>Timezone</Label>
+            <Input
+              value={form.timezone}
+              onChange={(e) => setForm(f => ({ ...f, timezone: e.target.value }))}
+              placeholder="e.g., America/Phoenix"
+              className="mt-1"
+            />
+            <p className="text-xs text-slate-500 mt-1">Your local timezone for slot calculations</p>
           </div>
 
           {/* Custom Message */}

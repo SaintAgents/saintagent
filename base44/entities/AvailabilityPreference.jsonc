@@ -1,0 +1,120 @@
+{
+  "name": "AvailabilityPreference",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "meeting_format": {
+      "type": "string",
+      "enum": [
+        "online",
+        "in_person",
+        "hybrid"
+      ],
+      "default": "online"
+    },
+    "days_of_week": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ]
+      },
+      "default": []
+    },
+    "time_windows": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "morning",
+          "afternoon",
+          "evening"
+        ]
+      },
+      "default": []
+    },
+    "weekly_slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "string",
+            "enum": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri",
+              "sat",
+              "sun"
+            ]
+          },
+          "start_hour": {
+            "type": "number"
+          },
+          "start_minute": {
+            "type": "number"
+          },
+          "end_hour": {
+            "type": "number"
+          },
+          "end_minute": {
+            "type": "number"
+          }
+        }
+      },
+      "default": [],
+      "description": "Recurring weekly availability windows per day"
+    },
+    "slot_duration_minutes": {
+      "type": "number",
+      "default": 30,
+      "description": "Default meeting slot length in minutes"
+    },
+    "start_hour": {
+      "type": "number",
+      "default": 9,
+      "description": "Earliest hour available (0-23) - legacy fallback"
+    },
+    "end_hour": {
+      "type": "number",
+      "default": 17,
+      "description": "Latest hour available (0-23) - legacy fallback"
+    },
+    "buffer_minutes": {
+      "type": "number",
+      "default": 15,
+      "description": "Buffer time between meetings"
+    },
+    "travel_radius_miles": {
+      "type": "number",
+      "default": 25
+    },
+    "booking_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether open call times booking is enabled"
+    },
+    "booking_message": {
+      "type": "string",
+      "description": "Custom message shown on the booking page"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "UTC"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}
