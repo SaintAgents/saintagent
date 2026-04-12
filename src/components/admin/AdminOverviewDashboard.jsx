@@ -8,8 +8,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Inbox, Crown, Wallet, MessageSquare, AlertTriangle, Folder, 
   Users, Clock, ArrowRight, ChevronRight, TrendingUp, 
-  UserPlus, Bug, ShieldAlert, CircleDollarSign, Flag
+  UserPlus, Bug, ShieldAlert, CircleDollarSign, Flag, Trash2
 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { format, parseISO, formatDistanceToNow } from 'date-fns';
 
 function AttentionCard({ icon: Icon, title, count, color, items, onViewAll, renderItem }) {
@@ -61,6 +62,14 @@ function timeAgo(dateStr) {
 }
 
 export default function AdminOverviewDashboard({ onNavigateTab }) {
+  const queryClient = useQueryClient();
+
+  const dismissFeedback = async (e, fb) => {
+    e.stopPropagation();
+    await base44.entities.BetaFeedback.update(fb.id, { status: 'resolved' });
+    queryClient.invalidateQueries({ queryKey: ['admin-overview-feedback'] });
+  };
+
   // Fetch all attention-needed data in parallel
   const { data: adminRequests = [] } = useQuery({
     queryKey: ['admin-overview-requests'],
@@ -260,7 +269,16 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
                   <p className="text-[10px] text-slate-500">{fb.reporter_name} · {timeAgo(fb.created_date)}</p>
                 </div>
               </div>
-              <Badge variant="outline" className={`text-[10px] shrink-0 ml-2 ${fb.severity === 'critical' ? 'border-red-300 text-red-600' : ''}`}>{fb.severity}</Badge>
+              <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                <Badge variant="outline" className={`text-[10px] ${fb.severity === 'critical' ? 'border-red-300 text-red-600' : ''}`}>{fb.severity}</Badge>
+                <button
+                  onClick={(e) => dismissFeedback(e, fb)}
+                  className="p-1 rounded hover:bg-red-100 text-slate-400 hover:text-red-500 transition-colors"
+                  title="Mark as resolved"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
           )}
         />
