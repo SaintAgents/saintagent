@@ -134,7 +134,18 @@ export default function OnboardingRewardsManager() {
   const totalComplete = processedRecords.filter(r => r.status === 'complete').length;
   const totalIncomplete = processedRecords.filter(r => r.status !== 'complete').length;
   const missingRewards = processedRecords.filter(r => r.status === 'complete' && !r.hasReward).length;
-  const awarded = processedRecords.filter(r => r.hasReward).length;
+  const awardedCount = processedRecords.filter(r => r.hasReward).length;
+  // Compute actual GGG sum from unique onboarding transactions (deduplicate by user_id)
+  const uniqueGGGByUser = {};
+  gggTransactions.forEach(tx => {
+    if (!uniqueGGGByUser[tx.user_id]) uniqueGGGByUser[tx.user_id] = tx.delta || 0;
+  });
+  // Also check wallet transactions for users not already counted
+  walletTx.forEach(tx => {
+    const uid = tx.actor_user_id;
+    if (uid && !uniqueGGGByUser[uid]) uniqueGGGByUser[uid] = tx.amount_ggg || 0;
+  });
+  const totalGGGAwarded = Object.values(uniqueGGGByUser).reduce((s, v) => s + v, 0);
 
   const isLoading = loadingOnboarding || loadingTx;
 
@@ -158,8 +169,8 @@ export default function OnboardingRewardsManager() {
             <div className="text-xs text-amber-700">In Progress</div>
           </div>
           <div className="p-3 bg-violet-50 rounded-lg text-center">
-            <div className="text-2xl font-bold text-violet-600">{awarded}</div>
-            <div className="text-xs text-violet-700">GGG Awarded</div>
+            <div className="text-2xl font-bold text-violet-600">{totalGGGAwarded.toFixed(2)}</div>
+            <div className="text-xs text-violet-700">GGG Awarded ({awardedCount} users)</div>
           </div>
           <div className="p-3 bg-rose-50 rounded-lg text-center">
             <div className="text-2xl font-bold text-rose-600">{missingRewards}</div>
