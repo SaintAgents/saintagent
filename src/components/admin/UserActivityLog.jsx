@@ -44,8 +44,8 @@ function UserRow({ profile, posts, missions, transactions, isOnline, isRecent, o
       className="flex items-center gap-3 py-3 px-4 hover:bg-violet-50/50 cursor-pointer transition-colors border-b border-slate-100 last:border-0"
       onClick={() => onDrilldown(profile)}
     >
-      <div className="relative">
-        <Avatar className="w-9 h-9">
+      <div className="relative" data-user-id={profile.user_id} onClick={(e) => e.stopPropagation()}>
+        <Avatar className="w-9 h-9 cursor-pointer">
           <AvatarImage src={profile.avatar_url} />
           <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
             {(profile.display_name || '?')[0]}
@@ -273,10 +273,12 @@ export default function UserActivityLog() {
             {topByPosts.map((p, i) => (
               <div key={p.id} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 rounded-lg p-1 -mx-1" onClick={() => setSelectedUser(p)}>
                 <span className="text-xs font-bold text-slate-400 w-4">{i + 1}</span>
-                <Avatar className="w-6 h-6">
-                  <AvatarImage src={p.avatar_url} />
-                  <AvatarFallback className="text-[10px]">{(p.display_name || '?')[0]}</AvatarFallback>
-                </Avatar>
+                <div data-user-id={p.user_id} onClick={(e) => e.stopPropagation()}>
+                  <Avatar className="w-6 h-6 cursor-pointer">
+                    <AvatarImage src={p.avatar_url} />
+                    <AvatarFallback className="text-[10px]">{(p.display_name || '?')[0]}</AvatarFallback>
+                  </Avatar>
+                </div>
                 <span className="text-xs font-medium flex-1 truncate">{p.display_name}</span>
                 <Badge variant="outline" className="text-[10px]">{userStats[p.user_id]?.posts || 0}</Badge>
               </div>
@@ -293,10 +295,12 @@ export default function UserActivityLog() {
             {topByGGG.map((p, i) => (
               <div key={p.id} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 rounded-lg p-1 -mx-1" onClick={() => setSelectedUser(p)}>
                 <span className="text-xs font-bold text-slate-400 w-4">{i + 1}</span>
-                <Avatar className="w-6 h-6">
-                  <AvatarImage src={p.avatar_url} />
-                  <AvatarFallback className="text-[10px]">{(p.display_name || '?')[0]}</AvatarFallback>
-                </Avatar>
+                <div data-user-id={p.user_id} onClick={(e) => e.stopPropagation()}>
+                  <Avatar className="w-6 h-6 cursor-pointer">
+                    <AvatarImage src={p.avatar_url} />
+                    <AvatarFallback className="text-[10px]">{(p.display_name || '?')[0]}</AvatarFallback>
+                  </Avatar>
+                </div>
                 <span className="text-xs font-medium flex-1 truncate">{p.display_name}</span>
                 <Badge variant="outline" className="text-[10px]">{(p.ggg_balance || 0).toFixed(1)}</Badge>
               </div>
@@ -313,10 +317,12 @@ export default function UserActivityLog() {
             {topByRP.map((p, i) => (
               <div key={p.id} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 rounded-lg p-1 -mx-1" onClick={() => setSelectedUser(p)}>
                 <span className="text-xs font-bold text-slate-400 w-4">{i + 1}</span>
-                <Avatar className="w-6 h-6">
-                  <AvatarImage src={p.avatar_url} />
-                  <AvatarFallback className="text-[10px]">{(p.display_name || '?')[0]}</AvatarFallback>
-                </Avatar>
+                <div data-user-id={p.user_id} onClick={(e) => e.stopPropagation()}>
+                  <Avatar className="w-6 h-6 cursor-pointer">
+                    <AvatarImage src={p.avatar_url} />
+                    <AvatarFallback className="text-[10px]">{(p.display_name || '?')[0]}</AvatarFallback>
+                  </Avatar>
+                </div>
                 <span className="text-xs font-medium flex-1 truncate">{p.display_name}</span>
                 <Badge variant="outline" className="text-[10px]">{p.rank_points || 0}</Badge>
               </div>
