@@ -18,6 +18,7 @@ import SetFollowUpModal from './SetFollowUpModal';
 import ContactEmailHistory from './ContactEmailHistory';
 import DeepDiveAIModal from './DeepDiveAIModal';
 import ContactInteractionTimeline from './ContactInteractionTimeline';
+import ContactInfoSection from './ContactInfoSection';
 
 const PERMISSION_CONFIG = {
   private: { label: 'Private', icon: Lock, color: 'bg-slate-100 text-slate-600' },
@@ -72,6 +73,8 @@ export default function ContactDetailModal({ open, onClose, contact, onEdit, onD
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [followUpModalOpen, setFollowUpModalOpen] = useState(false);
   const [deepDiveOpen, setDeepDiveOpen] = useState(false);
+  const [editingField, setEditingField] = useState(null);
+  const [fieldDraft, setFieldDraft] = useState('');
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -87,6 +90,30 @@ export default function ContactDetailModal({ open, onClose, contact, onEdit, onD
       setNewNote('');
     }
   });
+
+  const updateFieldMutation = useMutation({
+    mutationFn: (data) => base44.entities.Contact.update(contact.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myContacts'] });
+      setEditingField(null);
+      setFieldDraft('');
+    }
+  });
+
+  const saveField = (fieldKey) => {
+    const val = fieldDraft.trim();
+    if (fieldKey.startsWith('social_links.')) {
+      const subKey = fieldKey.split('.')[1];
+      updateFieldMutation.mutate({ social_links: { ...(contact.social_links || {}), [subKey]: val } });
+    } else {
+      updateFieldMutation.mutate({ [fieldKey]: val });
+    }
+  };
+
+  const startEdit = (fieldKey, currentVal) => {
+    setEditingField(fieldKey);
+    setFieldDraft(currentVal || '');
+  };
 
   const deleteMutation = useMutation({
     mutationFn: () => base44.entities.Contact.delete(contact.id),
@@ -302,41 +329,21 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-3 p-4 rounded-lg border contact-detail-section" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#334155' } : { backgroundColor: '#f8fafc' }}>
-            {/* Show email - include name field if it's an email */}
-            {(contact.email || (contact.name && contact.name.includes('@'))) && (
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
-                <a href={`mailto:${contact.email || contact.name}`} className="text-sm hover:underline contact-detail-value" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
-                  {contact.email || contact.name}
-                </a>
-              </div>
-            )}
-            {contact.phone && (
-              <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
-                <a href={`tel:${contact.phone}`} className="text-sm hover:underline contact-detail-value" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>
-                  {contact.phone}
-                </a>
-              </div>
-            )}
-            {contact.company && (
-              <div className="flex items-center gap-3">
-                <Building2 className="w-4 h-4" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
-                <span className="text-sm contact-detail-value" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>{contact.company}</span>
-              </div>
-            )}
-            {contact.location && (
-              <div className="flex items-center gap-3">
-                <MapPin className="w-4 h-4" style={isDark ? { color: '#64748b' } : { color: '#94a3b8' }} />
-                <span className="text-sm contact-detail-value" style={isDark ? { color: '#f1f5f9' } : { color: '#0f172a' }}>{contact.location}</span>
-              </div>
-            )}
-          </div>
+          {/* Contact Info - inline editable */}
+          <ContactInfoSection
+            contact={contact}
+            isDark={isDark}
+            editingField={editingField}
+            fieldDraft={fieldDraft}
+            setFieldDraft={setFieldDraft}
+            startEdit={startEdit}
+            saveField={saveField}
+            cancelEdit={() => { setEditingField(null); setFieldDraft(''); }}
+            isSaving={updateFieldMutation.isPending}
+          />
 
-          {/* Social Links */}
-          {(contact.social_links?.linkedin || contact.social_links?.twitter || contact.social_links?.website) && (
+          {/* Social Links - shown as clickable if present */}
+          {(contact.social_links?.linkedin || contact.social_links?.twitter) && (
             <div className="flex flex-wrap gap-2">
               {contact.social_links?.linkedin && (
                 <Button variant="outline" size="sm" asChild className="gap-2" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
@@ -349,13 +356,6 @@ Generate 2-3 bullet points for potential conversation starters or follow-up acti
                 <Button variant="outline" size="sm" asChild className="gap-2" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
                   <a href={contact.social_links.twitter} target="_blank" rel="noopener noreferrer">
                     <Twitter className="w-4 h-4" /> Twitter
-                  </a>
-                </Button>
-              )}
-              {contact.social_links?.website && (
-                <Button variant="outline" size="sm" asChild className="gap-2" style={isDark ? { backgroundColor: '#1e293b', borderColor: '#475569', color: '#e5e7eb' } : {}}>
-                  <a href={contact.social_links.website} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="w-4 h-4" /> Website
                   </a>
                 </Button>
               )}
