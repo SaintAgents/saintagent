@@ -48,13 +48,31 @@ export default function Messages() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: allMessages = [] } = useQuery({
-    queryKey: ['messages'],
-    queryFn: () => base44.entities.Message.list('-created_date', 200),
+  // Fetch messages TO me and FROM me separately, then merge
+  const { data: inboxMessages = [] } = useQuery({
+    queryKey: ['messagesInbox', user?.email],
+    queryFn: () => base44.entities.Message.filter({ to_user_id: user.email }, '-created_date', 200),
+    enabled: !!user?.email,
     staleTime: 10000,
     refetchOnWindowFocus: false,
     retry: false
   });
+
+  const { data: sentMessages = [] } = useQuery({
+    queryKey: ['messagesSent', user?.email],
+    queryFn: () => base44.entities.Message.filter({ from_user_id: user.email }, '-created_date', 200),
+    enabled: !!user?.email,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
+    retry: false
+  });
+
+  // Merge and deduplicate
+  const allMessages = React.useMemo(() => {
+    const map = new Map();
+    [...inboxMessages, ...sentMessages].forEach(m => map.set(m.id, m));
+    return [...map.values()].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+  }, [inboxMessages, sentMessages]);
 
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations'],
@@ -64,30 +82,44 @@ export default function Messages() {
     retry: false
   });
 
-  // Real-time: subscribe to new/updated messages — update cache directly to avoid re-fetch storms
+  // Real-time: subscribe to new/updated messages — update both inbox and sent caches
   React.useEffect(() => {
+    if (!user?.email) return;
     const unsubscribe = base44.entities.Message.subscribe((event) => {
-      if (event.type === 'create' && event.data) {
-        queryClient.setQueryData(['messages'], (old) => {
-          if (!old) return [event.data];
-          // Avoid duplicates
-          if (old.some(m => m.id === event.data.id)) return old;
-          return [event.data, ...old];
-        });
-      } else if (event.type === 'update' && event.data) {
-        queryClient.setQueryData(['messages'], (old) => {
-          if (!old) return old;
-          return old.map(m => m.id === event.data.id ? event.data : m);
-        });
-      } else if (event.type === 'delete') {
-        queryClient.setQueryData(['messages'], (old) => {
-          if (!old) return old;
-          return old.filter(m => m.id !== event.id);
-        });
+      const updateCache = (key) => {
+        if (event.type === 'create' && event.data) {
+          queryClient.setQueryData(key, (old) => {
+            if (!old) return [event.data];
+            if (old.some(m => m.id === event.data.id)) return old;
+            return [event.data, ...old];
+          });
+        } else if (event.type === 'update' && event.data) {
+          queryClient.setQueryData(key, (old) => {
+            if (!old) return old;
+            return old.map(m => m.id === event.data.id ? event.data : m);
+          });
+        } else if (event.type === 'delete') {
+          queryClient.setQueryData(key, (old) => {
+            if (!old) return old;
+            return old.filter(m => m.id !== event.id);
+          });
+        }
+      };
+      // Route to correct cache based on message direction
+      if (event.data?.to_user_id === user.email) {
+        updateCache(['messagesInbox', user.email]);
+      }
+      if (event.data?.from_user_id === user.email) {
+        updateCache(['messagesSent', user.email]);
+      }
+      // If direction unknown (delete), update both
+      if (!event.data) {
+        updateCache(['messagesInbox', user.email]);
+        updateCache(['messagesSent', user.email]);
       }
     });
     return unsubscribe;
-  }, [queryClient]);
+  }, [queryClient, user?.email]);
 
   // Real-time: subscribe to conversation updates — update cache directly
   React.useEffect(() => {
@@ -160,7 +192,10 @@ export default function Messages() {
 
   const markReadMutation = useMutation({
     mutationFn: (id) => base44.entities.Message.update(id, { is_read: true, read_at: new Date().toISOString() }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['messages'] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+      queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
+    }
   });
 
   // Group messages into conversations (includes entity-defined Conversations)
@@ -462,10 +497,11 @@ export default function Messages() {
                       // Throttle: pause every 5 messages
                       if ((i + 1) % 5 === 0) await new Promise(r => setTimeout(r, 1000));
                     }
-                    queryClient.invalidateQueries({ queryKey: ['messages'] });
-                  }}>
-                Clear all
-              </Button>
+                    queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                      queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
+                     }}>
+                    Clear all
+                    </Button>
           </div>
 
 
@@ -536,7 +572,8 @@ export default function Messages() {
                     const newParticipants = (convEntity.participant_ids || []).filter((pid) => pid !== user?.email);
                     await base44.entities.Conversation.update(convEntity.id, { participant_ids: newParticipants });
                   }
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                  queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
                   queryClient.invalidateQueries({ queryKey: ['conversations'] });
                   if (selectedConversation?.id === conv.id) setSelectedConversation(null);
                 }}
@@ -614,7 +651,8 @@ export default function Messages() {
                       }
                       if ((i + 1) % 5 === 0) await new Promise(r => setTimeout(r, 1000));
                     }
-                    queryClient.invalidateQueries({ queryKey: ['messages'] });
+                    queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                    queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
                   }}>
                     <Trash2 className="w-4 h-4 mr-2" /> Clear for me
                   </DropdownMenuItem>
@@ -681,7 +719,8 @@ export default function Messages() {
                       const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
                       if (!list.includes(user.email)) {
                         base44.entities.Message.update(msg.id, { deleted_for_user_ids: [...list, user.email] }).then(() => {
-                          queryClient.invalidateQueries({ queryKey: ['messages'] });
+                          queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                          queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
                         });
                       }
                     }}
@@ -718,7 +757,8 @@ export default function Messages() {
                     file_size: attachment.fileSize
                   };
                   await base44.entities.Message.create(payload);
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                  queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
                 }}
               />
 
@@ -751,7 +791,8 @@ export default function Messages() {
                     icebreaker_prompt: prompt
                   };
                   await base44.entities.Message.create(payload);
-                  queryClient.invalidateQueries({ queryKey: ['messages'] });
+                  queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                  queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
                 }}
               />
 
@@ -835,7 +876,8 @@ export default function Messages() {
             action_url: meeting.join_url,
             priority: 'high',
           });
-          queryClient.invalidateQueries({ queryKey: ['messages'] });
+          queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+          queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
           // Auto-open for instant calls
           if (type === 'instant') {
             window.open(meeting.join_url, '_blank');
