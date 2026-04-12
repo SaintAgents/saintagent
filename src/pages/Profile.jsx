@@ -104,6 +104,7 @@ import PersonalAnalyticsDashboard from '@/components/profile/PersonalAnalyticsDa
 import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab.jsx';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
+import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
 import {
   Tooltip,
   TooltipContent,
@@ -763,6 +764,12 @@ export default function Profile() {
                 <TabsTrigger value="impact" className="text-xs sm:text-sm px-2 sm:px-3" title="Impact">
                   <span className="hidden sm:inline">Impact</span>
                   <Activity className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
+              {isOwnProfile && (
+                <TabsTrigger value="booking" className="text-xs sm:text-sm px-2 sm:px-3" title="Booking">
+                  <span className="hidden sm:inline">Booking</span>
+                  <Calendar className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
             </TabsList>
@@ -1810,6 +1817,22 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="impact" className="space-y-6">
               <ImpactDashboardTab currentUser={currentUser} profile={profile} />
+            </TabsContent>
+          )}
+
+          {isOwnProfile && (
+            <TabsContent value="booking" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-violet-500" />
+                    Open Call Times
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AvailabilitySettings />
+                </CardContent>
+              </Card>
             </TabsContent>
           )}
 
