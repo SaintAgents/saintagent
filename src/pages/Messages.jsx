@@ -277,7 +277,16 @@ export default function Messages() {
     return Object.values(convMap).sort((a, b) => new Date(b.lastMessage.created_date) - new Date(a.lastMessage.created_date));
   }, [allMessages, conversations, profiles, user]);
 
-  const currentMessages = (selectedConversation?.messages || []).filter((m) => !m.deleted_for_user_ids?.includes?.(user?.email));
+  // Derive current messages from live allMessages cache, not stale selectedConversation snapshot
+  const currentMessages = React.useMemo(() => {
+    if (!selectedConversation || !user?.email) return [];
+    // Find the up-to-date conversation from convList
+    const liveConv = convList.find(c => c.id === selectedConversation.id);
+    const msgs = liveConv?.messages || selectedConversation.messages || [];
+    return msgs
+      .filter((m) => !m.deleted_for_user_ids?.includes?.(user?.email))
+      .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+  }, [selectedConversation?.id, convList, user?.email]);
 
   // Typing indicators (poll other participants' typing state)
   const { data: typingStatuses = [] } = useQuery({
