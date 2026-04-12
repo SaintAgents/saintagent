@@ -135,15 +135,16 @@ export default function OnboardingRewardsManager() {
   const totalIncomplete = processedRecords.filter(r => r.status !== 'complete').length;
   const missingRewards = processedRecords.filter(r => r.status === 'complete' && !r.hasReward).length;
   const awardedCount = processedRecords.filter(r => r.hasReward).length;
-  // Compute actual GGG sum from unique onboarding transactions (deduplicate by user_id)
+  // Compute actual GGG sum from unique onboarding reward transactions (deduplicate by user_id)
   const uniqueGGGByUser = {};
   gggTransactions.forEach(tx => {
-    if (!uniqueGGGByUser[tx.user_id]) uniqueGGGByUser[tx.user_id] = tx.delta || 0;
+    if (!uniqueGGGByUser[tx.user_id]) uniqueGGGByUser[tx.user_id] = 0;
+    uniqueGGGByUser[tx.user_id] += (tx.delta || 0);
   });
-  // Also check wallet transactions for users not already counted
+  // For users only in walletTx (not in gggTransactions), add the onboarding reward amount
   walletTx.forEach(tx => {
     const uid = tx.actor_user_id;
-    if (uid && !uniqueGGGByUser[uid]) uniqueGGGByUser[uid] = tx.amount_ggg || 0;
+    if (uid && !(uid in uniqueGGGByUser)) uniqueGGGByUser[uid] = ONBOARDING_GGG_REWARD;
   });
   const totalGGGAwarded = Object.values(uniqueGGGByUser).reduce((s, v) => s + v, 0);
 
