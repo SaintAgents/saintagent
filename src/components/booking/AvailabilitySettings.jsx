@@ -12,6 +12,7 @@ import { Calendar, Clock, Save, Loader2, Copy, Check, Link as LinkIcon, RefreshC
 import { cn } from "@/lib/utils";
 import { toast } from 'sonner';
 import WeeklySlotEditor from './WeeklySlotEditor';
+import GoogleCalendarConnect from './GoogleCalendarConnect';
 import DateExceptionsEditor from './DateExceptionsEditor';
 
 const DAYS = [
@@ -245,21 +246,9 @@ export default function AvailabilitySettings() {
           </div>
 
           {/* Google Calendar Sync */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <RefreshCw className="w-5 h-5 text-blue-600" />
-                <div>
-                  <p className="text-sm font-medium text-blue-900">Google Calendar Sync</p>
-                  <p className="text-xs text-blue-600">Automatically block busy times from your Google Calendar when others book with you</p>
-                </div>
-              </div>
-              <Switch
-                checked={form.google_calendar_sync}
-                onCheckedChange={(v) => setForm(f => ({ ...f, google_calendar_sync: v }))}
-              />
-            </div>
-          </div>
+          <GoogleCalendarConnect
+            onConnectionChange={(connected) => setForm(f => ({ ...f, google_calendar_sync: connected }))}
+          />
 
           {/* Date Exceptions */}
           <DateExceptionsEditor

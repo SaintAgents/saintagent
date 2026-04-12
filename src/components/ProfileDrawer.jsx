@@ -45,6 +45,11 @@ const MARKETPLACE_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   // Always call hooks unconditionally with stable keys
   const { data: profiles } = useQuery({
     queryKey: ['profile', userId || 'none'],
@@ -626,7 +631,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
 
           {/* XP Progression */}
           <div className="mb-6">
-            <XPProgressCard profile={profile} socialCounts={xpSocialCounts} />
+            <XPProgressCard profile={profile} socialCounts={{ followers: profile?.follower_count || 0, following: profile?.following_count || 0 }} />
           </div>
 
           {/* Community Stats & Achievements */}
