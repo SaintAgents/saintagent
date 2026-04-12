@@ -49,6 +49,7 @@ import AdminOverviewDashboard from '@/components/admin/AdminOverviewDashboard';
 import WisdomModerationQueue from '@/components/admin/WisdomModerationQueue';
 import LearnPopupSettings from '@/components/admin/LearnPopupSettings';
 import UserActivityLog from '@/components/admin/UserActivityLog';
+import AdminProgressTab from '@/components/admin/AdminProgressTab';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -275,6 +276,10 @@ export default function Admin() {
               <BookOpen className="w-4 h-4" />
               Learn Popup
             </TabsTrigger>
+            <TabsTrigger value="progress" className="gap-2 px-3 py-2">
+              <Target className="w-4 h-4" />
+              Progress
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -461,6 +466,10 @@ export default function Admin() {
 
           <TabsContent value="learn-popup">
             <LearnPopupSettings />
+          </TabsContent>
+
+          <TabsContent value="progress">
+            <AdminProgressTab />
           </TabsContent>
         </Tabs>
       </div>
