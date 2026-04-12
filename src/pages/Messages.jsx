@@ -246,9 +246,8 @@ export default function Messages() {
       }
       
       // For direct messages without a Conversation entity, dedupe by other user
-      // ONLY merge into other non-entity conversations (never into Conversation entity entries)
+      // Merge into ANY existing conversation for this user (including entity-defined ones)
       const existingConvKey = Object.keys(convMap).find((key) => {
-        if (entityConvIds.has(key)) return false; // Never merge loose messages into entity-defined conversations
         const conv = convMap[key];
         return !conv.isGroup && conv.otherUser.id === otherUserId;
       });
