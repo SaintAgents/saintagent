@@ -61,8 +61,8 @@ export default function UserDrilldownPanel({ profile, isOnline, onClose }) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <Avatar className="w-12 h-12">
+            <div className="relative" data-user-id={profile.user_id}>
+              <Avatar className="w-12 h-12 cursor-pointer">
                 <AvatarImage src={profile.avatar_url} />
                 <AvatarFallback className="bg-violet-100 text-violet-700">
                   {(profile.display_name || '?')[0]}
