@@ -8,10 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Save, Loader2, Copy, Check, Link as LinkIcon } from "lucide-react";
+import { Calendar, Clock, Save, Loader2, Copy, Check, Link as LinkIcon, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from 'sonner';
 import WeeklySlotEditor from './WeeklySlotEditor';
+import DateExceptionsEditor from './DateExceptionsEditor';
 
 const DAYS = [
   { code: 'mon', label: 'Mon' },
@@ -94,7 +95,9 @@ export default function AvailabilitySettings() {
     buffer_minutes: 15,
     meeting_format: 'online',
     booking_message: '',
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    google_calendar_sync: false,
+    date_exceptions: []
   });
 
   useEffect(() => {
@@ -106,7 +109,9 @@ export default function AvailabilitySettings() {
         buffer_minutes: pref.buffer_minutes ?? 15,
         meeting_format: pref.meeting_format ?? 'online',
         booking_message: pref.booking_message ?? '',
-        timezone: pref.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+        timezone: pref.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+        google_calendar_sync: pref.google_calendar_sync ?? false,
+        date_exceptions: pref.date_exceptions ?? []
       });
     }
   }, [pref]);
@@ -238,6 +243,29 @@ export default function AvailabilitySettings() {
             />
             <p className="text-xs text-slate-500 mt-1">Your local timezone for slot calculations</p>
           </div>
+
+          {/* Google Calendar Sync */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <RefreshCw className="w-5 h-5 text-blue-600" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Google Calendar Sync</p>
+                  <p className="text-xs text-blue-600">Automatically block busy times from your Google Calendar when others book with you</p>
+                </div>
+              </div>
+              <Switch
+                checked={form.google_calendar_sync}
+                onCheckedChange={(v) => setForm(f => ({ ...f, google_calendar_sync: v }))}
+              />
+            </div>
+          </div>
+
+          {/* Date Exceptions */}
+          <DateExceptionsEditor
+            exceptions={form.date_exceptions}
+            onChange={(exceptions) => setForm(f => ({ ...f, date_exceptions: exceptions }))}
+          />
 
           {/* Custom Message */}
           <div>

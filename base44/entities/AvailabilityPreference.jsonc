@@ -76,6 +76,58 @@
       "default": [],
       "description": "Recurring weekly availability windows per day"
     },
+    "date_exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "YYYY-MM-DD date"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "blocked",
+              "custom"
+            ],
+            "description": "blocked = unavailable all day, custom = custom hours"
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start_hour": {
+                  "type": "number"
+                },
+                "start_minute": {
+                  "type": "number"
+                },
+                "end_hour": {
+                  "type": "number"
+                },
+                "end_minute": {
+                  "type": "number"
+                }
+              }
+            },
+            "description": "Custom availability windows for this date (only when type=custom)"
+          },
+          "label": {
+            "type": "string",
+            "description": "Optional label like 'Vacation' or 'Half day'"
+          }
+        }
+      },
+      "default": [],
+      "description": "Date-specific availability overrides"
+    },
+    "google_calendar_sync": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to sync with Google Calendar for busy time blocking"
+    },
     "slot_duration_minutes": {
       "type": "number",
       "default": 30,

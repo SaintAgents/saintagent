@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -14,7 +14,6 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case 'getFreeBusy': {
-        // Get busy times for a date range
         const { timeMin, timeMax } = params;
         const res = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
           method: 'POST',
@@ -41,7 +40,6 @@ Deno.serve(async (req) => {
       }
 
       case 'createEvent': {
-        // Create a Google Calendar event
         const { summary, description, startTime, endTime, attendeeEmails } = params;
         
         const eventBody = {
@@ -96,8 +94,35 @@ Deno.serve(async (req) => {
         });
       }
 
+      case 'listEvents': {
+        // List upcoming events for busy-time blocking
+        const { timeMin, timeMax } = params;
+        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime&maxResults=100`;
+        
+        const res = await fetch(url, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          console.error('List events error:', res.status, err);
+          return Response.json({ error: 'Failed to list calendar events' }, { status: 500 });
+        }
+
+        const data = await res.json();
+        const events = (data.items || []).map(e => ({
+          id: e.id,
+          summary: e.summary || 'Busy',
+          start: e.start?.dateTime || e.start?.date,
+          end: e.end?.dateTime || e.end?.date,
+          status: e.status
+        })).filter(e => e.status !== 'cancelled');
+
+        return Response.json({ success: true, events });
+      }
+
       default:
-        return Response.json({ error: 'Invalid action. Use: getFreeBusy, createEvent' }, { status: 400 });
+        return Response.json({ error: 'Invalid action. Use: getFreeBusy, createEvent, listEvents' }, { status: 400 });
     }
   } catch (error) {
     console.error('Calendar API error:', error);

@@ -89,12 +89,18 @@ export default function BookCall() {
     const now = new Date();
     const slots = [];
 
-    // Get time windows for this day from weekly_slots or fallback
+    // Check for date exception with custom hours
+    const dateStr = format(selectedDate, 'yyyy-MM-dd');
+    const exception = (availPref?.date_exceptions || []).find(e => e.date === dateStr);
+
+    // Get time windows for this day
     let windows = [];
-    if (availPref?.weekly_slots?.length > 0) {
+    if (exception?.type === 'custom' && exception.slots?.length > 0) {
+      // Use custom hours from exception
+      windows = exception.slots;
+    } else if (availPref?.weekly_slots?.length > 0) {
       windows = availPref.weekly_slots.filter(s => s.day === dayCode);
     } else {
-      // Legacy fallback: single window from start_hour to end_hour
       const startHour = availPref?.start_hour ?? 9;
       const endHour = availPref?.end_hour ?? 17;
       windows = [{ start_hour: startHour, start_minute: 0, end_hour: endHour, end_minute: 0 }];
@@ -137,15 +143,23 @@ export default function BookCall() {
     return slots;
   }, [selectedDate, busyData, availPref]);
 
-  // Check which days of week are allowed
+  // Check which days of week are allowed, respecting date exceptions
   const isDayAllowed = (date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    // Check date exceptions first
+    const exception = (availPref?.date_exceptions || []).find(e => e.date === dateStr);
+    if (exception) {
+      // Blocked dates are never allowed
+      if (exception.type === 'blocked') return false;
+      // Custom dates are allowed (they have custom slots)
+      if (exception.type === 'custom') return true;
+    }
+
     const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     const dayCode = dayMap[date.getDay()];
-    // If weekly_slots exist, check if any slot is for this day
     if (availPref?.weekly_slots?.length > 0) {
       return availPref.weekly_slots.some(s => s.day === dayCode);
     }
-    // Legacy fallback
     if (!availPref?.days_of_week?.length) return true;
     return availPref.days_of_week.includes(dayCode);
   };
