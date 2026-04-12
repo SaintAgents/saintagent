@@ -35,6 +35,7 @@ import RankedAvatar from '@/components/reputation/RankedAvatar';
 import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { formatDistanceToNow } from 'date-fns';
 import CommunityStatsCard from '@/components/profile/CommunityStatsCard';
+import XPProgressCard from '@/components/progression/XPProgressCard';
 
 
 // Default fallback hero image
@@ -67,15 +68,16 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     enabled: !!userId
   });
 
+  const { data: bookings = [] } = useQuery({
+    queryKey: ['userBookings', userId || 'none'],
+    queryFn: () => base44.entities.Booking.filter({ provider_id: userId }),
+    enabled: !!userId
+  });
+
   const { data: creatorTiers = [] } = useQuery({
     queryKey: ['creatorTiers', userId || 'none'],
     queryFn: () => base44.entities.CreatorTier.filter({ creator_id: userId, status: 'active' }),
     enabled: !!userId
-  });
-
-  const { data: currentUser } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
   });
 
   const { data: currentUserProfiles } = useQuery({
@@ -620,6 +622,11 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
               Friends
             </h3>
             <FriendsList userId={userId} compact={true} />
+          </div>
+
+          {/* XP Progression */}
+          <div className="mb-6">
+            <XPProgressCard profile={profile} socialCounts={xpSocialCounts} />
           </div>
 
           {/* Community Stats & Achievements */}
