@@ -22,6 +22,7 @@ import BusinessEntities from './pages/BusinessEntities';
 import BusinessEntityProfile from './pages/BusinessEntityProfile';
 import Glossary from './pages/Glossary';
 import Milestones from './pages/Milestones';
+import CacheAdmin from './pages/CacheAdmin';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -91,6 +92,7 @@ const AuthenticatedApp = () => {
       <Route path="/BusinessEntityProfile" element={<LayoutWrapper currentPageName="BusinessEntityProfile"><BusinessEntityProfile /></LayoutWrapper>} />
       <Route path="/Glossary" element={<LayoutWrapper currentPageName="Glossary"><Glossary /></LayoutWrapper>} />
       <Route path="/Milestones" element={<LayoutWrapper currentPageName="Milestones"><Milestones /></LayoutWrapper>} />
+      <Route path="/CacheAdmin" element={<LayoutWrapper currentPageName="CacheAdmin"><CacheAdmin /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
