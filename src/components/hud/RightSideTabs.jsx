@@ -11,6 +11,7 @@ import ReactMarkdown from 'react-markdown';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 import ConciergeAgentChat from '@/components/support/ConciergeAgentChat';
 import LearnPanel from '@/components/learn/LearnPanel';
+import HelpPanelThemeOverrides from '@/components/hud/HelpPanelThemeOverrides';
 import { format, parseISO } from 'date-fns';
 
 const QUICK_QUESTIONS = [
@@ -358,6 +359,7 @@ export default function RightSideTabs() {
 
   return (
     <>
+      <HelpPanelThemeOverrides />
       <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       
       {/* Help Tab */}
@@ -387,8 +389,8 @@ export default function RightSideTabs() {
         {/* Sliding Panel */}
         <div 
           className={cn(
-            "fixed border border-slate-200 dark:border-[rgba(0,255,136,0.3)] shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
-            "bg-white dark:bg-[#050505]",
+            "fixed border border-slate-200 shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
+            "bg-white",
             // Mobile: full screen overlay
             "inset-0",
             // Desktop: positioned bottom-right panel with fixed height
@@ -396,6 +398,7 @@ export default function RightSideTabs() {
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           data-solid-panel="true"
+          data-help-panel="true"
           style={{ right: '0px' }}
         >
           {conciergeMode ? (
@@ -528,7 +531,7 @@ export default function RightSideTabs() {
               </div>
 
               {/* Input */}
-              <div className="p-3 border-t border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-[#050505]/80">
+              <div className="p-3 border-t border-slate-200 bg-white">
                 {/* Action Buttons Row */}
                 <div className="flex gap-2 mb-2">
                   <button
