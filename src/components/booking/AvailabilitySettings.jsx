@@ -23,10 +23,45 @@ const DAYS = [
   { code: 'sun', label: 'Sun' },
 ];
 
-// Build weekly_slots from legacy start_hour/end_hour + days_of_week
+// Convert onboarding time_windows to hour ranges
+const TIME_WINDOW_HOURS = {
+  morning: { start_hour: 8, start_minute: 0, end_hour: 12, end_minute: 0 },
+  afternoon: { start_hour: 12, start_minute: 0, end_hour: 17, end_minute: 0 },
+  evening: { start_hour: 17, start_minute: 0, end_hour: 21, end_minute: 0 }
+};
+
+// Build weekly_slots from onboarding data (days_of_week + time_windows) or legacy start/end hour
 function migrateToWeeklySlots(pref) {
   if (pref.weekly_slots?.length > 0) return pref.weekly_slots;
   const days = pref.days_of_week?.length ? pref.days_of_week : ['mon', 'tue', 'wed', 'thu', 'fri'];
+  const windows = pref.time_windows?.length ? pref.time_windows : null;
+
+  if (windows) {
+    // Merge adjacent windows into continuous blocks per day
+    const ordered = ['morning', 'afternoon', 'evening'].filter(w => windows.includes(w));
+    const merged = [];
+    let current = null;
+    for (const w of ordered) {
+      const range = TIME_WINDOW_HOURS[w];
+      if (current && current.end_hour === range.start_hour) {
+        current = { ...current, end_hour: range.end_hour, end_minute: range.end_minute };
+      } else {
+        if (current) merged.push(current);
+        current = { ...range };
+      }
+    }
+    if (current) merged.push(current);
+
+    const slots = [];
+    for (const day of days) {
+      for (const block of merged) {
+        slots.push({ day, ...block });
+      }
+    }
+    return slots;
+  }
+
+  // Fallback: single window from legacy start/end hour
   return days.map(day => ({
     day,
     start_hour: pref.start_hour ?? 9,
