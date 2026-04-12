@@ -385,25 +385,28 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryKey: ['myProfile', currentUser?.email],
     queryFn: async () => {
       const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
-      console.log('Fetched profile:', {
-        ggg: byEmail?.[0]?.ggg_balance,
-        rp: byEmail?.[0]?.rp_points, 
-        rank: byEmail?.[0]?.rp_rank_code,
-        trust: byEmail?.[0]?.trust_score,
-        name: byEmail?.[0]?.display_name,
-        avatar_url: byEmail?.[0]?.avatar_url
-      });
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 1800000, // Cache for 30 minutes - synchronized with Layout
-    gcTime: 3600000, // Keep in cache for 60 minutes - synchronized with Layout
+    staleTime: 1800000,
+    gcTime: 3600000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false, // Use cached data when navigating back
+    refetchOnMount: false,
     refetchInterval: false,
     retry: false,
   });
   const profile = profiles?.[0];
+
+  // Listen for profile status changes from Sidebar and refresh cache
+  useEffect(() => {
+    if (!currentUser?.email) return;
+    const unsubscribe = base44.entities.UserProfile.subscribe((event) => {
+      if (event.type === 'update' && event.data?.user_id === currentUser.email) {
+        queryClient.invalidateQueries({ queryKey: ['myProfile', currentUser.email] });
+      }
+    });
+    return unsubscribe;
+  }, [currentUser?.email, queryClient]);
 
   // Set default view mode based on rank when profile loads (only if not already set)
   useEffect(() => {
