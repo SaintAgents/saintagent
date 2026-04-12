@@ -852,6 +852,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   const handleTourComplete = () => {
     setShowTour(false);
+    // After the Command Deck tour, invite user to the platform help tour
+    setTimeout(() => setShowOnboardingTour(true), 500);
   };
 
   // Show loading state while essential data is being fetched
