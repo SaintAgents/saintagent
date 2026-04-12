@@ -628,20 +628,24 @@ export default function Sidebar({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() => setThemeOpen(!themeOpen)}
+                  onClick={() => {
+                    const order = ['light', 'dark', 'hacker'];
+                    const idx = order.indexOf(theme);
+                    onThemeToggle(order[(idx + 1) % order.length]);
+                  }}
                   className={cn(
                     "w-full flex items-center justify-center p-2 rounded-lg transition-colors",
-                    themeOpen ? "bg-violet-100 text-violet-600" : "hover:bg-slate-50 text-slate-500"
+                    "hover:bg-slate-50 text-slate-500"
                   )}
                 >
-                  {theme === 'light' ? <Sun className="w-5 h-5" /> : 
-                   theme === 'dark' ? <Moon className="w-5 h-5" /> : 
-                   <Terminal className="w-5 h-5" />}
+                  {theme === 'light' ? <Sun className="w-5 h-5 text-amber-500" /> : 
+                   theme === 'dark' ? <Moon className="w-5 h-5 text-indigo-400" /> : 
+                   <Terminal className="w-5 h-5 text-green-500" />}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="right">
-                <p className="text-sm font-medium">Appearance</p>
-                <p className="text-xs text-slate-500">Theme: {theme}</p>
+                <p className="text-sm font-medium">Click to switch theme</p>
+                <p className="text-xs text-slate-500">Current: {theme}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
