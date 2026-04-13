@@ -41,6 +41,7 @@ export default function Messages() {
   const [imageViewerUrl, setImageViewerUrl] = useState(null);
   const typingRef = React.useRef({ lastSentAt: 0 });
   const messagesEndRef = React.useRef(null);
+  const scrollAreaRef = React.useRef(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -308,16 +309,23 @@ export default function Messages() {
   }, [profiles]);
 
   // Auto-scroll to bottom when messages change or conversation is selected
+  const scrollToBottom = React.useCallback(() => {
+    // ScrollArea wraps content in a [data-radix-scroll-area-viewport] div — scroll THAT
+    const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+    if (viewport) {
+      viewport.scrollTop = viewport.scrollHeight;
+    }
+  }, []);
+
   React.useEffect(() => {
-    if (!messagesEndRef.current) return;
-    // Immediate scroll first
-    messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
-    // Delayed scroll to catch late-rendered content
-    const t = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
-    }, 150);
-    return () => clearTimeout(t);
-  }, [currentMessages.length, selectedConversation?.id]);
+    // Immediate
+    scrollToBottom();
+    // After render settles
+    const t1 = setTimeout(scrollToBottom, 50);
+    const t2 = setTimeout(scrollToBottom, 200);
+    const t3 = setTimeout(scrollToBottom, 500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [currentMessages.length, selectedConversation?.id, scrollToBottom]);
   const STATUS_COLORS = { online: 'bg-emerald-500', focus: 'bg-amber-500', dnd: 'bg-rose-500', offline: 'bg-slate-400' };
   const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
 
@@ -719,7 +727,7 @@ export default function Messages() {
           })()}
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
             <div className="space-y-4">
               {currentMessages.map((msg) => {
                 const isOwn = msg.from_user_id === user?.email;
