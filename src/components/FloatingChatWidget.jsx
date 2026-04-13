@@ -161,9 +161,15 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    const viewport = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+    if (viewport) {
+      viewport.scrollTop = viewport.scrollHeight;
     }
+    const t = setTimeout(() => {
+      const vp = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+      if (vp) vp.scrollTop = vp.scrollHeight;
+    }, 100);
+    return () => clearTimeout(t);
   }, [conversationMessages.length]);
 
   // Mark messages as read when viewing
