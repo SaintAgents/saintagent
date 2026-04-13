@@ -353,8 +353,7 @@ export default function BookCall() {
               selected={selectedDate}
               onSelect={handleDateSelect}
               disabled={(date) => 
-                isBefore(startOfDay(date), startOfDay(new Date())) || 
-                isBefore(date, new Date()) ||
+                isBefore(startOfDay(date), startOfDay(new Date())) ||
                 date > addDays(new Date(), 60) ||
                 !isDayAllowed(date)
               }

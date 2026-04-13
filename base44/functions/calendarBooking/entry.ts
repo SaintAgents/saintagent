@@ -42,9 +42,11 @@ Deno.serve(async (req) => {
       case 'createEvent': {
         const { summary, description, startTime, endTime, attendeeEmails, timeZone } = params;
         const tz = timeZone || 'UTC';
-        
+        const eventSummary = summary || 'SaintAgent Meeting';
+        console.log('Creating calendar event with summary:', eventSummary, 'startTime:', startTime, 'endTime:', endTime, 'tz:', tz);
+
         const eventBody = {
-          summary,
+          summary: eventSummary,
           description: description || '',
           start: {
             dateTime: startTime,
