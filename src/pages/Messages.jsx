@@ -309,9 +309,14 @@ export default function Messages() {
 
   // Auto-scroll to bottom when messages change or conversation is selected
   React.useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (!messagesEndRef.current) return;
+    // Immediate scroll first
+    messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
+    // Delayed scroll to catch late-rendered content
+    const t = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
+    }, 150);
+    return () => clearTimeout(t);
   }, [currentMessages.length, selectedConversation?.id]);
   const STATUS_COLORS = { online: 'bg-emerald-500', focus: 'bg-amber-500', dnd: 'bg-rose-500', offline: 'bg-slate-400' };
   const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
