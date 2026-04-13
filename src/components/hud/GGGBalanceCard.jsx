@@ -16,7 +16,7 @@ export default function GGGBalanceCard({ walletAvailable }) {
 
   const storedPrice = settings?.[0]?.value ? JSON.parse(settings[0].value) : null;
   const pricePerGram = storedPrice?.price || DEFAULT_GOLD_PRICE;
-  const gggBalance = walletAvailable || 0;
+  const gggBalance = Math.max(0, walletAvailable || 0);
   const usdValue = gggBalance * pricePerGram;
 
   return (

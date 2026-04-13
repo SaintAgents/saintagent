@@ -417,8 +417,8 @@ export default function SidePanel({
     return format(date, "MMM d, h:mm a");
   };
 
-  // Use profile.ggg_balance directly (no API call needed)
-  const walletAvailable = profile?.ggg_balance ?? 0;
+  // Use profile.ggg_balance directly (no API call needed) — floor at 0 to prevent negative display
+  const walletAvailable = Math.max(0, profile?.ggg_balance ?? 0);
   // RP info no longer needed in wallet display
 
   // Fetch total users from User entity (has ALL users, not capped at 100)
