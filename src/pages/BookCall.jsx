@@ -190,14 +190,17 @@ export default function BookCall() {
       const me = myProfile?.[0];
       const hostName = hostProfile?.display_name || hostUserId;
       const guestName = currentUser.full_name || me?.display_name || 'Guest';
-      const meetingTitle = intakeForm.title || `Meeting with ${hostName}`;
+      // Calendar event title shows the guest's name (since it's on the host's calendar)
+      const calendarTitle = intakeForm.title || `Call with ${guestName}`;
+      // Meeting entity title shows both names for clarity
+      const meetingTitle = intakeForm.title || `${guestName} ↔ ${hostName}`;
       const notes = buildMeetingNotes();
 
       // 1. Create Google Calendar event
       const hostTz = availPref?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
       const calRes = await base44.functions.invoke('calendarBooking', {
         action: 'createEvent',
-        summary: meetingTitle,
+        summary: calendarTitle,
         description: notes,
         startTime: selectedSlot.start,
         endTime: selectedSlot.end,
