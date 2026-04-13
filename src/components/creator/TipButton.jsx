@@ -52,18 +52,23 @@ export default function TipButton({
   const { data: walletRes } = useQuery({
     queryKey: ['wallet', currentUser?.email],
     queryFn: async () => {
-      const { data } = await base44.functions.invoke('walletEngine', {
-        action: 'getWallet',
-        payload: { user_id: currentUser.email }
-      });
-      return data;
+      try {
+        const { data } = await base44.functions.invoke('walletEngine', {
+          action: 'getWallet',
+          payload: { user_id: currentUser.email }
+        });
+        return data;
+      } catch {
+        return null;
+      }
     },
     enabled: !!currentUser?.email,
     staleTime: 10000,
   });
 
-  // Use wallet balance first, then fall back to profile ggg_balance
-  const walletBalance = walletRes?.wallet?.available_balance ?? walletRes?.wallet?.ggg_balance ?? userProfile?.ggg_balance ?? 0;
+  // Use profile ggg_balance as primary source, wallet as secondary
+  const walletBal = walletRes?.wallet?.available_balance ?? walletRes?.wallet?.ggg_balance;
+  const walletBalance = (typeof walletBal === 'number' && walletBal > 0) ? walletBal : (userProfile?.ggg_balance ?? 0);
 
   const tipMutation = useMutation({
     mutationFn: async () => {
