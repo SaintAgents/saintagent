@@ -40,18 +40,19 @@ Deno.serve(async (req) => {
       }
 
       case 'createEvent': {
-        const { summary, description, startTime, endTime, attendeeEmails } = params;
+        const { summary, description, startTime, endTime, attendeeEmails, timeZone } = params;
+        const tz = timeZone || 'UTC';
         
         const eventBody = {
           summary,
           description: description || '',
           start: {
             dateTime: startTime,
-            timeZone: 'UTC'
+            timeZone: tz
           },
           end: {
             dateTime: endTime,
-            timeZone: 'UTC'
+            timeZone: tz
           },
           attendees: (attendeeEmails || []).map(email => ({ email })),
           reminders: {

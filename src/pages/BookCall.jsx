@@ -194,14 +194,15 @@ export default function BookCall() {
       const notes = buildMeetingNotes();
 
       // 1. Create Google Calendar event
+      const hostTz = availPref?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
       const calRes = await base44.functions.invoke('calendarBooking', {
         action: 'createEvent',
-        title: meetingTitle,
+        summary: meetingTitle,
         description: notes,
         startTime: selectedSlot.start,
         endTime: selectedSlot.end,
-        guestEmail: currentUser.email,
-        guestName: guestName
+        attendeeEmails: [currentUser.email, hostUserId].filter(Boolean),
+        timeZone: hostTz
       });
 
       // 2. Create Meeting entity
@@ -274,6 +275,7 @@ export default function BookCall() {
       hostProfile={hostProfile} 
       selectedSlot={selectedSlot}
       meetingType={intakeForm.meetingType}
+      timezone={availPref?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'}
     />;
   }
 
@@ -405,6 +407,9 @@ export default function BookCall() {
                   </p>
                   <p className="text-sm text-violet-600">
                     {selectedSlot.label} — {selectedSlot.endLabel}
+                  </p>
+                  <p className="text-xs text-violet-500 mt-0.5">
+                    Timezone: {availPref?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'}
                   </p>
                 </div>
               </div>
