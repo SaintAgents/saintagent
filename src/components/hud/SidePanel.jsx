@@ -670,6 +670,30 @@ export default function SidePanel({
                 </div>
               </CollapsibleCard>
 
+              {/* Today's Schedule */}
+              <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
+                <div className="space-y-2">
+                  {meetings.length === 0 ?
+                    <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
+                    meetings.slice(0, 4).map((meeting, i) =>
+                    <button
+                      key={i}
+                      onClick={() => onMeetingAction?.('view', meeting)}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                        <div className="p-2 rounded-lg bg-blue-100">
+                          <Clock className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                          <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400" />
+                      </button>
+                    )
+                  }
+                </div>
+              </CollapsibleCard>
+
               <CollapsibleCard title="Online Now" icon={Users} onPopout={() => setOnlinePopupOpen(true)}>
                 <div className="p-4 rounded-xl bg-slate-50 border">
                   <div className="flex items-center justify-between mb-2">
@@ -799,30 +823,6 @@ export default function SidePanel({
               {/* Project Updates */}
               <CollapsibleCard title="Project Updates" icon={Folder} badge="New" badgeColor="violet" defaultOpen={false}>
                 <ProjectUpdatesFeed limit={3} showProjectLink={true} />
-              </CollapsibleCard>
-
-              {/* Today's Schedule */}
-              <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
-                <div className="space-y-2">
-                  {meetings.length === 0 ?
-                    <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
-                    meetings.slice(0, 4).map((meeting, i) =>
-                    <button
-                      key={i}
-                      onClick={() => onMeetingAction?.('view', meeting)}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left">
-                        <div className="p-2 rounded-lg bg-blue-100">
-                          <Clock className="w-4 h-4 text-blue-600" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
-                          <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-slate-400" />
-                      </button>
-                    )
-                  }
-                </div>
               </CollapsibleCard>
 
               {/* Top Matches */}
@@ -1111,6 +1111,30 @@ export default function SidePanel({
             </div>
           </CollapsibleCard>
 
+          {/* Today's Schedule */}
+          <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
+            <div className="space-y-2">
+              {meetings.length === 0 ?
+                <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
+                meetings.slice(0, 4).map((meeting, i) =>
+                <button
+                  key={i}
+                  onClick={() => onMeetingAction?.('view', meeting)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                    <div className="p-2 rounded-lg bg-blue-100">
+                      <Clock className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                      <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                  </button>
+                )
+              }
+            </div>
+          </CollapsibleCard>
+
           {/* Presence Section with Popout */}
           <div className="relative">
             <div className="flex items-center justify-between mb-2">
@@ -1279,32 +1303,6 @@ export default function SidePanel({
                   );
                 })
               )}
-            </div>
-          </CollapsibleCard>
-
-           {/* Today's Schedule */}
-          <CollapsibleCard title="Today's Schedule" icon={Calendar} badge={meetings.length} badgeColor="blue" onPopout={() => setSchedulePopupOpen(true)}>
-            <div className="space-y-2">
-              {meetings.length === 0 ?
-                <p className="text-sm text-slate-400 py-4 text-center">No meetings today</p> :
-
-                meetings.slice(0, 4).map((meeting, i) =>
-                <button
-                  key={i}
-                  onClick={() => onMeetingAction?.('view', meeting)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors text-left">
-
-                    <div className="p-2 rounded-lg bg-blue-100">
-                      <Clock className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
-                      <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
-                  </button>
-                )
-                }
             </div>
           </CollapsibleCard>
 
