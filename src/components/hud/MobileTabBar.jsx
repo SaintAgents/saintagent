@@ -7,16 +7,17 @@ export default function MobileTabBar({ currentPage, onWalletOpen, onMenuOpen }) 
     <button
       onClick={onMenuOpen}
       className={cn(
-        "fixed bottom-20 right-2 z-[50] md:hidden",
-        "w-11 h-11 rounded-full",
-        "bg-violet-600 dark:bg-[#00ff88] shadow-lg",
+        "fixed bottom-4 left-4 z-[100] md:hidden",
+        "w-14 h-14 rounded-full",
+        "bg-violet-600 dark:bg-[#00ff88] shadow-xl",
         "flex items-center justify-center",
         "hover:bg-violet-700 dark:hover:bg-[#00dd77]",
         "active:scale-95 transition-all",
-        "shadow-violet-500/30 dark:shadow-[#00ff88]/30"
+        "shadow-violet-500/40 dark:shadow-[#00ff88]/40",
+        "ring-4 ring-white/50 dark:ring-black/30"
       )}
     >
-      <Menu className="w-5 h-5 text-white dark:text-black" />
+      <Menu className="w-6 h-6 text-white dark:text-black" />
     </button>
   );
 }
