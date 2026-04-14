@@ -353,7 +353,7 @@ export default function ActivityFeed() {
               <div className="flex flex-wrap justify-center gap-3">
                 <Button 
                   variant="outline" 
-                  className="gap-2 border-slate-300"
+                  className="gap-2 border-slate-400 text-slate-700 hover:bg-slate-100"
                   onClick={() => refetch()}
                   disabled={isFetching}
                 >
@@ -361,17 +361,17 @@ export default function ActivityFeed() {
                   {isFetching ? 'Refreshing…' : 'Refresh'}
                 </Button>
                 <Link to={createPageUrl('Marketplace')}>
-                  <Button variant="outline" className="gap-2 border-slate-300">
+                  <Button variant="outline" className="gap-2 border-slate-400 text-slate-700 hover:bg-slate-100">
                     <Briefcase className="w-4 h-4" /> Browse Marketplace
                   </Button>
                 </Link>
                 <Link to={createPageUrl('Missions')}>
-                  <Button variant="outline" className="gap-2 border-slate-300">
+                  <Button variant="outline" className="gap-2 border-slate-400 text-slate-700 hover:bg-slate-100">
                     <Target className="w-4 h-4" /> Explore Missions
                   </Button>
                 </Link>
                 <Link to={createPageUrl('Matches')}>
-                  <Button className="gap-2 bg-[#051C2C] hover:bg-blue-900">
+                  <Button className="gap-2 bg-[#051C2C] hover:bg-blue-900 text-white">
                     <Users className="w-4 h-4" /> Find Matches
                   </Button>
                 </Link>
