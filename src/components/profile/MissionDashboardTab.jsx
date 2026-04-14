@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Target, Clock, Users, Coins, TrendingUp, Zap, Sparkles,
   CheckCircle, Play, Pause, Plus, ChevronRight, BarChart3, ListFilter,
@@ -15,7 +14,6 @@ import {
 import { format, formatDistanceToNow, parseISO, isPast } from "date-fns";
 import { createPageUrl } from '@/utils';
 import MissionDetailModal from '@/components/missions/MissionDetailModal';
-import MissionManagePanel from './MissionManagePanel';
 
 function MissionStatCard({ label, value, icon: Icon, color }) {
   const colors = {
@@ -93,7 +91,6 @@ function MissionRow({ mission, onClick, onManage, isCreator }) {
 
 export default function MissionDashboardTab({ currentUser, profile }) {
   const [selectedMission, setSelectedMission] = useState(null);
-  const [manageMission, setManageMission] = useState(null);
   const [filter, setFilter] = useState('all');
   const userId = currentUser?.email;
 
@@ -214,8 +211,16 @@ export default function MissionDashboardTab({ currentUser, profile }) {
               key={mission.id}
               mission={mission}
               isCreator={mission.creator_id === userId}
-              onClick={() => setSelectedMission(mission)}
-              onManage={(m) => setManageMission(m)}
+              onClick={() => {
+                if (mission.creator_id === userId) {
+                  window.location.href = createPageUrl('MissionManage') + '?id=' + mission.id;
+                } else {
+                  setSelectedMission(mission);
+                }
+              }}
+              onManage={(m) => {
+                window.location.href = createPageUrl('MissionManage') + '?id=' + m.id;
+              }}
             />
           ))}
         </div>
@@ -230,23 +235,7 @@ export default function MissionDashboardTab({ currentUser, profile }) {
         />
       )}
 
-      {/* Manage Mission Dialog */}
-      <Dialog open={!!manageMission} onOpenChange={(o) => { if (!o) setManageMission(null); }}>
-        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Settings2 className="w-5 h-5 text-violet-600" />
-              Manage: {manageMission?.title}
-            </DialogTitle>
-          </DialogHeader>
-          {manageMission && (
-            <MissionManagePanel
-              mission={manageMission}
-              onClose={() => setManageMission(null)}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+
     </div>
   );
 }
