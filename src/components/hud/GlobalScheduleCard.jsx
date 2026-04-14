@@ -62,15 +62,17 @@ export default function GlobalScheduleCard({ limit = 5 }) {
       if (m.scheduled_time && (m.status === 'scheduled' || m.status === 'accepted' || m.status === 'pending')) {
         const itemDate = parseISO(m.scheduled_time);
         if (isAfter(itemDate, now) && isBefore(itemDate, weekFromNow)) {
+          const amHost = m.host_id === currentUser?.email;
+          const otherName = amHost ? (m.guest_name || m.guest_id) : (m.host_name || m.host_id);
           items.push({
             id: m.id,
             type: 'meeting',
-            title: m.title,
+            title: otherName ? `Meeting with ${otherName}` : m.title,
             time: m.scheduled_time,
             duration: m.duration_minutes,
             status: m.status,
-            host: { name: m.host_name, avatar: m.host_avatar },
-            isHost: m.host_id === currentUser?.email,
+            host: { name: otherName, avatar: amHost ? m.guest_avatar : m.host_avatar },
+            isHost: amHost,
             online_link: m.online_link
           });
         }

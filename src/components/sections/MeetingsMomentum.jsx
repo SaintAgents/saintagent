@@ -4,7 +4,7 @@ import { Calendar } from "lucide-react";
 import MeetingCard from '@/components/hud/MeetingCard';
 import HelpHint from '@/components/hud/HelpHint';
 
-export default function MeetingsMomentum({ pendingMeetings = [], scheduledMeetings = [], onAction }) {
+export default function MeetingsMomentum({ pendingMeetings = [], scheduledMeetings = [], onAction, currentUserId }) {
   return (
     <div className="space-y-3">
       <div className="flex justify-end -mt-2 mb-2">
@@ -24,6 +24,7 @@ export default function MeetingsMomentum({ pendingMeetings = [], scheduledMeetin
             key={meeting.id} 
             meeting={meeting} 
             onAction={onAction}
+            currentUserId={currentUserId}
           />
         ))
       )}

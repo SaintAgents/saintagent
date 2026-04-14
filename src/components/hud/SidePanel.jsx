@@ -362,6 +362,13 @@ export default function SidePanel({
   // CRITICAL: GGG transactions are stored with email, not SA#
   const userEmail = profile?.user_id;
 
+  // Helper to get display title for a meeting (show "Meeting with <other person>")
+  const getMeetingDisplayTitle = (meeting) => {
+    const isHost = userEmail && meeting.host_id === userEmail;
+    const otherName = isHost ? (meeting.guest_name || meeting.guest_id) : (meeting.host_name || meeting.host_id);
+    return otherName ? `Meeting with ${otherName}` : meeting.title;
+  };
+
   // Audit trail data (GGG + Reputation)
   const { data: gggTx = [] } = useQuery({
     queryKey: ['gggTx', userEmail],
@@ -684,7 +691,7 @@ export default function SidePanel({
                           <Clock className="w-4 h-4 text-blue-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                          <p className="text-sm font-medium text-slate-900 truncate">{getMeetingDisplayTitle(meeting)}</p>
                           <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
                         </div>
                         <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -1125,7 +1132,7 @@ export default function SidePanel({
                       <Clock className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                      <p className="text-sm font-medium text-slate-900 truncate">{getMeetingDisplayTitle(meeting)}</p>
                       <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -1579,7 +1586,7 @@ export default function SidePanel({
                     <Clock className="w-4 h-4 text-blue-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+                    <p className="text-sm font-medium text-slate-900 truncate">{getMeetingDisplayTitle(meeting)}</p>
                     <p className="text-xs text-slate-500">{formatTime(meeting.scheduled_time)}</p>
                   </div>
                 </div>

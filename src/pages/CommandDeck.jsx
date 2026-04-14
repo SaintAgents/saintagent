@@ -550,8 +550,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // DISABLE matches - causing rate limits
   const matches = [];
 
-  // DISABLE meetings - causing rate limits  
-  const meetings = [];
+  const { data: meetingsRaw = [] } = useQuery({
+    queryKey: ['dashboardMeetings'],
+    queryFn: () => base44.entities.Meeting.list('-scheduled_time', 50),
+    enabled: queryStage >= 1, staleTime: 120000, refetchOnWindowFocus: false,
+  });
+  const meetings = meetingsRaw.filter(m => m.host_id === currentUser?.email || m.guest_id === currentUser?.email);
 
   // DISABLE missions - causing rate limits
   const missions = [];
@@ -1735,7 +1739,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </div> :
 
                 [...pendingMeetings, ...scheduledMeetings].slice(0, 3).map((meeting) =>
-                <MeetingCard key={meeting.id} meeting={meeting} onAction={handleMeetingAction} />
+                <MeetingCard key={meeting.id} meeting={meeting} onAction={handleMeetingAction} currentUserId={currentUser?.email} />
                 )
                 }
               </div>

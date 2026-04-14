@@ -16,7 +16,7 @@ import {
 "lucide-react";
 import { format, isToday, isTomorrow, parseISO } from "date-fns";
 
-export default function MeetingCard({ meeting, onAction, isCompact = false }) {
+export default function MeetingCard({ meeting, onAction, isCompact = false, currentUserId }) {
   const statusColors = {
     pending: "bg-amber-50 text-amber-700 border-amber-200",
     accepted: "bg-blue-50 text-blue-700 border-blue-200",
@@ -35,23 +35,32 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
     return format(date, "MMM d, h:mm a");
   };
 
-  const otherPerson = meeting.host_id === "current" ? {
-    name: meeting.guest_name,
+  // Determine the other person: if I'm the host, show the guest; otherwise show the host
+  const isHost = currentUserId && (meeting.host_id === currentUserId);
+  const otherPerson = isHost ? {
+    id: meeting.guest_id,
+    name: meeting.guest_name || meeting.guest_id,
     avatar: meeting.guest_avatar
   } : {
-    name: meeting.host_name,
+    id: meeting.host_id,
+    name: meeting.host_name || meeting.host_id,
     avatar: meeting.host_avatar
   };
+
+  // Display title: show "Meeting with <other person>" instead of raw meeting.title
+  const displayTitle = otherPerson.name 
+    ? `Meeting with ${otherPerson.name}` 
+    : meeting.title;
 
   if (isCompact) {
     return (
       <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
-        <Avatar className="w-8 h-8 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={meeting.host_id === "current" ? meeting.guest_id : meeting.host_id}>
+        <Avatar className="w-8 h-8 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all" data-user-id={otherPerson.id}>
           <AvatarImage src={otherPerson.avatar} />
           <AvatarFallback className="text-xs">{otherPerson.name?.charAt(0)}</AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-slate-900 truncate">{meeting.title}</p>
+          <p className="text-sm font-medium text-slate-900 truncate">{displayTitle}</p>
           <p className="text-xs text-slate-500">{formatMeetingTime(meeting.scheduled_time)}</p>
         </div>
         <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -64,7 +73,7 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
       <div className="flex items-start gap-4">
         <Avatar
           className="w-11 h-11 ring-2 ring-white shadow-sm cursor-pointer"
-          data-user-id={meeting.host_id === "current" ? meeting.guest_id : meeting.host_id}>
+          data-user-id={otherPerson.id}>
 
           <AvatarImage src={otherPerson.avatar} />
           <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
@@ -75,8 +84,8 @@ export default function MeetingCard({ meeting, onAction, isCompact = false }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h4 className="font-semibold text-slate-900">{meeting.title}</h4>
-              <p className="text-sm text-slate-500">with {otherPerson.name}</p>
+              <h4 className="font-semibold text-slate-900">{displayTitle}</h4>
+              <p className="text-sm text-slate-500">{meeting.meeting_type ? meeting.meeting_type.replace(/_/g, ' ') : ''}</p>
             </div>
             <Badge className={cn("border", statusColors[meeting.status])}>
               {meeting.status}
