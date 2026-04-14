@@ -450,7 +450,7 @@ export default function Messages() {
 
   return (
     <>
-    <div className="h-[calc(100vh-4rem)] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
+    <div className="h-[calc(100dvh-3.5rem)] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
       {/* Conversations List */}
       <div className={cn(
         "border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col",

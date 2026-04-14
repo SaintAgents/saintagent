@@ -391,10 +391,10 @@ export default function RightSideTabs() {
           className={cn(
             "fixed border border-slate-200 shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
             "bg-white",
-            // Mobile: full screen overlay
-            "inset-0",
+            // Mobile: full screen overlay but leave space at top for topbar
+            "inset-0 top-[3.5rem] pb-20",
             // Desktop: positioned bottom-right panel with fixed height
-            "md:inset-auto md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
+            "md:inset-auto md:top-auto md:pb-0 md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           data-solid-panel="true"
