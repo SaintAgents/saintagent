@@ -352,6 +352,28 @@ Return JSON with this exact structure:
           </CardContent>
         </Card>
 
+        {/* Events Calendar (Week) — at top for visibility */}
+        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
+          <CardHeader><CardTitle className="text-indigo-700 dark:text-slate-100">Events Calendar (Week of {format(weekStart, 'yyyy-MM-dd')} to {format(weekEnd, 'yyyy-MM-dd')})</CardTitle></CardHeader>
+          <CardContent>
+            {eventsWeek.length === 0 ? (
+              <div className="text-sm text-slate-500 dark:text-slate-400">No events posted for this week.</div>
+            ) : (
+              <div className="space-y-2">
+                {eventsWeek.map((ev, i) => (
+                  <div key={i} className="flex items-center justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600 text-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="text-slate-600 dark:text-slate-400">{format(parseISO(ev.date), 'yyyy-MM-dd — HH:mm')}</span>
+                      <span className="font-medium text-slate-900 dark:text-slate-100">{ev.title}</span>
+                    </div>
+                    <Badge variant="outline" className="dark:border-slate-500 dark:text-slate-300">{ev.type === 'meeting' ? 'Call' : 'Event'}</Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* My Tasks (from Projects) */}
         <MyTasksSection userEmail={user?.email} />
 
@@ -542,27 +564,6 @@ Return JSON with this exact structure:
           </CardContent>
         </Card>
 
-        {/* Events Calendar (Week) */}
-        <Card className="dark:bg-slate-800/50 dark:border-slate-700">
-          <CardHeader><CardTitle className="text-indigo-700 dark:text-slate-100">Events Calendar (Week of {format(weekStart, 'yyyy-MM-dd')} to {format(weekEnd, 'yyyy-MM-dd')})</CardTitle></CardHeader>
-          <CardContent>
-            {eventsWeek.length === 0 ? (
-              <div className="text-sm text-slate-500 dark:text-slate-400">No events posted for this week.</div>
-            ) : (
-              <div className="space-y-2">
-                {eventsWeek.map((ev, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-lg border p-3 bg-white dark:bg-slate-700/50 dark:border-slate-600 text-sm">
-                    <div className="flex items-center gap-3">
-                      <span className="text-slate-600 dark:text-slate-400">{format(parseISO(ev.date), 'yyyy-MM-dd — HH:mm')}</span>
-                      <span className="font-medium text-slate-900 dark:text-slate-100">{ev.title}</span>
-                    </div>
-                    <Badge variant="outline" className="dark:border-slate-500 dark:text-slate-300">{ev.type === 'meeting' ? 'Call' : 'Event'}</Badge>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
       {/* AI Assistant Modal */}
