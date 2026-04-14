@@ -450,7 +450,7 @@ export default function Messages() {
 
   return (
     <>
-    <div className="h-[calc(100vh-7.5rem)] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
+    <div className="h-[calc(100vh-4rem)] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
       {/* Conversations List */}
       <div className={cn(
         "border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col",
@@ -759,36 +759,58 @@ export default function Messages() {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-2 md:p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a]">
-            <div className="flex gap-1 md:gap-2 items-center flex-wrap">
-              {/* Media Attachment */}
-              <MediaAttachment 
-                onAttach={async (attachment) => {
-                  const payload = {
-                    conversation_id: selectedConversation.id,
-                    from_user_id: user.email,
-                    to_user_id: selectedConversation.otherUser.id,
-                    from_name: user.full_name,
-                    to_name: selectedConversation.otherUser.name,
-                    content: attachment.fileName || 'Shared media',
-                    message_type: attachment.type,
-                    media_url: attachment.url,
-                    media_thumbnail: attachment.thumbnail,
-                    file_name: attachment.fileName,
-                    file_size: attachment.fileSize
-                  };
-                  await base44.entities.Message.create(payload);
-                  queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
-                  queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
-                }}
-              />
+          <div className="p-2 md:p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
+            <div className="flex gap-1 md:gap-2 items-center">
+              {/* Media Attachment - hidden on mobile to save space */}
+              <div className="hidden md:flex gap-1">
+                <MediaAttachment 
+                  onAttach={async (attachment) => {
+                    const payload = {
+                      conversation_id: selectedConversation.id,
+                      from_user_id: user.email,
+                      to_user_id: selectedConversation.otherUser.id,
+                      from_name: user.full_name,
+                      to_name: selectedConversation.otherUser.name,
+                      content: attachment.fileName || 'Shared media',
+                      message_type: attachment.type,
+                      media_url: attachment.url,
+                      media_thumbnail: attachment.thumbnail,
+                      file_name: attachment.fileName,
+                      file_size: attachment.fileSize
+                    };
+                    await base44.entities.Message.create(payload);
+                    queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                    queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
+                  }}
+                />
 
-              <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
+                <EmojiPicker onSelect={(e) => setMessageText((t) => (t || '') + e)} />
 
-              {/* Share Affiliate Link */}
-              <ShareAffiliateLinkButton 
-                onInsertMessage={(msg) => setMessageText(msg)} 
-              />
+                {/* Share Affiliate Link */}
+                <ShareAffiliateLinkButton 
+                  onInsertMessage={(msg) => setMessageText(msg)} 
+                />
+
+                {/* Icebreaker Prompts */}
+                <IcebreakerPrompts
+                  recipientName={selectedConversation?.otherUser?.name}
+                  onSelect={async (prompt) => {
+                    const payload = {
+                      conversation_id: selectedConversation.id,
+                      from_user_id: user.email,
+                      to_user_id: selectedConversation.otherUser.id,
+                      from_name: user.full_name,
+                      to_name: selectedConversation.otherUser.name,
+                      content: prompt,
+                      message_type: 'icebreaker',
+                      icebreaker_prompt: prompt
+                    };
+                    await base44.entities.Message.create(payload);
+                    queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                    queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
+                  }}
+                />
+              </div>
 
               <Input
                 placeholder="Type a message..."
@@ -797,30 +819,10 @@ export default function Messages() {
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 className="flex-1 rounded-xl min-w-0" />
 
-              {/* Icebreaker Prompts - next to input */}
-              <IcebreakerPrompts
-                recipientName={selectedConversation?.otherUser?.name}
-                onSelect={async (prompt) => {
-                  const payload = {
-                    conversation_id: selectedConversation.id,
-                    from_user_id: user.email,
-                    to_user_id: selectedConversation.otherUser.id,
-                    from_name: user.full_name,
-                    to_name: selectedConversation.otherUser.name,
-                    content: prompt,
-                    message_type: 'icebreaker',
-                    icebreaker_prompt: prompt
-                  };
-                  await base44.entities.Message.create(payload);
-                  queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
-                  queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
-                }}
-              />
-
               <Button
                 onClick={handleSend}
                 disabled={!messageText.trim()}
-                className="rounded-xl bg-violet-600 hover:bg-violet-700">
+                className="rounded-xl bg-violet-600 hover:bg-violet-700 shrink-0">
                 <Send className="w-4 h-4" />
               </Button>
             </div>
