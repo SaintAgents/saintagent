@@ -90,7 +90,11 @@ export default function Missions() {
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ['missions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 100),
-    staleTime: 2 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
+    refetchOnWindowFocus: false,
   });
 
   // Get unique creators for filter dropdown
