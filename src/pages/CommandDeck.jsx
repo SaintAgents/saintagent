@@ -609,7 +609,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   );
 
   const pendingMeetings = meetings.filter((m) => m.status === 'pending');
-  const scheduledMeetings = meetings.filter((m) => m.status === 'scheduled');
+  const scheduledMeetings = meetings.filter((m) => m.status === 'scheduled' || m.status === 'accepted');
   const completedMeetingsThisWeek = meetings.filter((m) => m.status === 'completed').length;
 
   // Project filters
