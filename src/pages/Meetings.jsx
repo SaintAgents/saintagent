@@ -29,10 +29,18 @@ export default function Meetings() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: meetings = [], isLoading } = useQuery({
+  const { data: allMeetings = [], isLoading } = useQuery({
     queryKey: ['meetings'],
-    queryFn: () => base44.entities.Meeting.list('-scheduled_time', 50)
+    queryFn: () => base44.entities.Meeting.list('-scheduled_time', 100),
+    staleTime: 60000,
   });
+
+  // Filter to only meetings where the current user is host or guest
+  const meetings = allMeetings.filter(m =>
+    m.host_id === currentUser?.email || m.guest_id === currentUser?.email ||
+    m.invited_ids?.includes(currentUser?.email) ||
+    m.rsvp_yes?.includes(currentUser?.email)
+  );
 
   // Fetch circle events for integration
   const { data: circleEvents = [] } = useQuery({
@@ -309,6 +317,7 @@ export default function Meetings() {
               <MeetingCard 
                 key={meeting.id} 
                 meeting={meeting} 
+                currentUserId={currentUser?.email}
                 onAction={handleAction}
               />
             ))}

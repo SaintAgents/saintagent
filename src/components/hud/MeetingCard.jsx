@@ -148,7 +148,7 @@ export default function MeetingCard({ meeting, onAction, isCompact = false, curr
             </Button>
           </>
         }
-        {meeting.status === 'scheduled' &&
+        {(meeting.status === 'scheduled' || meeting.status === 'accepted') &&
         <>
             <Button
             size="sm"
@@ -166,9 +166,18 @@ export default function MeetingCard({ meeting, onAction, isCompact = false, curr
 
               Reschedule
             </Button>
+            <Button
+            size="sm"
+            variant="outline"
+            className="flex-1 rounded-lg"
+            onClick={() => onAction?.('confirm', meeting)}>
+
+              <Check className="w-4 h-4 mr-1.5" />
+              Confirm Done
+            </Button>
           </>
         }
-        {meeting.status === 'accepted' && !meeting.host_confirmed &&
+        {false && meeting.status === 'accepted' && !meeting.host_confirmed &&
         <Button
           size="sm"
           className="flex-1 bg-emerald-600 hover:bg-emerald-700 rounded-lg"
