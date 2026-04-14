@@ -12,11 +12,12 @@ import {
   Calendar,
   MessageCircle,
   Star,
-  ArrowRight } from
+  ArrowRight,
+  Loader2 } from
 "lucide-react";
 import { format, isToday, isTomorrow, parseISO } from "date-fns";
 
-export default function MeetingCard({ meeting, onAction, isCompact = false, currentUserId }) {
+export default function MeetingCard({ meeting, onAction, isCompact = false, currentUserId, isCreatingZoom = false }) {
   const statusColors = {
     pending: "bg-amber-50 text-amber-700 border-amber-200",
     accepted: "bg-blue-50 text-blue-700 border-blue-200",
@@ -153,10 +154,13 @@ export default function MeetingCard({ meeting, onAction, isCompact = false, curr
             <Button
             size="sm"
             className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
+            disabled={isCreatingZoom}
             onClick={() => onAction?.('join', meeting)}>
-
-              <Video className="w-4 h-4 mr-1.5" />
-              Join Meeting
+              {isCreatingZoom ? (
+                <><Loader2 className="w-4 h-4 mr-1.5 animate-spin" />Creating Zoom...</>
+              ) : (
+                <><Video className="w-4 h-4 mr-1.5" />{meeting.online_link ? 'Join Meeting' : 'Start Zoom'}</>
+              )}
             </Button>
             <Button
             size="sm"

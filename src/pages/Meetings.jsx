@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Check, Plus, Users, Video, MapPin } from "lucide-react";
+import { Calendar, Clock, Check, Plus, Users, Video, MapPin, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { format, parseISO, isAfter } from "date-fns";
 
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
@@ -22,6 +23,7 @@ export default function Meetings() {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [rescheduleMeeting, setRescheduleMeeting] = useState(null);
   const [bookingRequestOpen, setBookingRequestOpen] = useState(false);
+  const [creatingZoom, setCreatingZoom] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -88,12 +90,43 @@ export default function Meetings() {
         setRescheduleMeeting(meeting);
         break;
       case 'join':
-        // If meeting has an online link, open it
         if (meeting.online_link) {
           window.open(meeting.online_link, '_blank');
         } else {
-          // No link available - show message
-          alert('No video link has been set for this meeting yet. Please coordinate with your meeting partner to add a Zoom, Google Meet, or other video call link.');
+          // Auto-create Zoom meeting
+          setCreatingZoom(meeting.id);
+          try {
+            const res = await base44.functions.invoke('zoomMeeting', {
+              action: 'create',
+              meetingDetails: {
+                topic: meeting.title || 'Saint Agents Meeting',
+                start_time: meeting.scheduled_time || undefined,
+                duration: meeting.duration_minutes || 30,
+              },
+              sendEmails: true,
+              hostEmail: meeting.host_id,
+              hostName: meeting.host_name,
+              guestEmail: meeting.guest_id,
+              guestName: meeting.guest_name,
+            });
+            const zoom = res.data;
+            if (zoom?.success && zoom.meeting?.join_url) {
+              await base44.entities.Meeting.update(meeting.id, {
+                online_link: zoom.meeting.join_url,
+                zoom_meeting_id: String(zoom.meeting.id),
+              });
+              queryClient.invalidateQueries({ queryKey: ['meetings'] });
+              toast.success('Zoom meeting created!');
+              window.open(zoom.meeting.join_url, '_blank');
+            } else {
+              toast.error('Failed to create Zoom meeting');
+            }
+          } catch (err) {
+            console.error('Zoom create error:', err);
+            toast.error('Failed to create Zoom: ' + (err.message || 'Unknown error'));
+          } finally {
+            setCreatingZoom(null);
+          }
         }
         break;
     }
@@ -319,6 +352,7 @@ export default function Meetings() {
                 meeting={meeting} 
                 currentUserId={currentUser?.email}
                 onAction={handleAction}
+                isCreatingZoom={creatingZoom === meeting.id}
               />
             ))}
           </div>
