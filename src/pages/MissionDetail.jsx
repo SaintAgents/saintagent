@@ -66,14 +66,14 @@ export default function MissionDetail() {
   const { data: mission, isLoading } = useQuery({
     queryKey: ['mission', missionId],
     queryFn: async () => {
-      // Try direct filter first, fallback to list if needed
       const missions = await base44.entities.Mission.filter({ id: missionId });
       if (missions && missions.length > 0) return missions[0];
-      // Fallback: list all and find
-      const allMissions = await base44.entities.Mission.list('-created_date', 200);
-      return allMissions.find(m => m.id === missionId);
+      return null;
     },
-    enabled: !!missionId
+    enabled: !!missionId,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
+    staleTime: 300000,
   });
 
   const { data: participants = [] } = useQuery({
