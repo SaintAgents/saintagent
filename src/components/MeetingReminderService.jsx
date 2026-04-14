@@ -71,6 +71,7 @@ export default function MeetingReminderService() {
       const now = new Date();
       const reminderWindows = [15, 60]; // 15 minutes and 1 hour
       const scheduleWindows = [5, 15]; // for personal schedule items
+      const POLL_TOLERANCE = 3; // minutes tolerance to match polling interval
 
       // Meetings (where current user is host or guest)
       (meetings || []).forEach((meeting) => {
@@ -79,7 +80,7 @@ export default function MeetingReminderService() {
         const minutesUntil = (meetingTime - now) / (1000 * 60);
         if (minutesUntil > 0 && minutesUntil <= 120) {
           reminderWindows.forEach((window) => {
-            if (Math.abs(minutesUntil - window) <= 1) {
+            if (Math.abs(minutesUntil - window) <= POLL_TOLERANCE) {
               const alreadySent = existingNotifications.some(
                 (n) => n.metadata?.meeting_id === meeting.id && n.metadata?.reminder_window === window
               );
@@ -114,7 +115,7 @@ export default function MeetingReminderService() {
         const minutesUntil = (eventTime - now) / (1000 * 60);
         if (minutesUntil > 0 && minutesUntil <= 120) {
           reminderWindows.forEach((window) => {
-            if (Math.abs(minutesUntil - window) <= 1) {
+            if (Math.abs(minutesUntil - window) <= POLL_TOLERANCE) {
               const alreadySent = existingNotifications.some(
                 (n) => n.metadata?.event_id === evt.id && n.metadata?.reminder_window === window
               );
@@ -165,7 +166,7 @@ export default function MeetingReminderService() {
         const minutesUntil = (schedTime - now) / (1000 * 60);
         if (minutesUntil > 0 && minutesUntil <= 120) {
           scheduleWindows.forEach((window) => {
-            if (Math.abs(minutesUntil - window) <= 1) {
+            if (Math.abs(minutesUntil - window) <= POLL_TOLERANCE) {
               const alreadySent = existingNotifications.some(
                 (n) => n.metadata?.daily_date === todayStr && n.metadata?.schedule_index === idx && n.metadata?.reminder_window === window
               );

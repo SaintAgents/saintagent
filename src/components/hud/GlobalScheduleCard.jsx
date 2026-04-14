@@ -215,10 +215,30 @@ export default function GlobalScheduleCard({ limit = 5 }) {
                     const ItemIcon = config.icon;
                     const itemDate = parseISO(item.time);
 
+                    const handleClick = () => {
+                      switch (item.type) {
+                        case 'meeting':
+                          window.location.href = createPageUrl('Meetings');
+                          break;
+                        case 'event':
+                          window.location.href = createPageUrl('EventDetail') + `?id=${item.id}`;
+                          break;
+                        case 'broadcast':
+                          window.location.href = createPageUrl('Broadcast') + `?id=${item.id}`;
+                          break;
+                        case 'mission':
+                          window.location.href = createPageUrl('MissionDetail') + `?id=${item.id}`;
+                          break;
+                        default:
+                          window.location.href = createPageUrl('Schedule');
+                      }
+                    };
+
                     return (
                       <div 
                         key={`${item.type}-${item.id}`}
-                        className="flex items-center gap-3 p-2 rounded-lg bg-white border hover:border-violet-200 hover:shadow-sm transition-all"
+                        className="flex items-center gap-3 p-2 rounded-lg bg-white border hover:border-violet-200 hover:shadow-sm transition-all cursor-pointer"
+                        onClick={handleClick}
                       >
                         {/* Type indicator */}
                         <div className={cn(
