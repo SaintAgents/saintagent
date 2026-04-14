@@ -964,10 +964,11 @@ export default function TopBar({
                 {/* Logout icon top-right */}
                 <button
                   onClick={() => base44.auth.logout(createPageUrl('Landing'))}
-                  className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors group"
+                  className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 transition-colors group border border-rose-200 dark:border-rose-800"
                   title="Sign Out"
                 >
                   <LogOut className="w-4 h-4 text-rose-500 group-hover:text-rose-600" />
+                  <span className="text-xs font-medium text-rose-600 dark:text-rose-400">Log Out</span>
                 </button>
                 <Avatar className="w-16 h-16 mb-3 ring-2 ring-violet-100 dark:ring-violet-900">
                   <AvatarImage src={profile?.avatar_url} alt={profile?.display_name || ''} />
