@@ -315,16 +315,19 @@ export default function Messages() {
     if (viewport) {
       viewport.scrollTop = viewport.scrollHeight;
     }
+    // Also try the sentinel ref
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
   }, []);
 
   React.useEffect(() => {
     // Immediate
     scrollToBottom();
-    // After render settles
-    const t1 = setTimeout(scrollToBottom, 50);
-    const t2 = setTimeout(scrollToBottom, 200);
-    const t3 = setTimeout(scrollToBottom, 500);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    // After render settles — multiple attempts to handle lazy content
+    const t1 = setTimeout(scrollToBottom, 100);
+    const t2 = setTimeout(scrollToBottom, 300);
+    const t3 = setTimeout(scrollToBottom, 600);
+    const t4 = setTimeout(scrollToBottom, 1200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, [currentMessages.length, selectedConversation?.id, scrollToBottom]);
   const STATUS_COLORS = { online: 'bg-emerald-500', focus: 'bg-amber-500', dnd: 'bg-rose-500', offline: 'bg-slate-400' };
   const STATUS_LABELS = { online: 'Online', focus: 'Focus', dnd: 'Do Not Disturb', offline: 'Offline' };
@@ -450,7 +453,7 @@ export default function Messages() {
 
   return (
     <>
-    <div className="h-[calc(100dvh-3.5rem)] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
+    <div className="h-[calc(100dvh-3.5rem-env(safe-area-inset-bottom))] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
       {/* Conversations List */}
       <div className={cn(
         "border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col",
@@ -759,7 +762,7 @@ export default function Messages() {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-2 pb-20 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
+          <div className="p-2 pb-4 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
             <div className="flex gap-1 md:gap-2 items-center">
               {/* Media Attachment - hidden on mobile to save space */}
               <div className="hidden md:flex gap-1">
