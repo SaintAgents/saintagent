@@ -759,7 +759,7 @@ export default function Messages() {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-2 md:p-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
+          <div className="p-2 pb-20 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
             <div className="flex gap-1 md:gap-2 items-center">
               {/* Media Attachment - hidden on mobile to save space */}
               <div className="hidden md:flex gap-1">

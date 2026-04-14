@@ -229,9 +229,11 @@ export default function RightSideTabs() {
     try { localStorage.setItem('help_auto_open', newVal ? 'on' : 'off'); } catch {}
   };
 
-  // Auto-open help on first visit to each page (if enabled)
+  // Auto-open help on first visit to each page (if enabled) — desktop only
   useEffect(() => {
     if (!autoOpenHelp) return;
+    // Never auto-open on mobile — it blocks the entire page
+    if (window.innerWidth < 768) return;
     const currentPage = getCurrentPage();
     const visitedKey = `visited_page_${currentPage}`;
     try {
