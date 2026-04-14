@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// ScrollArea replaced with native overflow for better mobile compatibility
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedDoc from '@/components/collab/SharedDoc';
@@ -310,10 +310,9 @@ export default function Messages() {
 
   // Auto-scroll to bottom when messages change or conversation is selected
   const scrollToBottom = React.useCallback(() => {
-    // ScrollArea wraps content in a [data-radix-scroll-area-viewport] div — scroll THAT
-    const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-    if (viewport) {
-      viewport.scrollTop = viewport.scrollHeight;
+    // Scroll the messages container directly
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
     // Also try the sentinel ref
     messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
@@ -456,11 +455,11 @@ export default function Messages() {
     <div className="h-[calc(100dvh-3.5rem-env(safe-area-inset-bottom))] md:h-[calc(100vh-7.5rem)] bg-slate-50 dark:bg-[#050505] flex flex-col md:flex-row overflow-hidden">
       {/* Conversations List */}
       <div className={cn(
-        "border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col",
-        "w-full md:w-80 shrink-0",
-        selectedConversation ? "hidden md:flex" : "flex"
+        "border-r bg-white dark:bg-[#0a0a0a] dark:border-[rgba(0,255,136,0.2)] flex flex-col overflow-hidden",
+        "w-full md:w-80 md:shrink-0",
+        selectedConversation ? "hidden md:flex" : "flex flex-1"
       )}>
-        <div className="p-2 md:p-4 border-b dark:border-[rgba(0,255,136,0.2)] space-y-2 md:space-y-3 sticky top-0 z-20 bg-white dark:bg-[#0a0a0a]">
+        <div className="p-2 md:p-4 border-b dark:border-[rgba(0,255,136,0.2)] space-y-2 md:space-y-3 shrink-0 bg-white dark:bg-[#0a0a0a]">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-1 text-sm md:text-base">
             <BackButton className="p-1" />
@@ -530,8 +529,8 @@ export default function Messages() {
 
 
         </div>
-        <ScrollArea className="flex-1">
-          <div className="pr-2">
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <div>
           {convList.map((conv) =>
               <div key={conv.id} className="relative group">
               <div
@@ -607,7 +606,7 @@ export default function Messages() {
                 </div>
               )}
               </div>
-                </ScrollArea>
+                </div>
       </div>
 
       {/* Messages Area */}
@@ -730,7 +729,7 @@ export default function Messages() {
           })()}
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+          <div className="flex-1 min-h-0 overflow-y-auto p-4" ref={scrollAreaRef}>
             <div className="space-y-4">
               {currentMessages.map((msg) => {
                 const isOwn = msg.from_user_id === user?.email;
@@ -759,7 +758,7 @@ export default function Messages() {
               <TypingIndicator users={typingUsers} profiles={profiles} />
             )}
             <div ref={messagesEndRef} />
-          </ScrollArea>
+          </div>
 
           {/* Input */}
           <div className="p-2 pb-4 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
