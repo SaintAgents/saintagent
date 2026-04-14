@@ -96,7 +96,7 @@ const MODE_ICONS = {
 const MODE_TABS = [
   { id: 'command', label: 'Command', page: 'CommandDeck' },
   { id: 'build', label: 'Build', page: 'Missions' },
-  { id: 'teach', label: 'Do', page: 'Studio' },
+  { id: 'teach', label: 'Teach', page: 'Studio' },
   { id: 'earn', label: 'Earn', page: 'Marketplace' },
 ];
 
