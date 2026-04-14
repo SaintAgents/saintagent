@@ -251,8 +251,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     });
   };
 
-  // Resize image for mission cover
-  const resizeImage = (file, maxWidth = 800, maxHeight = 400) => {
+  // Resize image for mission cover / hero
+  const resizeImage = (file, maxWidth = 1200, maxHeight = 600) => {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
@@ -288,8 +288,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     if (!localFile) return;
     setUploading(true);
     try {
-      // Resize image before upload
-      const resizedFile = await resizeImage(localFile, 800, 400);
+      // Resize image before upload (hero-quality)
+      const resizedFile = await resizeImage(localFile, 1200, 600);
       const res = await base44.integrations.Core.UploadFile({ file: resizedFile });
       if (res?.file_url) {
         setFormData({ ...formData, image_url: res.file_url });
