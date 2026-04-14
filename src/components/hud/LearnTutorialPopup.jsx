@@ -141,6 +141,13 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
     return () => clearTimeout(timer);
   }, [adminConfig]);
 
+  // Listen for manual open event from avatar menu
+  useEffect(() => {
+    const handleOpen = () => setVisible(true);
+    document.addEventListener('openLearnPopup', handleOpen);
+    return () => document.removeEventListener('openLearnPopup', handleOpen);
+  }, []);
+
   const getCompletedTutorials = () => {
     try {
       return JSON.parse(localStorage.getItem(COMPLETED_KEY) || '[]');

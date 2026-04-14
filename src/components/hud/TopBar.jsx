@@ -48,7 +48,8 @@ import {
   PoundSterling,
   ArrowLeft,
   LayoutDashboard,
-  Pencil
+  Pencil,
+  GraduationCap
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
 import ModeHelpModal from './ModeHelpModal';
@@ -1020,6 +1021,10 @@ export default function TopBar({
                   <DropdownMenuItem onClick={() => setQuickStartOpen(true)} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-medium">
                     <Sparkles className="w-4 h-4" />
                     <span>Quick Start Guide</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => document.dispatchEvent(new CustomEvent('openLearnPopup'))} className="flex items-center gap-3 px-4 py-2.5 text-amber-600 font-medium">
+                    <GraduationCap className="w-4 h-4" />
+                    <span>Learn & Earn</span>
                   </DropdownMenuItem>
                 </div>
 
