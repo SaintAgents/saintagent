@@ -78,7 +78,7 @@
         "platform"
       ],
       "default": "self",
-      "description": "Whether GGG rewards come from creator's wallet or platform treasury (requires admin approval)"
+      "description": "Whether GGG reward comes from creator's wallet (self) or is a request for platform/admin funding (platform)"
     },
     "reward_rank_points": {
       "type": "number",
