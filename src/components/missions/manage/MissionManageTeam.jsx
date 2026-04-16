@@ -175,13 +175,13 @@ export default function MissionManageTeam({ mission, currentUser }) {
         participant_ids: newParticipants,
         participant_count: newParticipants.length
       });
-      await base44.entities.Notification.create({
-        user_id: request.user_id,
-        type: 'mission',
-        title: 'Mission request approved!',
-        message: `You've been approved to join "${mission.title}"`,
-        action_url: createPageUrl('MissionDetail') + '?id=' + mission.id
-      });
+      // Send notification via engine (in-app + email)
+      await base44.functions.invoke('missionNotificationEngine', {
+        action: 'join_request_status_changed',
+        mission_id: mission.id,
+        join_request_id: request.id,
+        new_status: 'approved',
+      }).catch(e => console.warn('Notification engine failed:', e));
     },
     onSuccess: () => {
       toast.success('Request approved');
@@ -197,6 +197,13 @@ export default function MissionManageTeam({ mission, currentUser }) {
         reviewed_by: currentUser?.email,
         reviewed_at: new Date().toISOString()
       });
+      // Send notification via engine (in-app + email)
+      await base44.functions.invoke('missionNotificationEngine', {
+        action: 'join_request_status_changed',
+        mission_id: mission.id,
+        join_request_id: request.id,
+        new_status: 'rejected',
+      }).catch(e => console.warn('Notification engine failed:', e));
     },
     onSuccess: () => {
       toast.success('Request rejected');

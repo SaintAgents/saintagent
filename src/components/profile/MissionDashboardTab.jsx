@@ -4,20 +4,25 @@ import { useQuery } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import {
-  Target, Plus, ListFilter, Settings2, ChevronDown,
-  LayoutGrid, List
+  Target, Plus, ListFilter, Settings2,
+  LayoutGrid, List, Clock, Users, Coins, ChevronRight,
+  PanelRightOpen
 } from "lucide-react";
+import { formatDistanceToNow, parseISO, isPast } from "date-fns";
 import { createPageUrl } from '@/utils';
 
 import MissionAnalyticsBar from './MissionAnalyticsBar';
 import MissionCard from '@/components/hud/MissionCard';
 import MissionDetailModal from '@/components/missions/MissionDetailModal';
+import MissionControlPanel from '@/components/missions/manage/MissionControlPanel';
 
 export default function MissionDashboardTab({ currentUser, profile }) {
   const [filter, setFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+  const [viewMode, setViewMode] = useState('grid');
   const [selectedMission, setSelectedMission] = useState(null);
+  const [controlMission, setControlMission] = useState(null);
   const userId = currentUser?.email;
 
   const { data: allMissions = [], isLoading } = useQuery({
@@ -58,7 +63,6 @@ export default function MissionDashboardTab({ currentUser, profile }) {
     else if (filter === 'completed') result = result.filter(m => m.status === 'completed');
     else if (filter === 'created') result = result.filter(m => m.creator_id === userId);
     else if (filter === 'joined') result = result.filter(m => m.creator_id !== userId);
-    // Sort: active first, then by date
     return result.sort((a, b) => {
       if (a.status === 'active' && b.status !== 'active') return -1;
       if (b.status === 'active' && a.status !== 'active') return 1;
@@ -68,9 +72,12 @@ export default function MissionDashboardTab({ currentUser, profile }) {
 
   const filters = ['all', 'active', 'completed', 'created', 'joined'];
 
-  const handleMissionAction = (action, mission) => {
-    if (action === 'manage') {
-      window.location.href = createPageUrl('MissionManage') + '?id=' + mission.id;
+  const handleMissionClick = (mission) => {
+    const isCreator = mission.creator_id === userId;
+    if (isCreator) {
+      setControlMission(mission);
+    } else {
+      setSelectedMission(mission);
     }
   };
 
@@ -105,33 +112,29 @@ export default function MissionDashboardTab({ currentUser, profile }) {
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center bg-white rounded-lg border p-0.5">
-            <Button
-              variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
-              size="icon"
-              className="h-7 w-7 rounded-md"
-              onClick={() => setViewMode('grid')}
-            >
+            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="icon" className="h-7 w-7 rounded-md" onClick={() => setViewMode('grid')}>
               <LayoutGrid className="w-3.5 h-3.5" />
             </Button>
-            <Button
-              variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-              size="icon"
-              className="h-7 w-7 rounded-md"
-              onClick={() => setViewMode('list')}
-            >
+            <Button variant={viewMode === 'list' ? 'secondary' : 'ghost'} size="icon" className="h-7 w-7 rounded-md" onClick={() => setViewMode('list')}>
               <List className="w-3.5 h-3.5" />
             </Button>
           </div>
-          <Button
-            size="sm"
-            className="bg-violet-600 hover:bg-violet-700 gap-1"
-            onClick={() => window.location.href = createPageUrl('Missions')}
-          >
+          <Button size="sm" className="bg-violet-600 hover:bg-violet-700 gap-1" onClick={() => window.location.href = createPageUrl('Missions')}>
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">New Mission</span>
           </Button>
         </div>
       </div>
+
+      {/* Inline Control Panel */}
+      {controlMission && (
+        <MissionControlPanel
+          mission={controlMission}
+          currentUser={currentUser}
+          isCreator={controlMission.creator_id === userId}
+          onClose={() => setControlMission(null)}
+        />
+      )}
 
       {/* Mission Grid / List */}
       {isLoading ? (
@@ -148,10 +151,7 @@ export default function MissionDashboardTab({ currentUser, profile }) {
             <p className="text-sm text-slate-500 mb-4">
               {filter === 'all' ? "You haven't joined or created any missions yet." : `No ${filter} missions.`}
             </p>
-            <Button
-              className="bg-violet-600 hover:bg-violet-700"
-              onClick={() => window.location.href = createPageUrl('Missions')}
-            >
+            <Button className="bg-violet-600 hover:bg-violet-700" onClick={() => window.location.href = createPageUrl('Missions')}>
               Browse Missions
             </Button>
           </CardContent>
@@ -160,19 +160,24 @@ export default function MissionDashboardTab({ currentUser, profile }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map(mission => (
             <div key={mission.id} className="relative">
-              {/* Creator badge overlay */}
               {mission.creator_id === userId && (
-                <div className="absolute top-3 right-3 z-10">
+                <div className="absolute top-3 right-3 z-10 flex gap-1">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setControlMission(mission); }}
+                    className="p-1 rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors"
+                    title="Open Mission Control"
+                  >
+                    <PanelRightOpen className="w-3.5 h-3.5" />
+                  </button>
                   <Badge className="bg-violet-600 text-white text-[10px] px-1.5 py-0 gap-1">
                     <Settings2 className="w-2.5 h-2.5" />
                     Owner
                   </Badge>
                 </div>
               )}
-              <MissionCard
-                mission={mission}
-                onAction={handleMissionAction}
-              />
+              <MissionCard mission={mission} onAction={(action, m) => {
+                if (action === 'manage') setControlMission(m);
+              }} />
             </div>
           ))}
         </div>
@@ -183,14 +188,15 @@ export default function MissionDashboardTab({ currentUser, profile }) {
               key={mission.id}
               mission={mission}
               isCreator={mission.creator_id === userId}
-              onClick={() => setSelectedMission(mission)}
-              onManage={() => window.location.href = createPageUrl('MissionManage') + '?id=' + mission.id}
+              isSelected={controlMission?.id === mission.id}
+              onClick={() => handleMissionClick(mission)}
+              onManage={() => setControlMission(mission)}
             />
           ))}
         </div>
       )}
 
-      {/* Detail Modal for list view clicks */}
+      {/* Detail Modal for non-creator clicks */}
       {selectedMission && (
         <MissionDetailModal
           mission={selectedMission}
@@ -202,12 +208,7 @@ export default function MissionDashboardTab({ currentUser, profile }) {
   );
 }
 
-// Compact list row for list view mode
-import { Progress } from "@/components/ui/progress";
-import { Clock, Users, Coins, ChevronRight } from "lucide-react";
-import { formatDistanceToNow, parseISO, isPast } from "date-fns";
-
-function MissionListRow({ mission, isCreator, onClick, onManage }) {
+function MissionListRow({ mission, isCreator, isSelected, onClick, onManage }) {
   const completedTasks = mission.tasks?.filter(t => t.completed)?.length || 0;
   const totalTasks = mission.tasks?.length || 0;
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
@@ -226,8 +227,10 @@ function MissionListRow({ mission, isCreator, onClick, onManage }) {
 
   return (
     <div
-      className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer bg-white"
-      onClick={isCreator ? onManage : onClick}
+      className={`flex items-center gap-4 p-4 rounded-xl border transition-all cursor-pointer bg-white ${
+        isSelected ? 'border-violet-400 shadow-md ring-1 ring-violet-200' : 'border-slate-200 hover:border-violet-300 hover:shadow-sm'
+      }`}
+      onClick={onClick}
     >
       <div className="p-2 rounded-lg bg-violet-100 shrink-0">
         <Target className="w-5 h-5 text-violet-600" />
@@ -250,8 +253,8 @@ function MissionListRow({ mission, isCreator, onClick, onManage }) {
       </div>
       <div className="flex items-center gap-1 shrink-0">
         {isCreator && (
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-violet-600" onClick={(e) => { e.stopPropagation(); onManage(); }} title="Manage Mission">
-            <Settings2 className="w-4 h-4" />
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-violet-600" onClick={(e) => { e.stopPropagation(); onManage(); }} title="Open Control Panel">
+            <PanelRightOpen className="w-4 h-4" />
           </Button>
         )}
         <ChevronRight className="w-4 h-4 text-slate-400" />

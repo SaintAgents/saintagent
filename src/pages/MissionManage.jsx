@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Target, ArrowLeft, Pencil, Users, BarChart3, Settings, Shield
+  Target, ArrowLeft, Pencil, Users, BarChart3, Settings, Shield, Clock, Bell
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import Breadcrumb from '@/components/hud/Breadcrumb';
@@ -15,6 +15,8 @@ import CreateMissionModal from '@/components/CreateMissionModal';
 import MissionManageOverview from '@/components/missions/manage/MissionManageOverview';
 import MissionManageTeam from '@/components/missions/manage/MissionManageTeam';
 import MissionManageControls from '@/components/missions/manage/MissionManageControls';
+import MissionDeadlinePanel from '@/components/missions/manage/MissionDeadlinePanel';
+import MissionNotificationsLog from '@/components/missions/manage/MissionNotificationsLog';
 
 export default function MissionManage() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -155,9 +157,17 @@ export default function MissionManage() {
               <Users className="w-4 h-4" />
               Team
             </TabsTrigger>
+            <TabsTrigger value="deadlines" className="gap-1.5">
+              <Clock className="w-4 h-4" />
+              Deadlines
+            </TabsTrigger>
             <TabsTrigger value="controls" className="gap-1.5">
               <Settings className="w-4 h-4" />
               Controls
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="gap-1.5">
+              <Bell className="w-4 h-4" />
+              Log
             </TabsTrigger>
           </TabsList>
 
@@ -169,8 +179,16 @@ export default function MissionManage() {
             <MissionManageTeam mission={mission} currentUser={user} />
           </TabsContent>
 
+          <TabsContent value="deadlines">
+            <MissionDeadlinePanel mission={mission} isCreator={isCreator} />
+          </TabsContent>
+
           <TabsContent value="controls">
             <MissionManageControls mission={mission} currentUser={user} missionId={missionId} />
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <MissionNotificationsLog mission={mission} currentUser={user} />
           </TabsContent>
         </Tabs>
       </div>

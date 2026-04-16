@@ -175,6 +175,9 @@ export default function MissionTaskTracker({ mission, canEdit }) {
   });
 
   const handleTaskStatusChange = (milestoneIndex, taskIndex, newStatus) => {
+    const oldTask = mission.milestones?.[milestoneIndex]?.tasks?.[taskIndex];
+    const oldStatus = oldTask?.status || (oldTask?.completed ? 'completed' : 'todo');
+    
     const updatedMilestones = (mission.milestones || []).map((m, mi) => {
       if (mi !== milestoneIndex) return m;
       const updatedTasks = (m.tasks || []).map((t, ti) => {
@@ -186,6 +189,16 @@ export default function MissionTaskTracker({ mission, canEdit }) {
       return { ...m, tasks: updatedTasks, completed: allDone };
     });
     updateMutation.mutate(updatedMilestones);
+
+    // Send notifications when a task is marked completed (and wasn't already)
+    if (newStatus === 'completed' && oldStatus !== 'completed') {
+      base44.functions.invoke('missionNotificationEngine', {
+        action: 'task_completed',
+        mission_id: mission.id,
+        task_index: taskIndex,
+        milestone_index: milestoneIndex,
+      }).catch(e => console.warn('Notification send failed:', e));
+    }
   };
 
   const milestones = mission?.milestones || [];
