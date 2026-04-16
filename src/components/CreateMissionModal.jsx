@@ -365,50 +365,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                       />
                     </div>
 
-                    <div>
-                      <Label>Description</Label>
-                      <Textarea
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Describe the mission in detail..."
-                        rows={4}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Mission Type</Label>
-                        <Select
-                          value={formData.mission_type}
-                          onValueChange={(value) => setFormData({ ...formData, mission_type: value })}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="personal">Personal</SelectItem>
-                            <SelectItem value="circle">Circle</SelectItem>
-                            <SelectItem value="region">Region</SelectItem>
-                            <SelectItem value="platform">Platform</SelectItem>
-                            <SelectItem value="leader">Leader</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label>Max Participants</Label>
-                        <Input
-                          type="number"
-                          value={formData.max_participants}
-                          onChange={(e) => setFormData({ ...formData, max_participants: e.target.value })}
-                          placeholder="Unlimited"
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Cover Image */}
+                    {/* Cover Image - placed early so it's visible on mobile */}
                     <div>
                       <Label className="flex items-center gap-2">
                         <Image className="w-4 h-4" />
@@ -452,6 +409,50 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                         />
                       </div>
                     </div>
+
+                    <div>
+                      <Label>Description</Label>
+                      <Textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Describe the mission in detail..."
+                        rows={4}
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Mission Type</Label>
+                        <Select
+                          value={formData.mission_type}
+                          onValueChange={(value) => setFormData({ ...formData, mission_type: value })}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="personal">Personal</SelectItem>
+                            <SelectItem value="circle">Circle</SelectItem>
+                            <SelectItem value="region">Region</SelectItem>
+                            <SelectItem value="platform">Platform</SelectItem>
+                            <SelectItem value="leader">Leader</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label>Max Participants</Label>
+                        <Input
+                          type="number"
+                          value={formData.max_participants}
+                          onChange={(e) => setFormData({ ...formData, max_participants: e.target.value })}
+                          placeholder="Unlimited"
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+
                   </TabsContent>
 
                   {/* Milestones Tab */}
