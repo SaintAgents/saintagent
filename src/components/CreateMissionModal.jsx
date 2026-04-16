@@ -36,7 +36,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     roles_needed: [],
     milestones: [],
     requires_ggg_approval: false,
-    join_policy: 'open'
+    join_policy: 'open',
+    ggg_funding_source: 'self'
   });
   const [newRole, setNewRole] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -89,7 +90,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         roles_needed: editMission.roles_needed || [],
         milestones: editMission.milestones || [],
         requires_ggg_approval: editMission.requires_ggg_approval || false,
-        join_policy: editMission.join_policy || 'open'
+        join_policy: editMission.join_policy || 'open',
+        ggg_funding_source: editMission.ggg_funding_source || 'self'
       });
       setActiveTab('basics');
     } else if (prefillData) {
@@ -123,7 +125,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
       roles_needed: [],
       milestones: [],
       requires_ggg_approval: false,
-      join_policy: 'open'
+      join_policy: 'open',
+      ggg_funding_source: 'self'
     });
     setActiveTab('basics');
   };
@@ -131,7 +134,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
   const createMutation = useMutation({
     mutationFn: async (data) => {
       const gggAmount = parseFloat(data.reward_ggg) || 0;
-      const needsApproval = data.requires_ggg_approval || (!canOverrideCap && gggAmount > effectiveMaxGGG);
+      const isPlatformFunded = data.ggg_funding_source === 'platform';
+      const needsApproval = isPlatformFunded || data.requires_ggg_approval || (!canOverrideCap && gggAmount > effectiveMaxGGG);
       
       // Build the editable fields only
       const editableFields = {
@@ -150,6 +154,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         milestones: data.milestones || [],
         requires_ggg_approval: needsApproval,
         join_policy: data.join_policy || 'open',
+        ggg_funding_source: data.ggg_funding_source || 'self',
       };
 
       // If posting as a business entity, look up entity details
@@ -301,7 +306,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     setUploading(false);
   };
 
-  const gggRequiresApproval = !canOverrideCap && (parseFloat(formData.reward_ggg) || 0) > 0;
+  const gggRequiresApproval = formData.ggg_funding_source === 'platform' || (!canOverrideCap && (parseFloat(formData.reward_ggg) || 0) > 0);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -478,6 +483,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                       onApprovalChange={(v) => setFormData({ ...formData, requires_ggg_approval: v })}
                       maxGGG={effectiveMaxGGG}
                       canOverrideCap={canOverrideCap}
+                      fundingSource={formData.ggg_funding_source}
+                      onFundingSourceChange={(source) => setFormData({ ...formData, ggg_funding_source: source, requires_ggg_approval: source === 'platform' ? true : formData.requires_ggg_approval })}
                     />
                   </TabsContent>
 

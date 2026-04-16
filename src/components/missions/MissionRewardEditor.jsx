@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Coins, Award, TrendingUp, Zap, Shield, Info, AlertTriangle } from "lucide-react";
+import { Coins, Award, TrendingUp, Zap, Shield, Info, AlertTriangle, Wallet, Building2 } from "lucide-react";
 import { GGG_TO_USD } from '@/components/earnings/gggMatrix';
 
 // Available badges that can be awarded
@@ -36,7 +36,9 @@ export default function MissionRewardEditor({
   requiresApproval,
   onApprovalChange,
   maxGGG,
-  canOverrideCap 
+  canOverrideCap,
+  fundingSource,
+  onFundingSourceChange
 }) {
   const updateReward = (key, value) => {
     onChange({ ...rewards, [key]: value });
@@ -45,6 +47,7 @@ export default function MissionRewardEditor({
   const gggValue = parseFloat(rewards.reward_ggg) || 0;
   const usdValue = gggValue * GGG_TO_USD;
   const exceedsCap = !canOverrideCap && maxGGG && gggValue > maxGGG;
+  const currentFunding = fundingSource || 'self';
 
   return (
     <div className="space-y-4">
@@ -52,6 +55,52 @@ export default function MissionRewardEditor({
         <Award className="w-5 h-5 text-amber-500" />
         Reward Structure
       </Label>
+
+      {/* GGG Funding Source */}
+      {gggValue > 0 && (
+        <div>
+          <Label className="flex items-center gap-2 mb-2 text-sm font-medium">
+            <Coins className="w-4 h-4 text-amber-500" />
+            GGG Funding Source
+          </Label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => onFundingSourceChange?.('self')}
+              className={`p-3 rounded-xl border-2 text-left transition-all ${
+                currentFunding === 'self'
+                  ? 'border-emerald-500 bg-emerald-50'
+                  : 'border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              <Wallet className="w-5 h-5 text-emerald-600 mb-1" />
+              <p className="font-medium text-sm text-slate-900">My Wallet</p>
+              <p className="text-xs text-slate-500 mt-0.5">Fund from your own GGG balance</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => onFundingSourceChange?.('platform')}
+              className={`p-3 rounded-xl border-2 text-left transition-all ${
+                currentFunding === 'platform'
+                  ? 'border-violet-500 bg-violet-50'
+                  : 'border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              <Building2 className="w-5 h-5 text-violet-600 mb-1" />
+              <p className="font-medium text-sm text-slate-900">Platform Treasury</p>
+              <p className="text-xs text-slate-500 mt-0.5">Request funding — requires admin approval</p>
+            </button>
+          </div>
+          {currentFunding === 'platform' && (
+            <Alert className="mt-2 bg-violet-50 border-violet-200">
+              <Info className="w-4 h-4 text-violet-600" />
+              <AlertDescription className="text-sm text-violet-700">
+                This mission will be submitted for admin approval. An admin must approve the GGG funding before the mission goes live.
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* GGG Reward */}

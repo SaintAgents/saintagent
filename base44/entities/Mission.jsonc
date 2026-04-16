@@ -1,0 +1,274 @@
+{
+  "name": "Mission",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "mission_type": {
+      "type": "string",
+      "enum": [
+        "platform",
+        "circle",
+        "region",
+        "leader",
+        "personal"
+      ],
+      "default": "platform"
+    },
+    "creator_id": {
+      "type": "string"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "BusinessEntity5D ID if created on behalf of a business"
+    },
+    "entity_name": {
+      "type": "string",
+      "description": "Business entity name"
+    },
+    "entity_logo": {
+      "type": "string",
+      "description": "Business entity logo URL"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_approval",
+        "active",
+        "completed",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "join_policy": {
+      "type": "string",
+      "enum": [
+        "open",
+        "approval_required"
+      ],
+      "default": "open"
+    },
+    "reward_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "ggg_funding_source": {
+      "type": "string",
+      "enum": [
+        "self",
+        "platform"
+      ],
+      "default": "self",
+      "description": "Whether GGG rewards come from creator's wallet or platform treasury (requires admin approval)"
+    },
+    "reward_rank_points": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_boost": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_badge_code": {
+      "type": "string"
+    },
+    "reward_role": {
+      "type": "string"
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "completed": {
+            "type": "boolean",
+            "default": false
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "reward_ggg": {
+            "type": "number"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "completed": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "todo",
+                    "in_progress",
+                    "completed"
+                  ],
+                  "default": "todo"
+                },
+                "assignee_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "default": []
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "todo",
+              "in_progress",
+              "completed"
+            ],
+            "default": "todo"
+          }
+        }
+      }
+    },
+    "roles_needed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "participant_count": {
+      "type": "number",
+      "default": 0
+    },
+    "max_participants": {
+      "type": "number"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "is_demo": {
+      "type": "boolean",
+      "default": false
+    },
+    "claimed_by": {
+      "type": "string"
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requires_ggg_approval": {
+      "type": "boolean",
+      "default": false
+    },
+    "ggg_approval_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "ggg_approval_note": {
+      "type": "string"
+    },
+    "meta_variance": {
+      "type": "object",
+      "properties": {
+        "coherence_factor": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 5
+        },
+        "tagline": {
+          "type": "string",
+          "default": "Meta-Variance: The science of how reality adapts to you."
+        },
+        "difficulty_multiplier": {
+          "type": "number",
+          "default": 1.0
+        },
+        "reward_multiplier": {
+          "type": "number",
+          "default": 1.0
+        },
+        "timeline_resonance": {
+          "type": "string",
+          "enum": [
+            "atlantis",
+            "egypt",
+            "qumran",
+            "france",
+            "tibet",
+            "future",
+            "source"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "title",
+    "objective"
+  ]
+}
