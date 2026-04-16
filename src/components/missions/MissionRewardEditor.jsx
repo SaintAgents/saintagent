@@ -84,6 +84,51 @@ export default function MissionRewardEditor({
                 Exceeds cap - requires approval
               </p>
             )}
+
+            {/* Funding Source Selector */}
+            {gggValue > 0 && (
+              <div className="pt-2 border-t border-amber-200 space-y-2">
+                <Label className="text-xs font-medium text-amber-800">Funding Source</Label>
+                <div className="grid grid-cols-1 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onFundingSourceChange?.('self')}
+                    className={`flex items-center gap-2 p-2 rounded-lg border-2 text-left transition-all text-xs ${
+                      gggFundingSource === 'self'
+                        ? 'border-amber-500 bg-amber-100'
+                        : 'border-slate-200 hover:border-amber-300 bg-white'
+                    }`}
+                  >
+                    <Wallet className="w-4 h-4 text-amber-600 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-800">My Wallet</p>
+                      <p className="text-slate-500 truncate">Balance: {userGGGBalance.toFixed(2)} GGG</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onFundingSourceChange?.('platform')}
+                    className={`flex items-center gap-2 p-2 rounded-lg border-2 text-left transition-all text-xs ${
+                      gggFundingSource === 'platform'
+                        ? 'border-violet-500 bg-violet-50'
+                        : 'border-slate-200 hover:border-violet-300 bg-white'
+                    }`}
+                  >
+                    <Building2 className="w-4 h-4 text-violet-600 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-800">Request Platform Funding</p>
+                      <p className="text-slate-500">Admin approval required</p>
+                    </div>
+                  </button>
+                </div>
+                {gggFundingSource === 'self' && gggValue > userGGGBalance && (
+                  <p className="text-xs text-red-500 flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
+                    Insufficient balance ({userGGGBalance.toFixed(2)} GGG available)
+                  </p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 

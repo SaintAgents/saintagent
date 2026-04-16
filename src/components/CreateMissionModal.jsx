@@ -36,8 +36,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
     roles_needed: [],
     milestones: [],
     requires_ggg_approval: false,
-    join_policy: 'open',
-    ggg_funding_source: 'self'
+    ggg_funding_source: 'self',
+    join_policy: 'open'
   });
   const [newRole, setNewRole] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -90,8 +90,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         roles_needed: editMission.roles_needed || [],
         milestones: editMission.milestones || [],
         requires_ggg_approval: editMission.requires_ggg_approval || false,
-        join_policy: editMission.join_policy || 'open',
-        ggg_funding_source: editMission.ggg_funding_source || 'self'
+        ggg_funding_source: editMission.ggg_funding_source || 'self',
+        join_policy: editMission.join_policy || 'open'
       });
       setActiveTab('basics');
     } else if (prefillData) {
@@ -125,8 +125,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
       roles_needed: [],
       milestones: [],
       requires_ggg_approval: false,
-      join_policy: 'open',
-      ggg_funding_source: 'self'
+      ggg_funding_source: 'self',
+      join_policy: 'open'
     });
     setActiveTab('basics');
   };
@@ -153,8 +153,8 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         roles_needed: data.roles_needed || [],
         milestones: data.milestones || [],
         requires_ggg_approval: needsApproval,
-        join_policy: data.join_policy || 'open',
         ggg_funding_source: data.ggg_funding_source || 'self',
+        join_policy: data.join_policy || 'open',
       };
 
       // If posting as a business entity, look up entity details
@@ -192,7 +192,7 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
         await base44.entities.AdminRequest.create({
           request_type: 'mission_ggg_approval',
           title: `GGG Approval: ${data.title}`,
-          description: `Mission "${data.title}" requests ${gggAmount} GGG reward (≈$${(gggAmount * GGG_TO_USD).toFixed(2)})`,
+          description: `Mission "${data.title}" requests ${gggAmount} GGG reward (≈$${(gggAmount * GGG_TO_USD).toFixed(2)})${isPlatformFunded ? ' — Platform funding requested' : ' — Self-funded from creator wallet'}`,
           requester_id: user.email,
           requester_name: profile?.display_name || user.full_name,
           requester_avatar: profile?.avatar_url,
@@ -483,8 +483,9 @@ export default function CreateMissionModal({ open, onClose, prefillData, editMis
                       onApprovalChange={(v) => setFormData({ ...formData, requires_ggg_approval: v })}
                       maxGGG={effectiveMaxGGG}
                       canOverrideCap={canOverrideCap}
-                      fundingSource={formData.ggg_funding_source}
-                      onFundingSourceChange={(source) => setFormData({ ...formData, ggg_funding_source: source, requires_ggg_approval: source === 'platform' ? true : formData.requires_ggg_approval })}
+                      gggFundingSource={formData.ggg_funding_source}
+                      onFundingSourceChange={(src) => setFormData({ ...formData, ggg_funding_source: src, requires_ggg_approval: src === 'platform' ? true : formData.requires_ggg_approval })}
+                      userGGGBalance={profile?.ggg_balance || 0}
                     />
                   </TabsContent>
 
