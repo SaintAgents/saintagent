@@ -371,7 +371,7 @@ export default function RightSideTabs() {
           // On mobile, only show if panel is open (triggered from menu)
           showHelpPanel ? "block" : "hidden md:block"
         )}
-        style={{ bottom: '60px' }}
+        style={{ bottom: '100px' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
@@ -396,12 +396,12 @@ export default function RightSideTabs() {
             // Mobile: full screen overlay but leave space at top for topbar
             "inset-0 top-[3.5rem] pb-20",
             // Desktop: positioned bottom-right panel with fixed height
-            "md:inset-auto md:top-auto md:pb-0 md:bottom-24 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
+            "md:inset-auto md:top-auto md:pb-0 md:bottom-28 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
             showHelpPanel ? "opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           )}
           data-solid-panel="true"
           data-help-panel="true"
-          style={{ right: '0px' }}
+          style={{ right: '8px' }}
         >
           {conciergeMode ? (
             <div className="flex flex-col h-full min-h-0">
