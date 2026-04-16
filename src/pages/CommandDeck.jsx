@@ -557,18 +557,32 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   });
   const meetings = meetingsRaw.filter(m => m.host_id === currentUser?.email || m.guest_id === currentUser?.email);
 
-  // DISABLE missions - causing rate limits
-  const missions = [];
+  const { data: missions = [] } = useQuery({
+    queryKey: ['dashboardMissions', currentUser?.email],
+    queryFn: async () => {
+      const email = currentUser?.email;
+      const saNum = profile?.sa_number;
+      const allActive = await base44.entities.Mission.filter({ status: 'active' }, '-created_date', 50);
+      return allActive.filter(m => m.creator_id === email || m.participant_ids?.includes(email) || (saNum && m.participant_ids?.includes(saNum)));
+    },
+    enabled: queryStage >= 2 && !!currentUser?.email,
+    staleTime: 300000, refetchOnWindowFocus: false,
+  });
 
   // DISABLE listings - causing rate limits
   const listings = [];
 
-  // Projects for dashboard card
   const { data: projects = [] } = useQuery({
-    queryKey: ['dashboardProjects'],
-    queryFn: () => base44.entities.Project.filter({ status: 'funded' }, '-created_date', 20),
-    enabled: queryStage >= 2,
-    staleTime: 300000
+    queryKey: ['dashboardProjects', currentUser?.email],
+    queryFn: async () => {
+      const email = currentUser?.email;
+      const owned = await base44.entities.Project.filter({ owner_id: email }, '-created_date', 50);
+      const claimed = await base44.entities.Project.filter({ claimed_by: email, claim_status: 'approved' }, '-created_date', 50);
+      const seen = new Set();
+      return [...owned, ...claimed].filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; });
+    },
+    enabled: queryStage >= 2 && !!currentUser?.email,
+    staleTime: 300000, refetchOnWindowFocus: false,
   });
 
   // DISABLE notifications - causing rate limits
