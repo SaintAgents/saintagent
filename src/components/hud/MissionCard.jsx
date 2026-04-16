@@ -31,7 +31,7 @@ const MISSION_IMAGES = {
   default: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80' // Holographic
 };
 
-export default function MissionCard({ mission, onAction, variant = "default" }) {
+export default function MissionCard({ mission, onAction, variant = "default", onClick: onClickOverride }) {
   const [detailOpen, setDetailOpen] = useState(false);
   const completedTasks = mission.tasks?.filter((t) => t.completed)?.length || 0;
   const totalTasks = mission.tasks?.length || 0;
@@ -77,7 +77,7 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
     <>
     <div 
       className="mission-card bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.3)] overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
-      onClick={() => setDetailOpen(true)}
+      onClick={() => onClickOverride ? onClickOverride() : setDetailOpen(true)}
     >
       {/* Always show image */}
       <div className="relative h-40 bg-gradient-to-br from-violet-500 to-purple-600">
@@ -177,7 +177,7 @@ export default function MissionCard({ mission, onAction, variant = "default" }) 
         <div className="flex items-center gap-2">
           <Button
             className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg"
-            onClick={(e) => { e.stopPropagation(); setDetailOpen(true); }}>
+            onClick={(e) => { e.stopPropagation(); onClickOverride ? onClickOverride() : setDetailOpen(true); }}>
             <Target className="w-4 h-4 mr-1.5" />
             View Mission
           </Button>

@@ -174,8 +174,10 @@ export default function MissionDashboardTab({ currentUser, profile }) {
                 </div>
               )}
               <MissionCard mission={mission} onAction={(action, m) => {
-                if (action === 'manage') setControlMission(m);
-              }} />
+                if (action === 'manage') window.location.href = createPageUrl('MissionManage') + '?id=' + m.id;
+              }}
+              onClick={mission.creator_id === userId ? () => { window.location.href = createPageUrl('MissionManage') + '?id=' + mission.id; } : undefined}
+              />
             </div>
           ))}
         </div>
