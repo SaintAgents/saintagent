@@ -1913,6 +1913,14 @@ html[data-theme='dark'] [data-sidebar] {
     }
 }
 
+/* Help panel - constrain to viewport on tablet */
+@media (min-width: 768px) and (max-width: 1100px) {
+  [data-help-panel] {
+    max-width: calc(100vw - 1rem) !important;
+    right: 0.5rem !important;
+  }
+}
+
 /* Tablet adjustments */
 @media (min-width: 768px) and (max-width: 1023px) {
   /* 2 columns on tablet */
