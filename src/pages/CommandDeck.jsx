@@ -78,6 +78,7 @@ import GlobalScheduleCard from '@/components/hud/GlobalScheduleCard';
 import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import AIProfileCompletionPrompt from '@/components/ai/AIProfileCompletionPrompt';
 import ControlsDeck from '@/components/hud/ControlsDeck';
+import MatchScanPulse from '@/components/hud/MatchScanPulse';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -158,9 +159,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } catch { return getDefaultCustomCards(); }
   });
   
-  // Set default view mode based on rank when profile loads (only if not already set)
-  // Note: profile query is defined below after currentUser query
-
   // Persist deck view mode and notify other components
   useEffect(() => {
     if (deckViewMode) {
@@ -1707,7 +1705,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint /></span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')}>
+            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint />{profile?.auto_scan_prefs?.new_matches_count > 0 && <MatchScanPulse count={profile.auto_scan_prefs.new_matches_count} variant="badge" />}</span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>

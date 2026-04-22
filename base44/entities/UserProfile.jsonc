@@ -1,0 +1,431 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to the user"
+    },
+    "handle": {
+      "type": "string",
+      "description": "Unique username handle"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "alias": {
+      "type": "string",
+      "description": "Optional call name or alias"
+    },
+    "sa_number": {
+      "type": "string",
+      "description": "Unique SaintAgent number (e.g., 000001)"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "hero_image_url": {
+      "type": "string",
+      "description": "Banner/hero image URL"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short bio (max 500 characters)"
+    },
+    "location": {
+      "type": "string",
+      "description": "City, region, or country"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "online",
+        "focus",
+        "dnd",
+        "offline"
+      ],
+      "default": "online"
+    },
+    "status_message": {
+      "type": "string",
+      "description": "Custom status message (max 100 chars)"
+    },
+    "dm_policy": {
+      "type": "string",
+      "enum": [
+        "everyone",
+        "followers",
+        "mutual",
+        "none"
+      ],
+      "default": "everyone"
+    },
+    "profile_visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "members_only",
+        "private"
+      ],
+      "default": "public"
+    },
+    "visibility_settings": {
+      "type": "object",
+      "description": "Privacy settings per field"
+    },
+    "notification_prefs": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "boolean",
+          "default": true
+        },
+        "in_app": {
+          "type": "boolean",
+          "default": true
+        },
+        "push": {
+          "type": "boolean",
+          "default": false
+        },
+        "digest_enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "digest_frequency": {
+          "type": "string",
+          "enum": [
+            "daily",
+            "weekly",
+            "none"
+          ],
+          "default": "none"
+        },
+        "digest_time": {
+          "type": "string",
+          "default": "09:00"
+        },
+        "digest_day": {
+          "type": "string",
+          "enum": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ],
+          "default": "monday"
+        },
+        "quiet_hours_enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "quiet_hours_start": {
+          "type": "string",
+          "default": "22:00"
+        },
+        "quiet_hours_end": {
+          "type": "string",
+          "default": "08:00"
+        }
+      },
+      "default": {}
+    },
+    "notification_categories": {
+      "type": "object",
+      "description": "Per-category notification preferences",
+      "default": {}
+    },
+    "task_notification_prefs": {
+      "type": "object",
+      "properties": {
+        "task_assigned": {
+          "type": "boolean",
+          "default": true
+        },
+        "task_due_reminder": {
+          "type": "boolean",
+          "default": true
+        },
+        "task_due_days_before": {
+          "type": "number",
+          "default": 1
+        },
+        "dependency_met": {
+          "type": "boolean",
+          "default": true
+        },
+        "project_updates": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "default": {}
+    },
+    "auto_scan_prefs": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "scan_relationships": {
+          "type": "boolean",
+          "default": true
+        },
+        "scan_connections": {
+          "type": "boolean",
+          "default": true
+        },
+        "frequency_hours": {
+          "type": "number",
+          "default": 24,
+          "description": "How often to auto-scan in hours (6-168)"
+        },
+        "notify_mode": {
+          "type": "string",
+          "enum": [
+            "notification",
+            "pulse"
+          ],
+          "default": "pulse",
+          "description": "notification = toast/bell alert, pulse = subtle glow on nav icon"
+        },
+        "last_scan_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "new_matches_count": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "default": {}
+    },
+    "theme_preference": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark",
+        "custom"
+      ],
+      "default": "light",
+      "description": "UI theme preference"
+    },
+    "custom_theme_colors": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        }
+      },
+      "description": "Custom theme color hex codes"
+    },
+    "command_deck_layout": {
+      "type": "object",
+      "properties": {
+        "view_mode": {
+          "type": "string",
+          "enum": [
+            "standard",
+            "compact",
+            "analytics"
+          ],
+          "default": "standard"
+        },
+        "show_side_panel": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "default": {}
+    },
+    "social_links": {
+      "type": "object",
+      "properties": {
+        "website": {
+          "type": "string"
+        },
+        "twitter": {
+          "type": "string"
+        },
+        "instagram": {
+          "type": "string"
+        },
+        "facebook": {
+          "type": "string"
+        },
+        "linkedin": {
+          "type": "string"
+        },
+        "youtube": {
+          "type": "string"
+        },
+        "tiktok": {
+          "type": "string"
+        },
+        "telegram": {
+          "type": "string"
+        },
+        "discord": {
+          "type": "string"
+        },
+        "substack": {
+          "type": "string"
+        },
+        "custom_link_1": {
+          "type": "string"
+        },
+        "custom_link_1_label": {
+          "type": "string"
+        },
+        "custom_link_2": {
+          "type": "string"
+        },
+        "custom_link_2_label": {
+          "type": "string"
+        }
+      },
+      "default": {},
+      "description": "Social media and website links"
+    },
+    "ggg_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "rank_code": {
+      "type": "string",
+      "enum": [
+        "seeker",
+        "initiate",
+        "adept",
+        "practitioner",
+        "master",
+        "sage",
+        "oracle",
+        "ascended",
+        "guardian"
+      ],
+      "default": "seeker"
+    },
+    "rank_points": {
+      "type": "number",
+      "default": 0
+    },
+    "follower_count": {
+      "type": "number",
+      "default": 0
+    },
+    "following_count": {
+      "type": "number",
+      "default": 0
+    },
+    "intentions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User's set intentions"
+    },
+    "personal_goals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "target": {
+            "type": "number"
+          },
+          "current": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "User's personal goals for tracking"
+    },
+    "mbti_prompt_dismissed": {
+      "type": "boolean",
+      "default": false
+    },
+    "mbti_prompt_dismissed_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mystical_identifier": {
+      "type": "string",
+      "description": "Mystical identity label"
+    },
+    "birthday": {
+      "type": "string",
+      "format": "date"
+    },
+    "astrological_sign": {
+      "type": "string"
+    },
+    "rising_sign": {
+      "type": "string"
+    },
+    "moon_sign": {
+      "type": "string"
+    },
+    "numerology_life_path": {
+      "type": "number"
+    },
+    "numerology_destiny": {
+      "type": "number"
+    },
+    "numerology_soul_urge": {
+      "type": "number"
+    },
+    "numerology_personality": {
+      "type": "number"
+    },
+    "enneagram_type": {
+      "type": "string"
+    },
+    "birth_card": {
+      "type": "string"
+    },
+    "planetary_ruling_card": {
+      "type": "string"
+    },
+    "sun_card": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "handle",
+    "display_name"
+  ]
+}

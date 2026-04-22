@@ -24,12 +24,14 @@ import {
   Eye,
   Save,
   Check,
-  Landmark } from
+  Landmark,
+  Radar } from
 "lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import TaskNotificationSettings from '@/components/notifications/TaskNotificationSettings';
 import BackButton from '@/components/hud/BackButton';
 import BackgroundSettings from '@/components/settings/BackgroundSettings';
+import AutoScanSettings from '@/components/settings/AutoScanSettings';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
 import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
 import { trackUpdateProfile } from '@/components/gamification/challengeTracker';
@@ -60,7 +62,8 @@ export default function Settings() {
       notification_prefs: profile.notification_prefs || prev.notification_prefs,
       theme_preference: profile.theme_preference || prev.theme_preference,
       custom_theme_colors: profile.custom_theme_colors || prev.custom_theme_colors,
-      command_deck_layout: profile.command_deck_layout || prev.command_deck_layout
+      command_deck_layout: profile.command_deck_layout || prev.command_deck_layout,
+      auto_scan_prefs: profile.auto_scan_prefs || prev.auto_scan_prefs
     }));
   }, [profile?.id]);
 
@@ -77,6 +80,7 @@ export default function Settings() {
       accent: typeof window !== 'undefined' ? localStorage.getItem('custom_accent') || '#f59e0b' : '#f59e0b'
     },
     command_deck_layout: profile?.command_deck_layout || { view_mode: 'standard', show_side_panel: true },
+    auto_scan_prefs: profile?.auto_scan_prefs || { enabled: false, scan_relationships: true, scan_connections: true, frequency_hours: 24, notify_mode: 'pulse' },
     zfold_mode: typeof window !== 'undefined' ? localStorage.getItem('zfold_mode') === 'true' : false
   });
   
@@ -172,7 +176,8 @@ export default function Settings() {
       notification_prefs: settings.notification_prefs,
       theme_preference: settings.theme_preference,
       custom_theme_colors: settings.custom_theme_colors,
-      command_deck_layout: settings.command_deck_layout
+      command_deck_layout: settings.command_deck_layout,
+      auto_scan_prefs: settings.auto_scan_prefs
     });
   };
 
@@ -577,6 +582,11 @@ export default function Settings() {
                 </div>
               </CardContent>
             </Card>
+
+            <AutoScanSettings
+              prefs={settings.auto_scan_prefs}
+              onChange={(newPrefs) => setSettings({ ...settings, auto_scan_prefs: newPrefs })}
+            />
 
             <Card className="bg-violet-50/50">
               <CardHeader>

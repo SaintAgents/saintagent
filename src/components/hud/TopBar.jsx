@@ -68,6 +68,7 @@ import LiveBroadcastBanner from './LiveBroadcastBanner';
 import FloatingNotesWidget from '../notes/FloatingNotesWidget';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import CollapsedViewModeToggle from './CollapsedViewModeToggle';
+import MatchScanPulse from './MatchScanPulse';
 
 // Theme-aware mode icons
 const MODE_ICONS = {
@@ -733,6 +734,12 @@ export default function TopBar({
                 setDatingSearching(false);
                 document.dispatchEvent(new CustomEvent('openDatingPopup'));
               }, 600);
+              // Clear pulse on click if auto-scan had new matches
+              if (profile?.auto_scan_prefs?.new_matches_count > 0 && profile?.id) {
+                base44.entities.UserProfile.update(profile.id, {
+                  auto_scan_prefs: { ...profile.auto_scan_prefs, new_matches_count: 0 }
+                }).catch(() => {});
+              }
             }}
           >
             {datingSearching ? (
@@ -740,9 +747,17 @@ export default function TopBar({
                 <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
               </div>
             ) : (
-              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+              <div className="relative w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center animate-pulse" style={{ boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
                 <Heart className="w-3 h-3 md:w-3.5 md:h-3.5 text-white fill-white" />
+                {/* Auto-scan pulse indicator */}
+                {profile?.auto_scan_prefs?.enabled && profile?.auto_scan_prefs?.notify_mode === 'pulse' && (
+                  <MatchScanPulse count={profile?.auto_scan_prefs?.new_matches_count || 0} variant="dot" />
+                )}
               </div>
+            )}
+            {/* Auto-scan badge indicator (notification mode) */}
+            {!datingSearching && profile?.auto_scan_prefs?.enabled && profile?.auto_scan_prefs?.notify_mode === 'notification' && (profile?.auto_scan_prefs?.new_matches_count || 0) > 0 && (
+              <MatchScanPulse count={profile.auto_scan_prefs.new_matches_count} variant="badge" className="absolute -top-1 -right-1" />
             )}
             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
               {datingSearching ? 'Searching...' : 'Dating Matches'}
