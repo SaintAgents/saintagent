@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   CheckCircle2, Circle, Loader2, ChevronDown, Calendar, 
-  ListTodo 
+  ListTodo, Lock
 } from "lucide-react";
+import BlockerIndicator from './BlockerIndicator';
+import TaskDependencyPicker from './TaskDependencyPicker';
 
 const STATUS_CONFIG = {
   todo: { label: 'To Do', icon: Circle, color: 'text-slate-400', bg: 'bg-slate-100', border: 'border-slate-200' },
@@ -22,22 +24,51 @@ const STATUS_CONFIG = {
   completed: { label: 'Completed', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
 };
 
-function TaskStatusButton({ task, onStatusChange, disabled }) {
+// Build a flat map of taskId -> task object across all milestones
+function buildTaskMap(mission) {
+  const map = {};
+  (mission?.milestones || []).forEach(m => {
+    (m.tasks || []).forEach(t => {
+      if (t.id) map[t.id] = t;
+    });
+  });
+  (mission?.tasks || []).forEach(t => {
+    if (t.id) map[t.id] = t;
+  });
+  return map;
+}
+
+// Check if a task is blocked (has incomplete dependencies)
+function getIncompleteBlockers(task, taskMap) {
+  const deps = task.depends_on || [];
+  if (deps.length === 0) return [];
+  return deps
+    .map(id => taskMap[id])
+    .filter(Boolean)
+    .filter(t => (t.status || (t.completed ? 'completed' : 'todo')) !== 'completed');
+}
+
+function TaskStatusButton({ task, onStatusChange, disabled, isBlocked }) {
   const status = task.status || (task.completed ? 'completed' : 'todo');
   const config = STATUS_CONFIG[status];
   const Icon = config.icon;
+  const effectiveDisabled = disabled || isBlocked;
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger disabled={disabled} className="focus:outline-none">
+      <DropdownMenuTrigger disabled={effectiveDisabled} className="focus:outline-none">
         <div className={cn(
           "flex items-center gap-1.5 px-2 py-1 rounded-md border text-xs font-medium cursor-pointer transition-all hover:shadow-sm",
-          config.bg, config.border, config.color,
-          disabled && "opacity-50 cursor-not-allowed"
+          isBlocked ? "bg-amber-50 border-amber-200 text-amber-500" : cn(config.bg, config.border, config.color),
+          effectiveDisabled && "opacity-50 cursor-not-allowed"
         )}>
-          <Icon className={cn("w-3.5 h-3.5", status === 'in_progress' && "animate-spin")} />
-          {config.label}
-          <ChevronDown className="w-3 h-3 opacity-60" />
+          {isBlocked ? (
+            <Lock className="w-3.5 h-3.5" />
+          ) : (
+            <Icon className={cn("w-3.5 h-3.5", status === 'in_progress' && "animate-spin")} />
+          )}
+          {isBlocked ? 'Blocked' : config.label}
+          {!isBlocked && <ChevronDown className="w-3 h-3 opacity-60" />}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-40">
@@ -59,10 +90,9 @@ function TaskStatusButton({ task, onStatusChange, disabled }) {
   );
 }
 
-function MilestoneSection({ milestone, milestoneIndex, onTaskStatusChange, disabled }) {
+function MilestoneSection({ milestone, milestoneIndex, onTaskStatusChange, onDepsChange, disabled, taskMap, allMilestoneTasks }) {
   const tasks = milestone.tasks || [];
   const completedCount = tasks.filter(t => (t.status || (t.completed ? 'completed' : 'todo')) === 'completed').length;
-  const inProgressCount = tasks.filter(t => (t.status || 'todo') === 'in_progress').length;
   const totalTasks = tasks.length;
   const milestoneProgress = totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0;
 
@@ -103,28 +133,79 @@ function MilestoneSection({ milestone, milestoneIndex, onTaskStatusChange, disab
         <div className="divide-y divide-slate-100">
           {tasks.map((task, taskIndex) => {
             const status = task.status || (task.completed ? 'completed' : 'todo');
+            const incompleteBlockers = getIncompleteBlockers(task, taskMap);
+            const isBlocked = incompleteBlockers.length > 0;
+
             return (
               <div 
                 key={task.id || taskIndex} 
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 transition-colors",
-                  status === 'completed' && "bg-emerald-50/30",
-                  status === 'in_progress' && "bg-blue-50/30"
+                  "px-4 py-3 transition-colors",
+                  isBlocked && status !== 'completed' && "bg-amber-50/30 border-l-2 border-l-amber-300",
+                  !isBlocked && status === 'completed' && "bg-emerald-50/30",
+                  !isBlocked && status === 'in_progress' && "bg-blue-50/30"
                 )}
               >
-                <TaskStatusButton
-                  task={task}
-                  onStatusChange={(newStatus) => onTaskStatusChange(milestoneIndex, taskIndex, newStatus)}
-                  disabled={disabled}
-                />
-                <span className={cn(
-                  "text-sm flex-1",
-                  status === 'completed' && "text-slate-400 line-through",
-                  status === 'in_progress' && "text-blue-700 font-medium",
-                  status === 'todo' && "text-slate-700"
-                )}>
-                  {task.title}
-                </span>
+                <div className="flex items-center gap-3">
+                  <TaskStatusButton
+                    task={task}
+                    onStatusChange={(newStatus) => onTaskStatusChange(milestoneIndex, taskIndex, newStatus)}
+                    disabled={disabled}
+                    isBlocked={isBlocked && status !== 'completed'}
+                  />
+                  <span className={cn(
+                    "text-sm flex-1",
+                    status === 'completed' && "text-slate-400 line-through",
+                    status === 'in_progress' && !isBlocked && "text-blue-700 font-medium",
+                    status === 'todo' && !isBlocked && "text-slate-700",
+                    isBlocked && status !== 'completed' && "text-amber-700"
+                  )}>
+                    {task.title}
+                  </span>
+                  <BlockerIndicator blockerTasks={incompleteBlockers} />
+                </div>
+
+                {/* Dependency picker row — only for editors */}
+                {disabled ? (
+                  // Read-only: show dependency badges if any
+                  (task.depends_on?.length > 0 && (
+                    <div className="mt-1.5 ml-[72px] flex flex-wrap gap-1">
+                      {task.depends_on.map(depId => {
+                        const depTask = taskMap[depId];
+                        if (!depTask) return null;
+                        const depStatus = depTask.status || (depTask.completed ? 'completed' : 'todo');
+                        return (
+                          <Badge 
+                            key={depId} 
+                            variant="outline" 
+                            className={cn(
+                              "text-[10px] gap-1",
+                              depStatus === 'completed' 
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-600" 
+                                : "bg-amber-50 border-amber-200 text-amber-600"
+                            )}
+                          >
+                            {depStatus === 'completed' ? (
+                              <CheckCircle2 className="w-2.5 h-2.5" />
+                            ) : (
+                              <Lock className="w-2.5 h-2.5" />
+                            )}
+                            {depTask.title?.length > 25 ? depTask.title.slice(0, 25) + '…' : depTask.title}
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  ))
+                ) : (
+                  <div className="mt-1.5 ml-[72px]">
+                    <TaskDependencyPicker
+                      currentTaskId={task.id}
+                      currentDeps={task.depends_on || []}
+                      allTasks={allMilestoneTasks}
+                      onChange={(newDeps) => onDepsChange(milestoneIndex, taskIndex, newDeps)}
+                    />
+                  </div>
+                )}
               </div>
             );
           })}
@@ -142,7 +223,6 @@ export function computeMissionProgress(mission) {
   let completedCount = 0;
   let totalCount = 0;
 
-  // Count from milestones
   (mission?.milestones || []).forEach(m => {
     (m.tasks || []).forEach(t => {
       totalCount++;
@@ -151,7 +231,6 @@ export function computeMissionProgress(mission) {
     });
   });
 
-  // Count from top-level tasks
   (mission?.tasks || []).forEach(t => {
     totalCount++;
     const status = t.status || (t.completed ? 'completed' : 'todo');
@@ -163,6 +242,10 @@ export function computeMissionProgress(mission) {
 
 export default function MissionTaskTracker({ mission, canEdit }) {
   const queryClient = useQueryClient();
+  const taskMap = buildTaskMap(mission);
+
+  // Flat list of all tasks across all milestones (for dependency picker)
+  const allMilestoneTasks = (mission?.milestones || []).flatMap(m => m.tasks || []);
 
   const updateMutation = useMutation({
     mutationFn: async (updatedMilestones) => {
@@ -184,13 +267,11 @@ export default function MissionTaskTracker({ mission, canEdit }) {
         if (ti !== taskIndex) return t;
         return { ...t, status: newStatus, completed: newStatus === 'completed' };
       });
-      // Auto-mark milestone as completed if all tasks are done
       const allDone = updatedTasks.length > 0 && updatedTasks.every(t => t.status === 'completed' || t.completed);
       return { ...m, tasks: updatedTasks, completed: allDone };
     });
     updateMutation.mutate(updatedMilestones);
 
-    // Send notifications when a task is marked completed (and wasn't already)
     if (newStatus === 'completed' && oldStatus !== 'completed') {
       base44.functions.invoke('missionNotificationEngine', {
         action: 'task_completed',
@@ -199,6 +280,18 @@ export default function MissionTaskTracker({ mission, canEdit }) {
         milestone_index: milestoneIndex,
       }).catch(e => console.warn('Notification send failed:', e));
     }
+  };
+
+  const handleDepsChange = (milestoneIndex, taskIndex, newDeps) => {
+    const updatedMilestones = (mission.milestones || []).map((m, mi) => {
+      if (mi !== milestoneIndex) return m;
+      const updatedTasks = (m.tasks || []).map((t, ti) => {
+        if (ti !== taskIndex) return t;
+        return { ...t, depends_on: newDeps };
+      });
+      return { ...m, tasks: updatedTasks };
+    });
+    updateMutation.mutate(updatedMilestones);
   };
 
   const milestones = mission?.milestones || [];
@@ -214,7 +307,10 @@ export default function MissionTaskTracker({ mission, canEdit }) {
             milestone={milestone}
             milestoneIndex={index}
             onTaskStatusChange={handleTaskStatusChange}
+            onDepsChange={handleDepsChange}
             disabled={!canEdit || updateMutation.isPending}
+            taskMap={taskMap}
+            allMilestoneTasks={allMilestoneTasks}
           />
         ))}
     </div>

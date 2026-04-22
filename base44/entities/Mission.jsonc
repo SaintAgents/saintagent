@@ -148,6 +148,14 @@
                 },
                 "assignee_id": {
                   "type": "string"
+                },
+                "depends_on": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [],
+                  "description": "Array of task IDs that must be completed before this task"
                 }
               }
             }
@@ -178,6 +186,14 @@
               "completed"
             ],
             "default": "todo"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "Array of task IDs that must be completed before this task"
           }
         }
       }
