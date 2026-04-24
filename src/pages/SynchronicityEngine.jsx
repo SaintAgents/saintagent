@@ -78,7 +78,7 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-slate-900/80 to-slate-800/60 rounded-xl border border-violet-500/20 p-4 hover:border-violet-500/40 transition-all"
+      className="bg-white dark:bg-gradient-to-br dark:from-slate-900/80 dark:to-slate-800/60 rounded-xl border border-slate-200 dark:border-violet-500/20 p-4 hover:border-violet-300 dark:hover:border-violet-500/40 transition-all shadow-sm"
     >
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
@@ -89,8 +89,8 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
           </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-white truncate">{sync.user_name}</p>
-          <p className="text-xs text-slate-400">
+          <p className="font-medium text-slate-900 dark:text-white truncate">{sync.user_name}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {sync.created_date ? formatDistanceToNow(new Date(sync.created_date), { addSuffix: true }) : 'Recently'}
           </p>
         </div>
@@ -111,15 +111,15 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
 
       {/* Content */}
       {sync.title && (
-        <h3 className="font-semibold text-violet-200 mb-2">{sync.title}</h3>
+        <h3 className="font-semibold text-violet-700 dark:text-violet-200 mb-2">{sync.title}</h3>
       )}
-      <p className="text-slate-300 text-sm leading-relaxed mb-3">{sync.description}</p>
+      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-3">{sync.description}</p>
 
       {/* Symbols */}
       {sync.symbols?.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
           {sync.symbols.map((symbol, i) => (
-            <span key={i} className="px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs">
+            <span key={i} className="px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-500/10 border border-violet-200 dark:border-violet-500/20 text-violet-700 dark:text-violet-300 text-xs">
               {symbol}
             </span>
           ))}
@@ -127,7 +127,7 @@ function SynchronicityCard({ sync, onLike, onResonate }) {
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-4 pt-3 border-t border-slate-700/50">
+      <div className="flex items-center gap-4 pt-3 border-t border-slate-200 dark:border-slate-700/50">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -377,15 +377,15 @@ export default function SynchronicityEngine() {
       </div>
 
       {/* Filters Bar */}
-      <div className="border-b border-violet-500/20 bg-slate-900/50 backdrop-blur-sm sticky top-16 z-10">
+      <div className="border-b border-slate-200 dark:border-violet-500/20 bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm sticky top-16 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             {/* View Toggle */}
-            <div className="flex items-center gap-1 bg-slate-800/50 border border-slate-700 rounded-lg p-1">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-1">
               <Button
                 size="sm"
                 variant={viewMode === 'feed' ? 'default' : 'ghost'}
-                className={viewMode === 'feed' ? 'bg-violet-600' : 'text-slate-400'}
+                className={viewMode === 'feed' ? 'bg-violet-600 text-white' : 'text-slate-600 dark:text-slate-400'}
                 onClick={() => setViewMode('feed')}
               >
                 <Flame className="w-4 h-4 mr-1" />
@@ -394,7 +394,7 @@ export default function SynchronicityEngine() {
               <Button
                 size="sm"
                 variant={viewMode === 'challenges' ? 'default' : 'ghost'}
-                className={viewMode === 'challenges' ? 'bg-violet-600' : 'text-slate-400'}
+                className={viewMode === 'challenges' ? 'bg-violet-600 text-white' : 'text-slate-600 dark:text-slate-400'}
                 onClick={() => setViewMode('challenges')}
               >
                 <Users className="w-4 h-4 mr-1" />
@@ -403,7 +403,7 @@ export default function SynchronicityEngine() {
               <Button
                 size="sm"
                 variant={viewMode === 'deepdive' ? 'default' : 'ghost'}
-                className={viewMode === 'deepdive' ? 'bg-violet-600' : 'text-slate-400'}
+                className={viewMode === 'deepdive' ? 'bg-violet-600 text-white' : 'text-slate-600 dark:text-slate-400'}
                 onClick={() => setViewMode('deepdive')}
               >
                 <TrendingUp className="w-4 h-4 mr-1" />
@@ -414,24 +414,24 @@ export default function SynchronicityEngine() {
             {viewMode === 'feed' && (
               <>
                 <div className="relative flex-1 max-w-xs">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search symbols, experiences..."
-                    className="pl-9 bg-slate-800/50 border-slate-700 text-white"
+                    className="pl-9 bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
                 <div className="flex items-center gap-2">
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-40 bg-slate-800/50 border-slate-700 text-white">
+                    <SelectTrigger className="w-40 bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                       <Filter className="w-4 h-4 mr-2" />
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="all" className="text-white">All Categories</SelectItem>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
                       {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
-                        <SelectItem key={key} value={key} className="text-white">
+                        <SelectItem key={key} value={key}>
                           {config.label}
                         </SelectItem>
                       ))}
@@ -469,8 +469,8 @@ export default function SynchronicityEngine() {
               ) : synchronicities.length === 0 ? (
                 <div className="text-center py-16">
                   <Sparkles className="w-16 h-16 text-violet-500/30 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-white mb-2">No synchronicities found</h3>
-                  <p className="text-slate-400 mb-6">Be the first to share your experience</p>
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">No synchronicities found</h3>
+                  <p className="text-slate-500 dark:text-slate-400 mb-6">Be the first to share your experience</p>
                   <Button onClick={() => setSubmitOpen(true)} className="bg-violet-600 hover:bg-violet-500">
                     Share Synchronicity
                   </Button>
@@ -509,10 +509,10 @@ export default function SynchronicityEngine() {
               />
 
               {/* Trending Symbols */}
-              <Card className="bg-slate-900/80 border-violet-500/20">
+              <Card className="bg-white dark:bg-slate-900/80 border-slate-200 dark:border-violet-500/20 shadow-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base text-white flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-violet-400" />
+                  <CardTitle className="text-base text-slate-900 dark:text-white flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-violet-500" />
                     Trending Symbols
                     <HelpTooltip>Symbols and patterns most frequently appearing in recent synchronicity reports. Click any symbol to filter the feed.</HelpTooltip>
                   </CardTitle>
@@ -523,10 +523,10 @@ export default function SynchronicityEngine() {
                       <button
                         key={symbol}
                         onClick={() => setSearchQuery(symbol)}
-                        className="px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm hover:bg-violet-500/20 transition-colors"
+                        className="px-3 py-1.5 rounded-full bg-violet-100 dark:bg-violet-500/10 border border-violet-200 dark:border-violet-500/20 text-violet-700 dark:text-violet-300 text-sm hover:bg-violet-200 dark:hover:bg-violet-500/20 transition-colors"
                       >
                         {symbol}
-                        <span className="ml-1.5 text-violet-400/60">{count}</span>
+                        <span className="ml-1.5 text-violet-400">{count}</span>
                       </button>
                     ))}
                     {trendingSymbols.length === 0 && (
@@ -537,27 +537,27 @@ export default function SynchronicityEngine() {
               </Card>
 
               {/* Stats */}
-              <Card className="bg-slate-900/80 border-violet-500/20">
+              <Card className="bg-white dark:bg-slate-900/80 border-slate-200 dark:border-violet-500/20 shadow-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base text-white flex items-center gap-2">
+                  <CardTitle className="text-base text-slate-900 dark:text-white flex items-center gap-2">
                     Community Stats
                     <HelpTooltip>Real-time metrics showing how the community is experiencing synchronicities together.</HelpTooltip>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    <span className="text-slate-500 text-sm flex items-center gap-1.5">
                       Total Shared
                       <HelpTooltip>All synchronicities ever shared by the community</HelpTooltip>
                     </span>
-                    <span className="text-white font-semibold">{synchronicities.length}</span>
+                    <span className="text-slate-900 dark:text-white font-semibold">{synchronicities.length}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    <span className="text-slate-500 text-sm flex items-center gap-1.5">
                       This Week
                       <HelpTooltip>Synchronicities shared in the last 7 days</HelpTooltip>
                     </span>
-                    <span className="text-white font-semibold">
+                    <span className="text-slate-900 dark:text-white font-semibold">
                       {synchronicities.filter(s => {
                         const d = new Date(s.created_date);
                         const now = new Date();
@@ -566,11 +566,11 @@ export default function SynchronicityEngine() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    <span className="text-slate-500 text-sm flex items-center gap-1.5">
                       Total Resonances
                       <HelpTooltip>When others click "resonate" to acknowledge experiencing similar synchronicities</HelpTooltip>
                     </span>
-                    <span className="text-white font-semibold">
+                    <span className="text-slate-900 dark:text-white font-semibold">
                       {synchronicities.reduce((acc, s) => acc + (s.resonance_count || 0), 0)}
                     </span>
                   </div>

@@ -85,11 +85,11 @@ Provide insightful, meaningful analysis that helps users understand the deeper p
   };
 
   return (
-    <Card className="bg-gradient-to-br from-violet-900/40 to-slate-900/60 border-violet-500/30">
+    <Card className="bg-white dark:bg-gradient-to-br dark:from-violet-900/40 dark:to-slate-900/60 border-slate-200 dark:border-violet-500/30 shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base text-white flex items-center gap-2">
-            <Brain className="w-4 h-4 text-violet-400" />
+          <CardTitle className="text-base text-slate-900 dark:text-white flex items-center gap-2">
+            <Brain className="w-4 h-4 text-violet-500" />
             AI Pattern Insights
           </CardTitle>
           <Button
@@ -111,7 +111,7 @@ Provide insightful, meaningful analysis that helps users understand the deeper p
         {!insights && !isAnalyzing && (
           <div className="text-center py-6">
             <Sparkles className="w-10 h-10 text-violet-500/40 mx-auto mb-3" />
-            <p className="text-slate-400 text-sm mb-3">
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-3">
               {synchronicities.length < 3 
                 ? "Need at least 3 synchronicities to analyze patterns"
                 : "Click refresh to analyze community patterns"}

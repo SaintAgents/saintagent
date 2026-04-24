@@ -97,11 +97,11 @@ Make it personal, meaningful, and spiritually insightful.`,
   const totalInteractions = mySyncs.length + myLikes.length;
 
   return (
-    <Card className="bg-gradient-to-br from-indigo-900/40 to-slate-900/60 border-indigo-500/30">
+    <Card className="bg-white dark:bg-gradient-to-br dark:from-indigo-900/40 dark:to-slate-900/60 border-slate-200 dark:border-indigo-500/30 shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base text-white flex items-center gap-2">
-            <FileText className="w-4 h-4 text-indigo-400" />
+          <CardTitle className="text-base text-slate-900 dark:text-white flex items-center gap-2">
+            <FileText className="w-4 h-4 text-indigo-500" />
             Personal Trend Report
           </CardTitle>
           <Button
@@ -119,19 +119,19 @@ Make it personal, meaningful, and spiritually insightful.`,
         <CardContent className="space-y-4">
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-slate-800/50 text-center">
-              <p className="text-2xl font-bold text-white">{mySyncs.length}</p>
-              <p className="text-xs text-slate-400">Your Shares</p>
+            <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800/50 text-center">
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{mySyncs.length}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Your Shares</p>
             </div>
-            <div className="p-3 rounded-lg bg-slate-800/50 text-center">
-              <p className="text-2xl font-bold text-white">{myLikes.length}</p>
-              <p className="text-xs text-slate-400">Resonated With</p>
+            <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800/50 text-center">
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{myLikes.length}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Resonated With</p>
             </div>
           </div>
 
           {!report && !isGenerating && (
             <div className="text-center py-4">
-              <p className="text-slate-400 text-sm mb-3">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-3">
                 {totalInteractions < 4 
                   ? "Share or interact with more synchronicities to generate your report"
                   : "Generate your personalized synchronicity analysis"}
